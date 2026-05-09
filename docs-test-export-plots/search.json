@@ -1,0 +1,44 @@
+[
+  {
+    "objectID": "exporting_tools/exporting_plots.html",
+    "href": "exporting_tools/exporting_plots.html",
+    "title": "Exporting plots",
+    "section": "",
+    "text": "Exporting plots from R can be done in several ways, depending on the desired output format and quality. Here are some common methods to export plots:"
+  },
+  {
+    "objectID": "exporting_tools/exporting_plots.html#using-rs-built-in-functions",
+    "href": "exporting_tools/exporting_plots.html#using-rs-built-in-functions",
+    "title": "Exporting plots",
+    "section": "Using R’s Built-in Functions",
+    "text": "Using R’s Built-in Functions\nR provides several built-in functions for exporting plots to different formats:\n\nRaster Formats\n\npng(), jpeg(), tiff(), bmp(): These functions save plots in raster formats. You can specify filename, dimensions, and resolution.\n\n# PNG format (good for web)\npng(\"plot.png\", width = 800, height = 600, res = 100)\nplot(x, y)\ndev.off()\n\n# High-resolution TIFF for publications\ntiff(\"plot.tiff\", width = 8, height = 6, units = \"in\", res = 300)\nplot(x, y)\ndev.off()\n\n\nVector Formats\n\npdf(): Saves plots in PDF format, vector-based and scalable.\nsvg(): Saves plots in SVG format, ideal for web and scalable graphics.\n\n# PDF for high-quality prints\npdf(\"plot.pdf\", width = 8, height = 6)\nplot(x, y)\ndev.off()\n\n# SVG for web use\nsvg(\"plot.svg\", width = 8, height = 6)\nplot(x, y)\ndev.off()"
+  },
+  {
+    "objectID": "exporting_tools/exporting_plots.html#exporting-ggplot2-plots",
+    "href": "exporting_tools/exporting_plots.html#exporting-ggplot2-plots",
+    "title": "Exporting plots",
+    "section": "Exporting ggplot2 Plots",
+    "text": "Exporting ggplot2 Plots\nFor ggplot2 plots, the ggsave() function is the most convenient way to export:\nlibrary(ggplot2)\n\n# Create a plot\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point()\n\n# Save in different formats\nggsave(\"plot.png\", p, width = 8, height = 6, dpi = 150)\nggsave(\"plot.pdf\", p, width = 8, height = 6)\nggsave(\"plot.svg\", p, width = 8, height = 6)\n\nControlling Output Quality\n\nResolution (DPI): Higher DPI for print quality (300+), lower for web (72-150)\nDimensions: Specify in inches or pixels\nAspect Ratio: Maintain proportions for consistency\n\n# High-resolution for publications\nggsave(\"publication_plot.tiff\", p, \n       width = 6, height = 4, \n       dpi = 300, \n       device = \"tiff\")\n\n# Web-optimized PNG\nggsave(\"web_plot.png\", p, \n       width = 800, height = 600, \n       dpi = 100, \n       units = \"px\")"
+  },
+  {
+    "objectID": "exporting_tools/exporting_plots.html#advanced-exporting-techniques",
+    "href": "exporting_tools/exporting_plots.html#advanced-exporting-techniques",
+    "title": "Exporting plots",
+    "section": "Advanced Exporting Techniques",
+    "text": "Advanced Exporting Techniques\n\nExporting Multiple Plots\n# Save multiple plots to PDF\npdf(\"multiple_plots.pdf\")\nplot1 &lt;- ggplot(data1, aes(x, y)) + geom_point()\nprint(plot1)\nplot2 &lt;- ggplot(data2, aes(x, y)) + geom_line()\nprint(plot2)\ndev.off()\n\n\nUsing Cairo for Better Quality\nThe Cairo graphics library can provide better quality for some formats:\ninstall.packages(\"Cairo\")\nlibrary(Cairo)\n\nCairoPNG(\"high_quality.png\", width = 800, height = 600)\nplot(x, y)\ndev.off()\n\n\nExporting to Clipboard\nFor quick sharing:\n# Windows\nsavePlot(\"clipboard\", type = \"wmf\")\n\n# Or for ggplot2\nggsave(\"clipboard\", p, device = \"png\")"
+  },
+  {
+    "objectID": "exporting_tools/exporting_plots.html#best-practices",
+    "href": "exporting_tools/exporting_plots.html#best-practices",
+    "title": "Exporting plots",
+    "section": "Best Practices",
+    "text": "Best Practices\n\nChoose the right format: PDF/SVG for vector graphics, PNG/TIFF for raster\nSet appropriate resolution: 300 DPI for print, 72-150 for screen\nConsider file size: Vector formats scale better but may be larger\nTest outputs: Always check exported files in target applications\nUse consistent dimensions: Maintain aspect ratios across exports"
+  },
+  {
+    "objectID": "exporting_tools/exporting_plots.html#common-issues-and-solutions",
+    "href": "exporting_tools/exporting_plots.html#common-issues-and-solutions",
+    "title": "Exporting plots",
+    "section": "Common Issues and Solutions",
+    "text": "Common Issues and Solutions\n\nPlot not saving: Ensure dev.off() is called after plotting\nLow quality: Increase DPI or use vector formats\nWrong dimensions: Specify units explicitly (inches, cm, pixels)\nColors not matching: Check color profiles and device settings"
+  }
+]

@@ -1,0 +1,102 @@
+---
+title: "Data Analysis"
+format:
+  html:
+    code-copy: true
+    theme: cosmo
+    toc: true
+    lightbox: auto
+---
+
+::: {.content-visible when-profile="moderate"}
+
+# Data Analysis for Medical Datasets
+
+This section builds on general R skills and shows common descriptive and inferential analyses.
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(janitor)
+```
+
+## Load and clean data
+
+```{r}
+p <- read_excel("../data/prac_modded.xlsx") |> 
+  clean_names()
+
+head(p)
+```
+
+## Descriptive statistics
+
+```{r}
+summary(p$age_of_participants)
+sd(p$age_of_participants)
+```
+
+### Frequency tables
+
+```{r}
+freq_table <- table(p$past_history_of_diabetes)
+prop_table <- prop.table(freq_table)
+combined_table <- data.frame(
+  Frequency = freq_table,
+  Percentage = prop_table * 100
+)
+combined_table
+```
+
+### Grouped summaries
+
+```{r}
+summary_table <- p %>%
+  mutate(wealth_index = factor(wealth_index_of_participants)) %>% 
+  group_by(wealth_index) %>%
+  reframe(
+    Frequency = n(),
+    Percentage = paste0(round(n() * 100 / nrow(p), 2), "%")
+  )
+summary_table
+```
+
+## Hypothesis testing
+
+### Chi-square goodness-of-fit
+
+```{r}
+observed <- table(p$ever_screened_for_bp)
+expected <- c(1/2, 1/2) * sum(observed)
+chisq_test <- chisq.test(x = observed, p = expected / sum(observed))
+chisq_test
+```
+
+### Chi-square test for association
+
+```{r}
+table_gender_dm <- table(p$sex_of_participants, p$past_history_of_diabetes)
+chisq_m_5_b <- chisq.test(table_gender_dm, correct = FALSE)
+chisq_m_5_b
+```
+
+### McNemar test for paired binary responses
+
+```{r}
+table_bfr_aftr <- table(p$pain_foot_bfr, p$pain_foot_aftr)
+mcnemar_test <- mcnemar.test(table_bfr_aftr)
+mcnemar_test
+```
+
+### Normality diagnostics
+
+```{r}
+hist(p$age_of_participants, main = "Age distribution", xlab = "Age", ylab = "Density", freq = FALSE, col = "grey")
+lines(density(p$age_of_participants), col = "red", lwd = 2)
+qqnorm(p$sbp_in_mm_hg)
+qqline(p$sbp_in_mm_hg, col = "red")
+```
+
+These examples show the R workflow for medical data: import, clean, summarize, test, and visualize.
+
+:::

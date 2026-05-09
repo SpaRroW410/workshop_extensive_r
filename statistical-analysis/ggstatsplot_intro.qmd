@@ -1,0 +1,182 @@
+---
+title: "ggstatsplot — Introduction"
+format:
+  html:
+    code-copy: true
+    toc: true
+    lightbox: auto
+---
+
+## What is ggstatsplot?
+
+`ggstatsplot` is an R package that combines **statistical tests** and **publication-ready visualisations** in a single function call. Each plot automatically selects, runs, and annotates the appropriate statistical test based on your data, displaying results directly on the figure.
+
+This removes a common workflow bottleneck: running a test in one place, building a plot in another, and manually annotating results.
+
+```{r}
+#| eval: false
+install.packages("ggstatsplot")
+library(ggstatsplot)
+```
+
+**Why use it?**
+
+- One function produces both the visual and the statistical result
+- Automatically annotates effect sizes and confidence intervals
+- Sensible defaults — works out of the box for most common comparisons
+- Output is a ggplot2 object, so you can add layers or themes as usual
+
+---
+
+## Core functions covered in this module
+
+| Function | Use case |
+|---|---|
+| `ggbetweenstats()` | Compare groups (independent samples) |
+| `ggscatterstats()` | Correlation between two continuous variables |
+| `gghistostats()` | Distribution of a single continuous variable |
+
+---
+
+## `ggbetweenstats()` — Group Comparisons
+
+Use this when you want to compare a continuous variable across two or more independent groups.
+
+```{r}
+#| eval: false
+library(ggstatsplot)
+
+# Compare systolic BP across fuel type groups
+ggbetweenstats(
+  data  = overall_up,
+  x     = fuel_type,         # grouping variable (categorical)
+  y     = sbp_0m,            # outcome variable (continuous)
+  title = "Systolic BP by Fuel Type"
+)
+```
+
+**What the output shows:**
+
+- A violin + boxplot combination with individual data points
+- The statistical test used (Welch's ANOVA or Kruskal-Wallis, chosen automatically)
+- The p-value, effect size (η² or ε²), and confidence interval
+- Pairwise comparisons (if more than 2 groups)
+
+**Choosing parametric vs non-parametric:**
+
+```{r}
+#| eval: false
+# Force non-parametric (Kruskal-Wallis)
+ggbetweenstats(
+  data  = overall_up,
+  x     = fuel_type,
+  y     = sbp_0m,
+  type  = "nonparametric"   # "parametric", "nonparametric", "robust", "bayes"
+)
+```
+
+---
+
+## `ggscatterstats()` — Correlation
+
+Use this when you want to examine the relationship between two continuous variables.
+
+```{r}
+#| eval: false
+ggscatterstats(
+  data  = overall_up,
+  x     = current_age,
+  y     = sbp_0m,
+  title = "Age vs Systolic BP at Baseline"
+)
+```
+
+**What the output shows:**
+
+- A scatter plot with a linear trend line and confidence band
+- Pearson (or Spearman) correlation coefficient, r
+- p-value and 95% confidence interval for r
+- Marginal histograms on both axes
+
+**Using Spearman instead of Pearson:**
+
+```{r}
+#| eval: false
+ggscatterstats(
+  data = overall_up,
+  x    = current_age,
+  y    = sbp_0m,
+  type = "nonparametric"   # uses Spearman's rho
+)
+```
+
+---
+
+## `gghistostats()` — Distribution
+
+Use this when you want to visualise the distribution of a single continuous variable with a one-sample test.
+
+```{r}
+#| eval: false
+gghistostats(
+  data     = overall_up,
+  x        = current_age,
+  title    = "Distribution of Age at Enrolment",
+  test.value = 40          # hypothesised population mean
+)
+```
+
+**What the output shows:**
+
+- Histogram with overlaid density curve
+- One-sample t-test (or Wilcoxon signed-rank) against the specified `test.value`
+- Mean, median, and their confidence intervals
+
+---
+
+## Reading the statistical annotation
+
+Every ggstatsplot figure includes a subtitle with the test results in a standardised format:
+
+```
+Welch's ANOVA, F(2, 147.3) = 5.23, p = 0.006, ω² = 0.06, 95% CI [0.01, 0.14]
+```
+
+| Component | Meaning |
+|---|---|
+| Test name | Which test was used (selected automatically) |
+| Test statistic | F, t, χ², H etc. |
+| p-value | Statistical significance |
+| Effect size | Practical significance (ω², d, r, etc.) |
+| 95% CI | Uncertainty around the effect size |
+
+::: {.callout-tip}
+## Interpreting effect sizes
+
+- **η² / ω²**: Small ≈ 0.01, Medium ≈ 0.06, Large ≈ 0.14 (for ANOVA)
+- **Cohen's d**: Small ≈ 0.2, Medium ≈ 0.5, Large ≈ 0.8 (for t-tests)
+- **r**: Small ≈ 0.1, Medium ≈ 0.3, Large ≈ 0.5 (for correlation)
+:::
+
+---
+
+## Quick reference
+
+```{r}
+#| eval: false
+# Two-group comparison
+ggbetweenstats(data = df, x = group, y = outcome)
+
+# Correlation
+ggscatterstats(data = df, x = var1, y = var2)
+
+# Distribution
+gghistostats(data = df, x = continuous_var, test.value = 0)
+```
+
+---
+
+## Further reading
+
+- [ggstatsplot documentation](https://indrajeetpatil.github.io/ggstatsplot/)
+- Patil, I. (2021). Visualizations with statistical details. *JOSS*, 6(61), 3167.

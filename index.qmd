@@ -1,35 +1,273 @@
 ---
-format: html
+title: ""
+format:
+  html:
+    theme: flatly
+    css:
+      - assets/theme_webp.css
+      - assets/landing.css
+    toc: false
+    page-layout: full
 ---
 
+```{=html}
+<!-- ═══════════════════════════════════════════════════════
+     HERO SECTION
+     ═══════════════════════════════════════════════════════ -->
+<div class="ws-hero">
+  <div class="ws-hero-inner">
+    <div class="ws-logo-row">
+      <span class="ws-logo-icon">📊</span>
+    </div>
+    <h1 class="ws-title">R Data Visualization Workshop</h1>
+    <p class="ws-subtitle">
+      A comprehensive, tiered learning platform for data wrangling,
+      statistical analysis, and visualization in R
+    </p>
+    <p class="ws-authors">
+      Dr. Mukul Maheshwari &nbsp;·&nbsp; Dr. Rudresh Negi<br>
+      <span class="ws-dept">Department of Community Medicine</span>
+    </p>
+  </div>
+</div>
 
+<!-- ═══════════════════════════════════════════════════════
+     TRACK SELECTION
+     ═══════════════════════════════════════════════════════ -->
+<div class="ws-tracks-section">
+  <h2 class="ws-section-heading">Choose Your Workshop Track</h2>
+  <p class="ws-section-sub">
+    Select the track that matches your level. Basic is open to everyone.
+    Other tracks require a workshop key provided by the session organiser.
+  </p>
 
-This site is your interactive guide for the **Data Visualization Workshop** that uses **R** and **Quarto**.  You'll find everything you need to learn or improve your skills, including hands-on examples, best practices, and plotting techniques, all in one place.
+  <!-- Row 1: Basic · Moderate · Advanced -->
+  <div class="ws-cards-row" id="cards-row-1">
 
-## Workshop Goals
+    <div class="ws-card ws-card--open" data-profile="basic">
+      <div class="ws-card-badge ws-badge--open">🟢 Open Access</div>
+      <h3 class="ws-card-title">Basic</h3>
+      <ul class="ws-card-list">
+        <li>R Foundations &amp; Data Wrangling</li>
+        <li>Basic Visualization (ggplot2)</li>
+        <li>Statistical Test Selection</li>
+        <li>ggstatsplot — Introduction</li>
+        <li>Quarto Basics</li>
+      </ul>
+      <button class="ws-btn ws-btn--open" onclick="enterTrack('basic')">
+        Enter Track →
+      </button>
+    </div>
 
- - Learn the basics of good data visualization
- - Use R to learn how to wrangle and prepare data
- - Learn about basic, advanced, and interactive ways to plot data
- - Make and share your own visualizations based on Quarto
+    <div class="ws-card ws-card--locked" data-profile="moderate">
+      <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+      <h3 class="ws-card-title">Moderate</h3>
+      <ul class="ws-card-list">
+        <li>Everything in Basic</li>
+        <li>Best Practices &amp; Plot Matching</li>
+        <li>Intermediate Plots + Modules 1–2</li>
+        <li>ggstatsplot — Intermediate</li>
+        <li>Quarto Dynamic Documents</li>
+        <li>gtsummary Tables</li>
+        <li>Applied Healthcare Examples</li>
+      </ul>
+      <button class="ws-btn ws-btn--locked" onclick="openKeyModal('moderate')">
+        Enter Key →
+      </button>
+    </div>
 
-## Find your way around the workshop
+    <div class="ws-card ws-card--locked" data-profile="advanced">
+      <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+      <h3 class="ws-card-title">Advanced</h3>
+      <ul class="ws-card-list">
+        <li>Everything in Moderate</li>
+        <li>Advanced &amp; Interactive Plots</li>
+        <li>ggplot2 Modules 3–4</li>
+        <li>ggstatsplot — Advanced</li>
+        <li>Quarto for Publication</li>
+        <li>Deep Statistical Analysis</li>
+      </ul>
+      <button class="ws-btn ws-btn--locked" onclick="openKeyModal('advanced')">
+        Enter Key →
+      </button>
+    </div>
 
- To look at each module, use the navigation bar above:
+  </div>
 
- - **[R Foundations](r-foundations/getting-started.qmd)**  
-   Learn how to use R syntax, clean up your data, and make your workflows neat.
-   
- - **[Data Visualization Principles](data-visualization/ggplot_grammar.qmd)**   
-   Learn the basics of good visual design and what not to do.
+  <!-- Row 2: DataViz Foundations · DataViz Complete -->
+  <h2 class="ws-section-heading ws-section-heading--second">
+    Visualization-Focused Tracks
+  </h2>
+  <p class="ws-section-sub">
+    Dedicated tracks covering only visualization — no statistical analysis modules.
+    Ideal for focused workshops on ggplot2 and plot design.
+  </p>
 
- - **[Plot Gallery](plot-gallery/basic.qmd)**  
-   Look at examples that range from simple bar charts to interactive dashboards.
+  <div class="ws-cards-row ws-cards-row--two" id="cards-row-2">
 
-## Code and Examples in Real Time
+    <div class="ws-card ws-card--locked ws-card--viz" data-profile="dataviz-base">
+      <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+      <h3 class="ws-card-title">Data Visualization — Foundations</h3>
+      <ul class="ws-card-list">
+        <li>Grammar of Graphics</li>
+        <li>Best Practices</li>
+        <li>Matching Data to Plots</li>
+        <li>ggplot2 Modules 1–2</li>
+        <li>Basic &amp; Intermediate Gallery</li>
+        <li>Applied Visualization Examples</li>
+      </ul>
+      <button class="ws-btn ws-btn--locked" onclick="openKeyModal('dataviz-base')">
+        Enter Key →
+      </button>
+    </div>
 
- There are code snippets, rendered outputs, and downloadable datasets all over the site.
+    <div class="ws-card ws-card--locked ws-card--viz" data-profile="dataviz-complete">
+      <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+      <h3 class="ws-card-title">Data Visualization — Complete</h3>
+      <ul class="ws-card-list">
+        <li>Everything in Foundations</li>
+        <li>ggplot2 Modules 3–4</li>
+        <li>Advanced Plot Gallery</li>
+        <li>Interactive Plots</li>
+        <li>Practical Applications</li>
+        <li>Debugging &amp; Advanced Export</li>
+      </ul>
+      <button class="ws-btn ws-btn--locked" onclick="openKeyModal('dataviz-complete')">
+        Enter Key →
+      </button>
+    </div>
 
-## Downloadable Resources
+  </div>
+</div>
 
- ---
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER LINKS
+     ═══════════════════════════════════════════════════════ -->
+<div class="ws-footer-links">
+  <a href="downloads.qmd">📥 Downloads &amp; Cheatsheets</a>
+  <a href="contact.qmd">✉️ Contact Us</a>
+  <a href="references.qmd">📚 References</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     KEY ENTRY MODAL
+     ═══════════════════════════════════════════════════════ -->
+<div id="ws-modal-overlay" class="ws-modal-overlay" onclick="closeModal(event)">
+  <div class="ws-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="ws-modal-close" onclick="closeKeyModal()" aria-label="Close">✕</button>
+    <div class="ws-modal-icon">🔑</div>
+    <h3 id="modal-title" class="ws-modal-title">Enter Workshop Key</h3>
+    <p id="modal-track-name" class="ws-modal-track"></p>
+    <input
+      type="password"
+      id="ws-key-input"
+      class="ws-key-input"
+      placeholder="Workshop key..."
+      onkeydown="if(event.key==='Enter') submitKey()"
+      autocomplete="off"
+    />
+    <p id="ws-key-error" class="ws-key-error" aria-live="polite"></p>
+    <button class="ws-btn ws-btn--modal" onclick="submitKey()">Unlock →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     JAVASCRIPT — key gate logic
+     ═══════════════════════════════════════════════════════ -->
+<script>
+// Config is loaded from config.json at page load so the admin
+// can change keys or unlock tiers by editing that one file on GitHub.
+let workshopConfig = null;
+let activeProfile  = null;
+
+async function loadConfig() {
+  try {
+    const res = await fetch('config.json');
+    workshopConfig = await res.json();
+    applyLockStates();
+  } catch (e) {
+    // If config.json can't be fetched (e.g. local file:// preview),
+    // fall back to locked state for all non-basic profiles.
+    console.warn('config.json not available — defaulting to locked state.');
+  }
+}
+
+function applyLockStates() {
+  if (!workshopConfig) return;
+  const profiles = workshopConfig.profiles;
+
+  Object.entries(profiles).forEach(([id, cfg]) => {
+    const card = document.querySelector(`[data-profile="${id}"]`);
+    if (!card) return;
+
+    if (!cfg.locked) {
+      // Silently unlock — swap badge and button
+      card.classList.remove('ws-card--locked');
+      card.classList.add('ws-card--open');
+      const badge = card.querySelector('.ws-card-badge');
+      if (badge) { badge.textContent = '🟢 Open Access'; badge.className = 'ws-card-badge ws-badge--open'; }
+      const btn = card.querySelector('.ws-btn');
+      if (btn) {
+        btn.className = 'ws-btn ws-btn--open';
+        btn.textContent = 'Enter Track →';
+        btn.setAttribute('onclick', `enterTrack('${id}')`);
+      }
+    }
+  });
+}
+
+function enterTrack(profileId) {
+  const cfg = workshopConfig && workshopConfig.profiles[profileId];
+  const path = cfg ? cfg.path : `docs/${profileId}/index.html`;
+  window.location.href = path;
+}
+
+function openKeyModal(profileId) {
+  activeProfile = profileId;
+  const cfg = workshopConfig && workshopConfig.profiles[profileId];
+
+  // If admin silently unlocked, just redirect
+  if (cfg && !cfg.locked) { enterTrack(profileId); return; }
+
+  document.getElementById('modal-track-name').textContent =
+    cfg ? cfg.label : profileId;
+  document.getElementById('ws-key-input').value = '';
+  document.getElementById('ws-key-error').textContent = '';
+  document.getElementById('ws-modal-overlay').style.display = 'flex';
+  setTimeout(() => document.getElementById('ws-key-input').focus(), 50);
+}
+
+function closeKeyModal() {
+  document.getElementById('ws-modal-overlay').style.display = 'none';
+  activeProfile = null;
+}
+
+function closeModal(event) {
+  if (event.target.id === 'ws-modal-overlay') closeKeyModal();
+}
+
+function submitKey() {
+  if (!activeProfile || !workshopConfig) return;
+  const cfg    = workshopConfig.profiles[activeProfile];
+  const entered = document.getElementById('ws-key-input').value.trim();
+  const errEl   = document.getElementById('ws-key-error');
+
+  if (entered === cfg.key) {
+    closeKeyModal();
+    enterTrack(activeProfile);
+  } else {
+    errEl.textContent = 'Incorrect key — please try again.';
+    const input = document.getElementById('ws-key-input');
+    input.classList.add('ws-shake');
+    setTimeout(() => { input.classList.remove('ws-shake'); input.select(); }, 600);
+  }
+}
+
+// Escape key closes modal
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeKeyModal();
+});
+
+loadConfig();
+</script>
+```

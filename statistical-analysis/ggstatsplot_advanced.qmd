@@ -1,0 +1,277 @@
+---
+title: "ggstatsplot — Advanced"
+format:
+  html:
+    code-copy: true
+    toc: true
+    lightbox: auto
+---
+
+::: {.callout-note}
+This module builds on [ggstatsplot — Introduction](ggstatsplot_intro.qmd) and
+[ggstatsplot — Intermediate](ggstatsplot_moderate.qmd).
+:::
+
+## Topics covered
+
+- Full Bayesian reporting workflow
+- `grouped_*` functions — faceted comparisons
+- `ggcorrmat()` — correlation matrices
+- Combining with `patchwork`
+- Publication-ready output
+- Healthcare case study
+
+---
+
+## Bayesian Reporting Workflow
+
+The Bayesian approach in ggstatsplot uses the `BayesFactor` package internally. The goal is to quantify *how much* evidence exists for or against an effect, rather than simply crossing a significance threshold.
+
+### Setting priors
+
+```{r}
+#| eval: false
+library(ggstatsplot)
+
+# Default Cauchy prior (r = 0.707) — appropriate for most comparisons
+ggbetweenstats(
+  data         = overall_up,
+  x            = intervention,
+  y            = sbp_0m,
+  type         = "bayes",
+  bf.prior     = 0.707,        # scale of Cauchy prior on effect size
+  title        = "SBP by Intervention (Bayesian, default prior)"
+)
+
+# Narrow prior — use if you expect a small effect
+ggbetweenstats(
+  data         = overall_up,
+  x            = intervention,
+  y            = sbp_0m,
+  type         = "bayes",
+  bf.prior     = 0.5,
+  title        = "SBP by Intervention (narrow prior)"
+)
+```
+
+### Reporting Bayes factors in text
+
+When BF₁₀ = 18.4:
+
+> "A Bayesian independent-samples t-test revealed moderate-to-strong evidence
+> for a difference in baseline SBP between intervention groups,
+> BF₁₀ = 18.4, δ = 0.41, 95% credible interval [0.18, 0.65]."
+
+When BF₁₀ = 0.21:
+
+> "A Bayesian independent-samples t-test provided moderate evidence in favour
+> of the null hypothesis (no difference in SBP), BF₁₀ = 0.21."
+
+::: {.callout-tip}
+## Key distinction: BF₁₀ vs BF₀₁
+- **BF₁₀**: evidence for H₁ over H₀ (use when testing for an effect)
+- **BF₀₁ = 1/BF₁₀**: evidence for H₀ over H₁ (use when supporting the null)
+
+ggstatsplot reports BF₁₀ by default. To interpret support for H₀, invert it.
+:::
+
+---
+
+## `grouped_*` Functions — Faceted Comparisons
+
+The `grouped_*` variants run the same comparison separately within each level of a grouping variable and combine the results into a faceted plot.
+
+```{r}
+#| eval: false
+# Compare SBP across tobacco types, separately by sex
+grouped_ggbetweenstats(
+  data             = overall_up,
+  x                = tobacco_type,
+  y                = sbp_0m,
+  grouping.var     = sex,           # one panel per sex
+  title            = "SBP by Tobacco Type, stratified by Sex",
+  plotgrid.args    = list(ncol = 2)
+)
+```
+
+```{r}
+#| eval: false
+# Correlation stratified by intervention group
+grouped_ggscatterstats(
+  data         = overall_up,
+  x            = current_age,
+  y            = sbp_0m,
+  grouping.var = intervention,
+  title        = "Age vs SBP by Intervention Group"
+)
+```
+
+**Available grouped functions:**
+
+- `grouped_ggbetweenstats()`
+- `grouped_ggwithinstats()`
+- `grouped_ggscatterstats()`
+- `grouped_gghistostats()`
+- `grouped_ggbarstats()`
+- `grouped_ggpiestats()`
+- `grouped_ggcorrmat()`
+- `grouped_ggdotplotstats()`
+
+---
+
+## `ggcorrmat()` — Correlation Matrix
+
+Visualises pairwise correlations across multiple continuous variables with significance annotations.
+
+```{r}
+#| eval: false
+ggcorrmat(
+  data   = overall_up |> select(current_age, sbp_0m, sbp_3m, sbp_6m,
+                                 consumption_per_day_0m),
+  title  = "Correlation Matrix — Baseline Variables",
+  type   = "parametric"     # "parametric", "nonparametric", "robust", "bayes"
+)
+```
+
+**Choosing the correlation type:**
+
+| `type` | Method | When to use |
+|---|---|---|
+| `"parametric"` | Pearson's r | Continuous, approximately normal |
+| `"nonparametric"` | Spearman's ρ | Ordinal or skewed distributions |
+| `"robust"` | Percentage bend r | Presence of outliers |
+| `"bayes"` | Bayesian r | Quantify evidence, not just significance |
+
+---
+
+## Combining with patchwork
+
+All ggstatsplot outputs are ggplot2 objects and compose naturally with `patchwork`.
+
+```{r}
+#| eval: false
+library(patchwork)
+
+p1 <- ggbetweenstats(
+  data  = overall_up,
+  x     = intervention,
+  y     = sbp_0m,
+  title = "Baseline SBP"
+)
+
+p2 <- ggbetweenstats(
+  data  = overall_up,
+  x     = intervention,
+  y     = sbp_3m,
+  title = "3-Month SBP"
+)
+
+p3 <- ggscatterstats(
+  data  = overall_up,
+  x     = sbp_0m,
+  y     = sbp_3m,
+  title = "Baseline vs 3-Month SBP"
+)
+
+# Compose: two plots on top, one full-width below
+(p1 | p2) / p3 +
+  plot_annotation(
+    title   = "Blood Pressure Outcomes by Intervention",
+    caption = "Source: NCTOH Study Dataset"
+  )
+```
+
+---
+
+## Publication-ready output
+
+```{r}
+#| eval: false
+library(ggplot2)
+
+pub_plot <- ggbetweenstats(
+  data             = overall_up,
+  x                = intervention,
+  y                = sbp_0m,
+  type             = "parametric",
+  pairwise.display = "significant",    # show only significant comparisons
+  p.adjust.method  = "bonferroni",
+  title            = "Baseline Systolic Blood Pressure by Intervention Group",
+  xlab             = "Intervention Group",
+  ylab             = "Systolic BP (mmHg)",
+  package          = "RColorBrewer",
+  palette          = "Set1"
+) +
+  theme_classic(base_size = 12) +
+  theme(
+    plot.title       = element_text(face = "bold", hjust = 0.5),
+    axis.line        = element_line(linewidth = 0.5),
+    plot.caption     = element_text(hjust = 0, colour = "grey50")
+  ) +
+  labs(caption = "Bonferroni-adjusted pairwise comparisons shown for p < 0.05")
+
+# Save at print quality
+ggsave("figures/sbp_by_intervention.png",
+       pub_plot, width = 8, height = 6, dpi = 300)
+```
+
+---
+
+## Case Study: Healthcare Data
+
+A complete example using the NCTOH study dataset — comparing the change in SBP across intervention groups, accounting for tobacco type.
+
+```{r}
+#| eval: false
+library(ggstatsplot)
+library(dplyr)
+library(patchwork)
+
+# Derive SBP change variable
+study_data <- overall_up |>
+  mutate(sbp_change = sbp_3m - sbp_0m)
+
+# 1. Overall change by intervention
+p_overall <- ggbetweenstats(
+  data  = study_data,
+  x     = intervention,
+  y     = sbp_change,
+  type  = "parametric",
+  title = "Change in SBP at 3 Months"
+)
+
+# 2. Stratified by tobacco type
+p_strat <- grouped_ggbetweenstats(
+  data         = study_data,
+  x            = intervention,
+  y            = sbp_change,
+  grouping.var = tobacco_type,
+  title        = "SBP Change Stratified by Tobacco Type",
+  plotgrid.args = list(ncol = 3)
+)
+
+# View each
+p_overall
+p_strat
+```
+
+---
+
+## Quick reference
+
+```{r}
+#| eval: false
+# Bayesian comparison
+ggbetweenstats(data = df, x = group, y = outcome, type = "bayes",
+               bf.prior = 0.707)
+
+# Faceted comparisons
+grouped_ggbetweenstats(data = df, x = group, y = outcome,
+                       grouping.var = stratifier)
+
+# Correlation matrix
+ggcorrmat(data = df |> select(var1, var2, var3, var4))
+
+# Compose with patchwork
+(p1 | p2) / p3 + plot_annotation(title = "Figure 1")
+```

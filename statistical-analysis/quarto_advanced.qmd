@@ -1,0 +1,366 @@
+---
+title: "Quarto — Publication"
+format:
+  html:
+    code-copy: true
+    toc: true
+    lightbox: auto
+---
+
+::: {.callout-note}
+This module builds on [Quarto Basics](reproducible_writing.qmd) and
+[Quarto — Dynamic Documents](quarto_moderate.qmd).
+:::
+
+## Topics covered
+
+- Journal-quality document structure and YAML
+- Custom themes with CSS
+- Multi-file Quarto projects (books and websites)
+- GitHub + Quarto publishing workflow
+- Embedding Shiny widgets in Quarto
+
+---
+
+## Journal-Quality Documents
+
+A well-structured YAML for a manuscript-style document:
+
+```yaml
+---
+title: "Effect of Clean Fuel Intervention on Blood Pressure: A Community Trial"
+author:
+  - name: "Dr. Mukul Maheshwari"
+    affiliation: "Department of Community Medicine"
+    email: "author@institution.ac.in"
+  - name: "Dr. Rudresh Negi"
+    affiliation: "Department of Community Medicine"
+date: today
+abstract: |
+  **Background:** Indoor air pollution remains a major public health concern...
+  **Methods:** A cluster-randomised trial was conducted...
+  **Results:** ...
+  **Conclusion:** ...
+keywords: [indoor air pollution, blood pressure, community trial, R]
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: flatly
+  pdf:
+    toc: true
+    number-sections: true
+    cite-method: biblatex
+    pdf-engine: xelatex
+    mainfont: "Times New Roman"
+    fontsize: 12pt
+    geometry: "margin=2.5cm"
+bibliography: references.bib
+csl: vancouver.csl          # citation style (download from Zotero CSL repo)
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+```
+
+---
+
+## Custom Themes with CSS
+
+### Linking a custom stylesheet
+
+```yaml
+format:
+  html:
+    theme: flatly
+    css: custom.css
+```
+
+### Useful CSS overrides for publication style
+
+```css
+/* custom.css */
+
+/* Typography */
+body {
+  font-family: "Georgia", serif;
+  font-size: 16px;
+  line-height: 1.8;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+/* Figure captions */
+.figure-caption, figcaption {
+  font-size: 0.85em;
+  color: #555;
+  font-style: italic;
+  text-align: center;
+  margin-top: 0.4em;
+}
+
+/* Table caption */
+caption {
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: 0.5em;
+}
+
+/* Callout notes styled as journal "boxes" */
+.callout-note {
+  border-left: 4px solid #2c7bb6;
+  background: #f0f7ff;
+}
+
+/* Reduce heading sizes for manuscript feel */
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.3rem; border-bottom: 1px solid #ddd; padding-bottom: 0.2em; }
+h3 { font-size: 1.1rem; }
+```
+
+---
+
+## Callout Blocks
+
+Callouts draw attention to key information without disrupting text flow.
+
+```markdown
+::: {.callout-note}
+This is a note — useful for clarifications and asides.
+:::
+
+::: {.callout-tip}
+## Tip title
+A tip with a custom heading.
+:::
+
+::: {.callout-warning}
+This is a warning — use for cautions about interpretation.
+:::
+
+::: {.callout-important}
+Critical information the reader must not miss.
+:::
+```
+
+---
+
+## Multi-File Quarto Projects
+
+### Books
+
+A Quarto book renders multiple `.qmd` files into a single structured document
+(HTML, PDF, or ePub).
+
+```
+my-book/
+├── _quarto.yml
+├── index.qmd        (preface / front matter)
+├── 01-intro.qmd
+├── 02-methods.qmd
+├── 03-results.qmd
+├── 04-discussion.qmd
+└── references.qmd
+```
+
+`_quarto.yml` for a book:
+
+```yaml
+project:
+  type: book
+
+book:
+  title: "Community Trial Methods in R"
+  author: "Dr. Mukul Maheshwari"
+  date: today
+  chapters:
+    - index.qmd
+    - 01-intro.qmd
+    - 02-methods.qmd
+    - 03-results.qmd
+    - 04-discussion.qmd
+    - references.qmd
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: scrbook
+```
+
+### Websites
+
+For a multi-page website (like this workshop), see the project's `_quarto.yml`
+for a working example of navbar configuration, profiles, and output directories.
+
+---
+
+## GitHub + Quarto Publishing Workflow
+
+### Option A — Push rendered HTML to GitHub Pages
+
+1. Render your project locally: `quarto render`
+2. Output goes to `docs/` (set `output-dir: docs` in `_quarto.yml`)
+3. Commit and push the `docs/` folder to GitHub
+4. In your repository: **Settings → Pages → Source → Branch: main, Folder: /docs**
+
+```bash
+# Full publish cycle
+quarto render
+git add docs/
+git commit -m "Rebuild site"
+git push
+```
+
+### Option B — GitHub Actions (automated rebuild)
+
+Create `.github/workflows/publish.yml`:
+
+```yaml
+name: Publish Quarto Site
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::quarto
+            any::tidyverse
+            any::ggstatsplot
+            any::gtsummary
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Render and publish
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
+```
+
+With this workflow, every push to `main` automatically rebuilds and deploys the site.
+
+### Option C — Quarto Pub (zero configuration)
+
+```bash
+quarto publish quarto-pub
+```
+
+Creates a free public site at `username.quarto.pub/project-name`. Suitable for
+sharing documents without managing a GitHub repository.
+
+---
+
+## Embedding Shiny in Quarto
+
+For lightweight interactivity within a static Quarto document.
+
+### Using `shinylive` (no server required)
+
+`shinylive` compiles Shiny to WebAssembly — no Shiny server needed.
+
+```yaml
+---
+title: "Interactive Report"
+format: html
+filters:
+  - shinylive
+---
+```
+
+````markdown
+```{{shinylive-r}}
+#| standalone: true
+library(shiny)
+library(ggplot2)
+
+ui <- fluidPage(
+  sliderInput("bins", "Bins:", 5, 50, 20),
+  plotOutput("hist")
+)
+
+server <- function(input, output) {
+  output$hist <- renderPlot({
+    ggplot(data.frame(x = rnorm(500)), aes(x)) +
+      geom_histogram(bins = input$bins)
+  })
+}
+
+shinyApp(ui, server)
+```
+````
+
+Install `shinylive`:
+
+```r
+install.packages("shinylive")
+quarto::quarto_add_extension("quarto-ext/shinylive")
+```
+
+### Embedding a deployed Shiny app with `<iframe>`
+
+If you have an app on shinyapps.io:
+
+```markdown
+<iframe src="https://yourname.shinyapps.io/yourapp/"
+        width="100%" height="600px"
+        style="border: none;">
+</iframe>
+```
+
+---
+
+## Citations and Bibliography
+
+### Adding references
+
+Create `references.bib` in the project root. Example entry:
+
+```bibtex
+@article{patil2021,
+  author  = {Patil, Indrajeet},
+  title   = {Visualizations with statistical details},
+  journal = {Journal of Open Source Software},
+  year    = {2021},
+  volume  = {6},
+  number  = {61},
+  pages   = {3167},
+  doi     = {10.21105/joss.03167}
+}
+```
+
+### Citing in text
+
+| Syntax | Output |
+|---|---|
+| `@patil2021` | Patil (2021) |
+| `[@patil2021]` | (Patil, 2021) |
+| `[@patil2021, p. 5]` | (Patil, 2021, p. 5) |
+| `[-@patil2021]` | (2021) — suppress author name |
+
+Quarto automatically generates the reference list at the end of the document.
+
+---
+
+## Checklist: Publication-Ready Document
+
+- [ ] YAML includes `author`, `date`, `abstract`, `keywords`
+- [ ] `number-sections: true` enabled
+- [ ] All figures have `label: fig-*` and `fig-cap`
+- [ ] All tables have `label: tbl-*` and `tbl-cap`
+- [ ] Cross-references used (no manual "Figure 1" text)
+- [ ] `execute: echo: false` set globally
+- [ ] Citation style file (`.csl`) matches target journal
+- [ ] PDF renders cleanly with `tinytex`
+- [ ] Spelling checked (RStudio: Edit → Check Spelling)

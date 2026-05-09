@@ -10,4 +10,192 @@ editor:
 
 This chapter introduces various tools and libraries available in R for creating visualizations. It covers base R plotting functions, as well as popular packages like ggplot2 and lattice, which offer advanced capabilities for creating complex and customizable plots.
 
+## Base R Plotting
+
+R's built-in plotting functions provide a solid foundation for data visualization:
+
+### Basic Plot Types
+
+```r
+# Scatter plot
+plot(x = mtcars$wt, y = mtcars$mpg,
+     xlab = "Weight", ylab = "Miles per Gallon",
+     main = "Scatter Plot Example")
+
+# Line plot
+plot(x = 1:10, y = (1:10)^2, type = "l",
+     xlab = "X", ylab = "Y^2")
+
+# Bar plot
+barplot(height = c(10, 15, 8, 12),
+        names.arg = c("A", "B", "C", "D"))
+
+# Histogram
+hist(mtcars$mpg, breaks = 10,
+     xlab = "Miles per Gallon",
+     main = "Histogram of MPG")
+```
+
+### Advanced Base R Features
+
+```r
+# Multiple plots in one window
+par(mfrow = c(2, 2))  # 2x2 grid
+
+plot(mtcars$wt, mtcars$mpg)
+hist(mtcars$mpg)
+boxplot(mtcars$mpg ~ mtcars$cyl)
+plot(density(mtcars$mpg))
+
+par(mfrow = c(1, 1))  # Reset to single plot
+```
+
+## ggplot2: Grammar of Graphics
+
+ggplot2 is the most popular R package for data visualization, based on the Grammar of Graphics:
+
+### Basic ggplot2 Structure
+
+```r
+library(ggplot2)
+
+# Basic scatter plot
+ggplot(data = mtcars, aes(x = wt, y = mpg)) +
+  geom_point()
+
+# Adding aesthetics
+ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +
+  geom_point(size = 3) +
+  labs(title = "MPG vs Weight by Cylinders",
+       x = "Weight (1000 lbs)",
+       y = "Miles per Gallon")
+```
+
+### Common Geoms
+
+```r
+# Points, lines, bars
+p <- ggplot(mtcars, aes(x = wt, y = mpg))
+
+p + geom_point()           # Scatter plot
+p + geom_smooth()          # Smooth line
+p + geom_line()            # Line plot
+p + geom_bar(stat = "identity")  # Bar plot
+p + geom_histogram()       # Histogram
+p + geom_boxplot()         # Box plot
+```
+
+### Faceting and Themes
+
+```r
+# Faceting
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  facet_wrap(~ cyl) +
+  theme_minimal()
+
+# Custom themes
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  theme_bw() +
+  ggtitle("Custom Theme Example")
+```
+
+## Lattice Graphics
+
+Lattice provides trellis graphics for multivariate data:
+
+```r
+library(lattice)
+
+# Scatter plot matrix
+splom(mtcars[, c("mpg", "wt", "hp")])
+
+# Conditional plots
+xyplot(mpg ~ wt | factor(cyl), data = mtcars,
+       layout = c(3, 1))
+
+# 3D plots
+cloud(mpg ~ wt * hp, data = mtcars)
+```
+
+## Interactive Plotting Tools
+
+### plotly
+
+```r
+library(plotly)
+
+# Convert ggplot to interactive
+p <- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
+ggplotly(p)
+
+# Native plotly
+plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+```
+
+### ggvis
+
+```r
+library(ggvis)
+
+# Interactive ggplot2-like syntax
+mtcars %>%
+  ggvis(x = ~wt, y = ~mpg) %>%
+  layer_points() %>%
+  add_tooltip(function(df) paste("Weight:", df$wt, "MPG:", df$mpg))
+```
+
+## Specialized Plotting Packages
+
+### For Statistical Plots
+
+```r
+library(ggstatsplot)
+
+# Statistical plots with tests
+ggbetweenstats(data = mtcars, x = cyl, y = mpg)
+```
+
+### For Maps
+
+```r
+library(ggplot2)
+library(maps)
+
+# Basic map
+world <- map_data("world")
+ggplot(world, aes(x = long, y = lat, group = group)) +
+  geom_polygon(fill = "lightblue", color = "black")
+```
+
+### For Networks
+
+```r
+library(igraph)
+library(ggraph)
+
+# Create network
+g <- make_ring(10)
+ggraph(g, layout = "circle") +
+  geom_edge_link() +
+  geom_node_point(size = 5)
+```
+
+## Choosing the Right Tool
+
+- **Base R**: Quick plots, statistical graphics
+- **ggplot2**: Publication-quality static plots, complex customizations
+- **Lattice**: Multivariate data, trellis displays
+- **plotly/ggvis**: Interactive web-based visualizations
+- **Specialized packages**: Domain-specific visualizations (maps, networks, etc.)
+
+## Best Practices
+
+1. **Know your data**: Choose plot types that best represent your data
+2. **Keep it simple**: Avoid clutter, focus on the message
+3. **Use color effectively**: Consider colorblind-friendly palettes
+4. **Label clearly**: Include informative titles, axis labels, legends
+5. **Test different tools**: Experiment with different packages for the best result
+
 

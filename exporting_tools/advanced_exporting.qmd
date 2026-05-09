@@ -1,0 +1,273 @@
+---
+title: "Advanced Exporting Techniques"
+author: "SpaRroW"
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+# Advanced Exporting Techniques
+
+This chapter covers advanced techniques for exporting plots, including programmatic generation, batch processing, custom devices, and integration with other tools.
+
+## Programmatic Plot Generation
+
+### Looping Over Data Subsets
+
+```r
+library(ggplot2)
+library(purrr)
+
+# Create plots for each cylinder group
+plots <- mtcars %>%
+  split(.$cyl) %>%
+  map(~ ggplot(.x, aes(x = wt, y = mpg)) + 
+        geom_point() + 
+        ggtitle(paste("Cylinders:", .x$cyl[1])))
+
+# Save each plot
+walk2(plots, names(plots), 
+      ~ ggsave(filename = paste0("plot_cyl_", .x, ".png"), 
+               plot = .y, 
+               width = 6, height = 4))
+```
+
+### Dynamic File Naming
+
+```r
+# Generate timestamped filenames
+timestamp <- format(Sys.time(), "%Y%m%d_%H%M%S")
+
+ggsave(paste0("analysis_plot_", timestamp, ".pdf"), 
+       plot = p, 
+       width = 8, height = 6)
+```
+
+## Batch Processing
+
+### Exporting Multiple Formats
+
+```r
+save_plot_multiple_formats <- function(plot, filename_base, 
+                                     formats = c("png", "pdf", "svg")) {
+  for (fmt in formats) {
+    filename <- paste0(filename_base, ".", fmt)
+    ggsave(filename, plot, width = 8, height = 6)
+  }
+}
+
+# Usage
+p <- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
+save_plot_multiple_formats(p, "mtcars_scatter")
+```
+
+### Processing Multiple Datasets
+
+```r
+datasets <- list(
+  mtcars = mtcars,
+  iris = iris,
+  airquality = airquality
+)
+
+for (name in names(datasets)) {
+  data <- datasets[[name]]
+  # Create appropriate plot based on data
+  if (name == "mtcars") {
+    p <- ggplot(data, aes(x = wt, y = mpg)) + geom_point()
+  } else if (name == "iris") {
+    p <- ggplot(data, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) + 
+      geom_point()
+  }
+  
+  ggsave(paste0(name, "_plot.png"), p, width = 6, height = 4)
+}
+```
+
+## Custom Graphics Devices
+
+### Using Cairo for High Quality
+
+```r
+library(Cairo)
+
+# High-quality PNG
+CairoPNG("high_quality.png", width = 800, height = 600, 
+         bg = "white", pointsize = 12)
+plot(mtcars$wt, mtcars$mpg)
+dev.off()
+
+# PDF with embedded fonts
+CairoPDF("embedded_fonts.pdf", width = 8, height = 6, 
+         family = "Arial")
+plot(mtcars$wt, mtcars$mpg)
+dev.off()
+```
+
+### Custom Device Functions
+
+```r
+# Create a custom device wrapper
+save_high_res <- function(filename, plot_func, ...) {
+  png(filename, width = 1200, height = 800, res = 150, ...)
+  plot_func()
+  dev.off()
+}
+
+# Usage
+my_plot <- function() {
+  plot(mtcars$wt, mtcars$mpg, 
+       xlab = "Weight", ylab = "MPG",
+       main = "High Resolution Plot")
+}
+
+save_high_res("high_res_plot.png", my_plot)
+```
+
+## Integration with Other Tools
+
+### Exporting for LaTeX/TikZ
+
+```r
+library(tikzDevice)
+
+# Export as TikZ for LaTeX
+tikz("plot.tex", width = 4, height = 3)
+ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
+dev.off()
+```
+
+### Web Formats
+
+```r
+# Export as HTML with plotly
+library(plotly)
+p <- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
+htmlwidgets::saveWidget(ggplotly(p), "interactive_plot.html")
+```
+
+## Advanced ggplot2 Exporting
+
+### Theme Customization for Export
+
+```r
+# Create publication-ready theme
+publication_theme <- theme_minimal() +
+  theme(
+    text = element_text(size = 12, family = "Times"),
+    axis.title = element_text(size = 14, face = "bold"),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    legend.position = "bottom"
+  )
+
+p <- ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +
+  geom_point() +
+  publication_theme +
+  labs(title = "Publication Quality Plot")
+
+ggsave("publication_plot.pdf", p, 
+       width = 6, height = 4, 
+       device = cairo_pdf)
+```
+
+### Multi-panel Figures
+
+```r
+library(cowplot)
+
+# Create individual plots
+p1 <- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
+p2 <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) + geom_boxplot()
+p3 <- ggplot(mtcars, aes(x = hp)) + geom_histogram()
+
+# Combine into single figure
+combined <- plot_grid(p1, p2, p3, 
+                      labels = c("A", "B", "C"),
+                      ncol = 2)
+
+# Save combined figure
+ggsave("combined_figure.pdf", combined, 
+       width = 10, height = 8)
+```
+
+## Performance Optimization
+
+### Efficient Exporting for Large Datasets
+
+```r
+# For large datasets, use sampling or aggregation
+large_data <- data.frame(x = rnorm(100000), y = rnorm(100000))
+
+# Option 1: Sample data
+sample_data <- large_data[sample(nrow(large_data), 10000), ]
+ggplot(sample_data, aes(x = x, y = y)) + geom_point(alpha = 0.1)
+ggsave("sampled_plot.png")
+
+# Option 2: Use density plots
+ggplot(large_data, aes(x = x, y = y)) + 
+  geom_density2d() +
+  geom_point(data = sample_data, alpha = 0.1)
+ggsave("density_plot.png")
+```
+
+### Memory Management
+
+```r
+# Clear graphics devices
+graphics.off()
+
+# Force garbage collection
+gc()
+
+# Monitor memory usage
+library(pryr)
+mem_used()
+```
+
+## Quality Control
+
+### Automated Quality Checks
+
+```r
+check_plot_quality <- function(filename) {
+  # Check file exists
+  if (!file.exists(filename)) {
+    stop("File was not created")
+  }
+  
+  # Check file size (basic quality indicator)
+  size <- file.info(filename)$size
+  if (size < 1000) {
+    warning("File seems too small, may indicate error")
+  }
+  
+  # For images, could check dimensions
+  if (grepl("\\.png$", filename)) {
+    img <- png::readPNG(filename)
+    message("Image dimensions: ", dim(img)[1], "x", dim(img)[2])
+  }
+}
+
+# Usage
+ggsave("test_plot.png", ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point())
+check_plot_quality("test_plot.png")
+```
+
+## Best Practices for Advanced Exporting
+
+1. **Automate repetitive tasks**: Use functions and loops for batch processing
+2. **Standardize formats**: Establish consistent dimensions and resolutions
+3. **Quality control**: Implement checks for successful exports
+4. **Performance awareness**: Optimize for large datasets
+5. **Version control**: Track plot versions with timestamps or git
+6. **Documentation**: Comment code for reproducible exports
+7. **Cross-platform compatibility**: Test exports on target systems
+
+## Resources
+
+- ggplot2 documentation: `?ggsave`
+- Cairo package: High-quality graphics
+- tikzDevice: LaTeX integration
+- cowplot: Multi-panel figures
+- R Graphics Cookbook: Advanced techniques</content>
+<parameter name="filePath">d:\R studio\workshop\workshop_extensive\data_visualization\exporting_tools\advanced_exporting.qmd

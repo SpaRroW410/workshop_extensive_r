@@ -1,0 +1,72 @@
+[
+  {
+    "objectID": "exporting_tools/advanced_exporting.html",
+    "href": "exporting_tools/advanced_exporting.html",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "This chapter covers advanced techniques for exporting plots, including programmatic generation, batch processing, custom devices, and integration with other tools.\n\n\n\n\nlibrary(ggplot2)\nlibrary(purrr)\n\n# Create plots for each cylinder group\nplots &lt;- mtcars %&gt;%\n  split(.$cyl) %&gt;%\n  map(~ ggplot(.x, aes(x = wt, y = mpg)) + \n        geom_point() + \n        ggtitle(paste(\"Cylinders:\", .x$cyl[1])))\n\n# Save each plot\nwalk2(plots, names(plots), \n      ~ ggsave(filename = paste0(\"plot_cyl_\", .x, \".png\"), \n               plot = .y, \n               width = 6, height = 4))\n\n\n\n# Generate timestamped filenames\ntimestamp &lt;- format(Sys.time(), \"%Y%m%d_%H%M%S\")\n\nggsave(paste0(\"analysis_plot_\", timestamp, \".pdf\"), \n       plot = p, \n       width = 8, height = 6)\n\n\n\n\n\n\nsave_plot_multiple_formats &lt;- function(plot, filename_base, \n                                     formats = c(\"png\", \"pdf\", \"svg\")) {\n  for (fmt in formats) {\n    filename &lt;- paste0(filename_base, \".\", fmt)\n    ggsave(filename, plot, width = 8, height = 6)\n  }\n}\n\n# Usage\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nsave_plot_multiple_formats(p, \"mtcars_scatter\")\n\n\n\ndatasets &lt;- list(\n  mtcars = mtcars,\n  iris = iris,\n  airquality = airquality\n)\n\nfor (name in names(datasets)) {\n  data &lt;- datasets[[name]]\n  # Create appropriate plot based on data\n  if (name == \"mtcars\") {\n    p &lt;- ggplot(data, aes(x = wt, y = mpg)) + geom_point()\n  } else if (name == \"iris\") {\n    p &lt;- ggplot(data, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) + \n      geom_point()\n  }\n  \n  ggsave(paste0(name, \"_plot.png\"), p, width = 6, height = 4)\n}\n\n\n\n\n\n\nlibrary(Cairo)\n\n# High-quality PNG\nCairoPNG(\"high_quality.png\", width = 800, height = 600, \n         bg = \"white\", pointsize = 12)\nplot(mtcars$wt, mtcars$mpg)\ndev.off()\n\n# PDF with embedded fonts\nCairoPDF(\"embedded_fonts.pdf\", width = 8, height = 6, \n         family = \"Arial\")\nplot(mtcars$wt, mtcars$mpg)\ndev.off()\n\n\n\n# Create a custom device wrapper\nsave_high_res &lt;- function(filename, plot_func, ...) {\n  png(filename, width = 1200, height = 800, res = 150, ...)\n  plot_func()\n  dev.off()\n}\n\n# Usage\nmy_plot &lt;- function() {\n  plot(mtcars$wt, mtcars$mpg, \n       xlab = \"Weight\", ylab = \"MPG\",\n       main = \"High Resolution Plot\")\n}\n\nsave_high_res(\"high_res_plot.png\", my_plot)\n\n\n\n\n\n\nlibrary(tikzDevice)\n\n# Export as TikZ for LaTeX\ntikz(\"plot.tex\", width = 4, height = 3)\nggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\ndev.off()\n\n\n\n# Export as HTML with plotly\nlibrary(plotly)\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nhtmlwidgets::saveWidget(ggplotly(p), \"interactive_plot.html\")\n\n\n\n\n\n\n# Create publication-ready theme\npublication_theme &lt;- theme_minimal() +\n  theme(\n    text = element_text(size = 12, family = \"Times\"),\n    axis.title = element_text(size = 14, face = \"bold\"),\n    plot.title = element_text(size = 16, hjust = 0.5),\n    legend.position = \"bottom\"\n  )\n\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +\n  geom_point() +\n  publication_theme +\n  labs(title = \"Publication Quality Plot\")\n\nggsave(\"publication_plot.pdf\", p, \n       width = 6, height = 4, \n       device = cairo_pdf)\n\n\n\nlibrary(cowplot)\n\n# Create individual plots\np1 &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\np2 &lt;- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) + geom_boxplot()\np3 &lt;- ggplot(mtcars, aes(x = hp)) + geom_histogram()\n\n# Combine into single figure\ncombined &lt;- plot_grid(p1, p2, p3, \n                      labels = c(\"A\", \"B\", \"C\"),\n                      ncol = 2)\n\n# Save combined figure\nggsave(\"combined_figure.pdf\", combined, \n       width = 10, height = 8)\n\n\n\n\n\n\n# For large datasets, use sampling or aggregation\nlarge_data &lt;- data.frame(x = rnorm(100000), y = rnorm(100000))\n\n# Option 1: Sample data\nsample_data &lt;- large_data[sample(nrow(large_data), 10000), ]\nggplot(sample_data, aes(x = x, y = y)) + geom_point(alpha = 0.1)\nggsave(\"sampled_plot.png\")\n\n# Option 2: Use density plots\nggplot(large_data, aes(x = x, y = y)) + \n  geom_density2d() +\n  geom_point(data = sample_data, alpha = 0.1)\nggsave(\"density_plot.png\")\n\n\n\n# Clear graphics devices\ngraphics.off()\n\n# Force garbage collection\ngc()\n\n# Monitor memory usage\nlibrary(pryr)\nmem_used()\n\n\n\n\n\n\ncheck_plot_quality &lt;- function(filename) {\n  # Check file exists\n  if (!file.exists(filename)) {\n    stop(\"File was not created\")\n  }\n  \n  # Check file size (basic quality indicator)\n  size &lt;- file.info(filename)$size\n  if (size &lt; 1000) {\n    warning(\"File seems too small, may indicate error\")\n  }\n  \n  # For images, could check dimensions\n  if (grepl(\"\\\\.png$\", filename)) {\n    img &lt;- png::readPNG(filename)\n    message(\"Image dimensions: \", dim(img)[1], \"x\", dim(img)[2])\n  }\n}\n\n# Usage\nggsave(\"test_plot.png\", ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point())\ncheck_plot_quality(\"test_plot.png\")\n\n\n\n\n\nAutomate repetitive tasks: Use functions and loops for batch processing\nStandardize formats: Establish consistent dimensions and resolutions\nQuality control: Implement checks for successful exports\nPerformance awareness: Optimize for large datasets\nVersion control: Track plot versions with timestamps or git\nDocumentation: Comment code for reproducible exports\nCross-platform compatibility: Test exports on target systems\n\n\n\n\n\nggplot2 documentation: ?ggsave\nCairo package: High-quality graphics\ntikzDevice: LaTeX integration\ncowplot: Multi-panel figures\nR Graphics Cookbook: Advanced techniques d:studio_extensive_visualization_tools_exporting.qmd"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#programmatic-plot-generation",
+    "href": "exporting_tools/advanced_exporting.html#programmatic-plot-generation",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "library(ggplot2)\nlibrary(purrr)\n\n# Create plots for each cylinder group\nplots &lt;- mtcars %&gt;%\n  split(.$cyl) %&gt;%\n  map(~ ggplot(.x, aes(x = wt, y = mpg)) + \n        geom_point() + \n        ggtitle(paste(\"Cylinders:\", .x$cyl[1])))\n\n# Save each plot\nwalk2(plots, names(plots), \n      ~ ggsave(filename = paste0(\"plot_cyl_\", .x, \".png\"), \n               plot = .y, \n               width = 6, height = 4))\n\n\n\n# Generate timestamped filenames\ntimestamp &lt;- format(Sys.time(), \"%Y%m%d_%H%M%S\")\n\nggsave(paste0(\"analysis_plot_\", timestamp, \".pdf\"), \n       plot = p, \n       width = 8, height = 6)"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#batch-processing",
+    "href": "exporting_tools/advanced_exporting.html#batch-processing",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "save_plot_multiple_formats &lt;- function(plot, filename_base, \n                                     formats = c(\"png\", \"pdf\", \"svg\")) {\n  for (fmt in formats) {\n    filename &lt;- paste0(filename_base, \".\", fmt)\n    ggsave(filename, plot, width = 8, height = 6)\n  }\n}\n\n# Usage\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nsave_plot_multiple_formats(p, \"mtcars_scatter\")\n\n\n\ndatasets &lt;- list(\n  mtcars = mtcars,\n  iris = iris,\n  airquality = airquality\n)\n\nfor (name in names(datasets)) {\n  data &lt;- datasets[[name]]\n  # Create appropriate plot based on data\n  if (name == \"mtcars\") {\n    p &lt;- ggplot(data, aes(x = wt, y = mpg)) + geom_point()\n  } else if (name == \"iris\") {\n    p &lt;- ggplot(data, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) + \n      geom_point()\n  }\n  \n  ggsave(paste0(name, \"_plot.png\"), p, width = 6, height = 4)\n}"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#custom-graphics-devices",
+    "href": "exporting_tools/advanced_exporting.html#custom-graphics-devices",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "library(Cairo)\n\n# High-quality PNG\nCairoPNG(\"high_quality.png\", width = 800, height = 600, \n         bg = \"white\", pointsize = 12)\nplot(mtcars$wt, mtcars$mpg)\ndev.off()\n\n# PDF with embedded fonts\nCairoPDF(\"embedded_fonts.pdf\", width = 8, height = 6, \n         family = \"Arial\")\nplot(mtcars$wt, mtcars$mpg)\ndev.off()\n\n\n\n# Create a custom device wrapper\nsave_high_res &lt;- function(filename, plot_func, ...) {\n  png(filename, width = 1200, height = 800, res = 150, ...)\n  plot_func()\n  dev.off()\n}\n\n# Usage\nmy_plot &lt;- function() {\n  plot(mtcars$wt, mtcars$mpg, \n       xlab = \"Weight\", ylab = \"MPG\",\n       main = \"High Resolution Plot\")\n}\n\nsave_high_res(\"high_res_plot.png\", my_plot)"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#integration-with-other-tools",
+    "href": "exporting_tools/advanced_exporting.html#integration-with-other-tools",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "library(tikzDevice)\n\n# Export as TikZ for LaTeX\ntikz(\"plot.tex\", width = 4, height = 3)\nggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\ndev.off()\n\n\n\n# Export as HTML with plotly\nlibrary(plotly)\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nhtmlwidgets::saveWidget(ggplotly(p), \"interactive_plot.html\")"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#advanced-ggplot2-exporting",
+    "href": "exporting_tools/advanced_exporting.html#advanced-ggplot2-exporting",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "# Create publication-ready theme\npublication_theme &lt;- theme_minimal() +\n  theme(\n    text = element_text(size = 12, family = \"Times\"),\n    axis.title = element_text(size = 14, face = \"bold\"),\n    plot.title = element_text(size = 16, hjust = 0.5),\n    legend.position = \"bottom\"\n  )\n\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +\n  geom_point() +\n  publication_theme +\n  labs(title = \"Publication Quality Plot\")\n\nggsave(\"publication_plot.pdf\", p, \n       width = 6, height = 4, \n       device = cairo_pdf)\n\n\n\nlibrary(cowplot)\n\n# Create individual plots\np1 &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\np2 &lt;- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) + geom_boxplot()\np3 &lt;- ggplot(mtcars, aes(x = hp)) + geom_histogram()\n\n# Combine into single figure\ncombined &lt;- plot_grid(p1, p2, p3, \n                      labels = c(\"A\", \"B\", \"C\"),\n                      ncol = 2)\n\n# Save combined figure\nggsave(\"combined_figure.pdf\", combined, \n       width = 10, height = 8)"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#performance-optimization",
+    "href": "exporting_tools/advanced_exporting.html#performance-optimization",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "# For large datasets, use sampling or aggregation\nlarge_data &lt;- data.frame(x = rnorm(100000), y = rnorm(100000))\n\n# Option 1: Sample data\nsample_data &lt;- large_data[sample(nrow(large_data), 10000), ]\nggplot(sample_data, aes(x = x, y = y)) + geom_point(alpha = 0.1)\nggsave(\"sampled_plot.png\")\n\n# Option 2: Use density plots\nggplot(large_data, aes(x = x, y = y)) + \n  geom_density2d() +\n  geom_point(data = sample_data, alpha = 0.1)\nggsave(\"density_plot.png\")\n\n\n\n# Clear graphics devices\ngraphics.off()\n\n# Force garbage collection\ngc()\n\n# Monitor memory usage\nlibrary(pryr)\nmem_used()"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#quality-control",
+    "href": "exporting_tools/advanced_exporting.html#quality-control",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "check_plot_quality &lt;- function(filename) {\n  # Check file exists\n  if (!file.exists(filename)) {\n    stop(\"File was not created\")\n  }\n  \n  # Check file size (basic quality indicator)\n  size &lt;- file.info(filename)$size\n  if (size &lt; 1000) {\n    warning(\"File seems too small, may indicate error\")\n  }\n  \n  # For images, could check dimensions\n  if (grepl(\"\\\\.png$\", filename)) {\n    img &lt;- png::readPNG(filename)\n    message(\"Image dimensions: \", dim(img)[1], \"x\", dim(img)[2])\n  }\n}\n\n# Usage\nggsave(\"test_plot.png\", ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point())\ncheck_plot_quality(\"test_plot.png\")"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#best-practices-for-advanced-exporting",
+    "href": "exporting_tools/advanced_exporting.html#best-practices-for-advanced-exporting",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "Automate repetitive tasks: Use functions and loops for batch processing\nStandardize formats: Establish consistent dimensions and resolutions\nQuality control: Implement checks for successful exports\nPerformance awareness: Optimize for large datasets\nVersion control: Track plot versions with timestamps or git\nDocumentation: Comment code for reproducible exports\nCross-platform compatibility: Test exports on target systems"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#resources",
+    "href": "exporting_tools/advanced_exporting.html#resources",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "ggplot2 documentation: ?ggsave\nCairo package: High-quality graphics\ntikzDevice: LaTeX integration\ncowplot: Multi-panel figures\nR Graphics Cookbook: Advanced techniques d:studio_extensive_visualization_tools_exporting.qmd"
+  }
+]

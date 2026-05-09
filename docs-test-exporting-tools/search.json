@@ -1,0 +1,226 @@
+[
+  {
+    "objectID": "exporting_tools/plotting_tools.html",
+    "href": "exporting_tools/plotting_tools.html",
+    "title": "Plotting Tools",
+    "section": "",
+    "text": "This chapter introduces various tools and libraries available in R for creating visualizations. It covers base R plotting functions, as well as popular packages like ggplot2 and lattice, which offer advanced capabilities for creating complex and customizable plots.\n\n\nR’s built-in plotting functions provide a solid foundation for data visualization:\n\n\n# Scatter plot\nplot(x = mtcars$wt, y = mtcars$mpg,\n     xlab = \"Weight\", ylab = \"Miles per Gallon\",\n     main = \"Scatter Plot Example\")\n\n# Line plot\nplot(x = 1:10, y = (1:10)^2, type = \"l\",\n     xlab = \"X\", ylab = \"Y^2\")\n\n# Bar plot\nbarplot(height = c(10, 15, 8, 12),\n        names.arg = c(\"A\", \"B\", \"C\", \"D\"))\n\n# Histogram\nhist(mtcars$mpg, breaks = 10,\n     xlab = \"Miles per Gallon\",\n     main = \"Histogram of MPG\")\n\n\n\n# Multiple plots in one window\npar(mfrow = c(2, 2))  # 2x2 grid\n\nplot(mtcars$wt, mtcars$mpg)\nhist(mtcars$mpg)\nboxplot(mtcars$mpg ~ mtcars$cyl)\nplot(density(mtcars$mpg))\n\npar(mfrow = c(1, 1))  # Reset to single plot\n\n\n\n\nggplot2 is the most popular R package for data visualization, based on the Grammar of Graphics:\n\n\nlibrary(ggplot2)\n\n# Basic scatter plot\nggplot(data = mtcars, aes(x = wt, y = mpg)) +\n  geom_point()\n\n# Adding aesthetics\nggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +\n  geom_point(size = 3) +\n  labs(title = \"MPG vs Weight by Cylinders\",\n       x = \"Weight (1000 lbs)\",\n       y = \"Miles per Gallon\")\n\n\n\n# Points, lines, bars\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg))\n\np + geom_point()           # Scatter plot\np + geom_smooth()          # Smooth line\np + geom_line()            # Line plot\np + geom_bar(stat = \"identity\")  # Bar plot\np + geom_histogram()       # Histogram\np + geom_boxplot()         # Box plot\n\n\n\n# Faceting\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  facet_wrap(~ cyl) +\n  theme_minimal()\n\n# Custom themes\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  theme_bw() +\n  ggtitle(\"Custom Theme Example\")\n\n\n\n\nLattice provides trellis graphics for multivariate data:\nlibrary(lattice)\n\n# Scatter plot matrix\nsplom(mtcars[, c(\"mpg\", \"wt\", \"hp\")])\n\n# Conditional plots\nxyplot(mpg ~ wt | factor(cyl), data = mtcars,\n       layout = c(3, 1))\n\n# 3D plots\ncloud(mpg ~ wt * hp, data = mtcars)\n\n\n\n\n\nlibrary(plotly)\n\n# Convert ggplot to interactive\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nggplotly(p)\n\n# Native plotly\nplot_ly(mtcars, x = ~wt, y = ~mpg, type = \"scatter\", mode = \"markers\")\n\n\n\nlibrary(ggvis)\n\n# Interactive ggplot2-like syntax\nmtcars %&gt;%\n  ggvis(x = ~wt, y = ~mpg) %&gt;%\n  layer_points() %&gt;%\n  add_tooltip(function(df) paste(\"Weight:\", df$wt, \"MPG:\", df$mpg))\n\n\n\n\n\n\nlibrary(ggstatsplot)\n\n# Statistical plots with tests\nggbetweenstats(data = mtcars, x = cyl, y = mpg)\n\n\n\nlibrary(ggplot2)\nlibrary(maps)\n\n# Basic map\nworld &lt;- map_data(\"world\")\nggplot(world, aes(x = long, y = lat, group = group)) +\n  geom_polygon(fill = \"lightblue\", color = \"black\")\n\n\n\nlibrary(igraph)\nlibrary(ggraph)\n\n# Create network\ng &lt;- make_ring(10)\nggraph(g, layout = \"circle\") +\n  geom_edge_link() +\n  geom_node_point(size = 5)\n\n\n\n\n\nBase R: Quick plots, statistical graphics\nggplot2: Publication-quality static plots, complex customizations\nLattice: Multivariate data, trellis displays\nplotly/ggvis: Interactive web-based visualizations\nSpecialized packages: Domain-specific visualizations (maps, networks, etc.)\n\n\n\n\n\nKnow your data: Choose plot types that best represent your data\nKeep it simple: Avoid clutter, focus on the message\nUse color effectively: Consider colorblind-friendly palettes\nLabel clearly: Include informative titles, axis labels, legends\nTest different tools: Experiment with different packages for the best result"
+  },
+  {
+    "objectID": "exporting_tools/plotting_tools.html#base-r-plotting",
+    "href": "exporting_tools/plotting_tools.html#base-r-plotting",
+    "title": "Plotting Tools",
+    "section": "",
+    "text": "R’s built-in plotting functions provide a solid foundation for data visualization:\n\n\n# Scatter plot\nplot(x = mtcars$wt, y = mtcars$mpg,\n     xlab = \"Weight\", ylab = \"Miles per Gallon\",\n     main = \"Scatter Plot Example\")\n\n# Line plot\nplot(x = 1:10, y = (1:10)^2, type = \"l\",\n     xlab = \"X\", ylab = \"Y^2\")\n\n# Bar plot\nbarplot(height = c(10, 15, 8, 12),\n        names.arg = c(\"A\", \"B\", \"C\", \"D\"))\n\n# Histogram\nhist(mtcars$mpg, breaks = 10,\n     xlab = \"Miles per Gallon\",\n     main = \"Histogram of MPG\")\n\n\n\n# Multiple plots in one window\npar(mfrow = c(2, 2))  # 2x2 grid\n\nplot(mtcars$wt, mtcars$mpg)\nhist(mtcars$mpg)\nboxplot(mtcars$mpg ~ mtcars$cyl)\nplot(density(mtcars$mpg))\n\npar(mfrow = c(1, 1))  # Reset to single plot"
+  },
+  {
+    "objectID": "exporting_tools/plotting_tools.html#ggplot2-grammar-of-graphics",
+    "href": "exporting_tools/plotting_tools.html#ggplot2-grammar-of-graphics",
+    "title": "Plotting Tools",
+    "section": "",
+    "text": "ggplot2 is the most popular R package for data visualization, based on the Grammar of Graphics:\n\n\nlibrary(ggplot2)\n\n# Basic scatter plot\nggplot(data = mtcars, aes(x = wt, y = mpg)) +\n  geom_point()\n\n# Adding aesthetics\nggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +\n  geom_point(size = 3) +\n  labs(title = \"MPG vs Weight by Cylinders\",\n       x = \"Weight (1000 lbs)\",\n       y = \"Miles per Gallon\")\n\n\n\n# Points, lines, bars\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg))\n\np + geom_point()           # Scatter plot\np + geom_smooth()          # Smooth line\np + geom_line()            # Line plot\np + geom_bar(stat = \"identity\")  # Bar plot\np + geom_histogram()       # Histogram\np + geom_boxplot()         # Box plot\n\n\n\n# Faceting\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  facet_wrap(~ cyl) +\n  theme_minimal()\n\n# Custom themes\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  theme_bw() +\n  ggtitle(\"Custom Theme Example\")"
+  },
+  {
+    "objectID": "exporting_tools/plotting_tools.html#lattice-graphics",
+    "href": "exporting_tools/plotting_tools.html#lattice-graphics",
+    "title": "Plotting Tools",
+    "section": "",
+    "text": "Lattice provides trellis graphics for multivariate data:\nlibrary(lattice)\n\n# Scatter plot matrix\nsplom(mtcars[, c(\"mpg\", \"wt\", \"hp\")])\n\n# Conditional plots\nxyplot(mpg ~ wt | factor(cyl), data = mtcars,\n       layout = c(3, 1))\n\n# 3D plots\ncloud(mpg ~ wt * hp, data = mtcars)"
+  },
+  {
+    "objectID": "exporting_tools/plotting_tools.html#interactive-plotting-tools",
+    "href": "exporting_tools/plotting_tools.html#interactive-plotting-tools",
+    "title": "Plotting Tools",
+    "section": "",
+    "text": "library(plotly)\n\n# Convert ggplot to interactive\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nggplotly(p)\n\n# Native plotly\nplot_ly(mtcars, x = ~wt, y = ~mpg, type = \"scatter\", mode = \"markers\")\n\n\n\nlibrary(ggvis)\n\n# Interactive ggplot2-like syntax\nmtcars %&gt;%\n  ggvis(x = ~wt, y = ~mpg) %&gt;%\n  layer_points() %&gt;%\n  add_tooltip(function(df) paste(\"Weight:\", df$wt, \"MPG:\", df$mpg))"
+  },
+  {
+    "objectID": "exporting_tools/plotting_tools.html#specialized-plotting-packages",
+    "href": "exporting_tools/plotting_tools.html#specialized-plotting-packages",
+    "title": "Plotting Tools",
+    "section": "",
+    "text": "library(ggstatsplot)\n\n# Statistical plots with tests\nggbetweenstats(data = mtcars, x = cyl, y = mpg)\n\n\n\nlibrary(ggplot2)\nlibrary(maps)\n\n# Basic map\nworld &lt;- map_data(\"world\")\nggplot(world, aes(x = long, y = lat, group = group)) +\n  geom_polygon(fill = \"lightblue\", color = \"black\")\n\n\n\nlibrary(igraph)\nlibrary(ggraph)\n\n# Create network\ng &lt;- make_ring(10)\nggraph(g, layout = \"circle\") +\n  geom_edge_link() +\n  geom_node_point(size = 5)"
+  },
+  {
+    "objectID": "exporting_tools/plotting_tools.html#choosing-the-right-tool",
+    "href": "exporting_tools/plotting_tools.html#choosing-the-right-tool",
+    "title": "Plotting Tools",
+    "section": "",
+    "text": "Base R: Quick plots, statistical graphics\nggplot2: Publication-quality static plots, complex customizations\nLattice: Multivariate data, trellis displays\nplotly/ggvis: Interactive web-based visualizations\nSpecialized packages: Domain-specific visualizations (maps, networks, etc.)"
+  },
+  {
+    "objectID": "exporting_tools/plotting_tools.html#best-practices",
+    "href": "exporting_tools/plotting_tools.html#best-practices",
+    "title": "Plotting Tools",
+    "section": "",
+    "text": "Know your data: Choose plot types that best represent your data\nKeep it simple: Avoid clutter, focus on the message\nUse color effectively: Consider colorblind-friendly palettes\nLabel clearly: Include informative titles, axis labels, legends\nTest different tools: Experiment with different packages for the best result"
+  },
+  {
+    "objectID": "exporting_tools/debugging_plots.html",
+    "href": "exporting_tools/debugging_plots.html",
+    "title": "Debugging Plots",
+    "section": "",
+    "text": "Debugging plots are essential tools for diagnosing issues in data visualization and analysis. They help identify problems such as incorrect data representation, scaling issues, or unexpected patterns in the data. In this guide, we will explore various techniques and tools for creating effective debugging plots.\n\n\n\n\n\nMissing or incorrect data types\n# Check data types\nstr(mtcars)\n\n# Check for missing values\nsum(is.na(mtcars))\n\n# Visualize missing patterns\nlibrary(naniar)\nvis_miss(mtcars)\nOutliers affecting scales\n# Check for outliers\nboxplot(mtcars$mpg)\n\n# Use robust statistics\nlibrary(robustbase)\nsummary(mtcars$mpg)\n\n\n\n\n\nMapping vs Setting Aesthetics\n# Correct: Map color to variable\nggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +\n  geom_point()\n\n# Incorrect: Setting color globally\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point(color = \"red\")  # This sets all points to red\nFactor Level Issues\n# Check factor levels\nlevels(mtcars$cyl)\n\n# Reorder factors if needed\nmtcars$cyl &lt;- factor(mtcars$cyl, levels = c(\"4\", \"6\", \"8\"))\nGeom Conflicts\n# Error: Can't use geom_bar with y aesthetic\n# ggplot(data, aes(x = category, y = value)) + geom_bar()\n\n# Correct: Use stat = \"identity\"\nggplot(data, aes(x = category, y = value)) + \n  geom_bar(stat = \"identity\")\n\n\n\n\n\n\n\n# Check ggplot object structure\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nstr(p)\n\n# View plot data\np$data\np$mapping\n\n\n\n# Build plot incrementally\np1 &lt;- ggplot(mtcars, aes(x = wt, y = mpg))\nprint(p1)  # Should show empty plot\n\np2 &lt;- p1 + geom_point()\nprint(p2)  # Check if points appear\n\np3 &lt;- p2 + theme_minimal()\nprint(p3)  # Check theme application\n\n\n\n# Enable ggplot2 debugging\noptions(ggplot2.debug = TRUE)\n\n# Check for warnings\nggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\n\n\n\n\n\n\n# Problem: Length mismatch\n# ggplot(data, aes(x = x_var, y = y_var, color = short_vector))\n\n# Solution: Ensure vectors are same length or use single values\nggplot(data, aes(x = x_var, y = y_var, color = factor(category)))\n\n\n\n# Problem: Wrong scale type\n# ggplot(data, aes(x = factor_var, y = numeric_var)) + scale_x_continuous()\n\n# Solution: Use appropriate scale\nggplot(data, aes(x = factor_var, y = numeric_var)) + scale_x_discrete()\n\n\n\n# Problem: Typo in parameter name\n# geom_point(size = 3)  # Correct\n# geom_point(siz = 3)   # Incorrect\n\n# Solution: Check documentation\n?geom_point\n\n\n\n\n\n\n# Residual plots for model diagnostics\nmodel &lt;- lm(mpg ~ wt, data = mtcars)\nplot(model)\n\n# QQ plots for normality\nqqnorm(mtcars$mpg)\nqqline(mtcars$mpg)\n\n\n\n# Correlation plots\nlibrary(corrplot)\ncorrplot(cor(mtcars))\n\n# Pairs plots\npairs(mtcars[, c(\"mpg\", \"wt\", \"hp\")])\n\n\n\n# Plot data distributions\nggplot(mtcars, aes(x = mpg)) + \n  geom_histogram() + \n  facet_wrap(~ cyl)\n\n# Check for data issues\nggplot(mtcars, aes(x = wt, y = mpg)) + \n  geom_point() + \n  geom_text(aes(label = rownames(mtcars)), check_overlap = TRUE)\n\n\n\n\n\n\n# When plot fails\ntryCatch({\n  ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\n}, error = function(e) {\n  print(e)\n  traceback()\n})\n\n\n\nlibrary(profvis)\n\n# Profile plotting code\nprofvis({\n  p &lt;- ggplot(large_dataset, aes(x = x, y = y)) + geom_point()\n  print(p)\n})\n\n\n\n# Check memory usage\ngc()\n\n# For large datasets, use sampling\nsample_data &lt;- mtcars[sample(nrow(mtcars), 1000, replace = TRUE), ]\nggplot(sample_data, aes(x = wt, y = mpg)) + geom_point()\n\n\n\n\n\nStart simple: Build plots incrementally\nCheck data first: Validate input data before plotting\nUse reproducible examples: Create minimal examples that reproduce issues\nRead error messages carefully: They often point to the exact problem\nCheck package versions: Ensure compatible versions of ggplot2 and extensions\nUse debugging tools: Leverage R’s debugging functions and ggplot2’s debug options\nDocument fixes: Keep notes on solutions for future reference\n\n\n\n\n\nggplot2 documentation: ?ggplot2\nR Graphics Cookbook by Winston Chang\nggplot2 book by Hadley Wickham\nStack Overflow ggplot2 tag\nRStudio Community forums"
+  },
+  {
+    "objectID": "exporting_tools/debugging_plots.html#common-plotting-issues",
+    "href": "exporting_tools/debugging_plots.html#common-plotting-issues",
+    "title": "Debugging Plots",
+    "section": "",
+    "text": "Missing or incorrect data types\n# Check data types\nstr(mtcars)\n\n# Check for missing values\nsum(is.na(mtcars))\n\n# Visualize missing patterns\nlibrary(naniar)\nvis_miss(mtcars)\nOutliers affecting scales\n# Check for outliers\nboxplot(mtcars$mpg)\n\n# Use robust statistics\nlibrary(robustbase)\nsummary(mtcars$mpg)\n\n\n\n\n\nMapping vs Setting Aesthetics\n# Correct: Map color to variable\nggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +\n  geom_point()\n\n# Incorrect: Setting color globally\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point(color = \"red\")  # This sets all points to red\nFactor Level Issues\n# Check factor levels\nlevels(mtcars$cyl)\n\n# Reorder factors if needed\nmtcars$cyl &lt;- factor(mtcars$cyl, levels = c(\"4\", \"6\", \"8\"))\nGeom Conflicts\n# Error: Can't use geom_bar with y aesthetic\n# ggplot(data, aes(x = category, y = value)) + geom_bar()\n\n# Correct: Use stat = \"identity\"\nggplot(data, aes(x = category, y = value)) + \n  geom_bar(stat = \"identity\")"
+  },
+  {
+    "objectID": "exporting_tools/debugging_plots.html#debugging-techniques",
+    "href": "exporting_tools/debugging_plots.html#debugging-techniques",
+    "title": "Debugging Plots",
+    "section": "",
+    "text": "# Check ggplot object structure\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nstr(p)\n\n# View plot data\np$data\np$mapping\n\n\n\n# Build plot incrementally\np1 &lt;- ggplot(mtcars, aes(x = wt, y = mpg))\nprint(p1)  # Should show empty plot\n\np2 &lt;- p1 + geom_point()\nprint(p2)  # Check if points appear\n\np3 &lt;- p2 + theme_minimal()\nprint(p3)  # Check theme application\n\n\n\n# Enable ggplot2 debugging\noptions(ggplot2.debug = TRUE)\n\n# Check for warnings\nggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()"
+  },
+  {
+    "objectID": "exporting_tools/debugging_plots.html#common-error-messages-and-solutions",
+    "href": "exporting_tools/debugging_plots.html#common-error-messages-and-solutions",
+    "title": "Debugging Plots",
+    "section": "",
+    "text": "# Problem: Length mismatch\n# ggplot(data, aes(x = x_var, y = y_var, color = short_vector))\n\n# Solution: Ensure vectors are same length or use single values\nggplot(data, aes(x = x_var, y = y_var, color = factor(category)))\n\n\n\n# Problem: Wrong scale type\n# ggplot(data, aes(x = factor_var, y = numeric_var)) + scale_x_continuous()\n\n# Solution: Use appropriate scale\nggplot(data, aes(x = factor_var, y = numeric_var)) + scale_x_discrete()\n\n\n\n# Problem: Typo in parameter name\n# geom_point(size = 3)  # Correct\n# geom_point(siz = 3)   # Incorrect\n\n# Solution: Check documentation\n?geom_point"
+  },
+  {
+    "objectID": "exporting_tools/debugging_plots.html#visual-debugging-tools",
+    "href": "exporting_tools/debugging_plots.html#visual-debugging-tools",
+    "title": "Debugging Plots",
+    "section": "",
+    "text": "# Residual plots for model diagnostics\nmodel &lt;- lm(mpg ~ wt, data = mtcars)\nplot(model)\n\n# QQ plots for normality\nqqnorm(mtcars$mpg)\nqqline(mtcars$mpg)\n\n\n\n# Correlation plots\nlibrary(corrplot)\ncorrplot(cor(mtcars))\n\n# Pairs plots\npairs(mtcars[, c(\"mpg\", \"wt\", \"hp\")])\n\n\n\n# Plot data distributions\nggplot(mtcars, aes(x = mpg)) + \n  geom_histogram() + \n  facet_wrap(~ cyl)\n\n# Check for data issues\nggplot(mtcars, aes(x = wt, y = mpg)) + \n  geom_point() + \n  geom_text(aes(label = rownames(mtcars)), check_overlap = TRUE)"
+  },
+  {
+    "objectID": "exporting_tools/debugging_plots.html#advanced-debugging",
+    "href": "exporting_tools/debugging_plots.html#advanced-debugging",
+    "title": "Debugging Plots",
+    "section": "",
+    "text": "# When plot fails\ntryCatch({\n  ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\n}, error = function(e) {\n  print(e)\n  traceback()\n})\n\n\n\nlibrary(profvis)\n\n# Profile plotting code\nprofvis({\n  p &lt;- ggplot(large_dataset, aes(x = x, y = y)) + geom_point()\n  print(p)\n})\n\n\n\n# Check memory usage\ngc()\n\n# For large datasets, use sampling\nsample_data &lt;- mtcars[sample(nrow(mtcars), 1000, replace = TRUE), ]\nggplot(sample_data, aes(x = wt, y = mpg)) + geom_point()"
+  },
+  {
+    "objectID": "exporting_tools/debugging_plots.html#best-practices-for-debugging",
+    "href": "exporting_tools/debugging_plots.html#best-practices-for-debugging",
+    "title": "Debugging Plots",
+    "section": "",
+    "text": "Start simple: Build plots incrementally\nCheck data first: Validate input data before plotting\nUse reproducible examples: Create minimal examples that reproduce issues\nRead error messages carefully: They often point to the exact problem\nCheck package versions: Ensure compatible versions of ggplot2 and extensions\nUse debugging tools: Leverage R’s debugging functions and ggplot2’s debug options\nDocument fixes: Keep notes on solutions for future reference"
+  },
+  {
+    "objectID": "exporting_tools/debugging_plots.html#resources",
+    "href": "exporting_tools/debugging_plots.html#resources",
+    "title": "Debugging Plots",
+    "section": "",
+    "text": "ggplot2 documentation: ?ggplot2\nR Graphics Cookbook by Winston Chang\nggplot2 book by Hadley Wickham\nStack Overflow ggplot2 tag\nRStudio Community forums"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html",
+    "href": "exporting_tools/advanced_exporting.html",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "This chapter covers advanced techniques for exporting plots, including programmatic generation, batch processing, custom devices, and integration with other tools.\n\n\n\n\nlibrary(ggplot2)\nlibrary(purrr)\n\n# Create plots for each cylinder group\nplots &lt;- mtcars %&gt;%\n  split(.$cyl) %&gt;%\n  map(~ ggplot(.x, aes(x = wt, y = mpg)) + \n        geom_point() + \n        ggtitle(paste(\"Cylinders:\", .x$cyl[1])))\n\n# Save each plot\nwalk2(plots, names(plots), \n      ~ ggsave(filename = paste0(\"plot_cyl_\", .x, \".png\"), \n               plot = .y, \n               width = 6, height = 4))\n\n\n\n# Generate timestamped filenames\ntimestamp &lt;- format(Sys.time(), \"%Y%m%d_%H%M%S\")\n\nggsave(paste0(\"analysis_plot_\", timestamp, \".pdf\"), \n       plot = p, \n       width = 8, height = 6)\n\n\n\n\n\n\nsave_plot_multiple_formats &lt;- function(plot, filename_base, \n                                     formats = c(\"png\", \"pdf\", \"svg\")) {\n  for (fmt in formats) {\n    filename &lt;- paste0(filename_base, \".\", fmt)\n    ggsave(filename, plot, width = 8, height = 6)\n  }\n}\n\n# Usage\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nsave_plot_multiple_formats(p, \"mtcars_scatter\")\n\n\n\ndatasets &lt;- list(\n  mtcars = mtcars,\n  iris = iris,\n  airquality = airquality\n)\n\nfor (name in names(datasets)) {\n  data &lt;- datasets[[name]]\n  # Create appropriate plot based on data\n  if (name == \"mtcars\") {\n    p &lt;- ggplot(data, aes(x = wt, y = mpg)) + geom_point()\n  } else if (name == \"iris\") {\n    p &lt;- ggplot(data, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) + \n      geom_point()\n  }\n  \n  ggsave(paste0(name, \"_plot.png\"), p, width = 6, height = 4)\n}\n\n\n\n\n\n\nlibrary(Cairo)\n\n# High-quality PNG\nCairoPNG(\"high_quality.png\", width = 800, height = 600, \n         bg = \"white\", pointsize = 12)\nplot(mtcars$wt, mtcars$mpg)\ndev.off()\n\n# PDF with embedded fonts\nCairoPDF(\"embedded_fonts.pdf\", width = 8, height = 6, \n         family = \"Arial\")\nplot(mtcars$wt, mtcars$mpg)\ndev.off()\n\n\n\n# Create a custom device wrapper\nsave_high_res &lt;- function(filename, plot_func, ...) {\n  png(filename, width = 1200, height = 800, res = 150, ...)\n  plot_func()\n  dev.off()\n}\n\n# Usage\nmy_plot &lt;- function() {\n  plot(mtcars$wt, mtcars$mpg, \n       xlab = \"Weight\", ylab = \"MPG\",\n       main = \"High Resolution Plot\")\n}\n\nsave_high_res(\"high_res_plot.png\", my_plot)\n\n\n\n\n\n\nlibrary(tikzDevice)\n\n# Export as TikZ for LaTeX\ntikz(\"plot.tex\", width = 4, height = 3)\nggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\ndev.off()\n\n\n\n# Export as HTML with plotly\nlibrary(plotly)\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nhtmlwidgets::saveWidget(ggplotly(p), \"interactive_plot.html\")\n\n\n\n\n\n\n# Create publication-ready theme\npublication_theme &lt;- theme_minimal() +\n  theme(\n    text = element_text(size = 12, family = \"Times\"),\n    axis.title = element_text(size = 14, face = \"bold\"),\n    plot.title = element_text(size = 16, hjust = 0.5),\n    legend.position = \"bottom\"\n  )\n\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +\n  geom_point() +\n  publication_theme +\n  labs(title = \"Publication Quality Plot\")\n\nggsave(\"publication_plot.pdf\", p, \n       width = 6, height = 4, \n       device = cairo_pdf)\n\n\n\nlibrary(cowplot)\n\n# Create individual plots\np1 &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\np2 &lt;- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) + geom_boxplot()\np3 &lt;- ggplot(mtcars, aes(x = hp)) + geom_histogram()\n\n# Combine into single figure\ncombined &lt;- plot_grid(p1, p2, p3, \n                      labels = c(\"A\", \"B\", \"C\"),\n                      ncol = 2)\n\n# Save combined figure\nggsave(\"combined_figure.pdf\", combined, \n       width = 10, height = 8)\n\n\n\n\n\n\n# For large datasets, use sampling or aggregation\nlarge_data &lt;- data.frame(x = rnorm(100000), y = rnorm(100000))\n\n# Option 1: Sample data\nsample_data &lt;- large_data[sample(nrow(large_data), 10000), ]\nggplot(sample_data, aes(x = x, y = y)) + geom_point(alpha = 0.1)\nggsave(\"sampled_plot.png\")\n\n# Option 2: Use density plots\nggplot(large_data, aes(x = x, y = y)) + \n  geom_density2d() +\n  geom_point(data = sample_data, alpha = 0.1)\nggsave(\"density_plot.png\")\n\n\n\n# Clear graphics devices\ngraphics.off()\n\n# Force garbage collection\ngc()\n\n# Monitor memory usage\nlibrary(pryr)\nmem_used()\n\n\n\n\n\n\ncheck_plot_quality &lt;- function(filename) {\n  # Check file exists\n  if (!file.exists(filename)) {\n    stop(\"File was not created\")\n  }\n  \n  # Check file size (basic quality indicator)\n  size &lt;- file.info(filename)$size\n  if (size &lt; 1000) {\n    warning(\"File seems too small, may indicate error\")\n  }\n  \n  # For images, could check dimensions\n  if (grepl(\"\\\\.png$\", filename)) {\n    img &lt;- png::readPNG(filename)\n    message(\"Image dimensions: \", dim(img)[1], \"x\", dim(img)[2])\n  }\n}\n\n# Usage\nggsave(\"test_plot.png\", ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point())\ncheck_plot_quality(\"test_plot.png\")\n\n\n\n\n\nAutomate repetitive tasks: Use functions and loops for batch processing\nStandardize formats: Establish consistent dimensions and resolutions\nQuality control: Implement checks for successful exports\nPerformance awareness: Optimize for large datasets\nVersion control: Track plot versions with timestamps or git\nDocumentation: Comment code for reproducible exports\nCross-platform compatibility: Test exports on target systems\n\n\n\n\n\nggplot2 documentation: ?ggsave\nCairo package: High-quality graphics\ntikzDevice: LaTeX integration\ncowplot: Multi-panel figures\nR Graphics Cookbook: Advanced techniques d:studio_extensive_visualization_tools_exporting.qmd"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#programmatic-plot-generation",
+    "href": "exporting_tools/advanced_exporting.html#programmatic-plot-generation",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "library(ggplot2)\nlibrary(purrr)\n\n# Create plots for each cylinder group\nplots &lt;- mtcars %&gt;%\n  split(.$cyl) %&gt;%\n  map(~ ggplot(.x, aes(x = wt, y = mpg)) + \n        geom_point() + \n        ggtitle(paste(\"Cylinders:\", .x$cyl[1])))\n\n# Save each plot\nwalk2(plots, names(plots), \n      ~ ggsave(filename = paste0(\"plot_cyl_\", .x, \".png\"), \n               plot = .y, \n               width = 6, height = 4))\n\n\n\n# Generate timestamped filenames\ntimestamp &lt;- format(Sys.time(), \"%Y%m%d_%H%M%S\")\n\nggsave(paste0(\"analysis_plot_\", timestamp, \".pdf\"), \n       plot = p, \n       width = 8, height = 6)"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#batch-processing",
+    "href": "exporting_tools/advanced_exporting.html#batch-processing",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "save_plot_multiple_formats &lt;- function(plot, filename_base, \n                                     formats = c(\"png\", \"pdf\", \"svg\")) {\n  for (fmt in formats) {\n    filename &lt;- paste0(filename_base, \".\", fmt)\n    ggsave(filename, plot, width = 8, height = 6)\n  }\n}\n\n# Usage\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nsave_plot_multiple_formats(p, \"mtcars_scatter\")\n\n\n\ndatasets &lt;- list(\n  mtcars = mtcars,\n  iris = iris,\n  airquality = airquality\n)\n\nfor (name in names(datasets)) {\n  data &lt;- datasets[[name]]\n  # Create appropriate plot based on data\n  if (name == \"mtcars\") {\n    p &lt;- ggplot(data, aes(x = wt, y = mpg)) + geom_point()\n  } else if (name == \"iris\") {\n    p &lt;- ggplot(data, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) + \n      geom_point()\n  }\n  \n  ggsave(paste0(name, \"_plot.png\"), p, width = 6, height = 4)\n}"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#custom-graphics-devices",
+    "href": "exporting_tools/advanced_exporting.html#custom-graphics-devices",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "library(Cairo)\n\n# High-quality PNG\nCairoPNG(\"high_quality.png\", width = 800, height = 600, \n         bg = \"white\", pointsize = 12)\nplot(mtcars$wt, mtcars$mpg)\ndev.off()\n\n# PDF with embedded fonts\nCairoPDF(\"embedded_fonts.pdf\", width = 8, height = 6, \n         family = \"Arial\")\nplot(mtcars$wt, mtcars$mpg)\ndev.off()\n\n\n\n# Create a custom device wrapper\nsave_high_res &lt;- function(filename, plot_func, ...) {\n  png(filename, width = 1200, height = 800, res = 150, ...)\n  plot_func()\n  dev.off()\n}\n\n# Usage\nmy_plot &lt;- function() {\n  plot(mtcars$wt, mtcars$mpg, \n       xlab = \"Weight\", ylab = \"MPG\",\n       main = \"High Resolution Plot\")\n}\n\nsave_high_res(\"high_res_plot.png\", my_plot)"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#integration-with-other-tools",
+    "href": "exporting_tools/advanced_exporting.html#integration-with-other-tools",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "library(tikzDevice)\n\n# Export as TikZ for LaTeX\ntikz(\"plot.tex\", width = 4, height = 3)\nggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\ndev.off()\n\n\n\n# Export as HTML with plotly\nlibrary(plotly)\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nhtmlwidgets::saveWidget(ggplotly(p), \"interactive_plot.html\")"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#advanced-ggplot2-exporting",
+    "href": "exporting_tools/advanced_exporting.html#advanced-ggplot2-exporting",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "# Create publication-ready theme\npublication_theme &lt;- theme_minimal() +\n  theme(\n    text = element_text(size = 12, family = \"Times\"),\n    axis.title = element_text(size = 14, face = \"bold\"),\n    plot.title = element_text(size = 16, hjust = 0.5),\n    legend.position = \"bottom\"\n  )\n\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +\n  geom_point() +\n  publication_theme +\n  labs(title = \"Publication Quality Plot\")\n\nggsave(\"publication_plot.pdf\", p, \n       width = 6, height = 4, \n       device = cairo_pdf)\n\n\n\nlibrary(cowplot)\n\n# Create individual plots\np1 &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\np2 &lt;- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) + geom_boxplot()\np3 &lt;- ggplot(mtcars, aes(x = hp)) + geom_histogram()\n\n# Combine into single figure\ncombined &lt;- plot_grid(p1, p2, p3, \n                      labels = c(\"A\", \"B\", \"C\"),\n                      ncol = 2)\n\n# Save combined figure\nggsave(\"combined_figure.pdf\", combined, \n       width = 10, height = 8)"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#performance-optimization",
+    "href": "exporting_tools/advanced_exporting.html#performance-optimization",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "# For large datasets, use sampling or aggregation\nlarge_data &lt;- data.frame(x = rnorm(100000), y = rnorm(100000))\n\n# Option 1: Sample data\nsample_data &lt;- large_data[sample(nrow(large_data), 10000), ]\nggplot(sample_data, aes(x = x, y = y)) + geom_point(alpha = 0.1)\nggsave(\"sampled_plot.png\")\n\n# Option 2: Use density plots\nggplot(large_data, aes(x = x, y = y)) + \n  geom_density2d() +\n  geom_point(data = sample_data, alpha = 0.1)\nggsave(\"density_plot.png\")\n\n\n\n# Clear graphics devices\ngraphics.off()\n\n# Force garbage collection\ngc()\n\n# Monitor memory usage\nlibrary(pryr)\nmem_used()"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#quality-control",
+    "href": "exporting_tools/advanced_exporting.html#quality-control",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "check_plot_quality &lt;- function(filename) {\n  # Check file exists\n  if (!file.exists(filename)) {\n    stop(\"File was not created\")\n  }\n  \n  # Check file size (basic quality indicator)\n  size &lt;- file.info(filename)$size\n  if (size &lt; 1000) {\n    warning(\"File seems too small, may indicate error\")\n  }\n  \n  # For images, could check dimensions\n  if (grepl(\"\\\\.png$\", filename)) {\n    img &lt;- png::readPNG(filename)\n    message(\"Image dimensions: \", dim(img)[1], \"x\", dim(img)[2])\n  }\n}\n\n# Usage\nggsave(\"test_plot.png\", ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point())\ncheck_plot_quality(\"test_plot.png\")"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#best-practices-for-advanced-exporting",
+    "href": "exporting_tools/advanced_exporting.html#best-practices-for-advanced-exporting",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "Automate repetitive tasks: Use functions and loops for batch processing\nStandardize formats: Establish consistent dimensions and resolutions\nQuality control: Implement checks for successful exports\nPerformance awareness: Optimize for large datasets\nVersion control: Track plot versions with timestamps or git\nDocumentation: Comment code for reproducible exports\nCross-platform compatibility: Test exports on target systems"
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#resources",
+    "href": "exporting_tools/advanced_exporting.html#resources",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "ggplot2 documentation: ?ggsave\nCairo package: High-quality graphics\ntikzDevice: LaTeX integration\ncowplot: Multi-panel figures\nR Graphics Cookbook: Advanced techniques d:studio_extensive_visualization_tools_exporting.qmd"
+  },
+  {
+    "objectID": "exporting_tools/exporting_plots.html",
+    "href": "exporting_tools/exporting_plots.html",
+    "title": "Exporting plots",
+    "section": "",
+    "text": "Exporting plots from R can be done in several ways, depending on the desired output format and quality. Here are some common methods to export plots:"
+  },
+  {
+    "objectID": "exporting_tools/exporting_plots.html#using-rs-built-in-functions",
+    "href": "exporting_tools/exporting_plots.html#using-rs-built-in-functions",
+    "title": "Exporting plots",
+    "section": "Using R’s Built-in Functions",
+    "text": "Using R’s Built-in Functions\nR provides several built-in functions for exporting plots to different formats:\n\nRaster Formats\n\npng(), jpeg(), tiff(), bmp(): These functions save plots in raster formats. You can specify filename, dimensions, and resolution.\n\n# PNG format (good for web)\npng(\"plot.png\", width = 800, height = 600, res = 100)\nplot(x, y)\ndev.off()\n\n# High-resolution TIFF for publications\ntiff(\"plot.tiff\", width = 8, height = 6, units = \"in\", res = 300)\nplot(x, y)\ndev.off()\n\n\nVector Formats\n\npdf(): Saves plots in PDF format, vector-based and scalable.\nsvg(): Saves plots in SVG format, ideal for web and scalable graphics.\n\n# PDF for high-quality prints\npdf(\"plot.pdf\", width = 8, height = 6)\nplot(x, y)\ndev.off()\n\n# SVG for web use\nsvg(\"plot.svg\", width = 8, height = 6)\nplot(x, y)\ndev.off()"
+  },
+  {
+    "objectID": "exporting_tools/exporting_plots.html#exporting-ggplot2-plots",
+    "href": "exporting_tools/exporting_plots.html#exporting-ggplot2-plots",
+    "title": "Exporting plots",
+    "section": "Exporting ggplot2 Plots",
+    "text": "Exporting ggplot2 Plots\nFor ggplot2 plots, the ggsave() function is the most convenient way to export:\nlibrary(ggplot2)\n\n# Create a plot\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point()\n\n# Save in different formats\nggsave(\"plot.png\", p, width = 8, height = 6, dpi = 150)\nggsave(\"plot.pdf\", p, width = 8, height = 6)\nggsave(\"plot.svg\", p, width = 8, height = 6)\n\nControlling Output Quality\n\nResolution (DPI): Higher DPI for print quality (300+), lower for web (72-150)\nDimensions: Specify in inches or pixels\nAspect Ratio: Maintain proportions for consistency\n\n# High-resolution for publications\nggsave(\"publication_plot.tiff\", p, \n       width = 6, height = 4, \n       dpi = 300, \n       device = \"tiff\")\n\n# Web-optimized PNG\nggsave(\"web_plot.png\", p, \n       width = 800, height = 600, \n       dpi = 100, \n       units = \"px\")"
+  },
+  {
+    "objectID": "exporting_tools/exporting_plots.html#advanced-exporting-techniques",
+    "href": "exporting_tools/exporting_plots.html#advanced-exporting-techniques",
+    "title": "Exporting plots",
+    "section": "Advanced Exporting Techniques",
+    "text": "Advanced Exporting Techniques\n\nExporting Multiple Plots\n# Save multiple plots to PDF\npdf(\"multiple_plots.pdf\")\nplot1 &lt;- ggplot(data1, aes(x, y)) + geom_point()\nprint(plot1)\nplot2 &lt;- ggplot(data2, aes(x, y)) + geom_line()\nprint(plot2)\ndev.off()\n\n\nUsing Cairo for Better Quality\nThe Cairo graphics library can provide better quality for some formats:\ninstall.packages(\"Cairo\")\nlibrary(Cairo)\n\nCairoPNG(\"high_quality.png\", width = 800, height = 600)\nplot(x, y)\ndev.off()\n\n\nExporting to Clipboard\nFor quick sharing:\n# Windows\nsavePlot(\"clipboard\", type = \"wmf\")\n\n# Or for ggplot2\nggsave(\"clipboard\", p, device = \"png\")"
+  },
+  {
+    "objectID": "exporting_tools/exporting_plots.html#best-practices",
+    "href": "exporting_tools/exporting_plots.html#best-practices",
+    "title": "Exporting plots",
+    "section": "Best Practices",
+    "text": "Best Practices\n\nChoose the right format: PDF/SVG for vector graphics, PNG/TIFF for raster\nSet appropriate resolution: 300 DPI for print, 72-150 for screen\nConsider file size: Vector formats scale better but may be larger\nTest outputs: Always check exported files in target applications\nUse consistent dimensions: Maintain aspect ratios across exports"
+  },
+  {
+    "objectID": "exporting_tools/exporting_plots.html#common-issues-and-solutions",
+    "href": "exporting_tools/exporting_plots.html#common-issues-and-solutions",
+    "title": "Exporting plots",
+    "section": "Common Issues and Solutions",
+    "text": "Common Issues and Solutions\n\nPlot not saving: Ensure dev.off() is called after plotting\nLow quality: Increase DPI or use vector formats\nWrong dimensions: Specify units explicitly (inches, cm, pixels)\nColors not matching: Check color profiles and device settings"
+  }
+]

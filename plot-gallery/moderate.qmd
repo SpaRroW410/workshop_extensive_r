@@ -11,6 +11,8 @@ editor:
   markdown:
     wrap: 72
 ---
+::: {.content-visible when-profile="moderate"}
+
 ## Intermediate Plot 
 
 Explore foundational plots grouped by data type and relationship
@@ -72,5 +74,7 @@ Includes:
 - Faceted maps (small multiples)
 - Interactive maps
 🔗 [View Slide Deck](moderate/2.6_geographic_intermediate.qmd)
+:::
+
 :::
 

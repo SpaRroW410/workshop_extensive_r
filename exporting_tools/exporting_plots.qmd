@@ -8,33 +8,142 @@ sidebar:
         - href: exporting_plots.qmd
           text: "Exporting Plots"
         - href: plotting_tools.qmd
-          text: "Intermediate"
+          text: "Plotting Tools"
         - href: debugging_plots.qmd
           text: "Debugging Plots"
+        - href: advanced_exporting.qmd
+          text: "Advanced Exporting"
 editor: 
   markdown: 
     wrap: 72
 ---
 
 Exporting plots from R can be done in several ways, depending on the desired output format and quality. Here are some common methods to export plots:
-1. **Using R's built-in functions**:
-   - `png()`, `jpeg()`, `tiff()`, `bmp()`: These functions allow you to save plots in various raster formats. You can specify the filename, width, height, and resolution.
-     ```R
-     png("plot.png", width=800, height=600)
-     plot(x, y)
-     dev.off()
-     ```
-   - `pdf()`: This function saves plots in PDF format, which is vector-based and suitable for high-quality prints.
-     ```R
-     pdf("plot.pdf", width=8, height=6)
-     plot(x, y)
-     dev.off()
-     ```
-   - `svg()`: This function saves plots in SVG format, which is also vector-based and ideal for web use.
-     ```R
-     svg("plot.svg", width=8, height=6)
-     plot(x, y)
-     dev.off()
-     ```
+
+## Using R's Built-in Functions
+
+R provides several built-in functions for exporting plots to different formats:
+
+### Raster Formats
+- `png()`, `jpeg()`, `tiff()`, `bmp()`: These functions save plots in raster formats. You can specify filename, dimensions, and resolution.
+
+```r
+# PNG format (good for web)
+png("plot.png", width = 800, height = 600, res = 100)
+plot(x, y)
+dev.off()
+
+# High-resolution TIFF for publications
+tiff("plot.tiff", width = 8, height = 6, units = "in", res = 300)
+plot(x, y)
+dev.off()
+```
+
+### Vector Formats
+- `pdf()`: Saves plots in PDF format, vector-based and scalable.
+- `svg()`: Saves plots in SVG format, ideal for web and scalable graphics.
+
+```r
+# PDF for high-quality prints
+pdf("plot.pdf", width = 8, height = 6)
+plot(x, y)
+dev.off()
+
+# SVG for web use
+svg("plot.svg", width = 8, height = 6)
+plot(x, y)
+dev.off()
+```
+
+## Exporting ggplot2 Plots
+
+For ggplot2 plots, the `ggsave()` function is the most convenient way to export:
+
+```r
+library(ggplot2)
+
+# Create a plot
+p <- ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point()
+
+# Save in different formats
+ggsave("plot.png", p, width = 8, height = 6, dpi = 150)
+ggsave("plot.pdf", p, width = 8, height = 6)
+ggsave("plot.svg", p, width = 8, height = 6)
+```
+
+### Controlling Output Quality
+
+- **Resolution (DPI)**: Higher DPI for print quality (300+), lower for web (72-150)
+- **Dimensions**: Specify in inches or pixels
+- **Aspect Ratio**: Maintain proportions for consistency
+
+```r
+# High-resolution for publications
+ggsave("publication_plot.tiff", p, 
+       width = 6, height = 4, 
+       dpi = 300, 
+       device = "tiff")
+
+# Web-optimized PNG
+ggsave("web_plot.png", p, 
+       width = 800, height = 600, 
+       dpi = 100, 
+       units = "px")
+```
+
+## Advanced Exporting Techniques
+
+### Exporting Multiple Plots
+
+```r
+# Save multiple plots to PDF
+pdf("multiple_plots.pdf")
+plot1 <- ggplot(data1, aes(x, y)) + geom_point()
+print(plot1)
+plot2 <- ggplot(data2, aes(x, y)) + geom_line()
+print(plot2)
+dev.off()
+```
+
+### Using Cairo for Better Quality
+
+The Cairo graphics library can provide better quality for some formats:
+
+```r
+install.packages("Cairo")
+library(Cairo)
+
+CairoPNG("high_quality.png", width = 800, height = 600)
+plot(x, y)
+dev.off()
+```
+
+### Exporting to Clipboard
+
+For quick sharing:
+
+```r
+# Windows
+savePlot("clipboard", type = "wmf")
+
+# Or for ggplot2
+ggsave("clipboard", p, device = "png")
+```
+
+## Best Practices
+
+1. **Choose the right format**: PDF/SVG for vector graphics, PNG/TIFF for raster
+2. **Set appropriate resolution**: 300 DPI for print, 72-150 for screen
+3. **Consider file size**: Vector formats scale better but may be larger
+4. **Test outputs**: Always check exported files in target applications
+5. **Use consistent dimensions**: Maintain aspect ratios across exports
+
+## Common Issues and Solutions
+
+- **Plot not saving**: Ensure `dev.off()` is called after plotting
+- **Low quality**: Increase DPI or use vector formats
+- **Wrong dimensions**: Specify units explicitly (inches, cm, pixels)
+- **Colors not matching**: Check color profiles and device settings
      
      

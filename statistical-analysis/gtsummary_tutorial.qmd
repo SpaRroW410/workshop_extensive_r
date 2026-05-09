@@ -1,0 +1,56 @@
+---
+title: "gtsummary for Publication-Ready Tables"
+format:
+  html:
+    code-copy: true
+    theme: cosmo
+    toc: true
+    lightbox: auto
+---
+
+::: {.content-visible when-profile="moderate"}
+
+## Using gtsummary for Professional Tables
+
+gtsummary creates publication-ready tables from R data.
+
+### Basic Summary Table
+
+```{r}
+library(gtsummary)
+
+data <- gtsummary::trial
+# Summary table
+data %>% 
+  tbl_summary(by = trt) %>% 
+  add_p()
+```
+
+### Regression Tables
+
+```{r}
+# Logistic regression example
+data$outcome <- rbinom(200, 1, 0.5)
+
+model_log <- glm(outcome ~ age + trt, data = data, family = binomial)
+
+tbl_regression(model_log, exponentiate = TRUE)
+```
+
+### Customizing Tables
+
+```{r}
+data %>% 
+  tbl_summary(
+    by = trt,
+    statistic = list(
+      all_continuous() ~ "{mean} ({sd})",
+      all_categorical() ~ "{n} ({p}%)"
+    )
+  ) %>% 
+  add_p() %>% 
+  modify_header(label = "**Variable**") %>% 
+  bold_labels()
+```
+
+:::

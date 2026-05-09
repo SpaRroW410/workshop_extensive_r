@@ -6,5 +6,230 @@ editor:
     wrap: 72
 ---
 
+# Debugging Plots
 
 Debugging plots are essential tools for diagnosing issues in data visualization and analysis. They help identify problems such as incorrect data representation, scaling issues, or unexpected patterns in the data. In this guide, we will explore various techniques and tools for creating effective debugging plots.
+
+## Common Plotting Issues
+
+### Data-Related Problems
+
+1. **Missing or incorrect data types**
+   ```r
+   # Check data types
+   str(mtcars)
+   
+   # Check for missing values
+   sum(is.na(mtcars))
+   
+   # Visualize missing patterns
+   library(naniar)
+   vis_miss(mtcars)
+   ```
+
+2. **Outliers affecting scales**
+   ```r
+   # Check for outliers
+   boxplot(mtcars$mpg)
+   
+   # Use robust statistics
+   library(robustbase)
+   summary(mtcars$mpg)
+   ```
+
+### ggplot2-Specific Issues
+
+1. **Mapping vs Setting Aesthetics**
+   ```r
+   # Correct: Map color to variable
+   ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +
+     geom_point()
+   
+   # Incorrect: Setting color globally
+   ggplot(mtcars, aes(x = wt, y = mpg)) +
+     geom_point(color = "red")  # This sets all points to red
+   ```
+
+2. **Factor Level Issues**
+   ```r
+   # Check factor levels
+   levels(mtcars$cyl)
+   
+   # Reorder factors if needed
+   mtcars$cyl <- factor(mtcars$cyl, levels = c("4", "6", "8"))
+   ```
+
+3. **Geom Conflicts**
+   ```r
+   # Error: Can't use geom_bar with y aesthetic
+   # ggplot(data, aes(x = category, y = value)) + geom_bar()
+   
+   # Correct: Use stat = "identity"
+   ggplot(data, aes(x = category, y = value)) + 
+     geom_bar(stat = "identity")
+   ```
+
+## Debugging Techniques
+
+### Using Built-in Diagnostics
+
+```r
+# Check ggplot object structure
+p <- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
+str(p)
+
+# View plot data
+p$data
+p$mapping
+```
+
+### Layer-by-Layer Debugging
+
+```r
+# Build plot incrementally
+p1 <- ggplot(mtcars, aes(x = wt, y = mpg))
+print(p1)  # Should show empty plot
+
+p2 <- p1 + geom_point()
+print(p2)  # Check if points appear
+
+p3 <- p2 + theme_minimal()
+print(p3)  # Check theme application
+```
+
+### Using Debug Tools
+
+```r
+# Enable ggplot2 debugging
+options(ggplot2.debug = TRUE)
+
+# Check for warnings
+ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
+```
+
+## Common Error Messages and Solutions
+
+### "Aesthetics must be either length 1 or the same as the data"
+
+```r
+# Problem: Length mismatch
+# ggplot(data, aes(x = x_var, y = y_var, color = short_vector))
+
+# Solution: Ensure vectors are same length or use single values
+ggplot(data, aes(x = x_var, y = y_var, color = factor(category)))
+```
+
+### "Discrete value supplied to continuous scale"
+
+```r
+# Problem: Wrong scale type
+# ggplot(data, aes(x = factor_var, y = numeric_var)) + scale_x_continuous()
+
+# Solution: Use appropriate scale
+ggplot(data, aes(x = factor_var, y = numeric_var)) + scale_x_discrete()
+```
+
+### "Unknown parameters" in geom_*
+
+```r
+# Problem: Typo in parameter name
+# geom_point(size = 3)  # Correct
+# geom_point(siz = 3)   # Incorrect
+
+# Solution: Check documentation
+?geom_point
+```
+
+## Visual Debugging Tools
+
+### Diagnostic Plots
+
+```r
+# Residual plots for model diagnostics
+model <- lm(mpg ~ wt, data = mtcars)
+plot(model)
+
+# QQ plots for normality
+qqnorm(mtcars$mpg)
+qqline(mtcars$mpg)
+```
+
+### Data Exploration Plots
+
+```r
+# Correlation plots
+library(corrplot)
+corrplot(cor(mtcars))
+
+# Pairs plots
+pairs(mtcars[, c("mpg", "wt", "hp")])
+```
+
+### Custom Debug Plots
+
+```r
+# Plot data distributions
+ggplot(mtcars, aes(x = mpg)) + 
+  geom_histogram() + 
+  facet_wrap(~ cyl)
+
+# Check for data issues
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point() + 
+  geom_text(aes(label = rownames(mtcars)), check_overlap = TRUE)
+```
+
+## Advanced Debugging
+
+### Using traceback()
+
+```r
+# When plot fails
+tryCatch({
+  ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
+}, error = function(e) {
+  print(e)
+  traceback()
+})
+```
+
+### Profiling Plot Performance
+
+```r
+library(profvis)
+
+# Profile plotting code
+profvis({
+  p <- ggplot(large_dataset, aes(x = x, y = y)) + geom_point()
+  print(p)
+})
+```
+
+### Memory Issues
+
+```r
+# Check memory usage
+gc()
+
+# For large datasets, use sampling
+sample_data <- mtcars[sample(nrow(mtcars), 1000, replace = TRUE), ]
+ggplot(sample_data, aes(x = wt, y = mpg)) + geom_point()
+```
+
+## Best Practices for Debugging
+
+1. **Start simple**: Build plots incrementally
+2. **Check data first**: Validate input data before plotting
+3. **Use reproducible examples**: Create minimal examples that reproduce issues
+4. **Read error messages carefully**: They often point to the exact problem
+5. **Check package versions**: Ensure compatible versions of ggplot2 and extensions
+6. **Use debugging tools**: Leverage R's debugging functions and ggplot2's debug options
+7. **Document fixes**: Keep notes on solutions for future reference
+
+## Resources
+
+- ggplot2 documentation: `?ggplot2`
+- R Graphics Cookbook by Winston Chang
+- ggplot2 book by Hadley Wickham
+- Stack Overflow ggplot2 tag
+- RStudio Community forums

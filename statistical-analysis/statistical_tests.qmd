@@ -1,0 +1,68 @@
+---
+title: "Statistical Tests and Analysis"
+format:
+  html:
+    code-copy: true
+    theme: cosmo
+    toc: true
+    lightbox: auto
+---
+
+::: {.content-visible when-profile="moderate"}
+
+## Statistical Tests in R
+
+This section covers common statistical tests used in medical research, implemented in R.
+
+### Descriptive Statistics
+
+```{r}
+# Load necessary libraries
+library(tidyverse)
+library(gtsummary)
+
+# Example data
+data <- data.frame(
+  age = rnorm(100, 50, 10),
+  blood_pressure = rnorm(100, 120, 15),
+  treatment = sample(c("A", "B"), 100, replace = TRUE)
+)
+
+# Summary statistics
+data %>% 
+  tbl_summary()
+```
+
+### Hypothesis Testing
+
+#### T-test
+
+```{r}
+# Two-sample t-test
+t.test(blood_pressure ~ treatment, data = data)
+```
+
+#### Chi-square test
+
+```{r}
+# Create categorical data
+data$outcome <- sample(c("Improved", "Not Improved"), 100, replace = TRUE)
+
+# Chi-square test
+chisq.test(table(data$treatment, data$outcome))
+```
+
+### Regression Analysis
+
+#### Linear Regression
+
+```{r}
+# Linear regression
+model <- lm(blood_pressure ~ age + treatment, data = data)
+summary(model)
+
+# Using gtsummary for nice tables
+tbl_regression(model)
+```
+
+:::

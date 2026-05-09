@@ -1,0 +1,257 @@
+---
+title: "Quarto — Dynamic Documents"
+format:
+  html:
+    code-copy: true
+    toc: true
+    lightbox: auto
+---
+
+::: {.callout-note}
+This module builds on [Quarto Basics](reproducible_writing.qmd). It assumes you
+can create and render a `.qmd` file and write basic code chunks.
+:::
+
+## What you will learn
+
+- Parameterised reports — run the same document for different subgroups
+- Inline R code — embed values directly in prose
+- Cross-references for figures and tables
+- Multiple output formats from one source file
+- Integrating `gtsummary` tables in Quarto
+
+---
+
+## Parameterised Reports
+
+Parameters let you run the same document with different inputs — for example,
+generating one report per hospital, intervention group, or region.
+
+### 1. Declare parameters in the YAML header
+
+```yaml
+---
+title: "Site Report"
+params:
+  site_name: "Site A"
+  intervention: "Control"
+---
+```
+
+### 2. Use parameters in code
+
+```{r}
+#| eval: false
+# params$site_name and params$intervention are available as R objects
+site_data <- overall_up |>
+  filter(site == params$site_name,
+         intervention == params$intervention)
+
+nrow(site_data)
+```
+
+### 3. Render with different parameter values
+
+```{r}
+#| eval: false
+# Render from R for a specific site
+quarto::quarto_render(
+  input  = "site_report.qmd",
+  output_file = "site_a_report.html",
+  execute_params = list(
+    site_name    = "Site A",
+    intervention = "Intervention"
+  )
+)
+```
+
+### 4. Batch render — one file per site
+
+```{r}
+#| eval: false
+library(purrr)
+
+sites <- c("Site A", "Site B", "Site C")
+
+walk(sites, \(site) {
+  quarto::quarto_render(
+    input          = "site_report.qmd",
+    output_file    = paste0(tolower(gsub(" ", "_", site)), "_report.html"),
+    execute_params = list(site_name = site)
+  )
+})
+```
+
+---
+
+## Inline R Code
+
+Embedding computed values directly in text avoids copy-paste errors and keeps
+your document reproducible.
+
+**Syntax:**
+
+`` `r nrow(gtsummary::trial)` ``
+
+```{r}
+#| eval: false
+# In a code chunk (runs silently):
+n_total  <- nrow(overall_up)
+mean_age <- round(mean(overall_up$current_age, na.rm = TRUE), 1)
+```
+
+**In Quarto prose:**
+
+```markdown
+The study enrolled `r nrow(gtsummary::trial)` participants with a mean age of
+`r mean(gtsummary::trial$age)` years (SD = `r round(sd(gtsummary::trial$age, na.rm = TRUE), 1)`).
+```
+
+Rendered output:
+
+> The study enrolled 1 248 participants with a mean age of 38.4 years (SD = 11.2).
+
+::: {.callout-tip}
+Compute all summary values in one early code chunk marked `#| include: false`,
+then reference them via inline code throughout the document.
+:::
+
+---
+
+## Cross-References
+
+Cross-references auto-number figures and tables and create clickable links.
+
+### Figures
+
+Add a `label` that starts with `fig-` and a `fig-cap`:
+
+````markdown
+```{{r}}
+#| label: fig-sbp-hist
+#| fig-cap: "Distribution of baseline systolic blood pressure."
+ggplot(overall_up, aes(x = sbp_0m)) +
+  geom_histogram(bins = 30) +
+  labs(x = "Systolic BP (mmHg)", y = "Count")
+```
+````
+
+Reference in text: `@fig-sbp-hist` → renders as "Figure 1"
+
+### Tables
+
+Add a `label` starting with `tbl-` and a `tbl-cap`:
+
+````markdown
+```{{r}}
+#| label: tbl-demographics
+#| tbl-cap: "Baseline characteristics of study participants."
+library(gtsummary)
+overall_up |>
+  select(current_age, sex, tobacco_type, fuel_type) |>
+  tbl_summary()
+```
+````
+
+Reference in text: `@tbl-demographics` → renders as "Table 1"
+
+---
+
+## Multiple Output Formats
+
+One `.qmd` file can produce HTML, PDF, and Word output.
+
+```yaml
+---
+title: "Study Report"
+format:
+  html:
+    toc: true
+    theme: flatly
+  pdf:
+    toc: true
+    number-sections: true
+  docx:
+    toc: true
+---
+```
+
+Render all formats at once:
+
+```bash
+quarto render study_report.qmd
+```
+
+::: {.callout-warning}
+## PDF requirements
+PDF rendering requires a LaTeX installation. Install `tinytex` from R:
+```r
+install.packages("tinytex")
+tinytex::install_tinytex()
+```
+:::
+
+---
+
+## gtsummary Tables in Quarto
+
+`gtsummary` integrates naturally with Quarto. Use `as_kable_extra()` or the
+default `print()` method for HTML output; use `as_gt()` for PDF.
+
+```{r}
+#| eval: false
+#| label: tbl-summary
+#| tbl-cap: "Baseline characteristics by intervention group."
+library(gtsummary)
+
+overall_up |>
+  select(current_age, sex, tobacco_type, fuel_type, sbp_0m, intervention) |>
+  tbl_summary(
+    by      = intervention,
+    missing = "no"
+  ) |>
+  add_p() |>
+  add_overall() |>
+  bold_labels()
+```
+
+**Adjusting output by format:**
+
+```{r}
+#| eval: false
+tbl <- overall_up |>
+  tbl_summary(by = intervention)
+
+# HTML output
+tbl
+
+# For PDF (via gt)
+tbl |> as_gt()
+
+# For Word
+tbl |> as_flex_table()
+```
+
+---
+
+## Code Chunk Options Reference
+
+| Option | Effect |
+|---|---|
+| `echo: false` | Hide code, show output |
+| `include: false` | Run code silently (no output shown) |
+| `eval: false` | Show code but don't run it |
+| `warning: false` | Suppress warnings |
+| `message: false` | Suppress package messages |
+| `fig-width: 8` | Figure width in inches |
+| `fig-height: 5` | Figure height in inches |
+| `fig-dpi: 300` | Resolution for saved figures |
+
+Set globally in YAML to apply to all chunks:
+
+```yaml
+execute:
+  echo: false
+  warning: false
+  message: false
+```

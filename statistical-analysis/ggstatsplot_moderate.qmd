@@ -1,0 +1,220 @@
+---
+title: "ggstatsplot — Intermediate"
+format:
+  html:
+    code-copy: true
+    toc: true
+    lightbox: auto
+---
+
+::: {.callout-note}
+This module assumes familiarity with the basics covered in
+[ggstatsplot — Introduction](ggstatsplot_intro.qmd).
+:::
+
+## Functions covered in this module
+
+| Function | Use case |
+|---|---|
+| `ggwithinstats()` | Repeated measures / paired comparisons |
+| `ggbarstats()` | Proportions across categorical groups |
+| `ggpiestats()` | Proportions as pie / donut charts |
+| Customising appearance | Colours, themes, subtitle text |
+| Interpreting Bayes factors | Introduction |
+
+---
+
+## `ggwithinstats()` — Repeated Measures
+
+Use this when the same participants are measured more than once (paired/within-subjects design) — for example, pre-post measurements.
+
+```{r}
+#| eval: false
+library(ggstatsplot)
+library(tidyr)
+
+# Reshape from wide to long for within-subjects comparison
+overall_long <- overall_up |>
+  select(member_id, sbp_0m, sbp_3m) |>
+  pivot_longer(
+    cols      = c(sbp_0m, sbp_3m),
+    names_to  = "timepoint",
+    values_to = "sbp"
+  ) |>
+  mutate(timepoint = factor(timepoint,
+                            levels = c("sbp_0m", "sbp_3m"),
+                            labels = c("Baseline", "3 Months")))
+
+ggwithinstats(
+  data    = overall_long,
+  x       = timepoint,
+  y       = sbp,
+  subject.id = member_id,       # links pairs across timepoints
+  title   = "Systolic BP: Baseline vs 3 Months"
+)
+```
+
+**Key differences from `ggbetweenstats()`:**
+
+- `subject.id` is required — it tells the function which rows are paired
+- Uses a paired t-test (parametric) or Wilcoxon signed-rank (non-parametric)
+- Lines connect paired observations in the plot
+
+---
+
+## `ggbarstats()` — Proportions
+
+Use this when you want to compare proportions of a categorical outcome across groups. The output includes a χ² or Fisher's exact test.
+
+```{r}
+#| eval: false
+ggbarstats(
+  data  = overall_up,
+  x     = fuel_type,           # grouping variable (x-axis)
+  y     = tobacco_type,        # outcome category (fill)
+  title = "Tobacco Type by Fuel Type"
+)
+```
+
+**What the output shows:**
+
+- Stacked bar chart with proportion labels
+- χ² test statistic, degrees of freedom, p-value, and Cramér's V effect size
+- Pairwise comparisons between bars (if > 2 groups)
+
+**Swap axes to change orientation:**
+
+```{r}
+#| eval: false
+# Make tobacco_type the grouping variable
+ggbarstats(data = overall_up, x = tobacco_type, y = fuel_type)
+```
+
+---
+
+## `ggpiestats()` — Pie / Donut Charts
+
+Use this for a single categorical variable, or two categorical variables where a pie chart is appropriate for the audience.
+
+```{r}
+#| eval: false
+# Single variable — proportions of intervention types
+ggpiestats(
+  data  = overall_up,
+  x     = intervention,
+  title = "Distribution of Intervention Groups"
+)
+```
+
+```{r}
+#| eval: false
+# Two variables — tobacco type by intervention
+ggpiestats(
+  data  = overall_up,
+  x     = tobacco_type,
+  y     = intervention,       # creates faceted pies
+  title = "Tobacco Type by Intervention"
+)
+```
+
+::: {.callout-warning}
+## When to use pie charts
+Pie charts are appropriate when there are ≤ 5 categories and the audience
+is non-technical. For more categories or detailed comparisons, prefer
+`ggbarstats()`.
+:::
+
+---
+
+## Customising appearance
+
+All ggstatsplot functions return a ggplot2 object, so you can extend them normally.
+
+```{r}
+#| eval: false
+library(ggplot2)
+
+ggbetweenstats(
+  data        = overall_up,
+  x           = fuel_type,
+  y           = sbp_0m,
+  # Colours for each group
+  palette     = "Set2",
+  package     = "RColorBrewer",
+  # Remove the subtitle (statistical results) if preferred
+  results.subtitle = TRUE,
+  # Change point size and transparency
+  point.args  = list(size = 2, alpha = 0.4),
+  title       = "Systolic BP by Fuel Type"
+) +
+  theme_minimal(base_size = 13) +
+  labs(caption = "Source: NCTOH Study Dataset")
+```
+
+**Common customisation parameters:**
+
+| Parameter | What it controls |
+|---|---|
+| `palette` + `package` | Colour palette for groups |
+| `results.subtitle` | Show/hide statistical annotation |
+| `point.args` | Size, alpha, shape of data points |
+| `centrality.plotting` | Show/hide mean/median marker |
+| `xlab` / `ylab` | Axis labels |
+
+---
+
+## Introduction to Bayes Factors
+
+When you set `type = "bayes"`, ggstatsplot reports a **Bayes Factor (BF₁₀)** instead of a p-value.
+
+```{r}
+#| eval: false
+ggbetweenstats(
+  data  = overall_up,
+  x     = fuel_type,
+  y     = sbp_0m,
+  type  = "bayes",
+  title = "Systolic BP by Fuel Type (Bayesian)"
+)
+```
+
+**Interpreting BF₁₀:**
+
+| BF₁₀ | Interpretation |
+|---|---|
+| > 100 | Extreme evidence for H₁ |
+| 30–100 | Very strong evidence for H₁ |
+| 10–30 | Strong evidence for H₁ |
+| 3–10 | Moderate evidence for H₁ |
+| 1–3 | Anecdotal evidence for H₁ |
+| ~1 | No evidence either way |
+| 1/3–1 | Anecdotal evidence for H₀ |
+| < 1/10 | Strong–extreme evidence for H₀ |
+
+- **BF₁₀ > 3**: reasonably confident that H₁ (an effect exists) is supported
+- **BF₁₀ < 1/3**: reasonably confident that H₀ (no effect) is supported
+- Values between 1/3 and 3 are inconclusive
+
+::: {.callout-note}
+Bayesian inference and deeper interpretation of Bayes factors is covered in
+[ggstatsplot — Advanced](ggstatsplot_advanced.qmd).
+:::
+
+---
+
+## Quick reference
+
+```{r}
+#| eval: false
+# Paired/repeated measures
+ggwithinstats(data = df, x = timepoint, y = outcome, subject.id = id)
+
+# Proportions (bar)
+ggbarstats(data = df, x = group, y = category)
+
+# Proportions (pie)
+ggpiestats(data = df, x = category)
+
+# Bayesian version of any function
+ggbetweenstats(data = df, x = group, y = outcome, type = "bayes")
+```

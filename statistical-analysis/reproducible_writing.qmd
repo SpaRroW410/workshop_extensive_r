@@ -1,0 +1,61 @@
+---
+title: "Reproducible Writing with Quarto"
+format:
+  html:
+    code-copy: true
+    theme: cosmo
+    toc: true
+    lightbox: auto
+---
+
+::: {.content-visible when-profile="moderate"}
+
+## Reproducible Research with Quarto
+
+Quarto enables reproducible research by combining code, text, and output in a single document.
+
+### Creating Reports
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(ggplot2)
+
+data_1 <- readxl::read_excel("../data/PublicHealth_BP_Dataset.xlsx")
+```
+
+### Inline Code
+
+The mean age is `r mean(gtsummary::trial$age)` years.
+
+### Figures
+
+```{r}
+#| label: fig-age-dist
+#| fig-cap: "Distribution of Age"
+ggplot(gtsummary::trial, aes(x = age)) +
+  geom_histogram(binwidth = 5, fill = "blue", alpha = 0.7) +
+  theme_minimal()
+```
+
+### Tables
+
+```{r}
+#| label: tbl-summary
+#| tbl-cap: "Summary Statistics"
+data_1 %>% 
+  summarise(
+    Mean_Age = mean(Age),
+    SD_Age = sd(Age),
+    Mean_SBP = mean(SysBP_0m),
+    SD_SBP = sd(SysBP_0m)
+  ) %>% 
+  knitr::kable()
+```
+
+### Citations and References
+
+Quarto supports citations using BibTeX or DOI.
+
+:::
