@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.27">
+
+  <title>Data Visualization Workshop — Moderate – Categorical - ADVANCED</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-ec442cf06bb45be625e3b8987e465173.css">
+  <link rel="stylesheet" href="../../assets/slide_deck.css">
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Categorical - ADVANCED</h1>
+  <p class="subtitle">Hierarchical &amp; Complex Categorical Data</p>
+
+<div class="quarto-title-authors">
+</div>
+
+</section>
+<section>
+<section id="advanced-categorical-visualization" class="title-slide slide level1 center">
+<h1>Advanced Categorical Visualization</h1>
+
+</section>
+<section id="what-well-learn---advanced" class="slide level2 center">
+<h2>What We’ll Learn - Advanced</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Complex Categorical Structures:</strong></p>
+<ul>
+<li>Treemaps (hierarchical proportions)</li>
+<li>Sunburst charts (circular hierarchies)</li>
+<li>Dendrograms (clustering)</li>
+<li>Marimekko charts (two-way composition)</li>
+<li>Waffle charts (unit visualization)</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Analytical Goals:</strong></p>
+<ul>
+<li>🔴 <strong>Part of Whole</strong> - Hierarchical composition</li>
+<li>🟢 <strong>Ranking</strong> - Within hierarchies</li>
+<li>⚫ <strong>Correlation</strong> - Category associations</li>
+<li>🟡 <strong>Distribution</strong> - Nested patterns</li>
+</ul>
+</div></div>
+</section>
+<section id="setup-code" class="slide level2 center">
+<h2>Setup Code</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="co"># Load required packages</span></span>
+<span id="cb1-2"><a></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-3"><a></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-4"><a></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-5"><a></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-6"><a></a><span class="fu">library</span>(treemapify)  <span class="co"># For treemaps</span></span>
+<span id="cb1-7"><a></a><span class="fu">library</span>(sunburstR)   <span class="co"># For sunburst charts</span></span>
+<span id="cb1-8"><a></a><span class="fu">library</span>(ggmosaic)    <span class="co"># For mosaic plots</span></span>
+<span id="cb1-9"><a></a></span>
+<span id="cb1-10"><a></a><span class="co"># Load dataset</span></span>
+<span id="cb1-11"><a></a>health_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"../../data/PublicHealth_BP_Dataset.xlsx"</span>)</span>
+<span id="cb1-12"><a></a></span>
+<span id="cb1-13"><a></a><span class="co"># Create hierarchical data</span></span>
+<span id="cb1-14"><a></a>hierarchical_data <span class="ot">&lt;-</span> health_data <span class="sc">%&gt;%</span></span>
+<span id="cb1-15"><a></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Region), <span class="sc">!</span><span class="fu">is.na</span>(Gender), <span class="sc">!</span><span class="fu">is.na</span>(SmokingStatus)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-16"><a></a>  <span class="fu">count</span>(Region, Gender, SmokingStatus, <span class="at">name =</span> <span class="st">"count"</span>)</span>
+<span id="cb1-17"><a></a></span>
+<span id="cb1-18"><a></a><span class="co"># Create theme</span></span>
+<span id="cb1-19"><a></a>theme_custom <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb1-20"><a></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb1-21"><a></a>  <span class="fu">theme</span>(</span>
+<span id="cb1-22"><a></a>    <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"serif"</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb1-23"><a></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb1-24"><a></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">11</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb1-25"><a></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb1-26"><a></a>  )</span>
+<span id="cb1-27"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="treemap---code" class="slide level2 center">
+<h2>Treemap - Code</h2>
+<div style="font-size: 0.8em;">
+<p><strong>Purpose:</strong> Show hierarchical part-to-whole relationships</p>
+<p><strong>Goal:</strong> 🔴 Part of Whole + 🟢 Ranking</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co"># Prepare data for treemap</span></span>
+<span id="cb2-2"><a></a>treemap_data <span class="ot">&lt;-</span> health_data <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Region), <span class="sc">!</span><span class="fu">is.na</span>(TreatmentGroup)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a></a>  <span class="fu">count</span>(Region, TreatmentGroup, <span class="at">name =</span> <span class="st">"count"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a></a>  <span class="fu">mutate</span>(<span class="at">label =</span> <span class="fu">paste0</span>(TreatmentGroup, <span class="st">"</span><span class="sc">\n</span><span class="st">(n="</span>, count, <span class="st">")"</span>))</span>
+<span id="cb2-6"><a></a></span>
+<span id="cb2-7"><a></a><span class="co"># Create treemap</span></span>
+<span id="cb2-8"><a></a><span class="fu">ggplot</span>(treemap_data, <span class="fu">aes</span>(<span class="at">area =</span> count, <span class="at">fill =</span> Region, </span>
+<span id="cb2-9"><a></a>                         <span class="at">label =</span> label, <span class="at">subgroup =</span> Region)) <span class="sc">+</span></span>
+<span id="cb2-10"><a></a>  <span class="fu">geom_treemap</span>() <span class="sc">+</span></span>
+<span id="cb2-11"><a></a>  <span class="fu">geom_treemap_subgroup_border</span>(<span class="at">color =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb2-12"><a></a>  <span class="fu">geom_treemap_subgroup_text</span>(</span>
+<span id="cb2-13"><a></a>    <span class="at">place =</span> <span class="st">"center"</span>,</span>
+<span id="cb2-14"><a></a>    <span class="at">grow =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-15"><a></a>    <span class="at">alpha =</span> <span class="fl">0.5</span>,</span>
+<span id="cb2-16"><a></a>    <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb2-17"><a></a>    <span class="at">fontface =</span> <span class="st">"bold"</span>,</span>
+<span id="cb2-18"><a></a>    <span class="at">size =</span> <span class="dv">18</span></span>
+<span id="cb2-19"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb2-20"><a></a>  <span class="fu">geom_treemap_text</span>(</span>
+<span id="cb2-21"><a></a>    <span class="at">color =</span> <span class="st">"white"</span>,</span>
+<span id="cb2-22"><a></a>    <span class="at">place =</span> <span class="st">"center"</span>,</span>
+<span id="cb2-23"><a></a>    <span class="at">size =</span> <span class="dv">10</span>,</span>
+<span id="cb2-24"><a></a>    <span class="at">grow =</span> <span class="cn">FALSE</span></span>
+<span id="cb2-25"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb2-26"><a></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
+<span id="cb2-27"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Patient Distribution by Region and Treatment"</span>,</span>
+<span id="cb2-28"><a></a>       <span class="at">subtitle =</span> <span class="st">"Rectangle size proportional to patient count"</span>,</span>
+<span id="cb2-29"><a></a>       <span class="at">fill =</span> <span class="st">"Region"</span>) <span class="sc">+</span></span>
+<span id="cb2-30"><a></a>  <span class="fu">theme_custom</span>() <span class="sc">+</span></span>
+<span id="cb2-31"><a></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</div>
+</section>
+<section id="treemap---output" class="slide level2 center">
+<h2>Treemap - Output</h2>
+
+<img data-src="3.1_categorical_advanced_files/figure-revealjs/unnamed-chunk-3-1.png" width="1056" class="r-stretch"></section>
+<section id="interpreting-treemaps" class="slide level2 center">
+<h2>Interpreting Treemaps</h2>
+<div class="columns" style="font-size: 0.9em;">
+<div class="column" style="width:50%;">
+<p><strong>Key Features:</strong></p>
+<ul>
+<li><strong>Size = Quantity</strong> - Larger rectangles = more patients</li>
+<li><strong>Color = Category</strong> - Each region has its own color</li>
+<li><strong>Hierarchy</strong> - Region (outer) → Treatment (inner)</li>
+<li><strong>Space-efficient</strong> - Uses all available area</li>
+</ul>
+<p><strong>Best Practices:</strong></p>
+<ul>
+<li>Limit to 2-3 hierarchy levels</li>
+<li>Use clear labels</li>
+<li>Consistent color scheme</li>
+<li>Consider interactivity for complex trees</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Our Treemap Shows:</strong></p>
+<ol type="1">
+<li><p><strong>East region largest</strong> overall</p>
+<ul>
+<li>Most patients</li>
+</ul></li>
+<li><p><strong>Within each region</strong> treatment distribution visible</p>
+<ul>
+<li>Relative sizes easy to compare</li>
+</ul></li>
+<li><p><strong>Quick identification</strong> of smallest/largest segments</p></li>
+<li><p><strong>Hierarchical structure</strong> immediately clear</p>
+<ul>
+<li>Region → Treatment breakdown</li>
+</ul></li>
+</ol>
+<p><strong>Advantage:</strong> Efficient use of space compared to nested pie charts</p>
+</div></div>
+</section>
+<section id="sunburst-chart---code" class="slide level2 center">
+<h2>Sunburst Chart - Code</h2>
+<div style="font-size: 0.75em;">
+<p><strong>Purpose:</strong> Radial hierarchical visualization</p>
+<p><strong>Goal:</strong> 🔴 Part of Whole (circular)</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="co"># Prepare data in required format for sunburst</span></span>
+<span id="cb3-2"><a></a><span class="co"># Format: path-count pairs</span></span>
+<span id="cb3-3"><a></a>sunburst_data <span class="ot">&lt;-</span> health_data <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Region), <span class="sc">!</span><span class="fu">is.na</span>(Gender), <span class="sc">!</span><span class="fu">is.na</span>(SmokingStatus)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a></a>  <span class="fu">count</span>(Region, Gender, SmokingStatus) <span class="sc">%&gt;%</span></span>
+<span id="cb3-6"><a></a>  <span class="fu">mutate</span>(<span class="at">path =</span> <span class="fu">paste</span>(Region, Gender, SmokingStatus, <span class="at">sep =</span> <span class="st">"-"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-7"><a></a>  <span class="fu">select</span>(path, n)</span>
+<span id="cb3-8"><a></a></span>
+<span id="cb3-9"><a></a><span class="co"># Create sunburst chart</span></span>
+<span id="cb3-10"><a></a><span class="fu">sunburst</span>(</span>
+<span id="cb3-11"><a></a>  <span class="at">data =</span> sunburst_data,</span>
+<span id="cb3-12"><a></a>  <span class="at">count =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-13"><a></a>  <span class="at">legend =</span> <span class="fu">list</span>(<span class="at">w =</span> <span class="dv">150</span>, <span class="at">h =</span> <span class="dv">25</span>, <span class="at">s =</span> <span class="dv">5</span>, <span class="at">t =</span> <span class="dv">25</span>),</span>
+<span id="cb3-14"><a></a>  <span class="at">breadcrumb =</span> <span class="fu">list</span>(<span class="at">w =</span> <span class="dv">0</span>, <span class="at">h =</span> <span class="dv">25</span>, <span class="at">s =</span> <span class="dv">5</span>, <span class="at">t =</span> <span class="dv">10</span>),</span>
+<span id="cb3-15"><a></a>  <span class="at">colors =</span> <span class="fu">list</span>(</span>
+<span id="cb3-16"><a></a>    <span class="at">range =</span> <span class="fu">c</span>(<span class="st">"#E41A1C"</span>, <span class="st">"#377EB8"</span>, <span class="st">"#4DAF4A"</span>, <span class="st">"#984EA3"</span>,</span>
+<span id="cb3-17"><a></a>             <span class="st">"#FF7F00"</span>, <span class="st">"#FFFF33"</span>, <span class="st">"#A65628"</span>, <span class="st">"#F781BF"</span>)</span>
+<span id="cb3-18"><a></a>  ),</span>
+<span id="cb3-19"><a></a>  <span class="at">withD3 =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-20"><a></a>  <span class="at">width =</span> <span class="st">"100%"</span>,</span>
+<span id="cb3-21"><a></a>  <span class="at">height =</span> <span class="dv">500</span></span>
+<span id="cb3-22"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p><strong>Note:</strong> Sunburst creates interactive HTML widget. For static, use <code>ggplot2</code> alternative.</p>
+<p><strong>Static Alternative (next slide):</strong></p>
+</div>
+</section>
+<section id="sunburst-alternative-radial-bar---code" class="slide level2 center">
+<h2>Sunburst Alternative: Radial Bar - Code</h2>
+<div style="font-size: 0.8em;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="co"># Create radial bar plot (sunburst alternative)</span></span>
+<span id="cb4-2"><a></a>radial_data <span class="ot">&lt;-</span> health_data <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Region), <span class="sc">!</span><span class="fu">is.na</span>(SmokingStatus)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a></a>  <span class="fu">count</span>(Region, SmokingStatus) <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a></a>  <span class="fu">group_by</span>(Region) <span class="sc">%&gt;%</span></span>
+<span id="cb4-6"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-7"><a></a>    <span class="at">percentage =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n) <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb4-8"><a></a>    <span class="at">id =</span> <span class="fu">paste</span>(Region, SmokingStatus, <span class="at">sep =</span> <span class="st">"-"</span>)</span>
+<span id="cb4-9"><a></a>  )</span>
+<span id="cb4-10"><a></a></span>
+<span id="cb4-11"><a></a><span class="fu">ggplot</span>(radial_data, <span class="fu">aes</span>(<span class="at">x =</span> Region, <span class="at">y =</span> n, <span class="at">fill =</span> SmokingStatus)) <span class="sc">+</span></span>
+<span id="cb4-12"><a></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb4-13"><a></a>  <span class="fu">coord_polar</span>() <span class="sc">+</span></span>
+<span id="cb4-14"><a></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Never"</span> <span class="ot">=</span> <span class="st">"#00A087"</span>, </span>
+<span id="cb4-15"><a></a>                              <span class="st">"Former"</span> <span class="ot">=</span> <span class="st">"#3C5488"</span>,</span>
+<span id="cb4-16"><a></a>                              <span class="st">"Current"</span> <span class="ot">=</span> <span class="st">"#DC0000"</span>)) <span class="sc">+</span></span>
+<span id="cb4-17"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Smoking Status Distribution by Region (Radial)"</span>,</span>
+<span id="cb4-18"><a></a>       <span class="at">subtitle =</span> <span class="st">"Each segment shows proportion within region"</span>,</span>
+<span id="cb4-19"><a></a>       <span class="at">fill =</span> <span class="st">"Smoking Status"</span>) <span class="sc">+</span></span>
+<span id="cb4-20"><a></a>  <span class="fu">theme_custom</span>() <span class="sc">+</span></span>
+<span id="cb4-21"><a></a>  <span class="fu">theme</span>(</span>
+<span id="cb4-22"><a></a>    <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-23"><a></a>    <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-24"><a></a>    <span class="at">panel.grid =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb4-25"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</div>
+</section>
+<section id="radial-bar---output" class="slide level2 center">
+<h2>Radial Bar - Output</h2>
+
+<img data-src="3.1_categorical_advanced_files/figure-revealjs/unnamed-chunk-6-1.png" width="864" class="r-stretch"></section>
+<section id="marimekko-chart---code" class="slide level2 center">
+<h2>Marimekko Chart - Code</h2>
+<div style="font-size: 0.8em;">
+<p><strong>Purpose:</strong> Two-way composition (varying column widths)</p>
+<p><strong>Goal:</strong> 🔴 Part of Whole (two dimensions)</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="co"># Prepare data for Marimekko</span></span>
+<span id="cb5-2"><a></a>marimekko_data <span class="ot">&lt;-</span> health_data <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Region), <span class="sc">!</span><span class="fu">is.na</span>(TreatmentGroup)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a></a>  <span class="fu">count</span>(Region, TreatmentGroup) <span class="sc">%&gt;%</span></span>
+<span id="cb5-5"><a></a>  <span class="fu">group_by</span>(Region) <span class="sc">%&gt;%</span></span>
+<span id="cb5-6"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-7"><a></a>    <span class="at">region_total =</span> <span class="fu">sum</span>(n),</span>
+<span id="cb5-8"><a></a>    <span class="at">pct_in_region =</span> n <span class="sc">/</span> region_total <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb5-9"><a></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb5-10"><a></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb5-11"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-12"><a></a>    <span class="at">region_pct =</span> region_total <span class="sc">/</span> <span class="fu">sum</span>(region_total) <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb5-13"><a></a>    <span class="at">cumsum_region =</span> <span class="fu">cumsum</span>(region_pct) <span class="sc">-</span> region_pct <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb5-14"><a></a>  )</span>
+<span id="cb5-15"><a></a></span>
+<span id="cb5-16"><a></a><span class="co"># Create Marimekko chart</span></span>
+<span id="cb5-17"><a></a><span class="fu">ggplot</span>(marimekko_data, <span class="fu">aes</span>(<span class="at">x =</span> Region, <span class="at">y =</span> pct_in_region, </span>
+<span id="cb5-18"><a></a>                           <span class="at">fill =</span> TreatmentGroup, <span class="at">width =</span> region_pct)) <span class="sc">+</span></span>
+<span id="cb5-19"><a></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"stack"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb5-20"><a></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>) <span class="sc">+</span></span>
+<span id="cb5-21"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Treatment Distribution by Region (Marimekko)"</span>,</span>
+<span id="cb5-22"><a></a>       <span class="at">subtitle =</span> <span class="st">"Column width = regional patient share | Height = treatment proportion"</span>,</span>
+<span id="cb5-23"><a></a>       <span class="at">x =</span> <span class="st">"Region"</span>,</span>
+<span id="cb5-24"><a></a>       <span class="at">y =</span> <span class="st">"Percentage within Region"</span>,</span>
+<span id="cb5-25"><a></a>       <span class="at">fill =</span> <span class="st">"Treatment"</span>) <span class="sc">+</span></span>
+<span id="cb5-26"><a></a>  <span class="fu">theme_custom</span>() <span class="sc">+</span></span>
+<span id="cb5-27"><a></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</div>
+</section>
+<section id="marimekko-chart---output" class="slide level2 center">
+<h2>Marimekko Chart - Output</h2>
+
+<img data-src="3.1_categorical_advanced_files/figure-revealjs/unnamed-chunk-8-1.png" width="960" class="r-stretch"></section>
+<section id="interpreting-marimekko-charts" class="slide level2 center">
+<h2>Interpreting Marimekko Charts</h2>
+<div style="font-size: 0.9em;">
+<p><strong>Unique Features:</strong></p>
+<ol type="1">
+<li class="fragment"><strong>Two dimensions of composition</strong>
+<ul>
+<li class="fragment">Width would represent one variable’s total</li>
+<li class="fragment">Height shows breakdown within that category</li>
+</ul></li>
+<li class="fragment"><strong>Space = Area</strong>
+<ul>
+<li class="fragment">Total area of each segment = actual count contribution</li>
+</ul></li>
+<li class="fragment"><strong>Compare both dimensions simultaneously</strong>
+<ul>
+<li class="fragment">More information dense than standard stacked bars</li>
+</ul></li>
+</ol>
+<p><strong>Our Chart:</strong></p>
+<ul>
+<li class="fragment"><strong>Treatment distribution</strong> fairly consistent across regions</li>
+<li class="fragment"><strong>All regions</strong> show similar proportions of each treatment</li>
+<li class="fragment"><strong>Visual balance</strong> suggests good randomization</li>
+</ul>
+<p><strong>When to use:</strong> Two categorical variables where both totals and proportions matter</p>
+</div>
+</section>
+<section id="waffle-chart---code" class="slide level2 center">
+<h2>Waffle Chart - Code</h2>
+<div style="font-size: 0.8em;">
+<p><strong>Purpose:</strong> Unit-based visualization (each square = fixed count)</p>
+<p><strong>Goal:</strong> 🔴 Part of Whole (intuitive units)</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="co"># Prepare data (each unit = 10 patients)</span></span>
+<span id="cb6-2"><a></a>waffle_data <span class="ot">&lt;-</span> health_data <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(TreatmentGroup)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a></a>  <span class="fu">count</span>(TreatmentGroup) <span class="sc">%&gt;%</span></span>
+<span id="cb6-5"><a></a>  <span class="fu">mutate</span>(<span class="at">squares =</span> <span class="fu">round</span>(n <span class="sc">/</span> <span class="dv">10</span>))  <span class="co"># 1 square = 10 patients</span></span>
+<span id="cb6-6"><a></a></span>
+<span id="cb6-7"><a></a><span class="co"># Create waffle chart</span></span>
+<span id="cb6-8"><a></a>waffle_expanded <span class="ot">&lt;-</span> waffle_data <span class="sc">%&gt;%</span></span>
+<span id="cb6-9"><a></a>  <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-10"><a></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span>squares)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-11"><a></a>  <span class="fu">unnest</span>(id) <span class="sc">%&gt;%</span></span>
+<span id="cb6-12"><a></a>  <span class="fu">mutate</span>(<span class="at">square_id =</span> <span class="fu">row_number</span>(),</span>
+<span id="cb6-13"><a></a>         <span class="at">x =</span> (square_id <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">%%</span> <span class="dv">10</span>,   <span class="co"># 10 rows</span></span>
+<span id="cb6-14"><a></a>         <span class="at">y =</span> (square_id <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">%/%</span> <span class="dv">10</span>)</span>
+<span id="cb6-15"><a></a></span>
+<span id="cb6-16"><a></a><span class="co"># Plot with ggplot2</span></span>
+<span id="cb6-17"><a></a><span class="fu">ggplot</span>(waffle_expanded, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> TreatmentGroup)) <span class="sc">+</span></span>
+<span id="cb6-18"><a></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb6-19"><a></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Treatment A"</span> <span class="ot">=</span> <span class="st">"#E41A1C"</span>,</span>
+<span id="cb6-20"><a></a>                               <span class="st">"Treatment B"</span> <span class="ot">=</span> <span class="st">"#377EB8"</span>,</span>
+<span id="cb6-21"><a></a>                               <span class="st">"Control"</span>     <span class="ot">=</span> <span class="st">"#4DAF4A"</span>)) <span class="sc">+</span></span>
+<span id="cb6-22"><a></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb6-23"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Patient Distribution by Treatment Group"</span>,</span>
+<span id="cb6-24"><a></a>       <span class="at">x =</span> <span class="st">"1 square = 10 patients"</span>,</span>
+<span id="cb6-25"><a></a>       <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb6-26"><a></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb6-27"><a></a>  <span class="fu">theme</span>(</span>
+<span id="cb6-28"><a></a>    <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb6-29"><a></a>    <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb6-30"><a></a>    <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"serif"</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb6-31"><a></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>)</span>
+<span id="cb6-32"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</div>
+</section>
+<section id="waffle-chart---output" class="slide level2 center">
+<h2>Waffle Chart - Output</h2>
+
+<img data-src="3.1_categorical_advanced_files/figure-revealjs/unnamed-chunk-10-1.png" width="960" class="r-stretch"></section>
+<section id="interpreting-waffle-charts" class="slide level2 center">
+<h2>Interpreting Waffle Charts</h2>
+<div style="font-size: 0.9em;">
+<p><strong>Why Waffle Charts Work:</strong></p>
+<ol type="1">
+<li class="fragment"><strong>Intuitive unit representation</strong>
+<ul>
+<li class="fragment">Each square = fixed count (e.g., 10 patients)</li>
+<li class="fragment">Easy to count and compare</li>
+</ul></li>
+<li class="fragment"><strong>Avoid pie chart problems</strong>
+<ul>
+<li class="fragment">No angles to judge</li>
+<li class="fragment">Better for exact comparisons</li>
+</ul></li>
+<li class="fragment"><strong>Visual impact</strong>
+<ul>
+<li class="fragment">Engaging and memorable</li>
+<li class="fragment">Good for presentations and infographics</li>
+</ul></li>
+</ol>
+<p><strong>Our Chart:</strong></p>
+<ul>
+<li class="fragment"><strong>Treatment groups balanced</strong></li>
+<li class="fragment"><strong>Control group</strong> has similar size</li>
+<li class="fragment"><strong>Each square represents 10 patients</strong></li>
+<li class="fragment"><strong>Visual counting</strong> easier than interpreting angles</li>
+</ul>
+<p><strong>When to use:</strong> Small to medium datasets, need visual impact</p>
+</div>
+</section>
+<section id="dendrogram---code" class="slide level2 center">
+<h2>Dendrogram - Code</h2>
+<div style="font-size: 0.75em;">
+<p><strong>Purpose:</strong> Show hierarchical clustering of categories</p>
+<p><strong>Goal:</strong> ⚫ Correlation + hierarchical structure</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="co"># Calculate dissimilarity matrix for regions based on health metrics</span></span>
+<span id="cb7-2"><a></a>region_profiles <span class="ot">&lt;-</span> health_data <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Region)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a></a>  <span class="fu">group_by</span>(Region) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a></a>  <span class="fu">summarise</span>(</span>
+<span id="cb7-6"><a></a>    <span class="at">mean_bp =</span> <span class="fu">mean</span>(SysBP_0m, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-7"><a></a>    <span class="at">mean_chol =</span> <span class="fu">mean</span>(Cholesterol_0m, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-8"><a></a>    <span class="at">mean_bmi =</span> <span class="fu">mean</span>(BMI_0m, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-9"><a></a>    <span class="at">pct_smokers =</span> <span class="fu">mean</span>(SmokingStatus <span class="sc">==</span> <span class="st">"Current"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb7-10"><a></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-11"><a></a>  <span class="fu">column_to_rownames</span>(<span class="st">"Region"</span>)</span>
+<span id="cb7-12"><a></a></span>
+<span id="cb7-13"><a></a><span class="co"># Scale variables</span></span>
+<span id="cb7-14"><a></a>region_scaled <span class="ot">&lt;-</span> <span class="fu">scale</span>(region_profiles)</span>
+<span id="cb7-15"><a></a></span>
+<span id="cb7-16"><a></a><span class="co"># Hierarchical clustering</span></span>
+<span id="cb7-17"><a></a>hc <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>(region_scaled), <span class="at">method =</span> <span class="st">"ward.D2"</span>)</span>
+<span id="cb7-18"><a></a></span>
+<span id="cb7-19"><a></a><span class="co"># Plot dendrogram</span></span>
+<span id="cb7-20"><a></a><span class="fu">library</span>(ggdendro)</span>
+<span id="cb7-21"><a></a><span class="fu">ggdendrogram</span>(hc, <span class="at">rotate =</span> <span class="cn">FALSE</span>, <span class="at">theme_dendro =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb7-22"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Hierarchical Clustering of Regions by Health Profiles"</span>,</span>
+<span id="cb7-23"><a></a>       <span class="at">subtitle =</span> <span class="st">"Based on BP, cholesterol, BMI, and smoking rates"</span>,</span>
+<span id="cb7-24"><a></a>       <span class="at">x =</span> <span class="st">"Region"</span>,</span>
+<span id="cb7-25"><a></a>       <span class="at">y =</span> <span class="st">"Distance (Ward's method)"</span>) <span class="sc">+</span></span>
+<span id="cb7-26"><a></a>  <span class="fu">theme_custom</span>() <span class="sc">+</span></span>
+<span id="cb7-27"><a></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</div>
+</section>
+<section id="dendrogram---output" class="slide level2 center">
+<h2>Dendrogram - Output</h2>
+
+<img data-src="3.1_categorical_advanced_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"></section>
+<section id="interpreting-dendrograms" class="slide level2 center">
+<h2>Interpreting Dendrograms</h2>
+<div class="columns" style="font-size: 0.9em;">
+<div class="column" style="width:50%;">
+<p><strong>Reading Dendrograms:</strong></p>
+<ul>
+<li><strong>Height</strong> = Dissimilarity</li>
+<li><strong>Branches</strong> joining lower = more similar</li>
+<li><strong>Clusters</strong> formed by cutting at height</li>
+<li><strong>Leaf</strong> = Individual category</li>
+</ul>
+<p><strong>Method Matters:</strong></p>
+<ul>
+<li><strong>Ward’s</strong> - Minimizes within-cluster variance</li>
+<li><strong>Complete</strong> - Maximum distance</li>
+<li><strong>Average</strong> - Mean distance between clusters</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Our Dendrogram:</strong></p>
+<ol type="1">
+<li><strong>East and North</strong> most similar
+<ul>
+<li>Join at lowest height</li>
+<li>Similar health profiles</li>
+</ul></li>
+<li><strong>South different</strong> from North/East
+<ul>
+<li>Joins at higher level</li>
+</ul></li>
+<li><strong>West most distinct</strong>
+<ul>
+<li>Joins last, highest dissimilarity</li>
+</ul></li>
+</ol>
+<p><strong>Use Case:</strong> Identifying similar market segments, patient groups</p>
+</div></div>
+</section>
+<section id="chart-selection-guide" class="slide level2 center">
+<h2>Chart Selection Guide</h2>
+<div style="font-size: 0.85em;">
+<table class="caption-top">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 15%">
+<col style="width: 25%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Chart Type</th>
+<th>Goal</th>
+<th>Best For</th>
+<th>Complexity</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Treemap</strong></td>
+<td>🔴 Part of Whole</td>
+<td>Hierarchical proportions, space-efficient</td>
+<td>Medium</td>
+</tr>
+<tr class="even">
+<td><strong>Sunburst</strong></td>
+<td>🔴 Part of Whole</td>
+<td>Multi-level hierarchies, interactive</td>
+<td>High</td>
+</tr>
+<tr class="odd">
+<td><strong>Marimekko</strong></td>
+<td>🔴 Part of Whole</td>
+<td>Two-way composition</td>
+<td>Medium-High</td>
+</tr>
+<tr class="even">
+<td><strong>Waffle</strong></td>
+<td>🔴 Part of Whole</td>
+<td>Small datasets, visual impact</td>
+<td>Easy-Medium</td>
+</tr>
+<tr class="odd">
+<td><strong>Dendrogram</strong></td>
+<td>⚫ Correlation</td>
+<td>Category clustering, similarity</td>
+<td>Medium-High</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pro Tip:</strong> Advanced charts require more explanation - include clear legends and labels</p>
+</div>
+</section>
+<section id="common-mistakes" class="slide level2 center">
+<h2>Common Mistakes</h2>
+<div style="font-size: 0.9em;">
+<ol type="1">
+<li class="fragment"><strong>Too many categories</strong> in treemap/sunburst
+<ul>
+<li class="fragment">Solution: Filter to top N categories or aggregate small ones</li>
+</ul></li>
+<li class="fragment"><strong>Poor color choices</strong> making comparisons hard
+<ul>
+<li class="fragment">Solution: Use consistent, meaningful color schemes</li>
+</ul></li>
+<li class="fragment"><strong>Missing context</strong> in dendrograms
+<ul>
+<li class="fragment">Solution: Explain clustering method and distance metric</li>
+</ul></li>
+<li class="fragment"><strong>Waffle charts</strong> with inappropriate units
+<ul>
+<li class="fragment">Solution: Choose unit size that creates 50-200 squares</li>
+</ul></li>
+<li class="fragment"><strong>Marimekko</strong> without clear labels
+<ul>
+<li class="fragment">Solution: Add annotations explaining width/height meanings</li>
+</ul></li>
+<li class="fragment"><strong>Interactive charts</strong> not working in static reports
+<ul>
+<li class="fragment">Solution: Provide static alternatives or export images</li>
+</ul></li>
+</ol>
+</div>
+</section>
+<section id="practice-exercise" class="slide level2 center">
+<h2>Practice Exercise</h2>
+<p><strong>Your Turn:</strong></p>
+<ol type="1">
+<li>Create a treemap showing patient distribution by Region → Gender → SmokingStatus</li>
+<li>Build a waffle chart for ExerciseFreq (1 square = 5 patients)</li>
+<li>Create a dendrogram clustering treatment groups based on outcome metrics</li>
+<li>Make a Marimekko chart for Gender × TreatmentGroup</li>
+</ol>
+<p><strong>Bonus Challenge:</strong></p>
+<p>Create an interactive sunburst chart with 3 levels: Region → TreatmentGroup → Adherence_Status</p>
+</section>
+<section id="summary" class="slide level2 center">
+<h2>Summary</h2>
+<div style="font-size: 0.9em;">
+<p><strong>What You’ve Learned:</strong></p>
+<ol type="1">
+<li class="fragment"><strong>Treemaps</strong> efficiently show hierarchical proportions</li>
+<li class="fragment"><strong>Sunburst charts</strong> display circular hierarchies</li>
+<li class="fragment"><strong>Marimekko charts</strong> reveal two-way compositions</li>
+<li class="fragment"><strong>Waffle charts</strong> provide intuitive unit-based views</li>
+<li class="fragment"><strong>Dendrograms</strong> identify category similarities</li>
+</ol>
+<p><strong>Key Principle:</strong></p>
+<blockquote>
+<p>Advanced categorical charts reveal patterns in complex, multi-level categorical data that simpler charts cannot show</p>
+</blockquote>
+</div>
+</section>
+<section id="next-steps" class="slide level2 center">
+<h2>Next Steps</h2>
+<p><strong>You’ve mastered Categorical - Advanced!</strong></p>
+<p><strong>Next:</strong> Continuous - Advanced</p>
+<p>Learn advanced continuous visualizations:</p>
+<ul>
+<li>Contour plots</li>
+<li>3D surface plots</li>
+<li>Parallel coordinates</li>
+<li>Advanced density techniques</li>
+</ul>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: true,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <div style="
+
+      position: fixed;
+
+      bottom: 10px;           /* lifted above slide number */
+
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      font-size: 0.9em;
+
+      color: black;
+
+      background-color: transparent;
+
+      z-index: 9999;
+
+      text-align: center;
+
+    ">
+
+      <a href="../../index.html" style="color: black;">🏠 Home</a> |
+
+      <a href="../basic.html" style="color: black;">📊 Plot Gallery</a>
+
+    </div>
+    
+
+    <script>
+
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
+      // slide changes (different for each slide format).
+
+      (function () {
+
+        // dispatch for htmlwidgets
+
+        function fireSlideEnter() {
+
+          const event = window.document.createEvent("Event");
+
+          event.initEvent("slideenter", true, true);
+
+          window.document.dispatchEvent(event);
+
+        }
+
+    
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          fireSlideEnter();
+
+    
+
+          // dispatch for shiny
+
+          if (window.jQuery) {
+
+            if (previousSlide) {
+
+              window.jQuery(previousSlide).trigger("hidden");
+
+            }
+
+            if (currentSlide) {
+
+              window.jQuery(currentSlide).trigger("shown");
+
+            }
+
+          }
+
+        }
+
+    
+
+        // hookup for slidy
+
+        if (window.w3c_slidy) {
+
+          window.w3c_slidy.add_observer(function (slide_num) {
+
+            // slide_num starts at position 1
+
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
+          });
+
+        }
+
+    
+
+      })();
+
+    </script>
+
+    
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("\.");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

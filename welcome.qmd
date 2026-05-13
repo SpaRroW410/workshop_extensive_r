@@ -1,0 +1,330 @@
+---
+title: "Welcome"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+---
+
+```{r}
+#| echo: false
+#| output: asis
+
+profile <- Sys.getenv("QUARTO_PROFILE", unset = "basic")
+
+# ── Profile metadata ──────────────────────────────────────────────────────────
+meta <- list(
+
+  basic = list(
+    title   = "Basic Track",
+    badge   = "🟢 Open Access",
+    colour  = "#2e7d32",
+    bg      = "#f1f8f1",
+    intro   = "Welcome to the **Basic Track** of the R Data Visualization Workshop — an open-access, self-paced learning platform for data wrangling, visualization, and statistical analysis in R. This site contains hands-on examples, best practices, and plotting techniques all in one place.",
+    goals   = c(
+      "Learn the basics of good data visualization",
+      "Use R to wrangle and prepare data",
+      "Explore basic visualization and statistical testing",
+      "Create reproducible reports using Quarto"
+    ),
+    modules = c(
+      "📁 R Foundations & Data Wrangling",
+      "📊 Basic Visualization with ggplot2",
+      "🧪 Statistical Test Selection",
+      "📈 ggstatsplot — Introduction",
+      "📝 Quarto Basics"
+    ),
+    nav = list(
+      list(icon="📁", label="R Foundations",     href="r-foundations/getting-started.qmd",          desc="R syntax, data cleaning, and tidy workflows"),
+      list(icon="📊", label="Data Visualization", href="data-visualization/ggplot_grammar.qmd",       desc="Grammar of graphics and basic ggplot2"),
+      list(icon="🧪", label="Statistical Analysis",href="statistical-analysis/statistical_tests.qmd", desc="Choosing the right statistical test"),
+      list(icon="📝", label="Reproducibility",    href="statistical-analysis/reproducible_writing.qmd",desc="Creating reports with Quarto")
+    ),
+    show_stats   = TRUE,
+    show_quarto  = TRUE,
+    downloads = list(
+      scripts    = c("downloads/basic_r_foundations.R", "downloads/basic_visualization.R"),
+      datasets   = c("downloads/workshop_data.csv", "downloads/workshop_data.xlsx", "downloads/workshop_data.rds"),
+      cheatsheets= c("downloads/ggplot2_cheatsheet.pdf", "downloads/dplyr_cheatsheet.pdf"),
+      quarto     = c("downloads/quarto_basics.qmd")
+    ),
+    tip  = "New to R? Start with **R Foundations → Getting Started** before anything else.",
+    nav_note = "Use the navbar above to explore topics in any order."
+  ),
+
+  moderate = list(
+    title   = "Moderate Track",
+    badge   = "🔵 Workshop Key Unlocked",
+    colour  = "#1565c0",
+    bg      = "#f0f4ff",
+    intro   = "Welcome to the **Moderate Track** — unlocked for workshop participants. This track builds on the basics with best practices, intermediate plots, ggplot2 modules 1–2, gtsummary tables, and applied healthcare examples from real public health datasets.",
+    goals   = c(
+      "Apply best practices to plot design",
+      "Use ggplot2 modules 1–2 for intermediate visualization",
+      "Summarise data with gtsummary tables",
+      "Create dynamic Quarto documents with inline R code"
+    ),
+    modules = c(
+      "📁 R Foundations & Data Wrangling (+ Applied Examples)",
+      "📊 Best Practices & Plot Matching",
+      "🎨 ggplot2 Modules 1–2",
+      "🖼️ Basic & Intermediate Plot Gallery",
+      "🔗 Specialized Plots — Merged & Statistical",
+      "🧪 ggstatsplot — Intro & Intermediate",
+      "📋 gtsummary Tables",
+      "📝 Quarto Basics & Dynamic Documents",
+      "⚙️ Exporting & Plotting Tools"
+    ),
+    nav = list(
+      list(icon="📁", label="R Foundations",     href="r-foundations/getting-started.qmd",             desc="R syntax, wrangling, and applied healthcare examples"),
+      list(icon="📊", label="Data Visualization", href="data-visualization/ggplot_grammar.qmd",          desc="Best practices, plot matching, and ggplot2 modules 1–2"),
+      list(icon="🧪", label="Statistical Analysis",href="statistical-analysis/statistical_tests.qmd",    desc="ggstatsplot intermediate and gtsummary tables"),
+      list(icon="📝", label="Reproducibility",    href="statistical-analysis/reproducible_writing.qmd",  desc="Quarto basics and dynamic documents with inline R")
+    ),
+    show_stats   = TRUE,
+    show_quarto  = TRUE,
+    downloads = list(
+      scripts    = c("downloads/basic_r_foundations.R", "downloads/basic_visualization.R",
+                     "downloads/moderate_visualization.R", "downloads/gtsummary_examples.R"),
+      datasets   = c("downloads/workshop_data.csv", "downloads/workshop_data.xlsx",
+                     "downloads/workshop_data.rds", "downloads/nctoh_data.rds"),
+      cheatsheets= c("downloads/ggplot2_cheatsheet.pdf", "downloads/dplyr_cheatsheet.pdf",
+                     "downloads/gtsummary_cheatsheet.pdf"),
+      quarto     = c("downloads/quarto_basics.qmd")
+    ),
+    tip  = "Already comfortable with basics? Jump to **ggplot2 Module 1** or **Best Practices** directly.",
+    nav_note = "All Basic content remains accessible from the navbar above."
+  ),
+
+  advanced = list(
+    title   = "Advanced Track",
+    badge   = "🔴 Workshop Key Unlocked",
+    colour  = "#b71c1c",
+    bg      = "#fff5f5",
+    intro   = "Welcome to the **Advanced Track** — the full workshop experience. This track covers all four ggplot2 modules, advanced and interactive plots, ggstatsplot advanced, Quarto for publication, deep statistical analysis, and real-world applied NCTOH healthcare examples.",
+    goals   = c(
+      "Master all four ggplot2 modules",
+      "Build interactive and advanced visualizations",
+      "Perform deep statistical analysis with ggstatsplot",
+      "Produce publication-ready documents using Quarto"
+    ),
+    modules = c(
+      "📁 R Foundations & Data Wrangling (+ Applied Examples)",
+      "📊 Best Practices & Plot Matching",
+      "🎨 ggplot2 Modules 1–4 (Complete)",
+      "🖼️ Basic, Intermediate & Advanced Plot Gallery",
+      "🔗 Specialized Plots — Merged, Statistical & Interactive",
+      "🧪 ggstatsplot — Intro, Intermediate & Advanced",
+      "📋 gtsummary Tables & Deep Statistical Analysis",
+      "📝 Quarto — Basics, Dynamic Documents & Publication",
+      "⚙️ Full Exporting, Debugging & Advanced Tools",
+      "🏥 Applied NCTOH Healthcare Examples"
+    ),
+    nav = list(
+      list(icon="📁", label="R Foundations",     href="r-foundations/getting-started.qmd",             desc="R syntax, wrangling, and full NCTOH applied examples"),
+      list(icon="📊", label="Data Visualization", href="data-visualization/ggplot_grammar.qmd",          desc="All four ggplot2 modules, advanced and interactive plots"),
+      list(icon="🧪", label="Statistical Analysis",href="statistical-analysis/statistical_tests.qmd",    desc="Full ggstatsplot, gtsummary, and deep analysis"),
+      list(icon="📝", label="Reproducibility",    href="statistical-analysis/reproducible_writing.qmd",  desc="Quarto basics through publication-ready documents")
+    ),
+    show_stats   = TRUE,
+    show_quarto  = TRUE,
+    downloads = list(
+      scripts    = c("downloads/basic_r_foundations.R", "downloads/basic_visualization.R",
+                     "downloads/moderate_visualization.R", "downloads/advanced_visualization.R",
+                     "downloads/gtsummary_examples.R", "downloads/interactive_plots.R"),
+      datasets   = c("downloads/workshop_data.csv", "downloads/workshop_data.xlsx",
+                     "downloads/workshop_data.rds", "downloads/nctoh_data.rds",
+                     "downloads/nctoh_complete.rds"),
+      cheatsheets= c("downloads/ggplot2_cheatsheet.pdf", "downloads/dplyr_cheatsheet.pdf",
+                     "downloads/gtsummary_cheatsheet.pdf", "downloads/quarto_cheatsheet.pdf",
+                     "downloads/ggstatsplot_cheatsheet.pdf"),
+      quarto     = c("downloads/quarto_basics.qmd")
+    ),
+    tip  = "Explore **Applied Examples** under each section for real-world healthcare data workflows.",
+    nav_note = "The complete navbar gives full access to all workshop content."
+  ),
+
+  `dataviz-base` = list(
+    title   = "Data Visualization — Foundations",
+    badge   = "🟣 Workshop Key Unlocked",
+    colour  = "#6a1b9a",
+    bg      = "#faf0ff",
+    intro   = "Welcome to the **Data Visualization Foundations** track. This focused track covers the grammar of graphics, visualization best practices, ggplot2 Modules 1–2, and the basic and intermediate plot galleries. No statistical analysis or Quarto modules are included.",
+    goals   = c(
+      "Understand the grammar of graphics",
+      "Apply best practices to plot design",
+      "Use ggplot2 Modules 1–2 for effective visualization",
+      "Export and share publication-ready plots"
+    ),
+    modules = c(
+      "📐 Grammar of Graphics",
+      "✅ Best Practices",
+      "🗂️ Matching Data to Plots",
+      "🎨 ggplot2 Modules 1–2",
+      "🖼️ Basic & Intermediate Plot Gallery",
+      "🔗 Specialized Plots — Merged & Statistical",
+      "⚙️ Exporting & Plotting Tools",
+      "🏥 Applied Visualization Examples"
+    ),
+    nav = list(
+      list(icon="📐", label="Data Visualization", href="data-visualization/ggplot_grammar.qmd",    desc="Grammar of graphics, best practices, and plot matching"),
+      list(icon="🎨", label="ggplot2 Modules",    href="data-visualization/gram_ggplot/module_1_foundations_geoms.qmd", desc="Modules 1–2: foundations, geoms, aesthetics, and faceting"),
+      list(icon="🖼️", label="Plot Gallery",       href="plot-gallery/basic.qmd",                   desc="Basic and intermediate plot examples"),
+      list(icon="⚙️", label="Exporting & Tools",  href="exporting_tools/exporting_plots.qmd",       desc="Export plots and use plotting tools effectively")
+    ),
+    show_stats   = FALSE,
+    show_quarto  = FALSE,
+    downloads = list(
+      scripts    = c("downloads/basic_visualization.R", "downloads/moderate_visualization.R"),
+      datasets   = c("downloads/workshop_data.csv", "downloads/workshop_data.xlsx",
+                     "downloads/workshop_data.rds"),
+      cheatsheets= c("downloads/ggplot2_cheatsheet.pdf", "downloads/dplyr_cheatsheet.pdf"),
+      quarto     = character(0)
+    ),
+    tip  = "Start with **Grammar of Graphics** for a solid conceptual foundation before the modules.",
+    nav_note = "Use the navbar above to move through visualization topics in sequence."
+  ),
+
+  `dataviz-complete` = list(
+    title   = "Data Visualization — Complete",
+    badge   = "🟠 Workshop Key Unlocked",
+    colour  = "#e65100",
+    bg      = "#fff8f0",
+    intro   = "Welcome to the **Data Visualization Complete** track — the full visualization experience. All four ggplot2 modules, the complete plot gallery including advanced and interactive plots, debugging tools, advanced export, and practical applied examples.",
+    goals   = c(
+      "Master all four ggplot2 modules",
+      "Build advanced and interactive visualizations",
+      "Debug and optimize plots for publication",
+      "Apply visualization skills to real-world datasets"
+    ),
+    modules = c(
+      "📐 Grammar of Graphics & Best Practices",
+      "🗂️ Matching Data to Plots",
+      "🎨 ggplot2 Modules 1–4 (All Modules)",
+      "🖼️ Basic, Intermediate, Advanced & Practical Gallery",
+      "🔗 Specialized Plots — Merged, Statistical & Interactive",
+      "⚙️ Exporting, Plotting Tools, Debugging & Advanced Export",
+      "🏥 Applied Visualization & Practical Examples"
+    ),
+    nav = list(
+      list(icon="📐", label="Data Visualization", href="data-visualization/ggplot_grammar.qmd",    desc="Grammar of graphics, best practices, and all four ggplot2 modules"),
+      list(icon="🎨", label="ggplot2 Modules",    href="data-visualization/gram_ggplot/module_1_foundations_geoms.qmd", desc="All four modules from foundations to advanced best practices"),
+      list(icon="🖼️", label="Plot Gallery",       href="plot-gallery/basic.qmd",                   desc="Full gallery — basic through practical applications"),
+      list(icon="⚙️", label="Exporting & Tools",  href="exporting_tools/exporting_plots.qmd",       desc="Exporting, debugging, and advanced export techniques")
+    ),
+    show_stats   = FALSE,
+    show_quarto  = FALSE,
+    downloads = list(
+      scripts    = c("downloads/basic_visualization.R", "downloads/moderate_visualization.R",
+                     "downloads/advanced_visualization.R", "downloads/interactive_plots.R"),
+      datasets   = c("downloads/workshop_data.csv", "downloads/workshop_data.xlsx",
+                     "downloads/workshop_data.rds", "downloads/nctoh_data.rds"),
+      cheatsheets= c("downloads/ggplot2_cheatsheet.pdf", "downloads/dplyr_cheatsheet.pdf",
+                     "downloads/quarto_cheatsheet.pdf"),
+      quarto     = character(0)
+    ),
+    tip  = "Already done Foundations? Start at **Module 3 — Colors, Scales & Themes** to pick up where you left off.",
+    nav_note = "The full navbar above gives access to all visualization content."
+  )
+)
+
+m <- if (!is.null(meta[[profile]])) meta[[profile]] else meta[["basic"]]
+
+# ── Helper: file label from path ──────────────────────────────────────────────
+file_label <- function(path) {
+  base <- basename(path)
+  tools::file_path_sans_ext(base) |>
+    gsub("_", " ", x = _) |>
+    tools::toTitleCase()
+}
+
+# ═══════════════════════════════════════════════════════
+# HERO BADGE + INTRO
+# ═══════════════════════════════════════════════════════
+cat(sprintf('
+<div style="background:%s;border-left:5px solid %s;border-radius:10px;
+            padding:1.5rem 2rem;margin-bottom:2rem;">
+  <span style="display:inline-block;background:%s;color:white;font-size:0.8rem;
+               font-weight:600;padding:0.2rem 0.75rem;border-radius:999px;
+               margin-bottom:0.75rem;">%s</span>
+  <h2 style="color:%s;margin-top:0.4rem;margin-bottom:0.6rem;">%s</h2>
+  <p style="font-size:1.05rem;line-height:1.7;margin:0;">%s</p>
+</div>
+', m$bg, m$colour, m$colour, m$badge, m$colour, m$title, m$intro))
+
+# ═══════════════════════════════════════════════════════
+# WORKSHOP GOALS
+# ═══════════════════════════════════════════════════════
+cat('\n## 🎯 Workshop Goals\n\n')
+for (g in m$goals) cat(sprintf('- %s\n', g))
+
+# ═══════════════════════════════════════════════════════
+# WHAT THIS TRACK COVERS
+# ═══════════════════════════════════════════════════════
+cat('\n\n## 📚 What This Track Covers\n\n')
+for (mod in m$modules) cat(sprintf('- %s\n', mod))
+
+# ═══════════════════════════════════════════════════════
+# NAVIGATION GUIDE
+# ═══════════════════════════════════════════════════════
+cat('\n\n## 🧭 Find Your Way Around\n\n')
+cat('Use the navigation bar above to browse all modules. Key starting points:\n\n')
+
+for (item in m$nav) {
+  cat(sprintf('- %s **[%s](%s)** — %s\n',
+              item$icon, item$label, item$href, item$desc))
+}
+cat(sprintf('\n> %s\n', m$nav_note))
+
+# ═══════════════════════════════════════════════════════
+# DOWNLOADABLE RESOURCES
+# ═══════════════════════════════════════════════════════
+cat('\n\n## 📥 Downloadable Resources\n\n')
+cat('All files for this track are available below, grouped by type.\n\n')
+
+dl <- m$downloads
+
+# R Scripts
+if (length(dl$scripts) > 0) {
+  cat('### 📄 R Scripts\n\n')
+  for (f in dl$scripts) {
+    cat(sprintf('- [%s](%s)\n', file_label(f), f))
+  }
+  cat('\n')
+}
+
+# Datasets
+if (length(dl$datasets) > 0) {
+  cat('### 🗄️ Datasets\n\n')
+  for (f in dl$datasets) {
+    ext  <- tools::file_ext(f)
+    icon <- switch(ext, csv="📊", xlsx="📗", rds="🔵", "📦")
+    cat(sprintf('- %s [%s](%s) `.%s`\n', icon, file_label(f), f, ext))
+  }
+  cat('\n')
+}
+
+# Cheatsheets
+if (length(dl$cheatsheets) > 0) {
+  cat('### 📋 Cheatsheets\n\n')
+  for (f in dl$cheatsheets) {
+    cat(sprintf('- [%s](%s)\n', file_label(f), f))
+  }
+  cat('\n')
+}
+
+# Quarto file (only if profile includes Quarto)
+if (m$show_quarto && length(dl$quarto) > 0) {
+  cat('### 📝 Quarto Template\n\n')
+  for (f in dl$quarto) {
+    cat(sprintf('- [%s](%s) — starter `.qmd` file covering Quarto basics\n',
+                file_label(f), f))
+  }
+  cat('\n')
+}
+
+# ═══════════════════════════════════════════════════════
+# CLOSING TIP
+# ═══════════════════════════════════════════════════════
+cat(sprintf('\n---\n\n> 💡 **Tip:** %s\n', m$tip))
+```

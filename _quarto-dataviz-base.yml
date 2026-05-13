@@ -1,0 +1,65 @@
+project:
+  type: website
+  output-dir: docs/dataviz-base
+
+website:
+  title: "Data Visualization — Foundations"
+  site-url: "."
+  search: true
+
+  navbar:
+    logo-href: welcome.html
+    left:
+      - href: welcome.qmd
+        text: "🏠 Home"
+      - text: "Data Visualization"
+        menu:
+          - text: "Grammar of Graphics"
+            href: data-visualization/ggplot_grammar.qmd
+          - text: "Best Practices"
+            href: data-visualization/best_practices.qmd
+          - text: "Matching Data to Plots"
+            href: data-visualization/plot_data.qmd
+          - text: "---"
+          - text: "Module 1 — Foundations & Geoms"
+            href: data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
+          - text: "Module 2 — Aesthetics, Faceting & Themes"
+            href: data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd
+      - text: "Plot Gallery"
+        menu:
+          - text: "Basic Plots"
+            href: plot-gallery/basic.qmd
+          - text: "Intermediate Plots"
+            href: plot-gallery/moderate.qmd
+      - text: "Specialized Plots"
+        menu:
+          - text: "Merged Visuals"
+            href: specialized/merge_visuals.qmd
+          - text: "Statistical Plots"
+            href: specialized/plot_stats.qmd
+      - text: "Exporting & Tools"
+        menu:
+          - text: "Exporting Plots"
+            href: exporting_tools/exporting_plots.qmd
+          - text: "Plotting Tools"
+            href: exporting_tools/plotting_tools.qmd
+      - text: "Applied: Viz Examples"
+        href: nctoh/data_visualization.qmd
+    right:
+      - text: "Reference"
+        icon: book
+        menu:
+          - text: "Contact Us"
+            href: contact.qmd
+          - text: "References"
+            href: references.qmd
+          - text: "Downloads"
+            href: downloads.qmd
+
+format:
+  html:
+    theme: flatly
+    css: assets/theme_webp.css
+    code-copy: true
+    toc: true
+    lightbox: auto

@@ -10,6 +10,7 @@ format:
     page-layout: full
 ---
 
+
 ```{=html}
 <!-- ═══════════════════════════════════════════════════════
      HERO SECTION
@@ -31,6 +32,7 @@ format:
   </div>
 </div>
 
+
 <!-- ═══════════════════════════════════════════════════════
      TRACK SELECTION
      ═══════════════════════════════════════════════════════ -->
@@ -41,8 +43,10 @@ format:
     Other tracks require a workshop key provided by the session organiser.
   </p>
 
+
   <!-- Row 1: Basic · Moderate · Advanced -->
   <div class="ws-cards-row" id="cards-row-1">
+
 
     <div class="ws-card ws-card--open" data-profile="basic">
       <div class="ws-card-badge ws-badge--open">🟢 Open Access</div>
@@ -54,10 +58,11 @@ format:
         <li>ggstatsplot — Introduction</li>
         <li>Quarto Basics</li>
       </ul>
-      <button class="ws-btn ws-btn--open" onclick="enterTrack('basic')">
+      <button class="ws-btn ws-btn--open ws-btn--loading" onclick="enterTrack('basic')" disabled>
         Enter Track →
       </button>
     </div>
+
 
     <div class="ws-card ws-card--locked" data-profile="moderate">
       <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
@@ -71,10 +76,11 @@ format:
         <li>gtsummary Tables</li>
         <li>Applied Healthcare Examples</li>
       </ul>
-      <button class="ws-btn ws-btn--locked" onclick="openKeyModal('moderate')">
+      <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('moderate')" disabled>
         Enter Key →
       </button>
     </div>
+
 
     <div class="ws-card ws-card--locked" data-profile="advanced">
       <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
@@ -87,12 +93,14 @@ format:
         <li>Quarto for Publication</li>
         <li>Deep Statistical Analysis</li>
       </ul>
-      <button class="ws-btn ws-btn--locked" onclick="openKeyModal('advanced')">
+      <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('advanced')" disabled>
         Enter Key →
       </button>
     </div>
 
+
   </div>
+
 
   <!-- Row 2: DataViz Foundations · DataViz Complete -->
   <h2 class="ws-section-heading ws-section-heading--second">
@@ -103,7 +111,9 @@ format:
     Ideal for focused workshops on ggplot2 and plot design.
   </p>
 
+
   <div class="ws-cards-row ws-cards-row--two" id="cards-row-2">
+
 
     <div class="ws-card ws-card--locked ws-card--viz" data-profile="dataviz-base">
       <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
@@ -116,10 +126,11 @@ format:
         <li>Basic &amp; Intermediate Gallery</li>
         <li>Applied Visualization Examples</li>
       </ul>
-      <button class="ws-btn ws-btn--locked" onclick="openKeyModal('dataviz-base')">
+      <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('dataviz-base')" disabled>
         Enter Key →
       </button>
     </div>
+
 
     <div class="ws-card ws-card--locked ws-card--viz" data-profile="dataviz-complete">
       <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
@@ -132,13 +143,15 @@ format:
         <li>Practical Applications</li>
         <li>Debugging &amp; Advanced Export</li>
       </ul>
-      <button class="ws-btn ws-btn--locked" onclick="openKeyModal('dataviz-complete')">
+      <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('dataviz-complete')" disabled>
         Enter Key →
       </button>
     </div>
 
+
   </div>
 </div>
+
 
 <!-- ═══════════════════════════════════════════════════════
      FOOTER LINKS
@@ -148,6 +161,7 @@ format:
   <a href="contact.qmd">✉️ Contact Us</a>
   <a href="references.qmd">📚 References</a>
 </div>
+
 
 <!-- ═══════════════════════════════════════════════════════
      KEY ENTRY MODAL
@@ -171,6 +185,7 @@ format:
   </div>
 </div>
 
+
 <!-- ═══════════════════════════════════════════════════════
      JAVASCRIPT — key gate logic
      ═══════════════════════════════════════════════════════ -->
@@ -179,6 +194,18 @@ format:
 // can change keys or unlock tiers by editing that one file on GitHub.
 let workshopConfig = null;
 let activeProfile  = null;
+
+// ── FIX 1: Loading state helpers ─────────────────────────
+// All buttons start disabled (set in HTML above).
+// removeLoadingState() re-enables them after config is fetched.
+// This prevents the /docs/null/index.html race condition where
+// enterTrack() was called before workshopConfig was populated.
+function removeLoadingState() {
+  document.querySelectorAll('.ws-btn').forEach(btn => {
+    btn.disabled = false;
+    btn.classList.remove('ws-btn--loading');
+  });
+}
 
 async function loadConfig() {
   try {
@@ -189,8 +216,12 @@ async function loadConfig() {
     // If config.json can't be fetched (e.g. local file:// preview),
     // fall back to locked state for all non-basic profiles.
     console.warn('config.json not available — defaulting to locked state.');
+  } finally {
+    // ── Always re-enable buttons, whether fetch succeeded or failed
+    removeLoadingState();
   }
 }
+
 
 function applyLockStates() {
   if (!workshopConfig) return;
@@ -216,11 +247,13 @@ function applyLockStates() {
   });
 }
 
+
 function enterTrack(profileId) {
   const cfg = workshopConfig && workshopConfig.profiles[profileId];
   const path = cfg ? cfg.path : `docs/${profileId}/index.html`;
   window.location.href = path;
 }
+
 
 function openKeyModal(profileId) {
   activeProfile = profileId;
@@ -237,22 +270,28 @@ function openKeyModal(profileId) {
   setTimeout(() => document.getElementById('ws-key-input').focus(), 50);
 }
 
+
 function closeKeyModal() {
   document.getElementById('ws-modal-overlay').style.display = 'none';
   activeProfile = null;
 }
 
+
 function closeModal(event) {
   if (event.target.id === 'ws-modal-overlay') closeKeyModal();
 }
 
+
 function submitKey() {
   if (!activeProfile || !workshopConfig) return;
-  const cfg    = workshopConfig.profiles[activeProfile];
+  const cfg     = workshopConfig.profiles[activeProfile];
   const entered = document.getElementById('ws-key-input').value.trim();
   const errEl   = document.getElementById('ws-key-error');
 
-  if (entered === cfg.key) {
+  // ── FIX 2: Case-insensitive key comparison ────────────────
+  // Trims whitespace and ignores capitalisation so keys like
+  // "workshop-mod" and "WORKSHOP-MOD" both work correctly.
+  if (entered.toUpperCase() === cfg.key.toUpperCase()) {
     closeKeyModal();
     enterTrack(activeProfile);
   } else {
@@ -263,10 +302,12 @@ function submitKey() {
   }
 }
 
+
 // Escape key closes modal
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeKeyModal();
 });
+
 
 loadConfig();
 </script>
