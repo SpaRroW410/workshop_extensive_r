@@ -444,7 +444,8 @@ function applyLockStates() {
 
 function enterTrack(profileId) {
   const cfg = workshopConfig && workshopConfig.profiles[profileId];
-  const path = cfg ? cfg.path : `docs/${profileId}/index.html`;
+  // Changed docs/${profileId}/index.html to just ${profileId}/welcome.html
+  const path = cfg ? cfg.path : `${profileId}/welcome.html`; 
   window.location.href = path;
 }
 
@@ -482,12 +483,10 @@ function submitKey() {
   const entered = document.getElementById('ws-key-input').value.trim();
   const errEl   = document.getElementById('ws-key-error');
 
-  // ── FIX 2: Case-insensitive key comparison ────────────────
-  // Trims whitespace and ignores capitalisation so keys like
-  // "workshop-mod" and "WORKSHOP-MOD" both work correctly.
   if (entered.toUpperCase() === cfg.key.toUpperCase()) {
-    closeKeyModal();
-    enterTrack(activeProfile);
+    const trackToEnter = activeProfile; // 1. Save the track name
+    closeKeyModal();                    // 2. Close modal (sets activeProfile to null)
+    enterTrack(trackToEnter);           // 3. Use the saved track name!
   } else {
     errEl.textContent = 'Incorrect key — please try again.';
     const input = document.getElementById('ws-key-input');
