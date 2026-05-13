@@ -1,10 +1,23 @@
+# ═══════════════════════════════════════════════════════════════
+# _quarto.yml  — BASE / SHARED SETTINGS
+# ---------------------------------------------------------------
+# DO NOT put output-dir or website: here.
+# Each profile YAML (_quarto-basic.yml, etc.) controls its own
+# output-dir and navbar.  Quarto merges this file + the active
+# profile YAML at render time.
+# ═══════════════════════════════════════════════════════════════
+
 project:
   type: website
-  output-dir: docs/basic
-  resources: 
-  - config.json
+  resources:
+    - config.json
+    - assets/
   render:
-    - "*.qmd"
+    - "index.qmd"
+    - "welcome.qmd"
+    - "contact.qmd"
+    - "downloads.qmd"
+    - "references.qmd"
     - "r-foundations/*.qmd"
     - "data-visualization/*.qmd"
     - "data-visualization/gram_ggplot/*.qmd"
@@ -13,53 +26,6 @@ project:
     - "statistical-analysis/*.qmd"
     - "exporting_tools/*.qmd"
     - "nctoh/*.qmd"
-
-website:
-  title: "Data Visualization Workshop — Basic"
-  site-url: "."
-  search: true
-
-  navbar:
-    logo-href: welcome.html
-    left:
-      - href: welcome.qmd
-        text: "🏠 Home"
-      - text: "R Foundations"
-        menu:
-          - text: "Getting Started"
-            href: r-foundations/getting-started.qmd
-          - text: "Intro to R"
-            href: r-foundations/intro_to_r.qmd
-          - text: "Data Wrangling (Tidyverse)"
-            href: r-foundations/data-wrangling.qmd
-          - text: "Merging Datasets"
-            href: r-foundations/merging_dataset.qmd
-      - text: "Data Visualization"
-        menu:
-          - text: "Grammar of Graphics"
-            href: data-visualization/ggplot_grammar.qmd
-          - text: "Basic Plot Gallery"
-            href: plot-gallery/basic.qmd
-      - text: "Statistical Analysis"
-        menu:
-          - text: "Test Selection Guide"
-            href: statistical-analysis/statistical_tests.qmd
-          - text: "ggstatsplot — Intro"
-            href: statistical-analysis/ggstatsplot_intro.qmd
-      - text: "Quarto"
-        menu:
-          - text: "Quarto Basics"
-            href: statistical-analysis/reproducible_writing.qmd
-    right:
-      - text: "Reference"
-        icon: book
-        menu:
-          - text: "Contact Us"
-            href: contact.qmd
-          - text: "References"
-            href: references.qmd
-          - text: "Downloads"
-            href: downloads.qmd
 
 format:
   html:

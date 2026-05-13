@@ -1,5 +1,10 @@
+# ═══════════════════════════════════════════════════════════════
+# _quarto-advanced.yml  — ADVANCED PROFILE
+# Render with:  quarto render --profile advanced
+# Output goes to:  docs/advanced/
+# ═══════════════════════════════════════════════════════════════
+
 project:
-  type: website
   output-dir: docs/advanced
 
 website:
@@ -111,11 +116,3 @@ website:
             href: references.qmd
           - text: "Downloads"
             href: downloads.qmd
-
-format:
-  html:
-    theme: flatly
-    css: assets/theme_webp.css
-    code-copy: true
-    toc: true
-    lightbox: auto

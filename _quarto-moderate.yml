@@ -1,5 +1,10 @@
+# ═══════════════════════════════════════════════════════════════
+# _quarto-moderate.yml  — MODERATE PROFILE
+# Render with:  quarto render --profile moderate
+# Output goes to:  docs/moderate/
+# ═══════════════════════════════════════════════════════════════
+
 project:
-  type: website
   output-dir: docs/moderate
 
 website:
@@ -89,11 +94,3 @@ website:
             href: references.qmd
           - text: "Downloads"
             href: downloads.qmd
-
-format:
-  html:
-    theme: flatly
-    css: assets/theme_webp.css
-    code-copy: true
-    toc: true
-    lightbox: auto

@@ -1,5 +1,10 @@
+# ═══════════════════════════════════════════════════════════════
+# _quarto-dataviz-base.yml  — DATAVIZ FOUNDATIONS PROFILE
+# Render with:  quarto render --profile dataviz-base
+# Output goes to:  docs/dataviz-base/
+# ═══════════════════════════════════════════════════════════════
+
 project:
-  type: website
   output-dir: docs/dataviz-base
 
 website:
@@ -55,11 +60,3 @@ website:
             href: references.qmd
           - text: "Downloads"
             href: downloads.qmd
-
-format:
-  html:
-    theme: flatly
-    css: assets/theme_webp.css
-    code-copy: true
-    toc: true
-    lightbox: auto

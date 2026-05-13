@@ -1,0 +1,55 @@
+# ═══════════════════════════════════════════════════════════════
+# _quarto-basic.yml  — BASIC PROFILE
+# Render with:  quarto render --profile basic
+# Output goes to:  docs/basic/
+# ═══════════════════════════════════════════════════════════════
+
+project:
+  output-dir: docs/basic
+
+website:
+  title: "Data Visualization Workshop — Basic"
+  site-url: "."
+  search: true
+
+  navbar:
+    logo-href: welcome.html
+    left:
+      - href: welcome.qmd
+        text: "🏠 Home"
+      - text: "R Foundations"
+        menu:
+          - text: "Getting Started"
+            href: r-foundations/getting-started.qmd
+          - text: "Intro to R"
+            href: r-foundations/intro_to_r.qmd
+          - text: "Data Wrangling (Tidyverse)"
+            href: r-foundations/data-wrangling.qmd
+          - text: "Merging Datasets"
+            href: r-foundations/merging_dataset.qmd
+      - text: "Data Visualization"
+        menu:
+          - text: "Grammar of Graphics"
+            href: data-visualization/ggplot_grammar.qmd
+          - text: "Basic Plot Gallery"
+            href: plot-gallery/basic.qmd
+      - text: "Statistical Analysis"
+        menu:
+          - text: "Test Selection Guide"
+            href: statistical-analysis/statistical_tests.qmd
+          - text: "ggstatsplot — Intro"
+            href: statistical-analysis/ggstatsplot_intro.qmd
+      - text: "Quarto"
+        menu:
+          - text: "Quarto Basics"
+            href: statistical-analysis/reproducible_writing.qmd
+    right:
+      - text: "Reference"
+        icon: book
+        menu:
+          - text: "Contact Us"
+            href: contact.qmd
+          - text: "References"
+            href: references.qmd
+          - text: "Downloads"
+            href: downloads.qmd

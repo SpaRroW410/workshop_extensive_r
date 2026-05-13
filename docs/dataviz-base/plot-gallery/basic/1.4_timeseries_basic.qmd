@@ -1,0 +1,447 @@
+---
+title: "Time Series - BASIC"
+subtitle: "Visualizing Data Over Time"
+format:
+  revealjs:
+    theme: serif
+    css: ../../assets/slide_deck.css
+    include-after-body: footer.html
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    code-fold: true
+    chalkboard: true
+    preview-links: true
+    center: true
+    zoom: true
+---
+
+# Time Series Data {.center}
+
+## What is Time Series Data?
+
+::: {.columns}
+::: {.column width="50%"}
+**Definition:**
+
+Data points indexed by **time** or **ordered sequence**
+
+- Observations at regular intervals
+- Temporal ordering matters
+- Shows change over time
+- Can reveal trends and patterns
+:::
+
+::: {.column width="50%"}
+**Examples in Our Dataset:**
+
+- Blood Pressure at 0, 3, 6 months
+- Patient measurements over time
+- Baseline dates
+- Treatment progression
+- Longitudinal health outcomes
+:::
+:::
+
+## Analytical Goals for Time Series
+
+::: {style="font-size: 0.9em;"}
+**What questions can we answer?**
+
+::: {.incremental}
+- 🔵 **Evolution** - How does it change over time?
+- 🟡 **Distribution** - What's the pattern across time periods?
+- 🟢 **Ranking** - Which time period is highest/lowest?
+:::
+
+**Charts we'll learn:**
+
+1. Simple Line Chart
+2. Multiple Line Chart (comparing groups)
+3. Line Chart with Points
+:::
+
+## Setup: Load and Prepare Data
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-4|6-7|9-17|19-21"
+
+# Load required libraries
+library(ggplot2)
+library(dplyr)
+library(tidyr)      # For data reshaping
+
+# Load the dataset
+data <- readxl::read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+
+# Reshape data from wide to long format for time series plotting
+# Convert columns SysBP_0m, SysBP_3m, SysBP_6m to rows
+bp_long <- data %>%
+  select(PatientID, TreatmentGroup, SysBP_0m, SysBP_3m, SysBP_6m) %>%
+  pivot_longer(cols = starts_with("SysBP"),
+               names_to = "TimePoint",
+               values_to = "SysBP") %>%  # Convert to long format
+  mutate(Month = case_when(TimePoint == "SysBP_0m" ~ 0,
+                           TimePoint == "SysBP_3m" ~ 3,
+                           TimePoint == "SysBP_6m" ~ 6))  # Extract month number
+
+# Preview the transformed data
+head(bp_long)
+```
+
+## Data Preview {.smaller}
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(readxl)
+
+data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+
+bp_long <- data %>%
+  select(PatientID, TreatmentGroup, SysBP_0m, SysBP_3m, SysBP_6m) %>%
+  pivot_longer(cols = starts_with("SysBP"),
+               names_to = "TimePoint",
+               values_to = "SysBP") %>%
+  mutate(Month = case_when(TimePoint == "SysBP_0m" ~ 0,
+                           TimePoint == "SysBP_3m" ~ 3,
+                           TimePoint == "SysBP_6m" ~ 6))
+
+head(bp_long, 12)
+```
+
+---
+
+# Simple Line Chart
+
+## Simple Line Chart - Code
+
+🔵 **Goal:** Show evolution over time (aggregate)
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-4|6-8|9-11|12-15"
+
+# Calculate mean systolic BP at each time point
+mean_bp <- bp_long %>%
+  group_by(Month) %>%
+  summarise(Mean_SysBP = mean(SysBP, na.rm = TRUE))  # Average across all patients
+
+# Create line chart showing trend over time
+ggplot(mean_bp, aes(x = Month, y = Mean_SysBP)) +
+  geom_line(color = "steelblue", size = 1.5) +  # Draw line
+  geom_point(color = "steelblue", size = 4) +  # Add points at each time point
+  scale_x_continuous(breaks = c(0, 3, 6)) +  # Show all time points on x-axis
+  labs(title = "Mean Systolic Blood Pressure Over 6 Months",
+       x = "Month", 
+       y = "Mean Systolic BP (mmHg)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+```
+
+## Simple Line Chart - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+#| message: false
+
+mean_bp <- bp_long %>%
+  group_by(Month) %>%
+  summarise(Mean_SysBP = mean(SysBP, na.rm = TRUE))
+
+ggplot(mean_bp, aes(x = Month, y = Mean_SysBP)) +
+  geom_line(color = "steelblue", size = 1.5) +
+  geom_point(color = "steelblue", size = 4) +
+  scale_x_continuous(breaks = c(0, 3, 6)) +
+  labs(title = "Mean Systolic Blood Pressure Over 6 Months",
+       x = "Month", 
+       y = "Mean Systolic BP (mmHg)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+```
+
+---
+
+# Interpreting Line Charts
+
+## How to Read Line Charts
+
+**Using the previous plot:**
+
+::: {.incremental style="font-size: 0.85em;"}
+**OBSERVATION:**
+- Baseline (Month 0): Mean SysBP ~135 mmHg
+- Month 3: Mean SysBP ~129 mmHg (decrease of ~6 mmHg)
+- Month 6: Mean SysBP ~130 mmHg (slight increase from Month 3)
+- Overall trend: Downward from baseline
+- Small rebound between months 3 and 6
+
+**INTERPRETATION:**
+- Blood pressure decreased during first 3 months of study
+- Effect stabilized or slightly reversed by month 6
+- Overall improvement of ~5 mmHg from baseline
+- Intervention may have time-dependent effects
+
+**IMPLICATIONS:**
+- Treatment appears effective in short term (3 months)
+- Longer-term effects need investigation
+- 5 mmHg reduction clinically meaningful
+- May need to compare Control vs. Intervention separately
+
+**ACTIONS:**
+- Separate analysis by treatment group needed
+- Consider reasons for Month 6 rebound
+- Evaluate if maintenance strategies needed
+- Assess clinical significance (5 mmHg reduction = ~10% stroke risk ↓)
+:::
+:::
+
+---
+
+# Multiple Line Chart
+
+## Multiple Line Chart - Code
+
+🔵 **Goal:** Compare evolution across groups
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-4|6-9|10-13|14-16"
+
+# Calculate mean BP by treatment group and time
+mean_bp_group <- bp_long %>%
+  group_by(Month, TreatmentGroup) %>%
+  summarise(Mean_SysBP = mean(SysBP, na.rm = TRUE), .groups = "drop")
+
+# Create line chart with separate lines for each group
+ggplot(mean_bp_group, aes(x = Month, y = Mean_SysBP, 
+                          color = TreatmentGroup, group = TreatmentGroup)) +
+  geom_line(size = 1.5) +  # Draw lines
+  geom_point(size = 4) +  # Add points
+  scale_color_manual(values = c("Control" = "#E74C3C", 
+                                 "Intervention" = "#3498DB"),
+                     name = "Treatment Group") +  # Custom colors
+  scale_x_continuous(breaks = c(0, 3, 6)) +
+  labs(title = "Systolic BP by Treatment Group Over Time",
+       x = "Month", y = "Mean Systolic BP (mmHg)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        legend.position = "right")
+```
+
+## Multiple Line Chart - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+#| message: false
+
+mean_bp_group <- bp_long %>%
+  group_by(Month, TreatmentGroup) %>%
+  summarise(Mean_SysBP = mean(SysBP, na.rm = TRUE), .groups = "drop")
+
+ggplot(mean_bp_group, aes(x = Month, y = Mean_SysBP, 
+                          color = TreatmentGroup, group = TreatmentGroup)) +
+  geom_line(size = 1.5) +
+  geom_point(size = 4) +
+  scale_color_manual(values = c("Control" = "#E74C3C", 
+                                 "Intervention" = "#3498DB"),
+                     name = "Treatment Group") +
+  scale_x_continuous(breaks = c(0, 3, 6)) +
+  labs(title = "Systolic BP by Treatment Group Over Time",
+       x = "Month", y = "Mean Systolic BP (mmHg)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        legend.title = element_text(size = 11, face = "bold"),
+        legend.text = element_text(size = 10))
+```
+
+---
+
+# Line Chart with Confidence Intervals
+
+## Line Chart with Error Bars - Code
+
+🔵 **Goal:** Show trend with uncertainty
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-7|9-13|14-17|18-21"
+
+# Calculate mean and standard error by group
+bp_summary <- bp_long %>%
+  group_by(Month, TreatmentGroup) %>%
+  summarise(Mean_SysBP = mean(SysBP, na.rm = TRUE),
+            SE = sd(SysBP, na.rm = TRUE) / sqrt(n()),  # Standard error
+            .groups = "drop")
+
+# Create line chart with error ribbons
+ggplot(bp_summary, aes(x = Month, y = Mean_SysBP, 
+                       color = TreatmentGroup, fill = TreatmentGroup)) +
+  geom_ribbon(aes(ymin = Mean_SysBP - SE, ymax = Mean_SysBP + SE),
+              alpha = 0.2, color = NA) +  # Add confidence bands
+  geom_line(size = 1.5) +  # Draw lines on top
+  geom_point(size = 4) +  # Add points
+  scale_color_manual(values = c("Control" = "#E74C3C", 
+                                 "Intervention" = "#3498DB")) +
+  scale_fill_manual(values = c("Control" = "#E74C3C", 
+                                "Intervention" = "#3498DB")) +
+  scale_x_continuous(breaks = c(0, 3, 6)) +
+  labs(title = "Systolic BP Over Time with Standard Error",
+       x = "Month", y = "Mean Systolic BP (mmHg)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        legend.position = "right")
+```
+
+## Line Chart with Error Bars - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+#| message: false
+
+bp_summary <- bp_long %>%
+  group_by(Month, TreatmentGroup) %>%
+  summarise(Mean_SysBP = mean(SysBP, na.rm = TRUE),
+            SE = sd(SysBP, na.rm = TRUE) / sqrt(n()),
+            .groups = "drop")
+
+ggplot(bp_summary, aes(x = Month, y = Mean_SysBP, 
+                       color = TreatmentGroup, fill = TreatmentGroup)) +
+  geom_ribbon(aes(ymin = Mean_SysBP - SE, ymax = Mean_SysBP + SE),
+              alpha = 0.2, color = NA) +
+  geom_line(size = 1.5) +
+  geom_point(size = 4) +
+  scale_color_manual(values = c("Control" = "#E74C3C", 
+                                 "Intervention" = "#3498DB"),
+                     name = "Treatment\nGroup") +
+  scale_fill_manual(values = c("Control" = "#E74C3C", 
+                                "Intervention" = "#3498DB"),
+                    name = "Treatment\nGroup") +
+  scale_x_continuous(breaks = c(0, 3, 6)) +
+  labs(title = "Systolic BP Over Time with Standard Error",
+       x = "Month", y = "Mean Systolic BP (mmHg)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        legend.title = element_text(size = 11, face = "bold"),
+        legend.text = element_text(size = 10))
+```
+
+---
+
+# Quick Reference
+
+## Time Series - Summary
+
+| Chart Type | Goal | When to Use | Code Complexity |
+|------------|------|-------------|-----------------|
+| **Simple Line** | 🔵 Evolution | Single metric over time | Simple (4-8 lines) |
+| **Multiple Lines** | 🔵 Evolution + Compare | Compare groups over time | Medium (6-10 lines) |
+| **Line + Confidence** | 🔵 Evolution + Uncertainty | Show trends with error | Medium (10-15 lines) |
+
+## Key Time Series Concepts
+
+::: {.columns style="font-size: 0.85em;"}
+::: {.column width="50%"}
+**Trend:**
+- Overall direction (up, down, flat)
+- Long-term pattern
+- Calculate: moving average, regression
+
+**Seasonality:**
+- Regular periodic fluctuations
+- Daily, weekly, monthly patterns
+- Example: Higher BP in winter
+
+**Volatility:**
+- Amount of variation
+- High = unstable, Low = stable
+- Measure: standard deviation
+:::
+
+::: {.column width="50%"}
+**Data Preparation:**
+- Wide format: One column per time point
+- Long format: One row per observation
+- Use `pivot_longer()` to convert
+
+**Best Practices:**
+- Always show all time points
+- Use consistent time intervals
+- Label axes clearly with units
+- Consider adding reference lines
+- Show confidence intervals when relevant
+:::
+:::
+
+## Key Takeaways
+
+::: {style="font-size: 0.9em;"}
+::: {.incremental}
+**Remember:**
+
+1. **Connect the dots** - use geom_line() to show continuity
+2. **Add points** - helps identify exact time points
+3. **Multiple lines need legends** - make groups clear
+4. **Show uncertainty** - confidence intervals add credibility
+5. **Wide to long format** - essential for time series plotting
+
+**Common Mistakes:**
+
+- Not connecting points (scatter instead of line)
+- Too many lines (>5 becomes cluttered)
+- Inconsistent time intervals without noting
+- Missing baseline comparisons
+- Not handling missing time points
+:::
+:::
+
+## Practice Exercise
+
+**Your Turn:**
+
+1. Create a line chart of mean `DiaBP` (diastolic BP) over 0, 3, 6 months
+2. Add separate lines for Control vs. Intervention
+3. Include confidence intervals (± SE)
+4. Add a horizontal reference line at 80 mmHg (hypertension threshold)
+
+**Bonus:** Create a line chart showing mean `BMI` changes over time by `Gender`
+
+## Next Steps {.center}
+
+**You've completed all BASIC level decks!**
+
+🎉 **Congratulations!** 
+
+**Next:** Intermediate Level
+
+Move to Module 2 for enhanced visualizations:
+- Categorical Intermediate (Lollipop, Mosaic plots)
+- Continuous Intermediate (Violin, Ridge plots)
+- Advanced time series
+- Geographic maps
+- Network diagrams

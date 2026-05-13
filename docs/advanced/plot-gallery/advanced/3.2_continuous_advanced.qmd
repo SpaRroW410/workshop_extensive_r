@@ -1,0 +1,119 @@
+---
+title: "Continuous - ADVANCED"
+subtitle: "Multivariate & 3D Techniques"
+format:
+  revealjs:
+    theme: serif
+    slide-number: true
+    code-fold: true
+---
+
+# Continuous Advanced {.center}
+
+## Topics Covered
+
+- Contour plots (2D density)
+- 3D surface plots
+- Parallel coordinates
+- Correlation ellipses
+- Hexbin plots (large data)
+
+Goal: Handle complex continuous relationships
+
+## Setup
+
+```{r}
+library(readxl); library(dplyr); library(ggplot2)
+library(plotly); library(GGally)
+health_data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+```
+
+## Contour Plot - Code
+
+```{r eval=FALSE, echo=TRUE}
+ggplot(health_data, aes(x = BMI_0m, y = SysBP_0m)) +
+  geom_density_2d_filled(alpha = 0.7) +
+  geom_point(size = 0.5, alpha = 0.3) +
+  scale_fill_viridis_d(option = "plasma") +
+  labs(title = "2D Density: BMI vs Blood Pressure",
+       x = "BMI", y = "Systolic BP") +
+  theme_minimal()
+```
+
+Shows concentration areas - darker = more patients
+
+## Parallel Coordinates - Code
+
+```{r eval=FALSE, echo=TRUE}
+library(GGally)
+health_subset <- health_data %>%
+  select(Age, BMI_0m, SysBP_0m, Cholesterol_0m, BloodSugar_0m) %>%
+  na.omit() %>% sample_n(200)
+
+ggparcoord(health_subset, columns = 1:5,
+           scale = "uniminmax",
+           alphaLines = 0.3) +
+  labs(title = "Parallel Coordinates: Health Metrics") +
+  theme_minimal()
+```
+
+Each line = one patient across multiple variables
+
+## 3D Surface (Conceptual)
+
+```{r eval=FALSE, echo=TRUE}
+library(plotly)
+# Create grid
+x <- seq(20, 40, 0.5)
+y <- seq(100, 180, 2)
+# Simulate density surface
+z <- outer(x, y, function(a,b) 
+  dnorm(a, 28, 5) * dnorm(b, 140, 20))
+
+plot_ly(x = ~x, y = ~y, z = ~z) %>%
+  add_surface() %>%
+  layout(title = "3D Density Surface: BMI × BP")
+```
+
+Interactive 3D exploration of relationships
+
+## Hexbin Plot - Code
+
+```{r eval=FALSE, echo=TRUE}
+ggplot(health_data, aes(x = BMI_0m, y = SysBP_0m)) +
+  geom_hex(bins = 30) +
+  scale_fill_viridis_c(option = "inferno", trans = "log10") +
+  labs(title = "Hexbin Plot: Large Dataset Visualization",
+       fill = "Count (log10)") +
+  theme_minimal()
+```
+
+Better than scatter for 1000+ points
+
+## Correlation Matrix with Ellipses
+
+```{r eval=FALSE, echo=TRUE}
+library(ggcorrplot)
+cor_matrix <- health_data %>%
+  select(Age, BMI_0m, SysBP_0m, DiaBP_0m, 
+         Cholesterol_0m, BloodSugar_0m) %>%
+  cor(use = "complete.obs")
+
+ggcorrplot(cor_matrix, type = "lower",
+           lab = TRUE, lab_size = 3,
+           colors = c("#DC0000", "white", "#00A087"))
+```
+
+Quick overview of all correlations
+
+## Summary
+
+**Advanced continuous techniques:**
+
+1. Contour plots - 2D density
+2. Parallel coordinates - multivariate patterns  
+3. 3D surfaces - interactive exploration
+4. Hexbin - big data visualization
+5. Correlation ellipses - relationship matrices
+
+**Next:** Category vs Continuous Advanced

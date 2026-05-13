@@ -1,0 +1,698 @@
+---
+title: "Relational/Flow - INTERMEDIATE"
+subtitle: "Visualizing Connections and Flows"
+format:
+  revealjs:
+    theme: serif
+    css: ../../assets/slide_deck.css
+    include-after-body: footer.html
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    code-fold: true
+    chalkboard: true
+    preview-links: true
+    center: true
+    zoom: true
+---
+
+# Relational & Flow Data {.center}
+
+## What We'll Learn - Intermediate
+
+::: {.columns}
+::: {.column width="50%"}
+**Visualizing Relationships:**
+
+- Network diagrams (nodes & edges)
+- Sankey diagrams (flow)
+- Chord diagrams (circular relationships)
+- Alluvial plots (categorical flows)
+- Correlation networks
+:::
+
+::: {.column width="50%"}
+**Analytical Goals:**
+
+- 🔴 **Flow** - Movement between states
+- ⚫ **Correlation** - Strength of relationships
+- 🟢 **Ranking** - Most connected nodes
+- 🟡 **Distribution** - Network properties
+:::
+:::
+
+## Setup Code
+
+```{r}
+#| echo: true
+#| message: false
+
+# Load required packages
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(igraph)      # For network analysis
+library(ggraph)      # For network visualization
+library(networkD3)   # For Sankey diagrams
+library(circlize)    # For chord diagrams
+
+# Load datasets
+health_data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+network_data <- read_excel("../../data/Healthcare_Network_Dataset.xlsx", sheet = 2)
+
+# Create custom theme
+theme_custom <- function() {
+  theme_void() +  # Clean background for networks
+  theme(
+    text = element_text(family = "serif", size = 12),
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 11, hjust = 0.5),
+    legend.position = "right"
+  )
+}
+```
+
+## Network Diagram Basics - Code
+
+::: {style="font-size: 0.8em;"}
+**Purpose:** Show relationships between entities (nodes)
+
+**Goal:** ⚫ Correlation + 🟢 Ranking
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Prepare network data (patient referrals between providers)
+edges <- network_data %>%
+  select(from = FromProvider, to = ToProvider, 
+           weight = NumReferrals) %>%
+  filter(!is.na(from), !is.na(to), weight > 0)
+
+# Create network graph object
+network_graph <- graph_from_data_frame(edges, directed = TRUE)
+
+# Calculate node importance (degree centrality)
+V(network_graph)$degree <- degree(network_graph)
+V(network_graph)$betweenness <- betweenness(network_graph)
+
+# Plot network
+ggraph(network_graph, layout = "fr") +  # Fruchterman-Reingold layout
+  geom_edge_link(aes(width = weight, alpha = weight),
+                arrow = arrow(length = unit(3, "mm")),
+                end_cap = circle(3, "mm"),
+                color = "gray60") +
+  geom_node_point(aes(size = degree, color = degree)) +
+  geom_node_text(aes(label = name), repel = TRUE, size = 3) +
+  scale_edge_width(range = c(0.5, 3)) +
+  scale_edge_alpha(range = c(0.3, 0.8)) +
+  scale_size(range = c(3, 10)) +
+  scale_color_viridis_c(option = "plasma") +
+  labs(title = "Healthcare Provider Referral Network",
+       subtitle = "Node size = number of connections | Arrow width = referral volume",
+       size = "Connections",
+       color = "Connections") +
+  theme_custom()
+```
+:::
+
+## Network Diagram - Output
+
+```{r}
+#| echo: false
+#| fig-width: 11
+#| fig-height: 7
+#| warning: false
+#| message: false
+
+edges <- network_data %>%
+  select(from = FromProvider, to = ToProvider, 
+         weight = NumReferrals) %>%
+  filter(!is.na(from), !is.na(to), weight > 0)
+
+network_graph <- graph_from_data_frame(edges, directed = TRUE)
+V(network_graph)$degree <- igraph::degree(network_graph)
+V(network_graph)$betweenness <- betweenness(network_graph)
+
+set.seed(123)
+ggraph(network_graph, layout = "fr") +
+  geom_edge_link(aes(width = weight, alpha = weight),
+                arrow = arrow(length = unit(3, "mm")),
+                end_cap = circle(3, "mm"),
+                color = "gray60") +
+  geom_node_point(aes(size = degree, color = degree)) +
+  geom_node_text(aes(label = name), repel = TRUE, size = 3) +
+  scale_edge_width(range = c(0.5, 3)) +
+  scale_edge_alpha(range = c(0.3, 0.8)) +
+  scale_size(range = c(3, 10)) +
+  scale_color_viridis_c(option = "plasma") +
+  labs(title = "Healthcare Provider Referral Network",
+       subtitle = "Node size = number of connections | Arrow width = referral volume",
+       size = "Connections",
+       color = "Connections") +
+  theme_custom()
+```
+
+## Interpreting Network Diagrams
+
+::: {.columns style="font-size: 0.9em;"}
+::: {.column width="50%"}
+**Network Metrics:**
+
+- **Node size** - Degree centrality (connections)
+- **Node color** - Importance measure
+- **Edge width** - Connection strength
+- **Edge direction** - Flow direction
+
+**Key Nodes:**
+
+- **Hubs** - Many connections (large nodes)
+- **Bridges** - Connect clusters
+- **Periphery** - Few connections
+:::
+
+::: {.column width="50%"}
+**Our Network:**
+
+1. **Central hubs identified**
+   - Key providers with most referrals
+
+2. **Clusters visible**
+   - Groups of closely connected providers
+   - Possible subspecialty groups
+
+3. **Isolated providers** exist
+   - May need better integration
+
+4. **Referral patterns** show hierarchy
+   - Primary care → specialists
+   - Direction matters
+:::
+:::
+
+## Sankey Diagram - Code
+
+::: {style="font-size: 0.75em;"}
+**Purpose:** Show flow quantities between stages
+
+**Goal:** 🔴 Flow + 🔴 Part of Whole
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Prepare flow data: Patient journey through treatment
+# Stage 1: Initial Assessment → Stage 2: Treatment Selection → Stage 3: Outcome
+
+# Create flow data
+flow_data <- health_data %>%
+  filter(!is.na(TreatmentGroup), !is.na(Adherence_Status)) %>%
+  count(TreatmentGroup, Adherence_Status, name = "count") %>%
+  # Rename for Sankey format
+  rename(source = TreatmentGroup, target = Adherence_Status, value = count)
+
+# Prepare nodes and links for networkD3
+nodes <- data.frame(
+  name = unique(c(as.character(flow_data$source), 
+                 as.character(flow_data$target)))
+)
+
+# Create links with node indices
+flow_data$IDsource <- match(flow_data$source, nodes$name) - 1  # 0-indexed
+flow_data$IDtarget <- match(flow_data$target, nodes$name) - 1
+
+# Create Sankey diagram
+sankeyNetwork(
+  Links = flow_data,
+  Nodes = nodes,
+  Source = "IDsource",
+  Target = "IDtarget",
+  Value = "value",
+  NodeID = "name",
+  units = "patients",
+  fontSize = 14,
+  nodeWidth = 30,
+  sinksRight = FALSE,  # Align target nodes to left
+  colourScale = JS('d3.scaleOrdinal().domain(["Treatment A", "Treatment B", "Control", "High", "Low"]).range(["#E41A1C", "#377EB8", "#4DAF4A", "#FF7F00", "#984EA3"])')
+)
+```
+
+**Note:** This creates an interactive HTML widget
+:::
+
+## Sankey Diagram - Interpretation
+
+::: {style="font-size: 0.9em;"}
+**Reading Sankey Diagrams:**
+
+::: {.incremental}
+1. **Width of flow** = Quantity
+   - Wider flows = more patients
+
+2. **Color** helps track paths
+   - Each treatment group has its own color
+
+3. **Convergence/Divergence** shows patterns
+   - Where do patients end up?
+   - Which paths are most common?
+
+**Our Findings:**
+
+- **Treatment A & B** show higher adherence
+  - Larger flows to "High" adherence
+- **Control group** has lower adherence
+  - More patients in "Low" adherence
+- **Visual proportions** immediately show treatment effectiveness
+:::
+:::
+
+## Alluvial Plot - Code
+
+::: {style="font-size: 0.8em;"}
+**Purpose:** Show changes in categorical composition over time
+
+**Goal:** 🔴 Flow + 🟡 Distribution
+
+```{r}
+#| echo: true
+#| eval: false
+
+library(ggalluvial)
+
+# Prepare data: Smoking status changes over study
+alluvial_data <- health_data %>%
+  select(PatientID, SmokingStatus, Gender, TreatmentGroup) %>%
+  filter(!is.na(SmokingStatus), !is.na(Gender), !is.na(TreatmentGroup)) %>%
+  count(TreatmentGroup, SmokingStatus, Gender)
+
+# Create alluvial plot
+ggplot(alluvial_data,
+       aes(y = n, axis1 = TreatmentGroup, axis2 = SmokingStatus, 
+           axis3 = Gender)) +
+  geom_alluvium(aes(fill = SmokingStatus), width = 1/12, alpha = 0.7) +
+  geom_stratum(width = 1/12, fill = "gray90", color = "black") +
+  geom_label(stat = "stratum", aes(label = after_stat(stratum)), size = 3) +
+  scale_x_discrete(limits = c("Treatment", "Smoking", "Gender"),
+                   expand = c(0.05, 0.05)) +
+  scale_fill_manual(values = c("Never" = "#00A087", 
+                              "Former" = "#3C5488",
+                              "Current" = "#DC0000")) +
+  labs(title = "Patient Flow: Treatment → Smoking Status → Gender",
+       subtitle = "Stream width shows number of patients in each pathway",
+       y = "Number of Patients",
+       fill = "Smoking Status") +
+  theme_minimal() +
+  theme(
+    text = element_text(family = "serif", size = 12),
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 11, hjust = 0.5),
+    axis.text.y = element_text(size = 10),
+    panel.grid = element_blank()
+  )
+```
+:::
+
+## Alluvial Plot - Output
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 7
+#| warning: false
+#| message: false
+
+library(ggalluvial)
+
+alluvial_data <- health_data %>%
+  select(PatientID, SmokingStatus, Gender, TreatmentGroup) %>%
+  filter(!is.na(SmokingStatus), !is.na(Gender), !is.na(TreatmentGroup)) %>%
+  count(TreatmentGroup, SmokingStatus, Gender)
+
+ggplot(alluvial_data,
+       aes(y = n, axis1 = TreatmentGroup, axis2 = SmokingStatus, 
+           axis3 = Gender)) +
+  geom_alluvium(aes(fill = SmokingStatus), width = 1/12, alpha = 0.7) +
+  geom_stratum(width = 1/12, fill = "gray90", color = "black") +
+  geom_label(stat = "stratum", aes(label = after_stat(stratum)), size = 3) +
+  scale_x_discrete(limits = c("Treatment", "Smoking", "Gender"),
+                   expand = c(0.05, 0.05)) +
+  scale_fill_manual(values = c("Never" = "#00A087", 
+                              "Former" = "#3C5488",
+                              "Current" = "#DC0000")) +
+  labs(title = "Patient Flow: Treatment → Smoking Status → Gender",
+       subtitle = "Stream width shows number of patients in each pathway",
+       y = "Number of Patients",
+       fill = "Smoking Status") +
+  theme_minimal() +
+  theme(
+    text = element_text(family = "serif", size = 12),
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 11, hjust = 0.5),
+    axis.text.y = element_text(size = 10),
+    panel.grid = element_blank()
+  )
+```
+
+## Interpreting Alluvial Plots
+
+::: {style="font-size: 0.9em;"}
+**Key Features:**
+
+::: {.incremental}
+1. **Stream thickness** = Quantity flowing through that path
+   - Follow a color to track one category
+
+2. **Convergence** shows common endpoints
+   - Many paths leading to same outcome
+
+3. **Divergence** shows splits
+   - One group splits into multiple outcomes
+
+**Our Insights:**
+
+- **Never smokers** largest group in all treatments
+- **Gender distribution** fairly balanced across smoking statuses
+- **Treatment allocation** appears balanced across smoking groups
+- **Visual flow** shows patient composition clearly
+:::
+:::
+
+## Chord Diagram - Code {.scrollable}
+
+::: {style="font-size: 0.75em;"}
+**Purpose:** Show relationships between categories in circular layout
+
+**Goal:** ⚫ Correlation + 🔴 Flow
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Prepare chord data: Comorbidity co-occurrence
+# Simplified: Which regions refer to which treatment groups most
+
+chord_data <- network_data %>%
+  filter(!is.na(PatientRegion), !is.na(TreatmentAssigned)) %>%
+  count(PatientRegion, TreatmentAssigned, name = "count") %>%
+  pivot_wider(names_from = TreatmentAssigned, 
+              values_from = count, 
+              values_fill = 0)
+
+# Convert to matrix
+chord_matrix <- as.matrix(chord_data[, -1])
+rownames(chord_matrix) <- chord_data$PatientRegion
+
+# Create chord diagram
+circos.clear()
+circos.par(start.degree = 90, gap.degree = 4)
+
+chordDiagram(
+  chord_matrix,
+  grid.col = c("North" = "#E41A1C", "South" = "#377EB8", 
+               "East" = "#4DAF4A", "West" = "#984EA3",
+               "Treatment A" = "#FF7F00", "Treatment B" = "#FFFF33", 
+               "Control" = "#A65628"),
+  transparency = 0.5,
+  directional = 1,
+  direction.type = c("arrows", "diffHeight"),
+  diffHeight = -0.04,
+  annotationTrack = "grid",
+  annotationTrackHeight = c(0.05, 0.1),
+  link.arr.type = "big.arrow",
+  link.sort = TRUE,
+  link.largest.ontop = TRUE
+)
+
+# Add labels
+circos.trackPlotRegion(
+  track.index = 1,
+  bg.border = NA,
+  panel.fun = function(x, y) {
+    sector.index = get.cell.meta.data("sector.index")
+    circos.text(CELL_META$xcenter, CELL_META$ylim[1], sector.index,
+               facing = "clockwise", niceFacing = TRUE, adj = c(0, 0.5))
+  }
+)
+```
+:::
+
+## Chord Diagram - Interpretation
+
+::: {style="font-size: 0.9em;"}
+**Reading Chord Diagrams:**
+
+::: {.incremental}
+1. **Arcs** represent categories
+   - Arc width = total connections
+
+2. **Ribbons** show connections
+   - Ribbon width = flow strength
+   - Color indicates source
+
+3. **Circular layout** saves space
+   - Shows all connections simultaneously
+
+**Our Pattern:**
+
+- **East region** sends most patients to Treatment A
+- **North region** more balanced across treatments
+- **West region** has more Control assignments
+- **Treatment allocation** varies by region (interesting!)
+:::
+
+**When to use:** Many-to-many relationships, limited space
+:::
+
+## Correlation Network - Code
+
+::: {style="font-size: 0.8em;"}
+**Purpose:** Visualize correlation patterns as network
+
+**Goal:** ⚫ Correlation + clustering
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Calculate correlations among numeric health metrics
+cor_data <- health_data %>%
+  select(Age, BMI_0m, SysBP_0m, DiaBP_0m, 
+         Cholesterol_0m, BloodSugar_0m) %>%
+  cor(use = "complete.obs")
+
+# Convert to network (only strong correlations)
+cor_network <- cor_data %>%
+  as.data.frame() %>%
+  mutate(from = rownames(.)) %>%
+  pivot_longer(cols = -from, names_to = "to", values_to = "correlation") %>%
+  filter(from != to, abs(correlation) > 0.3) %>%  # Threshold
+  mutate(abs_cor = abs(correlation))
+
+# Create graph
+cor_graph <- graph_from_data_frame(cor_network, directed = FALSE)
+E(cor_graph)$weight <- cor_network$abs_cor
+E(cor_graph)$cor_sign <- ifelse(cor_network$correlation > 0, "Positive", "Negative")
+
+# Plot
+ggraph(cor_graph, layout = "fr") +
+  geom_edge_link(aes(width = abs_cor, color = cor_sign), alpha = 0.7) +
+  geom_node_point(size = 10, color = "#4DBBD5") +
+  geom_node_text(aes(label = name), size = 3.5, color = "white", fontface = "bold") +
+  scale_edge_width(range = c(1, 4)) +
+  scale_edge_color_manual(values = c("Positive" = "#00A087", "Negative" = "#DC0000")) +
+  labs(title = "Health Metrics Correlation Network",
+       subtitle = "Edge width = correlation strength | Color = positive/negative",
+       edge_color = "Correlation",
+       edge_width = "Strength") +
+  theme_custom()
+```
+:::
+
+## Correlation Network - Output
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 7
+#| warning: false
+
+cor_data <- health_data %>%
+  select(Age, BMI, SysBP_0m, DiaBP_0m, 
+         Cholesterol, BloodSugar) %>%
+  cor(use = "complete.obs")
+
+cor_network <- cor_data %>%
+  as.data.frame() %>%
+  mutate(from = rownames(.)) %>%
+  pivot_longer(cols = -from, names_to = "to", values_to = "correlation") %>%
+  filter(from != to, abs(correlation) > 0.3) %>%
+  mutate(abs_cor = abs(correlation))
+
+cor_graph <- graph_from_data_frame(cor_network, directed = FALSE)
+E(cor_graph)$weight <- cor_network$abs_cor
+E(cor_graph)$cor_sign <- ifelse(cor_network$correlation > 0, "Positive", "Negative")
+
+set.seed(456)
+ggraph(cor_graph, layout = "fr") +
+  geom_edge_link(aes(width = abs_cor, color = cor_sign), alpha = 0.7) +
+  geom_node_point(size = 10, color = "#4DBBD5") +
+  geom_node_text(aes(label = name), size = 3.5, color = "white", fontface = "bold") +
+  scale_edge_width(range = c(1, 4)) +
+  scale_edge_color_manual(values = c("Positive" = "#00A087", "Negative" = "#DC0000")) +
+  labs(title = "Health Metrics Correlation Network",
+       subtitle = "Edge width = correlation strength | Color = positive/negative",
+       edge_color = "Correlation",
+       edge_width = "Strength") +
+  theme_custom()
+```
+
+## Interpreting Correlation Networks
+
+::: {.columns style="font-size: 0.9em;"}
+::: {.column width="50%"}
+**Advantages:**
+
+- **Clusters** emerge naturally
+  - Related variables group together
+
+- **Strength** shown by thickness
+  - Thicker = stronger correlation
+
+- **Direction** shown by color
+  - Green = positive
+  - Red = negative
+
+- **Hub variables** visible
+  - Most connected = most important
+:::
+
+::: {.column width="50%"}
+**Our Network:**
+
+1. **SysBP & DiaBP** tightly linked
+   - Expected (measured together)
+
+2. **BMI cluster** with BP measures
+   - Weight affects blood pressure
+
+3. **Blood sugar** moderately connected
+   - Related to metabolic health
+
+4. **Age** shows weaker connections
+   - Less directly correlated with others
+:::
+:::
+
+## Chart Selection Guide
+
+::: {style="font-size: 0.85em;"}
+| Chart Type | Goal | Best For | Complexity |
+|------------|------|----------|------------|
+| **Network Diagram** | ⚫ Correlation + 🟢 | Show connections, identify hubs | High |
+| **Sankey Diagram** | 🔴 Flow | Show quantity flows between stages | Medium |
+| **Alluvial Plot** | 🔴 Flow + 🟡 | Categorical changes over stages | Medium |
+| **Chord Diagram** | ⚫ + 🔴 Flow | Many-to-many relationships | High |
+| **Correlation Network** | ⚫ Correlation | Show variable relationships | Medium-High |
+
+**Pro Tip:** Choose based on data structure and story you want to tell
+:::
+
+## Common Mistakes
+
+::: {.incremental style="font-size: 0.9em;"}
+1. **Too many nodes/edges**
+   - Solution: Filter to top connections, increase threshold
+
+2. **Poor layout** choice
+   - Solution: Try different layouts (fr, kk, circle, tree)
+
+3. **Unreadable labels**
+   - Solution: Use `repel = TRUE`, adjust size, or interactive plots
+
+4. **Ignoring direction** in networks
+   - Solution: Use arrows for directed graphs
+
+5. **Color overload** in complex diagrams
+   - Solution: Limit to 2-3 colors, use grayscale for edges
+
+6. **Not showing flow magnitude** clearly
+   - Solution: Vary width, transparency, or both
+:::
+
+## Interactive Networks
+
+::: {style="font-size: 0.9em;"}
+**Benefits of Interactive Plots:**
+
+```{r}
+#| echo: true
+#| eval: false
+
+library(visNetwork)
+
+# Prepare data for interactive network
+nodes_df <- data.frame(
+  id = V(network_graph)$name,
+  label = V(network_graph)$name,
+  value = V(network_graph)$degree,  # Size by degree
+  title = paste0(V(network_graph)$name, "<br>",
+                "Connections: ", V(network_graph)$degree)  # Tooltip
+)
+
+edges_df <- as_data_frame(network_graph) %>%
+  rename(from = from, to = to) %>%
+  mutate(value = weight,  # Width by weight
+         title = paste0("Referrals: ", weight))  # Tooltip
+
+# Create interactive network
+visNetwork(nodes_df, edges_df) %>%
+  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
+  visPhysics(stabilization = TRUE)
+```
+
+**Features:** Hover tooltips, zoom, drag nodes, highlight neighbors
+:::
+
+## Practice Exercise
+
+**Your Turn:**
+
+1. Create a network diagram showing correlations between `Cholesterol`, `BMI`, `BloodSugar`, and `Age`
+2. Build a Sankey diagram showing flow from `Region` → `TreatmentGroup` → `Adherence_Status`
+3. Create an alluvial plot for `Gender` → `ExerciseFreq` → `SmokingStatus`
+
+**Bonus Challenge:**
+
+Create a chord diagram showing referral patterns between different provider specialties (if you have specialty data).
+
+## Summary
+
+::: {style="font-size: 0.9em;"}
+**What You've Learned:**
+
+::: {.incremental}
+1. **Network diagrams** reveal connection patterns and hubs
+2. **Sankey diagrams** show quantity flows between stages
+3. **Alluvial plots** visualize categorical changes
+4. **Chord diagrams** display many-to-many relationships
+5. **Correlation networks** identify variable clusters
+
+**Key Principle:**
+
+> Relational visualizations reveal hidden patterns in connections, flows, and associations
+:::
+:::
+
+## Next Steps {.center}
+
+**You've mastered Relational/Flow - Intermediate!**
+
+**Next:** Geographic - Intermediate
+
+Learn spatial visualization with:
+
+- Choropleth maps
+- Point maps with clustering
+- Heat maps
+- Faceted maps
