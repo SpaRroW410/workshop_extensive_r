@@ -1,0 +1,869 @@
+---
+title: "Quarto"
+subtitle: "From First Document to Advanced Reporting"
+author: "Workshop"
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    embed-resources: true
+    scrollable: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# Part 1 — What is Quarto? {background-color="#2C3E50"}
+
+## Quarto at a Glance
+
+- Quarto is an **open-source scientific publishing system** built on Pandoc
+- Successor to R Markdown — works with R, Python, Julia, and Observable JS
+- One `.qmd` file → HTML, PDF, Word, slides, dashboards, books, websites
+- Separates **content** (text + code) from **presentation** (YAML options)
+
+```
+my_report.qmd  →  Render  →  my_report.html
+                          →  my_report.pdf
+                          →  my_report.docx
+```
+
+---
+
+## Installing Quarto
+
+1. Download from [quarto.org](https://quarto.org)
+2. Quarto comes pre-installed with **RStudio 2022.07+**
+3. Verify in terminal:
+
+```bash
+quarto --version
+```
+
+Required R packages:
+
+```{r eval=FALSE}
+install.packages(c("knitr", "rmarkdown", "tidyverse"))
+```
+
+---
+
+## The Anatomy of a .qmd File
+
+Every Quarto file has three parts:
+
+```
+---
+title: "My Report"       ← YAML front matter (metadata + options)
+author: "Name"
+format: html
+---
+
+Some **bold** text.      ← Markdown prose
+
+`​`​`{r}               ← Code chunk
+summary(cars)
+`​`​`
+```
+
+---
+
+# Part 2 — YAML Front Matter {background-color="#2C3E50"}
+
+## Basic YAML Options
+
+```yaml
+---
+title: "Study Report"
+subtitle: "Baseline Analysis"
+author: "Dr. Researcher"
+date: today
+format: html
+---
+```
+
+> `date: today` automatically inserts today's date at render time.
+
+---
+
+## Output Formats
+
+```yaml
+---
+format: html          # Web page
+format: pdf           # PDF (requires LaTeX or TinyTeX)
+format: docx          # Microsoft Word
+format: revealjs      # Slide deck
+format: pptx          # PowerPoint
+---
+```
+
+Install TinyTeX for PDF:
+
+```{r eval=FALSE}
+install.packages("tinytex")
+tinytex::install_tinytex()
+```
+
+---
+
+## HTML Format Options
+
+```yaml
+---
+format:
+  html:
+    toc: true               # Table of contents
+    toc-depth: 3            # Heading levels in TOC
+    number-sections: true   # Numbered headings
+    theme: flatly           # Bootstrap theme
+    embed-resources: true   # Single self-contained file
+    code-fold: true         # Collapsible code blocks
+    code-tools: true        # Copy button + source button
+---
+```
+
+---
+
+## HTML Themes
+
+Available Bootstrap themes:
+
+`default`, `cerulean`, `cosmo`, `cyborg`, `darkly`, `flatly`, `journal`,  
+`litera`, `lumen`, `lux`, `materia`, `minty`, `morph`, `pulse`, `quartz`,  
+`sandstone`, `simplex`, `sketchy`, `slate`, `solar`, `spacelab`, `superhero`,  
+`united`, `vapor`, `yeti`, `zephyr`
+
+```yaml
+format:
+  html:
+    theme: flatly
+```
+
+---
+
+## Word Format Options
+
+```yaml
+---
+format:
+  docx:
+    reference-doc: my_template.docx   # Use a custom Word template
+    toc: true
+    number-sections: true
+---
+```
+
+> Create a Word template by opening a blank `.docx` and modifying heading/body styles — save and reference it here.
+
+---
+
+## revealjs Slide Options
+
+```yaml
+---
+format:
+  revealjs:
+    theme: simple          # simple, moon, night, sky, serif, solarized
+    slide-number: true
+    incremental: true      # Bullets appear one at a time
+    embed-resources: true
+    transition: slide      # none, fade, slide, convex, zoom
+    chalkboard: true       # Enable drawing on slides
+---
+```
+
+---
+
+## Global Execute Options in YAML
+
+```yaml
+---
+execute:
+  echo: true        # Show code
+  eval: true        # Run code
+  warning: false    # Hide warnings
+  message: false    # Hide messages
+  error: false      # Hide errors (or true to continue on error)
+  cache: true       # Cache chunk results
+---
+```
+
+---
+
+# Part 3 — Markdown Basics {background-color="#2C3E50"}
+
+## Text Formatting
+
+```markdown
+**bold**        *italic*        ***bold italic***
+
+`inline code`   ~~strikethrough~~   ^superscript^   ~subscript~
+
+> This is a blockquote
+
+[Link text](https://quarto.org)
+
+![Caption](image.png){width=60%}
+```
+
+---
+
+## Headings
+
+```markdown
+# Level 1 Heading
+## Level 2 Heading
+### Level 3 Heading
+#### Level 4 Heading
+```
+
+> In a revealjs deck, `##` creates a new slide. In HTML, it creates a section heading.
+
+---
+
+## Lists
+
+```markdown
+# Unordered
+- Item one
+- Item two
+  - Nested item
+
+# Ordered
+1. First
+2. Second
+3. Third
+
+# Task list
+- [x] Done
+- [ ] To do
+```
+
+---
+
+## Tables in Markdown
+
+```markdown
+| Variable  | Type        | Example       |
+|-----------|-------------|---------------|
+| Age       | Continuous  | 34 years      |
+| Sex       | Categorical | Male / Female |
+| BMI       | Continuous  | 27.4          |
+```
+
+> Use the RStudio **Visual Editor** (Ctrl+Shift+F4) to insert and edit Markdown tables with a GUI.
+
+---
+
+## Callout Blocks
+
+```markdown
+::: {.callout-note}
+This is a note.
+:::
+
+::: {.callout-warning}
+Pay attention to this.
+:::
+
+::: {.callout-tip}
+A helpful tip.
+:::
+
+::: {.callout-important}
+This is important.
+:::
+```
+
+---
+
+## Divs and Spans for Custom Layout
+
+```markdown
+:::: {.columns}
+
+::: {.column width="50%"}
+Left column content
+:::
+
+::: {.column width="50%"}
+Right column content
+:::
+
+::::
+```
+
+---
+
+# Part 4 — Code Chunks {background-color="#2C3E50"}
+
+## Anatomy of a Code Chunk
+
+````markdown
+```{r}
+#| label: my-chunk
+#| echo: true
+#| eval: true
+#| warning: false
+
+summary(cars)
+```
+````
+
+> `#|` is the **YAML-style chunk option** syntax — preferred in Quarto over the old `{r echo=TRUE}` inline format.
+
+---
+
+## Key Chunk Options
+
+| Option | Values | Purpose |
+|---|---|---|
+| `echo` | true/false | Show code |
+| `eval` | true/false | Run code |
+| `output` | true/false/asis | Show output |
+| `warning` | true/false | Show warnings |
+| `message` | true/false | Show messages |
+| `include` | true/false | Include chunk at all |
+| `label` | string | Chunk name (for caching/cross-ref) |
+| `fig-width` | number | Figure width in inches |
+| `fig-height` | number | Figure height in inches |
+| `fig-cap` | string | Figure caption |
+
+---
+
+## echo: false — Hide Code, Show Output
+
+````markdown
+```{r}
+#| echo: false
+summary(cars)
+```
+````
+
+---
+
+## eval: false — Show Code, Don't Run
+
+````markdown
+```{r}
+#| eval: false
+install.packages("gtsummary")
+```
+````
+
+---
+
+## include: false — Run Silently
+
+````markdown
+```{r}
+#| include: false
+library(tidyverse)
+p <- read_csv("data.csv")
+```
+````
+
+> Code runs and results are available globally, but nothing is shown in the output.
+
+---
+
+## output: asis — Raw Output
+
+````markdown
+```{r}
+#| output: asis
+cat("**This text is bold in output.**")
+```
+````
+
+---
+
+## fig-cap and fig-alt
+
+````markdown
+```{r}
+#| fig-cap: "Distribution of participant age"
+#| fig-alt: "Histogram showing right-skewed distribution"
+#| fig-width: 6
+#| fig-height: 4
+
+hist(rnorm(100), main = "", xlab = "Age")
+```
+````
+
+---
+
+## Caching — Speed Up Long Renders
+
+````markdown
+```{r}
+#| cache: true
+#| label: slow-model
+
+model <- lm(mpg ~ ., data = mtcars)
+summary(model)
+```
+````
+
+> Cache is invalidated automatically when the chunk code changes. Delete `*_cache/` folder to force re-run.
+
+---
+
+## Inline Code
+
+Use backtick-r to embed computed values directly in prose:
+
+```markdown
+The mean age was `r round(mean(trial$age, na.rm = TRUE), 1)` years.
+```
+
+Renders as:
+
+> The mean age was **47.2** years.
+
+This makes results **fully reproducible** — update the data and the number updates automatically.
+
+---
+
+# Part 5 — Cross-References {background-color="#2C3E50"}
+
+## Figures
+
+````markdown
+```{r}
+#| label: fig-age-hist
+#| fig-cap: "Distribution of age"
+
+hist(rnorm(100))
+```
+
+See @fig-age-hist for the distribution.
+````
+
+> Labels for figures must start with `fig-`.
+
+---
+
+## Tables
+
+````markdown
+```{r}
+#| label: tbl-baseline
+#| tbl-cap: "Baseline characteristics"
+
+knitr::kable(head(mtcars))
+```
+
+See @tbl-baseline for baseline data.
+````
+
+> Labels for tables must start with `tbl-`.
+
+---
+
+## Sections
+
+```markdown
+## Methods {#sec-methods}
+
+Details here.
+
+As described in @sec-methods...
+```
+
+---
+
+## Equations
+
+Inline: `$E = mc^2$` → \(E = mc^2\)
+
+Block:
+```markdown
+$$
+\bar{x} = \frac{1}{n} \sum_{i=1}^{n} x_i
+$$
+```
+
+---
+
+# Part 6 — Output Customisation {background-color="#2C3E50"}
+
+## Table Output — knitr::kable()
+
+```{r}
+library(knitr)
+kable(head(mtcars[, 1:5]), caption = "Table: First rows of mtcars")
+```
+
+---
+
+## Table Output — kableExtra
+
+```{r}
+library(kableExtra)
+
+kable(head(mtcars[, 1:4]), caption = "Styled table") |>
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE
+  ) |>
+  column_spec(1, bold = TRUE) |>
+  row_spec(0, background = "#2C3E50", color = "white")
+```
+
+---
+
+## Figure Layout — side by side
+
+````markdown
+```{r}
+#| layout-ncol: 2
+#| fig-cap:
+#|   - "Left: Histogram"
+#|   - "Right: Boxplot"
+
+hist(rnorm(100))
+boxplot(rnorm(100))
+```
+````
+
+---
+
+## Figure Layout — custom grid
+
+````markdown
+```{r}
+#| layout: [[1,1], [1]]
+hist(rnorm(100))
+boxplot(rnorm(100))
+plot(cars)
+```
+````
+
+> `[[1,1], [1]]` means: row 1 has 2 equal-width plots; row 2 has 1 full-width plot.
+
+---
+
+## Page Breaks (Word/PDF)
+
+```markdown
+::: {.content-visible when-format="docx"}
+\newpage
+:::
+```
+
+Or universally:
+
+```markdown
+{{< pagebreak >}}
+```
+
+---
+
+# Part 7 — Parameters {background-color="#2C3E50"}
+
+## Parameterised Reports
+
+Define parameters in YAML and reference them in the document — render the same report for different groups or time periods.
+
+```yaml
+---
+title: "District Report"
+params:
+  district: "Bareilly"
+  year: 2026
+---
+```
+
+Reference in code:
+
+```{r eval=FALSE}
+params$district   # "Bareilly"
+params$year       # 2026
+
+data_filtered <- data |> filter(district == params$district)
+```
+
+---
+
+## Rendering with Different Parameters
+
+```{r eval=FALSE}
+# Render for each district
+quarto::quarto_render(
+  "district_report.qmd",
+  execute_params = list(district = "Lucknow", year = 2026),
+  output_file    = "lucknow_report.html"
+)
+
+quarto::quarto_render(
+  "district_report.qmd",
+  execute_params = list(district = "Agra", year = 2026),
+  output_file    = "agra_report.html"
+)
+```
+
+> This is powerful for generating **one report per site, district, or time period** automatically.
+
+---
+
+# Part 8 — Quarto Projects {background-color="#2C3E50"}
+
+## What is a Quarto Project?
+
+A project is a folder with a `_quarto.yml` configuration file that coordinates multiple `.qmd` files.
+
+```
+my_project/
+├── _quarto.yml       ← project config
+├── index.qmd         ← home / landing page
+├── methods.qmd
+├── results.qmd
+├── references.bib
+└── data/
+```
+
+---
+
+## _quarto.yml — Website Project
+
+```yaml
+project:
+  type: website
+
+website:
+  title: "My Research Site"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: results.qmd
+        text: Results
+```
+
+---
+
+## _quarto.yml — Book Project
+
+```yaml
+project:
+  type: book
+
+book:
+  title: "Field Epidemiology Manual"
+  author: "Workshop Team"
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - methods.qmd
+    - results.qmd
+    - references.qmd
+```
+
+---
+
+## _quarto.yml — Shared Execute Options
+
+```yaml
+execute:
+  echo: false
+  warning: false
+  message: false
+```
+
+> Any execute option in `_quarto.yml` applies to **all files** in the project.
+
+---
+
+## Rendering a Project
+
+```bash
+# Render all files
+quarto render
+
+# Preview in browser with live reload
+quarto preview
+
+# Render one specific file
+quarto render results.qmd
+```
+
+---
+
+# Part 9 — Advanced Features {background-color="#2C3E50"}
+
+## Conditional Content by Format
+
+```markdown
+::: {.content-visible when-format="html"}
+This only appears in HTML output.
+:::
+
+::: {.content-visible when-format="docx"}
+This only appears in Word output.
+:::
+
+::: {.content-hidden when-format="pdf"}
+This is hidden in PDF only.
+:::
+```
+
+---
+
+## Tabsets — Organise Content in Tabs
+
+```markdown
+::: {.panel-tabset}
+
+## Table
+
+```{r}
+knitr::kable(head(mtcars))
+```
+
+## Plot
+
+```{r}
+plot(cars)
+```
+
+:::
+```
+
+> Tabsets work in HTML only. They collapse to sequential sections in Word/PDF.
+
+---
+
+## Code Folding and Annotation
+
+```yaml
+format:
+  html:
+    code-fold: true
+    code-summary: "Show code"
+```
+
+Code annotation with `<1>` markers:
+
+````markdown
+```{r}
+model <- lm(mpg ~ hp + wt, data = mtcars)  # <1>
+summary(model)                              # <2>
+```
+1. Fit linear model with horsepower and weight as predictors.
+2. Display model summary with coefficients and fit statistics.
+````
+
+---
+
+## Bibliography and Citations
+
+In YAML:
+
+```yaml
+bibliography: references.bib
+csl: apa.csl     # Citation Style Language — APA, Vancouver, etc.
+```
+
+In text:
+
+```markdown
+As shown in previous studies [@smith2020; @jones2021],
+the prevalence was high.
+```
+
+Renders as:
+
+> As shown in previous studies (Smith, 2020; Jones, 2021), the prevalence was high.
+
+---
+
+## Shortcodes
+
+```markdown
+{{< var title >}}       ← Insert a YAML variable
+{{< include file.qmd >}} ← Include another file
+{{< pagebreak >}}       ← Insert a page break
+{{< kbd Ctrl+Enter >}}  ← Render a keyboard shortcut
+```
+
+---
+
+## Freeze — Large Projects
+
+```yaml
+execute:
+  freeze: auto    # Re-run only if source changes
+```
+
+Or per-chunk:
+
+````markdown
+```{r}
+#| freeze: true
+expensive_computation()
+```
+````
+
+> `freeze: auto` stores rendered outputs in `_freeze/` — prevents re-running unchanged chunks on every build.
+
+---
+
+## Lua Filters and Extensions
+
+Add community extensions directly in the terminal:
+
+```bash
+# Add an extension
+quarto add quarto-ext/fontawesome
+quarto add quarto-journals/jama        # JAMA journal template
+quarto add quarto-journals/plos        # PLOS template
+```
+
+Use in document:
+
+```markdown
+{{< fa user >}}    ← FontAwesome icon
+```
+
+---
+
+## Publishing Quarto Documents
+
+```bash
+# Publish to Quarto Pub (free, public)
+quarto publish quarto-pub
+
+# Publish to GitHub Pages
+quarto publish gh-pages
+
+# Publish to Posit Connect (organisational)
+quarto publish connect
+```
+
+---
+
+## Quick Reference — Quarto Cheat Sheet
+
+| Task | YAML / Syntax |
+|---|---|
+| HTML output | `format: html` |
+| Word output | `format: docx` |
+| Slides | `format: revealjs` |
+| TOC | `toc: true` |
+| Hide code | `echo: false` |
+| Don't run | `eval: false` |
+| Run silently | `include: false` |
+| Figure caption | `#\| fig-cap: "..."` |
+| Table caption | `#\| tbl-cap: "..."` |
+| Cross-ref figure | `@fig-label` |
+| Inline code | `` `r expr` `` |
+| Parameters | `params: key: value` |
+| Conditional content | `when-format="html"` |
+| Tabsets | `.panel-tabset` |
+| Page break | `{{< pagebreak >}}` |
+| Freeze | `freeze: auto` |
+| Render project | `quarto render` |
+| Preview | `quarto preview` |

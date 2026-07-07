@@ -6,11 +6,13 @@ date: today
 format: 
   revealjs:
     theme: serif
-    css: ../assets/slide_deck.css
+    css: ../assets/theme_webp.css
     include-after-body: footer.html
     slide-number: true
     navigation-mode: linear
     code-copy: true
+    code-fold: true
+    code-summary: "Show the code"
     chalkboard: true
     preview-links: true
     center: true

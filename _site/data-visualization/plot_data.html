@@ -1,0 +1,2414 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="SpaRroW">
+
+<title>Navigating the Decision Tree</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-6a5062f826eb074747ba5afc45337bd7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="assets/fitty-init.js"></script>
+
+
+<link rel="stylesheet" href="../assets/theme_webp.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#navigating-the-decision-tree" id="toc-navigating-the-decision-tree" class="nav-link active" data-scroll-target="#navigating-the-decision-tree">Navigating the Decision Tree</a>
+  <ul class="collapse">
+  <li><a href="#choosing-the-right-visualization-for-your-data" id="toc-choosing-the-right-visualization-for-your-data" class="nav-link" data-scroll-target="#choosing-the-right-visualization-for-your-data">Choosing the Right Visualization for Your Data</a></li>
+  </ul></li>
+  <li><a href="#the-3-step-framework" id="toc-the-3-step-framework" class="nav-link" data-scroll-target="#the-3-step-framework">The 3-Step Framework</a>
+  <ul class="collapse">
+  <li><a href="#your-roadmap-for-visualization-selection" id="toc-your-roadmap-for-visualization-selection" class="nav-link" data-scroll-target="#your-roadmap-for-visualization-selection">Your Roadmap for Visualization Selection</a></li>
+  </ul></li>
+  <li><a href="#the-seven-analytical-goals" id="toc-the-seven-analytical-goals" class="nav-link" data-scroll-target="#the-seven-analytical-goals">The Seven Analytical Goals</a>
+  <ul class="collapse">
+  <li><a href="#color-coded-framework" id="toc-color-coded-framework" class="nav-link" data-scroll-target="#color-coded-framework">Color-Coded Framework</a></li>
+  </ul></li>
+  <li><a href="#color-legend-chart-to-goal-mapping" id="toc-color-legend-chart-to-goal-mapping" class="nav-link" data-scroll-target="#color-legend-chart-to-goal-mapping">Color Legend: Chart-to-Goal Mapping</a>
+  <ul class="collapse">
+  <li><a href="#quick-reference---what-each-color-means" id="toc-quick-reference---what-each-color-means" class="nav-link" data-scroll-target="#quick-reference---what-each-color-means">Quick Reference - What Each Color Means</a></li>
+  </ul></li>
+  <li><a href="#know-your-data" id="toc-know-your-data" class="nav-link" data-scroll-target="#know-your-data">Know Your Data</a>
+  <ul class="collapse">
+  <li><a href="#the-6-data-type-categories" id="toc-the-6-data-type-categories" class="nav-link" data-scroll-target="#the-6-data-type-categories">The 6 Data Type Categories</a></li>
+  </ul></li>
+  <li><a href="#the-complete-decision-map" id="toc-the-complete-decision-map" class="nav-link" data-scroll-target="#the-complete-decision-map">The Complete Decision Map</a>
+  <ul class="collapse">
+  <li><a href="#how-variables-combine" id="toc-how-variables-combine" class="nav-link" data-scroll-target="#how-variables-combine">How Variables Combine</a></li>
+  </ul></li>
+  <li><a href="#single-variable-categoric-data" id="toc-single-variable-categoric-data" class="nav-link" data-scroll-target="#single-variable-categoric-data">SINGLE VARIABLE: Categoric Data</a>
+  <ul class="collapse">
+  <li><a href="#distribution-ranking-part-of-whole" id="toc-distribution-ranking-part-of-whole" class="nav-link" data-scroll-target="#distribution-ranking-part-of-whole"><span style="color: #FDB462;">●</span> Distribution | <span style="color: #A6D854;">●</span> Ranking | <span style="color: #FB8072;">●</span> Part of Whole</a>
+  <ul class="collapse">
+  <li><a href="#chart-options" id="toc-chart-options" class="nav-link" data-scroll-target="#chart-options">Chart Options:</a></li>
+  <li><a href="#healthcare-examples" id="toc-healthcare-examples" class="nav-link" data-scroll-target="#healthcare-examples">Healthcare Examples:</a></li>
+  <li><a href="#decision-guide" id="toc-decision-guide" class="nav-link" data-scroll-target="#decision-guide">Decision Guide:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#single-variable-ordinal-data" id="toc-single-variable-ordinal-data" class="nav-link" data-scroll-target="#single-variable-ordinal-data">SINGLE VARIABLE: Ordinal Data</a>
+  <ul class="collapse">
+  <li><a href="#distribution-part-of-whole-ordered" id="toc-distribution-part-of-whole-ordered" class="nav-link" data-scroll-target="#distribution-part-of-whole-ordered"><span style="color: #FDB462;">●</span> Distribution | <span style="color: #FB8072;">●</span> Part of Whole (Ordered)</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-1" id="toc-chart-options-1" class="nav-link" data-scroll-target="#chart-options-1">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-1" id="toc-healthcare-examples-1" class="nav-link" data-scroll-target="#healthcare-examples-1">Healthcare Examples:</a></li>
+  <li><a href="#decision-guide-1" id="toc-decision-guide-1" class="nav-link" data-scroll-target="#decision-guide-1">Decision Guide:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#single-variable-numeric-data" id="toc-single-variable-numeric-data" class="nav-link" data-scroll-target="#single-variable-numeric-data">SINGLE VARIABLE: Numeric Data</a>
+  <ul class="collapse">
+  <li><a href="#distribution" id="toc-distribution" class="nav-link" data-scroll-target="#distribution"><span style="color: #FDB462;">●</span> Distribution</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-2" id="toc-chart-options-2" class="nav-link" data-scroll-target="#chart-options-2">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-2" id="toc-healthcare-examples-2" class="nav-link" data-scroll-target="#healthcare-examples-2">Healthcare Examples:</a></li>
+  <li><a href="#decision-guide-2" id="toc-decision-guide-2" class="nav-link" data-scroll-target="#decision-guide-2">Decision Guide:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#single-variable-time-series" id="toc-single-variable-time-series" class="nav-link" data-scroll-target="#single-variable-time-series">SINGLE VARIABLE: Time Series</a>
+  <ul class="collapse">
+  <li><a href="#evolution" id="toc-evolution" class="nav-link" data-scroll-target="#evolution"><span style="color: #80B1D3;">●</span> Evolution</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-3" id="toc-chart-options-3" class="nav-link" data-scroll-target="#chart-options-3">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-3" id="toc-healthcare-examples-3" class="nav-link" data-scroll-target="#healthcare-examples-3">Healthcare Examples:</a></li>
+  <li><a href="#decision-guide-3" id="toc-decision-guide-3" class="nav-link" data-scroll-target="#decision-guide-3">Decision Guide:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#single-variable-spatialmap-data" id="toc-single-variable-spatialmap-data" class="nav-link" data-scroll-target="#single-variable-spatialmap-data">SINGLE VARIABLE: Spatial/Map Data</a>
+  <ul class="collapse">
+  <li><a href="#maps" id="toc-maps" class="nav-link" data-scroll-target="#maps"><span style="color: #BEBADA;">●</span> Maps</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-4" id="toc-chart-options-4" class="nav-link" data-scroll-target="#chart-options-4">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-4" id="toc-healthcare-examples-4" class="nav-link" data-scroll-target="#healthcare-examples-4">Healthcare Examples:</a></li>
+  <li><a href="#decision-guide-4" id="toc-decision-guide-4" class="nav-link" data-scroll-target="#decision-guide-4">Decision Guide:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#bivariate-numeric-numeric" id="toc-bivariate-numeric-numeric" class="nav-link" data-scroll-target="#bivariate-numeric-numeric">BIVARIATE: Numeric × Numeric</a>
+  <ul class="collapse">
+  <li><a href="#correlation-distribution" id="toc-correlation-distribution" class="nav-link" data-scroll-target="#correlation-distribution"><span style="color: #80B1D3;">●</span> Correlation | <span style="color: #FDB462;">●</span> Distribution</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-5" id="toc-chart-options-5" class="nav-link" data-scroll-target="#chart-options-5">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-5" id="toc-healthcare-examples-5" class="nav-link" data-scroll-target="#healthcare-examples-5">Healthcare Examples:</a></li>
+  <li><a href="#decision-guide-5" id="toc-decision-guide-5" class="nav-link" data-scroll-target="#decision-guide-5">Decision Guide:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#bivariate-numeric-outcome-categoric-predictor" id="toc-bivariate-numeric-outcome-categoric-predictor" class="nav-link" data-scroll-target="#bivariate-numeric-outcome-categoric-predictor">BIVARIATE: Numeric Outcome × Categoric Predictor</a>
+  <ul class="collapse">
+  <li><a href="#distribution-correlation-comparison" id="toc-distribution-correlation-comparison" class="nav-link" data-scroll-target="#distribution-correlation-comparison"><span style="color: #FDB462;">●</span> Distribution | <span style="color: #80B1D3;">●</span> Correlation (Comparison)</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-6" id="toc-chart-options-6" class="nav-link" data-scroll-target="#chart-options-6">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-6" id="toc-healthcare-examples-6" class="nav-link" data-scroll-target="#healthcare-examples-6">Healthcare Examples:</a></li>
+  <li><a href="#decision-guide-6" id="toc-decision-guide-6" class="nav-link" data-scroll-target="#decision-guide-6">Decision Guide:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#bivariate-categoric-outcome-numeric-predictor" id="toc-bivariate-categoric-outcome-numeric-predictor" class="nav-link" data-scroll-target="#bivariate-categoric-outcome-numeric-predictor">BIVARIATE: Categoric Outcome × Numeric Predictor</a>
+  <ul class="collapse">
+  <li><a href="#correlation-probability" id="toc-correlation-probability" class="nav-link" data-scroll-target="#correlation-probability"><span style="color: #80B1D3;">●</span> Correlation (Probability)</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-7" id="toc-chart-options-7" class="nav-link" data-scroll-target="#chart-options-7">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-7" id="toc-healthcare-examples-7" class="nav-link" data-scroll-target="#healthcare-examples-7">Healthcare Examples:</a></li>
+  <li><a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization">Visualization:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#bivariate-categoric-categoric" id="toc-bivariate-categoric-categoric" class="nav-link" data-scroll-target="#bivariate-categoric-categoric">BIVARIATE: Categoric × Categoric</a>
+  <ul class="collapse">
+  <li><a href="#distribution-ranking-part-of-whole-correlation" id="toc-distribution-ranking-part-of-whole-correlation" class="nav-link" data-scroll-target="#distribution-ranking-part-of-whole-correlation"><span style="color: #FDB462;">●</span> Distribution | <span style="color: #A6D854;">●</span> Ranking | <span style="color: #FB8072;">●</span> Part of Whole | <span style="color: #80B1D3;">●</span> Correlation</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-8" id="toc-chart-options-8" class="nav-link" data-scroll-target="#chart-options-8">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-8" id="toc-healthcare-examples-8" class="nav-link" data-scroll-target="#healthcare-examples-8">Healthcare Examples:</a></li>
+  <li><a href="#decision-guide-7" id="toc-decision-guide-7" class="nav-link" data-scroll-target="#decision-guide-7">Decision Guide:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#bivariate-ordinal-numeric" id="toc-bivariate-ordinal-numeric" class="nav-link" data-scroll-target="#bivariate-ordinal-numeric">BIVARIATE: Ordinal × Numeric</a>
+  <ul class="collapse">
+  <li><a href="#distribution-ordered" id="toc-distribution-ordered" class="nav-link" data-scroll-target="#distribution-ordered"><span style="color: #FDB462;">●</span> Distribution (Ordered)</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-9" id="toc-chart-options-9" class="nav-link" data-scroll-target="#chart-options-9">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-9" id="toc-healthcare-examples-9" class="nav-link" data-scroll-target="#healthcare-examples-9">Healthcare Examples:</a></li>
+  <li><a href="#key-point" id="toc-key-point" class="nav-link" data-scroll-target="#key-point">Key Point:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#bivariate-time-series-numeric" id="toc-bivariate-time-series-numeric" class="nav-link" data-scroll-target="#bivariate-time-series-numeric">BIVARIATE: Time Series × Numeric</a>
+  <ul class="collapse">
+  <li><a href="#evolution-correlation-trend" id="toc-evolution-correlation-trend" class="nav-link" data-scroll-target="#evolution-correlation-trend"><span style="color: #80B1D3;">●</span> Evolution | <span style="color: #80B1D3;">●</span> Correlation (Trend)</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-10" id="toc-chart-options-10" class="nav-link" data-scroll-target="#chart-options-10">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-10" id="toc-healthcare-examples-10" class="nav-link" data-scroll-target="#healthcare-examples-10">Healthcare Examples:</a></li>
+  <li><a href="#decision-guide-8" id="toc-decision-guide-8" class="nav-link" data-scroll-target="#decision-guide-8">Decision Guide:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#bivariate-time-series-categoric" id="toc-bivariate-time-series-categoric" class="nav-link" data-scroll-target="#bivariate-time-series-categoric">BIVARIATE: Time Series × Categoric</a>
+  <ul class="collapse">
+  <li><a href="#evolution-by-group-correlation-group-comparison" id="toc-evolution-by-group-correlation-group-comparison" class="nav-link" data-scroll-target="#evolution-by-group-correlation-group-comparison"><span style="color: #80B1D3;">●</span> Evolution (By Group) | <span style="color: #80B1D3;">●</span> Correlation (Group Comparison)</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-11" id="toc-chart-options-11" class="nav-link" data-scroll-target="#chart-options-11">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-11" id="toc-healthcare-examples-11" class="nav-link" data-scroll-target="#healthcare-examples-11">Healthcare Examples:</a></li>
+  <li><a href="#decision-guide-9" id="toc-decision-guide-9" class="nav-link" data-scroll-target="#decision-guide-9">Decision Guide:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#bivariate-ordinal-categoric" id="toc-bivariate-ordinal-categoric" class="nav-link" data-scroll-target="#bivariate-ordinal-categoric">BIVARIATE: Ordinal × Categoric</a>
+  <ul class="collapse">
+  <li><a href="#distribution-ordered-part-of-whole-ordered" id="toc-distribution-ordered-part-of-whole-ordered" class="nav-link" data-scroll-target="#distribution-ordered-part-of-whole-ordered"><span style="color: #FDB462;">●</span> Distribution (Ordered) | <span style="color: #FB8072;">●</span> Part of Whole (Ordered)</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-12" id="toc-chart-options-12" class="nav-link" data-scroll-target="#chart-options-12">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-12" id="toc-healthcare-examples-12" class="nav-link" data-scroll-target="#healthcare-examples-12">Healthcare Examples:</a></li>
+  <li><a href="#key-point-1" id="toc-key-point-1" class="nav-link" data-scroll-target="#key-point-1">Key Point:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#multivariate-numeric-numeric-numeric" id="toc-multivariate-numeric-numeric-numeric" class="nav-link" data-scroll-target="#multivariate-numeric-numeric-numeric">MULTIVARIATE: Numeric × Numeric × Numeric</a>
+  <ul class="collapse">
+  <li><a href="#continuous-variables-correlation" id="toc-continuous-variables-correlation" class="nav-link" data-scroll-target="#continuous-variables-correlation">3+ Continuous Variables | <span style="color: #80B1D3;">●</span> Correlation</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-13" id="toc-chart-options-13" class="nav-link" data-scroll-target="#chart-options-13">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-13" id="toc-healthcare-examples-13" class="nav-link" data-scroll-target="#healthcare-examples-13">Healthcare Examples:</a></li>
+  <li><a href="#decision-guide-10" id="toc-decision-guide-10" class="nav-link" data-scroll-target="#decision-guide-10">Decision Guide:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#multivariate-numeric-outcome-multiple-numeric-predictors" id="toc-multivariate-numeric-outcome-multiple-numeric-predictors" class="nav-link" data-scroll-target="#multivariate-numeric-outcome-multiple-numeric-predictors">MULTIVARIATE: Numeric Outcome × Multiple Numeric Predictors</a>
+  <ul class="collapse">
+  <li><a href="#correlation-matrix" id="toc-correlation-matrix" class="nav-link" data-scroll-target="#correlation-matrix"><span style="color: #80B1D3;">●</span> Correlation Matrix</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-14" id="toc-chart-options-14" class="nav-link" data-scroll-target="#chart-options-14">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-14" id="toc-healthcare-examples-14" class="nav-link" data-scroll-target="#healthcare-examples-14">Healthcare Examples:</a></li>
+  <li><a href="#visualization-1" id="toc-visualization-1" class="nav-link" data-scroll-target="#visualization-1">Visualization:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#multivariate-numeric-outcome-multiple-categoric-predictors" id="toc-multivariate-numeric-outcome-multiple-categoric-predictors" class="nav-link" data-scroll-target="#multivariate-numeric-outcome-multiple-categoric-predictors">MULTIVARIATE: Numeric Outcome × Multiple Categoric Predictors</a>
+  <ul class="collapse">
+  <li><a href="#distribution-faceted-correlation-interaction" id="toc-distribution-faceted-correlation-interaction" class="nav-link" data-scroll-target="#distribution-faceted-correlation-interaction"><span style="color: #FDB462;">●</span> Distribution (Faceted) | <span style="color: #80B1D3;">●</span> Correlation (Interaction)</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-15" id="toc-chart-options-15" class="nav-link" data-scroll-target="#chart-options-15">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-15" id="toc-healthcare-examples-15" class="nav-link" data-scroll-target="#healthcare-examples-15">Healthcare Examples:</a></li>
+  <li><a href="#visualization-strategy" id="toc-visualization-strategy" class="nav-link" data-scroll-target="#visualization-strategy">Visualization Strategy:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#multivariate-time-series-multiple-variables" id="toc-multivariate-time-series-multiple-variables" class="nav-link" data-scroll-target="#multivariate-time-series-multiple-variables">MULTIVARIATE: Time Series × Multiple Variables</a>
+  <ul class="collapse">
+  <li><a href="#evolution-advanced-distribution-temporal" id="toc-evolution-advanced-distribution-temporal" class="nav-link" data-scroll-target="#evolution-advanced-distribution-temporal"><span style="color: #80B1D3;">●</span> Evolution (Advanced) | <span style="color: #FDB462;">●</span> Distribution (Temporal)</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-16" id="toc-chart-options-16" class="nav-link" data-scroll-target="#chart-options-16">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-16" id="toc-healthcare-examples-16" class="nav-link" data-scroll-target="#healthcare-examples-16">Healthcare Examples:</a></li>
+  <li><a href="#decision-guide-11" id="toc-decision-guide-11" class="nav-link" data-scroll-target="#decision-guide-11">Decision Guide:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#multivariate-complex-categorical-3-categoric" id="toc-multivariate-complex-categorical-3-categoric" class="nav-link" data-scroll-target="#multivariate-complex-categorical-3-categoric">MULTIVARIATE: Complex Categorical (3+ Categoric)</a>
+  <ul class="collapse">
+  <li><a href="#flow-part-of-whole-hierarchical" id="toc-flow-part-of-whole-hierarchical" class="nav-link" data-scroll-target="#flow-part-of-whole-hierarchical"><span style="color: #FCCDE5;">●</span> Flow | <span style="color: #FB8072;">●</span> Part of Whole (Hierarchical)</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-17" id="toc-chart-options-17" class="nav-link" data-scroll-target="#chart-options-17">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-17" id="toc-healthcare-examples-17" class="nav-link" data-scroll-target="#healthcare-examples-17">Healthcare Examples:</a></li>
+  <li><a href="#decision-guide-12" id="toc-decision-guide-12" class="nav-link" data-scroll-target="#decision-guide-12">Decision Guide:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#multivariate-relationalnetwork-data" id="toc-multivariate-relationalnetwork-data" class="nav-link" data-scroll-target="#multivariate-relationalnetwork-data">MULTIVARIATE: Relational/Network Data</a>
+  <ul class="collapse">
+  <li><a href="#flow-correlation-connections" id="toc-flow-correlation-connections" class="nav-link" data-scroll-target="#flow-correlation-connections"><span style="color: #FCCDE5;">●</span> Flow | <span style="color: #80B1D3;">●</span> Correlation (Connections)</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-18" id="toc-chart-options-18" class="nav-link" data-scroll-target="#chart-options-18">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-18" id="toc-healthcare-examples-18" class="nav-link" data-scroll-target="#healthcare-examples-18">Healthcare Examples:</a></li>
+  <li><a href="#visualization-2" id="toc-visualization-2" class="nav-link" data-scroll-target="#visualization-2">Visualization:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#multivariate-hierarchical-data-4-levels" id="toc-multivariate-hierarchical-data-4-levels" class="nav-link" data-scroll-target="#multivariate-hierarchical-data-4-levels">MULTIVARIATE: Hierarchical Data (4+ Levels)</a>
+  <ul class="collapse">
+  <li><a href="#part-of-whole-flow" id="toc-part-of-whole-flow" class="nav-link" data-scroll-target="#part-of-whole-flow"><span style="color: #FB8072;">●</span> Part of Whole | <span style="color: #FCCDE5;">●</span> Flow</a>
+  <ul class="collapse">
+  <li><a href="#chart-options-19" id="toc-chart-options-19" class="nav-link" data-scroll-target="#chart-options-19">Chart Options:</a></li>
+  <li><a href="#healthcare-examples-19" id="toc-healthcare-examples-19" class="nav-link" data-scroll-target="#healthcare-examples-19">Healthcare Examples:</a></li>
+  <li><a href="#decision-guide-13" id="toc-decision-guide-13" class="nav-link" data-scroll-target="#decision-guide-13">Decision Guide:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#specialized-waterfall-funnel-charts" id="toc-specialized-waterfall-funnel-charts" class="nav-link" data-scroll-target="#specialized-waterfall-funnel-charts">SPECIALIZED: Waterfall &amp; Funnel Charts</a>
+  <ul class="collapse">
+  <li><a href="#flow-part-of-whole" id="toc-flow-part-of-whole" class="nav-link" data-scroll-target="#flow-part-of-whole"><span style="color: #FCCDE5;">●</span> Flow | <span style="color: #FB8072;">●</span> Part of Whole</a>
+  <ul class="collapse">
+  <li><a href="#waterfall-chart" id="toc-waterfall-chart" class="nav-link" data-scroll-target="#waterfall-chart">Waterfall Chart</a></li>
+  <li><a href="#funnel-chart" id="toc-funnel-chart" class="nav-link" data-scroll-target="#funnel-chart">Funnel Chart</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#specialized-advanced-temporal-visualizations" id="toc-specialized-advanced-temporal-visualizations" class="nav-link" data-scroll-target="#specialized-advanced-temporal-visualizations">SPECIALIZED: Advanced Temporal Visualizations</a>
+  <ul class="collapse">
+  <li><a href="#evolution-advanced-distribution-temporal-1" id="toc-evolution-advanced-distribution-temporal-1" class="nav-link" data-scroll-target="#evolution-advanced-distribution-temporal-1"><span style="color: #80B1D3;">●</span> Evolution (Advanced) | <span style="color: #FDB462;">●</span> Distribution (Temporal)</a>
+  <ul class="collapse">
+  <li><a href="#streamgraph" id="toc-streamgraph" class="nav-link" data-scroll-target="#streamgraph">Streamgraph</a></li>
+  <li><a href="#calendar-heatmap" id="toc-calendar-heatmap" class="nav-link" data-scroll-target="#calendar-heatmap">Calendar Heatmap</a></li>
+  <li><a href="#frequency-polygon" id="toc-frequency-polygon" class="nav-link" data-scroll-target="#frequency-polygon">Frequency Polygon</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#specialized-text-network-specialized" id="toc-specialized-text-network-specialized" class="nav-link" data-scroll-target="#specialized-text-network-specialized">SPECIALIZED: Text &amp; Network Specialized</a>
+  <ul class="collapse">
+  <li><a href="#distribution-text-correlation-networks" id="toc-distribution-text-correlation-networks" class="nav-link" data-scroll-target="#distribution-text-correlation-networks"><span style="color: #FDB462;">●</span> Distribution (Text) | <span style="color: #80B1D3;">●</span> Correlation (Networks)</a>
+  <ul class="collapse">
+  <li><a href="#word-cloud" id="toc-word-cloud" class="nav-link" data-scroll-target="#word-cloud">Word Cloud</a></li>
+  <li><a href="#arc-diagram" id="toc-arc-diagram" class="nav-link" data-scroll-target="#arc-diagram">Arc Diagram</a></li>
+  <li><a href="#hierarchical-edge-bundling" id="toc-hierarchical-edge-bundling" class="nav-link" data-scroll-target="#hierarchical-edge-bundling">Hierarchical Edge Bundling</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#case-study-1-real-world-application" id="toc-case-study-1-real-world-application" class="nav-link" data-scroll-target="#case-study-1-real-world-application">CASE STUDY 1: Real-World Application</a>
+  <ul class="collapse">
+  <li><a href="#scenario-quarterly-revenue-by-product-category-over-2-years" id="toc-scenario-quarterly-revenue-by-product-category-over-2-years" class="nav-link" data-scroll-target="#scenario-quarterly-revenue-by-product-category-over-2-years">Scenario: “Quarterly revenue by product category over 2 years”</a>
+  <ul class="collapse">
+  <li><a href="#step-1-identify-data-type" id="toc-step-1-identify-data-type" class="nav-link" data-scroll-target="#step-1-identify-data-type">Step 1: Identify Data Type</a></li>
+  <li><a href="#step-2-define-analytical-goal" id="toc-step-2-define-analytical-goal" class="nav-link" data-scroll-target="#step-2-define-analytical-goal">Step 2: Define Analytical Goal</a></li>
+  <li><a href="#step-3-chart-options" id="toc-step-3-chart-options" class="nav-link" data-scroll-target="#step-3-chart-options">Step 3: Chart Options</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#case-study-2-healthcare-example" id="toc-case-study-2-healthcare-example" class="nav-link" data-scroll-target="#case-study-2-healthcare-example">CASE STUDY 2: Healthcare Example</a>
+  <ul class="collapse">
+  <li><a href="#scenario-hba1c-levels-across-three-treatment-arms-over-12-months" id="toc-scenario-hba1c-levels-across-three-treatment-arms-over-12-months" class="nav-link" data-scroll-target="#scenario-hba1c-levels-across-three-treatment-arms-over-12-months">Scenario: “HbA1c levels across three treatment arms over 12 months”</a>
+  <ul class="collapse">
+  <li><a href="#step-1-identify-data-type-1" id="toc-step-1-identify-data-type-1" class="nav-link" data-scroll-target="#step-1-identify-data-type-1">Step 1: Identify Data Type</a></li>
+  <li><a href="#step-2-define-analytical-goal-1" id="toc-step-2-define-analytical-goal-1" class="nav-link" data-scroll-target="#step-2-define-analytical-goal-1">Step 2: Define Analytical Goal</a></li>
+  <li><a href="#step-3-chart-options-1" id="toc-step-3-chart-options-1" class="nav-link" data-scroll-target="#step-3-chart-options-1">Step 3: Chart Options</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#case-study-3-multi-dimensional-complexity" id="toc-case-study-3-multi-dimensional-complexity" class="nav-link" data-scroll-target="#case-study-3-multi-dimensional-complexity">CASE STUDY 3: Multi-Dimensional Complexity</a>
+  <ul class="collapse">
+  <li><a href="#scenario-top-10-competitors-market-share-over-5-years-by-region" id="toc-scenario-top-10-competitors-market-share-over-5-years-by-region" class="nav-link" data-scroll-target="#scenario-top-10-competitors-market-share-over-5-years-by-region">Scenario: “Top 10 competitors’ market share over 5 years by region”</a>
+  <ul class="collapse">
+  <li><a href="#step-1-identify-data-type-2" id="toc-step-1-identify-data-type-2" class="nav-link" data-scroll-target="#step-1-identify-data-type-2">Step 1: Identify Data Type</a></li>
+  <li><a href="#step-2-define-analytical-goal-2" id="toc-step-2-define-analytical-goal-2" class="nav-link" data-scroll-target="#step-2-define-analytical-goal-2">Step 2: Define Analytical Goal</a></li>
+  <li><a href="#step-3-chart-options-2" id="toc-step-3-chart-options-2" class="nav-link" data-scroll-target="#step-3-chart-options-2">Step 3: Chart Options</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#common-pitfalls-to-avoid" id="toc-common-pitfalls-to-avoid" class="nav-link" data-scroll-target="#common-pitfalls-to-avoid">Common Pitfalls to Avoid</a>
+  <ul class="collapse">
+  <li><a href="#what-not-to-do" id="toc-what-not-to-do" class="nav-link" data-scroll-target="#what-not-to-do">❌ What NOT to Do</a>
+  <ul class="collapse">
+  <li><a href="#pie-charts-with-10-categories" id="toc-pie-charts-with-10-categories" class="nav-link" data-scroll-target="#pie-charts-with-10-categories">❌ Pie charts with 10+ categories</a></li>
+  <li><a href="#d-charts" id="toc-d-charts" class="nav-link" data-scroll-target="#d-charts">❌ 3D charts</a></li>
+  <li><a href="#dual-axis-charts" id="toc-dual-axis-charts" class="nav-link" data-scroll-target="#dual-axis-charts">❌ Dual-axis charts</a></li>
+  <li><a href="#wrong-color-coding" id="toc-wrong-color-coding" class="nav-link" data-scroll-target="#wrong-color-coding">❌ Wrong color coding</a></li>
+  <li><a href="#overplotting-overlapping-points" id="toc-overplotting-overlapping-points" class="nav-link" data-scroll-target="#overplotting-overlapping-points">❌ Overplotting (overlapping points)</a></li>
+  <li><a href="#stacked-bars-for-detailed-comparison" id="toc-stacked-bars-for-detailed-comparison" class="nav-link" data-scroll-target="#stacked-bars-for-detailed-comparison">❌ Stacked bars for detailed comparison</a></li>
+  <li><a href="#too-many-dimensions-on-one-plot" id="toc-too-many-dimensions-on-one-plot" class="nav-link" data-scroll-target="#too-many-dimensions-on-one-plot">❌ Too many dimensions on one plot</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#quick-decision-matrix-cheat-sheet" id="toc-quick-decision-matrix-cheat-sheet" class="nav-link" data-scroll-target="#quick-decision-matrix-cheat-sheet">Quick Decision Matrix (Cheat Sheet)</a>
+  <ul class="collapse">
+  <li><a href="#analytical-goal-data-type-reference" id="toc-analytical-goal-data-type-reference" class="nav-link" data-scroll-target="#analytical-goal-data-type-reference">Analytical Goal × Data Type Reference</a></li>
+  </ul></li>
+  <li><a href="#your-turn-practice-exercises" id="toc-your-turn-practice-exercises" class="nav-link" data-scroll-target="#your-turn-practice-exercises">Your Turn: Practice Exercises</a>
+  <ul class="collapse">
+  <li><a href="#apply-what-youve-learned" id="toc-apply-what-youve-learned" class="nav-link" data-scroll-target="#apply-what-youve-learned">Apply What You’ve Learned</a>
+  <ul class="collapse">
+  <li><a href="#scenario-1-employee-satisfaction" id="toc-scenario-1-employee-satisfaction" class="nav-link" data-scroll-target="#scenario-1-employee-satisfaction">Scenario 1: Employee Satisfaction</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#your-turn-practice-exercises-continued" id="toc-your-turn-practice-exercises-continued" class="nav-link" data-scroll-target="#your-turn-practice-exercises-continued">Your Turn: Practice Exercises (continued)</a>
+  <ul class="collapse">
+  <li><a href="#scenario-2-website-analytics" id="toc-scenario-2-website-analytics" class="nav-link" data-scroll-target="#scenario-2-website-analytics">Scenario 2: Website Analytics</a></li>
+  </ul></li>
+  <li><a href="#your-turn-practice-exercises-continued-1" id="toc-your-turn-practice-exercises-continued-1" class="nav-link" data-scroll-target="#your-turn-practice-exercises-continued-1">Your Turn: Practice Exercises (continued)</a>
+  <ul class="collapse">
+  <li><a href="#scenario-3-clinical-trial-recruitment" id="toc-scenario-3-clinical-trial-recruitment" class="nav-link" data-scroll-target="#scenario-3-clinical-trial-recruitment">Scenario 3: Clinical Trial Recruitment</a></li>
+  </ul></li>
+  <li><a href="#your-turn-practice-exercises-continued-2" id="toc-your-turn-practice-exercises-continued-2" class="nav-link" data-scroll-target="#your-turn-practice-exercises-continued-2">Your Turn: Practice Exercises (continued)</a>
+  <ul class="collapse">
+  <li><a href="#scenario-4-healthcare---adverse-events" id="toc-scenario-4-healthcare---adverse-events" class="nav-link" data-scroll-target="#scenario-4-healthcare---adverse-events">Scenario 4: Healthcare - Adverse Events</a></li>
+  </ul></li>
+  <li><a href="#tools-resources" id="toc-tools-resources" class="nav-link" data-scroll-target="#tools-resources">Tools &amp; Resources</a>
+  <ul class="collapse">
+  <li><a href="#recommended-frameworks-references" id="toc-recommended-frameworks-references" class="nav-link" data-scroll-target="#recommended-frameworks-references">Recommended Frameworks &amp; References</a>
+  <ul class="collapse">
+  <li><a href="#visualization-tools" id="toc-visualization-tools" class="nav-link" data-scroll-target="#visualization-tools">Visualization Tools</a></li>
+  <li><a href="#reference-resources" id="toc-reference-resources" class="nav-link" data-scroll-target="#reference-resources">Reference Resources</a></li>
+  <li><a href="#practice-datasets" id="toc-practice-datasets" class="nav-link" data-scroll-target="#practice-datasets">Practice Datasets</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a>
+  <ul class="collapse">
+  <li><a href="#core-principles-for-effective-visualization" id="toc-core-principles-for-effective-visualization" class="nav-link" data-scroll-target="#core-principles-for-effective-visualization">Core Principles for Effective Visualization</a></li>
+  </ul></li>
+  <li><a href="#qa-thank-you" id="toc-qa-thank-you" class="nav-link" data-scroll-target="#qa-thank-you">Q&amp;A / Thank You</a>
+  <ul class="collapse">
+  <li><a href="#resources-next-steps" id="toc-resources-next-steps" class="nav-link" data-scroll-target="#resources-next-steps">Resources &amp; Next Steps</a>
+  <ul class="collapse">
+  <li><a href="#key-links" id="toc-key-links" class="nav-link" data-scroll-target="#key-links">Key Links</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next Steps</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#thank-you" id="toc-thank-you" class="nav-link" data-scroll-target="#thank-you">Thank You!</a>
+  <ul class="collapse">
+  <li><a href="#navigating-the-decision-tree-1" id="toc-navigating-the-decision-tree-1" class="nav-link" data-scroll-target="#navigating-the-decision-tree-1">Navigating the Decision Tree</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="plot_data.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Navigating the Decision Tree</h1>
+<p class="subtitle lead">Choosing the Right Visualization for Your Data</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>SpaRroW </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="navigating-the-decision-tree" class="level1 title-slide">
+<h1 class="title-slide">Navigating the Decision Tree</h1>
+<section id="choosing-the-right-visualization-for-your-data" class="level2">
+<h2 class="anchored" data-anchor-id="choosing-the-right-visualization-for-your-data">Choosing the Right Visualization for Your Data</h2>
+<p><strong>A Practical Framework Based on Analytical Goals</strong></p>
+<hr>
+</section>
+</section>
+<section id="the-3-step-framework" class="level1">
+<h1>The 3-Step Framework</h1>
+<section id="your-roadmap-for-visualization-selection" class="level2">
+<h2 class="anchored" data-anchor-id="your-roadmap-for-visualization-selection">Your Roadmap for Visualization Selection</h2>
+<div class="incremental">
+<ol class="incremental" type="1">
+<li><strong>Identify Your Data Type</strong>
+<ul class="incremental">
+<li>What kind of data do you have? (Numeric, Categorical, Temporal, etc.)</li>
+</ul></li>
+<li><strong>Define Your Analytical Goal</strong>
+<ul class="incremental">
+<li>What do you want to communicate? (Compare, Distribute, Show Relationships, etc.)</li>
+</ul></li>
+<li><strong>Select the Appropriate Chart</strong>
+<ul class="incremental">
+<li>What visualization best achieves your goal?</li>
+</ul></li>
+</ol>
+</div>
+<hr>
+</section>
+</section>
+<section id="the-seven-analytical-goals" class="level1">
+<h1>The Seven Analytical Goals</h1>
+<section id="color-coded-framework" class="level2">
+<h2 class="anchored" data-anchor-id="color-coded-framework">Color-Coded Framework</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 24%">
+<col style="width: 30%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Goal</th>
+<th>Symbol</th>
+<th>Question</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Distribution</strong></td>
+<td><span style="color: #FDB462;">●</span></td>
+<td>“What’s the spread?”</td>
+<td>Show data spread, shape, outliers</td>
+</tr>
+<tr class="even">
+<td><strong>Correlation</strong></td>
+<td><span style="color: #80B1D3;">●</span></td>
+<td>“How do things relate?”</td>
+<td>Show relationships between variables</td>
+</tr>
+<tr class="odd">
+<td><strong>Ranking</strong></td>
+<td><span style="color: #A6D854;">●</span></td>
+<td>“What’s the order?”</td>
+<td>Compare values in order</td>
+</tr>
+<tr class="even">
+<td><strong>Part of Whole</strong></td>
+<td><span style="color: #FB8072;">●</span></td>
+<td>“What’s the composition?”</td>
+<td>Show proportions/percentages</td>
+</tr>
+<tr class="odd">
+<td><strong>Evolution</strong></td>
+<td><span style="color: #80B1D3;">●</span></td>
+<td>“How does it change over time?”</td>
+<td>Track trends and changes</td>
+</tr>
+<tr class="even">
+<td><strong>Maps</strong></td>
+<td><span style="color: #BEBADA;">●</span></td>
+<td>“Where is it located?”</td>
+<td>Geographic/spatial distribution</td>
+</tr>
+<tr class="odd">
+<td><strong>Flow</strong></td>
+<td><span style="color: #FCCDE5;">●</span></td>
+<td>“How does it move?”</td>
+<td>Movement, transitions, journeys</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="color-legend-chart-to-goal-mapping" class="level1">
+<h1>Color Legend: Chart-to-Goal Mapping</h1>
+<section id="quick-reference---what-each-color-means" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference---what-each-color-means">Quick Reference - What Each Color Means</h2>
+<ul>
+<li><span style="color: #FDB462;"><strong>●</strong></span> <strong>Gold/Yellow = Distribution</strong> - Shows data spread, frequency, shape, outliers</li>
+<li><span style="color: #80B1D3;"><strong>●</strong></span> <strong>Blue = Correlation</strong> - Shows relationships, associations between variables</li>
+<li><span style="color: #A6D854;"><strong>●</strong></span> <strong>Green = Ranking</strong> - Shows order, comparison of values, top/bottom</li>
+<li><span style="color: #FB8072;"><strong>●</strong></span> <strong>Red/Salmon = Part of Whole</strong> - Shows composition, proportions, percentages</li>
+<li><span style="color: #80B1D3;"><strong>●</strong></span> <strong>Light Blue = Evolution</strong> - Shows trends, changes over time, trajectories</li>
+<li><span style="color: #BEBADA;"><strong>●</strong></span> <strong>Purple = Maps</strong> - Shows geographic/spatial distribution, location-based data</li>
+<li><span style="color: #FCCDE5;"><strong>●</strong></span> <strong>Pink/Tan = Flow</strong> - Shows movement, transitions, journeys, hierarchies</li>
+</ul>
+<p><strong>Tip:</strong> When you see a colored dot next to a chart name, it tells you what analytical goal that chart serves best!</p>
+<hr>
+</section>
+</section>
+<section id="know-your-data" class="level1">
+<h1>Know Your Data</h1>
+<section id="the-6-data-type-categories" class="level2">
+<h2 class="anchored" data-anchor-id="the-6-data-type-categories">The 6 Data Type Categories</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 34%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Data Type</th>
+<th>Definition</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Numeric</strong></td>
+<td>Continuous measurements</td>
+<td>Age, weight, blood pressure, lab values</td>
+</tr>
+<tr class="even">
+<td><strong>Categoric</strong></td>
+<td>Discrete categories/groups</td>
+<td>Gender, disease status, treatment type</td>
+</tr>
+<tr class="odd">
+<td><strong>Ordinal</strong></td>
+<td>Ordered categories</td>
+<td>Likert scale, tumor stages, severity levels</td>
+</tr>
+<tr class="even">
+<td><strong>Time Series</strong></td>
+<td>Temporal/chronological data</td>
+<td>Monthly incidence, patient vitals over time</td>
+</tr>
+<tr class="odd">
+<td><strong>Relational</strong></td>
+<td>Connections/networks</td>
+<td>Patient pathways, disease networks</td>
+</tr>
+<tr class="even">
+<td><strong>Map</strong></td>
+<td>Geographic/spatial data</td>
+<td>Regional disease rates, location coordinates</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="the-complete-decision-map" class="level1">
+<h1>The Complete Decision Map</h1>
+<section id="how-variables-combine" class="level2">
+<h2 class="anchored" data-anchor-id="how-variables-combine">How Variables Combine</h2>
+<pre><code>SINGLE VARIABLE
+├── Numeric → Histogram, Density, Boxplot
+├── Categoric → Bar, Pie, Lollipop
+├── Ordinal → Ordered Bar, Cumulative Frequency
+├── Time Series → Line, Area
+├── Map → Choropleth, Bubble Map
+└── Relational → Network Graph
+
+BIVARIATE (TWO VARIABLES)
+├── Numeric × Numeric → Scatter, Hexbin, Bubble
+├── Numeric × Categoric → Boxplot, Violin, Grouped Bar
+├── Categoric × Categoric → Grouped/Stacked Bar, Mosaic, Heatmap
+├── Time Series × Numeric → Multi-line, Stacked Area
+├── Time Series × Categoric → Faceted Line, Interaction Plot
+└── Any + Relational → Sankey, Chord
+
+MULTIVARIATE (3+ VARIABLES)
+├── Numeric × Numeric × Numeric → Bubble, Faceted Scatter
+├── Numeric × Multiple Categoric → Faceted Box/Violin, Interaction
+├── Multiple Categoric × Multiple Categoric → Sankey, Sunburst, Treemap
+├── Time Series × Multiple Variables → Ridgeline, Faceted Line
+└── Hierarchical → Treemap, Sunburst, Hierarchical Edge Bundling</code></pre>
+<hr>
+</section>
+</section>
+<section id="single-variable-categoric-data" class="level1">
+<h1>SINGLE VARIABLE: Categoric Data</h1>
+<section id="distribution-ranking-part-of-whole" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-ranking-part-of-whole"><span style="color: #FDB462;">●</span> Distribution | <span style="color: #A6D854;">●</span> Ranking | <span style="color: #FB8072;">●</span> Part of Whole</h2>
+<section id="chart-options" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options">Chart Options:</h3>
+<ul>
+<li><strong>Bar Chart</strong> <span style="color: #FDB462;">●</span> (counts/frequencies)</li>
+<li><strong>Lollipop Chart</strong> <span style="color: #FDB462;">●</span> (alternative to bar, especially for long lists)</li>
+<li><strong>Cleveland Dot Plot</strong> <span style="color: #A6D854;">●</span> (ranked comparison)</li>
+<li><strong>Pie Chart</strong> <span style="color: #FB8072;">●</span> (≤5 categories only, part-to-whole)</li>
+<li><strong>Doughnut Chart</strong> <span style="color: #FB8072;">●</span> (like pie, better labels)</li>
+<li><strong>Circular Bar Plot</strong> <span style="color: #A6D854;">●</span> (aesthetic alternative)</li>
+</ul>
+</section>
+<section id="healthcare-examples" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples">Healthcare Examples:</h3>
+<ul>
+<li>Disease prevalence by state</li>
+<li>Hospitalization by insurance type</li>
+<li>Comorbidity frequency distribution</li>
+</ul>
+</section>
+<section id="decision-guide" class="level3">
+<h3 class="anchored" data-anchor-id="decision-guide">Decision Guide:</h3>
+<ul>
+<li><strong>Few categories (&lt;5)</strong> and need part-of-whole → Pie/Doughnut</li>
+<li><strong>Few-moderate categories</strong> → Bar chart (horizontal if long names)</li>
+<li><strong>Many categories (&gt;8)</strong> → Lollipop or Cleveland dot</li>
+<li><strong>Need ranking emphasis</strong> → Ordered bar or lollipop</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="single-variable-ordinal-data" class="level1">
+<h1>SINGLE VARIABLE: Ordinal Data</h1>
+<section id="distribution-part-of-whole-ordered" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-part-of-whole-ordered"><span style="color: #FDB462;">●</span> Distribution | <span style="color: #FB8072;">●</span> Part of Whole (Ordered)</h2>
+<section id="chart-options-1" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-1">Chart Options:</h3>
+<ul>
+<li><strong>Ordered Bar Chart</strong> <span style="color: #FDB462;">●</span> (maintain categorical order)</li>
+<li><strong>Ordered Dot Plot</strong> <span style="color: #FDB462;">●</span></li>
+<li><strong>Cumulative Frequency Plot</strong> <span style="color: #FB8072;">●</span> (especially for Likert scales)</li>
+<li><strong>Frequency Polygon</strong> <span style="color: #FDB462;">●</span> (smooth trend)</li>
+</ul>
+</section>
+<section id="healthcare-examples-1" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-1">Healthcare Examples:</h3>
+<ul>
+<li>Patient satisfaction (Likert: 1=Very Unsatisfied to 5=Very Satisfied)</li>
+<li>Tumor stages frequency (Stage I → II → III → IV)</li>
+<li>Pain severity distribution (None → Mild → Moderate → Severe)</li>
+<li>Risk level counts (Low → Medium → High)</li>
+</ul>
+</section>
+<section id="decision-guide-1" class="level3">
+<h3 class="anchored" data-anchor-id="decision-guide-1">Decision Guide:</h3>
+<ul>
+<li><strong>Likert scales</strong> → Stacked ordered bar or cumulative frequency</li>
+<li><strong>Natural progression</strong> (stages, severity) → Maintain order on axis</li>
+<li><strong>Show accumulation</strong> → Cumulative frequency plot</li>
+<li><strong>Compare between groups</strong> → Grouped ordered bar</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="single-variable-numeric-data" class="level1">
+<h1>SINGLE VARIABLE: Numeric Data</h1>
+<section id="distribution" class="level2">
+<h2 class="anchored" data-anchor-id="distribution"><span style="color: #FDB462;">●</span> Distribution</h2>
+<section id="chart-options-2" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-2">Chart Options:</h3>
+<ul>
+<li><strong>Histogram</strong> <span style="color: #FDB462;">●</span> (shows bin structure, distribution shape)</li>
+<li><strong>Density Plot</strong> <span style="color: #FDB462;">●</span> (smooth, continuous estimate)</li>
+<li><strong>Boxplot</strong> <span style="color: #FDB462;">●</span> (summary: median, quartiles, outliers)</li>
+<li><strong>Violin Plot</strong> <span style="color: #FDB462;">●</span> (distribution + boxplot combined)</li>
+<li><strong>Dot/Strip Plot</strong> <span style="color: #FDB462;">●</span> (individual points, best for small n)</li>
+</ul>
+</section>
+<section id="healthcare-examples-2" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-2">Healthcare Examples:</h3>
+<ul>
+<li>Age distribution in cohort</li>
+<li>Blood pressure measurements in population</li>
+<li>Lab values (HbA1c, cholesterol, creatinine)</li>
+<li>Hospital length of stay</li>
+</ul>
+</section>
+<section id="decision-guide-2" class="level3">
+<h3 class="anchored" data-anchor-id="decision-guide-2">Decision Guide:</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Scenario</th>
+<th>Best Choice</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>n &lt; 20</strong></td>
+<td>Dot/Strip plot</td>
+<td>See every point</td>
+</tr>
+<tr class="even">
+<td><strong>n = 20-100</strong></td>
+<td>Histogram + Boxplot</td>
+<td>Balance detail &amp; summary</td>
+</tr>
+<tr class="odd">
+<td><strong>n &gt; 100</strong></td>
+<td>Density plot</td>
+<td>Smooth, reduces noise</td>
+</tr>
+<tr class="even">
+<td><strong>Want outliers</strong></td>
+<td>Boxplot</td>
+<td>Shows extreme values clearly</td>
+</tr>
+<tr class="odd">
+<td><strong>Want shape details</strong></td>
+<td>Violin plot</td>
+<td>Shows multimodality, skewness</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+</section>
+<section id="single-variable-time-series" class="level1">
+<h1>SINGLE VARIABLE: Time Series</h1>
+<section id="evolution" class="level2">
+<h2 class="anchored" data-anchor-id="evolution"><span style="color: #80B1D3;">●</span> Evolution</h2>
+<section id="chart-options-3" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-3">Chart Options:</h3>
+<ul>
+<li><strong>Line Chart</strong> <span style="color: #80B1D3;">●</span> (standard for continuous time data)</li>
+<li><strong>Area Chart</strong> <span style="color: #80B1D3;">●</span> (emphasizes magnitude/volume)</li>
+<li><strong>Streamgraph</strong> <span style="color: #80B1D3;">●</span> (stacked area with flowing theme)</li>
+</ul>
+</section>
+<section id="healthcare-examples-3" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-3">Healthcare Examples:</h3>
+<ul>
+<li>Disease incidence trends over years</li>
+<li>Hospital admission rates monthly</li>
+<li>COVID-19 case counts by week</li>
+<li>Patient vital signs during hospitalization</li>
+</ul>
+</section>
+<section id="decision-guide-3" class="level3">
+<h3 class="anchored" data-anchor-id="decision-guide-3">Decision Guide:</h3>
+<ul>
+<li><strong>Single series, continuous time</strong> → Line chart</li>
+<li><strong>Show cumulative volume</strong> → Area chart</li>
+<li><strong>Multiple series, show total</strong> → Stacked area</li>
+<li><strong>Sparse time points</strong> → Line chart with markers</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="single-variable-spatialmap-data" class="level1">
+<h1>SINGLE VARIABLE: Spatial/Map Data</h1>
+<section id="maps" class="level2">
+<h2 class="anchored" data-anchor-id="maps"><span style="color: #BEBADA;">●</span> Maps</h2>
+<section id="chart-options-4" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-4">Chart Options:</h3>
+<ul>
+<li><strong>Choropleth Map</strong> <span style="color: #BEBADA;">●</span> (color-coded by region)</li>
+<li><strong>Bubble Map</strong> <span style="color: #BEBADA;">●</span> (circles sized by value)</li>
+<li><strong>Heat Map</strong> <span style="color: #BEBADA;">●</span> (geographic intensity)</li>
+<li><strong>Dot Map</strong> <span style="color: #BEBADA;">●</span> (point locations)</li>
+</ul>
+</section>
+<section id="healthcare-examples-4" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-4">Healthcare Examples:</h3>
+<ul>
+<li>Regional disease rates (e.g., TB incidence by state in India)</li>
+<li>Hospital bed density by district</li>
+<li>Maternal mortality ratios by region</li>
+<li>Vaccination coverage by area</li>
+</ul>
+</section>
+<section id="decision-guide-4" class="level3">
+<h3 class="anchored" data-anchor-id="decision-guide-4">Decision Guide:</h3>
+<ul>
+<li><strong>Show rate/percentage by region</strong> → Choropleth</li>
+<li><strong>Show absolute counts by location</strong> → Bubble map</li>
+<li><strong>Show intensity/density</strong> → Heat map</li>
+<li><strong>Specific point locations matter</strong> → Dot map</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="bivariate-numeric-numeric" class="level1">
+<h1>BIVARIATE: Numeric × Numeric</h1>
+<section id="correlation-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="correlation-distribution"><span style="color: #80B1D3;">●</span> Correlation | <span style="color: #FDB462;">●</span> Distribution</h2>
+<section id="chart-options-5" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-5">Chart Options:</h3>
+<ul>
+<li><strong>Scatter Plot</strong> <span style="color: #80B1D3;">●</span> (relationship between two continuous variables)</li>
+<li><strong>Hexbin Plot</strong> <span style="color: #80B1D3;">●</span> (2D histogram for dense data)</li>
+<li><strong>2D Density Plot</strong> <span style="color: #80B1D3;">●</span> (contour or heatmap of overlapping points)</li>
+<li><strong>Bubble Plot</strong> <span style="color: #80B1D3;">●</span> (3rd variable via size or color)</li>
+</ul>
+</section>
+<section id="healthcare-examples-5" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-5">Healthcare Examples:</h3>
+<ul>
+<li>Age vs BMI (body mass relationship)</li>
+<li>HbA1c vs Blood Glucose (glycemic control markers)</li>
+<li>Creatinine vs eGFR (kidney function)</li>
+<li>Systolic vs Diastolic Blood Pressure</li>
+</ul>
+</section>
+<section id="decision-guide-5" class="level3">
+<h3 class="anchored" data-anchor-id="decision-guide-5">Decision Guide:</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Scenario</th>
+<th>Best Choice</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Moderate sample, clear pattern</strong></td>
+<td>Scatter plot</td>
+</tr>
+<tr class="even">
+<td><strong>Large n, lots of overplotting</strong></td>
+<td>Hexbin or 2D density</td>
+</tr>
+<tr class="odd">
+<td><strong>Want 3rd variable shown</strong></td>
+<td>Bubble (size) or color gradient</td>
+</tr>
+<tr class="even">
+<td><strong>Focused region interest</strong></td>
+<td>Zoomed scatter with annotations</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+</section>
+<section id="bivariate-numeric-outcome-categoric-predictor" class="level1">
+<h1>BIVARIATE: Numeric Outcome × Categoric Predictor</h1>
+<section id="distribution-correlation-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-correlation-comparison"><span style="color: #FDB462;">●</span> Distribution | <span style="color: #80B1D3;">●</span> Correlation (Comparison)</h2>
+<section id="chart-options-6" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-6">Chart Options:</h3>
+<ul>
+<li><strong>Boxplot</strong> <span style="color: #FDB462;">●</span> (median, quartiles, outliers by group)</li>
+<li><strong>Violin Plot</strong> <span style="color: #FDB462;">●</span> (distribution shape by group)</li>
+<li><strong>Jittered Dot/Strip/Beeswarm Plot</strong> <span style="color: #FDB462;">●</span> (individual points by group)</li>
+<li><strong>Bar Chart with Error Bars</strong> <span style="color: #FDB462;">●</span> (mean/median ± SD/IQR)</li>
+<li><strong>Cleveland Dot Plot</strong> <span style="color: #A6D854;">●</span> (ranked group means)</li>
+</ul>
+</section>
+<section id="healthcare-examples-6" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-6">Healthcare Examples:</h3>
+<ul>
+<li>HbA1c levels across treatment arms</li>
+<li>BMI by disease status (healthy vs diabetic vs obese)</li>
+<li>Blood pressure by gender</li>
+<li>Hospital length of stay by admission type</li>
+</ul>
+</section>
+<section id="decision-guide-6" class="level3">
+<h3 class="anchored" data-anchor-id="decision-guide-6">Decision Guide:</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Sample Size</th>
+<th>Distribution Focus</th>
+<th>Summary Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>n &lt; 30</strong></td>
+<td>Dot/Strip + Boxplot</td>
+<td>Not recommended</td>
+</tr>
+<tr class="even">
+<td><strong>n = 30-100</strong></td>
+<td>Violin or Boxplot</td>
+<td>Bar with error bars</td>
+</tr>
+<tr class="odd">
+<td><strong>n &gt; 100</strong></td>
+<td>Violin plot</td>
+<td>Density overlay + mean line</td>
+</tr>
+<tr class="even">
+<td><strong>Outliers matter</strong></td>
+<td>Boxplot + jitter</td>
+<td>Always show</td>
+</tr>
+<tr class="odd">
+<td><strong>Group ranking focus</strong></td>
+<td>Ranked dots</td>
+<td>Lollipop chart</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+</section>
+<section id="bivariate-categoric-outcome-numeric-predictor" class="level1">
+<h1>BIVARIATE: Categoric Outcome × Numeric Predictor</h1>
+<section id="correlation-probability" class="level2">
+<h2 class="anchored" data-anchor-id="correlation-probability"><span style="color: #80B1D3;">●</span> Correlation (Probability)</h2>
+<section id="chart-options-7" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-7">Chart Options:</h3>
+<ul>
+<li><strong>Logistic Regression Curve</strong> <span style="color: #80B1D3;">●</span> (smooth probability line)</li>
+<li><strong>Density Overlay</strong> <span style="color: #80B1D3;">●</span> (stacked densities by category)</li>
+<li><strong>Grouped Histogram/Density</strong> <span style="color: #80B1D3;">●</span> (overlapping distributions)</li>
+</ul>
+</section>
+<section id="healthcare-examples-7" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-7">Healthcare Examples:</h3>
+<ul>
+<li>Disease presence/absence across age ranges</li>
+<li>Treatment response (yes/no) by baseline score</li>
+<li>Adverse event (yes/no) by medication dose</li>
+<li>Mortality (yes/no) by APACHE score</li>
+</ul>
+</section>
+<section id="visualization" class="level3">
+<h3 class="anchored" data-anchor-id="visualization">Visualization:</h3>
+<ul>
+<li>X-axis: Numeric predictor (age, score, dose)</li>
+<li>Y-axis: Probability or proportion</li>
+<li>Two groups shown as overlapping curves or stacked</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="bivariate-categoric-categoric" class="level1">
+<h1>BIVARIATE: Categoric × Categoric</h1>
+<section id="distribution-ranking-part-of-whole-correlation" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-ranking-part-of-whole-correlation"><span style="color: #FDB462;">●</span> Distribution | <span style="color: #A6D854;">●</span> Ranking | <span style="color: #FB8072;">●</span> Part of Whole | <span style="color: #80B1D3;">●</span> Correlation</h2>
+<section id="chart-options-8" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-8">Chart Options:</h3>
+<ul>
+<li><strong>Grouped Bar Chart</strong> <span style="color: #FDB462;">●</span> (side-by-side comparison)</li>
+<li><strong>Dodged Bar Chart</strong> <span style="color: #FDB462;">●</span> (similar to grouped)</li>
+<li><strong>Stacked Bar Chart</strong> <span style="color: #FB8072;">●</span> (shows totals + composition)</li>
+<li><strong>Stacked Bar (Proportional)</strong> <span style="color: #FB8072;">●</span> (percentage/100% stacked)</li>
+<li><strong>Mosaic Plot</strong> <span style="color: #80B1D3;">●</span> (area ∝ frequency, shows association)</li>
+<li><strong>Heatmap</strong> <span style="color: #80B1D3;">●</span> (color intensity for cell frequencies)</li>
+</ul>
+</section>
+<section id="healthcare-examples-8" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-8">Healthcare Examples:</h3>
+<ul>
+<li>Gender vs Disease status (M/F vs HIV+/HIV-)</li>
+<li>Treatment arm vs Adverse event (Drug A/B vs AE Yes/No)</li>
+<li>Hospital site vs Patient outcome (Site 1-3 vs Recovered/Died)</li>
+<li>Risk level by comorbidity count</li>
+</ul>
+</section>
+<section id="decision-guide-7" class="level3">
+<h3 class="anchored" data-anchor-id="decision-guide-7">Decision Guide:</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Goal</th>
+<th>Best Chart</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Compare totals &amp; subgroups</strong></td>
+<td>Grouped bar</td>
+</tr>
+<tr class="even">
+<td><strong>Show composition per category</strong></td>
+<td>Stacked bar</td>
+</tr>
+<tr class="odd">
+<td><strong>Show percentages only</strong></td>
+<td>Stacked bar (proportional)</td>
+</tr>
+<tr class="even">
+<td><strong>Detect association strength</strong></td>
+<td>Mosaic or heatmap</td>
+</tr>
+<tr class="odd">
+<td><strong>Many categories, dense</strong></td>
+<td>Heatmap with color gradient</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+</section>
+<section id="bivariate-ordinal-numeric" class="level1">
+<h1>BIVARIATE: Ordinal × Numeric</h1>
+<section id="distribution-ordered" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-ordered"><span style="color: #FDB462;">●</span> Distribution (Ordered)</h2>
+<section id="chart-options-9" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-9">Chart Options:</h3>
+<ul>
+<li><strong>Ordered Boxplot</strong> <span style="color: #FDB462;">●</span> (boxplot by ordinal groups, maintaining order)</li>
+<li><strong>Ordered Violin Plot</strong> <span style="color: #FDB462;">●</span> (violin by ordinal groups)</li>
+<li><strong>Ordered Jittered Points</strong> <span style="color: #FDB462;">●</span> (points by group, groups ordered)</li>
+</ul>
+</section>
+<section id="healthcare-examples-9" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-9">Healthcare Examples:</h3>
+<ul>
+<li>Medication efficacy vs dose level (Low/Medium/High)</li>
+<li>Lab value vs disease severity (Stage I-IV)</li>
+<li>Pain score vs treatment intensity (Mild/Moderate/Severe)</li>
+<li>Functional status vs age group (Young/Middle/Elderly)</li>
+</ul>
+</section>
+<section id="key-point" class="level3">
+<h3 class="anchored" data-anchor-id="key-point">Key Point:</h3>
+<ul>
+<li>Always maintain explicit ordering on axis</li>
+<li>Example: Severity I → II → III → IV (not random order)</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="bivariate-time-series-numeric" class="level1">
+<h1>BIVARIATE: Time Series × Numeric</h1>
+<section id="evolution-correlation-trend" class="level2">
+<h2 class="anchored" data-anchor-id="evolution-correlation-trend"><span style="color: #80B1D3;">●</span> Evolution | <span style="color: #80B1D3;">●</span> Correlation (Trend)</h2>
+<section id="chart-options-10" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-10">Chart Options:</h3>
+<ul>
+<li><strong>Line Chart</strong> <span style="color: #80B1D3;">●</span> (single series over time)</li>
+<li><strong>Multi-line Chart</strong> <span style="color: #80B1D3;">●</span> (multiple series overlay)</li>
+<li><strong>Area Chart</strong> <span style="color: #80B1D3;">●</span> (cumulative volume over time)</li>
+<li><strong>Stacked Area Chart</strong> <span style="color: #80B1D3;">●</span> (composition over time)</li>
+<li><strong>Connected Scatter</strong> <span style="color: #80B1D3;">●</span> (if sparse time points)</li>
+</ul>
+</section>
+<section id="healthcare-examples-10" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-10">Healthcare Examples:</h3>
+<ul>
+<li>Disease incidence trends over years (single disease)</li>
+<li>Patient vital signs over hospital stay (temperature, BP, HR)</li>
+<li>Medication effectiveness over weeks (Drug A vs B)</li>
+<li>Mortality rates over decades by region</li>
+</ul>
+</section>
+<section id="decision-guide-8" class="level3">
+<h3 class="anchored" data-anchor-id="decision-guide-8">Decision Guide:</h3>
+<ul>
+<li><strong>Single series</strong> → Line chart</li>
+<li><strong>Few series (2-3) to compare</strong> → Multi-line chart</li>
+<li><strong>Many series, want to show total</strong> → Stacked area</li>
+<li><strong>Series showing parts of whole</strong> → Stacked area</li>
+<li><strong>Sparse measurements</strong> → Line with markers or connected scatter</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="bivariate-time-series-categoric" class="level1">
+<h1>BIVARIATE: Time Series × Categoric</h1>
+<section id="evolution-by-group-correlation-group-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="evolution-by-group-correlation-group-comparison"><span style="color: #80B1D3;">●</span> Evolution (By Group) | <span style="color: #80B1D3;">●</span> Correlation (Group Comparison)</h2>
+<section id="chart-options-11" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-11">Chart Options:</h3>
+<ul>
+<li><strong>Grouped Line Chart</strong> <span style="color: #80B1D3;">●</span> (separate lines for each group)</li>
+<li><strong>Faceted Line Chart</strong> <span style="color: #80B1D3;">●</span> (separate subplots per group)</li>
+<li><strong>Grouped Area Chart</strong> <span style="color: #80B1D3;">●</span> (stacked or overlapping)</li>
+<li><strong>Interaction Plot</strong> <span style="color: #80B1D3;">●</span> (lines intersecting showing interaction)</li>
+<li><strong>Ribbon Chart</strong> <span style="color: #80B1D3;">●</span> (flowing bands representing groups)</li>
+</ul>
+</section>
+<section id="healthcare-examples-11" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-11">Healthcare Examples:</h3>
+<ul>
+<li>Mortality rate trends (gender comparison: M vs F)</li>
+<li>Hospital admission trends by institution (5-year follow-up)</li>
+<li>Drug effectiveness over time by treatment arm</li>
+<li>Complication rates by age group over study period</li>
+</ul>
+</section>
+<section id="decision-guide-9" class="level3">
+<h3 class="anchored" data-anchor-id="decision-guide-9">Decision Guide:</h3>
+<ul>
+<li><strong>Few groups (2-3)</strong> → Multi-line chart</li>
+<li><strong>Many groups (5+)</strong> → Faceted line plots</li>
+<li><strong>Want to show total + groups</strong> → Stacked area</li>
+<li><strong>Interaction patterns matter</strong> → Interaction plot (lines cross)</li>
+<li><strong>Space constraints</strong> → Faceting better than overlapping</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="bivariate-ordinal-categoric" class="level1">
+<h1>BIVARIATE: Ordinal × Categoric</h1>
+<section id="distribution-ordered-part-of-whole-ordered" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-ordered-part-of-whole-ordered"><span style="color: #FDB462;">●</span> Distribution (Ordered) | <span style="color: #FB8072;">●</span> Part of Whole (Ordered)</h2>
+<section id="chart-options-12" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-12">Chart Options:</h3>
+<ul>
+<li><strong>Ordered Grouped Bar Chart</strong> <span style="color: #FDB462;">●</span> (bars by category, groups ordered)</li>
+<li><strong>Ordered Stacked Bar</strong> <span style="color: #FB8072;">●</span> (stacked, ordinal categories in order)</li>
+<li><strong>Faceted Ordered Bar</strong> <span style="color: #FDB462;">●</span> (subplots maintaining order)</li>
+</ul>
+</section>
+<section id="healthcare-examples-12" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-12">Healthcare Examples:</h3>
+<ul>
+<li>Patient satisfaction (Likert: 1-5) by hospital ward</li>
+<li>Pain severity (None/Mild/Moderate/Severe) by treatment type</li>
+<li>Risk level (Low/Med/High) by comorbidity count</li>
+<li>Functional status by treatment arm</li>
+</ul>
+</section>
+<section id="key-point-1" class="level3">
+<h3 class="anchored" data-anchor-id="key-point-1">Key Point:</h3>
+<ul>
+<li>Maintain ordinal ordering on one axis</li>
+<li>Example: Satisfaction scale always: 1 → 2 → 3 → 4 → 5</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="multivariate-numeric-numeric-numeric" class="level1">
+<h1>MULTIVARIATE: Numeric × Numeric × Numeric</h1>
+<section id="continuous-variables-correlation" class="level2">
+<h2 class="anchored" data-anchor-id="continuous-variables-correlation">3+ Continuous Variables | <span style="color: #80B1D3;">●</span> Correlation</h2>
+<section id="chart-options-13" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-13">Chart Options:</h3>
+<ul>
+<li><strong>Bubble Plot</strong> <span style="color: #80B1D3;">●</span> (x, y, size = 3rd; color/opacity = 4th)</li>
+<li><strong>Faceted Scatter</strong> <span style="color: #80B1D3;">●</span> (scatter by groups, multiple subplots)</li>
+<li><strong>3D Scatter</strong> (NOT recommended: distorts perception)</li>
+</ul>
+</section>
+<section id="healthcare-examples-13" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-13">Healthcare Examples:</h3>
+<ul>
+<li>Age vs BMI (size=cholesterol, color=treatment arm)</li>
+<li>HbA1c vs glucose (size=insulin, faceted by gender)</li>
+<li>Systolic vs diastolic BP (colored by smoking status)</li>
+</ul>
+</section>
+<section id="decision-guide-10" class="level3">
+<h3 class="anchored" data-anchor-id="decision-guide-10">Decision Guide:</h3>
+<ul>
+<li><strong>3 variables</strong> → Bubble plot (x, y, size)</li>
+<li><strong>4 variables</strong> → Bubble + color</li>
+<li><strong>5+ variables</strong> → Multiple faceted plots (don’t try to cram)</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="multivariate-numeric-outcome-multiple-numeric-predictors" class="level1">
+<h1>MULTIVARIATE: Numeric Outcome × Multiple Numeric Predictors</h1>
+<section id="correlation-matrix" class="level2">
+<h2 class="anchored" data-anchor-id="correlation-matrix"><span style="color: #80B1D3;">●</span> Correlation Matrix</h2>
+<section id="chart-options-14" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-14">Chart Options:</h3>
+<ul>
+<li><strong>Correlation Matrix</strong> <span style="color: #80B1D3;">●</span> (numeric table of coefficients)</li>
+<li><strong>Correlogram</strong> <span style="color: #80B1D3;">●</span> (heatmap with color intensity = correlation strength)</li>
+<li><strong>Scatter Plot Matrix</strong> <span style="color: #80B1D3;">●</span> (pairwise scatter plots)</li>
+</ul>
+</section>
+<section id="healthcare-examples-14" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-14">Healthcare Examples:</h3>
+<ul>
+<li>Lab inter-correlations: glucose, insulin, triglycerides, HDL, LDL</li>
+<li>Vital signs correlations: BP, HR, RR, O2 saturation, temperature</li>
+<li>Biomarker relationships in cohort study</li>
+</ul>
+</section>
+<section id="visualization-1" class="level3">
+<h3 class="anchored" data-anchor-id="visualization-1">Visualization:</h3>
+<ul>
+<li>Color intensity (warm = positive, cool = negative)</li>
+<li>Cell size may represent correlation strength</li>
+<li>Diagonal typically = 1.0 (variable with itself)</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="multivariate-numeric-outcome-multiple-categoric-predictors" class="level1">
+<h1>MULTIVARIATE: Numeric Outcome × Multiple Categoric Predictors</h1>
+<section id="distribution-faceted-correlation-interaction" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-faceted-correlation-interaction"><span style="color: #FDB462;">●</span> Distribution (Faceted) | <span style="color: #80B1D3;">●</span> Correlation (Interaction)</h2>
+<section id="chart-options-15" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-15">Chart Options:</h3>
+<ul>
+<li><strong>Faceted Boxplot/Violin</strong> <span style="color: #FDB462;">●</span> (boxplot per group, subplots for 3rd variable)</li>
+<li><strong>Interaction Plot</strong> <span style="color: #80B1D3;">●</span> (lines connecting means by two factors)</li>
+<li><strong>Faceted Scatter + regression lines</strong> <span style="color: #80B1D3;">●</span> (by groups)</li>
+</ul>
+</section>
+<section id="healthcare-examples-15" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-15">Healthcare Examples:</h3>
+<ul>
+<li>HbA1c by treatment type, faceted by gender (4 subplots: 2 treat × 2 gender)</li>
+<li>Lab values by disease status, colored by age group</li>
+<li>Drug efficacy by dose level, faceted by patient comorbidity</li>
+</ul>
+</section>
+<section id="visualization-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="visualization-strategy">Visualization Strategy:</h3>
+<ul>
+<li>Primary grouping on axis</li>
+<li>Secondary grouping via facets or colors</li>
+<li>Show interactions: do lines cross? Do patterns differ?</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="multivariate-time-series-multiple-variables" class="level1">
+<h1>MULTIVARIATE: Time Series × Multiple Variables</h1>
+<section id="evolution-advanced-distribution-temporal" class="level2">
+<h2 class="anchored" data-anchor-id="evolution-advanced-distribution-temporal"><span style="color: #80B1D3;">●</span> Evolution (Advanced) | <span style="color: #FDB462;">●</span> Distribution (Temporal)</h2>
+<section id="chart-options-16" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-16">Chart Options:</h3>
+<ul>
+<li><strong>Multi-line Chart with Faceting</strong> <span style="color: #80B1D3;">●</span> (separate subplots per group)</li>
+<li><strong>Ridgeline Plot</strong> <span style="color: #FDB462;">●</span> (distribution by group, stacked vertically)</li>
+<li><strong>Slope Chart</strong> <span style="color: #80B1D3;">●</span> (start → end values, multiple series)</li>
+<li><strong>Animated Time Series</strong> <span style="color: #80B1D3;">●</span> (interactive exploration)</li>
+</ul>
+</section>
+<section id="healthcare-examples-16" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-16">Healthcare Examples:</h3>
+<ul>
+<li>Disease incidence over years, separate lines by region (5 regions)</li>
+<li>Patient vitals during admission, faceted by treatment arm</li>
+<li>Hospital census by time, colored by department</li>
+</ul>
+</section>
+<section id="decision-guide-11" class="level3">
+<h3 class="anchored" data-anchor-id="decision-guide-11">Decision Guide:</h3>
+<ul>
+<li><strong>Multiple time series + groups</strong> → Faceted multi-line</li>
+<li><strong>Distribution evolution over time</strong> → Ridgeline plot</li>
+<li><strong>Show change from start to end</strong> → Slope chart</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="multivariate-complex-categorical-3-categoric" class="level1">
+<h1>MULTIVARIATE: Complex Categorical (3+ Categoric)</h1>
+<section id="flow-part-of-whole-hierarchical" class="level2">
+<h2 class="anchored" data-anchor-id="flow-part-of-whole-hierarchical"><span style="color: #FCCDE5;">●</span> Flow | <span style="color: #FB8072;">●</span> Part of Whole (Hierarchical)</h2>
+<section id="chart-options-17" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-17">Chart Options:</h3>
+<ul>
+<li><strong>Sankey Diagram</strong> <span style="color: #FCCDE5;">●</span> (flow from one category to another)</li>
+<li><strong>Alluvial Diagram</strong> <span style="color: #FCCDE5;">●</span> (similar to Sankey, broader flows)</li>
+<li><strong>Treemap</strong> <span style="color: #FB8072;">●</span> (nested rectangles for hierarchy)</li>
+<li><strong>Sunburst Chart</strong> <span style="color: #FB8072;">●</span> (nested circles/rings for hierarchy)</li>
+</ul>
+</section>
+<section id="healthcare-examples-17" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-17">Healthcare Examples:</h3>
+<ul>
+<li><strong>Sankey:</strong> Patient flow (admission → diagnostic → treatment → discharge)</li>
+<li><strong>Alluvial:</strong> Disease progression stages (diagnosis → worsening/improvement → outcome)</li>
+<li><strong>Treemap:</strong> Hospital structure (Region → Hospital → Department → Ward)</li>
+<li><strong>Sunburst:</strong> Disease classification (Category → Subcategory → Specific condition)</li>
+</ul>
+</section>
+<section id="decision-guide-12" class="level3">
+<h3 class="anchored" data-anchor-id="decision-guide-12">Decision Guide:</h3>
+<ul>
+<li><strong>Flow/transition/journey</strong> → Sankey or Alluvial</li>
+<li><strong>Nested hierarchy/parts</strong> → Treemap or Sunburst</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="multivariate-relationalnetwork-data" class="level1">
+<h1>MULTIVARIATE: Relational/Network Data</h1>
+<section id="flow-correlation-connections" class="level2">
+<h2 class="anchored" data-anchor-id="flow-correlation-connections"><span style="color: #FCCDE5;">●</span> Flow | <span style="color: #80B1D3;">●</span> Correlation (Connections)</h2>
+<section id="chart-options-18" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-18">Chart Options:</h3>
+<ul>
+<li><strong>Sankey Diagram</strong> <span style="color: #FCCDE5;">●</span> (directional flows between nodes)</li>
+<li><strong>Chord Diagram</strong> <span style="color: #FCCDE5;">●</span> (bi-directional relationships, circular)</li>
+<li><strong>Network Graph</strong> <span style="color: #80B1D3;">●</span> (nodes + edges, force-directed layout)</li>
+<li><strong>Arc Diagram</strong> <span style="color: #80B1D3;">●</span> (nodes in line, arcs show connections)</li>
+</ul>
+</section>
+<section id="healthcare-examples-18" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-18">Healthcare Examples:</h3>
+<ul>
+<li><strong>Sankey:</strong> Patient journeys through clinic system</li>
+<li><strong>Chord:</strong> Disease co-occurrence patterns (patient network)</li>
+<li><strong>Network:</strong> Hospital referral patterns (which hospitals refer to which)</li>
+<li><strong>Arc:</strong> Comorbidity networks (which diseases co-occur)</li>
+</ul>
+</section>
+<section id="visualization-2" class="level3">
+<h3 class="anchored" data-anchor-id="visualization-2">Visualization:</h3>
+<ul>
+<li>Nodes = entities (patients, diseases, hospitals)</li>
+<li>Edges/arcs/flows = relationships (referral, co-occurrence)</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="multivariate-hierarchical-data-4-levels" class="level1">
+<h1>MULTIVARIATE: Hierarchical Data (4+ Levels)</h1>
+<section id="part-of-whole-flow" class="level2">
+<h2 class="anchored" data-anchor-id="part-of-whole-flow"><span style="color: #FB8072;">●</span> Part of Whole | <span style="color: #FCCDE5;">●</span> Flow</h2>
+<section id="chart-options-19" class="level3">
+<h3 class="anchored" data-anchor-id="chart-options-19">Chart Options:</h3>
+<ul>
+<li><strong>Treemap</strong> <span style="color: #FB8072;">●</span> (nested rectangles, size ∝ value)</li>
+<li><strong>Sunburst Chart</strong> <span style="color: #FB8072;">●</span> (nested circles, size ∝ value)</li>
+<li><strong>Hierarchical Edge Bundling</strong> <span style="color: #FCCDE5;">●</span> (connections in hierarchy)</li>
+</ul>
+</section>
+<section id="healthcare-examples-19" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-examples-19">Healthcare Examples:</h3>
+<ul>
+<li><strong>Treemap:</strong> Hospital admissions by Region → State → Hospital → Department (size = admission count)</li>
+<li><strong>Sunburst:</strong> Disease classification by Category → Subcategory → Specific condition → ICD code</li>
+<li><strong>Hierarchical Edge Bundling:</strong> Referral patterns between hospitals at different levels</li>
+</ul>
+</section>
+<section id="decision-guide-13" class="level3">
+<h3 class="anchored" data-anchor-id="decision-guide-13">Decision Guide:</h3>
+<ul>
+<li><strong>Static hierarchy focus</strong> → Treemap</li>
+<li><strong>Want circular aesthetic</strong> → Sunburst</li>
+<li><strong>Complex relationships in hierarchy</strong> → Hierarchical edge bundling</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="specialized-waterfall-funnel-charts" class="level1">
+<h1>SPECIALIZED: Waterfall &amp; Funnel Charts</h1>
+<section id="flow-part-of-whole" class="level2">
+<h2 class="anchored" data-anchor-id="flow-part-of-whole"><span style="color: #FCCDE5;">●</span> Flow | <span style="color: #FB8072;">●</span> Part of Whole</h2>
+<section id="waterfall-chart" class="level3">
+<h3 class="anchored" data-anchor-id="waterfall-chart">Waterfall Chart</h3>
+<ul>
+<li>Shows cumulative effect of sequential positive/negative values</li>
+<li><strong>Healthcare Example:</strong> Patient survival from enrollment → screening loss → randomization → completion
+<ul>
+<li>Start: 1000 enrolled</li>
+<li>Drop: -50 screening failures</li>
+<li>Drop: -30 withdrawn consent</li>
+<li>End: 920 completed</li>
+</ul></li>
+</ul>
+</section>
+<section id="funnel-chart" class="level3">
+<h3 class="anchored" data-anchor-id="funnel-chart">Funnel Chart</h3>
+<ul>
+<li>Stages in a process, showing attrition at each step</li>
+<li><strong>Healthcare Example:</strong> Hospital admission pipeline
+<ul>
+<li>Emergency triage: 500</li>
+<li>Admitted: 400 (20% filtered out)</li>
+<li>Discharged: 350 (12.5% transferred)</li>
+<li>Readmitted: 30 (8.6% recurrent)</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="specialized-advanced-temporal-visualizations" class="level1">
+<h1>SPECIALIZED: Advanced Temporal Visualizations</h1>
+<section id="evolution-advanced-distribution-temporal-1" class="level2">
+<h2 class="anchored" data-anchor-id="evolution-advanced-distribution-temporal-1"><span style="color: #80B1D3;">●</span> Evolution (Advanced) | <span style="color: #FDB462;">●</span> Distribution (Temporal)</h2>
+<section id="streamgraph" class="level3">
+<h3 class="anchored" data-anchor-id="streamgraph">Streamgraph</h3>
+<ul>
+<li>Stacked area with flowing, organic theme</li>
+<li><strong>Example:</strong> Emergency admissions over time, stacked by department
+<ul>
+<li>Total volume trends visible + department composition</li>
+</ul></li>
+</ul>
+</section>
+<section id="calendar-heatmap" class="level3">
+<h3 class="anchored" data-anchor-id="calendar-heatmap">Calendar Heatmap</h3>
+<ul>
+<li>Daily/weekly patterns across entire year</li>
+<li><strong>Example:</strong> Hospital occupancy by day of week
+<ul>
+<li>Darker = higher occupancy</li>
+<li>Pattern reveals peak days/seasons</li>
+</ul></li>
+</ul>
+</section>
+<section id="frequency-polygon" class="level3">
+<h3 class="anchored" data-anchor-id="frequency-polygon">Frequency Polygon</h3>
+<ul>
+<li>Line connecting histogram bins</li>
+<li><strong>Example:</strong> Age distribution comparison between cohorts
+<ul>
+<li>Multiple overlaid frequency polygons</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="specialized-text-network-specialized" class="level1">
+<h1>SPECIALIZED: Text &amp; Network Specialized</h1>
+<section id="distribution-text-correlation-networks" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-text-correlation-networks"><span style="color: #FDB462;">●</span> Distribution (Text) | <span style="color: #80B1D3;">●</span> Correlation (Networks)</h2>
+<section id="word-cloud" class="level3">
+<h3 class="anchored" data-anchor-id="word-cloud">Word Cloud</h3>
+<ul>
+<li>Text frequency visualization, size = occurrence</li>
+<li><strong>Limitation:</strong> More visual impact than analytic precision</li>
+<li><strong>Healthcare Use:</strong> Patient feedback themes, common symptoms</li>
+</ul>
+</section>
+<section id="arc-diagram" class="level3">
+<h3 class="anchored" data-anchor-id="arc-diagram">Arc Diagram</h3>
+<ul>
+<li>Network relationships with improved readability over hairball graphs</li>
+<li><strong>Example:</strong> Disease comorbidity network, cleaner than typical network graph</li>
+</ul>
+</section>
+<section id="hierarchical-edge-bundling" class="level3">
+<h3 class="anchored" data-anchor-id="hierarchical-edge-bundling">Hierarchical Edge Bundling</h3>
+<ul>
+<li>Complex relationship networks with hierarchy</li>
+<li><strong>Example:</strong> Referral patterns between hospitals (different organizational levels)</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="case-study-1-real-world-application" class="level1">
+<h1>CASE STUDY 1: Real-World Application</h1>
+<section id="scenario-quarterly-revenue-by-product-category-over-2-years" class="level2">
+<h2 class="anchored" data-anchor-id="scenario-quarterly-revenue-by-product-category-over-2-years">Scenario: “Quarterly revenue by product category over 2 years”</h2>
+<section id="step-1-identify-data-type" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-identify-data-type">Step 1: Identify Data Type</h3>
+<ul>
+<li><strong>Time component:</strong> Quarterly (Time Series)</li>
+<li><strong>Product component:</strong> Multiple categories (Categoric)</li>
+<li><strong>Revenue component:</strong> Continuous (Numeric)</li>
+<li><strong>Combined:</strong> Time Series + Categoric + Numeric</li>
+</ul>
+</section>
+<section id="step-2-define-analytical-goal" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-define-analytical-goal">Step 2: Define Analytical Goal</h3>
+<ul>
+<li><strong>Primary:</strong> <span style="color: #80B1D3;">●</span> Evolution (how revenue changes over time)</li>
+<li><strong>Secondary:</strong> <span style="color: #80B1D3;">●</span> Correlation (how categories compare)</li>
+</ul>
+</section>
+<section id="step-3-chart-options" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-chart-options">Step 3: Chart Options</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 19%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Chart Type</th>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>Multi-line chart <span style="color: #80B1D3;">●</span></td>
+<td>Clear trend per product</td>
+<td>Can be cluttered if &gt;5 products</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>Stacked area <span style="color: #80B1D3;">●</span></td>
+<td>Show total + composition</td>
+<td>Hard to compare individual products</td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td>Faceted line charts <span style="color: #80B1D3;">●</span></td>
+<td>Each product clear</td>
+<td>Uses more space</td>
+</tr>
+<tr class="even">
+<td>D</td>
+<td>Grouped bar chart <span style="color: #FDB462;">●</span></td>
+<td>Periodic view (snapshot)</td>
+<td>Less sense of continuous trend</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+</section>
+<section id="case-study-2-healthcare-example" class="level1">
+<h1>CASE STUDY 2: Healthcare Example</h1>
+<section id="scenario-hba1c-levels-across-three-treatment-arms-over-12-months" class="level2">
+<h2 class="anchored" data-anchor-id="scenario-hba1c-levels-across-three-treatment-arms-over-12-months">Scenario: “HbA1c levels across three treatment arms over 12 months”</h2>
+<section id="step-1-identify-data-type-1" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-identify-data-type-1">Step 1: Identify Data Type</h3>
+<ul>
+<li><strong>Time component:</strong> Baseline, 6mo, 12mo (Time Series - discrete)</li>
+<li><strong>Group component:</strong> 3 treatment arms (Categoric)</li>
+<li><strong>Outcome component:</strong> HbA1c values (Numeric)</li>
+<li><strong>Combined:</strong> Time Series + Categoric + Numeric</li>
+</ul>
+</section>
+<section id="step-2-define-analytical-goal-1" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-define-analytical-goal-1">Step 2: Define Analytical Goal</h3>
+<ul>
+<li><strong>Primary:</strong> <span style="color: #80B1D3;">●</span> Evolution (trajectories over follow-up)</li>
+<li><strong>Secondary:</strong> <span style="color: #80B1D3;">●</span> Correlation (do arms differ?)</li>
+<li><strong>Tertiary:</strong> <span style="color: #FDB462;">●</span> Distribution (spread within each arm at each timepoint)</li>
+</ul>
+</section>
+<section id="step-3-chart-options-1" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-chart-options-1">Step 3: Chart Options</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 32%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Chart Type</th>
+<th>Visualization</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>Multi-line ± CI <span style="color: #80B1D3;">●</span></td>
+<td>One line per arm, shaded confidence bands</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>Faceted violin plots <span style="color: #FDB462;">●</span></td>
+<td>3 subplots (one per arm), violin at each timepoint</td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td>Spaghetti plot <span style="color: #80B1D3;">●</span></td>
+<td>Individual patient trajectories, color-coded by arm</td>
+</tr>
+<tr class="even">
+<td>D</td>
+<td>Interaction plot <span style="color: #80B1D3;">●</span></td>
+<td>Means connected by lines, x-axis = timepoint</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+</section>
+<section id="case-study-3-multi-dimensional-complexity" class="level1">
+<h1>CASE STUDY 3: Multi-Dimensional Complexity</h1>
+<section id="scenario-top-10-competitors-market-share-over-5-years-by-region" class="level2">
+<h2 class="anchored" data-anchor-id="scenario-top-10-competitors-market-share-over-5-years-by-region">Scenario: “Top 10 competitors’ market share over 5 years by region”</h2>
+<section id="step-1-identify-data-type-2" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-identify-data-type-2">Step 1: Identify Data Type</h3>
+<ul>
+<li><strong>Time:</strong> Years (Time Series)</li>
+<li><strong>Competitors:</strong> 10 categories (Categoric)</li>
+<li><strong>Regions:</strong> Multiple regions (Categoric)</li>
+<li><strong>Market share:</strong> Percentage (Numeric)</li>
+<li><strong>Dimensions:</strong> 4 (too many for single plot!)</li>
+</ul>
+</section>
+<section id="step-2-define-analytical-goal-2" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-define-analytical-goal-2">Step 2: Define Analytical Goal</h3>
+<ul>
+<li><span style="color: #80B1D3;">●</span> Evolution (trends over time)</li>
+<li><span style="color: #A6D854;">●</span> Ranking (who’s leading?)</li>
+<li><span style="color: #80B1D3;">●</span> Correlation (how do regions differ?)</li>
+<li><span style="color: #FB8072;">●</span> Composition (what % of total?)</li>
+</ul>
+</section>
+<section id="step-3-chart-options-2" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-chart-options-2">Step 3: Chart Options</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 44%">
+<col style="width: 55%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Approach</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>A</strong></td>
+<td>Stacked area per region (faceted: 3-5 subplots) <span style="color: #80B1D3;">●</span> <span style="color: #FB8072;">●</span></td>
+</tr>
+<tr class="even">
+<td><strong>B</strong></td>
+<td>Grouped multi-line (each region = different color) <span style="color: #80B1D3;">●</span></td>
+</tr>
+<tr class="odd">
+<td><strong>C</strong></td>
+<td>Animated bar chart (top 10 race by region) <span style="color: #A6D854;">●</span> <span style="color: #80B1D3;">●</span></td>
+</tr>
+<tr class="even">
+<td><strong>D</strong></td>
+<td>Interactive dashboard (toggle region) <span style="color: #80B1D3;">●</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="decision" class="level3">
+<h3 class="anchored" data-anchor-id="decision">Decision:</h3>
+<ul>
+<li><strong>Best static option:</strong> Faceted stacked area (shows time, composition, region comparison)</li>
+<li><strong>Best interactive:</strong> Animated bar or dashboard</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="common-pitfalls-to-avoid" class="level1">
+<h1>Common Pitfalls to Avoid</h1>
+<section id="what-not-to-do" class="level2">
+<h2 class="anchored" data-anchor-id="what-not-to-do">❌ What NOT to Do</h2>
+<section id="pie-charts-with-10-categories" class="level3">
+<h3 class="anchored" data-anchor-id="pie-charts-with-10-categories">❌ Pie charts with 10+ categories</h3>
+<ul>
+<li><strong>Why?</strong> Human perception fails with small angles</li>
+<li><strong>Solution:</strong> Use bar chart <span style="color: #FDB462;">●</span>, lollipop <span style="color: #FDB462;">●</span>, or split into multiple pies</li>
+</ul>
+</section>
+<section id="d-charts" class="level3">
+<h3 class="anchored" data-anchor-id="d-charts">❌ 3D charts</h3>
+<ul>
+<li><strong>Why?</strong> Perspective distorts data perception (3D cone/pyramid/sphere)</li>
+<li><strong>Solution:</strong> Stick to 2D representations</li>
+</ul>
+</section>
+<section id="dual-axis-charts" class="level3">
+<h3 class="anchored" data-anchor-id="dual-axis-charts">❌ Dual-axis charts</h3>
+<ul>
+<li><strong>Why?</strong> Can mislead by manipulating axis scales</li>
+<li><strong>Solution:</strong> Use faceting or separate plots instead</li>
+</ul>
+</section>
+<section id="wrong-color-coding" class="level3">
+<h3 class="anchored" data-anchor-id="wrong-color-coding">❌ Wrong color coding</h3>
+<ul>
+<li><strong>Why?</strong> Color should reinforce analytical goal (not random aesthetic)</li>
+<li><strong>Solution:</strong> Sequential colors for magnitude, categorical colors for groups</li>
+</ul>
+</section>
+<section id="overplotting-overlapping-points" class="level3">
+<h3 class="anchored" data-anchor-id="overplotting-overlapping-points">❌ Overplotting (overlapping points)</h3>
+<ul>
+<li><strong>Why?</strong> Can’t see density or exact position</li>
+<li><strong>Solution:</strong> Use transparency (alpha), jitter, hexbin <span style="color: #80B1D3;">●</span>, or density plots <span style="color: #FDB462;">●</span></li>
+</ul>
+</section>
+<section id="stacked-bars-for-detailed-comparison" class="level3">
+<h3 class="anchored" data-anchor-id="stacked-bars-for-detailed-comparison">❌ Stacked bars for detailed comparison</h3>
+<ul>
+<li><strong>Why?</strong> Only first and last categories are easy to compare</li>
+<li><strong>Solution:</strong> Use grouped bar <span style="color: #FDB462;">●</span> or faceting for detailed comparison</li>
+</ul>
+</section>
+<section id="too-many-dimensions-on-one-plot" class="level3">
+<h3 class="anchored" data-anchor-id="too-many-dimensions-on-one-plot">❌ Too many dimensions on one plot</h3>
+<ul>
+<li><strong>Why?</strong> Cognitive overload, hard to extract insight</li>
+<li><strong>Solution:</strong> Split into multiple focused visualizations</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="quick-decision-matrix-cheat-sheet" class="level1">
+<h1>Quick Decision Matrix (Cheat Sheet)</h1>
+<section id="analytical-goal-data-type-reference" class="level2">
+<h2 class="anchored" data-anchor-id="analytical-goal-data-type-reference">Analytical Goal × Data Type Reference</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 11%">
+<col style="width: 14%">
+<col style="width: 11%">
+<col style="width: 17%">
+<col style="width: 14%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Goal &nbsp;Data Type</th>
+<th>Numeric</th>
+<th>Categoric</th>
+<th>Ordinal</th>
+<th>Time Series</th>
+<th>Relational</th>
+<th>Map</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Distribution</strong> 🟡</td>
+<td>Hist <span style="color: #FDB462;">●</span>, Density, Box, Violin</td>
+<td>Bar <span style="color: #FDB462;">●</span>, Pie</td>
+<td>Ordered Bar <span style="color: #FDB462;">●</span></td>
+<td>Line, Area</td>
+<td>Network</td>
+<td>Choropleth</td>
+</tr>
+<tr class="even">
+<td><strong>Correlation</strong> 🔵</td>
+<td>Scatter <span style="color: #80B1D3;">●</span>, Bubble, Hex</td>
+<td>Mosaic <span style="color: #80B1D3;">●</span>, Heatmap</td>
+<td>Ordered Box <span style="color: #80B1D3;">●</span></td>
+<td>Multi-line <span style="color: #80B1D3;">●</span></td>
+<td>Sankey, Chord</td>
+<td>Choropleth</td>
+</tr>
+<tr class="odd">
+<td><strong>Ranking</strong> 🟢</td>
+<td>Dot <span style="color: #A6D854;">●</span></td>
+<td>Lollipop <span style="color: #A6D854;">●</span>, Bar</td>
+<td>Ordered Bar <span style="color: #A6D854;">●</span></td>
+<td>Line (end)</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr class="even">
+<td><strong>Part of Whole</strong> 🔴</td>
+<td>-</td>
+<td>Pie <span style="color: #FB8072;">●</span>, Stacked Bar, Treemap</td>
+<td>Stacked (ordered)</td>
+<td>Stacked Area <span style="color: #FB8072;">●</span></td>
+<td>Sankey, Treemap</td>
+<td>Choropleth</td>
+</tr>
+<tr class="odd">
+<td><strong>Evolution</strong> 🔵</td>
+<td>Line <span style="color: #80B1D3;">●</span>, Area</td>
+<td>-</td>
+<td>-</td>
+<td>Line, Area, Ribbon <span style="color: #80B1D3;">●</span></td>
+<td>-</td>
+<td>Animated Map</td>
+</tr>
+<tr class="even">
+<td><strong>Maps</strong> 🟣</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>All map types <span style="color: #BEBADA;">●</span></td>
+</tr>
+<tr class="odd">
+<td><strong>Flow</strong> 🟤</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>Sankey <span style="color: #FCCDE5;">●</span>, Chord, Network</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="your-turn-practice-exercises" class="level1">
+<h1>Your Turn: Practice Exercises</h1>
+<section id="apply-what-youve-learned" class="level2">
+<h2 class="anchored" data-anchor-id="apply-what-youve-learned">Apply What You’ve Learned</h2>
+<section id="scenario-1-employee-satisfaction" class="level3">
+<h3 class="anchored" data-anchor-id="scenario-1-employee-satisfaction">Scenario 1: Employee Satisfaction</h3>
+<p><strong>Question:</strong> Show employee satisfaction scores (Likert 1-5) across hospital departments, comparing before/after intervention</p>
+<ul>
+<li>What data types are present?</li>
+<li>What analytical goal(s)?</li>
+<li>Recommend chart type(s)</li>
+</ul>
+<div class="notes">
+<p>Answer: Ordinal × Categoric + Time (before/after) Goals: Distribution (satisfaction spread), Comparison (departments differ?), Evolution (did intervention help?) Charts: Faceted ordered bar / Grouped stacked bar / Interaction plot</p>
+</div>
+<hr>
+</section>
+</section>
+</section>
+<section id="your-turn-practice-exercises-continued" class="level1">
+<h1>Your Turn: Practice Exercises (continued)</h1>
+<section id="scenario-2-website-analytics" class="level3">
+<h3 class="anchored" data-anchor-id="scenario-2-website-analytics">Scenario 2: Website Analytics</h3>
+<p><strong>Question:</strong> Display website traffic sources (organic, paid, direct, referral) and their conversion rates over 6 months</p>
+<ul>
+<li>What data types are present?</li>
+<li>What analytical goal(s)?</li>
+<li>Recommend chart type(s)</li>
+</ul>
+<div class="notes">
+<p>Answer: Categoric (traffic source) × Numeric (conversion %) + Time (monthly) Goals: Evolution (trends), Comparison (which source converts best?), Part-of-whole (traffic distribution) Charts: Multi-line chart / Stacked area / Faceted line per source</p>
+</div>
+<hr>
+</section>
+</section>
+<section id="your-turn-practice-exercises-continued-1" class="level1">
+<h1>Your Turn: Practice Exercises (continued)</h1>
+<section id="scenario-3-clinical-trial-recruitment" class="level3">
+<h3 class="anchored" data-anchor-id="scenario-3-clinical-trial-recruitment">Scenario 3: Clinical Trial Recruitment</h3>
+<p><strong>Question:</strong> Track patient recruitment rates by site and treatment arm monthly through a 2-year trial</p>
+<ul>
+<li>What data types are present?</li>
+<li>What analytical goal(s)?</li>
+<li>Recommend chart type(s)</li>
+</ul>
+<div class="notes">
+<p>Answer: Time (monthly) × Categoric (sites, arms) + Numeric (count) Goals: Evolution (enrollment pace), Comparison (which site fastest?), Composition (proportional enrollment) Charts: Multi-line faceted / Grouped bar per month / Stacked area / Interaction plot</p>
+</div>
+<hr>
+</section>
+</section>
+<section id="your-turn-practice-exercises-continued-2" class="level1">
+<h1>Your Turn: Practice Exercises (continued)</h1>
+<section id="scenario-4-healthcare---adverse-events" class="level3">
+<h3 class="anchored" data-anchor-id="scenario-4-healthcare---adverse-events">Scenario 4: Healthcare - Adverse Events</h3>
+<p><strong>Question:</strong> Compare adverse event frequencies between two drug treatments across age groups (pediatric, adult, elderly)</p>
+<ul>
+<li>What data types are present?</li>
+<li>What analytical goal(s)?</li>
+<li>Recommend chart type(s)</li>
+</ul>
+<div class="notes">
+<p>Answer: Categoric (drug, AE type) × Categoric (age group) + Numeric (count) Goals: Ranking (most common AEs), Comparison (which drug safer?), Distribution (event frequency) Charts: Grouped bar / Faceted bar / Mosaic / Heatmap</p>
+</div>
+<hr>
+</section>
+</section>
+<section id="tools-resources" class="level1">
+<h1>Tools &amp; Resources</h1>
+<section id="recommended-frameworks-references" class="level2">
+<h2 class="anchored" data-anchor-id="recommended-frameworks-references">Recommended Frameworks &amp; References</h2>
+<section id="visualization-tools" class="level3">
+<h3 class="anchored" data-anchor-id="visualization-tools">Visualization Tools</h3>
+<ul>
+<li><strong>R:</strong> ggplot2, plotly, ggvis</li>
+<li><strong>Python:</strong> matplotlib, seaborn, plotly, altair</li>
+<li><strong>BI Platforms:</strong> Tableau, PowerBI, Looker</li>
+<li><strong>Static/Interactive:</strong> D3.js, Observable</li>
+</ul>
+</section>
+<section id="reference-resources" class="level3">
+<h3 class="anchored" data-anchor-id="reference-resources">Reference Resources</h3>
+<ul>
+<li><strong>data-to-viz.com</strong> - Yan Holtz’s comprehensive decision tree</li>
+<li><strong>R Graph Gallery</strong> (r-graph-gallery.com) - 200+ ggplot2 examples</li>
+<li><strong>ggplot2 documentation</strong> - Official reference + cheat sheets</li>
+<li><strong>Fundamentals of Data Visualization</strong> (Claus Wilke) - Free online book</li>
+</ul>
+</section>
+<section id="practice-datasets" class="level3">
+<h3 class="anchored" data-anchor-id="practice-datasets">Practice Datasets</h3>
+<ul>
+<li><strong>UCI Machine Learning Repository</strong></li>
+<li><strong>Kaggle Datasets</strong> - Thousands of public datasets</li>
+<li><strong>NFHS-V Data</strong> (National Family Health Survey, India)</li>
+<li><strong>GitHub public repositories</strong> - Data visualization examples</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="key-takeaways" class="level1">
+<h1>Key Takeaways</h1>
+<section id="core-principles-for-effective-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="core-principles-for-effective-visualization">Core Principles for Effective Visualization</h2>
+<p>✅ <strong>Always start with your analytical goal</strong> - What question are you answering? (distribute, compare, rank, relate, etc.)</p>
+<p>✅ <strong>Data types narrow your options significantly</strong> - Numeric vs Categoric vs Ordinal vs Temporal vs Spatial</p>
+<p>✅ <strong>Multiple valid charts may exist—choose based on audience &amp; context</strong> - Scientist ≠ Executive ≠ Patient communication</p>
+<p>✅ <strong>Use color strategically to support your analytical goal</strong> - Sequential for magnitude, categorical for groups, diverging for contrasts</p>
+<p>✅ <strong>Simplicity trumps complexity; avoid unnecessary dimensions</strong> - If 3D doesn’t add insight, keep it 2D - If faceting helps clarity, use it</p>
+<p>✅ <strong>When in doubt, check data-to-viz.com or reference examples</strong> - Don’t reinvent the wheel; learn from established best practices</p>
+<p>✅ <strong>Practice makes perfect—iterate on visualizations</strong> - First draft rarely optimal; refine based on feedback</p>
+<hr>
+</section>
+</section>
+<section id="qa-thank-you" class="level1">
+<h1>Q&amp;A / Thank You</h1>
+<section id="resources-next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="resources-next-steps">Resources &amp; Next Steps</h2>
+<section id="key-links" class="level3">
+<h3 class="anchored" data-anchor-id="key-links">Key Links</h3>
+<ul>
+<li><strong>data-to-viz.com</strong> - Decision tree flowchart</li>
+<li><strong>R Graph Gallery</strong> - Live examples with code</li>
+<li><strong>ggplot2 cheat sheet</strong> - Quick reference</li>
+</ul>
+</section>
+<section id="questions" class="level3">
+<h3 class="anchored" data-anchor-id="questions">Questions?</h3>
+<ul>
+<li>What visualization challenges are YOU facing?</li>
+<li>What data type combinations are most common in your work?</li>
+</ul>
+</section>
+<section id="next-steps" class="level3">
+<h3 class="anchored" data-anchor-id="next-steps">Next Steps</h3>
+<ul>
+<li>Apply the 3-step framework to your own data</li>
+<li>Practice with the scenario exercises</li>
+<li>Refer back to the decision matrix when choosing charts</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="thank-you" class="level1">
+<h1>Thank You!</h1>
+<section id="navigating-the-decision-tree-1" class="level2">
+<h2 class="anchored" data-anchor-id="navigating-the-decision-tree-1">Navigating the Decision Tree</h2>
+<p><strong>Remember:</strong> Good visualization is about clarity, not complexity.</p>
+<p>Choose charts that illuminate your data and communicate your insights effectively.</p>
+<p>Good luck with your visualizations! 📊📈📉</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

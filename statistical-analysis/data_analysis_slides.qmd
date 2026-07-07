@@ -1,0 +1,790 @@
+---
+title: "Data Analysis"
+subtitle: "Normality Testing, Descriptive Statistics, Parametric and Non-Parametric Tests"
+author: "Workshop"
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    embed-resources: true
+    toc: false
+    chalkboard: false
+    incremental: false
+    smaller: false
+    scrollable: false
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Setup
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(janitor)
+library(nortest)
+library(car)
+library(rstatix)
+library(exact2x2)
+
+p <- read_excel("prac_modded.xlsx") |>
+  clean_names()
+```
+
+---
+
+# Why Data Analysis Matters {background-color="#2C3E50"}
+
+## Importance of Data Analysis
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Making Sense of Data**
+
+- **Driving Informed Decisions** — strategic choices based on evidence, not intuition
+- **Identifying Patterns and Insights** — uncovering hidden relationships in data
+- **Optimizing Processes** — streamline operations using performance metrics
+- **Supporting Innovation** — fuel new ideas and solutions
+:::
+
+::: {.column width="50%"}
+**Research Perspective**
+
+- **Evidence-Based Research** — validate hypotheses and draw reliable conclusions
+- **Mitigating Risk** — identify potential errors before they reach conclusions
+- **Improving Reproducibility** — ensures findings can be replicated
+- **Ethical Responsibility** — especially critical in clinical and health research
+:::
+
+::::
+
+---
+
+# Choosing the Right Statistical Test {background-color="#2C3E50"}
+
+## Why Test Selection Matters
+
+Choosing the wrong test leads to **Type I** (false positive) or **Type II** (false negative) errors.
+
+| Reason | Detail |
+|---|---|
+| Accuracy & Validity | Test must match data nature and research question |
+| Avoiding Errors | Wrong test → misleading conclusions |
+| Reproducibility | Correct test ensures others can replicate findings |
+| Meeting Objectives | Test must align with the hypothesis |
+| Ethical Responsibility | In clinical research, conclusions affect real policy |
+
+---
+
+## Decision Framework — Overview
+
+> The choice of statistical test depends on: **variable type → number of groups → normality → independence of observations**
+
+:::{.callout-note}
+**Flowchart placeholder**
+
+*Insert here: Overall test selection flowchart — starting from variable type (Categorical vs Continuous), then branching by number of groups, then normality, then paired vs unpaired.*
+:::
+
+---
+
+# Variables {background-color="#2C3E50"}
+
+## Types of Variables
+
+:::{.callout-note}
+**Flowchart placeholder**
+
+*Insert here: Variable classification diagram — Qualitative (Nominal, Ordinal) and Quantitative (Discrete, Continuous). Can also show examples relevant to your dataset such as sex, wealth index, age, SBP, FBS.*
+:::
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Categorical / Qualitative**
+
+- **Nominal** — no order (e.g., sex, past history of DM)
+- **Ordinal** — ordered categories (e.g., wealth index: poorest → richest)
+- **Binary / Dichotomous** — two categories (e.g., screened: Yes/No)
+:::
+
+::: {.column width="50%"}
+**Numerical / Quantitative**
+
+- **Discrete** — whole numbers (e.g., number of visits)
+- **Continuous** — any value in a range (e.g., age, SBP, height, FBS)
+:::
+
+::::
+
+---
+
+# Descriptive Statistics {background-color="#2C3E50"}
+
+## Categorical Variables — Frequency Tables
+
+Use `table()` for base R frequency counts or `group_by()` + `reframe()` for tidy output.
+
+```{r}
+# Base R approach
+freq_table <- table(p$past_history_of_diabetes)
+prop_table <- prop.table(freq_table)
+
+combined_table <- data.frame(
+  Frequency = freq_table,
+  Percentage = round(prop_table * 100, 2)
+)
+combined_table
+```
+
+---
+
+## Categorical Variables — Tidyverse Approach
+
+```{r}
+# Frequency and percentage using dplyr — unordered factor
+summary_table <- p %>%
+  mutate(wealth_index = factor(wealth_index_of_participants)) |>
+  group_by(wealth_index) %>%
+  reframe(
+    Frequency = n(),
+    Percentage = paste(round(n() * 100 / nrow(p), 2), "%")
+  )
+summary_table
+```
+
+---
+
+## Categorical Variables — Ordered Factor
+
+```{r}
+# Define a meaningful order for wealth index
+summary_table_1 <- p %>%
+  mutate(wealth_index = factor(
+    wealth_index_of_participants,
+    levels = c("poorest", "poorer", "middle", "richer", "richest")
+  )) |>
+  group_by(wealth_index) %>%
+  reframe(
+    Frequency = n(),
+    Percentage = paste(round(n() * 100 / nrow(p), 2), "%")
+  )
+summary_table_1
+```
+
+---
+
+## Continuous Variables — Summary Statistics
+
+```{r}
+# Base R
+summary(p$age_of_participants)
+sd(p$age_of_participants)
+```
+
+---
+
+## Continuous Variables — Full Tidyverse Summary
+
+```{r}
+p |>
+  summarise(
+    mean_age    = mean(age_of_participants),
+    sd_age      = sd(age_of_participants),
+    median_age  = median(age_of_participants),
+    Q1          = quantile(age_of_participants, 0.25),
+    Q3          = quantile(age_of_participants, 0.75),
+    IQR         = IQR(age_of_participants),
+    var_age     = var(age_of_participants),
+    min_age     = min(age_of_participants),
+    max_age     = max(age_of_participants)
+  )
+```
+
+---
+
+# Normality Testing {background-color="#2C3E50"}
+
+## Why Check Normality?
+
+Many parametric tests (t-test, ANOVA, Pearson's r) **assume normally distributed data**.
+
+Failing to check normality can lead to:
+
+- Invalid p-values
+- Wrong test selection
+- Misleading conclusions
+
+**Two approaches:** Visual methods + Statistical tests
+
+---
+
+## Visual Methods — Histogram
+
+```{r}
+hist(
+  p$age_of_participants,
+  main  = "Histogram with Density Line",
+  xlab  = "Age",
+  ylab  = "Density",
+  col   = "grey",
+  border = "black",
+  freq  = FALSE
+)
+lines(density(p$age_of_participants), col = "red", lwd = 2)
+```
+
+*A roughly bell-shaped curve suggests normality. Skewed or multimodal histograms indicate non-normality.*
+
+---
+
+## Visual Methods — QQ Plot
+
+```{r}
+qqnorm(p$sbp_in_mm_hg, main = "Q-Q Plot: SBP")
+qqline(p$sbp_in_mm_hg, col = "red")
+```
+
+*Points should follow the red diagonal line closely if the data are normally distributed. Deviations at the tails indicate non-normality.*
+
+---
+
+## Statistical Tests — Shapiro-Wilk
+
+Best for **small samples (n ≤ 50)**. Randomly sample if n > 50.
+
+```{r}
+p1 <- p[sample(nrow(p), 50), ]
+s_test <- shapiro.test(p1$age_of_participants)
+s_test
+```
+
+> **Interpretation:** p > 0.05 → data does not significantly deviate from normality (cannot reject H₀ of normality).
+
+---
+
+## Statistical Tests — Kolmogorov-Smirnov
+
+Suitable for **larger samples**. Compares distribution to a theoretical normal.
+
+```{r}
+ks_test <- ks.test(p$sbp_in_mm_hg, "pnorm",
+                   mean = mean(p$sbp_in_mm_hg),
+                   sd   = sd(p$sbp_in_mm_hg))
+ks_test
+```
+
+> **Note:** Use `options(scipen = 999)` to display p-values in decimal format instead of scientific notation.
+
+---
+
+## Statistical Tests — Anderson-Darling
+
+More sensitive to tails than KS test. Requires `nortest` package.
+
+```{r}
+ad_test <- ad.test(p$height)
+ad_test
+```
+
+| Test | Best Use | Package |
+|---|---|---|
+| Shapiro-Wilk | n ≤ 50 | base R |
+| Kolmogorov-Smirnov | n > 50, continuous | base R |
+| Anderson-Darling | Sensitive to tail deviations | `nortest` |
+
+---
+
+# Statistical Tests — Categorical Variables {background-color="#2C3E50"}
+
+## Decision Framework — Categorical
+
+:::{.callout-note}
+**Flowchart placeholder**
+
+*Insert here: Categorical variable test selection flowchart — branching from number of groups (1, 2, >2) and paired vs unpaired, leading to: Chi-square goodness of fit → Chi-square test of independence / Fisher's exact → McNemar / Exact McNemar → Chi-square m×n / Monte Carlo.*
+:::
+
+---
+
+## Chi-Square Goodness-of-Fit — 1 Group
+
+Tests whether the observed distribution matches an **expected distribution**.
+
+```{r}
+observed <- table(p$ever_screened_for_bp)
+total    <- sum(observed)
+expected <- c(1/2, 1/2) * total
+
+chisq_test <- chisq.test(x = observed, p = expected / sum(expected))
+chisq_test
+```
+
+> **Assumption:** Expected frequency ≥ 5 in each cell.
+
+---
+
+## Chi-Square Test — 2 Binary Groups (Expected ≥ 5)
+
+Tests association between two categorical variables using a **contingency table**.
+
+```{r}
+table_gender_dm <- table(p$sex_of_participants, p$past_history_of_diabetes)
+table_gender_dm
+
+chisq_m5 <- chisq.test(table_gender_dm, correct = FALSE)
+chisq_m5
+
+# Check expected frequencies
+chisq_m5$expected
+```
+
+> Use `correct = FALSE` to apply the standard Pearson Chi-square (no Yates correction).
+
+---
+
+## Chi-Square — Yates Continuity Correction
+
+Yates correction subtracts 0.5 from the absolute difference between observed and expected frequency before squaring.
+
+```{r}
+# With Yates correction (correct = TRUE is default for 2x2 tables)
+chisq.test(table_gender_dm, correct = TRUE)
+```
+
+> Apply when sample sizes are small or expected frequencies approach 5.
+
+---
+
+## When Expected Frequency < 5
+
+Two options: **Monte Carlo simulation** or **Fisher's Exact Test**.
+
+```{r}
+table_htn_dm <- table(p$ever_screened_for_bp, p$past_history_of_diabetes)
+
+# Monte Carlo simulation (B = number of replicates, min p = 1/(B+1))
+chisq_mc <- chisq.test(table_htn_dm, simulate.p.value = TRUE, B = 2000)
+chisq_mc
+
+# Fisher's Exact Test
+fisher_test <- fisher.test(table_htn_dm)
+fisher_test
+```
+
+---
+
+## Chi-Square — m × n Contingency Table
+
+Use when both variables have **more than two categories**.
+
+```{r}
+table_mar_wealth <- table(
+  p$marital_status_of_participants,
+  p$wealth_index_of_participants
+)
+table_mar_wealth
+
+chisq_mn <- chisq.test(table_mar_wealth)
+chisq_mn
+
+# Monte Carlo if expected frequencies < 5
+chisq_mn_mc <- chisq.test(table_mar_wealth, simulate.p.value = TRUE, B = 2000)
+chisq_mn_mc
+```
+
+---
+
+## McNemar Test — Paired Binary Responses
+
+Use when the **same participants** are measured twice on a binary outcome (e.g., before and after treatment).
+
+```{r}
+table_bfr_aftr <- table(p$pain_foot_bfr, p$pain_foot_aftr)
+table_bfr_aftr
+
+mcnemar_test <- mcnemar.test(table_bfr_aftr)
+mcnemar_test
+```
+
+> **Assumption:** Discordant cells (b + c) should be ≥ 25. If < 25, use exact McNemar.
+
+---
+
+## Exact McNemar Test
+
+```{r}
+exact_mcnemar <- exact2x2::mcnemar.exact(table_bfr_aftr)
+exact_mcnemar
+```
+
+| Situation | Test |
+|---|---|
+| Paired binary, discordant ≥ 25 | McNemar |
+| Paired binary, discordant < 5 | Exact McNemar (`exact2x2`) |
+
+---
+
+# Statistical Tests — Continuous Variables {background-color="#2C3E50"}
+
+## Decision Framework — Continuous
+
+:::{.callout-note}
+**Flowchart placeholder**
+
+*Insert here: Continuous variable test selection flowchart — branching from number of groups (1, 2, >2), then normality (normal vs non-normal), then paired vs unpaired, leading to: Z-test / One-sample t → Independent t / Paired t / Mann-Whitney U / Wilcoxon Matched Pairs → One-way ANOVA / Repeated Measures ANOVA / Kruskal-Wallis / Friedman.*
+:::
+
+---
+
+## One Group — Z Test
+
+Use when population SD is **known** and n > 30.
+
+```{r}
+pr  <- p |> filter(wealth_index_of_participants == "richer")
+mu  <- mean(p$age_of_participants)
+sigma <- sd(p$age_of_participants)
+
+s_mean <- mean(pr$age_of_participants)
+n      <- length(pr$age_of_participants)
+z      <- (s_mean - mu) / (sigma / sqrt(n))
+
+p_two_tailed     <- 2 * (1 - pnorm(abs(z)))
+p_one_tailed_gt  <- 1 - pnorm(z)
+p_one_tailed_lt  <- pnorm(z)
+
+cat("Z =", round(z, 3),
+    "\nTwo-tailed p =", round(p_two_tailed, 4),
+    "\nOne-tailed (greater) p =", round(p_one_tailed_gt, 4))
+```
+
+---
+
+## One Group — One-Sample t Test
+
+Use when population SD is **unknown** or n < 30.
+
+```{r}
+pp <- p |> filter(wealth_index_of_participants == "poorest")
+
+t_test <- t.test(pp$age_of_participants, mu = mu)
+t_test
+```
+
+| Test | Population SD | n |
+|---|---|---|
+| One-sample Z | Known | > 30 |
+| One-sample t | Unknown | Any; especially < 30 |
+
+---
+
+## Two Groups — Testing Equal Variance
+
+Before an independent t-test, verify the **equal variance assumption**.
+
+```{r}
+# Levene's test (robust to non-normality)
+car::leveneTest(weight ~ sex_of_participants, data = p)
+
+# Bartlett's test (assumes normality)
+bartlett.test(weight ~ sex_of_participants, data = p)
+```
+
+> **Interpretation:** p < 0.05 → variances are NOT equal → use `var.equal = FALSE` in t.test.
+
+---
+
+## Two Groups — Independent t Test (Unpaired, Normal)
+
+```{r}
+ind_t_test <- t.test(weight ~ sex_of_participants,
+                     var.equal = TRUE,
+                     data = p)
+ind_t_test
+```
+
+:::{.callout-note}
+**Flowchart placeholder**
+
+*Insert here: Equal variance flowchart — Levene/Bartlett test → p < 0.05 (unequal variances, Welch t-test) vs p ≥ 0.05 (equal variances, standard independent t-test).*
+:::
+
+---
+
+## Two Groups — Paired t Test (Normal)
+
+Use when the **same participants** are measured at two time points.
+
+```{r}
+paired_t_test <- t.test(p$fbs_presentation, p$fbs_6_months, paired = TRUE)
+paired_t_test
+```
+
+> **Assumption:** Differences between paired observations must be normally distributed.
+
+---
+
+## Two Groups — Mann-Whitney U (Non-Normal, Unpaired)
+
+Non-parametric alternative to the independent t-test. Based on **ranks**, not raw values.
+
+```{r}
+mann_whit <- wilcox.test(sbp_presentation ~ sex_of_participants,
+                         data = p,
+                         correct = FALSE)
+mann_whit
+```
+
+> Use `correct = TRUE` (continuity correction) when: sample size < 100, or data is ordinal/discrete.
+
+---
+
+## Two Groups — Wilcoxon Matched Pairs (Non-Normal, Paired)
+
+Non-parametric alternative to the paired t-test.
+
+```{r}
+wilcox_paired <- wilcox.test(p$sbp_presentation, p$sbp_6_months, paired = TRUE)
+wilcox_paired
+```
+
+> **Assumption:** Differences between paired values should be **symmetrically distributed** (not necessarily normal).
+
+---
+
+## Summary — Two Group Tests
+
+| Groups | Normal | Test |
+|---|---|---|
+| Unpaired | Yes | Independent t-test |
+| Unpaired | No | Mann-Whitney U |
+| Paired | Yes | Paired t-test |
+| Paired | No | Wilcoxon Matched Pairs |
+
+---
+
+# More Than Two Groups {background-color="#2C3E50"}
+
+## One-Way ANOVA (Normal, Unpaired)
+
+Tests for differences in means across **three or more independent groups**.
+
+```{r}
+aov_un <- aov(height ~ marital_status_of_participants, data = p)
+summary(aov_un)
+```
+
+> **Assumptions:** Groups are independent, data within each group is normally distributed, equal variances across groups.
+
+---
+
+## One-Way ANOVA — Post Hoc (Tukey HSD)
+
+A significant ANOVA tells you that at least one group differs — but not **which pairs**.
+
+```{r}
+tukey_res <- TukeyHSD(aov_un)
+print(tukey_res)
+```
+
+> Tukey's HSD controls the family-wise error rate when making all pairwise comparisons.
+
+---
+
+## Repeated Measures ANOVA (Normal, Paired)
+
+Use when the **same participants** are measured at three or more time points.
+
+```{r}
+p_long_n <- p |>
+  select(s_no, fbs_presentation, fbs_3_months, fbs_6_months) |>
+  pivot_longer(
+    cols = c(fbs_presentation, fbs_3_months, fbs_6_months),
+    names_to = "time",
+    values_to = "value"
+  )
+
+res_aov <- anova_test(data = p_long_n, dv = value, wid = s_no, within = time)
+get_anova_table(res_aov)
+```
+
+> **Assumption:** Sphericity — variances of differences between all pairs of time points are equal.
+
+---
+
+## Repeated Measures ANOVA — Post Hoc
+
+```{r}
+pairwise_p <- pairwise.t.test(
+  p_long_n$value,
+  p_long_n$time,
+  p.adjust.method = "bonferroni"
+)
+print(pairwise_p)
+```
+
+> **Bonferroni correction** divides the significance level (α) by the number of comparisons to control Type I error.
+
+---
+
+## Kruskal-Wallis Test (Non-Normal, Unpaired)
+
+Non-parametric alternative to one-way ANOVA. Based on **ranks**.
+
+```{r}
+kruskal_unp <- kruskal.test(sbp_presentation ~ marital_status_of_participants, data = p)
+kruskal_unp
+```
+
+---
+
+## Kruskal-Wallis — Post Hoc
+
+```{r}
+pairwise_wilcox <- pairwise.wilcox.test(
+  p$sbp_presentation,
+  p$marital_status_of_participants,
+  p.adjust.method = "bonferroni"
+)
+print(pairwise_wilcox)
+```
+
+> **Minimum achievable p-value** with Monte Carlo simulation of B replicates = 1 / (B + 1).
+
+---
+
+## Friedman Test (Non-Normal, Paired / Repeated)
+
+Non-parametric equivalent of repeated measures ANOVA.
+
+```{r}
+data_long <- pivot_longer(
+  p,
+  cols = c(sbp_presentation, sbp_3_months, sbp_6_months),
+  names_to  = "time",
+  values_to = "sbp"
+)
+
+friedman_res <- friedman.test(sbp ~ time | s_no, data = data_long)
+print(friedman_res)
+```
+
+> **Assumption:** Dependent samples — same participants measured at each time point.
+
+---
+
+## Friedman — Post Hoc
+
+```{r}
+pairwise_np <- pairwise.wilcox.test(
+  data_long$sbp,
+  data_long$time,
+  p.adjust.method = "bonferroni",
+  paired = TRUE
+)
+print(pairwise_np)
+```
+
+---
+
+## Summary — More Than Two Groups
+
+| Groups | Normal | Design | Test | Post Hoc |
+|---|---|---|---|---|
+| > 2 | Yes | Unpaired | One-way ANOVA | Tukey HSD |
+| > 2 | Yes | Paired | Repeated ANOVA | Bonferroni t-test |
+| > 2 | No | Unpaired | Kruskal-Wallis | Pairwise Wilcoxon |
+| > 2 | No | Paired | Friedman | Pairwise Wilcoxon |
+
+---
+
+# Correlation {background-color="#2C3E50"}
+
+## Pearson vs Spearman Correlation
+
+Both measure **strength and direction** of a relationship between two continuous variables.
+
+| Feature | Pearson | Spearman |
+|---|---|---|
+| Data requirement | Normally distributed | Any distribution |
+| Relationship type | Linear | Monotonic |
+| Homoscedasticity | Required | Not required |
+| Based on | Raw values | Ranks |
+
+> **Homoscedasticity** — the variance of residuals should remain constant across all levels of the independent variable.
+
+---
+
+## Pearson's Correlation
+
+```{r}
+pearson <- cor.test(p$fbs_presentation, p$weight, method = "pearson")
+pearson
+```
+
+> Assumes: linearity, bivariate normality, homoscedasticity, independence of observations.
+
+---
+
+## Spearman's Correlation
+
+```{r}
+spearman <- cor.test(
+  p$sbp_in_mm_hg,
+  p$age_of_participants,
+  method = "spearman",
+  exact = FALSE
+)
+spearman
+```
+
+> Use `exact = FALSE` when there are ties in the data (avoids exact p-value computation error).
+
+---
+
+## Interpreting Correlation Coefficients
+
+| r value | Interpretation |
+|---|---|
+| 0.00 – 0.19 | Negligible |
+| 0.20 – 0.39 | Weak |
+| 0.40 – 0.59 | Moderate |
+| 0.60 – 0.79 | Strong |
+| 0.80 – 1.00 | Very strong |
+
+> Always report both **r** (strength and direction) and **p** (statistical significance) together.
+
+---
+
+## Overall Test Selection — Full Decision Map
+
+:::{.callout-note}
+**Flowchart placeholder**
+
+*Insert here: Master decision flowchart — starting from variable type (Categorical vs Continuous), then number of groups (1, 2, >2), then normality check, then paired vs unpaired, with all tests mapped to the correct branch. This is the key summary diagram for the whole session.*
+:::
+
+---
+
+# Cleaning Up the Environment
+
+```{r}
+rm(list = setdiff(ls(), "p"))
+```
+
+> Use `options(scipen = 999)` to display p-values as decimals instead of scientific notation.
+> Use `options(scipen = 0)` to revert to scientific notation.
+
+---
+
+# Coming Next {background-color="#2C3E50"}
+
+## Further Topics
+
+- **Data Visualization** — principles of effective charts
+- **ggplot2** — grammar of graphics in R
+- **ggstatsplot** — publication-ready plots with embedded statistics

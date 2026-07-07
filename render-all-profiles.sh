@@ -62,6 +62,10 @@ echo "  Output    : docs/"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # Explicitly create the docs folder in case it was deleted
+if [ -d "docs" ]; then
+  echo "  Removing existing docs/ ..."
+  rm -rf docs
+fi
 mkdir -p docs
 
 # Render only index.qmd

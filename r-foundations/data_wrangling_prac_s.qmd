@@ -1,0 +1,290 @@
+---
+title: "Tidyverse Data Wrangling Practice"
+subtitle: "Slide Exercises"
+author: "Sparrow"
+date: today
+format: 
+  revealjs:
+    theme: serif
+    css: ../assets/theme_webp.css
+    include-after-body: footer.html
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    code-fold: true
+    code-summary: "Show the code"
+    chalkboard: true
+    preview-links: true
+    center: true
+    zoom: true
+    echo: true
+---
+
+## How to Use
+
+- Each slide contains one tidyverse practice question.
+- Fill in the blanks marked as `_____`.
+- These tasks cover core verbs, recoding, reshaping, joins, and cleaning.
+
+## Setup Data
+
+```{r}
+library(tidyverse)
+
+clinic_wide <- tibble(
+  id = 1:6,
+  sex = c("Female", "Male", "Female", "Male", "Female", "Male"),
+  age = c(22, 34, 29, 41, 37, 26),
+  bmi = c(19.8, 27.2, 31.1, 24.3, 29.4, 22.6),
+  fbs_0 = c(88, 110, 132, 96, 124, 91),
+  fbs_3 = c(86, 104, 120, 94, 118, 89),
+  ppbs_0 = c(126, 168, 214, 142, 176, 130),
+  smoker = c("No", "Yes", "No", "Yes", "No", "No")
+)
+
+clinic_long <- tibble(
+  id = c(1,1,2,2,3,3,4,4),
+  visit = c("baseline", "3m", "baseline", "3m", "baseline", "3m", "baseline", "3m"),
+  fbs = c(88, 86, 110, 104, 132, 120, 96, 94)
+)
+
+treatment_map <- tibble(
+  id = 1:6,
+  treatment = c("Diet", "Metformin", "Insulin", "Diet", "Metformin", "Diet")
+)
+```
+
+## Exercise 1
+
+Select only `id`, `age`, and `bmi`.
+
+```{r eval=FALSE}
+clinic_wide %>%
+  _____(id, age, bmi)
+```
+
+## Exercise 2
+
+Filter participants with BMI 25 or more.
+
+```{r eval=FALSE}
+clinic_wide %>%
+  _____(bmi >= 25)
+```
+
+## Exercise 3
+
+Create a new column `bmi_group` where BMI is classified as:
+
+- `<25` = `"Normal"`
+- `25 to <30` = `"Overweight"`
+- `>=30` = `"Obese"`
+
+```{r eval=FALSE}
+clinic_wide %>%
+  mutate(
+    bmi_group = case_when(
+      bmi < 25 ~ "Normal",
+      bmi >= 25 & bmi < 30 ~ "Overweight",
+      bmi >= 30 ~ "Obese"
+    )
+  )
+```
+
+## Exercise 4
+
+Create `age_group` as `"Under30"` or `"30plus"` using `mutate()`.
+
+```{r eval=FALSE}
+clinic_wide %>%
+  _____(age_group = if_else(age < 30, "Under30", "30plus"))
+```
+
+## Exercise 5
+
+Arrange rows from highest to lowest baseline FBS.
+
+```{r eval=FALSE}
+clinic_wide %>%
+  _____(desc(fbs_0))
+```
+
+## Exercise 6
+
+Find mean BMI by sex.
+
+```{r eval=FALSE}
+clinic_wide %>%
+  _____(sex) %>%
+  summarise(mean_bmi = mean(bmi))
+```
+
+## Exercise 7
+
+Count participants by smoking status.
+
+```{r eval=FALSE}
+clinic_wide %>%
+  _____(smoker)
+```
+
+## Exercise 8
+
+Convert `clinic_wide` from wide to long for the two FBS columns.
+
+```{r eval=FALSE}
+clinic_wide %>%
+  pivot_longer(
+    cols = _____,
+    names_to = "visit",
+    values_to = "fbs"
+  )
+```
+
+## Exercise 9
+
+Convert `clinic_long` from long to wide so each visit becomes a separate column.
+
+```{r eval=FALSE}
+clinic_long %>%
+  pivot_wider(
+    names_from = _____,
+    values_from = fbs
+  )
+```
+
+## Exercise 10
+
+Join treatment information into `clinic_wide` using `id`.
+
+```{r eval=FALSE}
+clinic_wide %>%
+  _____(treatment_map, by = "id")
+```
+
+## Exercise 11
+
+Rename `fbs_0` to `fbs_baseline`.
+
+```{r eval=FALSE}
+clinic_wide %>%
+  _____(fbs_baseline = fbs_0)
+```
+
+## Exercise 12
+
+Move `smoker` to appear right after `sex`.
+
+```{r eval=FALSE}
+clinic_wide %>%
+  _____(smoker, .after = sex)
+```
+
+## Exercise 13
+
+Keep only distinct combinations of `sex` and `smoker`.
+
+```{r eval=FALSE}
+clinic_wide %>%
+  _____(sex, smoker)
+```
+
+## Exercise 14
+
+Create a flag `high_fbs` that is `TRUE` when baseline FBS is 126 or more.
+
+```{r eval=FALSE}
+clinic_wide %>%
+  mutate(high_fbs = _____ >= 126)
+```
+
+## Exercise 15
+
+Create a variable `fbs_change` equal to 3-month FBS minus baseline FBS.
+
+```{r eval=FALSE}
+clinic_wide %>%
+  mutate(fbs_change = _____ - fbs_0)
+```
+
+## Exercise 16
+
+Use `select()` to keep all columns except `ppbs_0`.
+
+```{r eval=FALSE}
+clinic_wide %>%
+  select(-_____)
+```
+
+## Exercise 17
+
+Filter female participants younger than 30 years.
+
+```{r eval=FALSE}
+clinic_wide %>%
+  filter(sex == "Female", _____ < 30)
+```
+
+## Exercise 18
+
+Summarise the maximum baseline PPBS.
+
+```{r eval=FALSE}
+clinic_wide %>%
+  summarise(max_ppbs = _____(ppbs_0))
+```
+
+## Exercise 19
+
+Create a categorical FBS variable from baseline values:
+
+- `<100` = `"Normal"`
+- `100 to 125` = `"Prediabetes"`
+- `>=126` = `"Diabetes"`
+
+```{r eval=FALSE}
+clinic_wide %>%
+  mutate(
+    fbs_status = case_when(
+      fbs_0 < 100 ~ "Normal",
+      fbs_0 >= 100 & fbs_0 < 126 ~ "Prediabetes",
+      fbs_0 >= 126 ~ "Diabetes"
+    )
+  )
+```
+
+## Exercise 20
+
+Group by sex and summarise mean baseline FBS and mean baseline PPBS.
+
+```{r eval=FALSE}
+clinic_wide %>%
+  group_by(sex) %>%
+  summarise(
+    mean_fbs = mean(_____),
+    mean_ppbs = mean(ppbs_0)
+  )
+```
+
+## Instructor Key
+
+```{r eval=FALSE}
+# 1 select
+# 2 filter
+# 4 mutate
+# 5 arrange
+# 6 group_by
+# 7 count
+# 8 c(fbs_0, fbs_3)
+# 9 visit
+#10 left_join
+#11 rename
+#12 relocate
+#13 distinct
+#14 fbs_0
+#15 fbs_3
+#16 ppbs_0
+#17 age
+#18 max
+#20 fbs_0
+```

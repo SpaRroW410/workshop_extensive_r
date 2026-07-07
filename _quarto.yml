@@ -10,9 +10,15 @@
 project:
   type: website
   resources:
+    - "!docs/**"
+    - "!_site/**"
     - config.json
+    - navigation.json
+    - navigation.yml
     - assets/
   render:
+    - "!docs/**"
+    - "!_site/**"
     - "index.qmd"
     - "welcome.qmd"
     - "contact.qmd"
@@ -34,3 +40,6 @@ format:
     code-copy: true
     toc: true
     lightbox: auto
+    include-in-header:
+      text: |
+        <script src="assets/fitty-init.js"></script>

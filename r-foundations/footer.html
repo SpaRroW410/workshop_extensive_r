@@ -1,6 +1,6 @@
 <div style="
   position: fixed;
-  bottom: 10px;           /* lifted above slide number */
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 0.9em;
@@ -8,6 +8,69 @@
   background-color: transparent;
   z-index: 9999;
   text-align: center;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
 ">
-  <a href='../index.html' style="color: black;">🏠 Home</a> 
+  <a href='../welcome.html' style="color: black;">🏠 Home</a>
+  <span id="nextModule" style="display: none;">
+    | <a href='' id="nextModuleLink" style="color: black;">📚 Next Module</a>
+  </span>
+  <span id="nextSection" style="display: none;">
+    | <a href='' id="nextSectionLink" style="color: black;">➡️ Next Section</a>
+  </span>
 </div>
+
+<script>
+(async function() {
+  try {
+    // Load navigation config
+    const response = await fetch('../navigation.json');
+    const navConfig = await response.json();
+    
+    // Detect current profile (basic, moderate, advanced)
+    const pathParts = window.location.pathname.split('/');
+    const profile = pathParts[pathParts.length - 3] || 'basic';
+    
+    // Get current filename (e.g., intro_to_r.html)
+    const currentFile = pathParts[pathParts.length - 1].replace('.html', '.qmd');
+    
+    // Get section directory (e.g., r-foundations, data-visualization)
+    const section = pathParts[pathParts.length - 2];
+    
+    // Look up current page in nav config
+    if (navConfig[profile] && navConfig[profile][section]) {
+      const modules = navConfig[profile][section];
+      const currentModule = modules.find(m => m.file === currentFile);
+      
+      if (currentModule) {
+        const convertLink = (link) => link.replace(/\.qmd$/i, '.html');
+
+        // Set next module link
+        if (currentModule['next-module']) {
+          document.getElementById('nextModule').style.display = 'inline';
+          const nextModuleHref = convertLink(currentModule['next-module']);
+          document.getElementById('nextModuleLink').href = nextModuleHref;
+          
+          // --- UPDATED LOGIC HERE ---
+          // Look up the next module's data to get its proper label
+          const nextModuleData = modules.find(m => m.file === currentModule['next-module']);
+          const nextModuleText = nextModuleData ? nextModuleData.label : currentModule['next-module'].split('/').pop().replace('.qmd', '');
+          
+          document.getElementById('nextModuleLink').textContent = '📚 ' + nextModuleText;
+        }
+        
+        // Set next section link
+        if (currentModule['next-section']) {
+          document.getElementById('nextSection').style.display = 'inline';
+          const nextSectionHref = convertLink(currentModule['next-section']);
+          document.getElementById('nextSectionLink').href = nextSectionHref;
+          document.getElementById('nextSectionLink').textContent = '➡️ Next Section';
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('Navigation config not loaded:', error);
+  }
+})();
+</script>

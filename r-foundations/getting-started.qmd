@@ -9,10 +9,13 @@ format:
     slide-number: true
     navigation-mode: linear
     code-copy: true
+    code-fold: true
+    code-summary: "Show the code"
     chalkboard: true
     preview-links: true
     center: true
     zoom: true
+    
 sidebar:
   style: "floating"
   contents:
@@ -22,11 +25,16 @@ sidebar:
           text: "Getting Started"
         - href: data-wrangling.qmd
           text: "Data Wrangling (Tidyverse)"
+        - href: merging_dataset.qmd
+          text: "Merging Datasets"
+        - href: data_wrangling_prac_s.qmd
+          text: "Practice Slides"
 ---
 
 ## R - Language {background-image="images/r_rstudio.png" background-size="contain" background-opacity="0.4"}
 
--   Developed in the early 1990s by Ross Ihaka and Robert Gentleman at the University of Auckland, New Zealand\
+-   Developed in the early 1990s\
+-Ross Ihaka and Robert Gentleman at the University of Auckland, New Zealand\
 -   A powerful language for statistical computing and graphics\
 -   Widely used by statisticians, data scientists, and researchers\
 -   RStudio: User Interface
@@ -84,17 +92,13 @@ sidebar:
 
 ------------------------------------------------------------------------
 
-## R 4.4.1
+## R 4.4.1 {background-image="images/r_base_gui_4.6.jpg" background-size="contain" background-opacity="0.9"}
 
 ------------------------------------------------------------------------
 
-## RStudio Interface
+## RStudio Interface {background-image="images/r_environment.jpg" background-size="contain" background-opacity="0.9"}
 
--   Source Pane\
--   Environment / History\
--   Console Pane\
--   Viewer Pane\
--   Project
+
 
 ------------------------------------------------------------------------
 
@@ -108,34 +112,180 @@ sidebar:
 
 ------------------------------------------------------------------------
 
-## New File
+
+
+## Global options {background-image="images/global_options.jpg" background-size="contain" background-opacity="0.9"}
 
 ------------------------------------------------------------------------
 
-## Variables and Functions
+## New File — Core R Authoring
+
+- **R Script** — plain R code file for scripts and functions
+- **R Notebook** — interactive notebook with code, output, and narrative
+- **R Markdown** — reproducible reports combining R and text
+- **Quarto Document** — modern multi-language document format for reports
+- **Quarto Presentation** — slide decks built from Quarto content
 
 ------------------------------------------------------------------------
 
-## Lists and Matrices 
+## New File — Documentation & Static Content
+
+- **R HTML** — HTML pages generated from R code and content
+- **R Documentation** — help files for packages and functions
+- **Text File** — plain text for notes, configs, or simple drafts
+
+------------------------------------------------------------------------
+
+::: {.content-visible when-profile="moderate"}
+::: {.content-visible when-profile="advanced"}
+
+## New File — Other Languages & Tools {.smaller}
+
+- **Python Script** — Python code file for reticulate and Python work
+- **C++ File** — C++ source for Rcpp or performance-critical code
+- **SQL Script** — SQL queries and database interactions
+- **Stan File** — Stan model code for Bayesian modeling
+- **D3 Script** — D3 JavaScript visualizations
+- **R Sweave** — LaTeX+R documents for PDF reporting
+- **Shiny Web App** — interactive apps built with Shiny
+- **Plumber API** — R APIs exposed as web services
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Variables and Data Types {.smaller}
+
+- **Numeric** — numbers such as `3.14`, `42`
+- **Integer** — whole numbers with `L` suffix, e.g. `5L`
+- **Character** — text values like `"data"`
+- **Logical** — `TRUE` or `FALSE`
+- **Factor** — categorical values with levels
+- **Complex** — numbers with imaginary parts like `1 + 2i`
+
+```{r}
+#| eval: false
+#| echo: true
+x <- 5          # numeric
+name <- "Alice" # character
+flag <- TRUE    # logical
+colors <- factor(c("red", "blue", "green"))
+```
+
+- Variables store values in memory and can be reused later
+- R is dynamically typed: type depends on the stored value
+
+------------------------------------------------------------------------
+
+## Vectors and Sequences
+
+- Create ordered collections with `c()` and sequences with `seq()`
+- Useful for numeric data, indexes, and repeated values
+
+```{r}
+#| eval: false
+#| echo: true
+ages <- c(23, 35, 28)
+seq(1, 100, 3)
+seq(1, 2, length.out = 10)
+```
+
+------------------------------------------------------------------------
+
+## Factors and Categorical Variables
+
+- Store categories or groups with fixed levels
+- Important for statistical modeling and reporting
+- Use `factor()` to make discrete labels or ordered categories
+
+```{r}
+#| eval: false
+#| echo: true
+gender <- factor(c("Male", "Female", "Male", "Female"),
+                 levels = c("Male", "Female"))
+physical_activity <- factor(sample(c(1, 2), 10, replace = TRUE),
+                            levels = c(1, 2),
+                            labels = c("Yes", "No"))
+```
+
+------------------------------------------------------------------------
+
+## Lists and Matrices {.smaller}
 
 ::::: columns
 ::: {.column width="50%"}
 
-### Lists 
+### Lists
 
--   Flexible structure for heterogeneous data\
--   Use cases: nested structures, model results
+- Store mixed types in one object
+- Can contain vectors, data frames, functions, or other lists
+- Good for nested results and complex outputs
+
+```{r}
+#| eval: false
+#| echo: true
+my_list <- list(name = "Alice", score = 95, data = c(1, 2, 3))
+```
 
 :::
 
 ::: {.column width="50%"}
-### Matrices 
+### Matrices
 
--   2D array for homogeneous data\
--   Use cases: computations, tabular data, image processing
+- Two-dimensional arrays with a single data type
+- Ideal for numeric calculations, matrices, and linear algebra
+- Built from vectors using `matrix()`, `cbind()`, or `rbind()`
+
+```{r}
+#| eval: false
+#| echo: true
+m <- matrix(1:9, nrow = 3)
+```
 
 :::
 :::::
+
+------------------------------------------------------------------------
+
+## Data Structures
+
+- Data frames are the most common table structure in R
+- They combine columns of equal length and can contain different types
+- Lists and matrices are also important foundational structures
+
+```{r}
+#| eval: false
+#| echo: true
+my_data <- data.frame(
+  ID = 1:5,
+  Name = c("Alice", "Bob", "Charlie", "David", "Eva"),
+  Age = sample(20:50, 5, replace = TRUE)
+)
+```
+
+------------------------------------------------------------------------
+
+## Functions and Control Flow
+
+- Functions are reusable blocks of code created with `function()`
+- Control flow uses `if`, `else`, `for`, `while` and `repeat`
+
+```{r}
+#| eval: false
+#| echo: true
+add <- function(a, b) {
+  result <- a + b
+  return(result)
+}
+
+if (add(2, 3) > 4) {
+  print("Yes, it is greater than 4")
+}
+```
+
+- Functions help organize logic and avoid repetition
+- Control flow enables conditional decisions and loops
 
 ------------------------------------------------------------------------
 
@@ -147,5 +297,38 @@ sidebar:
 ```{r}
 #| eval: false
 #| echo: true
-  install.packages(c("tidyverse", "ggplot2", "readxl", "gtsummary", "ggstatsplot", "flextable", "pacman"))
+  install.packages(c("tidyverse", "ggplot2", "readxl", "gtsummary", 
+                     "ggstatsplot", "flextable", "pacman"))
 ```
+
+------------------------------------------------------------------------
+
+## Installation {.smaller}
+
+- Install a single package:
+
+```{r}
+#| eval: false
+#| echo: true
+install.packages("dplyr")
+```
+
+- Install several packages:
+
+```{r}
+#| eval: false
+#| echo: true
+install.packages(c("tidyverse", "ggplot2", "readxl"))
+```
+
+- Use `pacman` to install and load packages automatically:
+
+```{r}
+#| eval: false
+#| echo: true
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, ggplot2, readxl, gtsummary, ggstatsplot, flextable)
+```
+
+- `pacman::p_load()` installs missing packages and loads them in one command.
+

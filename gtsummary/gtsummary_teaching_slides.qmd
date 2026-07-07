@@ -1,0 +1,717 @@
+---
+title: "Publication-Ready Tables in R"
+subtitle: "gtsummary — from basics to customisation with flextable"
+author: "Workshop"
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    embed-resources: true
+    scrollable: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Setup
+
+```{r}
+library(tidyverse)
+library(gtsummary)
+library(flextable)
+library(janitor)
+
+# We will use the built-in trial dataset from gtsummary
+# It mimics a clinical trial with treatment arms, demographics, and outcomes
+data(trial)
+glimpse(trial)
+```
+
+---
+
+# Part 1 — gtsummary Basics {background-color="#2C3E50"}
+
+## What is gtsummary?
+
+- `gtsummary` creates **publication-ready summary tables** with minimal code
+- Automatically detects variable type (continuous vs categorical)
+- Adds statistics, p-values, and confidence intervals
+- Outputs are compatible with Word, PDF, HTML, and PowerPoint
+
+```{r}
+# Install if needed
+# install.packages("gtsummary")
+library(gtsummary)
+```
+
+---
+
+## tbl_summary() — Simplest Table
+
+```{r}
+trial |>
+  select(age, grade, response, trt) |>
+  tbl_summary()
+```
+
+*`tbl_summary()` auto-detects variable types and shows median (IQR) for continuous, n (%) for categorical.*
+
+---
+
+## tbl_summary() — By Group
+
+Stratify columns by a grouping variable using `by =`.
+
+```{r}
+trial |>
+  select(age, grade, response, trt) |>
+  tbl_summary(by = trt)
+```
+
+---
+
+## Adding Overall Column
+
+```{r}
+trial |>
+  select(age, grade, response, trt) |>
+  tbl_summary(by = trt) |>
+  add_overall()
+```
+
+---
+
+## Adding P-values
+
+```{r}
+trial |>
+  select(age, grade, response, trt) |>
+  tbl_summary(by = trt) |>
+  add_overall() |>
+  add_p()
+```
+
+> `add_p()` automatically selects the appropriate test: Wilcoxon rank-sum for continuous, Chi-square/Fisher for categorical.
+
+---
+
+## Customising Statistics
+
+Change what statistics are shown for each variable type.
+
+```{r}
+trial |>
+  select(age, marker, grade, trt) |>
+  tbl_summary(
+    by = trt,
+    statistic = list(
+      all_continuous() ~ "{mean} ({sd})",
+      all_categorical() ~ "{n} ({p}%)"
+    )
+  )
+```
+
+> Use `{mean}`, `{sd}`, `{median}`, `{p25}`, `{p75}`, `{n}`, `{p}`, `{N}` as placeholders.
+
+---
+
+## Formatting Digits
+
+```{r}
+trial |>
+  select(age, marker, trt) |>
+  tbl_summary(
+    by = trt,
+    statistic = all_continuous() ~ "{mean} ({sd})",
+    digits = all_continuous() ~ 1
+  )
+```
+
+---
+
+## Custom Labels
+
+```{r}
+trial |>
+  select(age, grade, trt) |>
+  tbl_summary(
+    by = trt,
+    label = list(
+      age   ~ "Age (years)",
+      grade ~ "Tumour Grade"
+    )
+  )
+```
+
+---
+
+## Changing Missing Data Label
+
+```{r}
+trial |>
+  select(age, grade, trt) |>
+  tbl_summary(
+    by = trt,
+    missing_text = "Not recorded"
+  )
+```
+
+---
+
+## Including / Excluding Missing
+
+```{r}
+# Show no missing row at all
+trial |>
+  select(age, grade, trt) |>
+  tbl_summary(
+    by  = trt,
+    missing = "no"
+  )
+```
+
+---
+
+## tbl_summary() — All Together
+
+```{r}
+trial |>
+  select(age, marker, grade, response, trt) |>
+  tbl_summary(
+    by = trt,
+    statistic = list(
+      all_continuous()  ~ "{mean} ({sd})",
+      all_categorical() ~ "{n} ({p}%)"
+    ),
+    digits  = all_continuous() ~ 1,
+    label   = list(
+      age      ~ "Age (years)",
+      marker   ~ "Marker level",
+      grade    ~ "Tumour Grade",
+      response ~ "Tumour Response"
+    ),
+    missing_text = "Not recorded"
+  ) |>
+  add_overall() |>
+  add_p()
+```
+
+---
+
+# Part 2 — Adding More Information {background-color="#2C3E50"}
+
+## add_n() — Sample Sizes per Column
+
+```{r}
+trial |>
+  select(age, grade, trt) |>
+  tbl_summary(by = trt) |>
+  add_n()
+```
+
+---
+
+## add_stat_label() — Describe the Statistic Used
+
+```{r}
+trial |>
+  select(age, grade, trt) |>
+  tbl_summary(by = trt) |>
+  add_stat_label()
+```
+
+---
+
+## bold_labels() and italicize_levels()
+
+```{r}
+trial |>
+  select(age, grade, trt) |>
+  tbl_summary(by = trt) |>
+  bold_labels() |>
+  italicize_levels()
+```
+
+---
+
+## bold_p() — Highlight Significant P-values
+
+```{r}
+trial |>
+  select(age, grade, response, trt) |>
+  tbl_summary(by = trt) |>
+  add_p() |>
+  bold_p(t = 0.05)
+```
+
+---
+
+## sort_p() — Sort by P-value
+
+```{r}
+trial |>
+  select(age, grade, response, trt) |>
+  tbl_summary(by = trt) |>
+  add_p() |>
+  sort_p()
+```
+
+---
+
+# Part 3 — Regression Tables {background-color="#2C3E50"}
+
+## tbl_regression() — Logistic Regression
+
+```{r}
+m_logistic <- glm(response ~ age + grade + trt,
+                  data   = trial,
+                  family = binomial)
+
+tbl_regression(m_logistic, exponentiate = TRUE)
+```
+
+> `exponentiate = TRUE` shows **Odds Ratios** instead of log-odds.
+
+---
+
+## tbl_regression() — Linear Regression
+
+```{r}
+m_linear <- lm(marker ~ age + grade + trt, data = trial)
+
+tbl_regression(m_linear)
+```
+
+---
+
+## add_glance_table() — Model Fit Statistics
+
+```{r}
+m_logistic |>
+  tbl_regression(exponentiate = TRUE) |>
+  add_glance_table(include = c(nobs, AIC, BIC))
+```
+
+---
+
+## tbl_uvregression() — Univariable Table
+
+Run univariable regressions for each predictor against one outcome in one step.
+
+```{r}
+trial |>
+  select(age, grade, marker, trt, response) |>
+  tbl_uvregression(
+    method    = glm,
+    y         = response,
+    method.args = list(family = binomial),
+    exponentiate = TRUE
+  ) |>
+  add_global_p()
+```
+
+---
+
+# Part 4 — Merging and Stacking {background-color="#2C3E50"}
+
+## tbl_merge() — Side by Side Tables
+
+Combine univariable and multivariable regression tables.
+
+```{r}
+tbl_uv <- trial |>
+  select(age, grade, marker, trt, response) |>
+  tbl_uvregression(
+    method       = glm,
+    y            = response,
+    method.args  = list(family = binomial),
+    exponentiate = TRUE
+  )
+
+tbl_mv <- glm(response ~ age + grade + marker + trt,
+              data   = trial,
+              family = binomial) |>
+  tbl_regression(exponentiate = TRUE)
+
+tbl_merge(
+  tbls        = list(tbl_uv, tbl_mv),
+  tab_spanner = c("**Univariable**", "**Multivariable**")
+)
+```
+
+---
+
+## tbl_stack() — Stack Tables Vertically
+
+```{r}
+tbl1 <- trial |>
+  filter(trt == "Drug A") |>
+  select(age, grade, response) |>
+  tbl_summary() |>
+  modify_header(stat_0 ~ "**Drug A** (n = {n})")
+
+tbl2 <- trial |>
+  filter(trt == "Drug B") |>
+  select(age, grade, response) |>
+  tbl_summary() |>
+  modify_header(stat_0 ~ "**Drug B** (n = {n})")
+
+tbl_stack(list(tbl1, tbl2), group_header = c("Drug A", "Drug B"))
+```
+
+---
+
+# Part 5 — Table Modifications {background-color="#2C3E50"}
+
+## modify_header() — Custom Column Headers
+
+```{r}
+trial |>
+  select(age, grade, trt) |>
+  tbl_summary(by = trt) |>
+  modify_header(
+    label       ~ "**Characteristic**",
+    stat_1      ~ "**Drug A** (n = {n})",
+    stat_2      ~ "**Drug B** (n = {n})"
+  )
+```
+
+---
+
+## modify_caption() — Add a Table Caption
+
+```{r}
+trial |>
+  select(age, grade, trt) |>
+  tbl_summary(by = trt) |>
+  modify_caption("**Table 1. Baseline Characteristics by Treatment Group**")
+```
+
+---
+
+## modify_footnote() — Add Footnotes
+
+```{r}
+trial |>
+  select(age, grade, trt) |>
+  tbl_summary(by = trt) |>
+  add_p() |>
+  modify_footnote(
+    p.value ~ "Wilcoxon rank-sum test; Chi-square test"
+  )
+```
+
+---
+
+## modify_spanning_header() — Group Columns
+
+```{r}
+trial |>
+  select(age, grade, trt) |>
+  tbl_summary(by = trt) |>
+  modify_spanning_header(
+    c(stat_1, stat_2) ~ "**Treatment Group**"
+  )
+```
+
+---
+
+## Removing Rows with modify_table_body()
+
+```{r}
+trial |>
+  select(age, grade, trt) |>
+  tbl_summary(by = trt) |>
+  modify_table_body(
+    ~ .x |> filter(!(variable == "grade" & row_type == "missing"))
+  )
+```
+
+---
+
+# Part 6 — Exporting gtsummary Tables {background-color="#2C3E50"}
+
+## Converting to Different Formats
+
+```{r eval=FALSE}
+tbl <- trial |>
+  select(age, grade, response, trt) |>
+  tbl_summary(by = trt) |>
+  add_p()
+
+# To Word (.docx) — requires officer package
+tbl |> as_flex_table() |> save_as_docx(path = "table1.docx")
+
+# To HTML
+tbl |> as_gt() |> gt::gtsave("table1.html")
+
+# To PDF (via gt)
+tbl |> as_gt() |> gt::gtsave("table1.pdf")
+```
+
+---
+
+# Part 7 — Modifying with flextable {background-color="#2C3E50"}
+
+## What is flextable?
+
+- `flextable` provides **fine-grained control** over table appearance
+- Works seamlessly with `gtsummary` via `as_flex_table()`
+- Ideal for Word/PowerPoint output
+- Controls: fonts, cell colours, borders, column widths, alignment, footnotes
+
+```{r}
+library(flextable)
+```
+
+---
+
+## Converting gtsummary to flextable
+
+```{r}
+tbl <- trial |>
+  select(age, grade, response, trt) |>
+  tbl_summary(
+    by      = trt,
+    missing = "no"
+  ) |>
+  add_overall() |>
+  add_p() |>
+  bold_labels()
+
+ft <- as_flex_table(tbl)
+ft
+```
+
+---
+
+## autofit() — Auto Column Widths
+
+```{r}
+ft |> autofit()
+```
+
+> Always run `autofit()` first — it resizes columns to fit content before applying other formatting.
+
+---
+
+## set_table_properties() — Table Width
+
+```{r}
+ft |>
+  autofit() |>
+  set_table_properties(width = 1, layout = "autofit")
+```
+
+> `width = 1` means full page width. Values between 0 and 1 set proportional width.
+
+---
+
+## theme_vanilla() and Other Themes
+
+```{r}
+ft |> theme_vanilla()
+ft |> theme_box()
+ft |> theme_booktabs()
+ft |> theme_alafoli()
+ft |> theme_zebra()
+```
+
+---
+
+## Bold Header
+
+```{r}
+ft |>
+  autofit() |>
+  bold(part = "header")
+```
+
+---
+
+## Font Face and Size
+
+```{r}
+ft |>
+  autofit() |>
+  font(fontname = "Times New Roman", part = "all") |>
+  fontsize(size = 11, part = "all") |>
+  fontsize(size = 12, part = "header")
+```
+
+---
+
+## Aligning Columns
+
+```{r}
+ft |>
+  autofit() |>
+  align(align = "center", part = "header") |>
+  align(j    = 2:5, align = "center", part = "body")
+```
+
+> `j` selects columns by position. `part` can be `"header"`, `"body"`, or `"all"`.
+
+---
+
+## Colouring Cells — bg()
+
+Highlight specific cells by value or condition.
+
+```{r}
+ft |>
+  autofit() |>
+  bg(part = "header", bg = "#2C3E50") |>
+  color(part = "header", color = "white")
+```
+
+---
+
+## Conditional Highlighting — p-value Column
+
+```{r}
+# Highlight rows where p < 0.05 in light yellow
+ft |>
+  autofit() |>
+  bg(
+    j = "p.value",
+    bg = "lightyellow",
+    part = "body"
+  )
+```
+
+---
+
+## Adding Borders — hline() and vline()
+
+```{r}
+border_style <- officer::fp_border(color = "black", width = 1.5)
+
+ft |>
+  autofit() |>
+  hline_top(part = "header", border = border_style) |>
+  hline_bottom(part = "header", border = border_style) |>
+  hline_bottom(part = "body", border = border_style)
+```
+
+---
+
+## Merging Header Cells — merge_h()
+
+```{r}
+ft |>
+  autofit() |>
+  add_header_row(
+    values = c("", "Treatment Arms", ""),
+    colwidths = c(1, 2, 2)
+  ) |>
+  merge_h(part = "header") |>
+  bold(part = "header") |>
+  align(align = "center", part = "header")
+```
+
+---
+
+## set_caption() — Table Caption
+
+```{r}
+ft |>
+  autofit() |>
+  set_caption(
+    caption = "Table 1. Baseline characteristics by treatment group",
+    style   = "Table Caption"
+  )
+```
+
+---
+
+## add_footer_lines() — Footnotes
+
+```{r}
+ft |>
+  autofit() |>
+  add_footer_lines(
+    "IQR: Interquartile Range. p-values: Wilcoxon rank-sum (continuous), Chi-square (categorical)."
+  ) |>
+  italic(part = "footer")
+```
+
+---
+
+## Padding Cells — padding()
+
+```{r}
+ft |>
+  autofit() |>
+  padding(padding = 4, part = "all")
+```
+
+---
+
+## Complete Formatted Table
+
+```{r}
+border_h <- officer::fp_border(color = "#2C3E50", width = 1.5)
+border_l <- officer::fp_border(color = "#cccccc", width = 0.5)
+
+ft |>
+  autofit() |>
+  theme_booktabs() |>
+  bold(part = "header") |>
+  font(fontname = "Calibri", part = "all") |>
+  fontsize(size = 10, part = "body") |>
+  fontsize(size = 11, part = "header") |>
+  bg(part = "header", bg = "#2C3E50") |>
+  color(part = "header", color = "white") |>
+  align(align = "center", part = "header") |>
+  align(j = 2:5, align = "center", part = "body") |>
+  hline_top(part = "header", border = border_h) |>
+  hline_bottom(part = "body", border = border_h) |>
+  padding(padding = 5, part = "all") |>
+  add_footer_lines(
+    "IQR: Interquartile Range. Chi-square or Wilcoxon tests used."
+  ) |>
+  italic(part = "footer") |>
+  set_caption("Table 1. Baseline Characteristics by Treatment Group")
+```
+
+---
+
+## Saving to Word
+
+```{r eval=FALSE}
+ft |>
+  autofit() |>
+  theme_booktabs() |>
+  save_as_docx(path = "table1_formatted.docx")
+```
+
+---
+
+## Saving to PowerPoint
+
+```{r eval=FALSE}
+ft |>
+  autofit() |>
+  save_as_pptx(path = "table1_formatted.pptx")
+```
+
+---
+
+## Quick Reference — Key Functions
+
+| Task | gtsummary | flextable |
+|---|---|---|
+| Basic table | `tbl_summary()` | `as_flex_table()` |
+| By group | `by =` | — |
+| P-values | `add_p()` | — |
+| Bold labels | `bold_labels()` | `bold(part = "header")` |
+| Caption | `modify_caption()` | `set_caption()` |
+| Footnote | `modify_footnote()` | `add_footer_lines()` |
+| Font | — | `font()`, `fontsize()` |
+| Cell colour | — | `bg()`, `color()` |
+| Borders | — | `hline_top()`, `hline_bottom()` |
+| Alignment | — | `align()` |
+| Auto width | — | `autofit()` |
+| Export Word | `as_flex_table() + save_as_docx()` | `save_as_docx()` |

@@ -1,6 +1,6 @@
 <div style="
   position: fixed;
-  bottom: 10px;           /* lifted above slide number */
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 0.9em;
@@ -8,7 +8,49 @@
   background-color: transparent;
   z-index: 9999;
   text-align: center;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
 ">
-  <a href='../../index.html' style="color: black;">🏠 Home</a> |
-  <a href='../basic.html' style="color: black;">📊 Plot Gallery</a>
+  <a href='../../welcome.html' style="color: black;">🏠 Home</a>
+  <span id="nextModule" style="display: none;">
+    | <a href='' id="nextModuleLink" style="color: black;">📚 Next Module</a>
+  </span>
+  <span id="nextSection" style="display: none;">
+    | <a href='' id="nextSectionLink" style="color: black;">➡️ Next Section</a>
+  </span>
 </div>
+
+<script>
+(async function() {
+  try {
+    const response = await fetch('../../navigation.json');
+    const navConfig = await response.json();
+    const pathParts = window.location.pathname.split('/');
+    const profile = pathParts[pathParts.length - 3] || 'basic';
+    const currentFile = pathParts[pathParts.length - 1].replace('.html', '.qmd');
+    const section = pathParts[pathParts.length - 2];
+    if (navConfig[profile] && navConfig[profile][section]) {
+      const modules = navConfig[profile][section];
+      const currentModule = modules.find(m => m.file === currentFile);
+      if (currentModule) {
+        const convertLink = (link) => link.replace(/\.qmd$/i, '.html');
+        if (currentModule['next-module']) {
+          document.getElementById('nextModule').style.display = 'inline';
+          const nextModuleHref = convertLink(currentModule['next-module']);
+          document.getElementById('nextModuleLink').href = nextModuleHref;
+          document.getElementById('nextModuleLink').textContent = '📚 ' + (currentModule['next-module'].split('/').pop().replace('.qmd', '') || 'Next Module');
+        }
+        if (currentModule['next-section']) {
+          document.getElementById('nextSection').style.display = 'inline';
+          const nextSectionHref = convertLink(currentModule['next-section']);
+          document.getElementById('nextSectionLink').href = nextSectionHref;
+          document.getElementById('nextSectionLink').textContent = '➡️ Next Section';
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('Navigation config not loaded:', error);
+  }
+})();
+</script>

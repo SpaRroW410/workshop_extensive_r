@@ -1,0 +1,534 @@
+[
+  {
+    "objectID": "r-foundations/getting-started.html#r---language",
+    "href": "r-foundations/getting-started.html#r---language",
+    "title": "Introduction to R",
+    "section": "R - Language",
+    "text": "R - Language\n\nDeveloped in the early 1990s\n-Ross Ihaka and Robert Gentleman at the University of Auckland, New Zealand\n\nA powerful language for statistical computing and graphics\n\nWidely used by statisticians, data scientists, and researchers\n\nRStudio: User Interface"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#why-use-r",
+    "href": "r-foundations/getting-started.html#why-use-r",
+    "title": "Introduction to R",
+    "section": "Why Use R",
+    "text": "Why Use R\n\nExtensive libraries for data analysis and visualization\n\nActive community support\n\nCross-platform compatibility (Windows, MacOS, Linux)\n\nIntegration with Python and C++\n\nFree and open-source"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#key-features-of-r",
+    "href": "r-foundations/getting-started.html#key-features-of-r",
+    "title": "Introduction to R",
+    "section": "Key Features of R",
+    "text": "Key Features of R\n\nComprehensive statistical analysis tools\n\nAdvanced graphics capabilities with ggplot2\n\nRich ecosystem of packages (dplyr, tidyr)\n\nInteractive and reproducible research with RMarkdown or Quarto"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#r-vs-python",
+    "href": "r-foundations/getting-started.html#r-vs-python",
+    "title": "Introduction to R",
+    "section": "R vs Python",
+    "text": "R vs Python\n\n\nR\n\nDesigned for statistical analysis and visualization\n\nRich ecosystem: dplyr, ggplot2, caret\n\nPreferred in academia and research\n\n\n\nPython\n\nGeneral-purpose language\n\nStrong in data science and ML: pandas, scikit-learn, TensorFlow\n\nVersatile for web, automation, and more"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#installation-of-r-and-rstudio",
+    "href": "r-foundations/getting-started.html#installation-of-r-and-rstudio",
+    "title": "Introduction to R",
+    "section": "Installation of R and RStudio",
+    "text": "Installation of R and RStudio\n\nR: CRAN Windows\n\nR: CRAN MacOS\n\nRStudio: RStudio Desktop - Posit"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#r-4.4.1",
+    "href": "r-foundations/getting-started.html#r-4.4.1",
+    "title": "Introduction to R",
+    "section": "R 4.4.1",
+    "text": "R 4.4.1"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#rstudio-interface",
+    "href": "r-foundations/getting-started.html#rstudio-interface",
+    "title": "Introduction to R",
+    "section": "RStudio Interface",
+    "text": "RStudio Interface"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#project",
+    "href": "r-foundations/getting-started.html#project",
+    "title": "Introduction to R",
+    "section": "Project",
+    "text": "Project\n\nCentralized Management\n\nConsistent Environment\n\nVersion Control Integration\n\nQuicker Setup"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#global-options",
+    "href": "r-foundations/getting-started.html#global-options",
+    "title": "Introduction to R",
+    "section": "Global options",
+    "text": "Global options"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#new-file-core-r-authoring",
+    "href": "r-foundations/getting-started.html#new-file-core-r-authoring",
+    "title": "Introduction to R",
+    "section": "New File — Core R Authoring",
+    "text": "New File — Core R Authoring\n\nR Script — plain R code file for scripts and functions\nR Notebook — interactive notebook with code, output, and narrative\nR Markdown — reproducible reports combining R and text\nQuarto Document — modern multi-language document format for reports\nQuarto Presentation — slide decks built from Quarto content"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#new-file-documentation-static-content",
+    "href": "r-foundations/getting-started.html#new-file-documentation-static-content",
+    "title": "Introduction to R",
+    "section": "New File — Documentation & Static Content",
+    "text": "New File — Documentation & Static Content\n\nR HTML — HTML pages generated from R code and content\nR Documentation — help files for packages and functions\nText File — plain text for notes, configs, or simple drafts"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#new-file-other-languages-tools",
+    "href": "r-foundations/getting-started.html#new-file-other-languages-tools",
+    "title": "Introduction to R",
+    "section": "New File — Other Languages & Tools",
+    "text": "New File — Other Languages & Tools\n\nPython Script — Python code file for reticulate and Python work\nC++ File — C++ source for Rcpp or performance-critical code\nSQL Script — SQL queries and database interactions\nStan File — Stan model code for Bayesian modeling\nD3 Script — D3 JavaScript visualizations\nR Sweave — LaTeX+R documents for PDF reporting\nShiny Web App — interactive apps built with Shiny\nPlumber API — R APIs exposed as web services"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#variables-and-data-types",
+    "href": "r-foundations/getting-started.html#variables-and-data-types",
+    "title": "Introduction to R",
+    "section": "Variables and Data Types",
+    "text": "Variables and Data Types\n\nNumeric — numbers such as 3.14, 42\nInteger — whole numbers with L suffix, e.g. 5L\nCharacter — text values like \"data\"\nLogical — TRUE or FALSE\nFactor — categorical values with levels\nComplex — numbers with imaginary parts like 1 + 2i\n\n\n\nShow the code\nx &lt;- 5          # numeric\nname &lt;- \"Alice\" # character\nflag &lt;- TRUE    # logical\ncolors &lt;- factor(c(\"red\", \"blue\", \"green\"))\n\n\n\nVariables store values in memory and can be reused later\nR is dynamically typed: type depends on the stored value"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#vectors-and-sequences",
+    "href": "r-foundations/getting-started.html#vectors-and-sequences",
+    "title": "Introduction to R",
+    "section": "Vectors and Sequences",
+    "text": "Vectors and Sequences\n\nCreate ordered collections with c() and sequences with seq()\nUseful for numeric data, indexes, and repeated values\n\n\n\nShow the code\nages &lt;- c(23, 35, 28)\nseq(1, 100, 3)\nseq(1, 2, length.out = 10)"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#factors-and-categorical-variables",
+    "href": "r-foundations/getting-started.html#factors-and-categorical-variables",
+    "title": "Introduction to R",
+    "section": "Factors and Categorical Variables",
+    "text": "Factors and Categorical Variables\n\nStore categories or groups with fixed levels\nImportant for statistical modeling and reporting\nUse factor() to make discrete labels or ordered categories\n\n\n\nShow the code\ngender &lt;- factor(c(\"Male\", \"Female\", \"Male\", \"Female\"),\n                 levels = c(\"Male\", \"Female\"))\nphysical_activity &lt;- factor(sample(c(1, 2), 10, replace = TRUE),\n                            levels = c(1, 2),\n                            labels = c(\"Yes\", \"No\"))"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#lists-and-matrices",
+    "href": "r-foundations/getting-started.html#lists-and-matrices",
+    "title": "Introduction to R",
+    "section": "Lists and Matrices",
+    "text": "Lists and Matrices\n\n\nLists\n\nStore mixed types in one object\nCan contain vectors, data frames, functions, or other lists\nGood for nested results and complex outputs\n\n\n\nShow the code\nmy_list &lt;- list(name = \"Alice\", score = 95, data = c(1, 2, 3))\n\n\n\nMatrices\n\nTwo-dimensional arrays with a single data type\nIdeal for numeric calculations, matrices, and linear algebra\nBuilt from vectors using matrix(), cbind(), or rbind()\n\n\n\nShow the code\nm &lt;- matrix(1:9, nrow = 3)"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#data-structures",
+    "href": "r-foundations/getting-started.html#data-structures",
+    "title": "Introduction to R",
+    "section": "Data Structures",
+    "text": "Data Structures\n\nData frames are the most common table structure in R\nThey combine columns of equal length and can contain different types\nLists and matrices are also important foundational structures\n\n\n\nShow the code\nmy_data &lt;- data.frame(\n  ID = 1:5,\n  Name = c(\"Alice\", \"Bob\", \"Charlie\", \"David\", \"Eva\"),\n  Age = sample(20:50, 5, replace = TRUE)\n)"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#functions-and-control-flow",
+    "href": "r-foundations/getting-started.html#functions-and-control-flow",
+    "title": "Introduction to R",
+    "section": "Functions and Control Flow",
+    "text": "Functions and Control Flow\n\nFunctions are reusable blocks of code created with function()\nControl flow uses if, else, for, while and repeat\n\n\n\nShow the code\nadd &lt;- function(a, b) {\n  result &lt;- a + b\n  return(result)\n}\n\nif (add(2, 3) &gt; 4) {\n  print(\"Yes, it is greater than 4\")\n}\n\n\n\nFunctions help organize logic and avoid repetition\nControl flow enables conditional decisions and loops"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#packages",
+    "href": "r-foundations/getting-started.html#packages",
+    "title": "Introduction to R",
+    "section": "Packages",
+    "text": "Packages\n\nCollections of functions, data, and compiled code\n\nInstallation:\n\n\n\nShow the code\n  install.packages(c(\"tidyverse\", \"ggplot2\", \"readxl\", \"gtsummary\", \n                     \"ggstatsplot\", \"flextable\", \"pacman\"))"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#installation",
+    "href": "r-foundations/getting-started.html#installation",
+    "title": "Introduction to R",
+    "section": "Installation",
+    "text": "Installation\n\nInstall a single package:\n\n\n\nShow the code\ninstall.packages(\"dplyr\")\n\n\n\nInstall several packages:\n\n\n\nShow the code\ninstall.packages(c(\"tidyverse\", \"ggplot2\", \"readxl\"))\n\n\n\nUse pacman to install and load packages automatically:\n\n\n\nShow the code\nif (!require(\"pacman\")) install.packages(\"pacman\")\npacman::p_load(tidyverse, ggplot2, readxl, gtsummary, ggstatsplot, flextable)\n\n\n\npacman::p_load() installs missing packages and loads them in one command."
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#how-to-use",
+    "href": "r-foundations/data_wrangling_prac_s.html#how-to-use",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "How to Use",
+    "text": "How to Use\n\nEach slide contains one tidyverse practice question.\nFill in the blanks marked as _____.\nThese tasks cover core verbs, recoding, reshaping, joins, and cleaning."
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#setup-data",
+    "href": "r-foundations/data_wrangling_prac_s.html#setup-data",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Setup Data",
+    "text": "Setup Data\n\n\nShow the code\nlibrary(tidyverse)\n\nclinic_wide &lt;- tibble(\n  id = 1:6,\n  sex = c(\"Female\", \"Male\", \"Female\", \"Male\", \"Female\", \"Male\"),\n  age = c(22, 34, 29, 41, 37, 26),\n  bmi = c(19.8, 27.2, 31.1, 24.3, 29.4, 22.6),\n  fbs_0 = c(88, 110, 132, 96, 124, 91),\n  fbs_3 = c(86, 104, 120, 94, 118, 89),\n  ppbs_0 = c(126, 168, 214, 142, 176, 130),\n  smoker = c(\"No\", \"Yes\", \"No\", \"Yes\", \"No\", \"No\")\n)\n\nclinic_long &lt;- tibble(\n  id = c(1,1,2,2,3,3,4,4),\n  visit = c(\"baseline\", \"3m\", \"baseline\", \"3m\", \"baseline\", \"3m\", \"baseline\", \"3m\"),\n  fbs = c(88, 86, 110, 104, 132, 120, 96, 94)\n)\n\ntreatment_map &lt;- tibble(\n  id = 1:6,\n  treatment = c(\"Diet\", \"Metformin\", \"Insulin\", \"Diet\", \"Metformin\", \"Diet\")\n)"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-1",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-1",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 1",
+    "text": "Exercise 1\nSelect only id, age, and bmi.\n\n\nShow the code\nclinic_wide %&gt;%\n  _____(id, age, bmi)"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-2",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-2",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 2",
+    "text": "Exercise 2\nFilter participants with BMI 25 or more.\n\n\nShow the code\nclinic_wide %&gt;%\n  _____(bmi &gt;= 25)"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-3",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-3",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 3",
+    "text": "Exercise 3\nCreate a new column bmi_group where BMI is classified as:\n\n&lt;25 = \"Normal\"\n25 to &lt;30 = \"Overweight\"\n&gt;=30 = \"Obese\"\n\n\n\nShow the code\nclinic_wide %&gt;%\n  mutate(\n    bmi_group = case_when(\n      bmi &lt; 25 ~ \"Normal\",\n      bmi &gt;= 25 & bmi &lt; 30 ~ \"Overweight\",\n      bmi &gt;= 30 ~ \"Obese\"\n    )\n  )"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-4",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-4",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 4",
+    "text": "Exercise 4\nCreate age_group as \"Under30\" or \"30plus\" using mutate().\n\n\nShow the code\nclinic_wide %&gt;%\n  _____(age_group = if_else(age &lt; 30, \"Under30\", \"30plus\"))"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-5",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-5",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 5",
+    "text": "Exercise 5\nArrange rows from highest to lowest baseline FBS.\n\n\nShow the code\nclinic_wide %&gt;%\n  _____(desc(fbs_0))"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-6",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-6",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 6",
+    "text": "Exercise 6\nFind mean BMI by sex.\n\n\nShow the code\nclinic_wide %&gt;%\n  _____(sex) %&gt;%\n  summarise(mean_bmi = mean(bmi))"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-7",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-7",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 7",
+    "text": "Exercise 7\nCount participants by smoking status.\n\n\nShow the code\nclinic_wide %&gt;%\n  _____(smoker)"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-8",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-8",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 8",
+    "text": "Exercise 8\nConvert clinic_wide from wide to long for the two FBS columns.\n\n\nShow the code\nclinic_wide %&gt;%\n  pivot_longer(\n    cols = _____,\n    names_to = \"visit\",\n    values_to = \"fbs\"\n  )"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-9",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-9",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 9",
+    "text": "Exercise 9\nConvert clinic_long from long to wide so each visit becomes a separate column.\n\n\nShow the code\nclinic_long %&gt;%\n  pivot_wider(\n    names_from = _____,\n    values_from = fbs\n  )"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-10",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-10",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 10",
+    "text": "Exercise 10\nJoin treatment information into clinic_wide using id.\n\n\nShow the code\nclinic_wide %&gt;%\n  _____(treatment_map, by = \"id\")"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-11",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-11",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 11",
+    "text": "Exercise 11\nRename fbs_0 to fbs_baseline.\n\n\nShow the code\nclinic_wide %&gt;%\n  _____(fbs_baseline = fbs_0)"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-12",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-12",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 12",
+    "text": "Exercise 12\nMove smoker to appear right after sex.\n\n\nShow the code\nclinic_wide %&gt;%\n  _____(smoker, .after = sex)"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-13",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-13",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 13",
+    "text": "Exercise 13\nKeep only distinct combinations of sex and smoker.\n\n\nShow the code\nclinic_wide %&gt;%\n  _____(sex, smoker)"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-14",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-14",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 14",
+    "text": "Exercise 14\nCreate a flag high_fbs that is TRUE when baseline FBS is 126 or more.\n\n\nShow the code\nclinic_wide %&gt;%\n  mutate(high_fbs = _____ &gt;= 126)"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-15",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-15",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 15",
+    "text": "Exercise 15\nCreate a variable fbs_change equal to 3-month FBS minus baseline FBS.\n\n\nShow the code\nclinic_wide %&gt;%\n  mutate(fbs_change = _____ - fbs_0)"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-16",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-16",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 16",
+    "text": "Exercise 16\nUse select() to keep all columns except ppbs_0.\n\n\nShow the code\nclinic_wide %&gt;%\n  select(-_____)"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-17",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-17",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 17",
+    "text": "Exercise 17\nFilter female participants younger than 30 years.\n\n\nShow the code\nclinic_wide %&gt;%\n  filter(sex == \"Female\", _____ &lt; 30)"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-18",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-18",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 18",
+    "text": "Exercise 18\nSummarise the maximum baseline PPBS.\n\n\nShow the code\nclinic_wide %&gt;%\n  summarise(max_ppbs = _____(ppbs_0))"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-19",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-19",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 19",
+    "text": "Exercise 19\nCreate a categorical FBS variable from baseline values:\n\n&lt;100 = \"Normal\"\n100 to 125 = \"Prediabetes\"\n&gt;=126 = \"Diabetes\"\n\n\n\nShow the code\nclinic_wide %&gt;%\n  mutate(\n    fbs_status = case_when(\n      fbs_0 &lt; 100 ~ \"Normal\",\n      fbs_0 &gt;= 100 & fbs_0 &lt; 126 ~ \"Prediabetes\",\n      fbs_0 &gt;= 126 ~ \"Diabetes\"\n    )\n  )"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#exercise-20",
+    "href": "r-foundations/data_wrangling_prac_s.html#exercise-20",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Exercise 20",
+    "text": "Exercise 20\nGroup by sex and summarise mean baseline FBS and mean baseline PPBS.\n\n\nShow the code\nclinic_wide %&gt;%\n  group_by(sex) %&gt;%\n  summarise(\n    mean_fbs = mean(_____),\n    mean_ppbs = mean(ppbs_0)\n  )"
+  },
+  {
+    "objectID": "r-foundations/data_wrangling_prac_s.html#instructor-key",
+    "href": "r-foundations/data_wrangling_prac_s.html#instructor-key",
+    "title": "Tidyverse Data Wrangling Practice",
+    "section": "Instructor Key",
+    "text": "Instructor Key\n\n\nShow the code\n# 1 select\n# 2 filter\n# 4 mutate\n# 5 arrange\n# 6 group_by\n# 7 count\n# 8 c(fbs_0, fbs_3)\n# 9 visit\n#10 left_join\n#11 rename\n#12 relocate\n#13 distinct\n#14 fbs_0\n#15 fbs_3\n#16 ppbs_0\n#17 age\n#18 max\n#20 fbs_0"
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html",
+    "href": "r-foundations/data_wrang_tasks.html",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "",
+    "text": "This worksheet focuses on more applied data wrangling tasks using tidyverse. The dataset is small, but the tasks reflect real workflows used in health and clinical research projects."
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#overview",
+    "href": "r-foundations/data_wrang_tasks.html#overview",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "",
+    "text": "This worksheet focuses on more applied data wrangling tasks using tidyverse. The dataset is small, but the tasks reflect real workflows used in health and clinical research projects."
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#packages",
+    "href": "r-foundations/data_wrang_tasks.html#packages",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "2 Packages",
+    "text": "2 Packages\n\nlibrary(tidyverse)\nlibrary(lubridate)\nlibrary(janitor)"
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#data",
+    "href": "r-foundations/data_wrang_tasks.html#data",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "3 Data",
+    "text": "3 Data\n\npatients &lt;- tibble(\n  patient_id = 1001:1010,\n  sex = c(\"Female\", \"Male\", \"Female\", \"Male\", \"Female\", \"Male\", \"Female\", \"Male\", \"Female\", \"Male\"),\n  age = c(24, 46, 31, 52, 28, 37, 41, 33, 26, 49),\n  district = c(\"Bareilly\", \"Lucknow\", \"Bareilly\", \"Agra\", \"Lucknow\", \"Bareilly\", \"Agra\", \"Lucknow\", \"Bareilly\", \"Agra\"),\n  visit_date = c(\"2026-01-05\", \"2026-01-07\", \"2026-01-09\", \"2026-01-11\", \"2026-01-14\", \"2026-01-15\", \"2026-01-20\", \"2026-01-21\", \"2026-01-23\", \"2026-01-25\"),\n  bmi = c(20.1, 27.8, 24.2, 31.4, 26.0, 25.2, 29.1, 23.7, 21.8, 32.5),\n  treatment = c(\"Diet\", \"Metformin\", \"Diet\", \"Insulin\", \"Metformin\", \"Diet\", \"Metformin\", \"Diet\", \"Diet\", \"Insulin\")\n)\n\nglucose_wide &lt;- tibble(\n  patient_id = 1001:1010,\n  fbs_0 = c(86, 112, 94, 138, 101, 109, 126, 98, 92, 144),\n  fbs_3 = c(84, 104, 91, 128, 97, 102, 118, 95, 89, 136),\n  ppbs_0 = c(118, 166, 132, 214, 156, 172, 201, 149, 128, 226),\n  ppbs_3 = c(112, 154, 126, 198, 148, 160, 186, 143, 121, 210)\n)\n\nhba1c &lt;- tibble(\n  patient_id = 1001:1010,\n  hba1c_baseline = c(5.3, 6.4, 5.8, 8.1, 6.0, 6.2, 7.1, 5.9, 5.5, 8.5),\n  hba1c_3m = c(5.2, 6.0, 5.6, 7.3, 5.7, 5.9, 6.6, 5.8, 5.3, 7.8)\n)"
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#task-1-clean-and-inspect",
+    "href": "r-foundations/data_wrang_tasks.html#task-1-clean-and-inspect",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "4 Task 1: Clean and inspect",
+    "text": "4 Task 1: Clean and inspect\nClean the data and prepare it for analysis.\n\nConvert visit_date to a date.\nApply clean_names().\nCheck structure and preview rows.\n\n\n# Write your code here"
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#task-2-join-files",
+    "href": "r-foundations/data_wrang_tasks.html#task-2-join-files",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "5 Task 2: Join files",
+    "text": "5 Task 2: Join files\nJoin patients, glucose_wide, and hba1c into one analysis dataset called analysis_df using patient_id.\n\n# Write your code here"
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#task-3-continuous-to-categorical",
+    "href": "r-foundations/data_wrang_tasks.html#task-3-continuous-to-categorical",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "6 Task 3: Continuous to categorical",
+    "text": "6 Task 3: Continuous to categorical\nUsing mutate() and case_when(), create the following variables in analysis_df.\n\nage_group: &lt;30, 30-39, 40+\nbmi_group: Normal, Overweight, Obese\nfbs_status: Normal, Prediabetes, Diabetes based on fbs_0\n\n\n# Write your code here"
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#task-4-change-scores",
+    "href": "r-foundations/data_wrang_tasks.html#task-4-change-scores",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "7 Task 4: Change scores",
+    "text": "7 Task 4: Change scores\nCreate these new variables.\n\nfbs_change = fbs_3 - fbs_0\nppbs_change = ppbs_3 - ppbs_0\nhba1c_change = hba1c_3m - hba1c_baseline\n\nThen create a flag called improved_hba1c for values below 0.\n\n# Write your code here"
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#task-5-wide-to-long-pivot",
+    "href": "r-foundations/data_wrang_tasks.html#task-5-wide-to-long-pivot",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "8 Task 5: Wide to long pivot",
+    "text": "8 Task 5: Wide to long pivot\nConvert the repeated glucose columns into a long dataset named glucose_long.\nExpected idea: - Keep patient_id - Gather fbs_0, fbs_3, ppbs_0, ppbs_3 - Separate test type and time point\n\n# Write your code here"
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#task-6-long-to-wide-pivot",
+    "href": "r-foundations/data_wrang_tasks.html#task-6-long-to-wide-pivot",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "9 Task 6: Long to wide pivot",
+    "text": "9 Task 6: Long to wide pivot\nFrom glucose_long, create a tidy wide table where each row is one patient-time combination and glucose types become separate columns.\nSuggested output columns: - patient_id - time - fbs - ppbs\n\n# Write your code here"
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#task-7-district-summary",
+    "href": "r-foundations/data_wrang_tasks.html#task-7-district-summary",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "10 Task 7: District summary",
+    "text": "10 Task 7: District summary\nCreate a district-wise summary with:\n\nn\nmean_age\nmean_bmi\nmean_fbs_0\nmean_ppbs_0\nmean_hba1c_change\n\nArrange from highest to lowest mean_fbs_0.\n\n# Write your code here"
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#task-8-high-risk-subset",
+    "href": "r-foundations/data_wrang_tasks.html#task-8-high-risk-subset",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "11 Task 8: High-risk subset",
+    "text": "11 Task 8: High-risk subset\nCreate high_risk_df for participants meeting any of these:\n\nfbs_0 &gt;= 126\nppbs_0 &gt;= 200\nbmi &gt;= 30\n\nKeep only the most relevant review columns.\n\n# Write your code here"
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#task-9-treatment-level-report",
+    "href": "r-foundations/data_wrang_tasks.html#task-9-treatment-level-report",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "12 Task 9: Treatment-level report",
+    "text": "12 Task 9: Treatment-level report\nFor each treatment group, calculate:\n\ntotal participants\ndiabetes count\nobesity count\nmean baseline FBS\nmean HbA1c change\n\n\n# Write your code here"
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#task-10-grouped-clinical-summary",
+    "href": "r-foundations/data_wrang_tasks.html#task-10-grouped-clinical-summary",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "13 Task 10: Grouped clinical summary",
+    "text": "13 Task 10: Grouped clinical summary\nCreate a summary by sex and age_group showing:\n\nn\nmean_bmi\nmean_fbs_0\nmean_ppbs_0\n\nRound numeric summaries to 1 decimal place.\n\n# Write your code here"
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#task-11-task-specific-filter-pipeline",
+    "href": "r-foundations/data_wrang_tasks.html#task-11-task-specific-filter-pipeline",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "14 Task 11: Task-specific filter pipeline",
+    "text": "14 Task 11: Task-specific filter pipeline\nBuild a single pipeline that returns only Bareilly participants who are either prediabetic or diabetic. Select a compact review table including demographics, treatment, and glucose values.\n\n# Write your code here"
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#task-12-dates-and-ordering",
+    "href": "r-foundations/data_wrang_tasks.html#task-12-dates-and-ordering",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "15 Task 12: Dates and ordering",
+    "text": "15 Task 12: Dates and ordering\nUsing the visit date:\n\nExtract month and week number.\nArrange from earliest to latest visit.\nCreate a dataset of the first visit in each district.\n\n\n# Write your code here"
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#task-13-missing-data-style-practice",
+    "href": "r-foundations/data_wrang_tasks.html#task-13-missing-data-style-practice",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "16 Task 13: Missing-data style practice",
+    "text": "16 Task 13: Missing-data style practice\nCreate a modified copy of analysis_df where you intentionally replace a few values with NA, then:\n\ncount missing values per column,\ndrop rows with missing fbs_0,\nreplace missing treatment with \"Unknown\".\n\n\n# Write your code here"
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#task-14-export-ready-final-summary",
+    "href": "r-foundations/data_wrang_tasks.html#task-14-export-ready-final-summary",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "17 Task 14: Export-ready final summary",
+    "text": "17 Task 14: Export-ready final summary\nCreate final_summary with one row per district and treatment containing:\n\nn\nmedian_fbs_0\nmedian_ppbs_0\nmean_bmi\nimproved_hba1c_n\n\n\n# Write your code here"
+  },
+  {
+    "objectID": "r-foundations/data_wrang_tasks.html#optional-extension",
+    "href": "r-foundations/data_wrang_tasks.html#optional-extension",
+    "title": "Advanced Tidyverse Wrangling Practice",
+    "section": "18 Optional extension",
+    "text": "18 Optional extension\nTry any of these extra tasks.\n\nWrite final_summary to CSV.\nPlot mean baseline FBS by district.\nIdentify the top 3 participants with the largest HbA1c reduction.\nReorder bmi_group as an ordered factor.\nUse relocate() to make derived variables appear together."
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#case-study-1-publication-figure",
+    "href": "plot-gallery/practical_application.html#case-study-1-publication-figure",
+    "title": "Practical Application",
+    "section": "Case Study 1: Publication Figure",
+    "text": "Case Study 1: Publication Figure\nScenario: Need publication-ready figure for medical journal\nRequirements: - High resolution (300 DPI) - Grayscale-friendly - Clear statistical annotations - Professional formatting"
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#publication-figure---code",
+    "href": "plot-gallery/practical_application.html#publication-figure---code",
+    "title": "Practical Application",
+    "section": "Publication Figure - Code",
+    "text": "Publication Figure - Code\n\n\nCode\n# Treatment effect with confidence intervals\nmodel &lt;- lm(SysBP_12m ~ TreatmentGroup + Age + BMI_0m + SysBP_0m,\n           data = health_data)\n\nlibrary(ggeffects)\neffects &lt;- ggpredict(model, terms = \"TreatmentGroup\")\n\np &lt;- plot(effects) +\n  labs(title = \"Treatment Effect on Systolic Blood Pressure\",\n       subtitle = \"Adjusted for age, BMI, and baseline BP\",\n       x = \"Treatment Group\",\n       y = \"Predicted Systolic BP (mmHg)\",\n       caption = \"Error bars: 95% confidence intervals. n=500 per group.\") +\n  theme_bw(base_size = 12) +\n  theme(\n    plot.title = element_text(face = \"bold\", hjust = 0),\n    panel.grid.minor = element_blank(),\n    legend.position = \"none\"\n  )\n\n# Save high-res\nggsave(\"figure1.tiff\", p, width = 7, height = 5, dpi = 300)\nggsave(\"figure1.eps\", p, width = 7, height = 5, device = cairo_ps)"
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#case-study-2-executive-dashboard",
+    "href": "plot-gallery/practical_application.html#case-study-2-executive-dashboard",
+    "title": "Practical Application",
+    "section": "Case Study 2: Executive Dashboard",
+    "text": "Case Study 2: Executive Dashboard\nScenario: Monthly report for C-suite\nRequirements: - Key metrics at a glance - Trend over time - Regional breakdown - Action items highlighted"
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#executive-dashboard-structure",
+    "href": "plot-gallery/practical_application.html#executive-dashboard-structure",
+    "title": "Practical Application",
+    "section": "Executive Dashboard Structure",
+    "text": "Executive Dashboard Structure\n\n\nCode\n---\ntitle: \"Q4 2024 Health Outcomes\"\noutput:\n  flexdashboard::flex_dashboard:\n    theme: cosmo\n---\n\n# Executive Summary {data-icon=\"fa-dashboard\"}\n\n## Row {data-height=150}\n\n### Total Patients\nvalueBox(2500, icon = \"fa-users\", color = \"primary\")\n\n### Avg BP Reduction  \nvalueBox(-15.3, caption = \"mmHg\", icon = \"fa-arrow-down\",\n        color = \"success\")\n\n### Target Achievement\ngauge(87, min = 0, max = 100, symbol = \"%\",\n     gaugeSectors(success = c(80, 100), warning = c(60, 80),\n                 danger = c(0, 60)))\n\n## Row\n\n### Trend Over Time\n(plot showing quarterly BP trends)\n\n### Regional Heatmap\n(choropleth of outcomes by region)"
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#case-study-3-exploratory-analysis-report",
+    "href": "plot-gallery/practical_application.html#case-study-3-exploratory-analysis-report",
+    "title": "Practical Application",
+    "section": "Case Study 3: Exploratory Analysis Report",
+    "text": "Case Study 3: Exploratory Analysis Report\nScenario: Initial data exploration for research team\nRequirements: - Comprehensive EDA - Identify patterns - Flag data quality issues - Generate hypotheses"
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#eda-report-template",
+    "href": "plot-gallery/practical_application.html#eda-report-template",
+    "title": "Practical Application",
+    "section": "EDA Report Template",
+    "text": "EDA Report Template\n\n\nCode\n---\ntitle: \"Exploratory Data Analysis: BP Study\"\noutput:\n  html_document:\n    toc: true\n    toc_float: true\n    code_folding: hide\n---\n\n# Data Overview\n- Summary statistics\n- Missing data patterns\n- Outlier detection\n\n# Univariate Analysis\n- Distribution of each variable\n- Histograms, density plots\n\n# Bivariate Analysis\n- Correlation matrix\n- Key relationships\n\n# Multivariate Patterns\n- PCA or t-SNE\n- Clustering analysis\n\n# Data Quality Issues\n- Missing data by group\n- Potential errors\n- Recommendations"
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#case-study-4-interactive-web-app",
+    "href": "plot-gallery/practical_application.html#case-study-4-interactive-web-app",
+    "title": "Practical Application",
+    "section": "Case Study 4: Interactive Web App",
+    "text": "Case Study 4: Interactive Web App\nScenario: Tool for clinicians to explore patient data\nRequirements: - Filter by patient characteristics - Show similar patients - Display trends - Export reports"
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#clinician-tool---shiny",
+    "href": "plot-gallery/practical_application.html#clinician-tool---shiny",
+    "title": "Practical Application",
+    "section": "Clinician Tool - Shiny",
+    "text": "Clinician Tool - Shiny\n\n\nCode\nui &lt;- fluidPage(\n  titlePanel(\"Patient Explorer\"),\n  sidebarLayout(\n    sidebarPanel(\n      textInput(\"patientID\", \"Enter Patient ID:\"),\n      selectInput(\"metric\", \"Compare:\",\n                 choices = c(\"BP\", \"Cholesterol\", \"BMI\")),\n      actionButton(\"find\", \"Find Similar Patients\")\n    ),\n    mainPanel(\n      tabsetPanel(\n        tabPanel(\"Patient Profile\",\n                valueBoxOutput(\"currentBP\"),\n                plotOutput(\"patientTrend\")),\n        tabPanel(\"Similar Patients\",\n                plotOutput(\"similarScatter\"),\n                DTOutput(\"similarTable\")),\n        tabPanel(\"Predictions\",\n                plotOutput(\"forecastPlot\"))\n      )\n    )\n  )\n)\n\nserver &lt;- function(input, output) {\n  # Reactive logic for patient comparison\n  # Machine learning for similarity\n  # Visualization of results\n}"
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#case-study-5-automated-reporting",
+    "href": "plot-gallery/practical_application.html#case-study-5-automated-reporting",
+    "title": "Practical Application",
+    "section": "Case Study 5: Automated Reporting",
+    "text": "Case Study 5: Automated Reporting\nScenario: Weekly reports for 50+ clinic sites\nRequirements: - Automated generation - Site-specific content - Consistent formatting - Email distribution"
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#parameterized-reports",
+    "href": "plot-gallery/practical_application.html#parameterized-reports",
+    "title": "Practical Application",
+    "section": "Parameterized Reports",
+    "text": "Parameterized Reports\n\n\nCode\n---\ntitle: \"Weekly Report: `r params$site_name`\"\noutput: html_document\nparams:\n  site_name: \"North Clinic\"\n  week_start: \"2024-01-01\"\n  week_end: \"2024-01-07\"\n---\n\n\n# Filter data for this site\nsite_data &lt;- health_data %&gt;%\n  filter(Site == params$site_name,\n        Date &gt;= params$week_start,\n        Date &lt;= params$week_end)\n\n# Generate site-specific visualizations"
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#workflow-best-practices",
+    "href": "plot-gallery/practical_application.html#workflow-best-practices",
+    "title": "Practical Application",
+    "section": "Workflow Best Practices",
+    "text": "Workflow Best Practices\nProject Organization:\nproject/\n├── data/\n│   ├── raw/\n│   └── processed/\n├── R/\n│   ├── 01_cleaning.R\n│   ├── 02_analysis.R\n│   └── functions.R\n├── output/\n│   ├── figures/\n│   └── tables/\n├── reports/\n│   └── analysis.Rmd\n└── README.md\nVersion Control: - Use Git for code - Document changes - Reproducible workflows"
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#code-quality-checklist",
+    "href": "plot-gallery/practical_application.html#code-quality-checklist",
+    "title": "Practical Application",
+    "section": "Code Quality Checklist",
+    "text": "Code Quality Checklist\nBefore Sharing:\n\nRemove hardcoded paths\nAdd comments to complex code\nCheck for errors/warnings\nTest with subset of data\nVerify output matches expectations\nInclude session info (sessionInfo())\nDocument package versions (renv)"
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#summary",
+    "href": "plot-gallery/practical_application.html#summary",
+    "title": "Practical Application",
+    "section": "Summary",
+    "text": "Summary\nReal-world skills:\n\nPublication figures - high-quality, standards-compliant\nExecutive dashboards - key metrics, trends\nEDA reports - comprehensive exploration\nInteractive tools - Shiny apps for users\nAutomated reporting - scale insights\n\nRemember: - Know your audience - Tell a clear story - Make it reproducible - Test thoroughly"
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#congratulations",
+    "href": "plot-gallery/practical_application.html#congratulations",
+    "title": "Practical Application",
+    "section": "Congratulations! 🎉",
+    "text": "Congratulations! 🎉\nYou’ve completed all levels:\n\n✓ Foundation\n✓ Basic (4 data types)\n✓ Intermediate (6 techniques)\n✓ Advanced (7 specialized topics)\n✓ Practical application\n\nYou can now: - Choose appropriate visualizations - Create publication-quality figures - Build interactive dashboards - Apply advanced techniques - Handle real-world scenarios\nKeep practicing and exploring!"
+  }
+]
