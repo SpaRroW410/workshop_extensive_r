@@ -54,15 +54,6 @@ chisq.test(table(data$treatment, data$outcome))
 
 ### Regression Analysis
 
-#### Linear Regression
-
-```{r}
-# Linear regression
-model <- lm(blood_pressure ~ age + treatment, data = data)
-summary(model)
-
-# Using gtsummary for nice tables
-tbl_regression(model)
-```
+Regression modeling now has its own dedicated module — see **[Regression Analysis](regression.qmd)** for simple/multiple regression, diagnostics, and logistic regression.
 
 :::

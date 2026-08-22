@@ -1,0 +1,112 @@
+---
+title: "Regression Analysis"
+format:
+  html:
+    code-copy: true
+    theme: cosmo
+    toc: true
+    lightbox: auto
+---
+
+Regression models describe and quantify the relationship between an outcome and one or more predictors. This module builds up in tiers — start with a single predictor, then add predictors, then move on to diagnostics and logistic regression.
+
+## Simple Linear Regression
+
+```{r}
+library(tidyverse)
+
+data <- data.frame(
+  age = rnorm(100, 50, 10),
+  blood_pressure = rnorm(100, 120, 15),
+  treatment = sample(c("A", "B"), 100, replace = TRUE)
+)
+
+model_simple <- lm(blood_pressure ~ age, data = data)
+summary(model_simple)
+```
+
+```{r}
+ggplot(data, aes(x = age, y = blood_pressure)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(
+    title = "Blood Pressure vs Age",
+    x = "Age", y = "Blood Pressure"
+  )
+```
+
+`geom_smooth(method = "lm")` draws the same fitted line as `lm()`, with a shaded confidence band around it.
+
+::: {.content-visible when-profile="moderate"}
+
+## Multiple Regression
+
+Adding more predictors lets the model account for other sources of variation at the same time.
+
+```{r}
+library(gtsummary)
+
+model <- lm(blood_pressure ~ age + treatment, data = data)
+summary(model)
+
+# Using gtsummary for a publication-ready table
+tbl_regression(model)
+```
+
+Each coefficient is now interpreted "holding the other predictors constant" — the `treatment` effect is adjusted for `age`, and vice versa.
+
+:::
+
+::: {.content-visible when-profile="advanced"}
+
+## Multiple Regression
+
+Adding more predictors lets the model account for other sources of variation at the same time.
+
+```{r}
+library(gtsummary)
+
+model <- lm(blood_pressure ~ age + treatment, data = data)
+summary(model)
+
+# Using gtsummary for a publication-ready table
+tbl_regression(model)
+```
+
+Each coefficient is now interpreted "holding the other predictors constant" — the `treatment` effect is adjusted for `age`, and vice versa.
+
+## Regression Diagnostics
+
+A fitted model is only trustworthy once its assumptions have been checked.
+
+```{r}
+par(mfrow = c(2, 2))
+plot(model)
+```
+
+```{r}
+# Residuals vs fitted, and a normal Q-Q check
+qqnorm(residuals(model))
+qqline(residuals(model), col = "red")
+```
+
+Watch for: non-random patterns in residuals-vs-fitted (non-linearity), points far off the Q-Q line (non-normal residuals), and high-leverage points in the residuals-vs-leverage panel.
+
+## Logistic Regression
+
+When the outcome is binary rather than continuous, use `glm()` with a binomial family instead of `lm()`.
+
+```{r}
+data$outcome <- sample(c("Improved", "Not Improved"), 100, replace = TRUE)
+data$outcome_bin <- ifelse(data$outcome == "Improved", 1, 0)
+
+model_log <- glm(outcome_bin ~ age + treatment, data = data, family = binomial)
+summary(model_log)
+
+# Odds ratios instead of raw log-odds
+tbl_regression(model_log, exponentiate = TRUE)
+```
+
+`exponentiate = TRUE` converts the log-odds coefficients into odds ratios, which are usually easier to report and interpret.
+
+:::

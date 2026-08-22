@@ -100,3 +100,64 @@ qqline(p$sbp_in_mm_hg, col = "red")
 These examples show the R workflow for medical data: import, clean, summarize, test, and visualize.
 
 :::
+
+::: {.content-visible when-profile="advanced"}
+
+## Automating Analysis with Loops
+
+Real datasets often need the same test or summary repeated across many variables. Loops (and their `apply`/`purrr` equivalents) let you do that without copy-pasting code.
+
+### `for` loops
+
+```{r}
+vars <- c("age_of_participants", "sbp_in_mm_hg", "dbp_in_mm_hg")
+
+for (v in vars) {
+  cat("Summary of", v, ":\n")
+  print(summary(p[[v]]))
+  cat("\n")
+}
+```
+
+### `while` loops
+
+```{r}
+# Halve a sample size threshold until it drops below 10
+n <- nrow(p)
+threshold <- n
+
+while (threshold > 10) {
+  threshold <- threshold %/% 2
+}
+
+cat("Final threshold:", threshold, "\n")
+```
+
+### `repeat` loops
+
+```{r}
+# repeat runs until an explicit break condition is met
+count <- 0
+repeat {
+  count <- count + 1
+  if (count >= 5) break
+}
+count
+```
+
+### Vectorized alternatives: `sapply()` and `purrr::map()`
+
+Loops are explicit and easy to read, but for simple per-column operations the `apply` family or `purrr::map()` are usually shorter and avoid manual bookkeeping:
+
+```{r}
+library(purrr)
+
+# Same summaries as the for-loop above, without the explicit loop
+sapply(p[vars], mean, na.rm = TRUE)
+
+map_dbl(p[vars], ~ sd(.x, na.rm = TRUE))
+```
+
+Use a `for` loop when each iteration has side effects (printing, saving files, building up a report) or when the logic is easier to follow step-by-step; reach for `sapply()`/`map()` when you just need one result per element.
+
+:::
