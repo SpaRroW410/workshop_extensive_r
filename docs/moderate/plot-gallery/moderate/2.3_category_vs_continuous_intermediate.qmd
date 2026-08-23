@@ -1,0 +1,727 @@
+---
+title: "Category vs. Continuous - INTERMEDIATE"
+subtitle: "Advanced Group Comparisons"
+format:
+  revealjs:
+    theme: serif
+    css: ../../assets/slide_deck.css
+    include-after-body: footer.html
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    code-fold: true
+    chalkboard: true
+    preview-links: true
+    center: true
+    zoom: true
+---
+
+# Category vs. Continuous {.center}
+
+## What We'll Learn - Intermediate
+
+::: {.columns}
+::: {.column width="50%"}
+**Beyond Basic Box Plots:**
+
+- Violin plots (distribution shape)
+- Ridgeline plots (multiple distributions)
+- Bee swarm plots (all data points)
+- Raincloud plots (comprehensive view)
+- Enhanced grouped/stacked bars
+:::
+
+::: {.column width="50%"}
+**Analytical Goals:**
+
+- 🟡 **Distribution** - See full shapes
+- 🟢 **Ranking** - Compare multiple groups
+- ⚫ **Correlation** - Patterns across categories
+- 🔴 **Part of Whole** - Compositional analysis
+:::
+:::
+
+## Setup Code
+
+```{r}
+#| echo: true
+#| message: false
+
+# Load required packages
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(ggridges)  # For ridgeline plots
+library(ggbeeswarm) # For bee swarm plots
+
+# Load dataset
+health_data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+
+# Create custom theme
+theme_custom <- function() {
+  theme_minimal() +
+  theme(
+    text = element_text(family = "serif", size = 12),
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    axis.title = element_text(size = 11),
+    legend.position = "bottom"
+  )
+}
+```
+
+## Violin Plot - Code
+
+::: {style="font-size: 0.85em;"}
+**Purpose:** Show full distribution shape within each category
+
+**Goal:** 🟡 Distribution
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Create violin plot: BMI distribution by Gender
+ggplot(health_data, aes(x = Gender, y = BMI, fill = Gender)) +
+  geom_violin(trim = FALSE,        # Don't trim tails
+              alpha = 0.7) +       # Transparency
+  geom_boxplot(width = 0.1,       # Add boxplot inside
+               fill = "white",
+               outlier.shape = NA) + # Hide outliers (shown in violin)
+  stat_summary(fun = mean,         # Add mean point
+               geom = "point",
+               shape = 18,
+               size = 3,
+               color = "red") +
+  labs(title = "BMI Distribution by Gender",
+       subtitle = "Violin plot shows full distribution shape",
+       x = "Gender",
+       y = "Body Mass Index (kg/m²)") +
+  scale_fill_manual(values = c("Male" = "#4DBBD5", "Female" = "#E64B35")) +
+  theme_custom() +
+  theme(legend.position = "none")  # Remove legend (redundant with x-axis)
+```
+:::
+
+## Violin Plot - Output
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 5
+
+# Create violin plot
+ggplot(health_data, aes(x = Gender, y = BMI, fill = Gender)) +
+  geom_violin(trim = FALSE, alpha = 0.7) +
+  geom_boxplot(width = 0.1, fill = "white", outlier.shape = NA) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 3, color = "red") +
+  labs(title = "BMI Distribution by Gender",
+       subtitle = "Violin plot shows full distribution shape",
+       x = "Gender",
+       y = "Body Mass Index (kg/m²)") +
+  scale_fill_manual(values = c("Male" = "#4DBBD5", "Female" = "#E64B35")) +
+  theme_custom() +
+  theme(legend.position = "none")
+```
+
+## Interpreting Violin Plots
+
+::: {.columns}
+::: {.column width="50%"}
+**What to Look For:**
+
+- **Width** = Density of data
+- **Wider sections** = More observations
+- **Narrower sections** = Fewer observations
+- **Shape** reveals distribution pattern
+
+**Compare shapes:**
+
+- Symmetry vs. skewness
+- Single peak vs. multiple peaks
+- Spread differences
+:::
+
+::: {.column width="50%"}
+**In Our Example:**
+
+- Both genders show similar BMI distributions
+- Slight right skew (tail toward higher BMI)
+- Males show slightly wider spread
+- Boxplot inside shows quartiles
+- Red diamond = mean
+- Most data concentrated in 25-30 range
+:::
+:::
+
+## Ridgeline Plot - Code
+
+::: {style="font-size: 0.85em;"}
+**Purpose:** Compare distributions across many categories
+
+**Goal:** 🟡 Distribution + 🟢 Ranking
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Create ridgeline plot: Age distribution by Exercise Frequency
+health_data %>%
+  mutate(ExerciseFreq = factor(ExerciseFreq,
+                              levels = c("5-7 days/week", "3-4 days/week",
+                                       "1-2 days/week", "Never"))) %>%
+  ggplot(aes(x = Age, y = ExerciseFreq, fill = ExerciseFreq)) +
+  geom_density_ridges(alpha = 0.7,        # Transparency
+                     scale = 1.5,        # Overlap amount
+                     rel_min_height = 0.01) + # Trim small tails
+  labs(title = "Age Distribution by Exercise Frequency",
+       subtitle = "Ridgeline plot shows overlapping distributions",
+       x = "Age (years)",
+       y = "Exercise Frequency") +
+  scale_fill_viridis_d(option = "plasma") +  # Color-blind friendly
+  theme_custom() +
+  theme(legend.position = "none")
+```
+:::
+
+## Ridgeline Plot - Output
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 6
+
+library(ggridges)
+
+health_data %>%
+  mutate(ExerciseFreq = factor(ExerciseFreq,
+                              levels = c("5-7 days/week", "3-4 days/week",
+                                       "1-2 days/week", "Never"))) %>%
+  ggplot(aes(x = Age, y = ExerciseFreq, fill = ExerciseFreq)) +
+  geom_density_ridges(alpha = 0.7, scale = 1.5, rel_min_height = 0.01) +
+  labs(title = "Age Distribution by Exercise Frequency",
+       subtitle = "Ridgeline plot shows overlapping distributions",
+       x = "Age (years)",
+       y = "Exercise Frequency") +
+  scale_fill_viridis_d(option = "plasma") +
+  theme_custom() +
+  theme(legend.position = "none")
+```
+
+## Interpreting Ridgeline Plots
+
+**Key Observations:**
+
+::: {.incremental}
+1. **People who never exercise tend to be older**
+   - Peak around 65-70 years
+
+2. **More frequent exercisers tend to be younger**
+   - "5-7 days/week" peaks around 35-40 years
+
+3. **All groups show wide age ranges**
+   - Exercise happens at all ages
+   - But frequency patterns differ
+
+4. **The overlap shows transitions**
+   - Exercise habits change across life stages
+:::
+
+**When to use:** Comparing 3+ distributions, especially when order matters
+
+## Bee Swarm Plot - Code
+
+::: {style="font-size: 0.8em;"}
+**Purpose:** Show every individual data point without overlap
+
+**Goal:** 🟡 Distribution + individual observations
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Create bee swarm plot: Cholesterol by Smoking Status
+health_data %>%
+  filter(!is.na(SmokingStatus), !is.na(Cholesterol)) %>%
+  mutate(SmokingStatus = factor(SmokingStatus,
+                               levels = c("Never", "Former", "Current"))) %>%
+  ggplot(aes(x = SmokingStatus, y = Cholesterol, color = SmokingStatus)) +
+  geom_quasirandom(alpha = 0.5,      # Transparency for overlaps
+                  size = 2) +        # Point size
+  stat_summary(fun = median,         # Add median line
+               geom = "crossbar",
+               width = 0.5,
+               color = "black",
+               linewidth = 0.8) +
+  stat_summary(fun.data = mean_se,   # Add mean with error bars
+               geom = "pointrange",
+               color = "red",
+               size = 0.8) +
+  labs(title = "Cholesterol Levels by Smoking Status",
+       subtitle = "Each point is one patient | Black bar = median | Red = mean ± SE",
+       x = "Smoking Status",
+       y = "Total Cholesterol (mg/dL)") +
+  scale_color_manual(values = c("Never" = "#00A087", "Former" = "#3C5488", 
+                               "Current" = "#DC0000")) +
+  theme_custom() +
+  theme(legend.position = "none")
+```
+:::
+
+## Bee Swarm Plot - Output
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 6
+#| warning: false
+
+library(ggbeeswarm)
+
+health_data %>%
+  filter(!is.na(SmokingStatus), !is.na(Cholesterol)) %>%
+  mutate(SmokingStatus = factor(SmokingStatus,
+                               levels = c("Never", "Former", "Current"))) %>%
+  ggplot(aes(x = SmokingStatus, y = Cholesterol, color = SmokingStatus)) +
+  geom_quasirandom(alpha = 0.5, size = 2) +
+  stat_summary(fun = median, geom = "crossbar", width = 0.5, 
+               color = "black", linewidth = 0.8) +
+  stat_summary(fun.data = mean_se, geom = "pointrange", 
+               color = "red", size = 0.8) +
+  labs(title = "Cholesterol Levels by Smoking Status",
+       subtitle = "Each point is one patient | Black bar = median | Red = mean ± SE",
+       x = "Smoking Status",
+       y = "Total Cholesterol (mg/dL)") +
+  scale_color_manual(values = c("Never" = "#00A087", "Former" = "#3C5488", 
+                               "Current" = "#DC0000")) +
+  theme_custom() +
+  theme(legend.position = "none")
+```
+
+## Interpreting Bee Swarm Plots
+
+::: {.columns style="font-size: 0.9em;"}
+::: {.column width="50%"}
+**Advantages:**
+
+- **See every data point** - no data hiding
+- **Identify outliers** easily
+- **Compare distributions** visually
+- **Show sample sizes** (more points = more data)
+- **Patterns emerge** from cloud shapes
+
+**When to use:**
+
+- Small to medium datasets (n < 500 per group)
+- Want to show individual variation
+- Need to identify specific outliers
+:::
+
+::: {.column width="50%"}
+**Our Findings:**
+
+1. **Current smokers** have slightly higher cholesterol
+   - Median around 200 mg/dL
+
+2. **Former smokers** show wide variation
+   - Suggests health improvements vary by person
+
+3. **Several high outliers** in all groups
+   - These patients need attention
+
+4. **Sample sizes visible**
+   - "Never" has most patients
+   - "Current" has fewest
+:::
+:::
+
+## Raincloud Plot - Code
+
+::: {style="font-size: 0.75em;"}
+**Purpose:** Comprehensive view - combines violin + points + box
+
+**Goal:** 🟡 Distribution (most complete visualization)
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Create raincloud plot: Blood Pressure by Treatment Group
+library(ggdist)  # For stat_halfeye
+
+health_data %>%
+  filter(!is.na(TreatmentGroup), !is.na(SysBP_6m)) %>%
+  ggplot(aes(x = TreatmentGroup, y = SysBP_6m, fill = TreatmentGroup)) +
+  # Half violin (cloud)
+  stat_halfeye(adjust = 0.5, width = 0.6, .width = 0, 
+               justification = -0.2, point_colour = NA) +
+  # Box plot
+  geom_boxplot(width = 0.15, outlier.shape = NA, alpha = 0.5,
+               position = position_nudge(x = -0.1)) +
+  # Individual points (rain)
+  geom_point(aes(color = TreatmentGroup), size = 1.3, alpha = 0.3,
+             position = position_jitter(seed = 1, width = 0.05,
+                                       height = 0)) +
+  # Add mean point
+  stat_summary(fun = mean, geom = "point", shape = 18, 
+               size = 4, color = "black") +
+  coord_flip() +  # Flip to horizontal
+  labs(title = "Systolic Blood Pressure at 6 Months by Treatment Group",
+       subtitle = "Raincloud plot: density (cloud) + boxplot + points (rain)",
+       x = "Treatment Group",
+       y = "Systolic Blood Pressure (mmHg)") +
+  scale_fill_brewer(palette = "Set2") +
+  scale_color_brewer(palette = "Set2") +
+  theme_custom() +
+  theme(legend.position = "none")
+```
+:::
+
+## Raincloud Plot - Output
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+#| warning: false
+#| message: false
+
+library(ggdist)
+
+health_data %>%
+  filter(!is.na(TreatmentGroup), !is.na(SysBP_6m)) %>%
+  ggplot(aes(x = TreatmentGroup, y = SysBP_6m, fill = TreatmentGroup)) +
+  stat_halfeye(adjust = 0.5, width = 0.6, .width = 0, 
+               justification = -0.2, point_colour = NA) +
+  geom_boxplot(width = 0.15, outlier.shape = NA, alpha = 0.5,
+               position = position_nudge(x = -0.1)) +
+  geom_point(aes(color = TreatmentGroup), size = 1.3, alpha = 0.3,
+             position = position_jitter(seed = 1, width = 0.05, height = 0)) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  coord_flip() +
+  labs(title = "Systolic Blood Pressure at 6 Months by Treatment Group",
+       subtitle = "Raincloud plot: density (cloud) + boxplot + points (rain)",
+       x = "Treatment Group",
+       y = "Systolic Blood Pressure (mmHg)") +
+  scale_fill_brewer(palette = "Set2") +
+  scale_color_brewer(palette = "Set2") +
+  theme_custom() +
+  theme(legend.position = "none")
+```
+
+## Interpreting Raincloud Plots
+
+::: {style="font-size: 0.85em;"}
+**Three Components:**
+
+1. **Cloud (density curve)** - Shows distribution shape
+2. **Box plot** - Shows quartiles and median
+3. **Rain (points)** - Shows actual data
+
+**What We See:**
+
+::: {.incremental}
+- **Control group** has highest BP (expected)
+- **Treatment groups** show reduced BP
+- **All groups** show similar spread (IQR)
+- **Some patients** don't respond well (upper outliers in treatment groups)
+- **Distribution shapes** are roughly similar (slightly right-skewed)
+- **Sample sizes** visible from number of points
+:::
+
+**Advantage:** Most informative single plot for comparing distributions
+:::
+
+## Enhanced Grouped Bar Chart - Code
+
+::: {style="font-size: 0.8em;"}
+**Purpose:** Compare means across two categorical variables
+
+**Goal:** 🟢 Ranking + ⚫ Correlation
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Calculate summary statistics
+summary_data <- health_data %>%
+  filter(!is.na(Gender), !is.na(ExerciseFreq), !is.na(BMI)) %>%
+  group_by(Gender, ExerciseFreq) %>%
+  summarise(
+    mean_bmi = mean(BMI, na.rm = TRUE),
+    se_bmi = sd(BMI, na.rm = TRUE) / sqrt(n()),
+    n = n(),
+    .groups = "drop"
+  ) %>%
+  mutate(ExerciseFreq = factor(ExerciseFreq,
+                              levels = c("Never", "1-2 days/week",
+                                       "3-4 days/week", "5-7 days/week")))
+
+# Create grouped bar chart with error bars and sample sizes
+ggplot(summary_data, aes(x = ExerciseFreq, y = mean_bmi, fill = Gender)) +
+  geom_col(position = position_dodge(0.9), alpha = 0.8) +
+  geom_errorbar(aes(ymin = mean_bmi - se_bmi, ymax = mean_bmi + se_bmi),
+                position = position_dodge(0.9), width = 0.25) +
+  geom_text(aes(label = paste0("n=", n)), 
+            position = position_dodge(0.9), vjust = -1.5, size = 3) +
+  labs(title = "Mean BMI by Exercise Frequency and Gender",
+       subtitle = "Error bars show ± 1 SE | Numbers show sample size",
+       x = "Exercise Frequency",
+       y = "Mean BMI (kg/m²)",
+       fill = "Gender") +
+  scale_fill_manual(values = c("Male" = "#4DBBD5", "Female" = "#E64B35")) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  theme_custom()
+```
+:::
+
+## Enhanced Grouped Bar Chart - Output
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+#| warning: false
+
+summary_data <- health_data %>%
+  filter(!is.na(Gender), !is.na(ExerciseFreq), !is.na(BMI)) %>%
+  group_by(Gender, ExerciseFreq) %>%
+  summarise(
+    mean_bmi = mean(BMI, na.rm = TRUE),
+    se_bmi = sd(BMI, na.rm = TRUE) / sqrt(n()),
+    n = n(),
+    .groups = "drop"
+  ) %>%
+  mutate(ExerciseFreq = factor(ExerciseFreq,
+                              levels = c("Never", "1-2 days/week",
+                                       "3-4 days/week", "5-7 days/week")))
+
+ggplot(summary_data, aes(x = ExerciseFreq, y = mean_bmi, fill = Gender)) +
+  geom_col(position = position_dodge(0.9), alpha = 0.8) +
+  geom_errorbar(aes(ymin = mean_bmi - se_bmi, ymax = mean_bmi + se_bmi),
+                position = position_dodge(0.9), width = 0.25) +
+  geom_text(aes(label = paste0("n=", n)), 
+            position = position_dodge(0.9), vjust = -1.5, size = 3) +
+  labs(title = "Mean BMI by Exercise Frequency and Gender",
+       subtitle = "Error bars show ± 1 SE | Numbers show sample size",
+       x = "Exercise Frequency",
+       y = "Mean BMI (kg/m²)",
+       fill = "Gender") +
+  scale_fill_manual(values = c("Male" = "#4DBBD5", "Female" = "#E64B35")) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  theme_custom()
+```
+
+## Interpreting Enhanced Grouped Bars
+
+::: {style="font-size: 0.9em;"}
+**Key Observations:**
+
+::: {.incremental}
+1. **Clear inverse relationship** - More exercise → Lower BMI
+   - Consistent in both genders
+
+2. **Gender differences** are small but consistent
+   - Males slightly higher BMI across all groups
+   - Error bars overlap → differences may not be significant
+
+3. **Sample sizes matter**
+   - "Never" group has largest n
+   - "5-7 days/week" has smallest n
+   - Affects confidence in estimates
+
+4. **Error bars show uncertainty**
+   - Wider bars = more variability
+   - Consider both mean AND uncertainty when interpreting
+:::
+:::
+
+## Faceted Box Plots - Code
+
+::: {style="font-size: 0.85em;"}
+**Purpose:** Compare distributions across multiple dimensions
+
+**Goal:** 🟡 Distribution + ⚫ Patterns
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Create faceted box plots: Cholesterol by Region and Gender
+health_data %>%
+  filter(!is.na(Region), !is.na(Gender), !is.na(Cholesterol)) %>%
+  ggplot(aes(x = Gender, y = Cholesterol, fill = Gender)) +
+  geom_boxplot(alpha = 0.7, outlier.alpha = 0.5) +
+  stat_summary(fun = mean, geom = "point", shape = 18, 
+               size = 3, color = "red") +
+  facet_wrap(~ Region, ncol = 2) +  # Split by Region
+  labs(title = "Cholesterol Levels by Gender Across Regions",
+       subtitle = "Faceted box plots reveal regional patterns | Red diamond = mean",
+       x = "Gender",
+       y = "Total Cholesterol (mg/dL)") +
+  scale_fill_manual(values = c("Male" = "#4DBBD5", "Female" = "#E64B35")) +
+  theme_custom() +
+  theme(legend.position = "none",
+        strip.background = element_rect(fill = "gray90", color = "black"),
+        strip.text = element_text(face = "bold", size = 11))
+```
+:::
+
+## Faceted Box Plots - Output
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 7
+
+health_data %>%
+  filter(!is.na(Region), !is.na(Gender), !is.na(Cholesterol)) %>%
+  ggplot(aes(x = Gender, y = Cholesterol, fill = Gender)) +
+  geom_boxplot(alpha = 0.7, outlier.alpha = 0.5) +
+  stat_summary(fun = mean, geom = "point", shape = 18, 
+               size = 3, color = "red") +
+  facet_wrap(~ Region, ncol = 2) +
+  labs(title = "Cholesterol Levels by Gender Across Regions",
+       subtitle = "Faceted box plots reveal regional patterns | Red diamond = mean",
+       x = "Gender",
+       y = "Total Cholesterol (mg/dL)") +
+  scale_fill_manual(values = c("Male" = "#4DBBD5", "Female" = "#E64B35")) +
+  theme_custom() +
+  theme(legend.position = "none",
+        strip.background = element_rect(fill = "gray90", color = "black"),
+        strip.text = element_text(face = "bold", size = 11))
+```
+
+## Interpreting Faceted Box Plots
+
+::: {style="font-size: 0.9em;"}
+**Regional Patterns:**
+
+::: {.incremental}
+1. **East region** shows highest cholesterol overall
+   - Both genders affected
+
+2. **West region** shows lowest levels
+   - Possible dietary or lifestyle differences?
+
+3. **Gender differences consistent** across all regions
+   - Males tend to have slightly higher values
+
+4. **Outliers present** in all regions
+   - Need follow-up investigation
+
+5. **Regional variation > Gender variation**
+   - Geography matters more than gender for cholesterol
+:::
+
+**When to use facets:** When you have 3+ categorical variables to compare
+:::
+
+## Chart Selection Guide
+
+::: {style="font-size: 0.85em;"}
+| Chart Type | Goal | Best When | Sample Size |
+|------------|------|-----------|-------------|
+| **Violin Plot** | 🟡 Distribution shape | 2-5 groups, want to see shape | 50+ per group |
+| **Ridgeline Plot** | 🟡 Distribution + 🟢 Ranking | 3+ groups, order matters | 30+ per group |
+| **Bee Swarm** | 🟡 + individual points | Show every observation | < 500 per group |
+| **Raincloud** | 🟡 Comprehensive view | Publication-quality figure | 50+ per group |
+| **Grouped Bar** | 🟢 Ranking + ⚫ Comparison | Two categorical variables | Any size |
+| **Faceted Box** | 🟡 Distribution + patterns | 3+ categorical variables | 20+ per group |
+
+**Pro Tip:** Start with violin or raincloud for exploration, then choose based on audience needs
+:::
+
+## Common Mistakes to Avoid
+
+::: {.incremental style="font-size: 0.9em;"}
+1. **Too many groups** in one plot
+   - Solution: Use facets or filter to top groups
+
+2. **Ignoring sample size differences**
+   - Solution: Show n on plot or use error bars
+
+3. **Comparing distributions without uncertainty**
+   - Solution: Add confidence intervals or error bars
+
+4. **Bee swarms with too many points**
+   - Solution: Use violin or density if n > 500
+
+5. **Not ordering categories logically**
+   - Solution: Order by median, mean, or natural order
+
+6. **Forgetting about color-blind audiences**
+   - Solution: Use color-blind safe palettes (viridis, ColorBrewer)
+:::
+
+## Missing Data Handling
+
+::: {style="font-size: 0.9em;"}
+**Always check for missing data:**
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Check missing data by group
+health_data %>%
+  group_by(Gender, ExerciseFreq) %>%
+  summarise(
+    total = n(),
+    missing_bmi = sum(is.na(BMI)),
+    pct_missing = round(100 * missing_bmi / total, 1)
+  )
+```
+
+**Options for handling:**
+
+1. **Filter complete cases** - `filter(!is.na(variable))`
+2. **Show as separate category** - useful if missing is informative
+3. **Note in subtitle** - "Excludes N missing observations"
+4. **Investigate patterns** - Is missingness related to outcome?
+:::
+
+## Practice Exercise
+
+**Your Turn:**
+
+1. Create a violin plot of `BloodSugar_6m` by `TreatmentGroup`
+2. Add a ridgeline plot showing `Age` distribution by `Region`
+3. Create a bee swarm plot of `Cholesterol_6m` by `SmokingStatus`
+4. Build a raincloud plot of `SysBP_6m` by `Gender`
+
+**Bonus Challenge:**
+
+Create a faceted violin plot showing `BMI` by `Gender` across all 4 `Regions`, ordered by median BMI.
+
+## Summary
+
+::: {style="font-size: 0.9em;"}
+**What You've Learned:**
+
+::: {.incremental}
+1. **Violin plots** show full distribution shapes
+2. **Ridgeline plots** compare many overlapping distributions
+3. **Bee swarm plots** show every data point
+4. **Raincloud plots** provide comprehensive views
+5. **Enhanced grouped bars** show means with uncertainty
+6. **Faceted plots** reveal multi-dimensional patterns
+
+**Key Principle:**
+
+> Choose charts that match your data size, analytical goal, and audience needs
+:::
+:::
+
+## Next Steps {.center}
+
+**You've mastered Category vs. Continuous - Intermediate!**
+
+**Next:** Time Series - Intermediate
+
+Learn advanced time series visualization with:
+
+- Smoothed trends
+- Seasonal decomposition
+- Multiple series comparisons
+- Annotations and forecasts

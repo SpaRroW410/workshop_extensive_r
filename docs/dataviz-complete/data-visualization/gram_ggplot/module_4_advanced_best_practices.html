@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
+
+  <meta name="author" content="Sparrow">
+  <meta name="dcterms.date" content="2026-08-24">
+  <title>Data Visualization — Complete – Grammar of Graphics: Module 4</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-cc987b028043672fb83204947dec60a2.css">
+  <link rel="stylesheet" href="../../assets/slide_deck.css">
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Grammar of Graphics: Module 4</h1>
+  <p class="subtitle">Advanced Topics &amp; Best Practices</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Sparrow 
+</div>
+</div>
+</div>
+
+  <p class="date">2026-08-24</p>
+</section>
+<section id="module-4-overview" class="slide level2 smaller center">
+<h2>Module 4 Overview</h2>
+<p><strong>Previously</strong>: - Module 1: Foundations &amp; Geoms - Module 2: Aesthetics, Faceting &amp; Themes - Module 3: Colors, Scales &amp; Custom Themes</p>
+<p><strong>This Module (FINAL)</strong>: - Complex visualizations with progressive builds - Advanced composition techniques - Exporting and reproducibility - Limitations of ggplot2 - Best practices and common pitfalls - Workshop summary</p>
+</section>
+<section id="setup" class="slide level2 center">
+<h2>Setup</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-4"><a></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-5"><a></a><span class="fu">library</span>(ggthemes)</span>
+<span id="cb1-6"><a></a><span class="fu">library</span>(paletteer)</span>
+<span id="cb1-7"><a></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-8"><a></a><span class="co"># remotes::install_github("haleyjeppson/ggmosaic")</span></span>
+<span id="cb1-9"><a></a><span class="fu">library</span>(ggmosaic)  <span class="co"># For mosaic plots</span></span>
+<span id="cb1-10"><a></a></span>
+<span id="cb1-11"><a></a><span class="co"># Load data with all transformations</span></span>
+<span id="cb1-12"><a></a>bp_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"../../data/PublicHealth_BP_Dataset.xlsx"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-13"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-14"><a></a>    <span class="at">SysBP_Change =</span> SysBP_6m <span class="sc">-</span> SysBP_0m,</span>
+<span id="cb1-15"><a></a>    <span class="at">DiaBP_Change =</span> DiaBP_6m <span class="sc">-</span> DiaBP_0m,</span>
+<span id="cb1-16"><a></a>    <span class="at">AgeGroup =</span> <span class="fu">cut</span>(Age, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">65</span>, <span class="dv">100</span>),</span>
+<span id="cb1-17"><a></a>                   <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"18-30"</span>, <span class="st">"31-50"</span>, <span class="st">"51-65"</span>, <span class="st">"65+"</span>)),</span>
+<span id="cb1-18"><a></a>    <span class="at">Hypertension_Baseline =</span> <span class="fu">ifelse</span>(SysBP_0m <span class="sc">&gt;=</span> <span class="dv">140</span> <span class="sc">|</span> DiaBP_0m <span class="sc">&gt;=</span> <span class="dv">90</span>, </span>
+<span id="cb1-19"><a></a>                                   <span class="st">"Hypertensive"</span>, <span class="st">"Normal"</span>),</span>
+<span id="cb1-20"><a></a>    <span class="at">BMI_Category =</span> <span class="fu">cut</span>(BMI, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">18.5</span>, <span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">100</span>),</span>
+<span id="cb1-21"><a></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Underweight"</span>, <span class="st">"Normal"</span>, <span class="st">"Overweight"</span>, <span class="st">"Obese"</span>))</span>
+<span id="cb1-22"><a></a>  )</span>
+<span id="cb1-23"><a></a></span>
+<span id="cb1-24"><a></a><span class="co"># Time series</span></span>
+<span id="cb1-25"><a></a>bp_time <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
+<span id="cb1-26"><a></a>  <span class="fu">select</span>(PatientID, TreatmentGroup, SysBP_0m, SysBP_3m, SysBP_6m) <span class="sc">%&gt;%</span></span>
+<span id="cb1-27"><a></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"SysBP"</span>),</span>
+<span id="cb1-28"><a></a>               <span class="at">names_to =</span> <span class="st">"Time"</span>, <span class="at">values_to =</span> <span class="st">"SysBP"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-29"><a></a>  <span class="fu">mutate</span>(<span class="at">Months =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"SysBP_|m"</span>, <span class="st">""</span>, Time)))</span>
+<span id="cb1-30"><a></a></span>
+<span id="cb1-31"><a></a><span class="co"># Summary data</span></span>
+<span id="cb1-32"><a></a>bp_summary <span class="ot">&lt;-</span> bp_time <span class="sc">%&gt;%</span></span>
+<span id="cb1-33"><a></a>  <span class="fu">group_by</span>(TreatmentGroup, Months) <span class="sc">%&gt;%</span></span>
+<span id="cb1-34"><a></a>  <span class="fu">summarise</span>(<span class="at">Mean_SysBP =</span> <span class="fu">mean</span>(SysBP, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb1-35"><a></a></span>
+<span id="cb1-36"><a></a>ci_data <span class="ot">&lt;-</span> bp_time <span class="sc">%&gt;%</span></span>
+<span id="cb1-37"><a></a>  <span class="fu">group_by</span>(TreatmentGroup, Months) <span class="sc">%&gt;%</span></span>
+<span id="cb1-38"><a></a>  <span class="fu">summarise</span>(<span class="at">Mean =</span> <span class="fu">mean</span>(SysBP), <span class="at">SE =</span> <span class="fu">sd</span>(SysBP) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">n</span>()), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb1-39"><a></a></span>
+<span id="cb1-40"><a></a><span class="co"># Custom theme from Module 3</span></span>
+<span id="cb1-41"><a></a>theme_clinical_report <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">base_size =</span> <span class="dv">12</span>, <span class="at">base_family =</span> <span class="st">"serif"</span>) {</span>
+<span id="cb1-42"><a></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> base_size, <span class="at">base_family =</span> base_family) <span class="sc">+</span></span>
+<span id="cb1-43"><a></a>  <span class="fu">theme</span>(</span>
+<span id="cb1-44"><a></a>    <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> base_family),</span>
+<span id="cb1-45"><a></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">1.3</span>, <span class="at">face =</span> <span class="st">"bold"</span>, </span>
+<span id="cb1-46"><a></a>                              <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">10</span>)),</span>
+<span id="cb1-47"><a></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">1.1</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb1-48"><a></a>                                 <span class="at">color =</span> <span class="st">"gray30"</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">15</span>)),</span>
+<span id="cb1-49"><a></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">0.9</span>, <span class="at">hjust =</span> <span class="dv">1</span>,</span>
+<span id="cb1-50"><a></a>                                <span class="at">face =</span> <span class="st">"italic"</span>, <span class="at">color =</span> <span class="st">"gray50"</span>),</span>
+<span id="cb1-51"><a></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">1.1</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb1-52"><a></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">0.9</span>, <span class="at">color =</span> <span class="st">"gray20"</span>),</span>
+<span id="cb1-53"><a></a>    <span class="at">axis.line =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>),</span>
+<span id="cb1-54"><a></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"gray90"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>),</span>
+<span id="cb1-55"><a></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb1-56"><a></a>    <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"gray40"</span>, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">linewidth =</span> <span class="dv">1</span>),</span>
+<span id="cb1-57"><a></a>    <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>),</span>
+<span id="cb1-58"><a></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb1-59"><a></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb1-60"><a></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">0.9</span>),</span>
+<span id="cb1-61"><a></a>    <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb1-62"><a></a>    <span class="at">legend.key =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb1-63"><a></a>    <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>)</span>
+<span id="cb1-64"><a></a>  )</span>
+<span id="cb1-65"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section>
+<section id="section-1-complex-visualizations" class="title-slide slide level1 center" data-background-color="#2C5F8D">
+<h1>Section 1: Complex Visualizations</h1>
+
+</section>
+<section id="progressive-build-starting-simple" class="slide level2 center">
+<h2>Progressive Build: Starting Simple</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" data-code-line-numbers="|1-3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co"># Step 1: Basic plot</span></span>
+<span id="cb2-2"><a></a>p_base <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, </span>
+<span id="cb2-3"><a></a>                 <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m,</span>
+<span id="cb2-4"><a></a>                     <span class="at">color =</span> TreatmentGroup)) <span class="sc">+</span></span>
+<span id="cb2-5"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">size =</span> <span class="dv">2</span>)</span>
+<span id="cb2-6"><a></a></span>
+<span id="cb2-7"><a></a>p_base</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+
+</div>
+<img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-2-1.png" width="960" class="r-stretch"></section>
+<section id="progressive-build-step-1-output" class="slide level2 center">
+<h2>Progressive Build: Step 1 Output</h2>
+
+<img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-3-1.png" width="960" class="r-stretch"></section>
+<section id="progressive-build-add-trend-lines" class="slide level2 center">
+<h2>Progressive Build: Add Trend Lines</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" data-code-line-numbers="|2-3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="co"># Step 2: Add smooth trends</span></span>
+<span id="cb3-2"><a></a>p_trend <span class="ot">&lt;-</span> p_base <span class="sc">+</span></span>
+<span id="cb3-3"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb3-4"><a></a>              <span class="at">linewidth =</span> <span class="fl">1.2</span>)</span>
+<span id="cb3-5"><a></a></span>
+<span id="cb3-6"><a></a>p_trend</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+
+</div>
+<img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch"></section>
+<section id="progressive-build-step-2-output" class="slide level2 center">
+<h2>Progressive Build: Step 2 Output</h2>
+
+<img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"></section>
+<section id="progressive-build-apply-theme" class="slide level2 center">
+<h2>Progressive Build: Apply Theme</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" data-code-line-numbers="|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="co"># Step 3: Apply professional theme</span></span>
+<span id="cb4-2"><a></a>p_themed <span class="ot">&lt;-</span> p_trend <span class="sc">+</span></span>
+<span id="cb4-3"><a></a>  <span class="fu">theme_clinical_report</span>(<span class="at">base_size =</span> <span class="dv">14</span>)</span>
+<span id="cb4-4"><a></a></span>
+<span id="cb4-5"><a></a>p_themed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+
+</div>
+<img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-6-1.png" width="960" class="r-stretch"></section>
+<section id="progressive-build-step-3-output" class="slide level2 center">
+<h2>Progressive Build: Step 3 Output</h2>
+
+<img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-7-1.png" width="960" class="r-stretch"></section>
+<section id="progressive-build-final-polish" class="slide level2 center">
+<h2>Progressive Build: Final Polish</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" data-code-line-numbers="|2-8|9-11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="co"># Step 4: Final customization</span></span>
+<span id="cb5-2"><a></a>p_final <span class="ot">&lt;-</span> p_themed <span class="sc">+</span></span>
+<span id="cb5-3"><a></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb5-4"><a></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Control"</span> <span class="ot">=</span> <span class="st">"steelblue"</span>,</span>
+<span id="cb5-5"><a></a>               <span class="st">"Intervention"</span> <span class="ot">=</span> <span class="st">"darkred"</span>),</span>
+<span id="cb5-6"><a></a>    <span class="at">name =</span> <span class="st">"Treatment Group"</span>) <span class="sc">+</span></span>
+<span id="cb5-7"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Age vs Baseline Systolic BP"</span>,</span>
+<span id="cb5-8"><a></a>       <span class="at">subtitle =</span> <span class="st">"With linear trend lines"</span>,</span>
+<span id="cb5-9"><a></a>       <span class="at">x =</span> <span class="st">"Age (years)"</span>,</span>
+<span id="cb5-10"><a></a>       <span class="at">y =</span> <span class="st">"Systolic BP (mmHg)"</span>,</span>
+<span id="cb5-11"><a></a>       <span class="at">caption =</span> <span class="st">"n=200 patients"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</div><div class="column" style="width:40%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-9-1.png" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="multi-geom-plot-points-line-ribbon" class="slide level2 center">
+<h2>Multi-Geom Plot: Points + Line + Ribbon</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" data-code-line-numbers="|6-8|9-11|12-14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">ggplot</span>(ci_data, </span>
+<span id="cb6-2"><a></a>       <span class="fu">aes</span>(<span class="at">x =</span> Months, <span class="at">y =</span> Mean,</span>
+<span id="cb6-3"><a></a>           <span class="at">color =</span> TreatmentGroup,</span>
+<span id="cb6-4"><a></a>           <span class="at">fill =</span> TreatmentGroup)) <span class="sc">+</span></span>
+<span id="cb6-5"><a></a>  <span class="co"># Confidence band</span></span>
+<span id="cb6-6"><a></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> Mean <span class="sc">-</span> <span class="fl">1.96</span><span class="sc">*</span>SE,</span>
+<span id="cb6-7"><a></a>                  <span class="at">ymax =</span> Mean <span class="sc">+</span> <span class="fl">1.96</span><span class="sc">*</span>SE),</span>
+<span id="cb6-8"><a></a>              <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb6-9"><a></a>  <span class="co"># Trend line</span></span>
+<span id="cb6-10"><a></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb6-11"><a></a>  <span class="co"># Data points</span></span>
+<span id="cb6-12"><a></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb6-13"><a></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb6-14"><a></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"steelblue"</span>, <span class="st">"darkred"</span>)) <span class="sc">+</span></span>
+<span id="cb6-15"><a></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb6-16"><a></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"steelblue"</span>, <span class="st">"darkred"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</div><div class="column" style="width:40%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-11-1.png" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="combining-geoms-strategically" class="slide level2 center">
+<h2>Combining Geoms Strategically</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" data-code-line-numbers="|4-7|8-9|10-11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">ggplot</span>(bp_data, </span>
+<span id="cb7-2"><a></a>       <span class="fu">aes</span>(<span class="at">x =</span> AgeGroup, <span class="at">y =</span> SysBP_Change,</span>
+<span id="cb7-3"><a></a>           <span class="at">fill =</span> TreatmentGroup)) <span class="sc">+</span></span>
+<span id="cb7-4"><a></a>  <span class="co"># Individual points with jitter</span></span>
+<span id="cb7-5"><a></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">color =</span> TreatmentGroup),</span>
+<span id="cb7-6"><a></a>              <span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">width =</span> <span class="fl">0.2</span>,</span>
+<span id="cb7-7"><a></a>              <span class="at">size =</span> <span class="fl">1.5</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb7-8"><a></a>  <span class="co"># Box plot overlay</span></span>
+<span id="cb7-9"><a></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb7-10"><a></a>  <span class="co"># Add mean as point</span></span>
+<span id="cb7-11"><a></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>,</span>
+<span id="cb7-12"><a></a>               <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">shape =</span> <span class="dv">18</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</div><div class="column" style="width:40%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-13-1.png" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="publication-ready-plot-all-elements" class="slide level2 center">
+<h2>Publication-Ready Plot: All Elements</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" data-code-line-numbers="|1-15|16-23|24-27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>publication_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, </span>
+<span id="cb8-2"><a></a>                           <span class="fu">aes</span>(<span class="at">x =</span> BMI, <span class="at">y =</span> Cholesterol,</span>
+<span id="cb8-3"><a></a>                               <span class="at">color =</span> Hypertension_Baseline)) <span class="sc">+</span></span>
+<span id="cb8-4"><a></a>  <span class="co"># Data layer</span></span>
+<span id="cb8-5"><a></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb8-6"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb8-7"><a></a>  </span>
+<span id="cb8-8"><a></a>  <span class="co"># Scales</span></span>
+<span id="cb8-9"><a></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb8-10"><a></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Normal"</span> <span class="ot">=</span> <span class="st">"forestgreen"</span>, <span class="st">"Hypertensive"</span> <span class="ot">=</span> <span class="st">"darkred"</span>),</span>
+<span id="cb8-11"><a></a>    <span class="at">name =</span> <span class="st">"Baseline BP Status"</span>) <span class="sc">+</span></span>
+<span id="cb8-12"><a></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">15</span>, <span class="dv">40</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb8-13"><a></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">100</span>, <span class="dv">300</span>, <span class="dv">50</span>)) <span class="sc">+</span></span>
+<span id="cb8-14"><a></a>  </span>
+<span id="cb8-15"><a></a>  <span class="co"># Labels</span></span>
+<span id="cb8-16"><a></a>  <span class="fu">labs</span>(</span>
+<span id="cb8-17"><a></a>    <span class="at">title =</span> <span class="st">"Relationship Between BMI and Cholesterol"</span>,</span>
+<span id="cb8-18"><a></a>    <span class="at">subtitle =</span> <span class="st">"Stratified by baseline hypertension status"</span>,</span>
+<span id="cb8-19"><a></a>    <span class="at">x =</span> <span class="st">"Body Mass Index (kg/m²)"</span>,</span>
+<span id="cb8-20"><a></a>    <span class="at">y =</span> <span class="st">"Total Cholesterol (mg/dL)"</span>,</span>
+<span id="cb8-21"><a></a>    <span class="at">caption =</span> <span class="st">"Data: Public Health BP Dataset | n=200 patients | Linear regression with 95% CI"</span></span>
+<span id="cb8-22"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb8-23"><a></a>  </span>
+<span id="cb8-24"><a></a>  <span class="co"># Theme</span></span>
+<span id="cb8-25"><a></a>  <span class="fu">theme_clinical_report</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb8-26"><a></a>  <span class="fu">theme</span>(</span>
+<span id="cb8-27"><a></a>    <span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.85</span>, <span class="fl">0.15</span>),</span>
+<span id="cb8-28"><a></a>    <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>)</span>
+<span id="cb8-29"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="publication-ready-output" class="slide level2 center">
+<h2>Publication-Ready Output</h2>
+
+<img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-15-1.png" width="1056" class="r-stretch"></section></section>
+<section>
+<section id="section-2-advanced-composition" class="title-slide slide level1 center" data-background-color="#2C5F8D">
+<h1>Section 2: Advanced Composition</h1>
+
+</section>
+<section id="layer-ordering-matters" class="slide level2 center">
+<h2>Layer Ordering Matters</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="co"># Smooth UNDER points</span></span>
+<span id="cb9-2"><a></a><span class="fu">ggplot</span>(bp_data, </span>
+<span id="cb9-3"><a></a>       <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m)) <span class="sc">+</span></span>
+<span id="cb9-4"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span>  <span class="co"># First</span></span>
+<span id="cb9-5"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)        <span class="co"># Second</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-17-1.png" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="co"># Smooth OVER points</span></span>
+<span id="cb10-2"><a></a><span class="fu">ggplot</span>(bp_data, </span>
+<span id="cb10-3"><a></a>       <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m)) <span class="sc">+</span></span>
+<span id="cb10-4"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span>      <span class="co"># First</span></span>
+<span id="cb10-5"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)     <span class="co"># Second</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-19-1.png" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="coordinate-systems-coord_flip" class="slide level2 center">
+<h2>Coordinate Systems: coord_flip()</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" data-code-line-numbers="|6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>region_summary <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a></a>  <span class="fu">group_by</span>(Region) <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a></a>  <span class="fu">summarise</span>(<span class="at">Mean_SysBP =</span> <span class="fu">mean</span>(SysBP_0m), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb11-4"><a></a></span>
+<span id="cb11-5"><a></a><span class="fu">ggplot</span>(region_summary, </span>
+<span id="cb11-6"><a></a>       <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(Region, Mean_SysBP),</span>
+<span id="cb11-7"><a></a>           <span class="at">y =</span> Mean_SysBP, <span class="at">fill =</span> Region)) <span class="sc">+</span></span>
+<span id="cb11-8"><a></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb11-9"><a></a>  <span class="fu">coord_flip</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="fragment">
+<p><strong>Useful for</strong>: Long category names, horizontal bar charts</p>
+</div>
+</div><div class="column" style="width:40%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-21-1.png" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section></section>
+<section>
+<section id="section-3-exporting-reproducibility" class="title-slide slide level1 center" data-background-color="#2C5F8D">
+<h1>Section 3: Exporting &amp; Reproducibility</h1>
+
+</section>
+<section id="ggsave-saving-plots" class="slide level2 smaller center">
+<h2>ggsave(): Saving Plots</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" data-code-line-numbers="|1-3|5-10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="co"># Create a plot</span></span>
+<span id="cb12-2"><a></a>my_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m, <span class="at">color =</span> TreatmentGroup)) <span class="sc">+</span></span>
+<span id="cb12-3"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb12-4"><a></a></span>
+<span id="cb12-5"><a></a><span class="co"># Save the plot</span></span>
+<span id="cb12-6"><a></a><span class="fu">ggsave</span>(</span>
+<span id="cb12-7"><a></a>  <span class="at">filename =</span> <span class="st">"blood_pressure_analysis.png"</span>,</span>
+<span id="cb12-8"><a></a>  <span class="at">plot =</span> my_plot,</span>
+<span id="cb12-9"><a></a>  <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">units =</span> <span class="st">"in"</span>,</span>
+<span id="cb12-10"><a></a>  <span class="at">dpi =</span> <span class="dv">300</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ul>
+<li class="fragment"><strong>filename</strong>: File path and name with extension</li>
+<li class="fragment"><strong>plot</strong>: ggplot object (defaults to last plot displayed)</li>
+<li class="fragment"><strong>width, height</strong>: Dimensions</li>
+<li class="fragment"><strong>units</strong>: “in” (inches), “cm”, “mm”, “px”</li>
+<li class="fragment"><strong>dpi</strong>: Resolution (72 = screen, 300 = print quality, 600 = high-res print)</li>
+</ul>
+</section>
+<section id="supported-file-formats" class="slide level2 center">
+<h2>Supported File Formats</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Raster (Pixel-based)</strong>:</p>
+<ul>
+<li><strong>PNG</strong> - Best for web, presentations</li>
+<li><strong>JPEG</strong> - Photos, small file size</li>
+<li><strong>TIFF</strong> - High-quality archival</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">ggsave</span>(<span class="st">"plot.png"</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span>
+<span id="cb13-2"><a></a><span class="fu">ggsave</span>(<span class="st">"plot.jpg"</span>, <span class="at">dpi =</span> <span class="dv">150</span>)</span>
+<span id="cb13-3"><a></a><span class="fu">ggsave</span>(<span class="st">"plot.tiff"</span>, <span class="at">dpi =</span> <span class="dv">600</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</div><div class="column" style="width:50%;">
+<p><strong>Vector (Scalable)</strong>:</p>
+<ul>
+<li><strong>PDF</strong> - Publications, printing</li>
+<li><strong>SVG</strong> - Web, editing in Illustrator</li>
+<li><strong>EPS</strong> - Legacy publications</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">ggsave</span>(<span class="st">"plot.pdf"</span>, <span class="at">width =</span> <span class="dv">8</span>, </span>
+<span id="cb14-2"><a></a>       <span class="at">height =</span> <span class="dv">6</span>)</span>
+<span id="cb14-3"><a></a><span class="fu">ggsave</span>(<span class="st">"plot.svg"</span>)</span>
+<span id="cb14-4"><a></a><span class="fu">ggsave</span>(<span class="st">"plot.eps"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</div></div>
+</section>
+<section id="choosing-the-right-format" class="slide level2 smaller center">
+<h2>Choosing the Right Format</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 33%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Format</th>
+<th>Use Case</th>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>PNG</strong></td>
+<td>Web, presentations, reports</td>
+<td>Lossless, transparent background</td>
+<td>Large files</td>
+</tr>
+<tr class="even">
+<td><strong>PDF</strong></td>
+<td>Publications, printing</td>
+<td>Scalable, professional</td>
+<td>Requires PDF reader</td>
+</tr>
+<tr class="odd">
+<td><strong>SVG</strong></td>
+<td>Web, further editing</td>
+<td>Scalable, editable</td>
+<td>Not all software supports</td>
+</tr>
+<tr class="even">
+<td><strong>JPEG</strong></td>
+<td>Web (photos)</td>
+<td>Small files</td>
+<td>Lossy compression</td>
+</tr>
+<tr class="odd">
+<td><strong>TIFF</strong></td>
+<td>Archival, high-res</td>
+<td>Lossless, high quality</td>
+<td>Very large files</td>
+</tr>
+</tbody>
+</table>
+<div class="fragment">
+<p><strong>Recommendation</strong>: Use <strong>PDF</strong> for publications, <strong>PNG</strong> (300 dpi) for presentations/reports</p>
+</div>
+</section>
+<section id="reproducibility-best-practices" class="slide level2 smaller center">
+<h2>Reproducibility Best Practices</h2>
+<ol type="1">
+<li class="fragment"><strong>Set seed</strong> for random elements (jitter, sampling)</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="2" type="1">
+<li class="fragment"><strong>Document R and package versions</strong></li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="3" type="1">
+<li class="fragment"><strong>Use relative paths</strong>, not absolute</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="co"># Good: read_excel("data/bp_data.xlsx")</span></span>
+<span id="cb17-2"><a></a><span class="co"># Bad:  read_excel("C:/Users/John/Documents/data/bp_data.xlsx")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="4" type="1">
+<li class="fragment"><strong>Version control</strong> with Git/GitHub</li>
+<li class="fragment"><strong>Use R Projects</strong> for project organization</li>
+</ol>
+</section></section>
+<section>
+<section id="section-4-limitations-of-ggplot2" class="title-slide slide level1 center" data-background-color="#2C5F8D">
+<h1>Section 4: Limitations of ggplot2</h1>
+
+</section>
+<section id="what-ggplot2-cannot-do-well" class="slide level2 smaller center">
+<h2>What ggplot2 Cannot Do Well</h2>
+<p>While ggplot2 is powerful, it has limitations:</p>
+<ol type="1">
+<li class="fragment"><strong>Mosaic plots / Marimekko charts</strong> - Better with <code>ggmosaic</code> or base R <code>mosaicplot()</code></li>
+<li class="fragment"><strong>3D plots</strong> - Not natively supported, use <code>plotly</code> or <code>rgl</code></li>
+<li class="fragment"><strong>Network graphs</strong> - Use <code>ggraph</code> or <code>igraph</code></li>
+<li class="fragment"><strong>Interactive plots</strong> - Limited, need <code>plotly::ggplotly()</code> or <code>ggiraph</code></li>
+<li class="fragment"><strong>Sankey diagrams</strong> - Use <code>ggalluvial</code> or <code>networkD3</code></li>
+<li class="fragment"><strong>Circular plots</strong> (beyond polar) - Use <code>circlize</code></li>
+<li class="fragment"><strong>Very complex statistical diagrams</strong> - May need specialized packages</li>
+</ol>
+</section>
+<section id="mosaic-plots" class="slide level2 center">
+<h2>Mosaic Plots</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p><strong>ggplot2 cannot easily create mosaic plots</strong></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="co"># Use ggmosaic package instead</span></span>
+<span id="cb18-2"><a></a><span class="fu">library</span>(ggmosaic)</span>
+<span id="cb18-3"><a></a></span>
+<span id="cb18-4"><a></a><span class="fu">ggplot</span>(bp_data) <span class="sc">+</span></span>
+<span id="cb18-5"><a></a>  <span class="fu">geom_mosaic</span>(</span>
+<span id="cb18-6"><a></a>    <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">product</span>(TreatmentGroup, </span>
+<span id="cb18-7"><a></a>                    SmokingStatus),</span>
+<span id="cb18-8"><a></a>        <span class="at">fill =</span> TreatmentGroup))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="fragment">
+<p>Or use base R <code>mosaicplot()</code> for traditional mosaic plots</p>
+</div>
+</div><div class="column" style="width:40%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-29-1.png" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="when-to-use-alternatives" class="slide level2 smaller center">
+<h2>When to Use Alternatives</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Need</th>
+<th>ggplot2 Solution</th>
+<th>Better Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Mosaic plots</td>
+<td>❌ Not supported</td>
+<td><code>ggmosaic</code>, base <code>mosaicplot()</code></td>
+</tr>
+<tr class="even">
+<td>3D visualization</td>
+<td>❌ Not supported</td>
+<td><code>plotly</code>, <code>rgl</code>, <code>plot3D</code></td>
+</tr>
+<tr class="odd">
+<td>Network graphs</td>
+<td>❌ Not supported</td>
+<td><code>ggraph</code>, <code>igraph</code>, <code>visNetwork</code></td>
+</tr>
+<tr class="even">
+<td>Interactive plots</td>
+<td>Limited</td>
+<td><code>plotly</code>, <code>ggiraph</code>, <code>highcharter</code></td>
+</tr>
+<tr class="odd">
+<td>Animated plots</td>
+<td>Via <code>gganimate</code></td>
+<td><code>gganimate</code>, <code>plotly</code></td>
+</tr>
+<tr class="even">
+<td>Sankey diagrams</td>
+<td>❌ Not supported</td>
+<td><code>ggalluvial</code>, <code>networkD3</code></td>
+</tr>
+<tr class="odd">
+<td>Circular plots</td>
+<td>Limited (<code>coord_polar</code>)</td>
+<td><code>circlize</code></td>
+</tr>
+<tr class="even">
+<td>Geographic maps</td>
+<td>Basic</td>
+<td><code>leaflet</code>, <code>tmap</code>, <code>sf</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ggplot2-extensions-ecosystem" class="slide level2 smaller center">
+<h2>ggplot2 Extensions Ecosystem</h2>
+<p><strong>The good news</strong>: The ggplot2 ecosystem is vast!</p>
+<ul>
+<li class="fragment"><strong>ggmosaic</strong> - Mosaic plots</li>
+<li class="fragment"><strong>gganimate</strong> - Animation</li>
+<li class="fragment"><strong>ggraph</strong> - Network/tree diagrams</li>
+<li class="fragment"><strong>ggalluvial</strong> - Sankey/alluvial diagrams</li>
+<li class="fragment"><strong>ggiraph</strong> - Interactive graphics</li>
+<li class="fragment"><strong>patchwork</strong> / <strong>cowplot</strong> - Combining plots</li>
+<li class="fragment"><strong>ggridges</strong> - Ridge line plots</li>
+<li class="fragment"><strong>ggrepel</strong> - Smart label placement</li>
+<li class="fragment"><strong>ggforce</strong> - Additional geoms and stats</li>
+<li class="fragment"><strong>ggsci</strong> - Scientific journal color palettes</li>
+</ul>
+<div class="fragment">
+<p><strong>See</strong>: https://exts.ggplot2.tidyverse.org/ for comprehensive list</p>
+</div>
+</section></section>
+<section>
+<section id="section-5-best-practices-common-pitfalls" class="title-slide slide level1 center" data-background-color="#2C5F8D">
+<h1>Section 5: Best Practices &amp; Common Pitfalls</h1>
+
+</section>
+<section id="common-pitfalls-to-avoid" class="slide level2 smaller center">
+<h2>Common Pitfalls to Avoid</h2>
+<ol type="1">
+<li class="fragment"><strong>Mapping constants inside aes()</strong> - Use fixed values outside aes</li>
+<li class="fragment"><strong>Too many aesthetics</strong> - Limit to 3-4 visual encodings max</li>
+<li class="fragment"><strong>Poor color choices</strong> - Always test for colorblind accessibility</li>
+<li class="fragment"><strong>Overplotting</strong> - Use alpha, jitter, or facets</li>
+<li class="fragment"><strong>Misleading axes</strong> - Always start at zero for bar charts</li>
+<li class="fragment"><strong>Too much clutter</strong> - Remove unnecessary grid lines, legends, or decorations</li>
+<li class="fragment"><strong>Inconsistent themes</strong> - Use theme_set() for consistency</li>
+<li class="fragment"><strong>Ignoring aspect ratios</strong> - Consider final output dimensions</li>
+<li class="fragment"><strong>Not saving properly</strong> - Use appropriate format and resolution</li>
+<li class="fragment"><strong>Forgetting reproducibility</strong> - Set seed, document packages</li>
+</ol>
+</section>
+<section id="best-practices-checklist" class="slide level2 smaller center">
+<h2>Best Practices Checklist</h2>
+<p>Before finalizing visualizations:</p>
+<ul class="task-list">
+<li class="fragment"><label><input type="checkbox"><strong>Color</strong>: Use colorblind-friendly palettes (viridis, ColorBrewer)</label></li>
+<li class="fragment"><label><input type="checkbox"><strong>Contrast</strong>: Ensure sufficient contrast between elements</label></li>
+<li class="fragment"><label><input type="checkbox"><strong>Text size</strong>: Minimum 10pt for body text, 12pt+ for titles</label></li>
+<li class="fragment"><label><input type="checkbox"><strong>Redundancy</strong>: Don’t rely on color alone (use shape, pattern, labels)</label></li>
+<li class="fragment"><label><input type="checkbox"><strong>Simplicity</strong>: Remove unnecessary elements</label></li>
+<li class="fragment"><label><input type="checkbox"><strong>Labels</strong>: Clear, descriptive axis labels and titles</label></li>
+<li class="fragment"><label><input type="checkbox"><strong>Alt text</strong>: Provide text description for screen readers</label></li>
+<li class="fragment"><label><input type="checkbox"><strong>Print</strong>: Test in grayscale/black &amp; white</label></li>
+<li class="fragment"><label><input type="checkbox"><strong>Simulation</strong>: Test with colorblind simulator</label></li>
+<li class="fragment"><label><input type="checkbox"><strong>Font</strong>: Use readable fonts (avoid decorative fonts)</label></li>
+</ul>
+</section>
+<section id="the-ggplot2-building-process" class="slide level2 center">
+<h2>The ggplot2 Building Process</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> var1, <span class="at">y =</span> var2)) <span class="sc">+</span>           <span class="co"># 1. Data + Aesthetics</span></span>
+<span id="cb19-2"><a></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> var3, <span class="at">size =</span> var4)) <span class="sc">+</span>     <span class="co"># 2. Geometry + Local aes</span></span>
+<span id="cb19-3"><a></a>  <span class="fu">scale_color_viridis_d</span>() <span class="sc">+</span>                        <span class="co"># 3. Scales</span></span>
+<span id="cb19-4"><a></a>  <span class="fu">scale_size_continuous</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">6</span>)) <span class="sc">+</span>         <span class="co"># 4. More scales</span></span>
+<span id="cb19-5"><a></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> var5) <span class="sc">+</span>                             <span class="co"># 5. Facets</span></span>
+<span id="cb19-6"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"My Plot"</span>,                          <span class="co"># 6. Labels</span></span>
+<span id="cb19-7"><a></a>       <span class="at">x =</span> <span class="st">"X Label"</span>, <span class="at">y =</span> <span class="st">"Y Label"</span>) <span class="sc">+</span></span>
+<span id="cb19-8"><a></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span>                                <span class="co"># 7. Theme</span></span>
+<span id="cb19-9"><a></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>,                <span class="co"># 8. Theme customization</span></span>
+<span id="cb19-10"><a></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section></section>
+<section>
+<section id="section-6-workshop-summary" class="title-slide slide level1 center" data-background-color="#2C5F8D">
+<h1>Section 6: Workshop Summary</h1>
+
+</section>
+<section id="key-takeaways" class="slide level2 smaller center">
+<h2>Key Takeaways</h2>
+<ol type="1">
+<li class="fragment"><strong>Grammar of Graphics</strong> provides a systematic framework for building visualizations</li>
+<li class="fragment"><strong>Layering</strong> is fundamental - data → aesthetics → geometries → scales → themes</li>
+<li class="fragment"><strong>Aesthetics</strong> map data to visual properties (inside <code>aes()</code>)</li>
+<li class="fragment"><strong>Geoms</strong> are the building blocks - choose appropriately for your data type</li>
+<li class="fragment"><strong>Themes</strong> control appearance - use built-in or create custom ones</li>
+<li class="fragment"><strong>Colors</strong> matter - always consider colorblind accessibility</li>
+<li class="fragment"><strong>Scales</strong> control how data maps to aesthetics - customize breaks, limits, labels</li>
+<li class="fragment"><strong>Facets</strong> enable small multiples for comparing groups</li>
+<li class="fragment"><strong>Consistency</strong> is key - use global themes and organizational standards</li>
+<li class="fragment">Know ggplot2’s <strong>limitations</strong> and when to use alternatives</li>
+</ol>
+</section>
+<section id="what-we-covered-across-all-modules" class="slide level2 center">
+<h2>What We Covered Across All Modules</h2>
+<p><strong>Module 1</strong>: Foundations &amp; Basic Geoms - Seven layers of Grammar of Graphics - Essential geoms: point, line, col, bar, histogram, boxplot, violin, smooth, density, jitter - Data preparation and handling missing data</p>
+<p><strong>Module 2</strong>: Aesthetics, Faceting &amp; Themes - Global vs local aesthetics - facet_wrap() and facet_grid() - Built-in themes and ggthemes package</p>
+<p><strong>Module 3</strong>: Colors, Scales &amp; Custom Themes - Color palettes and accessibility (viridis, ColorBrewer, paletteer) - Scale functions (manual, gradient, continuous, discrete) - Custom theme creation with element functions</p>
+<p><strong>Module 4</strong>: Advanced Topics &amp; Best Practices - Complex visualizations and progressive builds - Exporting and reproducibility - Limitations and alternatives - Best practices and common pitfalls</p>
+</section>
+<section id="resources-for-further-learning" class="slide level2 smaller center">
+<h2>Resources for Further Learning</h2>
+<p><strong>Books</strong>: - <strong>“ggplot2: Elegant Graphics for Data Analysis”</strong> by Hadley Wickham - <strong>“R Graphics Cookbook”</strong> by Winston Chang - <strong>“Fundamentals of Data Visualization”</strong> by Claus O. Wilke</p>
+<p><strong>Online Resources</strong>: - Official documentation: https://ggplot2.tidyverse.org/ - R Graph Gallery: https://r-graph-gallery.com/ - ggplot2 extensions: https://exts.ggplot2.tidyverse.org/ - Tidyverse style guide: https://style.tidyverse.org/</p>
+<p><strong>Cheat Sheets</strong>: - RStudio ggplot2 cheat sheet - Data visualization with ggplot2 cheat sheet</p>
+</section>
+<section id="quick-reference-essential-geoms" class="slide level2 smaller center">
+<h2>Quick Reference: Essential Geoms</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">geom_point</span>()       <span class="co"># Scatter plots</span></span>
+<span id="cb20-2"><a></a><span class="fu">geom_line</span>()        <span class="co"># Line graphs</span></span>
+<span id="cb20-3"><a></a><span class="fu">geom_bar</span>()         <span class="co"># Bar charts (count)</span></span>
+<span id="cb20-4"><a></a><span class="fu">geom_col</span>()         <span class="co"># Column charts (values)</span></span>
+<span id="cb20-5"><a></a><span class="fu">geom_histogram</span>()   <span class="co"># Histograms</span></span>
+<span id="cb20-6"><a></a><span class="fu">geom_boxplot</span>()     <span class="co"># Box plots</span></span>
+<span id="cb20-7"><a></a><span class="fu">geom_violin</span>()      <span class="co"># Violin plots</span></span>
+<span id="cb20-8"><a></a><span class="fu">geom_smooth</span>()      <span class="co"># Trend lines</span></span>
+<span id="cb20-9"><a></a><span class="fu">geom_density</span>()     <span class="co"># Density plots</span></span>
+<span id="cb20-10"><a></a><span class="fu">geom_jitter</span>()      <span class="co"># Jittered points</span></span>
+<span id="cb20-11"><a></a><span class="fu">geom_tile</span>()        <span class="co"># Heatmaps</span></span>
+<span id="cb20-12"><a></a><span class="fu">geom_text</span>()        <span class="co"># Text annotations</span></span>
+<span id="cb20-13"><a></a><span class="fu">geom_errorbar</span>()    <span class="co"># Error bars</span></span>
+<span id="cb20-14"><a></a><span class="fu">geom_ribbon</span>()      <span class="co"># Confidence bands</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="quick-reference-essential-scales" class="slide level2 smaller center">
+<h2>Quick Reference: Essential Scales</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">scale_color_manual</span>()      <span class="co"># Custom colors</span></span>
+<span id="cb21-2"><a></a><span class="fu">scale_fill_viridis_d</span>()    <span class="co"># Colorblind-friendly discrete</span></span>
+<span id="cb21-3"><a></a><span class="fu">scale_x_continuous</span>()      <span class="co"># Continuous x-axis</span></span>
+<span id="cb21-4"><a></a><span class="fu">scale_y_log10</span>()           <span class="co"># Log transformation</span></span>
+<span id="cb21-5"><a></a><span class="fu">scale_color_brewer</span>()      <span class="co"># ColorBrewer palettes</span></span>
+<span id="cb21-6"><a></a><span class="fu">scale_color_gradient2</span>()   <span class="co"># Diverging gradient</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="quick-reference-theme-elements" class="slide level2 smaller center">
+<h2>Quick Reference: Theme Elements</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="co"># Text elements</span></span>
+<span id="cb22-2"><a></a>axis.title, axis.text, plot.title, plot.subtitle, </span>
+<span id="cb22-3"><a></a>plot.caption, legend.title, legend.text</span>
+<span id="cb22-4"><a></a></span>
+<span id="cb22-5"><a></a><span class="co"># Line elements</span></span>
+<span id="cb22-6"><a></a>axis.line, panel.grid.major, panel.grid.minor</span>
+<span id="cb22-7"><a></a></span>
+<span id="cb22-8"><a></a><span class="co"># Rectangle elements</span></span>
+<span id="cb22-9"><a></a>plot.background, panel.background, panel.border,</span>
+<span id="cb22-10"><a></a>legend.background, legend.key</span>
+<span id="cb22-11"><a></a></span>
+<span id="cb22-12"><a></a><span class="co"># Position</span></span>
+<span id="cb22-13"><a></a>legend.position <span class="ot">=</span> <span class="st">"top"</span> <span class="sc">|</span> <span class="st">"bottom"</span> <span class="sc">|</span> <span class="st">"left"</span> <span class="sc">|</span> <span class="st">"right"</span> <span class="sc">|</span> <span class="st">"none"</span> <span class="sc">|</span> <span class="fu">c</span>(x,y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="final-practice-exercise" class="slide level2 smaller center">
+<h2>Final Practice Exercise</h2>
+<p>Create a comprehensive publication-ready plot that includes:</p>
+<ol type="1">
+<li>Data from the BP dataset</li>
+<li>Multiple geoms (points + smooth or boxplot + jitter)</li>
+<li>Appropriate color scale (colorblind-friendly)</li>
+<li>Custom theme elements</li>
+<li>Proper labels and caption</li>
+<li>Legend management</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="co"># Your code here - combine everything you've learned!</span></span>
+<span id="cb23-2"><a></a><span class="fu">ggplot</span>(bp_data, ...) <span class="sc">+</span></span>
+<span id="cb23-3"><a></a>  <span class="fu">geom_...</span>() <span class="sc">+</span></span>
+<span id="cb23-4"><a></a>  <span class="fu">scale_...</span>() <span class="sc">+</span></span>
+<span id="cb23-5"><a></a>  <span class="fu">facet_...</span>() <span class="sc">+</span></span>
+<span id="cb23-6"><a></a>  <span class="fu">labs</span>(...) <span class="sc">+</span></span>
+<span id="cb23-7"><a></a>  <span class="fu">theme_...</span>() <span class="sc">+</span></span>
+<span id="cb23-8"><a></a>  <span class="fu">theme</span>(...)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="thank-you" class="slide level2 center">
+<h2>Thank You!</h2>
+<p><strong>Congratulations on completing the workshop!</strong></p>
+<div class="fragment">
+<p><strong>Remember</strong>:</p>
+<ul>
+<li>Start simple, build complexity layer by layer</li>
+<li>Always consider your audience</li>
+<li>Test for accessibility</li>
+<li>Practice, practice, practice!</li>
+</ul>
+</div>
+<div class="fragment">
+<p><strong>Contact &amp; Feedback</strong>: Please provide feedback on this workshop to help improve future sessions</p>
+</div>
+<div class="fragment">
+<p><strong>Questions?</strong></p>
+</div>
+</section>
+<section id="session-info-for-reproducibility" class="slide level2 center">
+<h2>Session Info for Reproducibility</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="co"># Document your R environment</span></span>
+<span id="cb24-2"><a></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.6.1 (2026-06-24 ucrt)
+Platform: aarch64-w64-mingw32
+Running under: Windows 11 (build 26200)
+
+Matrix products: default
+  LAPACK version 3.12.1
+
+locale:
+[1] LC_COLLATE=English_India.utf8  LC_CTYPE=English_India.utf8   
+[3] LC_MONETARY=English_India.utf8 LC_NUMERIC=C                  
+[5] LC_TIME=English_India.utf8    
+
+time zone: Asia/Calcutta
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] ggmosaic_0.4.0  patchwork_1.3.2 paletteer_1.7.0 ggthemes_5.2.0 
+[5] readxl_1.5.0    tidyr_1.3.2     dplyr_1.2.1     ggplot2_4.0.3  
+
+loaded via a namespace (and not attached):
+ [1] plotly_4.12.1      generics_0.1.4     productplots_0.1.2 lattice_0.22-9    
+ [5] stringi_1.8.9      digest_0.6.39      magrittr_2.0.5     evaluate_1.0.5    
+ [9] grid_4.6.1         RColorBrewer_1.1-3 fastmap_1.2.0      Matrix_1.7-5      
+[13] cellranger_1.1.0   plyr_1.8.9         jsonlite_2.0.0     ggrepel_0.9.8     
+[17] rematch2_2.1.2     mgcv_1.9-4         httr_1.4.8         purrr_1.2.2       
+[21] viridisLite_0.4.3  scales_1.4.0       cli_3.6.6          rlang_1.3.0       
+[25] splines_4.6.1      withr_3.0.3        yaml_2.3.12        otel_0.2.0        
+[29] tools_4.6.1        vctrs_0.7.3        R6_2.6.1           lifecycle_1.0.5   
+[33] stringr_1.6.0      htmlwidgets_1.6.4  pkgconfig_2.0.3    pillar_1.11.1     
+[37] gtable_0.3.6       glue_1.8.1         data.table_1.18.4  Rcpp_1.1.2        
+[41] xfun_0.60          tibble_3.3.1       tidyselect_1.2.1   rstudioapi_0.19.0 
+[45] knitr_1.51         farver_2.1.2       nlme_3.1-169       htmltools_0.5.9   
+[49] rmarkdown_2.31     labeling_0.4.3     compiler_4.6.1     S7_0.2.2          </code></pre>
+</div>
+</div>
+</section>
+<section class="slide level2 center">
+
+<p><strong>End of Module 4 &amp; Workshop</strong></p>
+<p><em>Grammar of Graphics: The ggplot2 Philosophy - Complete</em></p>
+</section>
+<section id="bonus-combining-plots-with-patchwork" class="slide level2 smaller center">
+<h2>Bonus: Combining Plots with patchwork</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb26-2"><a></a></span>
+<span id="cb26-3"><a></a><span class="co"># Create individual plots</span></span>
+<span id="cb26-4"><a></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb26-5"><a></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> BMI, <span class="at">y =</span> Cholesterol)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb26-6"><a></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Region, <span class="at">y =</span> SysBP_0m)) <span class="sc">+</span> <span class="fu">geom_boxplot</span>()</span>
+<span id="cb26-7"><a></a>p4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> SysBP_Change)) <span class="sc">+</span> <span class="fu">geom_histogram</span>()</span>
+<span id="cb26-8"><a></a></span>
+<span id="cb26-9"><a></a><span class="co"># Combine in various layouts</span></span>
+<span id="cb26-10"><a></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> p3 <span class="sc">+</span> p4                    <span class="co"># Side by side</span></span>
+<span id="cb26-11"><a></a>(p1 <span class="sc">|</span> p2) <span class="sc">/</span> (p3 <span class="sc">|</span> p4)                <span class="co"># Grid</span></span>
+<span id="cb26-12"><a></a>p1 <span class="sc">/</span> (p2 <span class="sc">|</span> p3)                       <span class="co"># Complex layout</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="fragment">
+<p><strong>patchwork</strong> makes combining plots intuitive with <code>+</code>, <code>|</code>, and <code>/</code> operators</p>
+</div>
+</section>
+<section id="bonus-example-combined-plot" class="slide level2 center">
+<h2>Bonus: Example Combined Plot</h2>
+
+
+
+<img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-37-1.png" width="1152" class="r-stretch"></section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: true,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <div style="
+
+      position: fixed;
+
+      bottom: 10px;
+
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      font-size: 0.9em;
+
+      color: black;
+
+      background-color: transparent;
+
+      z-index: 9999;
+
+      text-align: center;
+
+      display: flex;
+
+      gap: 20px;
+
+      justify-content: center;
+
+    ">
+
+      <a href="../../welcome.html" style="color: black;">🏠 Home</a>
+
+      <span id="nextModule" style="display: none;">
+
+        | <a href="" id="nextModuleLink" style="color: black;">📚 Next Module</a>
+
+      </span>
+
+      <span id="nextSection" style="display: none;">
+
+        | <a href="" id="nextSectionLink" style="color: black;">➡️ Next Section</a>
+
+      </span>
+
+    </div>
+
+    
+
+    <script>
+
+    (async function() {
+
+      try {
+
+        // Load navigation config
+
+        const response = await fetch('../../navigation.json');
+
+        const navConfig = await response.json();
+
+        
+
+        // Detect current profile (basic, moderate, advanced)
+
+        const pathParts = window.location.pathname.split('/');
+
+        const profile = pathParts[pathParts.length - 4] || 'basic';
+
+        
+
+        // Get current filename (e.g., module_1_foundations_geoms.html)
+
+        const currentFile = pathParts[pathParts.length - 1].replace('.html', '.qmd');
+
+        
+
+        // Get section directory (e.g., gram_ggplot)
+
+        const section = pathParts[pathParts.length - 2];
+
+        
+
+        // Look up current page in nav config
+
+        if (navConfig[profile] && navConfig[profile][section]) {
+
+          const modules = navConfig[profile][section];
+
+          const currentModule = modules.find(m => m.file === currentFile);
+
+          
+
+          if (currentModule) {
+
+            const convertLink = (link) => link.replace(/\.qmd$/i, '.html');
+
+            // Set next module link
+
+            if (currentModule['next-module']) {
+
+              document.getElementById('nextModule').style.display = 'inline';
+
+              const nextModuleHref = convertLink(currentModule['next-module']);
+
+              document.getElementById('nextModuleLink').href = nextModuleHref;
+
+              document.getElementById('nextModuleLink').textContent = '📚 ' + (currentModule['next-module'].split('/').pop().replace('.qmd', '') || 'Next Module');
+
+            }
+
+            
+
+            // Set next section link
+
+            if (currentModule['next-section']) {
+
+              document.getElementById('nextSection').style.display = 'inline';
+
+              const nextSectionHref = convertLink(currentModule['next-section']);
+
+              document.getElementById('nextSectionLink').href = nextSectionHref;
+
+              document.getElementById('nextSectionLink').textContent = '➡️ Next Section';
+
+            }
+
+          }
+
+        }
+
+      } catch (error) {
+
+        console.warn('Navigation config not loaded:', error);
+
+      }
+
+    })();
+
+    </script>
+    
+
+    <script>
+
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
+      // slide changes (different for each slide format).
+
+      (function () {
+
+        // dispatch for htmlwidgets
+
+        function fireSlideEnter() {
+
+          const event = window.document.createEvent("Event");
+
+          event.initEvent("slideenter", true, true);
+
+          window.document.dispatchEvent(event);
+
+        }
+
+    
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          fireSlideEnter();
+
+    
+
+          // dispatch for shiny
+
+          if (window.jQuery) {
+
+            if (previousSlide) {
+
+              window.jQuery(previousSlide).trigger("hidden");
+
+            }
+
+            if (currentSlide) {
+
+              window.jQuery(currentSlide).trigger("shown");
+
+            }
+
+          }
+
+        }
+
+    
+
+        // hookup for slidy
+
+        if (window.w3c_slidy) {
+
+          window.w3c_slidy.add_observer(function (slide_num) {
+
+            // slide_num starts at position 1
+
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
+          });
+
+        }
+
+    
+
+      })();
+
+    </script>
+
+    
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("\.");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

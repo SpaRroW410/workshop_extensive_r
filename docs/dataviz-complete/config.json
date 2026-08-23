@@ -1,0 +1,38 @@
+{
+  "profiles": {
+    "basic": {
+      "label": "Basic",
+      "description": "Wrangling · Basic Visualization · Test Selection · ggstatsplot · Quarto",
+      "locked": false,
+      "path": "basic/welcome.html"
+    },
+    "moderate": {
+      "label": "Moderate",
+      "description": "Best Practices · Intermediate Plots · ggplot Modules 1–2 · gtsummary · Applied Examples",
+      "locked": true,
+      "key": "WORKSHOP-MOD",
+      "path": "moderate/welcome.html"
+    },
+    "advanced": {
+      "label": "Advanced",
+      "description": "Advanced Plots · Interactive · All Modules · Publication Quarto · Deep Analysis",
+      "locked": true,
+      "key": "WORKSHOP-ADV",
+      "path": "advanced/welcome.html"
+    },
+    "dataviz-base": {
+      "label": "Data Visualization — Foundations",
+      "description": "Viz-only track: Grammar · Best Practices · Modules 1–2 · Basic & Intermediate Gallery",
+      "locked": true,
+      "key": "DATAVIZ-BASE",
+      "path": "dataviz-base/welcome.html"
+    },
+    "dataviz-complete": {
+      "label": "Data Visualization — Complete",
+      "description": "Full viz track: All modules · Advanced Gallery · Interactive · Practical Applications",
+      "locked": true,
+      "key": "DATAVIZ-FULL",
+      "path": "dataviz-complete/welcome.html"
+    }
+  }
+}

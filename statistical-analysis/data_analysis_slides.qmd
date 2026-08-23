@@ -29,7 +29,7 @@ library(car)
 library(rstatix)
 library(exact2x2)
 
-p <- read_excel("prac_modded.xlsx") |>
+p <- read_excel("../data/prac_modded.xlsx") |>
   clean_names()
 ```
 
