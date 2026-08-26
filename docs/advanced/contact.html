@@ -93,10 +93,6 @@ ul.task-list li input[type="checkbox"] {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="./welcome.html"> 
-<span class="menu-text">🏠 Home</span></a>
-  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-r-foundations" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">R Foundations</span>
@@ -216,19 +212,19 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Regression Analysis</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./statistical-analysis/ggstatsplot_intro.qmd">
+    <a class="dropdown-item" href="./ggstatsplot/ggstatsplot_intro.html">
  <span class="dropdown-text">ggstatsplot — Intro</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./statistical-analysis/ggstatsplot_moderate.qmd">
+    <a class="dropdown-item" href="./ggstatsplot/ggstatsplot_moderate.html">
  <span class="dropdown-text">ggstatsplot — Intermediate</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./statistical-analysis/ggstatsplot_advanced.qmd">
+    <a class="dropdown-item" href="./ggstatsplot/ggstatsplot_advanced.html">
  <span class="dropdown-text">ggstatsplot — Advanced</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./statistical-analysis/gtsummary_tutorial.qmd">
+    <a class="dropdown-item" href="./gtsummary/gtsummary_tutorial.html">
  <span class="dropdown-text">gtsummary Tables</span></a>
   </li>  
         <li>
@@ -248,15 +244,15 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-quarto">    
         <li>
-    <a class="dropdown-item" href="./statistical-analysis/reproducible_writing.qmd">
+    <a class="dropdown-item" href="./quarto_repro_w/reproducible_writing.html">
  <span class="dropdown-text">Quarto Basics</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./statistical-analysis/quarto_moderate.qmd">
+    <a class="dropdown-item" href="./quarto_repro_w/quarto_moderate.html">
  <span class="dropdown-text">Quarto — Dynamic Documents</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./statistical-analysis/quarto_advanced.qmd">
+    <a class="dropdown-item" href="./quarto_repro_w/quarto_advanced.html">
  <span class="dropdown-text">Quarto — Publication</span></a>
   </li>  
     </ul>
@@ -786,6 +782,79 @@ GitHub: <a href="https://github.com/SpaRroW410">github.com/SpaRroW410</a></p>
   });
   </script>
 </div> <!-- /content -->
+<script>
+// Quarto's navbar `logo-href` is emitted as a literal string and is
+// not depth-adjusted for nested pages (unlike navbar.left/right items
+// and the theme <link>), so it 404s from any page below the project
+// root. Derive the correct relative prefix from the theme stylesheet
+// link, which Quarto *does* resolve correctly, and reuse it here.
+(function () {
+  var css = document.querySelector('link[href$="assets/theme_webp.css"]');
+  var brand = document.querySelector('a.navbar-brand');
+  if (css && brand) {
+    var prefix = css.getAttribute('href').replace(/assets\/theme_webp\.css$/, '');
+    brand.setAttribute('href', prefix + 'welcome.html');
+
+    // Floating bottom-right icon cluster: track home / site index /
+    // close. Kiosk mode (start-workshop.bat) hides all browser
+    // chrome, so these give a way back without relying on the
+    // browser's own controls. Positioned bottom-right to avoid the
+    // top navbar and the bottom-center "Home | Next Module" footer
+    // some pages already include.
+    var isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+
+    var style = document.createElement('style');
+    style.textContent =
+      '.ws-nav-cluster{position:fixed;bottom:10px;right:10px;z-index:10000;' +
+      'display:flex;gap:6px;background:rgba(255,255,255,0.9);' +
+      'border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,0.2);}' +
+      '.ws-nav-cluster a,.ws-nav-cluster button{width:36px;height:36px;' +
+      'border-radius:50%;border:none;background:#fff;font-size:1.1rem;' +
+      'display:flex;align-items:center;justify-content:center;cursor:pointer;' +
+      'text-decoration:none;color:inherit;box-shadow:0 1px 3px rgba(0,0,0,0.15);}' +
+      '.ws-nav-cluster a:hover,.ws-nav-cluster button:hover{background:#f0f0f0;}' +
+      '.ws-nav-hint{position:fixed;bottom:54px;right:10px;z-index:10000;' +
+      'background:#2c3e50;color:#fff;font-size:0.8rem;padding:6px 10px;' +
+      'border-radius:6px;display:none;white-space:nowrap;}';
+    document.head.appendChild(style);
+
+    var cluster = document.createElement('div');
+    cluster.className = 'ws-nav-cluster';
+
+    var trackHome = document.createElement('a');
+    trackHome.href = prefix + 'welcome.html';
+    trackHome.title = 'Back to track home';
+    trackHome.textContent = '🏠';
+    cluster.appendChild(trackHome);
+
+    var siteIndex = document.createElement('a');
+    siteIndex.href = prefix + '../index.html';
+    siteIndex.title = 'All workshop tracks';
+    siteIndex.textContent = '🧭';
+    cluster.appendChild(siteIndex);
+
+    if (isLocal) {
+      var hint = document.createElement('div');
+      hint.className = 'ws-nav-hint';
+      hint.textContent = 'Press Alt+F4 to exit full-screen';
+      document.body.appendChild(hint);
+
+      var closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.title = 'Exit full-screen';
+      closeBtn.textContent = '✕';
+      closeBtn.addEventListener('click', function () {
+        window.close();
+        hint.style.display = 'block';
+        setTimeout(function () { hint.style.display = 'none'; }, 3000);
+      });
+      cluster.appendChild(closeBtn);
+    }
+
+    document.body.appendChild(cluster);
+  }
+})();
+</script>
 
 
 

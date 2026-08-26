@@ -110,3 +110,123 @@ tbl_regression(model_log, exponentiate = TRUE)
 `exponentiate = TRUE` converts the log-odds coefficients into odds ratios, which are usually easier to report and interpret.
 
 :::
+
+::: {.content-visible when-profile="regression"}
+
+## Multiple Regression
+
+Adding more predictors lets the model account for other sources of variation at the same time.
+
+```{r}
+library(gtsummary)
+
+model <- lm(blood_pressure ~ age + treatment, data = data)
+summary(model)
+
+# Using gtsummary for a publication-ready table
+tbl_regression(model)
+```
+
+Each coefficient is now interpreted "holding the other predictors constant" — the `treatment` effect is adjusted for `age`, and vice versa.
+
+## Regression Diagnostics
+
+A fitted model is only trustworthy once its assumptions have been checked.
+
+```{r}
+par(mfrow = c(2, 2))
+plot(model)
+```
+
+```{r}
+# Residuals vs fitted, and a normal Q-Q check
+qqnorm(residuals(model))
+qqline(residuals(model), col = "red")
+```
+
+Watch for: non-random patterns in residuals-vs-fitted (non-linearity), points far off the Q-Q line (non-normal residuals), and high-leverage points in the residuals-vs-leverage panel.
+
+## Logistic Regression
+
+When the outcome is binary rather than continuous, use `glm()` with a binomial family instead of `lm()`.
+
+```{r}
+data$outcome <- sample(c("Improved", "Not Improved"), 100, replace = TRUE)
+data$outcome_bin <- ifelse(data$outcome == "Improved", 1, 0)
+
+model_log <- glm(outcome_bin ~ age + treatment, data = data, family = binomial)
+summary(model_log)
+
+# Odds ratios instead of raw log-odds
+tbl_regression(model_log, exponentiate = TRUE)
+```
+
+`exponentiate = TRUE` converts the log-odds coefficients into odds ratios, which are usually easier to report and interpret.
+
+## Univariate Regression Screening
+
+Before building a multivariable model, it's common to screen each predictor on its own first. `gtsummary::tbl_uvregression()` fits one regression per predictor and lays the results out in a single comparison table.
+
+```{r}
+data$bmi <- rnorm(100, 27, 4)
+
+tbl_uvregression(
+  data[, c("blood_pressure", "age", "treatment", "bmi")],
+  method = lm,
+  y = blood_pressure,
+  hide_n = TRUE
+)
+```
+
+Each row is its own simple regression, fit independently — this is a screening step, not a substitute for the multivariable model above, since it ignores confounding between predictors.
+
+## Cox Proportional Hazards Regression
+
+For time-to-event outcomes (e.g. time to recovery, time to relapse), use `survival::coxph()` instead of `lm()`/`glm()`. It models the *hazard* of the event happening at any given time, adjusted for covariates.
+
+```{r}
+library(survival)
+
+data$time  <- rexp(100, rate = 0.05)
+data$event <- rbinom(100, 1, 0.7)   # 1 = event observed, 0 = censored
+
+cox_model <- coxph(Surv(time, event) ~ age + treatment, data = data)
+summary(cox_model)
+
+# Hazard ratios instead of raw log-hazard coefficients
+tbl_regression(cox_model, exponentiate = TRUE)
+```
+
+`exponentiate = TRUE` reports hazard ratios: above 1 means a faster time-to-event (higher instantaneous risk) as the predictor increases, below 1 means a slower one.
+
+```{r}
+fit <- survfit(Surv(time, event) ~ treatment, data = data)
+plot(
+  fit, col = c("#3498db", "#e74c3c"), lwd = 2,
+  xlab = "Time", ylab = "Survival probability",
+  main = "Kaplan-Meier Curves by Treatment"
+)
+legend("topright", legend = c("Treatment A", "Treatment B"),
+       col = c("#3498db", "#e74c3c"), lwd = 2)
+```
+
+The Kaplan-Meier curve shows the estimated probability of not yet having experienced the event over time for each treatment group — a purely descriptive view, independent of the Cox model's covariate adjustment above.
+
+## Model Diagnostics with `performance`
+
+The `performance` package gives a quick, standardized diagnostic check for a fitted model, going further than the base-R diagnostic plots used earlier.
+
+```{r}
+library(performance)
+
+check_model(model)
+```
+
+```{r}
+r2(model)
+check_collinearity(model)
+```
+
+`check_model()` bundles several checks — linearity, homogeneity of variance, normality of residuals, influential observations, and collinearity — into one panel. `check_collinearity()` reports Variance Inflation Factors (VIF) on their own; values above roughly 5 suggest predictors are too correlated with each other to interpret their individual coefficients reliably.
+
+:::

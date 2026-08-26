@@ -1,0 +1,35 @@
+# ═══════════════════════════════════════════════════════════════
+# _quarto-regression.yml  — REGRESSION PROFILE
+# Render with:  quarto render --profile regression
+# Output goes to:  docs/regression/
+# ═══════════════════════════════════════════════════════════════
+
+project:
+  output-dir: docs/regression
+
+website:
+  title: "Data Visualization Workshop — Regression"
+  site-url: "."
+  search: true
+
+  navbar:
+    logo-href: welcome.html
+    left:
+      - text: "R Foundations"
+        menu:
+          - text: "Getting Started"
+            href: r-foundations/getting-started.qmd
+          - text: "Data Wrangling (Tidyverse)"
+            href: r-foundations/data-wrangling.qmd
+      - text: "Regression Analysis"
+        href: statistical-analysis/regression.qmd
+    right:
+      - text: "Reference"
+        icon: book
+        menu:
+          - text: "Contact Us"
+            href: contact.qmd
+          - text: "References"
+            href: references.qmd
+          - text: "Downloads"
+            href: downloads.qmd

@@ -15,8 +15,6 @@ website:
   navbar:
     logo-href: welcome.html
     left:
-      - href: welcome.qmd
-        text: "🏠 Home"
       - text: "R Foundations"
         menu:
           - text: "Getting Started"
@@ -40,11 +38,11 @@ website:
           - text: "Regression Analysis"
             href: statistical-analysis/regression.qmd
           - text: "ggstatsplot — Intro"
-            href: statistical-analysis/ggstatsplot_intro.qmd
+            href: ggstatsplot/ggstatsplot_intro.qmd
       - text: "Quarto"
         menu:
           - text: "Quarto Basics"
-            href: statistical-analysis/reproducible_writing.qmd
+            href: quarto_repro_w/reproducible_writing.qmd
     right:
       - text: "Reference"
         icon: book

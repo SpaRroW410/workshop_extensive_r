@@ -24,6 +24,17 @@ if [ ! -f "config.json" ]; then
   exit 1
 fi
 
+# ── Local machine overrides (e.g. QUARTO_R / R_LIBS_USER pointing at an
+# ARM64 R install) — optional, gitignored, only present if you've set one
+# up on this machine. Sourced (not just read by Quarto) so the values
+# truly override anything already inherited from the shell/session.
+if [ -f "_environment" ]; then
+  while IFS='=' read -r key value; do
+    case "$key" in ""|\#*) continue ;; esac
+    export "$key=$value"
+  done < "_environment"
+fi
+
 # ── Helper ────────────────────────────────────────────────────
 render_profile() {
   local label="$1"
@@ -79,6 +90,7 @@ render_profile "Moderate"                   "moderate"        "docs/moderate"
 render_profile "Advanced"                   "advanced"        "docs/advanced"
 render_profile "DataViz — Foundations"      "dataviz-base"    "docs/dataviz-base"
 render_profile "DataViz — Complete"         "dataviz-complete" "docs/dataviz-complete"
+render_profile "Regression"                 "regression"       "docs/regression"
 
 # ── Done ──────────────────────────────────────────────────────
 echo ""

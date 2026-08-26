@@ -10,3 +10,7 @@ _site/
 .positai
 
 .serve-pids/
+
+# Machine-local R interpreter/library override (e.g. ARM64 R path) —
+# not portable across collaborators' machines.
+_environment

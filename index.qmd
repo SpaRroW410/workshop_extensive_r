@@ -102,17 +102,17 @@ format:
   </div>
 
 
-  <!-- Row 2: DataViz Foundations · DataViz Complete -->
+  <!-- Row 2: DataViz Foundations · DataViz Complete · Regression -->
   <h2 class="ws-section-heading ws-section-heading--second">
-    Visualization-Focused Tracks
+    Focused Tracks
   </h2>
   <p class="ws-section-sub">
-    Dedicated tracks covering only visualization — no statistical analysis modules.
-    Ideal for focused workshops on ggplot2 and plot design.
+    Dedicated tracks covering a single area in depth — visualization only, or
+    statistics only. Ideal for focused workshops.
   </p>
 
 
-  <div class="ws-cards-row ws-cards-row--two" id="cards-row-2">
+  <div class="ws-cards-row" id="cards-row-2">
 
 
     <div class="ws-card ws-card--locked ws-card--viz" data-profile="dataviz-base">
@@ -144,6 +144,23 @@ format:
         <li>Debugging &amp; Advanced Export</li>
       </ul>
       <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('dataviz-complete')" disabled>
+        Enter Key →
+      </button>
+    </div>
+
+
+    <div class="ws-card ws-card--locked ws-card--stats" data-profile="regression">
+      <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+      <h3 class="ws-card-title">Regression</h3>
+      <ul class="ws-card-list">
+        <li>R Foundations &amp; Data Wrangling</li>
+        <li>Simple &amp; Multiple Linear Regression</li>
+        <li>Univariate Regression Screening</li>
+        <li>Logistic Regression</li>
+        <li>Cox Proportional Hazards Regression</li>
+        <li>Model Diagnostics with performance</li>
+      </ul>
+      <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('regression')" disabled>
         Enter Key →
       </button>
     </div>

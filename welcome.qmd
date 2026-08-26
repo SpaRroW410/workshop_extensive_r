@@ -225,6 +225,43 @@ meta <- list(
     ),
     tip  = "Already done Foundations? Start at **Module 3 — Colors, Scales & Themes** to pick up where you left off.",
     nav_note = "The full navbar above gives access to all visualization content."
+  ),
+
+  regression = list(
+    title   = "Regression Track",
+    badge   = "🟡 Workshop Key Unlocked",
+    colour  = "#b8860b",
+    bg      = "#fffbf0",
+    intro   = "Welcome to the **Regression Track** — a focused, statistics-first path through R. This track covers R foundations and data wrangling, then goes deep on regression: simple and multiple linear regression, logistic regression, univariate screening, Cox proportional hazards models, and model diagnostics with the `performance` package.",
+    goals   = c(
+      "Get comfortable with R syntax and importing/wrangling data",
+      "Fit and interpret simple and multiple linear regression models",
+      "Screen predictors with univariate regression and build multivariable models",
+      "Fit logistic and Cox proportional hazards models for binary and time-to-event outcomes",
+      "Check model assumptions with base-R diagnostics and the `performance` package"
+    ),
+    modules = c(
+      "📁 R Foundations & Data Wrangling",
+      "📈 Simple & Multiple Linear Regression",
+      "🧮 Univariate Regression Screening",
+      "🎯 Logistic Regression",
+      "⏱️ Cox Proportional Hazards Regression",
+      "🩺 Model Diagnostics (base R + `performance`)"
+    ),
+    nav = list(
+      list(icon="📁", label="R Foundations",     href="r-foundations/getting-started.qmd", desc="R syntax, data import, and tidy data wrangling"),
+      list(icon="📈", label="Regression Analysis",href="statistical-analysis/regression.qmd",desc="Linear, logistic, and Cox regression, plus diagnostics")
+    ),
+    show_stats   = TRUE,
+    show_quarto  = FALSE,
+    downloads = list(
+      scripts    = character(0),
+      datasets   = character(0),
+      cheatsheets= c("downloads/cheatsheets/data-import.pdf", "downloads/cheatsheets/data-transformation.pdf"),
+      quarto     = character(0)
+    ),
+    tip  = "New to R? Start with **R Foundations → Getting Started**, then head straight to **Regression Analysis** — it covers everything from a single predictor through Cox regression on one page.",
+    nav_note = "Use the navbar above to jump straight to Regression Analysis at any time."
   )
 )
 

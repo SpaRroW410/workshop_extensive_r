@@ -87,15 +87,8 @@
   gap: 1.25rem;
 }
 
-.ws-cards-row--two {
-  grid-template-columns: repeat(2, 1fr);
-  max-width: 760px;
-  margin: 0 auto;
-}
-
 @media (max-width: 900px) {
   .ws-cards-row        { grid-template-columns: 1fr; }
-  .ws-cards-row--two   { grid-template-columns: 1fr; }
 }
 
 /* ── Cards ──────────────────────────────────────────────── */
@@ -121,6 +114,11 @@
 .ws-card--viz {
   background: #f8fbff;
   border-color: #3498db;
+}
+
+.ws-card--stats {
+  background: #fffdf5;
+  border-color: #b8860b;
 }
 
 /* ── Card Badge ─────────────────────────────────────────── */

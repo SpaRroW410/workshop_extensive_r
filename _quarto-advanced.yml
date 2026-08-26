@@ -15,8 +15,6 @@ website:
   navbar:
     logo-href: welcome.html
     left:
-      - href: welcome.qmd
-        text: "🏠 Home"
       - text: "R Foundations"
         menu:
           - text: "Getting Started"
@@ -74,13 +72,13 @@ website:
           - text: "Regression Analysis"
             href: statistical-analysis/regression.qmd
           - text: "ggstatsplot — Intro"
-            href: statistical-analysis/ggstatsplot_intro.qmd
+            href: ggstatsplot/ggstatsplot_intro.qmd
           - text: "ggstatsplot — Intermediate"
-            href: statistical-analysis/ggstatsplot_moderate.qmd
+            href: ggstatsplot/ggstatsplot_moderate.qmd
           - text: "ggstatsplot — Advanced"
-            href: statistical-analysis/ggstatsplot_advanced.qmd
+            href: ggstatsplot/ggstatsplot_advanced.qmd
           - text: "gtsummary Tables"
-            href: statistical-analysis/gtsummary_tutorial.qmd
+            href: gtsummary/gtsummary_tutorial.qmd
           - text: "Data Analysis"
             href: statistical-analysis/data_analysis.qmd
           - text: "---"
@@ -89,11 +87,11 @@ website:
       - text: "Quarto"
         menu:
           - text: "Quarto Basics"
-            href: statistical-analysis/reproducible_writing.qmd
+            href: quarto_repro_w/reproducible_writing.qmd
           - text: "Quarto — Dynamic Documents"
-            href: statistical-analysis/quarto_moderate.qmd
+            href: quarto_repro_w/quarto_moderate.qmd
           - text: "Quarto — Publication"
-            href: statistical-analysis/quarto_advanced.qmd
+            href: quarto_repro_w/quarto_advanced.qmd
       - text: "Exporting & Tools"
         menu:
           - text: "Exporting Plots"
