@@ -10,11 +10,10 @@ format:
 editor:
   markdown:
     wrap: 72
-    
----
-::: {.content-visible when-profile="advanced"}
 
-## Intermediate Plot 
+---
+
+## Intermediate Plot
 
 Explore foundational plots grouped by data type and relationship
 
@@ -22,7 +21,7 @@ Explore foundational plots grouped by data type and relationship
 
 ### ▸ Categorical Plots
 
-Includes: 
+Includes:
 - Treemaps (hierarchical proportions)
 - Sunburst charts (circular hierarchies)
 - Dendrograms (clustering)
@@ -34,7 +33,7 @@ Includes:
 
 ### ▸ Continuous Plots
 
-Includes: 
+Includes:
 - Contour plots (2D density)
 - 3D surface plots
 - Parallel coordinates
@@ -46,7 +45,7 @@ Includes:
 
 ### ▸ Category vs. Continuous
 
-Includes: 
+Includes:
 - Effect plots (model-based)
 - Interaction plots
 - Marginal effects
@@ -56,7 +55,7 @@ Includes:
 
 ---
 
-### ▸ Time 
+### ▸ Time
 
 Includes:
 - STL decomposition (trend/seasonal)
@@ -76,7 +75,6 @@ Includes:
 - Bipartite networks
 🔗 [View Slide Deck →](advanced/3.5_network_advanced.qmd)
 
-::: {.content-visible when-meta="advanced-content"}
 ### ▸ Geographical
 
 Includes:
@@ -86,9 +84,7 @@ Includes:
 - Hexbin maps
 - Isochrone maps
 🔗 [View Slide Deck →](advanced/3.6_geographic_advanced.qmd)
-:::
 
-::: {.content-visible when-meta="advanced-content"}
 ### ▸ Dashboard
 
 Includes:
@@ -98,7 +94,3 @@ Includes:
 - plotly interactivity
 - flexdashboard framework
 🔗 [View Slide Deck →](advanced/3.7_dashboards_advanced.qmd)
-:::
-
-:::
-

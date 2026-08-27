@@ -1,0 +1,717 @@
+---
+title: "Categorical - ADVANCED"
+subtitle: "Hierarchical & Complex Categorical Data"
+format:
+  revealjs:
+    theme: serif
+    css: ../../assets/slide_deck.css
+    include-after-body: footer.html
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    code-fold: true
+    chalkboard: true
+    preview-links: true
+    center: true
+    zoom: true
+---
+
+# Advanced Categorical Visualization {.center}
+
+## What We'll Learn - Advanced
+
+::: {.columns}
+::: {.column width="50%"}
+**Complex Categorical Structures:**
+
+- Treemaps (hierarchical proportions)
+- Sunburst charts (circular hierarchies)
+- Dendrograms (clustering)
+- Marimekko charts (two-way composition)
+- Waffle charts (unit visualization)
+:::
+
+::: {.column width="50%"}
+**Analytical Goals:**
+
+- 🔴 **Part of Whole** - Hierarchical composition
+- 🟢 **Ranking** - Within hierarchies
+- ⚫ **Correlation** - Category associations
+- 🟡 **Distribution** - Nested patterns
+:::
+:::
+
+## Setup Code
+
+```{r}
+#| echo: true
+#| message: false
+
+# Load required packages
+library(readxl)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(treemapify)  # For treemaps
+library(sunburstR)   # For sunburst charts
+library(ggmosaic)    # For mosaic plots
+
+# Load dataset
+health_data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+
+# Create hierarchical data
+hierarchical_data <- health_data %>%
+  filter(!is.na(Region), !is.na(Gender), !is.na(SmokingStatus)) %>%
+  count(Region, Gender, SmokingStatus, name = "count")
+
+# Create theme
+theme_custom <- function() {
+  theme_minimal() +
+  theme(
+    text = element_text(family = "serif", size = 12),
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 11, hjust = 0.5),
+    legend.position = "bottom"
+  )
+}
+```
+
+## Treemap - Code
+
+::: {style="font-size: 0.8em;"}
+**Purpose:** Show hierarchical part-to-whole relationships
+
+**Goal:** 🔴 Part of Whole + 🟢 Ranking
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Prepare data for treemap
+treemap_data <- health_data %>%
+  filter(!is.na(Region), !is.na(TreatmentGroup)) %>%
+  count(Region, TreatmentGroup, name = "count") %>%
+  mutate(label = paste0(TreatmentGroup, "\n(n=", count, ")"))
+
+# Create treemap
+ggplot(treemap_data, aes(area = count, fill = Region, 
+                         label = label, subgroup = Region)) +
+  geom_treemap() +
+  geom_treemap_subgroup_border(color = "white", size = 3) +
+  geom_treemap_subgroup_text(
+    place = "center",
+    grow = TRUE,
+    alpha = 0.5,
+    color = "black",
+    fontface = "bold",
+    size = 18
+  ) +
+  geom_treemap_text(
+    color = "white",
+    place = "center",
+    size = 10,
+    grow = FALSE
+  ) +
+  scale_fill_brewer(palette = "Set2") +
+  labs(title = "Patient Distribution by Region and Treatment",
+       subtitle = "Rectangle size proportional to patient count",
+       fill = "Region") +
+  theme_custom() +
+  theme(legend.position = "right")
+```
+:::
+
+## Treemap - Output
+
+```{r}
+#| echo: false
+#| fig-width: 11
+#| fig-height: 7
+#| warning: false
+
+treemap_data <- health_data %>%
+  filter(!is.na(Region), !is.na(TreatmentGroup)) %>%
+  count(Region, TreatmentGroup, name = "count") %>%
+  mutate(label = paste0(TreatmentGroup, "\n(n=", count, ")"))
+
+ggplot(treemap_data, aes(area = count, fill = Region, 
+                         label = label, subgroup = Region)) +
+  geom_treemap() +
+  geom_treemap_subgroup_border(color = "white", size = 3) +
+  geom_treemap_subgroup_text(
+    place = "center",
+    grow = TRUE,
+    alpha = 0.5,
+    color = "black",
+    fontface = "bold",
+    size = 18
+  ) +
+  geom_treemap_text(
+    color = "white",
+    place = "center",
+    size = 10,
+    grow = FALSE
+  ) +
+  scale_fill_brewer(palette = "Set2") +
+  labs(title = "Patient Distribution by Region and Treatment",
+       subtitle = "Rectangle size proportional to patient count",
+       fill = "Region") +
+  theme_custom() +
+  theme(legend.position = "right")
+```
+
+## Interpreting Treemaps
+
+::: {.columns style="font-size: 0.9em;"}
+::: {.column width="50%"}
+**Key Features:**
+
+- **Size = Quantity** - Larger rectangles = more patients
+- **Color = Category** - Each region has its own color
+- **Hierarchy** - Region (outer) → Treatment (inner)
+- **Space-efficient** - Uses all available area
+
+**Best Practices:**
+
+- Limit to 2-3 hierarchy levels
+- Use clear labels
+- Consistent color scheme
+- Consider interactivity for complex trees
+:::
+
+::: {.column width="50%"}
+**Our Treemap Shows:**
+
+1. **East region largest** overall
+   - Most patients
+
+2. **Within each region** treatment distribution visible
+   - Relative sizes easy to compare
+
+3. **Quick identification** of smallest/largest segments
+
+4. **Hierarchical structure** immediately clear
+   - Region → Treatment breakdown
+
+**Advantage:** Efficient use of space compared to nested pie charts
+:::
+:::
+
+## Sunburst Chart - Code
+
+::: {style="font-size: 0.75em;"}
+**Purpose:** Radial hierarchical visualization
+
+**Goal:** 🔴 Part of Whole (circular)
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Prepare data in required format for sunburst
+# Format: path-count pairs
+sunburst_data <- health_data %>%
+  filter(!is.na(Region), !is.na(Gender), !is.na(SmokingStatus)) %>%
+  count(Region, Gender, SmokingStatus) %>%
+  mutate(path = paste(Region, Gender, SmokingStatus, sep = "-")) %>%
+  select(path, n)
+
+# Create sunburst chart
+sunburst(
+  data = sunburst_data,
+  count = TRUE,
+  legend = list(w = 150, h = 25, s = 5, t = 25),
+  breadcrumb = list(w = 0, h = 25, s = 5, t = 10),
+  colors = list(
+    range = c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
+             "#FF7F00", "#FFFF33", "#A65628", "#F781BF")
+  ),
+  withD3 = TRUE,
+  width = "100%",
+  height = 500
+)
+```
+
+**Note:** Sunburst creates interactive HTML widget. For static, use `ggplot2` alternative.
+
+**Static Alternative (next slide):**
+:::
+
+## Sunburst Alternative: Radial Bar - Code
+
+::: {style="font-size: 0.8em;"}
+```{r}
+#| echo: true
+#| eval: false
+
+# Create radial bar plot (sunburst alternative)
+radial_data <- health_data %>%
+  filter(!is.na(Region), !is.na(SmokingStatus)) %>%
+  count(Region, SmokingStatus) %>%
+  group_by(Region) %>%
+  mutate(
+    percentage = n / sum(n) * 100,
+    id = paste(Region, SmokingStatus, sep = "-")
+  )
+
+ggplot(radial_data, aes(x = Region, y = n, fill = SmokingStatus)) +
+  geom_col(width = 1, color = "white", size = 0.5) +
+  coord_polar() +
+  scale_fill_manual(values = c("Never" = "#00A087", 
+                              "Former" = "#3C5488",
+                              "Current" = "#DC0000")) +
+  labs(title = "Smoking Status Distribution by Region (Radial)",
+       subtitle = "Each segment shows proportion within region",
+       fill = "Smoking Status") +
+  theme_custom() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank()
+  )
+```
+:::
+
+## Radial Bar - Output
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 7
+
+radial_data <- health_data %>%
+  filter(!is.na(Region), !is.na(SmokingStatus)) %>%
+  count(Region, SmokingStatus) %>%
+  group_by(Region) %>%
+  mutate(
+    percentage = n / sum(n) * 100,
+    id = paste(Region, SmokingStatus, sep = "-")
+  )
+
+ggplot(radial_data, aes(x = Region, y = n, fill = SmokingStatus)) +
+  geom_col(width = 1, color = "white", size = 0.5) +
+  coord_polar() +
+  scale_fill_manual(values = c("Never" = "#00A087", 
+                              "Former" = "#3C5488",
+                              "Current" = "#DC0000")) +
+  labs(title = "Smoking Status Distribution by Region (Radial)",
+       subtitle = "Each segment shows proportion within region",
+       fill = "Smoking Status") +
+  theme_custom() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank()
+  )
+```
+
+## Marimekko Chart - Code
+
+::: {style="font-size: 0.8em;"}
+**Purpose:** Two-way composition (varying column widths)
+
+**Goal:** 🔴 Part of Whole (two dimensions)
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Prepare data for Marimekko
+marimekko_data <- health_data %>%
+  filter(!is.na(Region), !is.na(TreatmentGroup)) %>%
+  count(Region, TreatmentGroup) %>%
+  group_by(Region) %>%
+  mutate(
+    region_total = sum(n),
+    pct_in_region = n / region_total * 100
+  ) %>%
+  ungroup() %>%
+  mutate(
+    region_pct = region_total / sum(region_total) * 100,
+    cumsum_region = cumsum(region_pct) - region_pct / 2
+  )
+
+# Create Marimekko chart
+ggplot(marimekko_data, aes(x = Region, y = pct_in_region, 
+                           fill = TreatmentGroup, width = region_pct)) +
+  geom_col(position = "stack", color = "white", size = 0.5) +
+  scale_fill_brewer(palette = "Set1") +
+  labs(title = "Treatment Distribution by Region (Marimekko)",
+       subtitle = "Column width = regional patient share | Height = treatment proportion",
+       x = "Region",
+       y = "Percentage within Region",
+       fill = "Treatment") +
+  theme_custom() +
+  theme(axis.text.x = element_text(angle = 0))
+```
+:::
+
+## Marimekko Chart - Output
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+#| warning: false
+
+marimekko_data <- health_data %>%
+  filter(!is.na(Region), !is.na(TreatmentGroup)) %>%
+  count(Region, TreatmentGroup) %>%
+  group_by(Region) %>%
+  mutate(
+    region_total = sum(n),
+    pct_in_region = n / region_total * 100
+  ) %>%
+  ungroup() %>%
+  mutate(
+    region_pct = region_total / sum(region_total) * 100
+  )
+
+ggplot(marimekko_data, aes(x = Region, y = pct_in_region, 
+                           fill = TreatmentGroup)) +
+  geom_col(position = "stack", color = "white", size = 0.5) +
+  scale_fill_brewer(palette = "Set1") +
+  labs(title = "Treatment Distribution by Region (Marimekko)",
+       subtitle = "Height shows treatment proportion within each region",
+       x = "Region",
+       y = "Percentage within Region",
+       fill = "Treatment") +
+  theme_custom()
+```
+
+## Interpreting Marimekko Charts
+
+::: {style="font-size: 0.9em;"}
+**Unique Features:**
+
+::: {.incremental}
+1. **Two dimensions of composition**
+   - Width would represent one variable's total
+   - Height shows breakdown within that category
+
+2. **Space = Area**
+   - Total area of each segment = actual count contribution
+
+3. **Compare both dimensions simultaneously**
+   - More information dense than standard stacked bars
+
+**Our Chart:**
+
+- **Treatment distribution** fairly consistent across regions
+- **All regions** show similar proportions of each treatment
+- **Visual balance** suggests good randomization
+
+**When to use:** Two categorical variables where both totals and proportions matter
+:::
+:::
+
+## Waffle Chart - Code
+
+::: {style="font-size: 0.8em;"}
+**Purpose:** Unit-based visualization (each square = fixed count)
+
+**Goal:** 🔴 Part of Whole (intuitive units)
+
+```{r}
+#| echo: true
+#| eval: false
+
+
+# Prepare data (each unit = 10 patients)
+waffle_data <- health_data %>%
+  filter(!is.na(TreatmentGroup)) %>%
+  count(TreatmentGroup) %>%
+  mutate(squares = round(n / 10))  # 1 square = 10 patients
+
+# Create waffle chart
+waffle_expanded <- waffle_data %>%
+  rowwise() %>%
+  mutate(id = list(1:squares)) %>%
+  unnest(id) %>%
+  mutate(square_id = row_number(),
+         x = (square_id - 1) %% 10,   # 10 rows
+         y = (square_id - 1) %/% 10)
+
+# Plot with ggplot2
+ggplot(waffle_expanded, aes(x = x, y = y, fill = TreatmentGroup)) +
+  geom_tile(color = "white", size = 0.5) +
+  scale_fill_manual(values = c("Treatment A" = "#E41A1C",
+                               "Treatment B" = "#377EB8",
+                               "Control"     = "#4DAF4A")) +
+  coord_equal() +
+  labs(title = "Patient Distribution by Treatment Group",
+       x = "1 square = 10 patients",
+       y = NULL) +
+  theme_minimal() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks = element_blank(),
+    text = element_text(family = "serif", size = 12),
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5)
+  )
+
+```
+:::
+
+## Waffle Chart - Output
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+#| warning: false
+#| message: false
+
+waffle_data <- health_data %>%
+  filter(!is.na(TreatmentGroup)) %>%
+  count(TreatmentGroup) %>%
+  mutate(squares = round(n / 10))
+
+# Manual waffle using geom_tile
+waffle_expanded <- waffle_data %>%
+  rowwise() %>%
+  mutate(id = list(1:squares)) %>%
+  unnest(id) %>%
+  mutate(square_id = row_number(),
+         x = (square_id - 1) %% 10,   # 10 rows
+         y = (square_id - 1) %/% 10)
+
+# Plot with ggplot2
+ggplot(waffle_expanded, aes(x = x, y = y, fill = TreatmentGroup)) +
+  geom_tile(color = "white", size = 0.5) +
+  scale_fill_manual(values = c("Treatment A" = "#E41A1C",
+                               "Treatment B" = "#377EB8",
+                               "Control"     = "#4DAF4A")) +
+  coord_equal() +
+  labs(title = "Patient Distribution by Treatment Group",
+       x = "1 square = 10 patients",
+       y = NULL) +
+  theme_minimal() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks = element_blank(),
+    text = element_text(family = "serif", size = 12),
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5)
+  )
+
+```
+
+## Interpreting Waffle Charts
+
+::: {style="font-size: 0.9em;"}
+**Why Waffle Charts Work:**
+
+::: {.incremental}
+1. **Intuitive unit representation**
+   - Each square = fixed count (e.g., 10 patients)
+   - Easy to count and compare
+
+2. **Avoid pie chart problems**
+   - No angles to judge
+   - Better for exact comparisons
+
+3. **Visual impact**
+   - Engaging and memorable
+   - Good for presentations and infographics
+
+**Our Chart:**
+
+- **Treatment groups balanced**
+- **Control group** has similar size
+- **Each square represents 10 patients**
+- **Visual counting** easier than interpreting angles
+
+**When to use:** Small to medium datasets, need visual impact
+:::
+:::
+
+## Dendrogram - Code
+
+::: {style="font-size: 0.75em;"}
+**Purpose:** Show hierarchical clustering of categories
+
+**Goal:** ⚫ Correlation + hierarchical structure
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Calculate dissimilarity matrix for regions based on health metrics
+region_profiles <- health_data %>%
+  filter(!is.na(Region)) %>%
+  group_by(Region) %>%
+  summarise(
+    mean_bp = mean(SysBP_0m, na.rm = TRUE),
+    mean_chol = mean(Cholesterol_0m, na.rm = TRUE),
+    mean_bmi = mean(BMI_0m, na.rm = TRUE),
+    pct_smokers = mean(SmokingStatus == "Current", na.rm = TRUE) * 100
+  ) %>%
+  column_to_rownames("Region")
+
+# Scale variables
+region_scaled <- scale(region_profiles)
+
+# Hierarchical clustering
+hc <- hclust(dist(region_scaled), method = "ward.D2")
+
+# Plot dendrogram
+library(ggdendro)
+ggdendrogram(hc, rotate = FALSE, theme_dendro = FALSE) +
+  labs(title = "Hierarchical Clustering of Regions by Health Profiles",
+       subtitle = "Based on BP, cholesterol, BMI, and smoking rates",
+       x = "Region",
+       y = "Distance (Ward's method)") +
+  theme_custom() +
+  theme(axis.text.x = element_text(angle = 0))
+```
+:::
+
+## Dendrogram - Output
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+#| warning: false
+#| message: false
+
+library(ggdendro)
+library(tibble)
+
+region_profiles <- health_data %>%
+  filter(!is.na(Region)) %>%
+  group_by(Region) %>%
+  summarise(
+    mean_bp = mean(SysBP_0m, na.rm = TRUE),
+    mean_chol = mean(Cholesterol, na.rm = TRUE),
+    mean_bmi = mean(BMI, na.rm = TRUE),
+    pct_smokers = mean(SmokingStatus == "Current", na.rm = TRUE) * 100
+  ) %>%
+  column_to_rownames("Region")
+
+region_scaled <- scale(region_profiles)
+hc <- hclust(dist(region_scaled), method = "ward.D2")
+
+ggdendrogram(hc, rotate = FALSE, theme_dendro = FALSE) +
+  labs(title = "Hierarchical Clustering of Regions by Health Profiles",
+       subtitle = "Based on BP, cholesterol, BMI, and smoking rates",
+       x = "Region",
+       y = "Distance (Ward's method)") +
+  theme_custom() +
+  theme(axis.text.x = element_text(angle = 0))
+```
+
+## Interpreting Dendrograms
+
+::: {.columns style="font-size: 0.9em;"}
+::: {.column width="50%"}
+**Reading Dendrograms:**
+
+- **Height** = Dissimilarity
+- **Branches** joining lower = more similar
+- **Clusters** formed by cutting at height
+- **Leaf** = Individual category
+
+**Method Matters:**
+
+- **Ward's** - Minimizes within-cluster variance
+- **Complete** - Maximum distance
+- **Average** - Mean distance between clusters
+:::
+
+::: {.column width="50%"}
+**Our Dendrogram:**
+
+1. **East and North** most similar
+   - Join at lowest height
+   - Similar health profiles
+
+2. **South different** from North/East
+   - Joins at higher level
+
+3. **West most distinct**
+   - Joins last, highest dissimilarity
+
+**Use Case:** Identifying similar market segments, patient groups
+:::
+:::
+
+## Chart Selection Guide
+
+::: {style="font-size: 0.85em;"}
+| Chart Type | Goal | Best For | Complexity |
+|------------|------|----------|------------|
+| **Treemap** | 🔴 Part of Whole | Hierarchical proportions, space-efficient | Medium |
+| **Sunburst** | 🔴 Part of Whole | Multi-level hierarchies, interactive | High |
+| **Marimekko** | 🔴 Part of Whole | Two-way composition | Medium-High |
+| **Waffle** | 🔴 Part of Whole | Small datasets, visual impact | Easy-Medium |
+| **Dendrogram** | ⚫ Correlation | Category clustering, similarity | Medium-High |
+
+**Pro Tip:** Advanced charts require more explanation - include clear legends and labels
+:::
+
+## Common Mistakes
+
+::: {.incremental style="font-size: 0.9em;"}
+1. **Too many categories** in treemap/sunburst
+   - Solution: Filter to top N categories or aggregate small ones
+
+2. **Poor color choices** making comparisons hard
+   - Solution: Use consistent, meaningful color schemes
+
+3. **Missing context** in dendrograms
+   - Solution: Explain clustering method and distance metric
+
+4. **Waffle charts** with inappropriate units
+   - Solution: Choose unit size that creates 50-200 squares
+
+5. **Marimekko** without clear labels
+   - Solution: Add annotations explaining width/height meanings
+
+6. **Interactive charts** not working in static reports
+   - Solution: Provide static alternatives or export images
+:::
+
+## Practice Exercise
+
+**Your Turn:**
+
+1. Create a treemap showing patient distribution by Region → Gender → SmokingStatus
+2. Build a waffle chart for ExerciseFreq (1 square = 5 patients)
+3. Create a dendrogram clustering treatment groups based on outcome metrics
+4. Make a Marimekko chart for Gender × TreatmentGroup
+
+**Bonus Challenge:**
+
+Create an interactive sunburst chart with 3 levels: Region → TreatmentGroup → Adherence_Status
+
+## Summary
+
+::: {style="font-size: 0.9em;"}
+**What You've Learned:**
+
+::: {.incremental}
+1. **Treemaps** efficiently show hierarchical proportions
+2. **Sunburst charts** display circular hierarchies
+3. **Marimekko charts** reveal two-way compositions
+4. **Waffle charts** provide intuitive unit-based views
+5. **Dendrograms** identify category similarities
+
+**Key Principle:**
+
+> Advanced categorical charts reveal patterns in complex, multi-level categorical data that simpler charts cannot show
+:::
+:::
+
+## Next Steps {.center}
+
+**You've mastered Categorical - Advanced!**
+
+**Next:** Continuous - Advanced
+
+Learn advanced continuous visualizations:
+
+- Contour plots
+- 3D surface plots
+- Parallel coordinates
+- Advanced density techniques

@@ -1,0 +1,778 @@
+---
+title: "Time Series - INTERMEDIATE"
+subtitle: "Advanced Temporal Analysis"
+format:
+  revealjs:
+    theme: serif
+    css: ../../assets/slide_deck.css
+    include-after-body: footer.html
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    code-fold: true
+    chalkboard: true
+    preview-links: true
+    center: true
+    zoom: true
+---
+
+# Time Series Analysis {.center}
+
+## What We'll Learn - Intermediate
+
+::: {.columns}
+::: {.column width="50%"}
+**Beyond Simple Line Charts:**
+
+- Smoothed trends (LOESS, moving average)
+- Area charts with confidence bands
+- Multi-series comparison plots
+- Annotations and event markers
+- Seasonal patterns
+- Change highlighting
+:::
+
+::: {.column width="50%"}
+**Analytical Goals:**
+
+- 🔵 **Evolution** - How things change over time
+- 🟡 **Distribution** - Spread at different times
+- 🟢 **Ranking** - Compare multiple series
+- ⚫ **Correlation** - Relationship between series
+:::
+:::
+
+## Setup Code
+
+```{r}
+#| echo: true
+#| message: false
+
+# Load required packages
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(zoo)      # For moving averages
+library(lubridate) # For date handling
+
+# Load dataset and create time series data
+health_data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+
+# Aggregate by time point
+time_data <- health_data %>%
+  pivot_longer(cols = c(SysBP_0m, SysBP_3m, SysBP_6m),
+               names_to = "TimePoint",
+               values_to = "SysBP") %>%
+  mutate(Month = case_when(
+    TimePoint == "SysBP_0m" ~ 0,
+    TimePoint == "SysBP_3m" ~ 3,
+    TimePoint == "SysBP_6m" ~ 6
+  ))
+
+# Create theme
+theme_custom <- function() {
+  theme_minimal() +
+  theme(
+    text = element_text(family = "serif", size = 12),
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 11, hjust = 0.5),
+    axis.title = element_text(size = 11),
+    legend.position = "bottom"
+  )
+}
+```
+
+## Smoothed Trend with LOESS - Code
+
+::: {style="font-size: 0.8em;"}
+**Purpose:** Show underlying trend while reducing noise
+
+**Goal:** 🔵 Evolution
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Calculate mean BP by treatment group over time
+trend_data <- time_data %>%
+  filter(!is.na(TreatmentGroup), !is.na(SysBP)) %>%
+  group_by(TreatmentGroup, Month) %>%
+  summarise(
+    mean_bp = mean(SysBP, na.rm = TRUE),
+    se_bp = sd(SysBP, na.rm = TRUE) / sqrt(n()),
+    .groups = "drop"
+  )
+
+# Create smoothed trend plot
+ggplot(trend_data, aes(x = Month, y = mean_bp, 
+                      color = TreatmentGroup, fill = TreatmentGroup)) +
+  # Raw data points
+  geom_point(size = 3, alpha = 0.6) +
+  # Smoothed trend line
+  geom_smooth(method = "loess",     # Locally weighted smoothing
+              span = 0.75,          # Smoothness (larger = smoother)
+              alpha = 0.2) +        # Confidence band transparency
+  labs(title = "Blood Pressure Trends by Treatment Group",
+       subtitle = "Smoothed LOESS curves with 95% confidence bands",
+       x = "Time (months)",
+       y = "Mean Systolic BP (mmHg)",
+       color = "Treatment",
+       fill = "Treatment") +
+  scale_color_brewer(palette = "Set1") +
+  scale_fill_brewer(palette = "Set1") +
+  scale_x_continuous(breaks = c(0, 6, 12)) +
+  theme_custom()
+```
+:::
+
+## Smoothed Trend with LOESS - Output
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+#| warning: false
+#| message: false
+
+trend_data <- time_data %>%
+  filter(!is.na(TreatmentGroup), !is.na(SysBP)) %>%
+  group_by(TreatmentGroup, Month) %>%
+  summarise(
+    mean_bp = mean(SysBP, na.rm = TRUE),
+    se_bp = sd(SysBP, na.rm = TRUE) / sqrt(n()),
+    .groups = "drop"
+  )
+
+ggplot(trend_data, aes(x = Month, y = mean_bp, 
+                      color = TreatmentGroup, fill = TreatmentGroup)) +
+  geom_point(size = 3, alpha = 0.6) +
+  geom_smooth(method = "loess", span = 0.75, alpha = 0.2) +
+  labs(title = "Blood Pressure Trends by Treatment Group",
+       subtitle = "Smoothed LOESS curves with 95% confidence bands",
+       x = "Time (months)",
+       y = "Mean Systolic BP (mmHg)",
+       color = "Treatment",
+       fill = "Treatment") +
+  scale_color_brewer(palette = "Set1") +
+  scale_fill_brewer(palette = "Set1") +
+  scale_x_continuous(breaks = c(0, 6, 12)) +
+  theme_custom()
+```
+
+## Interpreting Smoothed Trends
+
+::: {.columns style="font-size: 0.9em;"}
+::: {.column width="50%"}
+**LOESS Smoothing:**
+
+- **Local regression** at each point
+- Reduces random fluctuations
+- Reveals underlying patterns
+- Confidence bands show uncertainty
+
+**Span parameter:**
+
+- `span = 0.3` - Very wiggly (follows data closely)
+- `span = 0.75` - Moderate smoothing (default)
+- `span = 1.5` - Very smooth (may miss details)
+:::
+
+::: {.column width="50%"}
+**Our Findings:**
+
+1. **All groups start similar** at Month 0
+
+2. **Treatment A & B effective**
+   - Clear downward trend
+   - BP drops ~15-20 mmHg
+
+3. **Control group stable**
+   - No significant change
+   - As expected
+
+4. **Confidence bands widen** over time
+   - Less certainty in estimates
+   - Possible dropout effects
+:::
+:::
+
+## Area Chart with Confidence Bands - Code
+
+::: {style="font-size: 0.8em;"}
+**Purpose:** Emphasize magnitude and uncertainty over time
+
+**Goal:** 🔵 Evolution + 🟡 Distribution
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Calculate confidence intervals manually
+trend_ci <- trend_data %>%
+  mutate(
+    lower = mean_bp - 1.96 * se_bp,  # 95% CI
+    upper = mean_bp + 1.96 * se_bp
+  )
+
+# Create area chart with confidence band
+ggplot(trend_ci, aes(x = Month, y = mean_bp, 
+                    color = TreatmentGroup, fill = TreatmentGroup)) +
+  # Confidence band as ribbon
+  geom_ribbon(aes(ymin = lower, ymax = upper), 
+              alpha = 0.3, color = NA) +
+  # Mean line
+  geom_line(linewidth = 1.2) +
+  # Points at measurement times
+  geom_point(size = 3) +
+  labs(title = "Blood Pressure Changes with 95% Confidence Intervals",
+       subtitle = "Shaded areas show uncertainty in estimates",
+       x = "Time (months)",
+       y = "Mean Systolic BP (mmHg)",
+       color = "Treatment",
+       fill = "Treatment") +
+  scale_color_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_x_continuous(breaks = c(0, 6, 12)) +
+  theme_custom()
+```
+:::
+
+## Area Chart with Confidence Bands - Output
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+trend_ci <- trend_data %>%
+  mutate(
+    lower = mean_bp - 1.96 * se_bp,
+    upper = mean_bp + 1.96 * se_bp
+  )
+
+ggplot(trend_ci, aes(x = Month, y = mean_bp, 
+                    color = TreatmentGroup, fill = TreatmentGroup)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), 
+              alpha = 0.3, color = NA) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 3) +
+  labs(title = "Blood Pressure Changes with 95% Confidence Intervals",
+       subtitle = "Shaded areas show uncertainty in estimates",
+       x = "Time (months)",
+       y = "Mean Systolic BP (mmHg)",
+       color = "Treatment",
+       fill = "Treatment") +
+  scale_color_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_x_continuous(breaks = c(0, 6, 12)) +
+  theme_custom()
+```
+
+## Interpreting Area Charts
+
+::: {style="font-size: 0.9em;"}
+**Key Observations:**
+
+::: {.incremental}
+1. **Non-overlapping bands** = Statistically different
+   - Treatment A vs Control clearly different at 6 & 12 months
+
+2. **Overlapping bands** = May not be different
+   - Treatment A vs B overlap at all time points
+   - Suggests similar effectiveness
+
+3. **Band width** shows precision
+   - Narrower = more precise estimate
+   - Wider = more uncertainty
+
+4. **Trend direction** immediately visible
+   - Downward = improvement
+   - Flat = no change
+   - Upward = worsening
+:::
+:::
+
+## Annotated Time Series - Code
+
+::: {style="font-size: 0.75em;"}
+**Purpose:** Highlight important events and changes
+
+**Goal:** 🔵 Evolution + context
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Prepare data for one treatment group
+treatment_a_data <- trend_ci %>% filter(TreatmentGroup == "Treatment A")
+
+# Create annotated plot
+ggplot(treatment_a_data, aes(x = Month, y = mean_bp)) +
+  # Area under curve
+  geom_area(fill = "#4DBBD5", alpha = 0.3) +
+  # Line and points
+  geom_line(color = "#4DBBD5", linewidth = 1.5) +
+  geom_point(size = 4, color = "#4DBBD5") +
+  # Annotate starting point
+  annotate("text", x = 0, y = 142, 
+           label = "Baseline\n140 mmHg", 
+           hjust = 0.5, vjust = -0.5, size = 4, fontface = "bold") +
+  # Annotate 6-month check
+  annotate("segment", x = 6, y = 125, xend = 6, yend = 130,
+           arrow = arrow(length = unit(0.3, "cm")), 
+           color = "red", linewidth = 1) +
+  annotate("text", x = 6, y = 123, 
+           label = "First improvement\n-15 mmHg", 
+           hjust = 0.5, size = 3.5, color = "red") +
+  # Annotate final result
+  annotate("text", x = 12, y = 118, 
+           label = "Final: 120 mmHg\n✓ Target achieved", 
+           hjust = 0.5, vjust = 1.2, size = 4, fontface = "bold", color = "darkgreen") +
+  # Add horizontal reference line for target BP
+  geom_hline(yintercept = 120, linetype = "dashed", 
+             color = "darkgreen", linewidth = 0.8) +
+  labs(title = "Treatment A: Blood Pressure Reduction Over 12 Months",
+       subtitle = "Green line shows target BP of 120 mmHg",
+       x = "Time (months)",
+       y = "Mean Systolic BP (mmHg)") +
+  scale_x_continuous(breaks = c(0, 6, 12)) +
+  ylim(110, 145) +
+  theme_custom()
+```
+:::
+
+## Annotated Time Series - Output
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+treatment_a_data <- trend_ci %>% filter(TreatmentGroup == "Treatment A")
+
+ggplot(treatment_a_data, aes(x = Month, y = mean_bp)) +
+  geom_area(fill = "#4DBBD5", alpha = 0.3) +
+  geom_line(color = "#4DBBD5", linewidth = 1.5) +
+  geom_point(size = 4, color = "#4DBBD5") +
+  annotate("text", x = 0, y = 142, 
+           label = "Baseline\n140 mmHg", 
+           hjust = 0.5, vjust = -0.5, size = 4, fontface = "bold") +
+  annotate("segment", x = 6, y = 125, xend = 6, yend = 130,
+           arrow = arrow(length = unit(0.3, "cm")), 
+           color = "red", linewidth = 1) +
+  annotate("text", x = 6, y = 123, 
+           label = "First improvement\n-15 mmHg", 
+           hjust = 0.5, size = 3.5, color = "red") +
+  annotate("text", x = 12, y = 118, 
+           label = "Final: 120 mmHg\n✓ Target achieved", 
+           hjust = 0.5, vjust = 1.2, size = 4, fontface = "bold", color = "darkgreen") +
+  geom_hline(yintercept = 120, linetype = "dashed", 
+             color = "darkgreen", linewidth = 0.8) +
+  labs(title = "Treatment A: Blood Pressure Reduction Over 12 Months",
+       subtitle = "Green line shows target BP of 120 mmHg",
+       x = "Time (months)",
+       y = "Mean Systolic BP (mmHg)") +
+  scale_x_continuous(breaks = c(0, 6, 12)) +
+  ylim(110, 145) +
+  theme_custom()
+```
+
+## Effective Annotations
+
+::: {style="font-size: 0.9em;"}
+**When to Annotate:**
+
+::: {.incremental}
+- **Key milestones** - Important time points
+- **Threshold crossings** - When target is reached
+- **Notable events** - Interventions, policy changes
+- **Unexpected changes** - Spikes or drops
+- **Comparisons** - Differences from baseline
+
+**Best Practices:**
+
+1. **Don't over-annotate** - 2-4 annotations max
+2. **Use arrows** for clarity
+3. **Color-code** meaningfully (red = bad, green = good)
+4. **Keep text brief** - Key numbers + interpretation
+5. **Position carefully** - Avoid overlapping
+:::
+:::
+
+## Small Multiples - Code
+
+::: {style="font-size: 0.8em;"}
+**Purpose:** Compare many series side-by-side
+
+**Goal:** 🔵 Evolution + 🟢 Ranking
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Create small multiples by region
+region_trends <- time_data %>%
+  filter(!is.na(Region), !is.na(SysBP)) %>%
+  group_by(Region, Month) %>%
+  summarise(
+    mean_bp = mean(SysBP, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Small multiples plot
+ggplot(region_trends, aes(x = Month, y = mean_bp)) +
+  geom_line(color = "#3C5488", linewidth = 1.2) +
+  geom_point(size = 3, color = "#3C5488") +
+  geom_area(fill = "#3C5488", alpha = 0.2) +
+  facet_wrap(~ Region, ncol = 2) +  # Split by region
+  labs(title = "Blood Pressure Trends Across Regions",
+       subtitle = "Small multiples enable direct comparison",
+       x = "Time (months)",
+       y = "Mean Systolic BP (mmHg)") +
+  scale_x_continuous(breaks = c(0, 6, 12)) +
+  theme_custom() +
+  theme(
+    strip.background = element_rect(fill = "gray90", color = "black"),
+    strip.text = element_text(face = "bold", size = 11),
+    panel.spacing = unit(1.5, "lines")  # Space between panels
+  )
+```
+:::
+
+## Small Multiples - Output
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 7
+#| message: false
+
+region_trends <- time_data %>%
+  filter(!is.na(Region), !is.na(SysBP)) %>%
+  group_by(Region, Month) %>%
+  summarise(
+    mean_bp = mean(SysBP, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+ggplot(region_trends, aes(x = Month, y = mean_bp)) +
+  geom_line(color = "#3C5488", linewidth = 1.2) +
+  geom_point(size = 3, color = "#3C5488") +
+  geom_area(fill = "#3C5488", alpha = 0.2) +
+  facet_wrap(~ Region, ncol = 2) +
+  labs(title = "Blood Pressure Trends Across Regions",
+       subtitle = "Small multiples enable direct comparison",
+       x = "Time (months)",
+       y = "Mean Systolic BP (mmHg)") +
+  scale_x_continuous(breaks = c(0, 6, 12)) +
+  theme_custom() +
+  theme(
+    strip.background = element_rect(fill = "gray90", color = "black"),
+    strip.text = element_text(face = "bold", size = 11),
+    panel.spacing = unit(1.5, "lines")
+  )
+```
+
+## Interpreting Small Multiples
+
+::: {style="font-size: 0.9em;"}
+**Power of Small Multiples:**
+
+::: {.incremental}
+1. **Same scale** enables direct comparison
+   - Each region shows similar range
+
+2. **Pattern differences** are immediately visible
+   - West shows gradual increase
+   - North shows decrease
+   - East and South relatively stable
+
+3. **Easy to spot outliers** or anomalies
+   - West's upward trend is unusual
+
+4. **Reduces cognitive load** vs. overlapping lines
+   - Each series has its own space
+   - No color confusion
+
+**Insight:** Regional trends vary - need to investigate West region
+:::
+:::
+
+## Percent Change Plot - Code
+
+::: {style="font-size: 0.8em;"}
+**Purpose:** Show relative changes from baseline
+
+**Goal:** 🔵 Evolution + comparison
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Calculate percent change from baseline
+pct_change_data <- time_data %>%
+  filter(!is.na(TreatmentGroup), !is.na(SysBP)) %>%
+  group_by(TreatmentGroup, Month) %>%
+  summarise(mean_bp = mean(SysBP, na.rm = TRUE), .groups = "drop") %>%
+  group_by(TreatmentGroup) %>%
+  mutate(
+    baseline = first(mean_bp),           # Get baseline value
+    pct_change = 100 * (mean_bp - baseline) / baseline  # % change
+  )
+
+# Create percent change plot
+ggplot(pct_change_data, aes(x = Month, y = pct_change, 
+                           color = TreatmentGroup, group = TreatmentGroup)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
+  geom_line(linewidth = 1.3) +
+  geom_point(size = 3.5) +
+  labs(title = "Percent Change in Blood Pressure from Baseline",
+       subtitle = "Negative values indicate improvement",
+       x = "Time (months)",
+       y = "Change from Baseline (%)",
+       color = "Treatment") +
+  scale_color_brewer(palette = "Set1") +
+  scale_x_continuous(breaks = c(0, 6, 12)) +
+  theme_custom()
+```
+:::
+
+## Percent Change Plot - Output
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+#| message: false
+
+pct_change_data <- time_data %>%
+  filter(!is.na(TreatmentGroup), !is.na(SysBP)) %>%
+  group_by(TreatmentGroup, Month) %>%
+  summarise(mean_bp = mean(SysBP, na.rm = TRUE), .groups = "drop") %>%
+  group_by(TreatmentGroup) %>%
+  mutate(
+    baseline = first(mean_bp),
+    pct_change = 100 * (mean_bp - baseline) / baseline
+  )
+
+ggplot(pct_change_data, aes(x = Month, y = pct_change, 
+                           color = TreatmentGroup, group = TreatmentGroup)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
+  geom_line(linewidth = 1.3) +
+  geom_point(size = 3.5) +
+  labs(title = "Percent Change in Blood Pressure from Baseline",
+       subtitle = "Negative values indicate improvement",
+       x = "Time (months)",
+       y = "Change from Baseline (%)",
+       color = "Treatment") +
+  scale_color_brewer(palette = "Set1") +
+  scale_x_continuous(breaks = c(0, 6, 12)) +
+  theme_custom()
+```
+
+## Interpreting Percent Change
+
+::: {style="font-size: 0.9em;"}
+**Why Use Percent Change?**
+
+::: {.incremental}
+1. **Normalizes different baselines**
+   - Groups with different starting points comparable
+
+2. **Shows relative effect size**
+   - Treatment A: ~15% reduction
+   - Treatment B: ~12% reduction
+   - Control: ~0% change
+
+3. **Makes communication easier**
+   - "15% reduction" more intuitive than "20 mmHg decrease"
+
+4. **Useful for different scales**
+   - Can compare BP, cholesterol, weight, etc. on same plot
+
+**Limitation:** Can mislead if baseline values are very small
+:::
+:::
+
+## Slope Graph - Code
+
+::: {style="font-size: 0.8em;"}
+**Purpose:** Highlight individual changes between two time points
+
+**Goal:** 🔵 Evolution + individual patterns
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Prepare data: baseline vs 12-month by treatment
+slope_data <- health_data %>%
+  filter(!is.na(TreatmentGroup), !is.na(SysBP_0m), !is.na(SysBP_6m)) %>%
+  select(PatientID, TreatmentGroup, SysBP_0m, SysBP_6m) %>%
+  group_by(TreatmentGroup) %>%
+  slice_sample(n = 15) %>%  # Sample 15 patients per group
+  ungroup() %>%
+  pivot_longer(cols = c(SysBP_0m, SysBP_6m),
+               names_to = "Time",
+               values_to = "SysBP") %>%
+  mutate(Time = ifelse(Time == "SysBP_0m", "Baseline", "6 Months"))
+
+# Create slope graph
+ggplot(slope_data, aes(x = Time, y = SysBP, group = PatientID,
+                      color = TreatmentGroup)) +
+  geom_line(alpha = 0.6, linewidth = 0.8) +
+  geom_point(size = 2.5, alpha = 0.8) +
+  facet_wrap(~ TreatmentGroup, ncol = 3) +
+  labs(title = "Individual Patient Blood Pressure Changes",
+       subtitle = "Each line represents one patient (n=15 per group)",
+       x = "",
+       y = "Systolic BP (mmHg)") +
+  scale_color_brewer(palette = "Dark2") +
+  theme_custom() +
+  theme(legend.position = "none",
+        strip.background = element_rect(fill = "gray90"),
+        strip.text = element_text(face = "bold"))
+```
+:::
+
+## Slope Graph - Output
+
+```{r}
+#| echo: false
+#| fig-width: 11
+#| fig-height: 6
+#| message: false
+
+set.seed(123)
+slope_data <- health_data %>%
+  filter(!is.na(TreatmentGroup), !is.na(SysBP_0m), !is.na(SysBP_6m)) %>%
+  select(PatientID, TreatmentGroup, SysBP_0m, SysBP_6m) %>%
+  group_by(TreatmentGroup) %>%
+  slice_sample(n = 15) %>%
+  ungroup() %>%
+  pivot_longer(cols = c(SysBP_0m, SysBP_6m),
+               names_to = "Time",
+               values_to = "SysBP") %>%
+  mutate(Time = ifelse(Time == "SysBP_0m", "Baseline", "6 Months"))
+
+ggplot(slope_data, aes(x = Time, y = SysBP, group = PatientID,
+                      color = TreatmentGroup)) +
+  geom_line(alpha = 0.6, linewidth = 0.8) +
+  geom_point(size = 2.5, alpha = 0.8) +
+  facet_wrap(~ TreatmentGroup, ncol = 3) +
+  labs(title = "Individual Patient Blood Pressure Changes",
+       subtitle = "Each line represents one patient (n=15 per group)",
+       x = "",
+       y = "Systolic BP (mmHg)") +
+  scale_color_brewer(palette = "Dark2") +
+  theme_custom() +
+  theme(legend.position = "none",
+        strip.background = element_rect(fill = "gray90"),
+        strip.text = element_text(face = "bold"))
+```
+
+## Interpreting Slope Graphs
+
+::: {style="font-size: 0.9em;"}
+**What Slope Graphs Reveal:**
+
+::: {.incremental}
+1. **Treatment groups** show mostly downward slopes
+   - Most patients improved
+
+2. **Control group** shows mixed results
+   - Some up, some down (natural variation)
+
+3. **Individual variability** is visible
+   - Not all patients respond equally
+   - Some non-responders in treatment groups
+
+4. **Response heterogeneity** matters
+   - Need to identify why some don't respond
+
+**Advantage:** Shows both group trend AND individual variation
+:::
+:::
+
+## Chart Selection Guide
+
+::: {style="font-size: 0.8em;"}
+| Chart Type | Goal | Best For | Complexity |
+|------------|------|----------|------------|
+| **LOESS Smooth** | 🔵 Evolution | Noisy data, reveal trends | Medium |
+| **Area + CI** | 🔵 + 🟡 | Show uncertainty over time | Medium |
+| **Annotated** | 🔵 + context | Presentations, reports | Easy-Medium |
+| **Small Multiples** | 🔵 + 🟢 | Compare many series | Easy |
+| **Percent Change** | 🔵 + comparison | Different baselines | Easy |
+| **Slope Graph** | 🔵 + individuals | Before/after comparisons | Easy |
+
+**Pro Tip:** Combine techniques - e.g., small multiples with smoothing
+:::
+
+## Common Mistakes
+
+::: {.incremental style="font-size: 0.9em;"}
+1. **Over-smoothing** - Losing important details
+   - Solution: Try different span values
+
+2. **Too many lines** on one plot
+   - Solution: Use small multiples or filter
+
+3. **Ignoring uncertainty**
+   - Solution: Always show confidence intervals
+
+4. **Poor annotation** placement
+   - Solution: Use arrow() and adjust positions
+
+5. **Wrong baseline** for percent change
+   - Solution: Clearly document reference point
+
+6. **Missing time labels**
+   - Solution: Use clear date formats or labels
+:::
+
+## Practice Exercise
+
+**Your Turn:**
+
+1. Create a LOESS smoothed plot of mean `Cholesterol` over time by `Gender`
+2. Add confidence bands to the plot
+3. Create a slope graph showing individual `BMI` changes (0m → 12m) by `ExerciseFreq`
+4. Build small multiples showing `BloodSugar` trends across all 4 Regions
+
+**Bonus Challenge:**
+
+Create an annotated time series highlighting when Treatment A achieved target BP (<120 mmHg).
+
+## Summary
+
+::: {style="font-size: 0.9em;"}
+**What You've Learned:**
+
+::: {.incremental}
+1. **LOESS smoothing** reveals underlying trends
+2. **Confidence bands** show uncertainty
+3. **Annotations** add context and insights
+4. **Small multiples** enable easy comparison
+5. **Percent change** normalizes baselines
+6. **Slope graphs** show individual trajectories
+
+**Key Principle:**
+
+> Time series plots should tell a story - show the trend, highlight changes, and provide context
+:::
+:::
+
+## Next Steps {.center}
+
+**You've mastered Time Series - Intermediate!**
+
+**Next:** Relational/Flow - Intermediate
+
+Learn to visualize relationships with:
+
+- Network diagrams
+- Sankey diagrams
+- Chord diagrams
+- Alluvial plots

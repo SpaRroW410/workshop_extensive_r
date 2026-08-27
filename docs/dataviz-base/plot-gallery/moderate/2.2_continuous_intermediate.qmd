@@ -1,0 +1,519 @@
+---
+title: "Continuous Plots - INTERMEDIATE"
+subtitle: "Advanced Statistical Visualizations"
+format:
+  revealjs:
+    theme: serif
+    css: ../../assets/slide_deck.css
+    include-after-body: footer.html
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    code-fold: true
+    chalkboard: true
+    preview-links: true
+    center: true
+    zoom: true
+---
+
+# Continuous Intermediate {.center}
+
+## Enhanced Continuous Visualizations
+
+::: {style="font-size: 0.9em;"}
+**Building on Basic Skills:**
+
+Moving beyond simple histograms and scatter plots to sophisticated statistical visualizations.
+
+**New Techniques:**
+- Violin plots (distribution + density)
+- Ridgeline plots (comparing many distributions)
+- 2D density plots (large scatter data)
+- Hexbin plots (overplotting solution)
+- Scatter with regression (trend lines)
+
+**New Packages:**
+- `ggridges` for ridgeline plots
+- `hexbin` for hexagonal binning
+- Statistical layers in ggplot2
+:::
+
+## Setup
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-5|7-8|10-12"
+
+# Load required libraries
+library(ggplot2)
+library(dplyr)
+library(ggridges)    # For ridgeline plots
+library(hexbin)      # For hexbin plots
+
+# Load dataset
+data <- readxl::read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+
+# Clean data: complete cases for analysis
+data_clean <- data %>%
+  filter(!is.na(BMI), !is.na(Cholesterol), !is.na(ExerciseFreq))
+```
+
+## Data Preview {.smaller}
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(ggplot2)
+library(dplyr)
+library(ggridges)
+library(hexbin)
+library(readxl)
+
+data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+data_clean <- data %>% filter(!is.na(BMI), !is.na(Cholesterol), !is.na(ExerciseFreq))
+
+data_clean %>%
+  group_by(Region) %>%
+  summarise(
+    Count = n(),
+    Mean_BMI = round(mean(BMI), 2),
+    SD_BMI = round(sd(BMI), 2),
+    Mean_Chol = round(mean(Cholesterol), 1)
+  )
+```
+
+---
+
+# Violin Plot
+
+## Violin Plot - Code
+
+🟡 **Goal:** Show full distribution shape by group
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-2|3-4|5-7|8-10"
+
+# Create violin plot comparing BMI across regions
+ggplot(data_clean, aes(x = Region, y = BMI, fill = Region)) +
+  geom_violin(alpha = 0.7, trim = FALSE) +  # Create violin shapes
+  geom_boxplot(width = 0.15, alpha = 0.5, outlier.shape = NA) +  # Add boxplot inside
+  scale_fill_brewer(palette = "Set2", name = "Region") +  # Color palette
+  labs(title = "BMI Distribution by Region (Violin Plot)",
+       x = "Region", y = "Body Mass Index (BMI)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        legend.position = "none")  # X-axis labels regions
+```
+
+::: {.notes}
+Violin plot = rotated density plot on each side. Wider = more data at that value
+:::
+
+## Violin Plot - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(data_clean, aes(x = Region, y = BMI, fill = Region)) +
+  geom_violin(alpha = 0.7, trim = FALSE) +
+  geom_boxplot(width = 0.15, alpha = 0.5, outlier.shape = NA) +
+  scale_fill_brewer(palette = "Set2", name = "Region") +
+  labs(title = "BMI Distribution by Region (Violin Plot)",
+       x = "Region", y = "Body Mass Index (BMI)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        legend.position = "none")
+```
+
+---
+
+# Interpreting Violin Plots
+
+## How to Read Violin Plots
+
+**Using the previous plot:**
+
+::: {.incremental style="font-size: 0.85em;"}
+**OBSERVATION:**
+- All regions show symmetric, roughly normal distributions
+- Widest parts (bulges) around BMI 25 for most regions
+- South region: slightly wider violin (more variation)
+- Boxplots inside show median and quartiles
+- No extreme outliers visible
+
+**INTERPRETATION:**
+- BMI distributions similar across all regions
+- Most patients cluster around BMI 25 (normal/overweight boundary)
+- South region has more variability in BMI
+- No regional bias in BMI recruitment
+- Distributions roughly normal (good for parametric tests)
+
+**IMPLICATIONS:**
+- Regional effects on outcomes unlikely due to BMI differences
+- Can pool regions for BMI-related analyses
+- South's higher variability may need investigation
+- Sample representative across regions for BMI
+
+**ACTIONS:**
+- Proceed with region-pooled analyses for BMI
+- Consider South region variability in sensitivity analyses
+- Use BMI as continuous covariate (not categorized by region)
+:::
+:::
+
+---
+
+# Ridgeline Plot
+
+## Ridgeline Plot - Code
+
+🟡 **Goal:** Compare many distributions elegantly
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-3|5-7|8-11|12-14"
+
+# Create ridgeline plot of Cholesterol by Exercise Frequency
+# (overlapping density plots, like mountain ridges)
+ggplot(data_clean, aes(x = Cholesterol, y = ExerciseFreq, fill = ExerciseFreq)) +
+  geom_density_ridges(alpha = 0.7, scale = 1.2) +  # Create overlapping densities
+  scale_fill_brewer(palette = "Set2", name = "Exercise Frequency") +
+  labs(title = "Cholesterol Distribution by Exercise Frequency",
+       x = "Cholesterol (mg/dL)", 
+       y = "Exercise Frequency") +
+  theme_ridges(font_family = "serif") +  # Special theme for ridgeline plots
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        legend.position = "none")
+```
+
+::: {.notes}
+Ridgeline plots are perfect when comparing 3+ groups. Scale parameter controls overlap
+:::
+
+## Ridgeline Plot - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+#| message: false
+#| warning: false
+
+ggplot(data_clean, aes(x = Cholesterol, y = ExerciseFreq, fill = ExerciseFreq)) +
+  geom_density_ridges(alpha = 0.7, scale = 1.2) +
+  scale_fill_brewer(palette = "Set2", name = "Exercise Frequency") +
+  labs(title = "Cholesterol Distribution by Exercise Frequency",
+       x = "Cholesterol (mg/dL)", 
+       y = "Exercise Frequency") +
+  theme_ridges(font_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        legend.position = "none")
+```
+
+---
+
+# 2D Density Plot
+
+## 2D Density Plot - Code
+
+⚫ **Goal:** Show correlation patterns with density contours
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-2|3-4|5-7|8-10"
+
+# Create 2D density contour plot for Age vs. Cholesterol
+ggplot(data_clean, aes(x = Age, y = Cholesterol)) +
+  geom_density_2d_filled(alpha = 0.8, contour_var = "ndensity") +  # Filled contours
+  geom_point(size = 0.5, alpha = 0.3, color = "white") +  # Add semi-transparent points
+  scale_fill_viridis_d(option = "plasma", name = "Density") +  # Color scale
+  labs(title = "2D Density: Age vs. Cholesterol Relationship",
+       x = "Age (years)", 
+       y = "Cholesterol (mg/dL)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12))
+```
+
+::: {.notes}
+2D density shows where most data points cluster. Darker = higher concentration
+:::
+
+## 2D Density Plot - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(data_clean, aes(x = Age, y = Cholesterol)) +
+  geom_density_2d_filled(alpha = 0.8, contour_var = "ndensity") +
+  geom_point(size = 0.5, alpha = 0.3, color = "white") +
+  scale_fill_viridis_d(option = "plasma", name = "Density") +
+  labs(title = "2D Density: Age vs. Cholesterol Relationship",
+       x = "Age (years)", 
+       y = "Cholesterol (mg/dL)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        legend.title = element_text(size = 11, face = "bold"))
+```
+
+---
+
+# Hexbin Plot
+
+## Hexbin Plot - Code
+
+⚫ **Goal:** Handle overplotting in large scatter plots
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-2|3-4|5-7|8-10"
+
+# Create hexbin plot for BMI vs. Blood Sugar (handles overlapping points)
+ggplot(data_clean, aes(x = BMI, y = BloodSugar)) +
+  geom_hex(bins = 30) +  # Create hexagonal bins
+  scale_fill_viridis_c(option = "inferno", name = "Count") +  # Color by count
+  labs(title = "BMI vs. Blood Sugar (Hexbin Plot)",
+       x = "Body Mass Index (BMI)", 
+       y = "Blood Sugar (mg/dL)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12))
+```
+
+::: {.notes}
+Hexbin divides plot into hexagons and counts points in each. Better than overlapping points
+:::
+
+## Hexbin Plot - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(data_clean, aes(x = BMI, y = BloodSugar)) +
+  geom_hex(bins = 30) +
+  scale_fill_viridis_c(option = "inferno", name = "Count") +
+  labs(title = "BMI vs. Blood Sugar (Hexbin Plot)",
+       x = "Body Mass Index (BMI)", 
+       y = "Blood Sugar (mg/dL)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        legend.title = element_text(size = 11, face = "bold"))
+```
+
+---
+
+# Scatter with Regression
+
+## Scatter with Regression Line - Code
+
+⚫ **Goal:** Show correlation with statistical trend
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-2|3-4|5-8|9-13|14-16"
+
+# Scatter plot with linear regression line and confidence interval
+ggplot(data_clean, aes(x = Age, y = SysBP_0m)) +
+  geom_point(alpha = 0.5, color = "steelblue", size = 2.5) +  # Add points
+  geom_smooth(method = "lm", se = TRUE, color = "#E74C3C", 
+              fill = "#E74C3C", alpha = 0.2, size = 1.2) +  # Add regression line + CI
+  # Calculate and display correlation
+  annotate("text", x = 25, y = 160, 
+           label = paste("r =", round(cor(data_clean$Age, data_clean$SysBP_0m), 3)),
+           family = "serif", size = 5, fontface = "bold") +
+  labs(title = "Age vs. Baseline Systolic BP with Regression Line",
+       subtitle = "Linear trend with 95% confidence interval",
+       x = "Age (years)", 
+       y = "Systolic Blood Pressure (mmHg)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        plot.subtitle = element_text(hjust = 0.5, size = 12),
+        axis.title = element_text(size = 12))
+```
+
+## Scatter with Regression - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(data_clean, aes(x = Age, y = SysBP_0m)) +
+  geom_point(alpha = 0.5, color = "steelblue", size = 2.5) +
+  geom_smooth(method = "lm", se = TRUE, color = "#E74C3C", 
+              fill = "#E74C3C", alpha = 0.2, size = 1.2) +
+  annotate("text", x = 25, y = 160, 
+           label = paste("r =", round(cor(data_clean$Age, data_clean$SysBP_0m), 3)),
+           family = "serif", size = 5, fontface = "bold") +
+  labs(title = "Age vs. Baseline Systolic BP with Regression Line",
+       subtitle = "Linear trend with 95% confidence interval",
+       x = "Age (years)", 
+       y = "Systolic Blood Pressure (mmHg)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        plot.subtitle = element_text(hjust = 0.5, size = 12),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+```
+
+---
+
+# Interpreting Density & Regression
+
+## Reading Advanced Continuous Plots
+
+**Using the regression plot:**
+
+::: {.incremental style="font-size: 0.85em;"}
+**OBSERVATION:**
+- Weak positive correlation (r ≈ 0.2-0.3)
+- Regression line slopes upward slightly
+- Wide confidence interval (uncertainty in relationship)
+- Substantial scatter around the line
+- Age range: 18-79 years, BP range: 100-165 mmHg
+
+**INTERPRETATION:**
+- Age explains only small portion of BP variation (~4-9% via r²)
+- Systolic BP tends to increase slightly with age (expected)
+- Many other factors influence BP beyond age
+- Relationship is linear but weak
+- Individual variation is large
+
+**IMPLICATIONS:**
+- Age alone is poor predictor of BP
+- Need multivariate models (BMI, smoking, etc.)
+- Age adjustment important but not sufficient
+- Biological relationship exists but is noisy
+- Clinical: Don't assume high BP from age alone
+
+**CRITICAL REMINDERS:**
+- **Correlation ≠ Causation** (age doesn't "cause" high BP directly)
+- r < 0.3 = weak, 0.3-0.7 = moderate, >0.7 = strong
+- Always check confidence interval width
+- Look for non-linear patterns
+:::
+:::
+
+---
+
+# Quick Reference
+
+## Continuous Intermediate - Summary
+
+| Chart Type | Goal | When to Use | Code Lines |
+|------------|------|-------------|-----------|
+| **Violin Plot** | 🟡 Distribution | Compare 2-6 groups with full distribution | 10-15 |
+| **Ridgeline** | 🟡 Distribution | Compare 3+ groups elegantly | 12-18 |
+| **2D Density** | ⚫ Correlation | Show clustering in scatter data | 10-15 |
+| **Hexbin** | ⚫ Correlation | Handle overplotting (1000+ points) | 10-15 |
+| **Scatter + Regression** | ⚫ Correlation | Show trend + uncertainty | 15-20 |
+
+## Violin vs. Box Plot
+
+::: {.columns style="font-size: 0.85em;"}
+::: {.column width="50%"}
+**Box Plot Shows:**
+- 5-number summary
+- Median (50th percentile)
+- Quartiles (25th, 75th)
+- Outliers
+- **Missing:** Distribution shape
+
+**Use When:**
+- Quick comparison needed
+- Focus on median/quartiles
+- Outliers are important
+:::
+
+::: {.column width="50%"}
+**Violin Plot Shows:**
+- Full distribution shape
+- Density at each value
+- Can see bimodal patterns
+- Shows skewness clearly
+- **Missing:** Exact quantiles
+
+**Use When:**
+- Shape matters
+- Want to see multiple peaks
+- Comparing distributions
+- Publication quality needed
+:::
+:::
+
+## Key Takeaways
+
+::: {style="font-size: 0.85em;"}
+::: {.incremental}
+**Remember:**
+
+1. **Violin plots** show what box plots hide (distribution shape)
+2. **Ridgeline plots** scale well to 5-10 groups
+3. **2D density** reveals clustering patterns
+4. **Hexbin** solves overplotting automatically
+5. **Always show confidence intervals** on regression lines
+
+**Common Mistakes:**
+- Using violin plots with < 20 observations per group
+- Too many groups in ridgeline (>10 gets cluttered)
+- Forgetting to show confidence intervals
+- Interpreting weak correlations as strong relationships
+- Not checking for non-linear patterns
+
+**Pro Tips:**
+- Add boxplot inside violin for best of both worlds
+- `scale` parameter in ridgeline controls overlap
+- Use `alpha` transparency to show density overlaps
+- Always report correlation coefficient with regression
+:::
+:::
+
+## Practice Exercise
+
+**Your Turn:**
+
+1. Create a violin plot of `Cholesterol` by `SmokingStatus`
+2. Add a small boxplot inside each violin
+3. Create a ridgeline plot of `Age` distribution by `Region`
+4. Make a scatter plot with regression line: `BMI` vs. `Cholesterol`
+5. Add the correlation coefficient as text annotation
+
+**Bonus:** Create a hexbin plot colored by density for `Age` vs. `BloodSugar`
+
+## Next Steps {.center}
+
+**Continuous Intermediate Complete!**
+
+**Next:** Category vs. Continuous Intermediate (Deck 2.3)
+
+Learn multi-dimensional visualizations:
+- Treemaps
+- Heatmaps
+- Faceted plots
+- 100% stacked bars
+- Slope charts

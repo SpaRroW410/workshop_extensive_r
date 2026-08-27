@@ -1,0 +1,127 @@
+---
+title: "Category vs Continuous - ADVANCED"
+subtitle: "Interactions & Effect Plots"
+format:
+  revealjs:
+    theme: serif
+    slide-number: true
+    code-fold: true
+---
+
+# Advanced Comparisons {.center}
+
+## Topics Covered
+
+- Effect plots (model-based)
+- Interaction plots
+- Marginal effects
+- Bayesian credible intervals
+- Mixed effects visualization
+
+Goal: Show complex statistical relationships
+
+## Setup
+
+```{r}
+library(readxl); library(dplyr); library(ggplot2)
+library(ggeffects); library(interactions)
+health_data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+```
+
+## Interaction Plot - Code
+
+```{r eval=FALSE, echo=TRUE}
+# Fit model with interaction
+model <- lm(SysBP_6m ~ TreatmentGroup * Gender + Age + BMI_0m,
+           data = health_data)
+
+# Plot interaction
+library(interactions)
+interact_plot(model, pred = TreatmentGroup, modx = Gender,
+             interval = TRUE, int.width = 0.95) +
+  labs(title = "Treatment Effect by Gender",
+       y = "Predicted Systolic BP at 6 months") +
+  theme_minimal()
+```
+
+Shows if treatment effect differs by gender
+
+## Marginal Effects Plot
+
+```{r eval=FALSE, echo=TRUE}
+library(ggeffects)
+# Get predicted values
+effects <- ggpredict(model, terms = c("Age [all]", "TreatmentGroup"))
+
+plot(effects) +
+  labs(title = "Age Effect on BP by Treatment Group",
+       x = "Age (years)", y = "Predicted BP") +
+  theme_minimal()
+```
+
+Model-based predictions with confidence bands
+
+## Forest Plot (Effect Sizes)
+
+```{r eval=FALSE, echo=TRUE}
+library(broom)
+# Get coefficients
+coef_data <- tidy(model, conf.int = TRUE) %>%
+  filter(term != "(Intercept)")
+
+ggplot(coef_data, aes(x = estimate, y = term)) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  geom_point(size = 3) +
+  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high),
+                height = 0.2) +
+  labs(title = "Regression Coefficients with 95% CI",
+       x = "Effect on Systolic BP") +
+  theme_minimal()
+```
+
+Standard in medical research
+
+## Raincloud by Multiple Groups
+
+```{r eval=FALSE, echo=TRUE}
+library(ggdist)
+health_data %>%
+  filter(!is.na(TreatmentGroup), !is.na(Gender)) %>%
+  ggplot(aes(x = Gender, y = SysBP_6m, fill = TreatmentGroup)) +
+  stat_halfeye(position = position_dodge(width = 0.5),
+              adjust = 0.5, width = 0.3) +
+  geom_boxplot(width = 0.1, outlier.shape = NA,
+              position = position_dodge(width = 0.5)) +
+  facet_wrap(~ TreatmentGroup) +
+  theme_minimal()
+```
+
+Comprehensive view of nested groups
+
+## Bayesian Credible Intervals
+
+```{r eval=FALSE, echo=TRUE}
+library(rstanarm)
+# Bayesian model (conceptual)
+bayes_model <- stan_glm(SysBP_6m ~ TreatmentGroup + Age,
+                       data = health_data,
+                       prior = normal(0, 2.5))
+
+# Plot posterior distributions
+plot(bayes_model, prob = 0.95) +
+  labs(title = "Bayesian Coefficient Estimates")
+```
+
+Full uncertainty quantification
+
+## Summary
+
+**Advanced comparison techniques:**
+
+1. Interaction plots - show moderation effects
+2. Marginal effects - model-based predictions
+3. Forest plots - effect size comparisons
+4. Complex rainclouds - nested groups
+5. Bayesian intervals - full uncertainty
+
+**Next:** Time Series Advanced

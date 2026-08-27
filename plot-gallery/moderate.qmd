@@ -11,9 +11,8 @@ editor:
   markdown:
     wrap: 72
 ---
-::: {.content-visible when-profile="moderate"}
 
-## Intermediate Plot 
+## Intermediate Plot
 
 Explore foundational plots grouped by data type and relationship
 
@@ -35,17 +34,17 @@ Includes: Violin plots, Ridgeline plots, 2D density, Hexbin
 
 ### ▸ Category vs. Continuous
 
-Includes: 
-- Violin plots, 
-- Ridgeline plots, 
-- Bee swarm plots, 
-- Raincloud plots, 
+Includes:
+- Violin plots,
+- Ridgeline plots,
+- Bee swarm plots,
+- Raincloud plots,
 - Enhanced grouped/stacked bars
 🔗 [View Slide Deck →](moderate/2.3_category_vs_continuous_intermediate.qmd)
 
 ---
 
-### ▸ Time 
+### ▸ Time
 
 Includes:
 - Smoothed trends (LOESS, moving average)
@@ -64,8 +63,7 @@ Includes:
 - Correlation networks
 🔗 [View Slide Deck →](moderate/2.5_relational_flow_intermediate.qmd)
 
-::: {.content-visible unless-meta="hide-advanced"}
-### ▸ Geographical 
+### ▸ Geographical
 
 Includes:
 - Choropleth maps (filled regions)
@@ -74,7 +72,3 @@ Includes:
 - Faceted maps (small multiples)
 - Interactive maps
 🔗 [View Slide Deck](moderate/2.6_geographic_intermediate.qmd)
-:::
-
-:::
-

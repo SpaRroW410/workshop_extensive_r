@@ -1,0 +1,173 @@
+---
+title: "Geographic - ADVANCED"
+subtitle: "Spatial Analysis & Cartograms"
+format:
+  revealjs:
+    theme: serif
+    slide-number: true
+    code-fold: true
+---
+
+# Geographic Advanced {.center}
+
+## Topics Covered
+
+- Spatial interpolation (kriging)
+- Cartograms (area distortion)
+- Spatial autocorrelation
+- Hexbin maps
+- Isochrone maps
+
+Goal: Advanced spatial analysis
+
+## Setup
+
+```{r}
+library(readxl); library(dplyr); library(ggplot2)
+library(sf); library(gstat); library(cartogram)
+health_data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+
+# Aggregate by region
+region_summary <- health_data %>%
+  group_by(Region) %>%
+  summarise(mean_bp = mean(SysBP_0m, na.rm = TRUE),
+           n_patients = n())
+```
+
+## Spatial Interpolation - Code
+
+```{r eval=FALSE, echo=TRUE}
+library(gstat)
+library(sp)
+
+# Create spatial points (simulated coordinates)
+coords <- data.frame(
+  lon = c(-120, -100, -80, -110),
+  lat = c(40, 35, 42, 45),
+  bp = region_summary$mean_bp
+)
+coordinates(coords) <- ~lon + lat
+
+# Fit variogram and krige
+vgm_model <- vgm(psill = 100, model = "Exp", range = 500)
+kriged <- krige(bp ~ 1, coords, newdata = grid, model = vgm_model)
+
+# Plot interpolated surface
+ggplot(as.data.frame(kriged), aes(x = lon, y = lat, fill = var1.pred)) +
+  geom_tile() +
+  scale_fill_viridis_c() +
+  labs(title = "Spatial Interpolation (Kriging)",
+       fill = "Predicted BP") +
+  theme_minimal()
+```
+
+Estimates values between observations
+
+## Cartogram - Code
+
+```{r eval=FALSE, echo=TRUE}
+library(cartogram)
+library(sf)
+
+# Create SF object with regions
+us_regions <- st_as_sf(map_data_full, 
+                       coords = c("long", "lat")) %>%
+  group_by(region_name) %>%
+  summarise(mean_bp = first(mean_bp))
+
+# Create cartogram (distort by BP)
+cartogram_result <- cartogram_cont(us_regions, "mean_bp")
+
+ggplot(cartogram_result) +
+  geom_sf(aes(fill = mean_bp)) +
+  scale_fill_viridis_c() +
+  labs(title = "Cartogram: Area ∝ Blood Pressure",
+       fill = "Mean BP") +
+  theme_void()
+```
+
+Region size represents BP magnitude
+
+## Spatial Autocorrelation - Code
+
+```{r eval=FALSE, echo=TRUE}
+library(spdep)
+
+# Create neighbors
+neighbors <- poly2nb(us_regions)
+weights <- nb2listw(neighbors)
+
+# Moran's I test
+moran_result <- moran.test(us_regions$mean_bp, weights)
+
+# Plot Moran's I scatter
+moran.plot(us_regions$mean_bp, weights,
+          main = "Moran's I Spatial Autocorrelation",
+          xlab = "Blood Pressure",
+          ylab = "Lagged BP")
+
+# Add result
+text(x = min(us_regions$mean_bp), y = max(us_regions$mean_bp),
+    labels = paste0("Moran's I = ", 
+                   round(moran_result$estimate[1], 3),
+                   "\np = ", round(moran_result$p.value, 4)),
+    adj = c(0,1))
+```
+
+Tests if similar values cluster spatially
+
+## Hexbin Map - Code
+
+```{r eval=FALSE, echo=TRUE}
+library(geogrid)
+
+# Create hexagonal grid
+hex_grid <- calculate_grid(shape = us_regions, 
+                          grid_type = "hexagonal",
+                          seed = 123)
+
+# Assign data
+hex_data <- assign_polygons(us_regions, hex_grid)
+
+ggplot(hex_data) +
+  geom_sf(aes(fill = mean_bp), color = "white") +
+  geom_sf_text(aes(label = region_name), size = 3) +
+  scale_fill_viridis_c() +
+  labs(title = "Hexbin Map: Equal Area Representation") +
+  theme_void()
+```
+
+Each region = same size hexagon
+
+## Isochrone Map (Conceptual)
+
+```{r eval=FALSE, echo=TRUE}
+library(osrm)
+
+# Calculate isochrones (travel time zones)
+# From central hospital location
+iso <- osrmIsochrone(loc = c(-95, 38),  # Center point
+                    breaks = c(0, 15, 30, 45, 60),  # Minutes
+                    osrm.profile = "car")
+
+ggplot(iso) +
+  geom_sf(aes(fill = factor(isomax)), alpha = 0.5) +
+  scale_fill_brewer(palette = "YlOrRd",
+                   name = "Travel Time\n(minutes)") +
+  labs(title = "Hospital Access Isochrones") +
+  theme_void()
+```
+
+Shows accessibility zones
+
+## Summary
+
+**Advanced geographic techniques:**
+
+1. Spatial interpolation - estimate unmeasured locations
+2. Cartograms - size by variable
+3. Spatial autocorrelation - test clustering
+4. Hexbin maps - equal area representation
+5. Isochrones - accessibility analysis
+
+**Next:** Dashboards Advanced

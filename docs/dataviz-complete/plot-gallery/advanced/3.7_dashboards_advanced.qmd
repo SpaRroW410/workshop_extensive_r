@@ -1,0 +1,259 @@
+---
+title: "Dashboards - ADVANCED"
+subtitle: "Interactive Reporting & Shiny"
+format:
+  revealjs:
+    theme: serif
+    slide-number: true
+    code-fold: true
+---
+
+# Dashboard Design {.center}
+
+## Topics Covered
+
+- Dashboard layout principles
+- Shiny app structure
+- Reactive programming
+- plotly interactivity
+- flexdashboard framework
+
+Goal: Create interactive analytical tools
+
+## Dashboard Layout Principles
+
+::: {.columns}
+::: {.column width="50%"}
+**F-Pattern Layout:**
+
+- Top row: Key metrics (KPIs)
+- Left column: Filters/controls
+- Center: Main visualizations
+- Right: Secondary insights
+
+**Golden Rules:**
+
+1. Most important info top-left
+2. Limit to 5-7 visualizations
+3. Consistent color scheme
+4. Clear hierarchy
+:::
+
+::: {.column width="50%"}
+**Example Structure:**
+
+```
+┌─────────────────────────────┐
+│ KPI 1  │ KPI 2  │ KPI 3     │
+├────────┼────────┼───────────┤
+│ Filter │ Main Chart         │
+│ Panel  │                    │
+│        ├────────────────────┤
+│        │ Secondary Charts   │
+└────────┴────────────────────┘
+```
+:::
+:::
+
+## flexdashboard Structure
+
+```{r eval=FALSE, echo=TRUE}
+---
+title: "Health Dashboard"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+---
+
+# Page 1 {data-icon="fa-chart-bar"}
+
+## Row 1 {data-height=100}
+
+### KPI 1
+valueBox(150, caption = "Total Patients", icon = "fa-users")
+
+### KPI 2  
+valueBox(85, caption = "% Adherence", icon = "fa-check", 
+        color = ifelse(85 > 80, "success", "warning"))
+
+## Row 2
+
+### Chart 1
+plot_ly(data, x = ~x, y = ~y, type = "scatter")
+
+### Chart 2
+ggplotly(ggplot(data, aes(x, y)) + geom_bar())
+```
+
+## Basic Shiny App Structure
+
+```{r eval=FALSE, echo=TRUE}
+library(shiny)
+
+# UI
+ui <- fluidPage(
+  titlePanel("Blood Pressure Dashboard"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("region", "Region:",
+                 choices = c("North", "South", "East", "West")),
+      sliderInput("age", "Age Range:",
+                 min = 18, max = 80, value = c(18, 80))
+    ),
+    
+    mainPanel(
+      plotOutput("bpPlot"),
+      tableOutput("statsTable")
+    )
+  )
+)
+
+# Server
+server <- function(input, output) {
+  # Reactive data
+  filtered_data <- reactive({
+    health_data %>%
+      filter(Region == input$region,
+            Age >= input$age[1], Age <= input$age[2])
+  })
+  
+  # Outputs
+  output$bpPlot <- renderPlot({
+    ggplot(filtered_data(), aes(x = Age, y = SysBP_0m)) +
+      geom_point() + geom_smooth()
+  })
+  
+  output$statsTable <- renderTable({
+    filtered_data() %>%
+      summarise(Mean = mean(SysBP_0m),
+               SD = sd(SysBP_0m),
+               N = n())
+  })
+}
+
+shinyApp(ui, server)
+```
+
+## Reactive Programming Concepts
+
+**Key Reactive Functions:**
+
+```{r eval=FALSE, echo=TRUE}
+# reactive() - creates reactive expression
+data_filtered <- reactive({
+  req(input$region)  # Require input
+  health_data %>% filter(Region == input$region)
+})
+
+# observe() - side effects (no return value)
+observe({
+  print(paste("Region changed to:", input$region))
+})
+
+# observeEvent() - respond to specific event
+observeEvent(input$updateBtn, {
+  # Code runs when button clicked
+  output$plot <- renderPlot({...})
+})
+
+# eventReactive() - reactive value from event
+data_on_click <- eventReactive(input$loadBtn, {
+  read.csv(input$file$datapath)
+})
+```
+
+## plotly Interactivity
+
+```{r eval=FALSE, echo=TRUE}
+library(plotly)
+
+# Convert ggplot to interactive
+p <- ggplot(health_data, aes(x = BMI_0m, y = SysBP_0m, 
+                             color = Gender,
+                             text = paste("ID:", PatientID))) +
+  geom_point()
+
+ggplotly(p, tooltip = c("text", "x", "y"))
+
+# Native plotly with custom hover
+plot_ly(health_data, x = ~BMI_0m, y = ~SysBP_0m,
+       color = ~Gender,
+       type = "scatter", mode = "markers",
+       hovertemplate = paste(
+         "<b>Patient ID:</b> %{text}<br>",
+         "<b>BMI:</b> %{x:.1f}<br>",
+         "<b>BP:</b> %{y:.0f}<br>",
+         "<extra></extra>"
+       ),
+       text = ~PatientID)
+```
+
+Hover, zoom, pan, select automatically
+
+## Dashboard with Multiple Pages
+
+```{r eval=FALSE, echo=TRUE}
+# In flexdashboard
+---
+title: "Multi-Page Dashboard"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+---
+
+# Overview {data-icon="fa-dashboard"}
+## Row
+### Chart 1
+...
+
+# Demographics {data-icon="fa-users"}
+## Row
+### Chart 2
+...
+
+# Outcomes {data-icon="fa-heartbeat"}
+## Row
+### Chart 3
+...
+```
+
+Tab-based navigation
+
+## Performance Tips
+
+**Optimize Shiny Apps:**
+
+1. **Cache expensive computations**
+```{r eval=FALSE, echo=TRUE}
+cached_data <- memoise::memoise(function(param) {
+  # Expensive calculation
+  expensive_function(param)
+})
+```
+
+2. **Use renderCachedPlot** for static plots
+
+3. **Limit reactive dependencies**
+
+4. **Use DT package** for large tables
+
+5. **Deploy efficiently** (shinyapps.io, Docker)
+
+## Summary
+
+**Dashboard essentials:**
+
+1. Layout follows F-pattern, top-left priority
+2. flexdashboard for quick R dashboards
+3. Shiny for full interactivity
+4. Reactive programming handles updates
+5. plotly adds hover/zoom/select
+
+**Practice:** Build a dashboard for your data!
+
+**Resources:**
+- Mastering Shiny (book)
+- shiny.rstudio.com
+- flexdashboard.rstudio.com
