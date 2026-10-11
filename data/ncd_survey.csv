@@ -1,0 +1,601 @@
+id,village,age,sex,residence,education,bmi,waist,salt_g,tobacco,alcohol,phys_act,sbp,dbp,htn
+1,V01,42,Female,Rural,Primary,26.3,88.2,6.9,No,Yes,moderate,131,57,0
+2,V01,52,Female,Rural,Primary,21.7,74.4,9,No,No,low,135,61,0
+3,V01,46,Male,Rural,Graduate+,17.4,69.1,5.8,No,No,high,127,57,0
+4,V01,56,Male,Rural,Primary,24.1,85.9,10.2,No,No,moderate,155,79,1
+5,V01,30,Male,Rural,Graduate+,22.8,78.8,6.3,No,No,low,138,63,0
+6,V01,42,Female,Rural,Secondary,26.3,85.5,8.9,No,No,low,135,61,0
+7,V01,52,Female,Rural,No schooling,26,88.2,11,Yes,No,moderate,126,58,0
+8,V01,52,Female,Rural,Secondary,26.1,80.5,9.7,No,No,high,136,64,0
+9,V01,42,Female,Rural,Graduate+,16.8,62.8,4.5,No,No,low,125,60,0
+10,V01,61,Female,Rural,Primary,28.3,89.7,10.8,No,Yes,high,147,68,1
+11,V01,45,Female,Rural,Primary,22.9,76.1,8,Yes,No,low,122,53,0
+12,V01,55,Male,Rural,No schooling,27.7,91.4,6.9,No,No,moderate,153,66,1
+13,V01,48,Male,Rural,No schooling,26.5,91.1,7.1,No,Yes,moderate,158,69,1
+14,V01,60,Male,Rural,Primary,23.1,83.7,9.5,No,Yes,moderate,125,63,0
+15,V01,55,Male,Rural,No schooling,24.8,90,12.8,No,No,moderate,140,70,1
+16,V01,40,Female,Rural,No schooling,22.2,76.8,6.2,No,No,low,128,52,0
+17,V01,42,Female,Rural,Graduate+,20.4,70.1,5.9,No,No,low,114,55,0
+18,V01,33,Male,Rural,Graduate+,17.2,69.9,2,No,No,moderate,100,45,0
+19,V01,57,Female,Rural,Secondary,21.2,75,5.5,No,No,moderate,126,60,0
+20,V01,55,Male,Rural,Graduate+,24.3,88,4.7,No,No,high,129,55,0
+21,V01,50,Male,Rural,Secondary,24.2,81.4,8,Yes,No,high,128,59,0
+22,V01,30,Female,Rural,Secondary,21.4,75.4,5.7,No,No,low,119,53,0
+23,V01,37,Male,Rural,Primary,21.9,80.9,3.8,Yes,No,low,139,60,0
+24,V01,46,Male,Rural,Primary,33.7,107.3,9,No,No,low,151,69,1
+25,V01,37,Male,Rural,Graduate+,23.9,86.6,9.9,No,No,moderate,119,46,0
+26,V01,44,Female,Rural,Graduate+,21.7,72.9,8.9,No,No,moderate,149,78,1
+27,V01,67,Male,Rural,Primary,22.2,79.6,11.1,Yes,No,high,179,89,1
+28,V01,53,Female,Rural,Primary,24,78,9.6,No,No,low,155,67,1
+29,V01,31,Male,Rural,Graduate+,17.8,71.7,5.4,No,No,low,123,54,0
+30,V01,33,Female,Rural,Graduate+,25.7,83.7,7.6,No,No,low,139,60,0
+31,V02,60,Male,Urban,Graduate+,21.8,79.6,4.4,No,No,moderate,143,55,1
+32,V02,58,Female,Urban,No schooling,26.9,90.1,9.6,No,No,high,131,56,0
+33,V02,44,Female,Urban,No schooling,19.5,67.4,4.3,No,No,low,121,49,0
+34,V02,50,Female,Urban,Graduate+,27.1,87.7,6.6,No,No,moderate,137,58,0
+35,V02,56,Female,Urban,Primary,26,87.9,9.8,No,No,high,135,57,0
+36,V02,30,Male,Urban,Secondary,15,59.5,3.3,No,No,moderate,112,52,0
+37,V02,55,Male,Urban,Graduate+,21.3,83.5,NA,Yes,No,high,149,63,1
+38,V02,69,Female,Urban,Secondary,24.2,87.5,8,No,No,moderate,147,76,1
+39,V02,42,Male,Urban,Graduate+,25.4,90.1,5,No,No,high,125,47,0
+40,V02,52,Female,Urban,Secondary,27.9,91.1,8,No,No,moderate,117,60,0
+41,V02,40,Male,Urban,Graduate+,21.6,77.8,6,Yes,Yes,high,130,61,0
+42,V02,37,Female,Urban,Graduate+,18.5,63.8,5.6,No,No,moderate,121,62,0
+43,V02,69,Female,Urban,Secondary,23.2,79.5,6.4,No,No,high,142,67,1
+44,V02,31,Female,Urban,Graduate+,24.4,80.4,6.2,No,No,high,122,49,0
+45,V02,62,Male,Urban,Secondary,23.1,78.9,8.1,Yes,Yes,low,148,66,1
+46,V02,48,Male,Urban,Secondary,26.3,91.7,8,No,No,high,122,62,0
+47,V02,39,Female,Urban,Secondary,20.9,74.4,5.6,No,No,low,134,56,0
+48,V02,56,Female,Urban,Primary,22.4,76,7.4,No,No,high,134,68,0
+49,V02,30,Female,Urban,Secondary,27.7,90.4,8.2,No,No,low,141,56,1
+50,V02,57,Male,Urban,Primary,22.7,81.4,6.5,Yes,No,high,159,70,1
+51,V02,66,Male,Urban,Secondary,24,86.1,10.8,Yes,No,high,132,65,0
+52,V02,43,Male,Urban,Graduate+,NA,78.7,7.5,Yes,Yes,low,141,62,1
+53,V02,42,Male,Urban,Graduate+,23.1,82.6,5.5,Yes,Yes,low,123,56,0
+54,V02,34,Male,Urban,Graduate+,26.7,89.1,11.3,No,No,moderate,131,52,0
+55,V02,57,Male,Urban,Primary,21.8,80.6,8.9,No,Yes,moderate,130,63,0
+56,V02,53,Male,Urban,Secondary,26.9,92.3,4.2,Yes,Yes,low,147,56,1
+57,V02,49,Female,Urban,Graduate+,29.3,95,4.6,Yes,No,high,130,56,0
+58,V03,42,Male,Rural,Primary,24.2,83,7.6,No,Yes,moderate,140,57,1
+59,V03,48,Female,Rural,No schooling,25.6,82.6,5.1,No,No,low,136,60,0
+60,V03,52,Male,Rural,Graduate+,25.8,87.9,8.3,No,No,high,129,59,0
+61,V03,30,Male,Rural,Primary,21.1,75.5,7.4,Yes,Yes,low,139,57,0
+62,V03,31,Male,Rural,Graduate+,17.4,66.6,4.4,Yes,No,low,107,51,0
+63,V03,30,Male,Rural,Secondary,21.5,81,4.7,No,No,moderate,128,56,0
+64,V03,49,Female,Rural,Secondary,20.6,68.9,9.2,No,No,low,151,63,1
+65,V03,44,Male,Rural,Primary,19.1,70.7,7.1,No,Yes,moderate,101,46,0
+66,V03,56,Male,Rural,Primary,21,76.1,6.6,No,No,high,119,48,0
+67,V03,45,Male,Rural,Primary,22.1,81.1,8.5,Yes,Yes,moderate,125,50,0
+68,V03,51,Male,Rural,Secondary,22,78.2,6,No,No,high,131,60,0
+69,V03,55,Female,Rural,Secondary,23.5,77.4,9.7,No,No,moderate,126,54,0
+70,V03,47,Male,Rural,No schooling,22.6,83.9,6.5,Yes,Yes,low,154,72,1
+71,V03,40,Male,Rural,Secondary,27.6,92.9,9.5,No,Yes,low,140,69,1
+72,V03,55,Male,Rural,Primary,22.7,81.5,7.3,No,No,high,140,74,1
+73,V03,37,Male,Rural,Graduate+,16.1,66.7,2,Yes,No,low,101,45,0
+74,V03,65,Male,Rural,Primary,25.1,89.6,10.5,No,Yes,high,147,61,1
+75,V03,64,Male,Rural,Secondary,24.1,83.1,6.9,No,Yes,high,140,65,1
+76,V03,52,Male,Rural,Primary,NA,83.7,9.8,Yes,No,high,140,57,1
+77,V03,65,Female,Rural,No schooling,16.4,62.3,8.4,No,No,low,157,59,1
+78,V03,36,Male,Rural,Secondary,18.4,71.8,5.7,No,Yes,moderate,108,38,0
+79,V03,46,Female,Rural,Graduate+,NA,81.1,7.7,Yes,No,moderate,144,74,1
+80,V03,36,Female,Rural,Primary,21,74.2,7,No,No,low,109,37,0
+81,V03,30,Female,Rural,Primary,19.7,70.2,4.2,No,No,moderate,119,50,0
+82,V03,45,Female,Rural,Primary,25.4,84.7,5.9,No,No,low,152,70,1
+83,V03,69,Female,Rural,Primary,16.3,64.5,8.8,No,No,moderate,135,68,0
+84,V03,54,Male,Rural,Secondary,22.6,82.3,10.3,No,No,high,132,61,0
+85,V03,51,Male,Rural,Graduate+,18.9,70.9,5.2,Yes,Yes,high,130,58,0
+86,V03,30,Male,Rural,Graduate+,25.9,91.7,12.1,Yes,No,low,120,54,0
+87,V03,52,Male,Rural,Secondary,17.7,69.9,5.2,No,Yes,moderate,126,50,0
+88,V03,34,Male,Rural,Graduate+,26.5,91.3,7.7,No,Yes,high,128,58,0
+89,V03,58,Male,Rural,Graduate+,25.2,87.3,11.3,No,No,moderate,121,58,0
+90,V03,69,Female,Rural,No schooling,21.2,75.9,7.9,No,No,low,158,80,1
+91,V04,51,Female,Rural,Secondary,20.4,74.3,7.1,No,No,low,149,68,1
+92,V04,32,Male,Rural,No schooling,19.5,73.7,6.7,Yes,No,low,121,65,0
+93,V04,34,Male,Rural,Secondary,17.6,66.1,4.1,No,No,high,131,46,0
+94,V04,30,Female,Rural,Graduate+,17.8,65.7,3.2,No,No,moderate,122,49,0
+95,V04,58,Male,Rural,Primary,22.7,81.2,9.7,No,No,low,152,69,1
+96,V04,54,Male,Rural,Graduate+,27.9,93.4,10.8,No,No,low,137,62,0
+97,V04,55,Female,Rural,Graduate+,21.5,73.8,7.1,No,No,low,144,69,1
+98,V04,65,Female,Rural,No schooling,19.5,67.2,10.7,No,No,moderate,135,64,0
+99,V04,30,Female,Rural,Graduate+,23.7,77.3,5.7,No,No,moderate,126,48,0
+100,V04,64,Female,Rural,Primary,31.5,100.2,8.8,Yes,No,moderate,162,79,1
+101,V04,69,Female,Rural,No schooling,27.7,89.7,11.7,No,No,high,164,77,1
+102,V04,56,Female,Rural,Secondary,20.7,73.8,6.4,Yes,No,low,139,64,0
+103,V04,30,Male,Rural,Primary,23.1,80.4,6.7,Yes,No,high,130,69,0
+104,V04,50,Male,Rural,Secondary,25.7,89.7,8.6,No,No,low,136,65,0
+105,V04,41,Female,Rural,NA,18.4,68.9,5.8,No,No,high,136,57,0
+106,V04,56,Female,Rural,Primary,26.2,87.9,6.2,No,No,moderate,103,44,0
+107,V04,58,Female,Rural,Graduate+,20.3,74.2,8.3,No,No,high,157,68,1
+108,V04,38,Male,Rural,Secondary,20.5,78.7,4,Yes,No,low,106,45,0
+109,V04,44,Male,Rural,Primary,23.4,82.4,7.7,No,No,high,135,60,0
+110,V04,51,Male,Rural,Primary,30,99,9,Yes,No,low,154,73,1
+111,V04,43,Male,Rural,Graduate+,25.1,88,8.6,Yes,No,low,136,64,0
+112,V04,52,Female,Rural,No schooling,18.9,68.2,8.9,Yes,No,low,142,71,1
+113,V04,52,Male,Rural,Secondary,22.4,80.8,9.8,No,No,moderate,150,60,1
+114,V04,45,Female,Rural,Primary,NA,68.7,5.8,No,No,low,118,56,0
+115,V04,52,Female,Rural,Graduate+,27.2,89,9.9,No,Yes,low,140,74,1
+116,V04,57,Male,Rural,Graduate+,21.7,78.8,7.1,Yes,Yes,moderate,151,62,1
+117,V04,41,Female,Rural,Secondary,19.9,75.1,6,No,No,high,118,54,0
+118,V04,56,Female,Rural,Secondary,22.7,78,NA,No,No,moderate,145,68,1
+119,V04,68,Female,Rural,No schooling,27.9,92.4,8.1,No,No,low,128,59,0
+120,V04,53,Female,Rural,Secondary,24.4,84.2,10.8,No,No,high,151,72,1
+121,V04,55,Male,Rural,Graduate+,24.4,86,11.4,Yes,No,low,162,78,1
+122,V05,33,Male,Rural,Secondary,29.2,100.5,NA,No,No,high,136,56,0
+123,V05,38,Female,Rural,Secondary,17.4,68.3,5.5,No,No,low,113,53,0
+124,V05,66,Male,Rural,No schooling,24.2,83.3,9.5,Yes,No,moderate,157,71,1
+125,V05,51,Male,Rural,NA,19.6,73.4,5.8,Yes,No,moderate,134,59,0
+126,V05,45,Male,Rural,Graduate+,23.2,85.7,10.4,No,No,high,125,54,0
+127,V05,59,Male,Rural,No schooling,22.3,83.4,9.1,No,No,moderate,149,67,1
+128,V05,45,Female,Rural,Secondary,23.9,77.6,5.3,No,No,low,129,62,0
+129,V05,57,Male,Rural,Primary,24.8,85.5,10.9,Yes,No,moderate,141,63,1
+130,V05,36,Male,Rural,Secondary,17.3,69.4,NA,Yes,No,low,115,50,0
+131,V05,52,Female,Rural,Primary,19.4,67.3,8.3,No,No,moderate,119,47,0
+132,V05,45,Male,Rural,Primary,27.5,92.6,4.1,No,No,low,142,68,1
+133,V05,60,Female,Rural,Graduate+,16.7,60.8,8.3,No,No,moderate,102,53,0
+134,V05,46,Female,Rural,Primary,21.6,73.5,5.8,No,No,low,130,53,0
+135,V05,54,Female,Rural,No schooling,25.1,79.1,9.4,No,No,high,131,58,0
+136,V05,57,Male,Rural,Secondary,NA,77.2,NA,No,No,low,122,54,0
+137,V05,59,Female,Rural,No schooling,25.4,91.6,10.2,Yes,No,moderate,129,53,0
+138,V05,37,Female,Rural,Primary,23.2,78.6,7.8,No,No,moderate,100,41,0
+139,V05,60,Female,Rural,Secondary,20.2,72.2,4.9,No,No,high,108,46,0
+140,V05,35,Female,Rural,Secondary,20.1,72.2,7.1,Yes,No,moderate,109,51,0
+141,V05,45,Male,Rural,Secondary,17.4,66.4,8.9,No,No,low,105,50,0
+142,V05,51,Female,Rural,Secondary,20.5,74,4.9,No,No,high,114,55,0
+143,V05,48,Male,Rural,Primary,19.6,73.6,5.7,Yes,No,moderate,123,48,0
+144,V05,69,Female,Rural,No schooling,28.1,88.4,11.5,No,No,moderate,142,62,1
+145,V05,50,Female,Rural,No schooling,21.5,75.9,7.5,No,No,high,121,51,0
+146,V05,69,Female,Rural,No schooling,23,77.7,8.3,No,No,low,183,77,1
+147,V05,60,Female,Rural,NA,20.9,70.7,8.9,Yes,No,moderate,156,77,1
+148,V05,47,Female,Rural,Primary,20.3,73.5,4.2,No,No,moderate,106,48,0
+149,V05,38,Male,Rural,Graduate+,23.9,83.1,4.6,Yes,No,moderate,114,51,0
+150,V06,48,Female,Rural,Primary,22.3,77.1,7.7,No,No,low,135,57,0
+151,V06,43,Female,Rural,Graduate+,25.4,83,8.7,No,No,low,112,52,0
+152,V06,39,Female,Rural,Primary,18.5,70.5,8,No,No,moderate,125,54,0
+153,V06,40,Female,Rural,No schooling,21.8,73.5,8.2,No,No,low,130,54,0
+154,V06,64,Female,Rural,No schooling,19,69.6,7.3,No,No,high,121,54,0
+155,V06,60,Female,Rural,Secondary,23.3,79.7,7.8,Yes,No,moderate,130,66,0
+156,V06,55,Male,Rural,Primary,26.5,93.9,7.5,No,No,high,140,64,1
+157,V06,34,Male,Rural,Secondary,18.9,74.6,6.4,No,No,moderate,120,49,0
+158,V06,30,Male,Rural,No schooling,18.3,70.5,9.6,Yes,Yes,low,142,63,1
+159,V06,49,Female,Rural,Primary,22.3,81.1,7.5,No,No,low,114,52,0
+160,V06,43,Male,Rural,Graduate+,28.5,95.1,6.9,Yes,No,high,143,57,1
+161,V06,47,Male,Rural,Secondary,23,79.9,7.8,Yes,Yes,moderate,138,66,0
+162,V06,62,Female,Rural,No schooling,26.9,89.4,10.6,No,No,low,169,74,1
+163,V06,34,Female,Rural,Primary,18,66.9,4.8,No,No,low,104,49,0
+164,V06,49,Male,Rural,Secondary,20.3,77.2,2,No,No,high,131,70,0
+165,V06,59,Male,Rural,Primary,26.3,92.5,10.4,No,Yes,low,147,64,1
+166,V06,49,Female,Rural,Graduate+,20.3,73.4,6.6,No,No,high,146,72,1
+167,V06,39,Male,Rural,Graduate+,20,74.6,5.6,No,No,low,118,57,0
+168,V06,57,Female,Rural,Secondary,20.8,73.4,3.9,No,No,low,117,56,0
+169,V06,38,Male,Rural,Secondary,27,93.1,6.9,No,No,low,125,52,0
+170,V06,55,Female,Rural,Primary,28.8,85.5,9.2,No,No,high,138,58,0
+171,V06,59,Female,Rural,No schooling,28.4,87,9.3,No,No,low,134,58,0
+172,V06,53,Female,Rural,No schooling,22.9,76.7,8.2,No,Yes,low,113,54,0
+173,V06,41,Male,Rural,Graduate+,18.6,66.4,4.1,Yes,No,moderate,120,53,0
+174,V06,57,Male,Rural,Secondary,18.8,68.4,7,No,No,moderate,126,59,0
+175,V06,45,Female,Rural,Primary,25.1,84.4,8.5,No,No,moderate,124,50,0
+176,V06,45,Male,Rural,No schooling,23,82.2,9.9,No,No,high,128,54,0
+177,V06,51,Male,Rural,Primary,20.7,74.9,6.4,No,Yes,low,139,62,0
+178,V06,34,Female,Rural,Secondary,20.7,73.8,8.4,No,No,low,122,56,0
+179,V06,64,Female,Rural,No schooling,20.6,73,8.4,Yes,No,moderate,148,67,1
+180,V06,39,Male,Rural,No schooling,23.6,82.1,4.9,Yes,No,low,140,61,1
+181,V06,35,Female,Rural,No schooling,30.1,97.1,4.7,No,Yes,moderate,129,55,0
+182,V07,59,Male,Rural,Secondary,22.3,85.1,9.1,No,No,low,151,63,1
+183,V07,39,Female,Rural,Graduate+,25.4,84,7.4,No,Yes,low,135,63,0
+184,V07,44,Female,Rural,Graduate+,21.8,76.6,5.4,No,No,moderate,118,49,0
+185,V07,49,Female,Rural,Primary,16.2,58.3,6.4,No,No,high,133,54,0
+186,V07,51,Male,Rural,NA,25.3,86.7,11.2,No,Yes,moderate,161,77,1
+187,V07,50,Male,Rural,Secondary,22,77.7,6.2,No,No,high,144,66,1
+188,V07,51,Female,Rural,No schooling,21.9,77.2,7.1,Yes,No,low,159,70,1
+189,V07,65,Female,Rural,No schooling,28.3,91.6,11.5,No,No,high,165,79,1
+190,V07,32,Male,Rural,Graduate+,19.9,73.4,6.9,No,No,low,138,63,0
+191,V07,64,Female,Rural,Graduate+,26.1,85.3,10.1,No,No,high,167,75,1
+192,V07,46,Female,Rural,No schooling,26.5,86.5,9.7,No,No,low,134,73,0
+193,V07,47,Male,Rural,Graduate+,22.4,81.6,6.6,No,No,moderate,110,49,0
+194,V07,58,Female,Rural,No schooling,15.5,60.6,6.6,No,Yes,moderate,122,62,0
+195,V07,41,Male,Rural,Secondary,21.9,78.2,7.3,Yes,No,low,130,59,0
+196,V07,45,Female,Rural,Primary,25.9,87,6.2,No,No,high,122,44,0
+197,V07,42,Female,Rural,Primary,19.2,66.1,8.1,No,Yes,low,152,64,1
+198,V07,40,Male,Rural,Secondary,20,76.1,NA,No,Yes,low,145,69,1
+199,V07,65,Male,Rural,Primary,24.6,85.3,7.7,Yes,No,moderate,136,57,0
+200,V07,38,Female,Rural,Graduate+,21.8,75.6,9.1,No,No,low,127,42,0
+201,V07,49,Female,Rural,Secondary,25.2,80.8,8.4,No,No,low,127,58,0
+202,V07,58,Male,Rural,Graduate+,20.6,76.9,9.2,No,No,moderate,151,64,1
+203,V07,57,Male,Rural,Secondary,17.9,68.6,6.1,Yes,No,moderate,132,59,0
+204,V07,42,Male,Rural,Primary,20.4,79.6,7,Yes,Yes,low,152,57,1
+205,V07,59,Male,Rural,No schooling,22.7,81.3,7.7,No,No,high,169,73,1
+206,V07,43,Male,Rural,Graduate+,16.5,67.2,5,No,No,high,98,46,0
+207,V07,50,Male,Rural,Secondary,24.6,84.3,7.4,No,Yes,moderate,168,83,1
+208,V07,49,Male,Rural,Secondary,28.2,99.6,7.2,Yes,No,moderate,146,67,1
+209,V07,52,Male,Rural,Secondary,21.6,77.3,9.6,No,No,high,151,66,1
+210,V08,60,Male,Urban,Graduate+,25.8,87.6,5.5,No,No,high,145,71,1
+211,V08,44,Female,Urban,Graduate+,22.2,75.6,4.6,No,No,high,131,59,0
+212,V08,34,Female,Urban,Graduate+,20.9,75.5,5.6,No,No,moderate,119,47,0
+213,V08,47,Female,Urban,Graduate+,17.5,63.7,3.9,No,No,low,118,58,0
+214,V08,46,Female,Urban,Secondary,20.1,76.2,5.3,No,No,moderate,119,55,0
+215,V08,56,Female,Urban,Secondary,22.1,77,5.2,No,No,high,128,49,0
+216,V08,56,Male,Urban,Primary,28.2,94.4,8.7,Yes,No,high,140,59,1
+217,V08,40,Male,Urban,Graduate+,15,62.2,3.4,No,Yes,low,132,63,0
+218,V08,41,Male,Urban,NA,17.6,69.1,6.5,No,Yes,high,117,47,0
+219,V08,47,Female,Urban,Secondary,24.7,83.1,7.4,No,No,high,115,50,0
+220,V08,45,Male,Urban,Graduate+,19.3,72.2,2,No,No,moderate,121,54,0
+221,V08,53,Male,Urban,Secondary,29,98.5,8.4,No,No,moderate,129,59,0
+222,V08,43,Female,Urban,Graduate+,27.3,89.4,7.7,No,No,high,137,67,0
+223,V08,30,Male,Urban,Graduate+,25.1,87.7,8.9,No,No,high,131,58,0
+224,V08,63,Female,Urban,Primary,21.9,76.8,6.7,No,No,low,140,57,1
+225,V08,54,Male,Urban,Graduate+,23.3,79.7,9.4,Yes,No,moderate,122,49,0
+226,V08,41,Male,Urban,Graduate+,21.5,77.4,9.7,No,No,moderate,126,49,0
+227,V08,52,Male,Urban,Secondary,23.6,79.9,8.6,No,No,moderate,148,57,1
+228,V08,43,Male,Urban,Graduate+,23.3,81.2,8.5,No,Yes,low,136,52,0
+229,V08,34,Male,Urban,Secondary,25.5,84.5,7.3,No,No,high,140,68,1
+230,V08,44,Female,Urban,Primary,25.2,83.1,2.6,No,No,low,96,45,0
+231,V08,61,Female,Urban,Secondary,25.7,84.2,7.9,No,No,high,131,61,0
+232,V08,59,Female,Urban,No schooling,25,85.4,6.8,No,No,low,143,74,1
+233,V08,42,Male,Urban,Graduate+,19.9,76,7.5,No,Yes,low,118,54,0
+234,V08,54,Male,Urban,NA,19.7,75.2,4.7,Yes,No,high,132,58,0
+235,V08,40,Male,Urban,NA,29.9,100.9,8.8,No,Yes,high,134,53,0
+236,V08,31,Male,Urban,Graduate+,17.6,71.2,5.3,No,Yes,moderate,115,53,0
+237,V08,46,Female,Urban,Secondary,20.2,75.1,4.3,No,No,moderate,126,61,0
+238,V08,41,Female,Urban,Graduate+,20.4,71.9,5.1,No,No,high,119,58,0
+239,V08,52,Male,Urban,Graduate+,25.8,89.6,7.3,Yes,No,high,171,70,1
+240,V08,30,Female,Urban,Graduate+,22.8,79.6,8.3,Yes,No,high,136,59,0
+241,V08,55,Female,Urban,Primary,24.4,84,5.9,No,No,moderate,120,48,0
+242,V08,45,Male,Urban,Secondary,24.3,87.7,6.9,Yes,No,moderate,152,59,1
+243,V08,46,Male,Urban,Graduate+,24.4,85.8,3.3,Yes,Yes,moderate,142,64,1
+244,V08,37,Male,Urban,Graduate+,21.9,79.7,6.6,Yes,No,moderate,110,45,0
+245,V09,51,Male,Rural,Secondary,22.5,81.3,9.3,No,Yes,high,129,59,0
+246,V09,41,Male,Rural,Secondary,17.6,65.1,9.1,Yes,No,low,118,55,0
+247,V09,48,Male,Rural,Primary,22.8,83.6,4.8,No,No,high,140,62,1
+248,V09,49,Female,Rural,Secondary,22.5,81,6.3,No,No,high,110,44,0
+249,V09,55,Female,Rural,No schooling,24,82.2,11.7,No,No,moderate,129,62,0
+250,V09,46,Female,Rural,Primary,22.7,78.5,4.8,Yes,No,high,133,60,0
+251,V09,43,Female,Rural,Primary,23,79.6,6.1,Yes,No,high,133,52,0
+252,V09,59,Male,Rural,Secondary,20.8,76.3,9,No,Yes,low,126,59,0
+253,V09,59,Male,Rural,Primary,26.3,90.5,7.8,No,No,high,117,52,0
+254,V09,31,Male,Rural,No schooling,28.6,99.3,8.5,Yes,Yes,moderate,122,45,0
+255,V09,44,Male,Rural,Primary,22.8,83.4,11.8,Yes,No,moderate,132,57,0
+256,V09,52,Male,Rural,Graduate+,23.7,87.1,9.8,No,Yes,low,136,68,0
+257,V09,43,Female,Rural,Primary,15.8,64.2,8,No,No,moderate,112,46,0
+258,V09,51,Female,Rural,Primary,23.4,81,8.5,No,No,high,143,59,1
+259,V09,33,Male,Rural,Primary,22.2,81,5.9,No,Yes,high,104,51,0
+260,V09,39,Male,Rural,Graduate+,27.9,93.4,4.9,No,No,moderate,116,56,0
+261,V09,34,Male,Rural,Graduate+,24.5,88.3,7.8,No,Yes,moderate,123,56,0
+262,V09,40,Male,Rural,Primary,22.7,79.8,4.4,Yes,No,moderate,120,53,0
+263,V09,47,Female,Rural,Graduate+,19.5,69.6,6.3,Yes,No,low,133,65,0
+264,V09,33,Male,Rural,Secondary,18.8,71.9,6.8,No,Yes,high,107,41,0
+265,V09,52,Female,Rural,No schooling,16.6,64.1,3.4,No,No,low,133,60,0
+266,V09,54,Male,Rural,Secondary,22.1,80.7,4.6,Yes,No,low,135,64,0
+267,V09,50,Female,Rural,No schooling,28.9,91.9,9.3,No,No,moderate,133,62,0
+268,V09,52,Female,Rural,No schooling,30.4,96.9,10.2,No,No,high,139,59,0
+269,V09,63,Female,Rural,Primary,24.1,81.1,8.9,Yes,No,moderate,145,74,1
+270,V09,46,Male,Rural,Secondary,26.7,88.1,11.1,No,No,high,126,67,0
+271,V09,48,Male,Rural,Primary,19.8,75.2,6,No,No,high,138,60,0
+272,V09,58,Female,Rural,Graduate+,20.3,74.3,5.8,No,Yes,high,117,56,0
+273,V09,37,Female,Rural,Graduate+,22,77.7,6.5,No,No,low,113,51,0
+274,V09,56,Male,Rural,Primary,20.6,72.5,9.5,No,Yes,high,151,62,1
+275,V09,53,Male,Rural,Secondary,19.5,71.8,4.3,Yes,No,moderate,124,58,0
+276,V09,30,Female,Rural,Primary,16.2,63.4,2,No,No,moderate,98,39,0
+277,V10,45,Male,Urban,Graduate+,20.4,76,2.1,Yes,No,high,138,63,0
+278,V10,61,Female,Urban,Graduate+,26.9,84.2,9.2,No,No,low,156,75,1
+279,V10,61,Male,Urban,Primary,21.3,75.4,10.3,Yes,Yes,moderate,162,78,1
+280,V10,36,Male,Urban,Graduate+,20.6,77,4.6,No,No,high,117,64,0
+281,V10,38,Female,Urban,Graduate+,16.5,63.2,7.4,No,No,moderate,110,50,0
+282,V10,42,Female,Urban,Secondary,22,73.9,5.3,No,No,high,130,53,0
+283,V10,48,Male,Urban,Secondary,24.2,86.1,3.7,Yes,No,moderate,120,58,0
+284,V10,52,Female,Urban,Graduate+,21.2,75.8,5.9,No,No,low,141,65,1
+285,V10,58,Female,Urban,Graduate+,27.6,90.7,7.4,Yes,No,high,164,79,1
+286,V10,36,Female,Urban,Secondary,NA,73.3,7.4,No,No,low,138,61,0
+287,V10,66,Male,Urban,Secondary,32.7,105.9,10.3,Yes,No,high,168,84,1
+288,V10,48,Male,Urban,Primary,24.3,86,7.7,No,No,low,141,68,1
+289,V10,48,Male,Urban,Graduate+,25.7,86.2,9.6,Yes,Yes,high,123,58,0
+290,V10,50,Male,Urban,Graduate+,16.6,69.7,7.3,No,Yes,high,120,54,0
+291,V10,51,Female,Urban,Primary,27.5,89.6,NA,Yes,No,moderate,154,74,1
+292,V10,65,Female,Urban,Primary,22.5,75.5,7.9,No,No,low,159,77,1
+293,V10,30,Male,Urban,Graduate+,26.1,90.8,6.1,No,No,high,131,48,0
+294,V10,69,Female,Urban,No schooling,27.5,87.9,10.4,No,No,moderate,163,75,1
+295,V10,60,Female,Urban,Secondary,26.9,89.3,12.5,Yes,No,low,160,69,1
+296,V10,66,Male,Urban,Graduate+,26.4,93.5,8.9,Yes,No,high,164,73,1
+297,V10,49,Female,Urban,Graduate+,18,66.1,8.7,No,No,high,124,51,0
+298,V10,36,Female,Urban,Graduate+,23.9,79.7,9.7,No,No,moderate,127,58,0
+299,V10,69,Male,Urban,Graduate+,25.5,93.4,4.7,No,Yes,moderate,154,66,1
+300,V10,55,Female,Urban,Graduate+,20.4,72.7,11.6,No,Yes,moderate,124,59,0
+301,V10,47,Male,Urban,Graduate+,16.6,67.3,6.8,No,No,high,147,66,1
+302,V10,38,Male,Urban,Graduate+,23.1,84.8,10.4,No,No,high,142,60,1
+303,V10,30,Female,Urban,Graduate+,20.1,68.8,2.4,No,No,low,123,53,0
+304,V10,69,Female,Urban,No schooling,25.1,85.3,6.3,Yes,No,moderate,131,61,0
+305,V10,32,Male,Urban,Graduate+,NA,78,8.9,No,No,moderate,147,67,1
+306,V10,69,Female,Urban,Primary,19.2,70.2,8.5,No,No,moderate,145,65,1
+307,V11,35,Male,Urban,Primary,27.4,91.1,9.4,Yes,Yes,high,124,51,0
+308,V11,39,Female,Urban,Graduate+,16.2,65.1,2.9,No,No,low,118,43,0
+309,V11,43,Female,Urban,Graduate+,22.1,79.4,7.7,Yes,Yes,high,117,46,0
+310,V11,30,Female,Urban,Graduate+,29.5,92.5,5.3,No,No,high,119,48,0
+311,V11,37,Female,Urban,Graduate+,24.9,84.8,9.5,No,Yes,moderate,150,68,1
+312,V11,45,Male,Urban,Primary,29.4,98.5,8.4,No,No,high,127,65,0
+313,V11,65,Female,Urban,Primary,27.6,91.3,7.3,No,No,moderate,131,62,0
+314,V11,38,Female,Urban,Graduate+,20.8,72.6,8.1,No,No,low,120,47,0
+315,V11,54,Male,Urban,Secondary,24.2,89.2,4.6,No,No,high,148,72,1
+316,V11,59,Female,Urban,Graduate+,23.6,78.5,6.1,No,No,low,120,58,0
+317,V11,52,Male,Urban,Graduate+,26.2,89.3,7.6,Yes,Yes,moderate,155,72,1
+318,V11,46,Male,Urban,Graduate+,24,82.9,8.8,No,No,high,133,67,0
+319,V11,69,Male,Urban,Graduate+,21.8,78.6,9,No,No,high,126,58,0
+320,V11,50,Male,Urban,Graduate+,24.2,85.5,8.5,Yes,No,high,133,55,0
+321,V11,52,Female,Urban,No schooling,26.9,87.1,9.1,No,No,high,129,52,0
+322,V11,66,Female,Urban,Secondary,22.2,73.6,9.3,No,No,moderate,153,68,1
+323,V11,44,Male,Urban,Primary,23.2,78.9,6.2,Yes,No,low,126,61,0
+324,V11,49,Male,Urban,Graduate+,17.4,70.2,NA,No,No,moderate,133,63,0
+325,V11,53,Male,Urban,Graduate+,26.7,97.4,9.6,No,No,moderate,149,72,1
+326,V11,69,Female,Urban,Primary,28.1,93.1,10.2,No,Yes,low,165,76,1
+327,V11,34,Male,Urban,Graduate+,21.9,80.5,4.8,No,No,low,132,53,0
+328,V11,62,Male,Urban,Primary,27.2,92,9.3,Yes,Yes,moderate,130,61,0
+329,V11,57,Male,Urban,Graduate+,20.8,77.5,9.6,No,No,moderate,146,65,1
+330,V11,47,Female,Urban,Secondary,19.9,72,8.2,Yes,No,moderate,138,59,0
+331,V11,50,Female,Urban,Graduate+,31.7,101.3,5.2,No,No,high,121,55,0
+332,V11,30,Female,Urban,Graduate+,28.8,89.6,4.5,No,No,low,117,56,0
+333,V11,30,Female,Urban,Graduate+,23.9,81.3,7,Yes,No,high,126,51,0
+334,V11,50,Male,Urban,Graduate+,28.9,95.6,9.9,Yes,Yes,moderate,181,89,1
+335,V11,36,Female,Urban,Secondary,19,66.7,4.1,No,No,high,111,47,0
+336,V12,66,Male,Rural,Primary,22.3,78.7,7.2,No,No,low,136,67,0
+337,V12,47,Female,Rural,Primary,22.2,72.6,8.7,Yes,No,moderate,148,71,1
+338,V12,54,Male,Rural,No schooling,21.2,76.1,7.5,No,No,high,125,52,0
+339,V12,45,Female,Rural,Primary,21.8,73.3,9.5,No,No,moderate,122,56,0
+340,V12,66,Female,Rural,No schooling,24.8,80.6,6.4,No,No,moderate,108,54,0
+341,V12,37,Female,Rural,Primary,17.9,64.4,3.6,No,No,low,96,54,0
+342,V12,41,Male,Rural,Secondary,26.2,89,9.3,No,No,high,128,58,0
+343,V12,30,Male,Rural,Graduate+,19.4,76.4,5.4,Yes,Yes,low,114,48,0
+344,V12,42,Female,Rural,Graduate+,24.5,84.6,8.3,No,No,low,106,42,0
+345,V12,39,Male,Rural,Graduate+,21.9,81.3,4.9,No,No,high,100,46,0
+346,V12,46,Female,Rural,Primary,25.6,87.8,7.2,No,No,moderate,145,61,1
+347,V12,39,Female,Rural,Primary,19.5,73.2,7.3,No,No,moderate,124,50,0
+348,V12,50,Male,Rural,Secondary,30.8,100.5,11,Yes,No,high,152,63,1
+349,V12,48,Male,Rural,Graduate+,21.5,79.8,11.4,No,No,high,138,63,0
+350,V12,45,Female,Rural,Graduate+,18.2,66.7,3.7,Yes,Yes,low,127,58,0
+351,V12,57,Male,Rural,Secondary,26.7,91,9.2,No,Yes,low,148,57,1
+352,V12,54,Female,Rural,No schooling,17.3,62.5,7.4,No,Yes,low,135,66,0
+353,V12,60,Female,Rural,No schooling,22.3,75.8,5.4,Yes,No,low,113,43,0
+354,V12,33,Male,Rural,Primary,23,81.6,4.2,No,No,moderate,113,51,0
+355,V12,49,Male,Rural,Primary,25.7,87.3,5.7,No,No,moderate,121,42,0
+356,V12,47,Female,Rural,Secondary,21.9,73.7,3.4,No,No,moderate,116,59,0
+357,V12,56,Male,Rural,Graduate+,19.5,73.6,6.5,No,No,low,113,55,0
+358,V12,61,Female,Rural,Primary,22.2,73.4,NA,No,No,low,123,58,0
+359,V12,49,Female,Rural,Primary,28.1,90.2,12.7,No,No,low,109,50,0
+360,V12,46,Female,Rural,No schooling,24.4,80.9,10.2,No,No,high,132,63,0
+361,V12,65,Female,Rural,Secondary,25.6,86.7,10.3,No,No,high,138,56,0
+362,V13,57,Male,Urban,Secondary,32.7,105.9,12.8,No,Yes,moderate,141,48,1
+363,V13,36,Female,Urban,Graduate+,21.5,76.6,5.6,No,No,high,99,50,0
+364,V13,66,Female,Urban,Graduate+,24.1,82,9.2,Yes,No,high,161,72,1
+365,V13,45,Female,Urban,Secondary,NA,74.1,6.3,No,No,low,121,48,0
+366,V13,42,Male,Urban,Graduate+,28.8,95.9,10.8,Yes,Yes,high,140,62,1
+367,V13,38,Female,Urban,Graduate+,31.9,99.6,6.7,No,Yes,low,136,50,0
+368,V13,51,Male,Urban,Graduate+,24.5,89.6,7.5,Yes,Yes,high,142,61,1
+369,V13,63,Female,Urban,No schooling,23.8,81.8,8.8,No,Yes,low,124,61,0
+370,V13,30,Male,Urban,Graduate+,18.5,70.7,4.6,No,No,high,109,45,0
+371,V13,55,Male,Urban,Graduate+,25.9,91.2,5.7,Yes,No,high,124,58,0
+372,V13,48,Male,Urban,Secondary,26.6,90.3,9.1,No,No,low,125,63,0
+373,V13,45,Male,Urban,Graduate+,18.5,69.8,5.7,No,Yes,high,112,39,0
+374,V13,39,Male,Urban,Graduate+,27.8,93.7,7,Yes,Yes,moderate,159,71,1
+375,V13,43,Male,Urban,Graduate+,22.1,83.8,5.8,Yes,No,low,114,57,0
+376,V13,44,Female,Urban,Graduate+,26.1,86.3,7.3,No,No,low,126,55,0
+377,V13,47,Female,Urban,Graduate+,27.2,91.3,7.7,No,No,high,116,56,0
+378,V13,48,Male,Urban,Secondary,21.6,79.5,6.9,No,No,high,112,42,0
+379,V13,50,Male,Urban,Graduate+,21.9,81.3,9.3,No,No,high,134,62,0
+380,V13,64,Female,Urban,Secondary,26,84.6,9,Yes,No,high,104,42,0
+381,V13,30,Female,Urban,Graduate+,24,82,8.9,No,No,moderate,125,44,0
+382,V13,32,Male,Urban,Graduate+,19.5,72.4,6.3,Yes,No,low,125,52,0
+383,V13,65,Male,Urban,Primary,24.6,88.5,NA,Yes,No,moderate,140,70,1
+384,V13,36,Female,Urban,Primary,28.3,89.8,10.3,Yes,Yes,moderate,126,63,0
+385,V13,59,Male,Urban,Primary,19.1,72.1,6.2,Yes,No,high,134,64,0
+386,V13,30,Female,Urban,Graduate+,29.1,93.8,8.5,No,No,high,118,50,0
+387,V13,68,Female,Urban,Primary,22.8,80.6,4.3,No,No,high,129,56,0
+388,V13,47,Male,Urban,Graduate+,26.3,89.3,5.5,Yes,No,moderate,121,62,0
+389,V13,35,Male,Urban,Graduate+,NA,78.9,5.9,No,No,moderate,114,46,0
+390,V13,43,Male,Urban,NA,26.8,93,8.8,No,No,moderate,126,54,0
+391,V14,44,Male,Urban,Secondary,NA,71.4,5.1,No,No,high,132,61,0
+392,V14,52,Male,Urban,Graduate+,23.1,80.5,8.9,Yes,No,high,122,58,0
+393,V14,53,Female,Urban,Primary,18.7,68,5.1,No,No,moderate,125,61,0
+394,V14,30,Female,Urban,Graduate+,26.8,87.1,6.5,No,No,high,118,53,0
+395,V14,39,Male,Urban,Graduate+,21.6,76.4,5.5,No,Yes,high,146,69,1
+396,V14,60,Female,Urban,Primary,24.6,82.4,6.9,No,No,low,135,60,0
+397,V14,57,Female,Urban,Graduate+,20.9,75.4,5.4,No,Yes,high,127,62,0
+398,V14,50,Male,Urban,Graduate+,23.8,87.5,5.8,No,No,high,143,63,1
+399,V14,51,Male,Urban,Graduate+,20.3,72.5,3.6,No,No,moderate,124,60,0
+400,V14,53,Female,Urban,Primary,25.6,89.8,5.8,No,No,low,145,69,1
+401,V14,60,Male,Urban,Primary,NA,74.4,NA,No,No,high,113,51,0
+402,V14,67,Female,Urban,Secondary,25.5,84.4,8.8,No,No,moderate,156,79,1
+403,V14,30,Male,Urban,Graduate+,20.9,75.4,3.5,Yes,No,low,109,43,0
+404,V14,57,Male,Urban,Graduate+,NA,93.3,8.7,Yes,Yes,high,167,79,1
+405,V14,47,Male,Urban,Secondary,21.5,79.7,7.2,No,No,high,118,63,0
+406,V14,32,Female,Urban,Graduate+,29.8,94.9,5.6,No,No,moderate,130,58,0
+407,V14,53,Male,Urban,Secondary,15,61.5,6.3,Yes,No,high,116,48,0
+408,V14,48,Female,Urban,Graduate+,22.2,80,4.2,No,No,high,135,61,0
+409,V14,46,Female,Urban,Graduate+,15.6,60.5,7.8,No,No,high,110,60,0
+410,V14,45,Male,Urban,Primary,26.7,90.1,9.8,No,No,high,139,69,0
+411,V14,63,Male,Urban,Secondary,23.9,87.6,8.7,No,Yes,low,192,88,1
+412,V14,51,Male,Urban,Graduate+,20.9,75.3,7.2,Yes,No,high,131,57,0
+413,V14,58,Female,Urban,Primary,26.8,85.5,9,No,No,high,160,70,1
+414,V14,33,Male,Urban,Graduate+,26.7,91,4.3,No,Yes,high,118,53,0
+415,V14,30,Male,Urban,Secondary,17.5,67.6,4.8,Yes,Yes,high,110,41,0
+416,V14,52,Male,Urban,Primary,NA,85.2,9.5,Yes,Yes,high,156,76,1
+417,V14,44,Male,Urban,Secondary,25.2,90.5,9.2,Yes,No,low,119,51,0
+418,V14,53,Male,Urban,Graduate+,27.8,94.1,8.7,Yes,No,moderate,137,64,0
+419,V14,52,Female,Urban,Primary,22.8,76,7.1,Yes,No,high,134,59,0
+420,V14,59,Male,Urban,Graduate+,22.4,82.1,6.1,No,No,high,112,58,0
+421,V15,47,Male,Rural,No schooling,18.5,70.5,10.2,Yes,No,moderate,152,64,1
+422,V15,30,Male,Rural,Graduate+,21.1,80.1,4.6,No,No,low,131,56,0
+423,V15,67,Female,Rural,Graduate+,23,76.2,4.9,No,No,high,162,76,1
+424,V15,47,Male,Rural,Secondary,20,71,9,Yes,No,moderate,129,61,0
+425,V15,43,Female,Rural,No schooling,23.7,79.9,NA,No,No,moderate,123,57,0
+426,V15,58,Male,Rural,Graduate+,NA,79.4,8.8,No,No,high,138,57,0
+427,V15,60,Female,Rural,Primary,31.2,95.5,7.1,No,No,low,154,72,1
+428,V15,63,Male,Rural,Secondary,20.7,77.3,7.9,Yes,Yes,high,154,72,1
+429,V15,34,Female,Rural,Secondary,19.2,70.5,8.4,No,No,low,120,56,0
+430,V15,40,Female,Rural,No schooling,22.8,76.1,6.9,No,Yes,high,115,50,0
+431,V15,37,Male,Rural,Graduate+,24.7,86.8,5.7,No,No,high,125,51,0
+432,V15,58,Male,Rural,Graduate+,19.6,76.1,8,No,Yes,low,148,71,1
+433,V15,45,Female,Rural,No schooling,21.4,73.2,6.1,Yes,No,moderate,148,70,1
+434,V15,53,Female,Rural,No schooling,20.4,71.2,9.5,No,No,moderate,129,68,0
+435,V15,50,Male,Rural,Primary,21.2,80.2,4.8,Yes,No,moderate,137,63,0
+436,V15,49,Male,Rural,NA,26.6,91.7,6.5,No,Yes,high,121,59,0
+437,V15,69,Male,Rural,Primary,20.7,77.6,11.1,Yes,Yes,high,155,72,1
+438,V15,51,Female,Rural,No schooling,21.9,73.8,9,Yes,No,low,149,69,1
+439,V15,44,Female,Rural,Primary,23.5,80,8.3,No,No,moderate,113,57,0
+440,V15,60,Male,Rural,Secondary,18.7,72.3,6.5,No,No,low,143,67,1
+441,V15,40,Female,Rural,Secondary,21,72.8,5.9,No,No,low,138,65,0
+442,V15,33,Male,Rural,Graduate+,22.1,75.9,5,Yes,No,moderate,118,51,0
+443,V15,54,Male,Rural,Secondary,24.9,87.6,13.8,No,No,moderate,174,76,1
+444,V15,56,Female,Rural,NA,24.2,79.3,9.4,No,No,low,133,64,0
+445,V15,41,Female,Rural,Graduate+,23.5,79.1,8.7,No,No,moderate,133,60,0
+446,V15,69,Male,Rural,No schooling,19.1,71.9,7.2,No,Yes,low,167,78,1
+447,V15,69,Male,Rural,Primary,24.4,88.7,5.1,Yes,No,moderate,153,68,1
+448,V16,43,Female,Rural,Graduate+,22.1,74,5.5,Yes,No,low,123,49,0
+449,V16,37,Male,Rural,Secondary,28.1,98.4,7.5,Yes,No,moderate,150,57,1
+450,V16,41,Female,Rural,Primary,24.5,84.9,5.4,No,No,low,134,61,0
+451,V16,45,Male,Rural,Secondary,23.5,81.4,7.1,No,No,moderate,125,63,0
+452,V16,47,Male,Rural,Graduate+,15.8,64.6,5.9,No,No,high,108,46,0
+453,V16,60,Female,Rural,Primary,20.8,69,3.7,No,No,high,127,60,0
+454,V16,55,Male,Rural,Graduate+,23.5,82.8,7.4,Yes,Yes,moderate,134,63,0
+455,V16,38,Female,Rural,Secondary,22.6,78.1,7.8,No,No,low,92,42,0
+456,V16,51,Female,Rural,Graduate+,26.4,84.3,9.4,No,No,high,144,56,1
+457,V16,42,Female,Rural,Secondary,21.6,73.6,9.4,Yes,No,moderate,153,67,1
+458,V16,53,Female,Rural,No schooling,20.8,74.3,3.8,No,No,moderate,115,44,0
+459,V16,35,Female,Rural,Primary,15.3,60.6,6.2,No,No,moderate,110,49,0
+460,V16,44,Male,Rural,Secondary,23.5,83.9,9,Yes,Yes,low,134,60,0
+461,V16,49,Female,Rural,Secondary,25.5,87.8,9.7,No,No,low,138,61,0
+462,V16,53,Female,Rural,Primary,24.7,80.6,6.6,No,No,high,125,58,0
+463,V16,42,Female,Rural,Primary,15,56.2,4.5,No,No,low,103,47,0
+464,V16,41,Male,Rural,Graduate+,22.2,86.3,9.7,Yes,No,high,136,56,0
+465,V16,38,Female,Rural,Secondary,26.7,89.4,9.8,Yes,No,high,148,64,1
+466,V16,37,Female,Rural,Primary,24.4,78.7,4.7,Yes,No,moderate,97,39,0
+467,V16,31,Male,Rural,Primary,15.1,66.2,3.7,Yes,Yes,low,122,52,0
+468,V16,69,Male,Rural,NA,26.7,92.9,10.9,No,No,moderate,156,73,1
+469,V16,41,Male,Rural,Secondary,21.1,74,8,Yes,Yes,high,120,54,0
+470,V16,59,Male,Rural,Graduate+,23.5,82,7,No,Yes,high,142,60,1
+471,V16,36,Male,Rural,Graduate+,26,86.1,5.1,Yes,No,moderate,132,64,0
+472,V16,38,Female,Rural,Secondary,24.5,85.2,3.1,No,No,high,89,38,0
+473,V16,48,Female,Rural,Primary,23.3,78.9,7.9,No,No,moderate,157,77,1
+474,V16,64,Male,Rural,No schooling,22.2,80.6,9.5,Yes,No,high,119,50,0
+475,V16,56,Male,Rural,Secondary,23.3,82.5,9.4,No,No,high,151,76,1
+476,V16,41,Male,Rural,Graduate+,23,86.7,5.4,No,No,low,135,57,0
+477,V16,53,Female,Rural,Primary,23.6,79.2,7.5,No,No,low,144,68,1
+478,V16,31,Male,Rural,Graduate+,19.1,70.9,7.8,No,Yes,high,119,50,0
+479,V16,62,Male,Rural,No schooling,23,81.8,11.3,Yes,Yes,high,146,67,1
+480,V16,61,Female,Rural,No schooling,25.3,79.4,11,No,No,moderate,151,64,1
+481,V16,50,Female,Rural,Primary,22.9,76.7,7.5,Yes,No,moderate,136,74,0
+482,V16,53,Male,Rural,Primary,21.6,82.4,7.8,Yes,Yes,high,144,66,1
+483,V17,44,Female,Urban,No schooling,29.6,94,6.7,No,No,high,111,50,0
+484,V17,53,Male,Urban,Graduate+,23.2,83.2,6.6,Yes,No,high,165,76,1
+485,V17,54,Male,Urban,Secondary,24.6,82,6.3,Yes,No,high,104,51,0
+486,V17,30,Female,Urban,Secondary,22.9,79.9,3.6,No,No,low,100,45,0
+487,V17,50,Male,Urban,Graduate+,29,97.4,8.3,No,No,low,173,78,1
+488,V17,52,Male,Urban,Secondary,18.3,68.4,7.1,Yes,No,moderate,102,42,0
+489,V17,36,Male,Urban,Secondary,18.9,72.9,6,No,No,moderate,115,50,0
+490,V17,55,Female,Urban,Graduate+,22.9,82.2,6.4,No,No,high,118,46,0
+491,V17,65,Female,Urban,No schooling,17.9,64.8,8,No,No,moderate,173,83,1
+492,V17,59,Female,Urban,Secondary,29,90.3,10.3,No,No,low,141,69,1
+493,V17,30,Male,Urban,Graduate+,21.3,76.9,6.2,Yes,No,high,128,59,0
+494,V17,64,Male,Urban,Secondary,32,105.7,11.9,Yes,Yes,high,144,73,1
+495,V17,41,Male,Urban,Graduate+,21.2,76.6,6.3,Yes,No,low,139,56,0
+496,V17,53,Male,Urban,NA,29.9,98.5,7.4,Yes,Yes,moderate,148,68,1
+497,V17,59,Female,Urban,Secondary,24.2,81.1,4.8,No,No,high,132,62,0
+498,V17,35,Male,Urban,Graduate+,20.4,77.2,5.2,No,No,high,106,51,0
+499,V17,68,Male,Urban,Secondary,24.6,84.3,8.3,No,Yes,high,182,99,1
+500,V17,54,Female,Urban,Graduate+,NA,79.4,5,No,No,moderate,135,63,0
+501,V17,52,Female,Urban,Primary,28.6,91.5,5.8,Yes,No,low,139,58,0
+502,V17,42,Male,Urban,Graduate+,20.1,76.1,4.7,No,No,high,96,55,0
+503,V17,55,Male,Urban,Graduate+,25.6,87.2,9.7,No,Yes,high,142,59,1
+504,V17,52,Male,Urban,Secondary,30.5,101.1,7.5,No,No,moderate,148,68,1
+505,V18,36,Male,Rural,Secondary,18.9,75.3,4.2,No,Yes,low,107,50,0
+506,V18,63,Female,Rural,No schooling,24.1,77.2,7.7,No,No,high,150,70,1
+507,V18,30,Male,Rural,Graduate+,21.3,79,6.5,No,No,moderate,136,62,0
+508,V18,63,Female,Rural,Primary,19,71.9,8.8,Yes,No,high,139,57,0
+509,V18,33,Male,Rural,Secondary,24,86.3,7.2,Yes,Yes,moderate,129,50,0
+510,V18,41,Female,Rural,Primary,20.5,70.8,8.7,No,No,high,117,53,0
+511,V18,58,Male,Rural,Graduate+,24.6,84.4,NA,No,Yes,high,126,60,0
+512,V18,36,Female,Rural,Secondary,NA,73.5,2,No,No,low,113,49,0
+513,V18,49,Female,Rural,Secondary,25.4,85.4,7.8,Yes,No,moderate,110,49,0
+514,V18,48,Female,Rural,Primary,23.3,82,9,No,No,moderate,143,64,1
+515,V18,46,Female,Rural,Primary,18.9,69.5,5.7,No,Yes,moderate,88,41,0
+516,V18,48,Male,Rural,Primary,23.7,84.2,5.6,No,No,moderate,132,65,0
+517,V18,37,Male,Rural,Primary,21,79.5,9.1,Yes,Yes,low,138,57,0
+518,V18,36,Female,Rural,Secondary,27.9,88.6,8.9,No,No,moderate,130,55,0
+519,V18,47,Male,Rural,Secondary,22.2,79.9,9.3,No,No,high,140,64,1
+520,V18,35,Female,Rural,Graduate+,23.2,76,7,No,No,low,113,58,0
+521,V18,67,Female,Rural,No schooling,24.3,81,10.6,Yes,No,moderate,171,80,1
+522,V18,51,Male,Rural,No schooling,26.4,94.5,6.8,No,No,low,151,61,1
+523,V18,61,Male,Rural,Secondary,22.6,80.1,NA,No,Yes,moderate,152,69,1
+524,V18,47,Female,Rural,Primary,21.6,79.6,NA,Yes,No,moderate,117,55,0
+525,V18,31,Female,Rural,Primary,19,70.6,5.8,No,No,moderate,113,44,0
+526,V18,55,Male,Rural,No schooling,20.6,78.3,8.5,Yes,No,high,140,66,1
+527,V18,54,Female,Rural,NA,20.5,75.4,5.6,No,No,moderate,115,61,0
+528,V18,30,Female,Rural,Graduate+,20.1,76.1,5.6,No,No,moderate,118,54,0
+529,V18,64,Female,Rural,Primary,25.3,81.6,8.8,No,No,high,143,65,1
+530,V18,40,Male,Rural,Graduate+,16.2,65.1,2.9,No,No,moderate,116,50,0
+531,V18,41,Female,Rural,Secondary,18.5,68,4.5,No,No,moderate,115,48,0
+532,V18,30,Male,Rural,Graduate+,26.4,93.5,11.6,Yes,Yes,moderate,152,68,1
+533,V18,53,Male,Rural,NA,19.6,70.8,11.5,No,No,moderate,126,55,0
+534,V18,46,Male,Rural,Primary,20.2,78.3,7.3,No,Yes,high,135,68,0
+535,V19,39,Female,Rural,Primary,21.8,73.8,NA,No,No,low,127,58,0
+536,V19,43,Male,Rural,Graduate+,24,85.6,8,No,No,moderate,114,44,0
+537,V19,51,Male,Rural,No schooling,28.6,98.3,7.6,Yes,Yes,high,156,69,1
+538,V19,38,Male,Rural,Secondary,NA,82.8,6.1,No,No,low,142,56,1
+539,V19,40,Female,Rural,Primary,17.2,68.6,5,No,Yes,low,107,51,0
+540,V19,54,Female,Rural,No schooling,29.1,94.7,9.7,No,No,high,105,46,0
+541,V19,30,Female,Rural,Graduate+,21.9,77.6,5.4,No,No,low,132,64,0
+542,V19,51,Female,Rural,No schooling,21.9,72,8.7,No,No,moderate,135,59,0
+543,V19,58,Female,Rural,Secondary,28,94.1,11.2,No,No,high,161,80,1
+544,V19,37,Female,Rural,Secondary,18,63.8,4.3,No,No,moderate,127,60,0
+545,V19,43,Female,Rural,Secondary,26.2,86.3,11,No,No,low,135,57,0
+546,V19,47,Female,Rural,Graduate+,27.9,91.8,4.5,No,No,moderate,129,55,0
+547,V19,65,Male,Rural,No schooling,28.2,95.2,8.8,Yes,No,high,146,78,1
+548,V19,31,Male,Rural,Graduate+,26.2,86.7,9.2,No,No,low,141,55,1
+549,V19,43,Female,Rural,Primary,19.1,66.3,7.8,Yes,Yes,moderate,142,64,1
+550,V19,37,Male,Rural,Graduate+,23.9,86.4,9.5,Yes,Yes,low,147,66,1
+551,V19,53,Male,Rural,No schooling,15.8,64.7,4.7,Yes,Yes,low,127,55,0
+552,V19,45,Male,Rural,Primary,22.3,81.8,9.8,No,No,low,131,58,0
+553,V19,49,Female,Rural,Primary,24.3,80.6,8.6,No,No,high,131,56,0
+554,V19,40,Female,Rural,Primary,25.5,84,10.4,No,No,moderate,130,54,0
+555,V19,53,Female,Rural,Primary,23.8,76.4,3.4,Yes,Yes,high,130,57,0
+556,V19,63,Male,Rural,Primary,24,83.7,10.9,No,No,high,125,61,0
+557,V19,53,Male,Rural,Primary,22.2,80.6,8,Yes,Yes,low,174,73,1
+558,V19,49,Female,Rural,No schooling,25.8,81.8,6.9,Yes,No,low,105,51,0
+559,V19,55,Male,Rural,Graduate+,18.1,74,8.2,No,Yes,high,113,53,0
+560,V19,59,Male,Rural,No schooling,27.3,92.8,12.9,Yes,No,low,165,84,1
+561,V19,52,Male,Rural,Primary,15.6,63.6,6.6,No,Yes,moderate,130,69,0
+562,V19,52,Male,Rural,No schooling,25.6,88.6,6.2,No,No,high,120,57,0
+563,V19,30,Male,Rural,Graduate+,15,64.4,2.3,No,No,moderate,103,63,0
+564,V19,39,Male,Rural,Primary,15.8,64.8,3.7,Yes,No,low,121,53,0
+565,V19,45,Female,Rural,No schooling,24.6,83.2,9.4,No,No,moderate,141,71,1
+566,V20,42,Male,Rural,Secondary,21.9,83.6,NA,No,Yes,high,143,57,1
+567,V20,69,Male,Rural,Graduate+,24.2,84.2,11.6,No,Yes,moderate,162,82,1
+568,V20,63,Female,Rural,No schooling,25.7,85.2,NA,No,No,high,117,52,0
+569,V20,62,Male,Rural,Secondary,17.6,69.5,2,No,No,high,130,55,0
+570,V20,35,Female,Rural,Graduate+,30.1,96.6,7.7,No,No,low,138,65,0
+571,V20,69,Female,Rural,Primary,24.6,84.4,6.4,Yes,No,low,120,52,0
+572,V20,42,Female,Rural,No schooling,24.7,83,6.4,No,No,moderate,130,53,0
+573,V20,45,Female,Rural,Graduate+,21.1,74.1,8.7,No,No,moderate,129,56,0
+574,V20,57,Female,Rural,No schooling,22.2,78.1,11.7,No,No,low,137,62,0
+575,V20,34,Female,Rural,Graduate+,21.9,72.6,3.9,No,No,high,98,47,0
+576,V20,53,Male,Rural,Primary,15,64.2,2,Yes,No,high,117,47,0
+577,V20,48,Male,Rural,Primary,22.7,79.6,2.9,Yes,Yes,low,118,57,0
+578,V20,61,Female,Rural,Primary,29.1,91.6,10.4,No,No,high,138,60,0
+579,V20,54,Male,Rural,No schooling,20.6,77.3,4.4,No,No,high,98,49,0
+580,V20,57,Female,Rural,Primary,27.8,89.2,6.1,Yes,No,moderate,153,68,1
+581,V20,34,Female,Rural,Primary,23.5,82.8,7.1,No,Yes,moderate,118,62,0
+582,V20,67,Male,Rural,Primary,25.8,89.7,5.6,Yes,No,moderate,155,71,1
+583,V20,69,Male,Rural,Secondary,20.2,72.1,10.1,No,No,moderate,150,70,1
+584,V20,59,Male,Rural,Primary,21.8,80.6,9.7,Yes,No,high,149,73,1
+585,V20,45,Male,Rural,Primary,19.6,78.6,7.4,No,Yes,high,153,68,1
+586,V20,50,Male,Rural,Primary,21.3,77,6.4,No,No,low,131,58,0
+587,V20,43,Female,Rural,No schooling,23,80.1,9.5,No,No,moderate,131,58,0
+588,V20,50,Male,Rural,Graduate+,25.1,83.5,8.4,Yes,No,high,137,69,0
+589,V20,69,Female,Rural,No schooling,24.8,83.4,5.9,No,No,high,140,73,1
+590,V20,56,Male,Rural,Primary,23.9,86.3,7.2,No,No,high,131,52,0
+591,V20,40,Male,Rural,Secondary,22.3,82.1,4.4,Yes,Yes,high,133,63,0
+592,V20,55,Male,Rural,NA,17.3,69.6,8,No,Yes,moderate,134,54,0
+593,V20,45,Female,Rural,Secondary,20.6,73.6,8.1,No,Yes,low,122,58,0
+594,V20,53,Male,Rural,Graduate+,18.8,72.6,5.7,Yes,No,high,122,75,0
+595,V20,48,Male,Rural,Secondary,21,79.8,7.4,Yes,No,low,146,72,1
+596,V20,56,Female,Rural,No schooling,22.9,78.8,10.1,No,No,high,151,70,1
+597,V20,53,Male,Rural,Secondary,19.5,73,5,No,No,moderate,120,52,0
+598,V20,53,Female,Rural,No schooling,NA,71.7,8,No,No,high,134,61,0
+599,V20,55,Male,Rural,Graduate+,18.9,73.4,8,No,Yes,low,141,71,1
+600,V20,56,Male,Rural,Secondary,29.1,98.1,9.5,Yes,No,high,141,80,1

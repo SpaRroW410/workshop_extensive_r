@@ -1,0 +1,408 @@
+---
+title: "Session 1 — Foundations"
+subtitle: "Theory of Regression Analysis · Topics 1–2 · Lab 1"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Theory of Regression Analysis {.smaller}
+
+**A full-day workshop for community medicine residents and faculty**
+
+| Time | Session | Topics |
+|---|---|---|
+| 09:00 – 10:00 | **1 · Foundations** + Lab 1 | What regression is · choosing a model |
+| 10:00 – 11:15 | **2 · Simple linear regression** + Lab 2 | Equation · prediction · R² · centering |
+| 11:15 – 11:30 | *Tea* | |
+| 11:30 – 13:00 | **3 · Inference & multiple regression** + Lab 3 | β, p, CI · confounding · dummy variables · model building |
+| 13:00 – 13:45 | *Lunch* | |
+| 13:45 – 14:30 | **4 · Assumptions** + Lab 4 | Linearity · independence · normality · variance · collinearity |
+| 14:30 – 16:10 | **5 · Logistic regression** + Lab 5 | Odds · likelihood · ROC · OR vs PR |
+| 16:10 – 16:25 | *Tea* | |
+| 16:25 – 17:15 | **6 · Interpreting & reporting** + Lab 6 | Writing results · pitfalls · what next |
+
+::: {.notes}
+Walk through the day. Stress that every session ends with a lab in R and a 5-question self-check quiz.
+Everyone should have R, the workshop repo and the `data/ncd_survey.csv` file open before we start.
+:::
+
+## Our running example {.smaller}
+
+> *"Does eating more salt raise blood pressure in our community — and by how much?"*
+
+::: {.incremental}
+- A **simulated** NCD survey: **600 adults aged 30–69** across **20 villages** in an Indian community setting
+- Outcomes: **systolic BP** (continuous) and **hypertension** (yes/no)
+- Exposure of interest: **daily salt intake** (g/day)
+- Other variables: age, sex, residence, education, BMI, waist, tobacco, alcohol, physical activity
+- All six sessions and labs use the same dataset
+:::
+
+::: {.notes}
+The data are simulated so that every teaching point (confounding, collinearity, non-constant variance, clustering, common outcome, missing values) shows up on cue. Do not mention individual features yet — we will discover them.
+:::
+
+# Topic 1 — What is regression? {background-color="#2C3E50"}
+
+## What is regression?
+
+::: {.key}
+Regression describes how the **average** value of an **outcome** changes with one or more **predictors**.
+:::
+
+::: {.columns}
+::: {.column width="45%"}
+::: {.incremental}
+- "Among adults who eat 8 g of salt a day, the *average* SBP is …"
+- "For each extra 1 g/day of salt, average SBP is … mmHg higher"
+- One equation gives **description**, **comparison** and **prediction**
+:::
+:::
+::: {.column width="55%"}
+```{r}
+#| echo: false
+#| fig-width: 6.5
+#| fig-height: 4.6
+ggplot(ncd, aes(salt_g, sbp)) +
+  geom_point(alpha = .35, colour = col_blue) +
+  geom_smooth(method = "lm", colour = col_red, fill = col_red, alpha = .15) +
+  labs(x = "Salt intake (g/day)", y = "Systolic BP (mmHg)")
+```
+:::
+:::
+
+## Why do we use regression? {.smaller}
+
+::: {.columns}
+::: {.column width="50%"}
+::: {.incremental}
+1. **Describe** an association with a number in real units
+2. **Adjust** for other factors (age, BMI …) — the key idea in observational public health research
+3. **Predict** an outcome for a new person or community
+4. **Test** a hypothesis with a confidence interval
+:::
+:::
+::: {.column width="50%"}
+::: {.fragment}
+**Why not just a t-test or chi-square?**
+
+- They compare groups, one variable at a time
+- Regression handles **continuous exposures**, **many variables at once**, and gives an **effect size** (not only a p-value)
+:::
+:::
+:::
+
+## Regression in community medicine {.smaller}
+
+| Public health question | Outcome | Typical model |
+|---|---|---|
+| Is household wealth associated with child haemoglobin (NFHS)? | Hb (g/dL) – continuous | Linear |
+| Which factors predict hypertension in a screening camp? | Hypertension – binary | Logistic |
+| Rainfall and monthly dengue cases per ward | Count | Poisson / neg. binomial |
+| Stage of diabetic retinopathy and duration of diabetes | Ordered categories | Ordinal logistic |
+| Time to treatment failure in DOTS patients | Time-to-event | Cox |
+| Blood pressure of patients repeated across visits in one PHC | Repeated measures | Mixed model / GEE |
+
+::: {.notes}
+Ask the audience for their own thesis topics and place each on this table. The right-most column is the thread of the whole day.
+:::
+
+## Correlation vs regression: same data
+
+```{r}
+#| echo: false
+#| fig-height: 4.3
+r <- cor(ncd$sbp, ncd$salt_g, use = "complete.obs")
+ggplot(ncd, aes(salt_g, sbp)) +
+  geom_point(alpha = .3, colour = col_blue) +
+  annotate("label", x = 3, y = 185, hjust = 0, size = 6, fill = "#fef9e7",
+           label = paste0("Correlation: r = ", round(r, 2), "\nno 'outcome' vs 'predictor'")) +
+  labs(x = "Salt intake (g/day)", y = "Systolic BP (mmHg)")
+```
+
+## Correlation vs regression: same data
+
+```{r}
+#| echo: false
+#| fig-height: 4.3
+b <- coef(lm(sbp ~ salt_g, ncd))
+ggplot(ncd, aes(salt_g, sbp)) +
+  geom_point(alpha = .3, colour = col_blue) +
+  geom_smooth(method = "lm", colour = col_red, se = FALSE) +
+  annotate("label", x = 3, y = 185, hjust = 0, size = 6, fill = "#fdedec",
+           label = paste0("Regression: SBP = ", round(b[1]), " + ", round(b[2], 1),
+                          " x salt\n-> ", round(b[2], 1), " mmHg per g/day")) +
+  labs(x = "Salt intake (g/day)", y = "Systolic BP (mmHg)")
+```
+
+## Correlation vs regression: the differences {.smaller}
+
+```{r}
+cor(ncd$sbp, ncd$salt_g, use = "complete.obs")        # symmetric, unit-free
+coef(lm(sbp ~ salt_g, data = ncd))["salt_g"]           # directional, in mmHg per g
+coef(lm(salt_g ~ sbp, data = ncd))["sbp"]              # swap the roles -> a different slope
+```
+
+| | Correlation (r) | Regression (β) |
+|---|---|---|
+| Roles of X and Y | Symmetric | **Outcome** and **predictor** |
+| Units | None (−1 to +1) | **Outcome units per predictor unit** |
+| Adjust for other variables | No | **Yes** |
+| Predict new values | No | **Yes** |
+
+## Dependent vs independent variables {.smaller}
+
+| Role | Also called | In our survey |
+|---|---|---|
+| **Dependent** variable | outcome, response, Y | SBP, hypertension |
+| **Independent** variable | predictor, exposure, X, covariate | salt intake, age, BMI … |
+| **Confounder** | adjustment variable | age, BMI (related to salt *and* SBP) |
+
+::: {.fragment}
+::: {.warn}
+"Dependent" is a **modelling role**, not a statement of causation. The same variable can be an outcome in one analysis and a predictor in another (BMI!).
+:::
+:::
+
+## Type of outcome decides the model
+
+::: {.columns}
+::: {.column width="50%"}
+**Continuous**
+
+- SBP (mmHg), BMI, Hb
+- Summarised by mean ± SD
+- → **linear regression**
+:::
+::: {.column width="50%"}
+**Categorical**
+
+- Binary: hypertension yes/no
+- Nominal: facility chosen (PHC / CHC / private)
+- Ordinal: BP stage 1 / 2 / 3
+- Plus **counts** and **time-to-event**
+:::
+:::
+
+::: {.fragment}
+::: {.key}
+The first question in any regression analysis is not "which software?" but **"what type of outcome do I have?"**
+:::
+:::
+
+# Choosing a model {background-color="#2C3E50"}
+
+## The model-selection flowchart
+
+```{mermaid}
+%%| echo: false
+%%{init: {'flowchart': {'nodeSpacing': 16, 'rankSpacing': 45, 'padding': 14, 'htmlLabels': false}, 'themeVariables': {'fontSize': '19px', 'fontFamily': 'Arial, Helvetica, sans-serif'}}}%%
+flowchart LR
+  Q{{"What type of<br/>outcome<br/>do you have?"}}
+  Q --> C["Continuous (SBP, BMI, Hb)"] --> L["Linear regression ✅ S2–4"]
+  Q --> B["Binary (HTN yes/no)"] --> LG["Logistic regression ✅ S5"]
+  LG -.-> PR["Common outcome → prevalence ratio:<br/>Poisson (robust SE) / log-binomial ✅ S5"]
+  Q --> N["Count (cases per ward)"] --> P["Poisson / negative binomial"]
+  Q --> O["Ordinal (stage 1–3)"] --> OL["Ordinal logistic"]
+  Q --> NM["Nominal (3+ unordered)"] --> M["Multinomial logistic"]
+  Q --> T["Time-to-event"] --> CX["Cox regression"]
+  Q --> CL["Clustered / repeated<br/>(villages, visits)"] --> MM["Mixed models / GEE<br/>(mention only)"]
+  classDef today fill:#d5f5e3,stroke:#27ae60,stroke-width:3px,color:#145a32;
+  classDef later fill:#f2f3f4,stroke:#aab7b8,color:#566573;
+  class L,LG,PR today;
+  class P,OL,M,CX,MM later;
+```
+
+::: {.notes}
+Green = covered today (linear, logistic and the prevalence-ratio variant). Grey = Session 6 "beyond this workshop" slide gives packages and one line on when to use each. Clustering is not an outcome type but changes how we fit: our villages are an example.
+:::
+
+## Flowchart in practice: our survey
+
+| Question | Outcome type | Model | Today? |
+|---|---|---|---|
+| By how much does SBP change per gram of salt? | Continuous | Linear | <span class="pill">✔ S2–4</span> |
+| What are the odds of hypertension per gram of salt? | Binary | Logistic | <span class="pill">✔ S5</span> |
+| How many times *more prevalent* is HTN in 50+ vs <50? | Binary, common | Poisson-robust | <span class="pill">✔ S5</span> |
+| Number of NCD clinic visits last year | Count | Poisson / NB | <span class="pill no">later</span> |
+| Time until a hypertensive starts treatment | Time-to-event | Cox | <span class="pill no">later</span> |
+| Villages share unmeasured factors | Clustered | Mixed / GEE | <span class="pill no">mention</span> |
+
+# Meet the data {background-color="#2C3E50"}
+
+## Data dictionary {.smaller}
+
+| Variable | Meaning | Type |
+|---|---|---|
+| `id`, `village` | Participant ID; village (20 clusters) | ID / cluster |
+| `age`, `sex`, `residence`, `education` | Demographics (4 education levels) | numeric / categorical |
+| `bmi`, `waist` | kg/m², cm | continuous |
+| `salt_g` | Daily salt intake (g) | continuous |
+| `tobacco`, `alcohol`, `phys_act` | Yes/No; low/moderate/high | categorical |
+| `sbp`, `dbp` | Blood pressure (mmHg) | continuous (**outcomes**) |
+| `htn` | SBP ≥ 140 **or** DBP ≥ 90 | binary (**outcome**) |
+
+## Import and inspect
+
+```{r}
+library(tidyverse)
+ncd_raw <- read_csv("../data/ncd_survey.csv")
+glimpse(ncd_raw)
+```
+
+::: {.notes}
+In the lab the path is found automatically from the script. On the slide the deck sits in regression-workshop/ so the relative path is ../data/. Behind the scenes the deck converts text columns to factors with sensible level order (as in Lab 1, Task 4) and keeps the prepared data frame as `ncd`.
+:::
+
+## Missing values
+
+```{r}
+ncd_raw |> summarise(across(everything(), ~ sum(is.na(.x)))) |>
+  pivot_longer(everything()) |> filter(value > 0)
+```
+
+::: {.fragment}
+Three variables have about 3% missing. A regression model **silently drops** these rows (complete-case analysis) — so n changes from model to model unless you plan for it.
+:::
+
+## Table 1 with `tbl_summary()`
+
+```{r}
+#| output-location: slide
+library(gtsummary)
+ncd |>
+  select(age, sex, residence, education, bmi, salt_g, tobacco, alcohol, phys_act, htn_f) |>
+  tbl_summary(by = htn_f, missing_text = "(Missing)") |>
+  add_overall() |> add_p()
+```
+
+::: {.notes}
+Point at the Missing rows, the medians for continuous variables and the p-values. Table 1 compares groups one variable at a time: it cannot adjust, and it cannot tell us about causation.
+:::
+
+## Look before you model
+
+```{r}
+#| fig-height: 4.2
+ggplot(ncd, aes(salt_g, sbp)) +
+  geom_point(alpha = .4, colour = col_blue) +
+  geom_smooth(method = "lm", colour = col_red) +
+  labs(x = "Salt intake (g/day)", y = "Systolic BP (mmHg)")
+```
+
+## `cor()` — and its limits
+
+```{r}
+ncd |> select(age, bmi, waist, salt_g, sbp) |>
+  cor(use = "pairwise.complete.obs") |> round(2)
+```
+
+::: {.incremental}
+- `use = "pairwise.complete.obs"` handles the missing values
+- `sbp` and `salt_g`: moderate positive correlation — but **age and BMI also correlate with salt**
+- `bmi` and `waist`: **r = 0.95**. Remember this — it comes back in Session 4
+:::
+
+## 🔧 Switch to R — Lab 1 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `regression-workshop/labs/lab1_explore.R`
+
+- Import the CSV · glimpse · count missing values
+- Build **Table 1** with `tbl_summary()` by hypertension
+- Scatterplot of SBP vs salt · `cor()`
+:::
+
+**Time:** 30 minutes · **Fill every** `___` · answer Q1–Q4 in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s1q1", "A study asks: *Is tobacco use (yes/no) associated with having hypertension (yes/no), after adjusting for age?* Which model?",
+         c("Linear regression", "Logistic regression", "Cox regression", "Poisson regression for counts"), answer = 2,
+         explain = "The outcome (hypertension) is binary, so logistic regression is the starting point.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s1q2", "Time from starting TB treatment to death, with some patients lost to follow-up (censored). Which model?",
+         c("Linear regression", "Ordinal logistic", "Cox proportional hazards", "Multinomial logistic"), answer = 3,
+         explain = "Time-to-event data with censoring → Cox regression.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s1q3", "Which statement about correlation vs regression is TRUE?",
+         c("Correlation gives the change in Y per unit of X", "Regression treats X and Y symmetrically",
+           "Regression gives a slope in the units of the outcome and can adjust for other variables",
+           "Both always give the same number"), answer = 3,
+         explain = "Correlation is symmetric and unit-free; regression gives a directional effect in real units and can include other variables.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_fill("s1q4", "Lab 1, Task 5: which `gtsummary` function did you use to build Table 1?",
+          accept = c("tbl_summary", "tbl_summary()"),
+          explain = "`tbl_summary()` builds descriptive tables; `by =` splits by group; `add_p()` adds tests.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_fill("s1q5", "Lab 1, Task 7: `cor()` has an argument that controls how missing values are handled. What is the *name* of the argument?",
+          accept = c("use"),
+          explain = "`use = \"complete.obs\"` (or `\"pairwise.complete.obs\"`) tells `cor()` how to treat NAs.")
+```
+
+## Score and take-home {.smaller}
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- Regression = how the **average outcome** changes with predictors, **in real units**
+- **Outcome type** → model (flowchart); today = linear and logistic
+- Regression ≠ correlation: it has direction, units, adjustment and prediction
+- Always **look at the data** first: Table 1, plots, missing values
+:::
+
+**Next:** Session 2 — the straight line, prediction and R²

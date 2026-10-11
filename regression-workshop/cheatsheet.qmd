@@ -1,0 +1,100 @@
+---
+title: "Regression Interpretation Cheat Sheet"
+subtitle: "Linear and logistic regression · NCD survey examples · print on 2 pages (A4)"
+format:
+  html:
+    theme: cosmo
+    toc: false
+    page-layout: full
+    html-math-method: plain
+    css: assets/cheatsheet.css
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+source("assets/setup.R")
+cc <- ncd |> drop_na(sbp, htn, salt_g, age, bmi, sex, residence, education, tobacco, alcohol, phys_act)
+rhs <- "salt_g + age + bmi + sex + residence + education + tobacco + alcohol + phys_act"
+m_lin <- lm(reformulate(rhs, "sbp"), cc); m_log <- glm(reformulate(rhs, "htn"), binomial, cc)
+sl <- tidy(m_lin, conf.int = TRUE) |> filter(term == "salt_g")
+so <- tidy(m_log, conf.int = TRUE, exponentiate = TRUE) |> filter(term == "salt_g")
+f <- function(x, d = 1) formatC(x, format = "f", digits = d)
+```
+
+::: {.sheet}
+
+## 1 · Linear regression — reading the output
+
+| Output | Reads as | Example (adjusted SBP model) |
+|---|---|---|
+| **β (slope)** | Change in **mean outcome** per **1-unit** rise in x, others held constant — *always give units* | `r f(sl$estimate)` mmHg per g/day |
+| **Intercept** | Mean outcome when **all x = 0** — often meaningless (age 0?) so **centre** x | `lm(sbp ~ I(age-50))`: intercept = SBP at age 50 |
+| **Categorical β** | Difference **vs the reference level** | Men vs women: `r f(coef(m_lin)[["sexMale"]])` mmHg |
+| **95% CI** | Plausible values of the true β | `r f(sl$conf.low)` to `r f(sl$conf.high)` |
+| **p-value** | Chance of data this extreme if true β = 0 — *not* effect size | < 0.001 |
+| **R² / adj. R²** | Share of variability accounted for (adjusted penalises extra terms) | `r f(summary(m_lin)$r.squared, 2)` / `r f(summary(m_lin)$adj.r.squared, 2)` |
+| **Residual SE** | Typical prediction miss, in outcome units | `r f(sigma(m_lin))` mmHg |
+| **CI vs PI** | CI = **mean** of a group; PI = a **new individual** (wider) | `predict(m, interval = "confidence" / "prediction")` |
+
+**Crude vs adjusted:** crude salt β = `r f(coef(lm(sbp ~ salt_g, cc))[[2]])` → adjusted `r f(sl$estimate)` (a change ≥ 10% ⇒ confounding matters).
+
+### Assumptions — plot first, then test
+
+| Assumption | Check | Violation looks like | Fix |
+|---|---|---|---|
+| **L**inearity | Residuals vs x (loess) | Curved line | Add `x²`, spline, transform |
+| **I**ndependence | Design; residuals by cluster; ICC | Clustered residuals | Mixed model, GEE, cluster-robust SE |
+| **N**ormal residuals | Q–Q plot | Points leave the line | Transform, bootstrap (matters for small n) |
+| **E**qual variance | Residuals vs fitted; Breusch–Pagan | Funnel | Robust SE (`vcovHC`), transform |
+| **M**ulticollinearity | VIF (`check_collinearity`) | VIF > 5–10, β unstable | Keep one / combine |
+
+`performance::check_model(m)` · `check_normality()` · `check_heteroscedasticity()` · `car::vif()`
+
+### Building the model
+
+- ✅ **Choose covariates from a DAG / theory**, fix them before looking at p-values
+- ✅ Report **crude and adjusted**; state the **reference** of every factor
+- ⚠️ `step()` (AIC) = exploration only: biased β, narrow CIs, unstable
+- ⛔ "Univariable p < 0.2 → in the model" can drop real confounders
+
+:::
+
+::: {.sheet .pagebreak}
+
+## 2 · Logistic regression — reading the output
+
+::: {.formula}
+logit(p) = ln[ p / (1 − p) ] = β₀ + β₁x₁ + … &nbsp;&nbsp;|&nbsp;&nbsp; **OR = e^β** (one-unit change) &nbsp;&nbsp;|&nbsp;&nbsp; **OR = 1 ⇔ β = 0**
+:::
+
+| Output | Reads as | Example |
+|---|---|---|
+| **β** | Change in **log-odds** per 1-unit x | `r f(log(so$estimate), 3)` |
+| **OR = exp(β)** | Multiplies the **odds** by this factor per 1 unit; per k units: OR^k | OR `r f(so$estimate, 2)` per g/day; per 5 g = `r f(so$estimate^5, 2)` |
+| **95% CI** | Exponentiate the CI limits of β (so the CI is asymmetric on the OR scale) | `r f(so$conf.low, 2)` – `r f(so$conf.high, 2)` |
+| **OR > 1 / < 1** | Higher / lower odds; CI containing 1 ⇒ not significant | |
+| **Deviance** | −2 × log-likelihood (relative to perfect); smaller = better | null `r f(m_log$null.deviance, 0)` → `r f(deviance(m_log), 0)` |
+| **LR test** | Compare **nested** models: 2×(logLik₁ − logLik₀) ~ χ²(df). Preferred to Wald for model comparison and multi-df terms | `anova(m0, m1, test = "LRT")`, `lmtest::lrtest()`, `drop1(m, test="LRT")` |
+| **AIC** | −2 logLik + 2k; lower is better; works for **non-nested** (same rows!) | `AIC(m1, m2)` |
+| **Pseudo-R²** | McFadden / Nagelkerke / Tjur — **not** % variance explained; run low; descriptive only | `r f(r2_mcfadden(m_log)$R2[[1]], 2)` / `r f(r2_nagelkerke(m_log)[[1]], 2)` / `r f(r2_tjur(m_log)[[1]], 2)` |
+| **Calibration** | Predicted risk ≈ observed risk? Plot deciles; Hosmer–Lemeshow (p > 0.05 OK, but low power/bin-dependent) | `performance_hosmer(m)` |
+| **Discrimination** | AUC = P(random case ranked above random non-case): 0.5 chance · 0.7–0.8 ok · 0.8–0.9 good | AUC `r f(as.numeric(auc(roc(cc$htn, fitted(m_log), quiet = TRUE))), 2)` (`pROC::roc`) |
+
+### Common outcome? OR ≠ PR
+
+Prevalence `r f(100 * mean(ncd$htn), 0)`%. Age 50+ vs <50: **OR `r f({p <- tapply(ncd$htn, ncd$age50, mean); (p[2]/(1-p[2]))/(p[1]/(1-p[1]))}, 1)`** but **PR `r f({p <- tapply(ncd$htn, ncd$age50, mean); p[2]/p[1]}, 1)`**. OR ≈ PR only if the outcome is rare (< ~10%). For "times as likely": `glm(family = poisson)` + `lmtest::coeftest(m, vcov. = sandwich::vcovHC(m, "HC0"))`, or log-binomial.
+
+### Write it up
+
+> *Linear:* "Each 1 g/day higher salt intake was **associated with** a **`r f(sl$estimate)` mmHg higher SBP (95% CI `r f(sl$conf.low)` to `r f(sl$conf.high)`)**, adjusted for age, BMI, sex, residence, education, tobacco, alcohol and physical activity."
+>
+> *Logistic:* "Each 1 g/day higher salt intake was associated with **`r f(100*(so$estimate-1), 0)`% higher odds of hypertension (aOR `r f(so$estimate, 2)`; 95% CI `r f(so$conf.low, 2)`–`r f(so$conf.high, 2)`)**."
+
+### Pitfall checklist
+
+☐ outcome type → model ☐ covariates pre-specified ☐ **units + reference** stated ☐ CI, not just p ☐ assumptions checked ☐ ≥ 10 events per variable ☐ clustering acknowledged ☐ OR not read as risk ☐ pseudo-R² ≠ R² ☐ **association, not causation**
+
+:::

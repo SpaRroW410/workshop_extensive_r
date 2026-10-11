@@ -232,13 +232,14 @@ meta <- list(
     badge   = "🟡 Workshop Key Unlocked",
     colour  = "#b8860b",
     bg      = "#fffbf0",
-    intro   = "Welcome to the **Regression Track** — a focused, statistics-first path through R. This track covers R foundations and data wrangling, then goes deep on regression: simple and multiple linear regression, logistic regression, univariate screening, Cox proportional hazards models, and model diagnostics with the `performance` package.",
+    intro   = "Welcome to the **Regression Track** — a focused, statistics-first path through R. This track covers R foundations and data wrangling, then goes deep on regression: simple and multiple linear regression, logistic regression, univariate screening, Cox proportional hazards models, and model diagnostics with the `performance` package. It also hosts the full-day **Theory of Regression Analysis workshop**: six slide decks, six R labs with fill-in-the-blank exercises, self-check quizzes and a cheat sheet.",
     goals   = c(
       "Get comfortable with R syntax and importing/wrangling data",
       "Fit and interpret simple and multiple linear regression models",
       "Screen predictors with univariate regression and build multivariable models",
       "Fit logistic and Cox proportional hazards models for binary and time-to-event outcomes",
-      "Check model assumptions with base-R diagnostics and the `performance` package"
+      "Check model assumptions with base-R diagnostics and the `performance` package",
+      "Interpret and report linear and logistic models for a thesis or paper (full-day workshop)"
     ),
     modules = c(
       "📁 R Foundations & Data Wrangling",
@@ -246,18 +247,25 @@ meta <- list(
       "🧮 Univariate Regression Screening",
       "🎯 Logistic Regression",
       "⏱️ Cox Proportional Hazards Regression",
-      "🩺 Model Diagnostics (base R + `performance`)"
+      "🩺 Model Diagnostics (base R + `performance`)",
+      "🎓 Regression Workshop — 6 sessions, 6 labs, quizzes, cheat sheet"
     ),
     nav = list(
       list(icon="📁", label="R Foundations",     href="r-foundations/getting-started.qmd", desc="R syntax, data import, and tidy data wrangling"),
-      list(icon="📈", label="Regression Analysis",href="statistical-analysis/regression.qmd",desc="Linear, logistic, and Cox regression, plus diagnostics")
+      list(icon="📈", label="Regression Analysis",href="statistical-analysis/regression.qmd",desc="Linear, logistic, and Cox regression, plus diagnostics"),
+      list(icon="🎓", label="Regression Workshop",href="regression-workshop/s1_foundations.qmd",desc="Full-day theory workshop: slides, labs, quizzes (start at Session 1)"),
+      list(icon="📋", label="Cheat Sheet",href="regression-workshop/cheatsheet.qmd",desc="Two-page interpretation cheat sheet for linear and logistic output")
     ),
     show_stats   = TRUE,
     show_quarto  = FALSE,
     downloads = list(
-      scripts    = character(0),
-      datasets   = character(0),
-      cheatsheets= c("downloads/cheatsheets/data-import.pdf", "downloads/cheatsheets/data-transformation.pdf"),
+      scripts    = c("regression-workshop/make_data.R",
+                     "regression-workshop/labs/lab1_explore.R", "regression-workshop/labs/lab2_simple.R",
+                     "regression-workshop/labs/lab3_multiple.R", "regression-workshop/labs/lab4_assumptions.R",
+                     "regression-workshop/labs/lab5_logistic.R", "regression-workshop/labs/lab6_reporting.R"),
+      datasets   = c("data/ncd_survey.csv"),
+      cheatsheets= c("downloads/cheatsheets/data-import.pdf", "downloads/cheatsheets/data-transformation.pdf",
+                     "regression-workshop/cheatsheet.qmd"),
       quarto     = character(0)
     ),
     tip  = "New to R? Start with **R Foundations → Getting Started**, then head straight to **Regression Analysis** — it covers everything from a single predictor through Cox regression on one page.",

@@ -31,6 +31,23 @@ Below are the workshop downloads for cheat sheets, example scripts, and source f
 - [Data Wrangle script](downloads/source-scripts/nctoh/data_wrangle.R){target="_blank"}
 - [Data Visualization script](downloads/source-scripts/nctoh/data_vis.R){target="_blank"}
 
+::: {.content-visible when-profile="regression"}
+
+## Regression Workshop
+
+- [Simulated NCD survey (CSV)](data/ncd_survey.csv){target="_blank"} — n = 600, 20 villages
+- [make_data.R](regression-workshop/make_data.R){target="_blank"} — simulates the dataset and prints a feature check
+- Labs (fill in the `___` blanks):
+  [Lab 1](regression-workshop/labs/lab1_explore.R){target="_blank"} ·
+  [Lab 2](regression-workshop/labs/lab2_simple.R){target="_blank"} ·
+  [Lab 3](regression-workshop/labs/lab3_multiple.R){target="_blank"} ·
+  [Lab 4](regression-workshop/labs/lab4_assumptions.R){target="_blank"} ·
+  [Lab 5](regression-workshop/labs/lab5_logistic.R){target="_blank"} ·
+  [Lab 6](regression-workshop/labs/lab6_reporting.R){target="_blank"}
+- [Interpretation cheat sheet](regression-workshop/cheatsheet.qmd)
+
+:::
+
 ## How to use these files
 
 - Open the cheat sheets for quick reference on importing, transforming, and visualizing data in R.

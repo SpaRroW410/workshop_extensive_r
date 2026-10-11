@@ -1,0 +1,457 @@
+---
+title: "Session 4 — Assumptions of Linear Regression"
+subtitle: "Linearity · independence · normality · equal variance · collinearity · Topic 7 · Lab 4"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+cc <- ncd |> drop_na(sbp, salt_g, age, bmi, waist, sex, residence, education, tobacco, alcohol, phys_act)
+m <- lm(sbp ~ salt_g + age + bmi + sex + residence + education + tobacco + alcohol + phys_act, data = cc)
+```
+
+## Where we are
+
+::: {.incremental}
+- We have a model: `sbp ~ salt_g + age + bmi + sex + residence + education + tobacco + alcohol + phys_act`
+- Its p-values and CIs are **only trustworthy if its assumptions are reasonable**
+- For each assumption today: **what it means → how to check → what a violation looks like in OUR data → what to do**
+:::
+
+# Topic 7 — Assumptions {background-color="#2C3E50"}
+
+## The checklist
+
+| | Assumption | Plain meaning |
+|---|---|---|
+| **L** | **Linearity** | The mean outcome changes in a straight line with each predictor |
+| **I** | **Independence** | One person's error tells you nothing about another's |
+| **N** | **Normality** of residuals | Residuals are roughly bell-shaped |
+| **E** | **Equal variance** (homoscedasticity) | Spread of residuals is the same at every fitted value |
+| **M** | **No severe multicollinearity** | Predictors are not near-copies of each other |
+
+::: {.fragment}
+Plus a look for **influential points** (a few people driving the result).
+:::
+
+## What goes wrong when each fails
+
+| Violation | Main consequence |
+|---|---|
+| Non-linearity | **Biased** β — the line is the wrong shape |
+| Non-independence (clusters) | SEs **too small** → CIs too narrow, p too small |
+| Non-normal residuals | Usually minor if n is large; matters for small n and prediction intervals |
+| Unequal variance | SEs **wrong** (usually too small/large in places); estimates less efficient |
+| Multicollinearity | SEs **inflated**, β unstable, even sign flips |
+
+## The one-page panel: `check_model()`
+
+```{r}
+#| fig-width: 12
+#| fig-height: 7.2
+check_model(m, check = c("linearity", "homogeneity", "qq", "outliers"))
+```
+
+::: {.notes}
+Walk through the four panels. Top-left reference line should be flat and horizontal; it curves. Top-right should be flat; it rises (funnel). Q-Q points should sit on the line; they roughly do. Bottom-right should keep points inside the contour lines. We now take each assumption in turn.
+:::
+
+# L — Linearity {background-color="#2C3E50"}
+
+## Linearity: what and how
+
+::: {.columns}
+::: {.column width="50%"}
+**Means:** each continuous predictor has a **straight-line** relationship with the mean outcome.
+
+**Check:** plot **residuals vs each continuous predictor** (and vs fitted) with a smooth curve — it should be flat.
+:::
+::: {.column width="50%"}
+::: {.warn}
+**Violation looks like:** a curved (U, ∩ or banana-shaped) smooth line in the residual plot.
+:::
+:::
+:::
+
+## In our data: age is slightly curved
+
+```{r}
+#| output-location: slide
+cc |>
+  mutate(res = resid(m)) |>
+  ggplot(aes(age, res)) +
+  geom_point(alpha = .3, colour = col_blue) +
+  geom_smooth(method = "loess", se = FALSE, colour = col_red, formula = y ~ x) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(x = "Age (years)", y = "Residual (mmHg)")
+```
+
+::: {.notes}
+Residuals are slightly negative in the middle and positive at the ends: SBP rises faster at older ages than a straight line allows. A formal check: `resettest()`.
+:::
+
+## A formal nudge: RESET test
+
+```{r}
+resettest(m, power = 2, type = "regressor")
+```
+
+::: {.fragment}
+A small p-value suggests curvature somewhere — **but look at the plot** to see *where* and *how much*.
+:::
+
+## What to do about non-linearity
+
+```{r}
+m_quad <- lm(sbp ~ salt_g + age + I(age^2) + bmi + sex + residence + education +
+               tobacco + alcohol + phys_act, data = cc)
+anova(m, m_quad)
+```
+
+::: {.incremental}
+- Add a **squared term** (`I(age^2)`) — the improvement is significant
+- Better still for flexible shapes: **splines** (`splines::ns()`, `mgcv`) — mentioned in Session 6
+- Or **categorise** (age bands) — simple but throws information away
+- Or **transform** the predictor (e.g. log) when the curve is monotonic
+:::
+
+# I — Independence {background-color="#2C3E50"}
+
+## Independence: what and how
+
+::: {.columns}
+::: {.column width="50%"}
+**Means:** the residual of one person carries no information about another's.
+
+**Typically violated by:** people in the same **village / household / clinic**, **repeated measures** on the same person, **time series**.
+:::
+::: {.column width="50%"}
+**Check:** *by design first* (how were people sampled?), then plot residuals **by cluster** and estimate the **intraclass correlation**.
+:::
+:::
+
+## In our data: people are clustered in 20 villages
+
+```{r}
+#| output-location: slide
+cc |>
+  mutate(res = resid(m)) |>
+  ggplot(aes(reorder(village, res, FUN = median), res)) +
+  geom_boxplot(fill = "#d6eaf8") +
+  geom_hline(yintercept = 0, linetype = "dashed", colour = col_red) +
+  labs(x = "Village (ordered by median residual)", y = "Residual (mmHg)") +
+  theme(axis.text.x = element_text(angle = 90, vjust = .5))
+```
+
+## How big is the clustering?
+
+```{r}
+a   <- anova(lm(resid(m) ~ factor(cc$village)))
+msb <- a$`Mean Sq`[1]; msw <- a$`Mean Sq`[2]; k <- mean(table(cc$village))
+icc <- (msb - msw) / (msb + (k - 1) * msw)
+c(ICC = round(icc, 3), design_effect = round(1 + (k - 1) * icc, 2))
+```
+
+::: {.incremental}
+- **ICC ≈ `r round(icc, 2)`**: about `r round(100*icc)`% of the residual variation lies *between* villages
+- **Design effect ≈ `r round(1 + (k - 1) * icc, 1)`**: for village-level exposures the standard errors may be too small by about √`r round(1 + (k - 1) * icc, 1)` ≈ **`r round(sqrt(1 + (k - 1) * icc), 1)`×**
+:::
+
+## What to do about non-independence
+
+::: {.warn}
+In this workshop we only **detect and discuss** the village clustering — we do **not** model it.
+:::
+
+::: {.incremental}
+- **Mixed models** with a random intercept per village (`lme4`)
+- **GEE** (`geepack`) or **cluster-robust standard errors**
+- **Survey-design methods** for complex samples such as NFHS (`survey`)
+- At minimum: **report** the design, state the limitation, and be cautious with village-level predictors (e.g., residence)
+:::
+
+# N — Normality {background-color="#2C3E50"}
+
+## Normality of residuals: what and how
+
+::: {.columns}
+::: {.column width="50%"}
+**Means:** the **residuals** (not the outcome!) are roughly bell-shaped.
+
+**Check:** **Q–Q plot** — points should follow the diagonal; a histogram; tests are secondary.
+:::
+::: {.column width="50%"}
+::: {.key}
+With n ≈ 550, the **central limit theorem** protects CIs for β. Normality matters most for **small samples** and **prediction intervals**.
+:::
+:::
+:::
+
+## In our data
+
+```{r}
+#| output-location: slide
+augment(m) |>
+  ggplot(aes(sample = .std.resid)) +
+  stat_qq(alpha = .5, colour = col_blue) + stat_qq_line(colour = col_red, linewidth = 1) +
+  labs(x = "Theoretical quantiles", y = "Standardised residuals")
+```
+
+```{r}
+check_normality(m)
+```
+
+## If normality is badly violated
+
+::: {.incremental}
+- Check for **outliers** or data errors first
+- **Transform** the outcome (e.g., `log(sbp)`) — then interpret as % change
+- **Bootstrap** the CIs (no normality assumption)
+- **Robust regression** (`MASS::rlm`) or a different model for the outcome type
+:::
+
+# E — Equal variance {background-color="#2C3E50"}
+
+## Homoscedasticity: what and how
+
+::: {.columns}
+::: {.column width="50%"}
+**Means:** the spread of residuals is the **same** at every fitted value.
+
+**Check:** residuals vs fitted — a **funnel** (fan) shape means variance grows with the mean. **Breusch–Pagan** test.
+:::
+::: {.column width="50%"}
+::: {.warn}
+Biological outcomes often get **more variable at higher levels**: older adults vary more in BP.
+:::
+:::
+:::
+
+## In our data: SBP varies more in older adults
+
+```{r}
+#| output-location: slide
+cc |>
+  mutate(res = resid(m), age_band = cut(age, c(29, 39, 49, 59, 69), labels = c("30–39", "40–49", "50–59", "60–69"))) |>
+  ggplot(aes(age_band, res)) +
+  geom_boxplot(fill = "#d6eaf8") +
+  geom_hline(yintercept = 0, linetype = "dashed", colour = col_red) +
+  labs(x = "Age band", y = "Residual (mmHg)")
+```
+
+## Tests for non-constant variance
+
+```{r}
+check_heteroscedasticity(m)
+bptest(m)
+```
+
+::: {.fragment}
+Both flag non-constant variance. They are **variants** of the Breusch–Pagan test (the second is the studentised, more robust version), so their p-values differ slightly — **name the test you used**. The effect is **mild**: residual SD roughly **`r round(sd(resid(m)[cc$age < 45]))` mmHg** under 45 vs **`r round(sd(resid(m)[cc$age >= 55]))` mmHg** at 55+.
+:::
+
+## What to do about unequal variance
+
+```{r}
+rob <- coeftest(m, vcov. = sandwich::vcovHC(m, type = "HC3"))
+tibble(term = names(coef(m)),
+       SE_usual  = round(summary(m)$coefficients[, 2], 3),
+       SE_robust = round(rob[, 2], 3)) |> filter(term %in% c("salt_g", "age", "bmi", "sexMale"))
+```
+
+::: {.incremental}
+- **Robust (sandwich) SEs**: same β, honest SEs — the easiest fix (`sandwich::vcovHC`)
+- **Transform** the outcome (e.g., `log(sbp)`) or use **weighted least squares**
+- Our violation is **mild**: conclusions do not change — but you should know and say so
+:::
+
+# M — Multicollinearity {background-color="#2C3E50"}
+
+## Multicollinearity: what and how
+
+::: {.columns}
+::: {.column width="50%"}
+**Means:** two or more predictors carry **nearly the same information**, so the model cannot tell their effects apart.
+
+**Check:** correlation matrix and **VIF**.
+:::
+::: {.column width="50%"}
+::: {.key}
+**VIF** = how much a coefficient's variance is inflated by correlation with the other predictors.
+
+Rule of thumb: **> 5** worry, **> 10** serious.
+:::
+:::
+:::
+
+## In our data: BMI and waist
+
+```{r}
+#| output-location: slide
+ggplot(cc, aes(bmi, waist)) +
+  geom_point(alpha = .35, colour = col_blue) +
+  geom_smooth(method = "lm", colour = col_red, formula = y ~ x) +
+  annotate("text", x = 16, y = 125, hjust = 0, size = 6, label = paste0("r = ", round(cor(cc$bmi, cc$waist), 2))) +
+  labs(x = "BMI (kg/m²)", y = "Waist (cm)")
+```
+
+## VIF with both in the model
+
+```{r}
+m_both <- lm(sbp ~ salt_g + age + bmi + waist, data = cc)
+check_collinearity(m_both)
+```
+
+## What collinearity does to the estimates
+
+```{r}
+m_bmi <- lm(sbp ~ salt_g + age + bmi, data = cc)
+bind_rows(`BMI alone` = tidy(m_bmi), `BMI + waist` = tidy(m_both), .id = "model") |>
+  filter(term == "bmi") |> select(model, estimate, std.error, p.value) |>
+  mutate(across(where(is.numeric), ~ signif(.x, 3)))
+```
+
+::: {.fragment}
+::: {.bad}
+With waist added, the **BMI coefficient shrinks toward zero (and can flip sign)** while its **SE roughly triples** — each variable "steals" the other's effect.
+:::
+:::
+
+## How to handle collinearity
+
+::: {.incremental}
+- **Choose one** on clinical grounds (BMI for an exposure of interest; waist if central adiposity is the question) — **our fix**
+- **Combine** into one measure (e.g., a ratio or first principal component)
+- **Centre** predictors if the collinearity comes from polynomial or interaction terms
+- **Penalised regression** (ridge/lasso — `glmnet`) when many correlated predictors
+- Do **not** drop by p-value alone
+:::
+
+# Influential points {background-color="#2C3E50"}
+
+## A few people can drive a result
+
+```{r}
+infl <- augment(m) |> mutate(row = row_number()) |> arrange(desc(.cooksd)) |> select(row, sbp, salt_g, age, .std.resid, .cooksd) |> head(5)
+infl |> mutate(across(where(is.numeric), ~ round(.x, 3)))
+check_outliers(m)
+```
+
+::: {.incremental}
+- **Cook's distance** flags people whose removal would change the fit most
+- First **check data entry**; refit **with and without** them; report if conclusions change
+- Do not delete people just because they are inconvenient
+:::
+
+## All five assumptions on one slide {.smaller}
+
+| Assumption | Check | In our data | What we do |
+|---|---|---|---|
+| Linearity | Residuals vs predictor, RESET | Slight age curvature | Add `age²` / spline |
+| Independence | Design, residuals by cluster, ICC | Village ICC ≈ `r round(icc, 2)` | Mixed / GEE / robust SE (beyond today) |
+| Normality | Q–Q plot | Acceptable | None needed (n large) |
+| Equal variance | Residuals vs fitted, BP test | Variance rises with age (mild) | Robust SE |
+| Collinearity | VIF | BMI & waist: VIF ≈ 10 | Keep one |
+
+## 🔧 Switch to R — Lab 4 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `regression-workshop/labs/lab4_assumptions.R`
+
+- `check_model()` panel · residuals vs age
+- normality and heteroscedasticity tests
+- VIF with **waist + BMI** — then **fix it**
+- Squared age term · robust SEs · village residuals
+:::
+
+**Time:** 40 minutes · answer Q1–Q5 in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s4q1", "A residuals-vs-fitted plot shows points fanning out like a funnel as fitted values increase. Which assumption is violated?",
+         c("Linearity", "Independence", "Equal variance (homoscedasticity)", "Normality of the outcome"), answer = 3,
+         explain = "A funnel means the spread of residuals changes with the fitted value: heteroscedasticity. Robust (sandwich) SEs are an easy remedy.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s4q2", "BMI and waist circumference (r = 0.95) both enter a model; each has a VIF of about 10. What is the best response?",
+         c("Keep both — a high VIF is harmless", "Drop whichever has the larger p-value",
+           "Choose one on clinical grounds (or combine them) and re-check the VIFs", "Log-transform the outcome"), answer = 3,
+         explain = "VIF > 10 signals serious collinearity. Choose one measure based on the research question (or combine), not on p-values alone.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s4q3", "Participants are sampled from 20 villages and share village-level influences on BP. Ignoring this mainly makes…",
+         c("The coefficients biased towards zero", "The residuals non-normal",
+           "The standard errors too small (CIs too narrow), especially for village-level predictors", "The R² smaller"), answer = 3,
+         explain = "Clustered observations are not independent: the effective sample size is smaller than n, so naive SEs are too small.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_fill("s4q4", "Lab 4, Task 1: which `performance` function produced the panel of diagnostic plots?",
+          accept = c("check_model", "check_model()"),
+          explain = "`check_model()` bundles linearity, homogeneity of variance, influential points, normality and collinearity checks.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_fill("s4q5", "Lab 4, Task 5: which `performance` function reported the variance inflation factors?",
+          accept = c("check_collinearity", "check_collinearity()", "vif", "vif()"),
+          explain = "`performance::check_collinearity()` (or `car::vif()`) reports VIFs; > 5 is a concern, > 10 serious.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **LINE + M**: linearity, independence, normality, equal variance — plus collinearity
+- **Plot first**, test second; tests are over-sensitive when n is large
+- Match the **fix to the violation**: curve → add a term; variance → robust SE; clusters → mixed/GEE; collinearity → keep one
+- **Report** what you checked and what you did about it
+
+:::
+
+**Next:** Session 5 — logistic regression

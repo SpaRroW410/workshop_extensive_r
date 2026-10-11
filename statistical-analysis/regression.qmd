@@ -10,6 +10,25 @@ format:
 
 Regression models describe and quantify the relationship between an outcome and one or more predictors. This module builds up in tiers — start with a single predictor, then add predictors, then move on to diagnostics and logistic regression.
 
+::: {.content-visible when-profile="regression"}
+
+## Full-day workshop: Theory of Regression Analysis
+
+This page is a quick tour. For the full-day, thesis-level treatment — six slide decks, six fill-in-the-blank R labs and a self-check quiz after every session — use the **Regression Workshop** menu above. Everything runs on one simulated adult NCD survey (n = 600, 20 villages).
+
+| Session | Topics | Deck | Lab |
+|---|---|---|---|
+| 1 · Foundations | What regression is · model-selection flowchart | [Slides](../regression-workshop/s1_foundations.qmd) | `lab1_explore.R` |
+| 2 · Simple linear regression | Slope in units · CI vs PI · R² · centering | [Slides](../regression-workshop/s2_simple_regression.qmd) | `lab2_simple.R` |
+| 3 · Inference & multiple regression | Confounding · dummy coding · model building | [Slides](../regression-workshop/s3_multiple_regression.qmd) | `lab3_multiple.R` |
+| 4 · Assumptions | LINE + collinearity, with fixes | [Slides](../regression-workshop/s4_assumptions.qmd) | `lab4_assumptions.R` |
+| 5 · Logistic regression | Odds · likelihood · ROC · OR vs PR | [Slides](../regression-workshop/s5_logistic_regression.qmd) | `lab5_logistic.R` |
+| 6 · Interpreting & reporting | Writing results · pitfalls · what next | [Slides](../regression-workshop/s6_reporting.qmd) | `lab6_reporting.R` |
+
+Also: the [interpretation cheat sheet](../regression-workshop/cheatsheet.qmd), the [dataset](../data/ncd_survey.csv) and the [labs and data-simulation script](../downloads.qmd).
+
+:::
+
 ## Simple Linear Regression
 
 ```{r}

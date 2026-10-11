@@ -1,0 +1,435 @@
+---
+title: "Session 6 — Interpreting and Reporting"
+subtitle: "Annotated output · writing results · common pitfalls · what next · Topics 9–10 · Lab 6"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+cc <- ncd |> drop_na(sbp, htn, salt_g, age, bmi, waist, sex, residence, education, tobacco, alcohol, phys_act)
+f_rhs <- "salt_g + age + bmi + sex + residence + education + tobacco + alcohol + phys_act"
+m_lin <- lm(reformulate(f_rhs, "sbp"), data = cc)
+m_log <- glm(reformulate(f_rhs, "htn"), data = cc, family = binomial)
+sl <- tidy(m_lin, conf.int = TRUE) |> filter(term == "salt_g")
+so <- tidy(m_log, conf.int = TRUE, exponentiate = TRUE) |> filter(term == "salt_g")
+r2s <- summary(m_lin)
+roc_obj <- roc(cc$htn, fitted(m_log), quiet = TRUE)
+f1 <- function(x, d = 1) formatC(x, format = "f", digits = d)
+```
+
+## Where we are
+
+::: {.incremental}
+- You can now **fit** linear and logistic models and **check** them
+- Today: turn output into **words and tables** a thesis committee or journal accepts
+  - annotated walkthroughs of **linear** and **logistic** output
+  - **results and methods** wording
+  - **nine common pitfalls**
+  - **what lies beyond** this workshop (models and packages)
+:::
+
+# Topic 9 — Reading the output {background-color="#2C3E50"}
+
+## Linear regression: what each number means
+
+```{r}
+#| echo: false
+tibble(
+  Output = c("β (salt_g)", "Std. error", "95% CI", "p-value", "R² / adjusted R²", "Residual SE"),
+  Value  = c(f1(sl$estimate, 2), f1(sl$std.error, 2), paste0(f1(sl$conf.low), " to ", f1(sl$conf.high)),
+             "< 0.001", paste0(f1(r2s$r.squared, 2), " / ", f1(r2s$adj.r.squared, 2)), paste0(f1(sigma(m_lin)), " mmHg")),
+  `How to say it` = c(
+    "Each extra 1 g/day of salt ↔ this many mmHg higher mean SBP, other variables held constant",
+    "Precision of β: smaller = more precise",
+    "Plausible range for the true β — report it with every estimate",
+    "Chance of a β this far from 0 if the true β were 0 — not the size of the effect",
+    "Share of SBP variability the model accounts for — descriptive only",
+    "The typical size of a prediction miss, in mmHg")
+) |> knitr::kable()
+```
+
+## Logistic regression: what each number means
+
+```{r}
+#| echo: false
+tibble(
+  Output = c("OR (salt_g)", "95% CI", "p-value", "Null → residual deviance", "AIC", "Pseudo-R² (McFadden / Tjur)", "AUC"),
+  Value  = c(f1(so$estimate, 2), paste0(f1(so$conf.low, 2), " to ", f1(so$conf.high, 2)), "< 0.001",
+             paste0(f1(m_log$null.deviance, 0), " → ", f1(deviance(m_log), 0)), f1(AIC(m_log), 0),
+             paste0(f1(r2_mcfadden(m_log)$R2[[1]], 2), " / ", f1(r2_tjur(m_log)[[1]], 2)), f1(as.numeric(auc(roc_obj)), 2)),
+  `How to say it` = c(
+    "Each extra 1 g/day multiplies the ODDS of hypertension by this factor, adjusted",
+    "Plausible range for the OR; if it contains 1, no clear association",
+    "As for linear regression",
+    "How much the covariates improve the likelihood-based fit",
+    "Use to compare models fitted to the same rows (lower = better)",
+    "Descriptive; not 'variance explained'; do not compare with linear R²",
+    "Discrimination: 0.5 = chance, 1 = perfect")
+) |> knitr::kable()
+```
+
+## A publication-ready combined table
+
+```{r}
+#| output-location: slide
+labs <- list(salt_g ~ "Salt intake (per 1 g/day)", age ~ "Age (per year)", bmi ~ "BMI (per kg/m²)",
+             sex ~ "Sex", residence ~ "Residence", education ~ "Education", tobacco ~ "Tobacco use",
+             alcohol ~ "Alcohol use", phys_act ~ "Physical activity")
+t_lin <- tbl_regression(m_lin, label = labs) |> bold_labels()
+t_log <- tbl_regression(m_log, exponentiate = TRUE, label = labs) |> bold_labels()
+tbl_merge(list(t_lin, t_log), tab_spanner = c("**Systolic BP (β, mmHg)**", "**Hypertension (OR)**")) |>
+  modify_header(estimate_1 ~ "**β**", estimate_2 ~ "**OR**")
+```
+
+# Topic 10 — Writing it up {background-color="#2C3E50"}
+
+## Results sentence — linear regression
+
+::: {.key}
+"After adjusting for age, BMI, sex, residence, education, tobacco, alcohol and physical activity, **each 1 g/day higher salt intake was associated with a `r f1(sl$estimate)` mmHg higher systolic blood pressure (95% CI `r f1(sl$conf.low)` to `r f1(sl$conf.high)`; p < 0.001)** (n = `r nrow(cc)`; adjusted R² = `r f1(r2s$adj.r.squared, 2)`)."
+:::
+
+::: {.incremental}
+- ✔ **Direction + size + units** · ✔ **CI** · ✔ **adjustment set** · ✔ **n** · ✔ "associated with"
+- Give the **crude** estimate too (`r f1(coef(lm(sbp ~ salt_g, cc))[[2]])` mmHg) so readers see the effect of adjustment
+:::
+
+## Results sentence — logistic regression
+
+::: {.key}
+"Hypertension was present in `r f1(100 * mean(cc$htn), 0)`% of participants. After adjustment, **each 1 g/day higher salt intake was associated with `r f1(100 * (so$estimate - 1), 0)`% higher odds of hypertension (adjusted OR `r f1(so$estimate, 2)`; 95% CI `r f1(so$conf.low, 2)` to `r f1(so$conf.high, 2)`)**. The model showed good discrimination (AUC `r f1(as.numeric(auc(roc_obj)), 2)`)."
+:::
+
+::: {.incremental}
+- ✔ **Say "odds"** (not risk) · ✔ **unit of x** · ✔ **reference categories** for categorical ORs
+- With a **common outcome**, add the **prevalence ratio** if you want to say "times as likely"
+:::
+
+## Tables and figures: what a reader needs
+
+::: {.columns}
+::: {.column width="50%"}
+::: {.good}
+**Include**
+
+- **Units** in row labels (per g/day, per 5 kg/m²)
+- **Reference category** for every categorical variable
+- **n** analysed (note missing data handling)
+- **95% CI** (not only p)
+- **Footnote**: adjustment set, abbreviations, model type
+:::
+:::
+::: {.column width="50%"}
+::: {.bad}
+**Avoid**
+
+- "p = 0.000" (write p < 0.001)
+- Stars-only tables
+- Reporting β **without** the outcome units
+- Hiding the crude estimates
+:::
+:::
+:::
+
+## The Methods paragraph
+
+::: {.incremental}
+1. **Model and why** — "multiple linear regression for SBP; logistic regression for hypertension (SBP ≥ 140 or DBP ≥ 90)"
+2. **Covariates and rationale** — "chosen a priori from a causal diagram/literature, not by automated selection"
+3. **Assumption checks** — linearity, independence (clustering by village), residual normality, equal variance, collinearity (VIF); and how violations were handled
+4. **Missing data** — "complete-case analysis; n = …"
+5. **Model assessment** (logistic) — likelihood ratio tests, AIC, calibration, AUC
+6. **Software** — R version and packages (below)
+:::
+
+## Software line: let R tell you
+
+```{r}
+R.version.string
+sapply(c("tidyverse", "gtsummary", "broom", "performance", "pROC", "car", "lmtest"),
+       \(p) as.character(packageVersion(p)))
+```
+
+::: {.fragment}
+"Analyses were done in R `r paste(R.version$major, R.version$minor, sep = ".")` using the tidyverse, gtsummary, performance, car, lmtest and pROC packages." Follow **STROBE** for observational studies.
+:::
+
+# Common pitfalls {background-color="#2C3E50"}
+
+## Pitfall 1 — Stepwise selection presented as *the* analysis
+
+::: {.bad}
+"Variables were selected by backward stepwise regression (AIC)." → biased β, narrow CIs, unstable model, ignores confounding logic.
+:::
+
+::: {.good}
+**Instead:** pre-specify covariates from a **DAG or the literature**; report the same model whatever the p-values. If you use `step()`, label it **exploratory** (Session 3 demos).
+:::
+
+## Pitfall 2 — "p < 0.2 into the model"
+
+```{r}
+vars <- c("salt_g", "age", "bmi", "sex", "residence", "education", "tobacco", "alcohol", "phys_act")
+p_uni <- map_dbl(vars, \(v) anova(glm(reformulate(v, "htn"), binomial, cc), test = "LRT")$`Pr(>Chi)`[2])
+or_adj <- tidy(m_log, exponentiate = TRUE) |> filter(term %in% c("phys_actmoderate", "phys_acthigh", "residenceRural"))
+tibble(variable = vars, `univariable p` = signif(p_uni, 2)) |> filter(variable %in% c("phys_act", "residence", "salt_g"))
+or_adj |> select(term, `adjusted OR` = estimate, p.value) |> mutate(across(where(is.numeric), ~ signif(.x, 2)))
+```
+
+::: {.fragment}
+::: {.bad}
+Physical activity has **univariable p ≈ 1** — a "p < 0.2" screen would **drop it** — yet adjusted for age, BMI and sex, **high activity has OR ≈ 0.57**. Confounding hides it from the crude test.
+:::
+:::
+
+## Pitfalls 3–6: say it properly {.smaller}
+
+| Pitfall | ✘ Don't | ✔ Do |
+|---|---|---|
+| **3. β without units or reference** | "Salt β = 1.8; sex β = 3.8" | "1.8 mmHg higher SBP per 1 g/day; men 3.8 mmHg higher than women (reference)" |
+| **4. OR read as risk** | "50+ y are 5.1 times as likely to be hypertensive" (outcome 32%) | "…had 5.1 times the odds (PR 3.1)" |
+| **5. Pseudo-R² as R²** | "The model explains 29% of the variance in hypertension" | "Tjur's R² was 0.29 (a descriptive pseudo-R²)" |
+| **6. Statistical = clinical** | "Highly significant (p < 0.001), therefore important" | "A 1.8 mmHg difference per g/day (95% CI 1.2–2.4): a 5 g reduction ≈ 9 mmHg lower mean SBP" |
+
+## Pitfall 7 — Overfitting: too few events per variable
+
+```{r}
+events <- sum(cc$htn); params <- length(coef(m_log)) - 1
+c(events = events, parameters = params, events_per_variable = round(events / params, 1))
+```
+
+::: {.incremental}
+- Rule of thumb: **≥ 10 events per variable** (events = the *smaller* outcome group); our model has `r round(events/params, 1)` — acceptable
+- Too many predictors → the model memorises noise: **great on this sample, poor on the next**
+:::
+
+## Overfitting in action: 60 pure-noise predictors
+
+```{r}
+set.seed(3)
+noise <- as_tibble(matrix(rnorm(nrow(cc) * 60), ncol = 60)); d_o <- bind_cols(htn = cc$htn, noise)
+train <- sample(nrow(d_o), 300)
+g_o <- glm(htn ~ ., binomial, d_o[train, ])
+auc_in  <- auc(roc(d_o$htn[train],  fitted(g_o), quiet = TRUE))
+auc_out <- auc(roc(d_o$htn[-train], predict(g_o, d_o[-train, ], type = "response"), quiet = TRUE))
+round(c(AUC_on_training_data = as.numeric(auc_in), AUC_on_new_data = as.numeric(auc_out)), 2)
+```
+
+::: {.fragment}
+Pure noise can look **"good"** on the data that built it (AUC well above 0.5) and falls back toward **0.5** on new data — the signature of overfitting.
+:::
+
+## Pitfall 8 — Ignoring assumptions and clustering
+
+```{r}
+se_naive   <- summary(m_lin)$coefficients[, "Std. Error"]
+se_cluster <- sqrt(diag(sandwich::vcovCL(m_lin, cluster = cc$village)))
+tibble(term = names(se_naive), naive_SE = round(se_naive, 2), village_robust_SE = round(se_cluster, 2),
+       ratio = round(se_cluster / se_naive, 2)) |> filter(term %in% c("salt_g", "age", "residenceRural"))
+```
+
+::: {.incremental}
+- For **village-level** predictors (residence) the true SE is noticeably **larger** than the naive SE — naive CIs are too narrow
+- Individual-level predictors (salt) are less affected here, but you should still **state** the design and check assumptions
+- Remedies: mixed models, GEE, cluster-robust SE, survey methods (next slides)
+:::
+
+## Pitfall 9 — Calling associations causal
+
+::: {.columns}
+::: {.column width="50%"}
+::: {.bad}
+- "Salt **causes** hypertension (β = 1.8)"
+- "Tobacco **increases** SBP by 3 mmHg"
+:::
+:::
+::: {.column width="50%"}
+::: {.good}
+- "Higher salt intake was **associated with** higher SBP"
+- "Tobacco users **had** 3 mmHg higher mean SBP"
+:::
+:::
+:::
+
+::: {.incremental}
+- A **cross-sectional** survey cannot establish **temporal order**
+- Adjustment handles **measured** confounders only; the **DAG** states your assumptions
+- Causal claims need design (RCT, strong quasi-experiment) and **explicit causal reasoning**
+:::
+
+## Before you submit
+
+::: {.columns}
+::: {.column width="50%"}
+1. Outcome type matches the model
+2. Covariates pre-specified, with rationale
+3. Crude **and** adjusted estimates
+4. Units and reference categories
+5. CIs, not just p
+:::
+::: {.column width="50%"}
+6. Assumptions checked and reported
+7. Events per variable adequate
+8. Clustering / design acknowledged
+9. OR vs PR considered for common outcomes
+10. Language: **association**, not causation
+:::
+:::
+
+# Beyond this workshop {background-color="#2C3E50"}
+
+## Other outcome types {.smaller}
+
+| Model | Packages | When you'd use it |
+|---|---|---|
+| **Poisson / negative binomial** | `MASS::glm.nb` (and `glm(family = poisson)`) | **Counts** (dengue cases per ward, clinic visits); use NB when variance > mean; add an offset for person-time |
+| **Ordinal logistic** | `MASS::polr`, `ordinal` | **Ordered categories** (BP stage, CKD stage, Likert satisfaction) |
+| **Multinomial logistic** | `nnet::multinom` | **Unordered categories** (facility chosen, contraceptive method) |
+| **Cox proportional hazards** | `survival` | **Time-to-event** with censoring (time to TB cure, relapse, death) |
+
+## Data structure and design {.smaller}
+
+| Model | Packages | When you'd use it |
+|---|---|---|
+| **Mixed (multilevel) models** | `lme4` | **Clustered or repeated** data (villages, PHCs, repeated visits); subject-specific effects |
+| **GEE** | `geepack` | Same clustering when you want **population-average** effects with robust SEs |
+| **Complex survey data** | `survey`, `srvyr` | **NFHS / NSSO-type** surveys with strata, PSUs and sampling weights |
+
+::: {.warn}
+Our villages are exactly why Session 4's independence assumption matters: a **mixed model** or **GEE** is the natural next step.
+:::
+
+## Flexible models and helpful tools {.smaller}
+
+| Model or tool | Packages | When you'd use it |
+|---|---|---|
+| **Splines and GAMs** | `splines`, `mgcv` | **Non-linear** effects (age curve) without forcing a straight line or a polynomial |
+| **Penalised regression** | `glmnet` | **Many or correlated predictors**, few events; lasso/ridge for prediction models |
+| **Bayesian regression** | `brms` | **Small samples**, prior information, complex hierarchical models, full uncertainty |
+| **Regression modelling strategy** | `rms` | Harrell's toolkit: validation (bootstrap), nomograms, restricted cubic splines |
+| **Reporting and plots** | `modelsummary`, `sjPlot`, `broom`, `easystats` | Tidy extraction, publication tables, coefficient and effect plots, diagnostics |
+
+## Take-home messages of the day
+
+::: {.incremental}
+1. **Outcome type → model**; regression gives effects **in units**, with CIs
+2. **Confounding** is why we adjust: crude ≠ adjusted
+3. Choose covariates from **theory**, not from stepwise or p-values
+4. **Check assumptions** — and say what you did about violations
+5. Logistic: **exp(β) = OR**; assess with **likelihood**, **calibration** and **discrimination**; mind **OR vs PR**
+6. **Report** like a scientist: units, references, CIs, limitations — and **association ≠ causation**
+:::
+
+## 🔧 Switch to R — Lab 6 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `regression-workshop/labs/lab6_reporting.R`
+
+- Final linear + logistic models · **combined publication table**
+- `inline_text()` to pull numbers into sentences
+- A short **structured write-up** (Methods · Results · Limitations)
+:::
+
+**Time:** 35 minutes · bring your thesis variables next time!
+
+## Self-check quiz (1/6) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s6q1", "Which sentence reports a linear regression result correctly?",
+         c("Salt β = 1.8 (p < 0.001)",
+           "Salt had a significant effect on SBP",
+           "Each 1 g/day higher salt intake was associated with 1.8 mmHg higher SBP (95% CI 1.2 to 2.4), adjusted for age, BMI and other covariates",
+           "Salt explains 1.8% of blood pressure"), answer = 3,
+         explain = "Report direction, size WITH units, CI, adjustment set and use 'associated with'. A bare β or p-value is not enough.")
+```
+
+## Self-check quiz (2/6) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s6q2", "Why is 'keep variables with univariable p < 0.2' a poor strategy?",
+         c("It keeps too few variables", "A variable can look unrelated alone yet matter after adjustment (confounding), and screening ignores causal reasoning",
+           "It always overfits", "p-values cannot be computed for single variables"), answer = 2,
+         explain = "In our data physical activity had univariable p ≈ 1 but an adjusted OR of about 0.57. Choose covariates from theory (DAG/literature), not crude p-values.")
+```
+
+## Self-check quiz (3/6) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s6q3", "A cross-sectional survey finds higher salt intake is associated with higher SBP. Which conclusion is appropriate?",
+         c("Salt intake causes hypertension", "Reducing salt will lower SBP by exactly the coefficient in everyone",
+           "Higher salt intake was associated with higher SBP; causation cannot be established from this design alone",
+           "There is no association because R² is low"), answer = 3,
+         explain = "Cross-sectional data show association, not temporal order. Adjustment only handles measured confounders. Use association language and discuss limitations.")
+```
+
+## Self-check quiz (4/6) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s6q4", "Using the rule of thumb of at least 10 events per variable, about how many predictors can a logistic model with 60 events support?",
+         c("3", "6", "12", "60"), answer = 2,
+         explain = "60 events ÷ 10 events per variable ≈ 6 predictors (counting every dummy variable). More than that risks overfitting.")
+```
+
+## Self-check quiz (5/6) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_fill("s6q5", "Lab 6, Task 4: which `gtsummary` function pulls an estimate and CI from a table straight into text?",
+          accept = c("inline_text", "inline_text()"),
+          explain = "`inline_text(tbl, variable = \"salt_g\")` returns formatted text like '1.8 (95% CI 1.2, 2.4; p<0.001)', avoiding transcription errors.")
+```
+
+## Self-check quiz (6/6) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_fill("s6q6", "Lab 6, Task 3: which function placed the linear and logistic tables side by side?",
+          accept = c("tbl_merge", "tbl_merge()"),
+          explain = "`tbl_merge()` joins tables column-wise with `tab_spanner` headers; `tbl_stack()` would stack them vertically.")
+```
+
+## Score and close
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- You now have a workflow: **look → model → check → compare → report**
+- Re-run the labs on **your own data**; keep the cheat sheet beside you
+- Keep the **pitfalls** list beside your thesis draft
+:::
+
+**Thank you — questions?**

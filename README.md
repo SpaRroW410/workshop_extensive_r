@@ -77,3 +77,10 @@ install.packages(c("ggplot2", "ggstatsplot", "tidyverse"))
 ## 📬 Get in touch
 
 Please contact Dr. Mukul Maheshwari directly if you have any ideas, want to work together, or want to know how to get early access.
+
+## 🎓 Regression Workshop
+
+The regression track hosts a full-day **Theory of Regression Analysis** workshop in `regression-workshop/`
+(6 reveal.js decks, 6 fill-in-the-blank R labs with facilitator solutions, quiz engine, cheat sheet) on a simulated
+NCD survey (`data/ncd_survey.csv`). See [`regression-workshop/README.md`](regression-workshop/README.md).
+

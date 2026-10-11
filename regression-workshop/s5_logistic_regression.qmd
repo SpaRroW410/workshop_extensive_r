@@ -1,0 +1,741 @@
+---
+title: "Session 5 — Logistic Regression"
+subtitle: "Odds · why we exponentiate · likelihood · pseudo-R² · ROC · OR vs PR · Topic 8 · Lab 5"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+cc <- ncd |> drop_na(htn, salt_g, age, bmi, waist, sex, residence, education, tobacco, alcohol, phys_act)
+m_crude <- glm(htn ~ salt_g, data = cc, family = binomial)
+m_adj   <- glm(htn ~ salt_g + age + bmi + sex + residence + education + tobacco + alcohol + phys_act,
+               data = cc, family = binomial)
+b_salt  <- coef(m_adj)[["salt_g"]]
+prev    <- mean(ncd$htn)
+```
+
+## Where we are
+
+::: {.incremental}
+- Sessions 2–4: **continuous** outcome → linear regression
+- Today: **binary** outcome (hypertension yes/no) → **logistic regression**
+- By the end you can:
+  - explain **odds, log-odds** and **why we exponentiate** β into an OR
+  - build crude and adjusted ORs with CIs
+  - compare models by **likelihood ratio test** and **AIC**; read **pseudo-R²** honestly
+  - judge **calibration** and **discrimination** (Hosmer–Lemeshow, ROC/AUC)
+  - know when the **OR overstates** the prevalence ratio
+:::
+
+# A binary outcome {background-color="#2C3E50"}
+
+## Hypertension in our survey
+
+```{r}
+ncd |> count(htn_f) |> mutate(percent = round(100 * n / sum(n), 1))
+```
+
+::: {.fragment}
+**`r round(100 * prev)`%** of adults are hypertensive — a **common** outcome. (Remember this for the OR vs PR discussion.)
+:::
+
+## Why not just use linear regression?
+
+```{r}
+lpm <- lm(htn ~ age + salt_g + bmi + sex, data = cc)     # "linear probability model"
+range(fitted(lpm))
+sum(fitted(lpm) < 0)                                      # people with a negative "probability"
+```
+
+::: {.fragment}
+::: {.bad}
+Fit a straight line to a 0/1 outcome and some people get a **negative "probability"**.
+:::
+:::
+
+## A straight line leaves the 0–1 range
+
+```{r}
+#| echo: false
+#| fig-height: 4.2
+tibble(age = 15:90) |>
+  mutate(p = predict(lm(htn ~ age, cc), pick(age))) |>
+  ggplot(aes(age, p)) +
+  geom_line(colour = col_red, linewidth = 1.3) +
+  geom_hline(yintercept = c(0, 1), linetype = "dashed") +
+  scale_y_continuous(limits = c(-.5, 1.5)) +
+  labs(x = "Age (years)", y = "'Probability' of hypertension")
+```
+
+## Three problems with a straight line for a 0/1 outcome
+
+| Problem | Why |
+|---|---|
+| **Impossible predictions** | A line is unbounded: probabilities fall below 0 or above 1 |
+| **Non-constant variance** | The variance of a 0/1 outcome is p(1 − p): it depends on the mean |
+| **Non-normal errors** | Residuals can only take two values per fitted value |
+
+::: {.fragment}
+::: {.key}
+**Idea:** model a *transformation* of the probability that **can** take any value from −∞ to +∞ — the **log-odds**.
+:::
+:::
+
+# Probability → odds → log-odds {background-color="#2C3E50"}
+
+## Three ways to express the same risk
+
+::: {.eq .small}
+odds = p ÷ (1 − p)
+
+log-odds = ln(odds) = ln [ p ÷ (1 − p) ]
+:::
+
+```{r}
+tibble(probability = c(.10, .25, .32, .50, .75, .90)) |>
+  mutate(odds = round(probability / (1 - probability), 2),
+         `log-odds` = round(log(odds), 2))
+```
+
+::: {.fragment}
+**Worked example:** our prevalence is 32% → odds = 0.32 ÷ 0.68 = **0.47** ("about 1 hypertensive for every 2 non-hypertensive") → log-odds = ln 0.47 = **−0.75**.
+:::
+
+## The logit scale is unbounded and symmetric
+
+```{r}
+#| echo: false
+#| fig-height: 4.3
+tibble(logodds = seq(-6, 6, .05)) |>
+  mutate(p = plogis(logodds)) |>
+  ggplot(aes(logodds, p)) +
+  geom_line(colour = col_red, linewidth = 1.4) +
+  geom_hline(yintercept = c(0, 1), linetype = "dashed") +
+  geom_vline(xintercept = 0, linetype = "dotted") +
+  annotate("text", x = .2, y = .15, hjust = 0, label = "log-odds 0 = odds 1\n= probability 50%", size = 5) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(x = "log-odds (can be any number)", y = "probability (always 0–100%)")
+```
+
+## A 2×2 example: age and hypertension
+
+```{r}
+tab <- ncd |> count(age50, htn_f) |> pivot_wider(names_from = htn_f, values_from = n)
+tab <- tab |> mutate(risk = round(HTN / (HTN + `No HTN`), 3), odds = round(HTN / `No HTN`, 3))
+tab
+c(OR = tab$odds[2] / tab$odds[1], PR = tab$risk[2] / tab$risk[1]) |> round(2)
+```
+
+::: {.fragment}
+Among **50+** the odds are **`r tab$odds[2]`**, among **<50** **`r tab$odds[1]`**: **OR = `r round(tab$odds[2]/tab$odds[1], 1)`**. The prevalence ratio is only **`r round(tab$risk[2]/tab$risk[1], 1)`**. Keep this gap in mind.
+:::
+
+# The model {background-color="#2C3E50"}
+
+## The logistic regression equation
+
+::: {.eq}
+logit(p) = ln [ p ÷ (1 − p) ] = β~0~ + β~1~x~1~ + β~2~x~2~ + …
+:::
+
+::: {.incremental}
+- The **right side** is just like linear regression
+- The **left side** is the **log-odds** of the outcome
+- Solve for the probability: **p = 1 ÷ (1 + exp[ −(β~0~ + β~1~x~1~ + …) ])** — always between 0 and 1
+- Coefficients are estimated by **maximum likelihood**, not least squares
+:::
+
+## Fitting it: `glm(family = binomial)`
+
+```{r}
+m_crude <- glm(htn ~ salt_g, data = cc, family = binomial)
+summary(m_crude)$coefficients |> round(3)
+```
+
+::: {.fragment}
+β for salt = **`r round(coef(m_crude)[["salt_g"]], 2)`** — a change in **log-odds** per g/day. Not yet something a clinician can use: next we convert it.
+:::
+
+## The S-shaped curve
+
+```{r}
+#| fig-height: 4.2
+ggplot(cc, aes(salt_g, htn)) +
+  geom_jitter(height = .03, alpha = .25, colour = col_blue) +
+  geom_smooth(method = "glm", method.args = list(family = binomial), colour = col_red, formula = y ~ x) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(x = "Salt intake (g/day)", y = "Probability of hypertension")
+```
+
+# Why we exponentiate β {background-color="#2C3E50"}
+
+## Step 1 — the model speaks in log-odds
+
+::: {.eq}
+ln [ odds(x) ] = β~0~ + β~1~ x
+:::
+
+β~1~ is the change in **log-odds** for a **one-unit** increase in x. We want a **ratio of odds**, so compare the model at **x + 1** and at **x**.
+
+## Step 2 — compare x + 1 with x
+
+::: {.eq .small}
+ln [ odds(x + 1) ] = β~0~ + β~1~ (x + 1) = β~0~ + β~1~x + β~1~
+:::
+
+::: {.fragment}
+::: {.eq .small}
+ln [ odds(x + 1) ] − ln [ odds(x) ] = (β~0~ + β~1~x + β~1~) − (β~0~ + β~1~x) = **β~1~**
+:::
+:::
+
+::: {.fragment}
+::: {.eq .small}
+ln [ odds(x + 1) ÷ odds(x) ] = β~1~
+:::
+:::
+
+::: {.fragment}
+::: {.eq}
+OR = odds(x + 1) ÷ odds(x) = **e^β~1~^**
+:::
+:::
+
+::: {.notes}
+The β0 and the x terms cancel: that is why the OR for a one-unit change does not depend on the starting value of x, nor on the other covariates (they cancel as well). A difference in logs is the log of a ratio; exponentiate both sides to undo the log.
+:::
+
+## Step 3 — a worked number from our model
+
+```{r}
+b_salt <- coef(m_adj)[["salt_g"]]
+c(beta = b_salt, OR_per_1g = exp(b_salt), OR_per_5g = exp(5 * b_salt), same_as = exp(b_salt)^5) |> round(3)
+```
+
+::: {.incremental}
+- β = **`r round(b_salt, 3)`** → **OR per g/day = e^`r round(b_salt, 3)` = `r round(exp(b_salt), 2)`**
+- Per **5 g/day**: e^(5 × β) = `r round(exp(5*b_salt), 2)` — ORs **multiply**, they do not add
+- "Each extra 1 g/day multiplies the **odds** of hypertension by **`r round(exp(b_salt), 2)`**, holding the other variables constant"
+:::
+
+## Check it directly with two different people
+
+```{r}
+profile <- tibble(age = c(35, 35, 62, 62), sex = factor(c("Female", "Female", "Male", "Male"), levels(cc$sex)),
+                  salt_g = c(8, 9, 8, 9), bmi = c(22, 22, 29, 29),
+                  residence = factor("Rural", levels(cc$residence)), education = factor("Primary", levels(cc$education)),
+                  tobacco = factor("No", levels(cc$tobacco)), alcohol = factor("No", levels(cc$alcohol)),
+                  phys_act = factor("low", levels(cc$phys_act)))
+p <- predict(m_adj, profile, type = "response"); odds <- p / (1 - p)
+c(young_woman = odds[2] / odds[1], older_man = odds[4] / odds[3]) |> round(3)
+```
+
+::: {.fragment}
+Whatever the person's other characteristics, 8 → 9 g/day multiplies the odds by **exactly e^β = `r round(exp(b_salt), 3)`**. The **probability** change differs by person; the **OR does not**.
+:::
+
+## Confidence intervals: exponentiate the limits too
+
+```{r}
+ci_log <- confint(m_adj)["salt_g", ]                       # profile-likelihood CI on the log-odds scale
+rbind(`log-odds (β)` = c(est = b_salt, ci_log), `odds ratio` = exp(c(est = b_salt, ci_log))) |> round(3)
+```
+
+::: {.incremental}
+- CI for β is built on the **log scale**, where it is (approximately) symmetric
+- Exponentiating each limit gives the CI for the OR: **`r round(exp(b_salt), 2)` (`r round(exp(ci_log[1]), 2)` to `r round(exp(ci_log[2]), 2)`)**
+- Because *exp* stretches the right side more, the **OR CI is asymmetric** around the estimate
+:::
+
+## Symmetric on the β scale, asymmetric on the OR scale
+
+```{r}
+#| output-location: slide
+bind_rows(
+  tidy(m_adj, conf.int = TRUE, conf.level = .95) |> mutate(scale = "log-odds (β)"),
+  tidy(m_adj, conf.int = TRUE, exponentiate = TRUE) |> mutate(scale = "odds ratio (OR)")) |>
+  filter(term %in% c("sexMale", "alcoholYes", "salt_g")) |>
+  mutate(scale = fct_inorder(scale), null = if_else(scale == "odds ratio (OR)", 1, 0)) |>
+  ggplot(aes(estimate, term)) +
+  geom_vline(aes(xintercept = null), linetype = "dashed", colour = col_red) +
+  geom_pointrange(aes(xmin = conf.low, xmax = conf.high), colour = col_navy) +
+  facet_wrap(~ scale, scales = "free_x") +
+  labs(x = NULL, y = NULL, caption = "Dashed line = no effect: β = 0 on the left, OR = 1 on the right")
+```
+
+## Why OR = 1 corresponds to β = 0
+
+::: {.eq}
+e^0^ = 1  ⇒  β = 0  ⇔  OR = 1
+:::
+
+::: {.incremental}
+- OR = 1 means **no change in the odds** — no association
+- A CI for the OR that **includes 1** is the same as a CI for β that **includes 0** → not significant at 5%
+- OR **> 1** = higher odds; OR **< 1** = lower odds (**β > 0 / β < 0**)
+:::
+
+## Crude vs adjusted ORs
+
+```{r}
+#| output-location: slide
+t_crude <- cc |> select(htn, salt_g, age, bmi, sex, residence, education, tobacco, alcohol, phys_act) |>
+  tbl_uvregression(method = glm, y = htn, method.args = list(family = binomial), exponentiate = TRUE)
+t_adj <- tbl_regression(m_adj, exponentiate = TRUE)
+tbl_merge(list(t_crude, t_adj), tab_spanner = c("**Crude**", "**Adjusted**"))
+```
+
+::: {.notes}
+Compare crude and adjusted: salt 1.46 → 1.24; education gradient disappears; physical activity appears only after adjustment (high activity OR about 0.57) — a first warning against screening variables by crude p-value (Session 6).
+:::
+
+## Reading an OR, its CI and its p-value
+
+::: {.columns}
+::: {.column width="50%"}
+::: {.key}
+**Salt:** adjusted OR **`r round(exp(b_salt), 2)`** (95% CI `r round(exp(ci_log[1]), 2)`–`r round(exp(ci_log[2]), 2)`), p < 0.001
+:::
+
+::: {.incremental}
+- **Direction:** OR > 1 → higher odds with more salt
+- **Size:** 24% higher odds per g/day; ≈ 3× per 5 g/day
+- **Precision:** CI excludes 1
+:::
+:::
+::: {.column width="50%"}
+::: {.key}
+**Sex:** adjusted OR **`r round(exp(coef(m_adj)[["sexMale"]]), 1)`** for men vs women (reference)
+:::
+
+::: {.warn}
+An OR is a ratio of **odds**, not a ratio of **risks**. For a common outcome, "twice the odds" is **not** "twice as likely" (see later).
+:::
+:::
+:::
+
+# Likelihood-based assessment {background-color="#2C3E50"}
+
+## Likelihood: how probable were the data we saw?
+
+```{r}
+p_hat <- c(0.8, 0.3, 0.2)       # model's predicted P(hypertension) for 3 people
+y     <- c(1,   0,   0)         # what actually happened
+per_person <- ifelse(y == 1, p_hat, 1 - p_hat)
+per_person
+c(likelihood = prod(per_person), log_likelihood = sum(log(per_person)), deviance = -2 * sum(log(per_person))) |> round(3)
+```
+
+::: {.incremental}
+- **Likelihood** = product of the probabilities the model gave to what really happened
+- **Log-likelihood** = its logarithm (easier arithmetic; always ≤ 0; **closer to 0 = better fit**)
+- **Deviance** = −2 × log-likelihood (relative to a perfect model): **smaller = better fit**
+:::
+
+## Maximum likelihood: the peak of the curve
+
+```{r}
+#| output-location: slide
+bhat <- coef(m_crude)[["salt_g"]]
+prof <- tibble(b = seq(bhat - .3, bhat + .3, length.out = 100)) |>
+  mutate(ll = map_dbl(b, \(b) as.numeric(logLik(glm(htn ~ 1 + offset(b * salt_g), data = cc, family = binomial)))))
+ci <- confint(m_crude)["salt_g", ]
+
+ggplot(prof, aes(b, ll)) +
+  geom_line(colour = col_navy, linewidth = 1.2) +
+  geom_hline(yintercept = max(prof$ll) - qchisq(.95, 1) / 2, linetype = "dashed", colour = col_red) +
+  geom_vline(xintercept = c(bhat, ci), linetype = c("solid", "dotted", "dotted"), colour = col_blue) +
+  labs(x = "candidate β for salt (log-odds per g/day)", y = "log-likelihood",
+       caption = "Peak = maximum-likelihood estimate · red line = 1.92 below the peak → the 95% CI")
+```
+
+::: {.notes}
+Each point on the curve is the log-likelihood if the true salt β were that value (intercept re-optimised). The estimate sits at the peak. Values whose log-likelihood is within 1.92 of the peak (half of the chi-square 3.84 cut-off) form the likelihood-based 95% CI — this is what `confint()` uses.
+:::
+
+## Deviance and log-likelihood in R
+
+```{r}
+tibble(model = c("intercept only", "salt only", "adjusted"),
+       logLik   = c(logLik(glm(htn ~ 1, binomial, cc)), logLik(m_crude), logLik(m_adj)),
+       deviance = c(deviance(glm(htn ~ 1, binomial, cc)), deviance(m_crude), deviance(m_adj)),
+       params   = c(1, 2, length(coef(m_adj)))) |> mutate(across(c(logLik, deviance), ~ round(.x, 1)))
+```
+
+::: {.fragment}
+More predictors → higher log-likelihood and **lower deviance**. The question is whether the improvement is **more than chance** — that is the likelihood ratio test.
+:::
+
+## Likelihood ratio test (LRT) for nested models {.smaller}
+
+::: {.key}
+**H₀:** the extra coefficients are all zero.  **Test statistic = 2 × (logLik~big~ − logLik~small~)** ~ χ² with df = number of extra parameters.
+:::
+
+```{r}
+m_small <- glm(htn ~ age + sex, data = cc, family = binomial)
+m_big   <- glm(htn ~ age + sex + salt_g + bmi + tobacco + alcohol + phys_act, data = cc, family = binomial)
+anova(m_small, m_big, test = "LRT")
+lmtest::lrtest(m_small, m_big)
+```
+
+## Why LRT rather than Wald for comparing models
+
+::: {.columns}
+::: {.column width="50%"}
+::: {.incremental}
+- **Multi-df terms**: education has 3 dummies — Wald gives 3 separate p-values; the LRT asks **"does education matter at all?"** once
+- **Small samples / big effects**: Wald can be unreliable (Hauck–Donner)
+- LRT is **invariant to re-parameterisation**; Wald is not
+:::
+:::
+::: {.column width="50%"}
+```{r}
+drop1(m_adj, test = "LRT") |> as.data.frame() |>
+  rownames_to_column("term") |> select(term, Df, AIC, LRT, `Pr(>Chi)`) |>
+  mutate(across(where(is.numeric), ~ signif(.x, 3)))
+```
+:::
+:::
+
+::: {.notes}
+drop1 refits the model without each term: one LRT per term including the 3-df education and 2-df physical activity terms.
+:::
+
+## AIC: comparing models that are not nested
+
+```{r}
+m_bmi   <- glm(htn ~ age + sex + bmi,   data = cc, family = binomial)
+m_waist <- glm(htn ~ age + sex + waist, data = cc, family = binomial)
+AIC(m_bmi, m_waist)
+```
+
+::: {.incremental}
+- **AIC = −2 log-likelihood + 2 × (number of parameters)** — fit, penalised for complexity
+- **Lower is better**; a difference **< 2** means essentially no preference
+- Works for **non-nested** comparisons (BMI vs waist) where an LRT cannot
+- Always compare on the **same rows** (watch missing data!)
+:::
+
+# Pseudo-R² {background-color="#2C3E50"}
+
+## Three pseudo-R² measures
+
+```{r}
+r2(m_adj)                       # for logistic models r2() reports Tjur's R2
+tibble(measure = c("McFadden", "Nagelkerke", "Tjur"),
+       value   = c(r2_mcfadden(m_adj)$R2[[1]], r2_nagelkerke(m_adj)[[1]], r2_tjur(m_adj)[[1]])) |>
+  mutate(value = round(value, 2))
+```
+
+::: {.warn}
+Three **different** numbers for one model — because they are **different things**.
+:::
+
+## How to use (and not use) pseudo-R²
+
+::: {.columns}
+::: {.column width="50%"}
+::: {.bad}
+**Not**
+
+- the same as linear R²
+- "% of variance explained"
+- comparable across datasets or with R² from `lm()`
+:::
+:::
+::: {.column width="50%"}
+::: {.good}
+**Do**
+
+- remember their values **run low** (a McFadden of 0.2–0.4 is already a very good fit)
+- report **one** descriptively, naming it
+- compare models with **LRT / AIC** instead
+:::
+:::
+:::
+
+## Tjur's R² has a picture
+
+```{r}
+#| echo: false
+#| fig-height: 3.8
+cc |> mutate(p_hat = fitted(m_adj)) |>
+  ggplot(aes(htn_f, p_hat, fill = htn_f)) +
+  geom_boxplot(show.legend = FALSE, alpha = .7) +
+  stat_summary(fun = mean, geom = "point", size = 4, shape = 18, show.legend = FALSE) +
+  scale_fill_manual(values = c(col_blue, col_red)) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(x = "Observed", y = "Predicted probability")
+```
+
+::: {.fragment}
+Tjur's R² ≈ the **gap between the mean predicted probability** in people with and without the outcome. Handy — but still only descriptive.
+:::
+
+# Calibration and discrimination {background-color="#2C3E50"}
+
+## Two different questions
+
+::: {.columns}
+::: {.column width="50%"}
+::: {.key}
+**Calibration**
+
+If the model says "30% risk", do **about 30%** of such people actually have hypertension?
+:::
+:::
+::: {.column width="50%"}
+::: {.key}
+**Discrimination**
+
+Does the model give **higher predicted risk to people who have** hypertension than to those who do not?
+:::
+:::
+:::
+
+## Calibration plot: predicted vs observed
+
+```{r}
+#| output-location: slide
+cal <- cc |> mutate(p_hat = fitted(m_adj), decile = ntile(p_hat, 10)) |>
+  group_by(decile) |> summarise(predicted = mean(p_hat), observed = mean(htn), .groups = "drop")
+
+ggplot(cal, aes(predicted, observed)) +
+  geom_abline(linetype = "dashed", colour = col_red) +
+  geom_line(colour = col_navy) + geom_point(size = 3, colour = col_navy) +
+  coord_equal(xlim = c(0, 1), ylim = c(0, 1)) +
+  labs(x = "Mean predicted risk (decile of risk)", y = "Observed proportion with hypertension")
+```
+
+## Hosmer–Lemeshow test
+
+```{r}
+performance_hosmer(m_adj, n_bins = 10)
+```
+
+::: {.columns}
+::: {.column width="50%"}
+::: {.good}
+**p > 0.05** → no evidence of poor calibration
+:::
+:::
+::: {.column width="50%"}
+::: {.warn}
+**Limitations:** depends on the number of bins; low power in small samples, over-sensitive in huge ones; a single p-value does not show **where** the model fails. **Prefer the calibration plot.**
+:::
+:::
+:::
+
+## ROC curve and AUC
+
+```{r}
+#| output-location: slide
+cc$p_hat <- fitted(m_adj)
+roc_obj  <- roc(cc$htn, cc$p_hat, quiet = TRUE)
+
+ggroc(roc_obj, colour = col_red, linewidth = 1.3) +
+  geom_abline(intercept = 1, slope = 1, linetype = "dashed") +
+  annotate("text", x = .45, y = .25, size = 6, hjust = 0,
+           label = paste0("AUC = ", round(auc(roc_obj), 2))) +
+  labs(x = "Specificity", y = "Sensitivity")
+```
+
+## Interpreting the AUC
+
+```{r}
+auc(roc_obj)
+ci.auc(roc_obj)
+```
+
+::: {.incremental}
+- **AUC** = probability that a **randomly chosen hypertensive** gets a **higher predicted risk** than a **randomly chosen normotensive**
+- 0.5 = coin toss · 0.7–0.8 acceptable · 0.8–0.9 good · > 0.9 excellent
+- Ours: **`r round(auc(roc_obj), 2)`** (95% CI `r paste(round(ci.auc(roc_obj)[c(1,3)], 2), collapse = "–")`)
+:::
+
+## A cut-off, and a caution
+
+```{r}
+coords(roc_obj, "best", ret = c("threshold", "sensitivity", "specificity"), best.method = "youden") |> round(2)
+```
+
+::: {.incremental}
+- The "best" threshold depends on purpose: **screening** (favour sensitivity) vs **confirmation** (favour specificity)
+- AUC from the same data that fitted the model is **optimistic** — validate (new sample, cross-validation, bootstrap)
+- Good discrimination does **not** guarantee good calibration, and vice-versa
+:::
+
+# OR vs prevalence ratio {background-color="#2C3E50"}
+
+## The OR overstates the PR when the outcome is common
+
+```{r}
+risk <- tab$risk; or <- (risk[2] / (1 - risk[2])) / (risk[1] / (1 - risk[1])); pr <- risk[2] / risk[1]
+c(prevalence_50plus = risk[2], prevalence_under50 = risk[1], PR = pr, OR = or) |> round(2)
+```
+
+::: {.fragment}
+::: {.bad}
+"50+ year-olds have **`r round(or, 1)` times the odds**" is true — but "**`r round(or, 1)` times as likely**" is **wrong**. They are **`r round(pr, 1)` times as likely**.
+:::
+:::
+
+## Why: the gap grows with baseline risk
+
+```{r}
+#| echo: false
+#| fig-height: 4
+tibble(p0 = seq(.01, .45, .005)) |>
+  mutate(p1 = pmin(.99, 2 * p0), OR = (p1 / (1 - p1)) / (p0 / (1 - p0))) |>
+  ggplot(aes(p0, OR)) +
+  geom_line(colour = col_red, linewidth = 1.3) +
+  geom_hline(yintercept = 2, linetype = "dashed") +
+  scale_x_continuous(labels = scales::percent) +
+  annotate("text", x = .25, y = 1.6, hjust = 0, label = "dashed line = true PR of 2", size = 5) +
+  labs(x = "Baseline prevalence (unexposed)", y = "OR when the true PR is 2")
+```
+
+::: {.fragment}
+OR ≈ PR only when the outcome is **rare (< ~10%)**. With ~32% prevalence, the OR is far from the PR.
+:::
+
+## Getting a prevalence ratio: Poisson with robust SE
+
+```{r}
+m_pr <- glm(htn ~ age50, data = ncd, family = poisson)
+m_or <- glm(htn ~ age50, data = ncd, family = binomial)
+robust_vcov <- sandwich::vcovHC(m_pr, type = "HC0")
+
+tibble(measure  = c("OR (logistic)", "PR (Poisson, robust SE)"),
+       estimate = exp(c(coef(m_or)[[2]], coef(m_pr)[[2]])),
+       lower    = exp(c(confint.default(m_or)[2, 1], coefci(m_pr, vcov. = robust_vcov)[2, 1])),
+       upper    = exp(c(confint.default(m_or)[2, 2], coefci(m_pr, vcov. = robust_vcov)[2, 2]))) |>
+  mutate(across(where(is.numeric), ~ round(.x, 2)))
+```
+
+::: {.incremental}
+- **Poisson with robust (sandwich) SE** gives a valid PR for a binary outcome
+- **Log-binomial** (`glm(family = binomial(link = "log"))`) gives the PR directly but can **fail to converge** — try it, fall back to Poisson-robust
+- Adjusted PRs work the same way (add covariates)
+:::
+
+## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `regression-workshop/labs/lab5_logistic.R`
+
+- `glm(family = binomial)` · exponentiated ORs and CIs · crude vs adjusted tables
+- **LR test** between nested models · **AIC** · **pseudo-R²**
+- **Hosmer–Lemeshow** · **ROC/AUC** · **OR vs PR**
+:::
+
+**Time:** 45 minutes · answer Q1–Q6 in the comments
+
+## Self-check quiz (1/6) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q1", "Why is ordinary linear regression a poor choice for a 0/1 outcome?",
+         c("It cannot include more than one predictor", "Predicted 'probabilities' can fall below 0 or above 1, and the variance is not constant",
+           "It needs a larger sample size", "It only works with categorical predictors"), answer = 2,
+         explain = "A straight line is unbounded and the variance of a binary outcome depends on its mean. Logistic regression models the log-odds, which is unbounded.")
+```
+
+## Self-check quiz (2/6) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q2", "In a logistic model the coefficient for salt is β = 0.21, so e^β = 1.24. Which is the correct interpretation?",
+         c("Each extra g/day of salt raises the probability of hypertension by 24 percentage points",
+           "Each extra g/day of salt multiplies the odds of hypertension by 1.24, other variables held constant",
+           "24% of hypertension is due to salt",
+           "People eating more salt are 1.24 times as likely to be hypertensive"), answer = 2,
+         explain = "exp(β) is the odds ratio for a one-unit increase: odds(x+1)/odds(x) = e^β. It is a ratio of ODDS, not of probabilities or risks.")
+```
+
+## Self-check quiz (3/6) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q3", "Which statement about pseudo-R² (McFadden, Nagelkerke, Tjur) is TRUE?",
+         c("It is the percentage of variance in the outcome explained by the model",
+           "Different pseudo-R² measures give the same value for a given model",
+           "It is not interpreted like linear R²; use it descriptively and compare models with LRT or AIC",
+           "A value below 0.5 means the model is useless"), answer = 3,
+         explain = "Pseudo-R² values are on different scales, run low (McFadden 0.2–0.4 is already excellent) and are not 'variance explained'. Likelihood-based comparison is better.")
+```
+
+## Self-check quiz (4/6) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q4", "Prevalence of hypertension is 16% in people under 50 and 50% in those 50+ (OR ≈ 5.1, PR ≈ 3.1). What is the best statement?",
+         c("People aged 50+ are 5 times as likely to be hypertensive",
+           "People aged 50+ are about 3 times as likely; the OR exaggerates because the outcome is common",
+           "The OR and PR are always identical",
+           "The PR is only valid for rare diseases"), answer = 2,
+         explain = "For a common outcome the OR is further from 1 than the PR. Quote the PR (Poisson with robust SE or log-binomial) when you mean 'times as likely'.")
+```
+
+## Self-check quiz (5/6) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_fill("s5q5", "Lab 5, Task 3: which argument (set to `TRUE`) made `tidy()` return odds ratios instead of log-odds?",
+          accept = c("exponentiate", "exponentiate = TRUE", "exponentiate=TRUE"),
+          explain = "`exponentiate = TRUE` applies exp() to the estimates and to the confidence limits (also in `tbl_regression()`).")
+```
+
+## Self-check quiz (6/6) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_fill("s5q6", "Lab 5, Task 5: in `anova(m_small, m_big, test = ...)`, what value gives the likelihood ratio test? (3–4 letters)",
+          accept = c("LRT", "\"LRT\"", "'LRT'", "Chisq", "\"Chisq\""),
+          explain = "`test = \"LRT\"` (equivalent to \"Chisq\" for a glm) compares nested models by deviance. It is preferred to Wald p-values when comparing models, especially for multi-df terms.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- Logistic regression models the **log-odds**; **e^β = odds ratio**, CI limits exponentiated; **OR = 1 ⇔ β = 0**
+- **Likelihood** drives assessment: compare nested models by **LRT**, others by **AIC**
+- **Pseudo-R²** is descriptive, not "variance explained"
+- **Calibration** (plot > Hosmer–Lemeshow) and **discrimination** (AUC) answer different questions
+- For common outcomes, the **OR overstates the PR** — report the PR if you mean "times as likely"
+:::
+
+**Next:** Session 6 — interpreting and reporting
