@@ -1,6 +1,6 @@
 ## 1. Concept
 
-**Regression Campus** is a regression-only game website for community-medicine residents and faculty who already have **basic-to-moderate R**. It is not a course with a game bolted on; it is a place you *play in*: a map of worlds, a skill tree that shows what you can and cannot do yet, case files that feel like real thesis problems, an arcade for quick drills, and a lab bench where you run real R.
+**The game** (working title; name pending) is a website for learning **medical statistics in R**, for community-medicine residents and faculty who already have **basic-to-moderate R**. It is organised into **tracks** (Track 1 = Regression, others planned: comparing groups, epidemiological measures, study design and sample size, surveys, evidence synthesis, reporting). It is not a course with a game bolted on; it is a place you *play in*: a map of worlds, a skill tree that shows what you can and cannot do yet, case files that feel like real thesis problems, an arcade for quick drills, and a lab bench where you run real R.
 
 | Design goal | How the site delivers it |
 |---|---|
@@ -18,10 +18,11 @@
 ## 2. Information architecture
 
 ```
-Regression Campus
+The game (name pending)
 ├── 🏠 Campus (home)            today's plan, streak, daily review, continue, news
 ├── 🌳 Skill tree               ~70 skills in 16 branches; mastery levels; "what next?"
-├── 🗺️ Quests (worlds 1–16)     briefing → levels → boss        (guided path)
+├── 🧭 Tracks                   Regression (live) · Comparing groups · Epi measures · …
+├── 🗺️ Quests (worlds)          briefing → levels → boss        (guided path, per track)
 ├── 📁 Case files               branching thesis scenarios       (judgement)
 ├── 🕹️ Arcade                   short repeatable drills          (fluency)
 ├── 🧪 R Lab bench              downloadable labs + result-code check (real R)
@@ -42,7 +43,7 @@ Regression Campus
 
 ```
 ┌───────────────────────────────────────────────────────────────────────────┐
-│ 🧭 Regression Campus   🔥 5-day streak  ⭐ 640 XP  Epidemiologist ▓▓▓░  🏅 9 │
+│ 🧭 [Game name]         🔥 5-day streak  ⭐ 640 XP  Epidemiologist ▓▓▓░  🏅 9 │
 ├───────────────────────────────────────────────────────────────────────────┤
 │  Welcome back, Dr. A.            [ ▶ Continue: World 3 · Confounding Caves ]│
 │                                                                           │
@@ -311,7 +312,7 @@ Object exists and has the right class/formula; estimates within tolerance (relat
 | Skills | `skills.json` | one file | Graph check: acyclic, every skill has ≥ 8 items across ≥ 2 modes |
 | Datasets | `make_data_*.R` | scripts | Feature checks must pass |
 
-**Content targets by end of Phase 5:** 70 skills · ≥ 8 items each (≈ 600 items) · 12 case files · 12 arcade games · 16 quests · 16 hybrid labs · 2 parallel test forms per world.
+**Content targets by end of Phase 5 (Track 1 only):** 70 skills · ≥ 8 items each (≈ 600 items) · 12 case files · 12 arcade games · 16 quests · 16 hybrid labs · 2 parallel test forms per world.
 
 ---
 
@@ -323,7 +324,7 @@ Object exists and has the right class/formula; estimates within tolerance (relat
 * **Arcade generators:** plots pre-generated as SVG/PNG variants at build time (R) for the first release; client-side generation later for numeric games.
 * **Accessibility:** WCAG 2.2 AA; all interactions keyboard operable; no colour-only cues; reduced-motion honoured; screen-reader labels for tree nodes and drag-like items (button alternatives exist).
 * **Performance budget:** < 150 KB JS, < 60 KB CSS per page; pages usable on low-end phones.
-* **Localisation-ready:** string tables; Hindi as the first translation target; bilingual statistical terms.
+* **English only:** strings kept in one place for maintainability; no translation planned.
 
 ---
 
@@ -356,10 +357,10 @@ Object exists and has the right class/formula; estimates within tolerance (relat
 
 ## 13. Open questions
 
-1. **Name and branding:** "Regression Campus", "Regression Quest", or something department-specific?
-2. **Language scope:** English only at launch, or Hindi alongside from Phase 3?
-3. **Who reviews statistics** before each world ships (named biostatistician sign-off)?
+1. **Name and branding:** pending (must suit *medical statistics in R* and be playful; not regression-specific). Shortlist in the project notes.
+2. ~~Language scope~~ **Decided: English only.**
+3. ~~Who reviews statistics~~ **Decided: the author (community-medicine faculty)**; optional external statistician check before wide release.
 4. **Pilot cohort:** which residents/department, and when can a first cohort test Worlds 1–2 and the pre/post forms?
-5. **Credentialing:** is a completion certificate wanted? (That pushes accounts and server verification earlier.)
+5. ~~Credentialing~~ **Decided: completion certificate is a later priority** (needs accounts and server verification; Phase 6).
 6. **R environment:** Posit Cloud, local RStudio, or both, for the hybrid labs?
 7. **Dataset licensing:** open-license the simulated datasets and item bank?

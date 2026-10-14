@@ -1,8 +1,17 @@
 ## 1. Vision and principles
 
-**Goal:** turn the one-day *Theory of Regression Analysis* workshop into a **regression-only game website** ("Regression Campus"): a self-paced, gamified, *tested* learning environment that takes an MD (Community Medicine) resident from "I can run `lm()`" to "I can plan, run, check and report the right regression for my thesis", and keeps going into the models the workshop only names.
+**Goal:** turn the one-day *Theory of Regression Analysis* workshop into a **game for learning medical statistics in R** (working title; name pending): a self-paced, gamified, *tested* environment for community-medicine residents and faculty. The platform is organised into **tracks**; **Track 1 is Regression** (the worlds in §3), and further tracks follow (§1.1). Within Regression, a learner goes from "I can run `lm()`" to "I can plan, run, check and report the right regression for my thesis", and on into the models the workshop only names.
 
-**Scope decision (v2):** the site teaches *regression*, not R. Learners are assumed to have **basic-to-moderate R** (import data, tidyverse verbs, simple plots, run a model and read `summary()`). A short **readiness check** (§2.3) routes anyone who is not ready to the repo's existing R Foundations track. The full site design (information architecture, game modes, skill tree, hybrid R labs, state model) is in [Site design](site-design.qmd).
+**Scope decisions (v3):**
+
+* **Platform = medical statistics in R; regression is its first track.** The name and branding must therefore *not* be regression-specific.
+* **R basics are a prerequisite.** Learners are assumed to have basic-to-moderate R (import data, tidyverse verbs, simple plots, run a model and read `summary()`); a short **readiness check** (§2.3) advises anyone who is not ready (it points to the repo's existing R Foundations track).
+* **English only.** It is a coding place; no translation work is planned.
+* **Certificate: later.** Completion certificates are a later-phase priority (Phase 6, with accounts and server verification).
+* **Reviewer:** content and statistics are reviewed by the author (community-medicine faculty); an optional external statistician check can be added before wide release.
+* **Hosting:** static now, accounts later. R practice: hybrid (§7).
+
+The full site design (information architecture, game modes, skill tree, hybrid R labs, state model) is in [Site design](site-design.qmd).
 
 | Principle | What it means in practice |
 |---|---|
@@ -10,14 +19,32 @@
 | **Test what matters** | Interpretation, judgement and error-spotting beat function recall. No "which function does X?" items. |
 | **Honest assessment** | No giveaways: balanced option lengths, no "all of the above", shuffled display, no key-first markup, explanations only after an attempt. Enforced by a linter in CI. |
 | **Real public-health context** | Indian community-medicine scenarios and datasets (NCD survey, TB cohort, dengue counts, NFHS-type surveys). |
-| **Regression only, deeply** | No detours into general R teaching; every minute goes to modelling, interpretation, checking and reporting. |
+| **Depth over breadth, track by track** | No detours into general R teaching; each track goes deep (Track 1: modelling, interpretation, checking and reporting) before the next opens. |
 | **Three ways to practise** | *Quests* (guided path), *Case files* (realistic thesis scenarios with decisions), *Arcade* (short repeatable drills): so mastery comes from varied retrieval, not one pass. |
 | **Real R, hybrid** | Learners also run real R on the project datasets; the game checks results through verifiable codes (no server needed), with in-browser R as an optional later mode. |
 | **Works anywhere** | Static files, offline-capable, no login needed for the core path; optional server features come later. |
 | **Evidence of gain** | Every learner gets a baseline (pre-test) and a parallel post-test; the project measures learning gain, not just completion. |
 | **Reproducible content** | One source of truth per item and per lab; everything built and verified by scripts. |
 
-**Non-goals (for now):** replacing a biostatistician, covering every statistical method, high-stakes certification (that needs proctoring and a server).
+**Non-goals (for now):** replacing a biostatistician, covering every statistical method in the first release, teaching R itself, translations, high-stakes certification (that needs proctoring and a server).
+
+---
+
+### 1.1 Platform tracks
+
+The skill tree and engine are **track-agnostic**: a track is a set of worlds, skills, items, case files and arcade games.
+
+| Track | Focus | Status |
+|---|---|---|
+| **1 · Regression** | Linear, logistic, counts, survival, clusters, surveys, missing data, prediction, causal (Worlds 1–16, §3) | ✅ started (Worlds 1–2 playable) |
+| **2 · Comparing groups** | t-tests, non-parametric tests, chi-square/Fisher, ANOVA, choosing a test, multiple testing, effect sizes | ⬜ planned |
+| **3 · Epidemiological measures** | Risk/odds/rate ratios, attributable fractions, standardisation, confounding by stratification (Mantel–Haenszel), screening metrics | ⬜ planned |
+| **4 · Study design & sample size** | Sampling, power and precision, randomisation, bias catalogue, cluster designs, reporting standards | ⬜ planned |
+| **5 · Survey & health-systems analytics** | Complex surveys, weights, small-area rates, time series for surveillance | ⬜ planned |
+| **6 · Evidence synthesis & diagnostics** | Meta-analysis, heterogeneity, diagnostic accuracy, decision curves | ⬜ planned |
+| **7 · Reproducible reporting** | Quarto, tables/figures, STROBE/CONSORT, thesis workflow | ⬜ planned |
+
+Tracks unlock independently after the readiness check; a learner can start in any track whose prerequisite skills they hold.
 
 ---
 
@@ -300,7 +327,7 @@ Phases 1–5 stay fully static on GitHub Pages. To make accounts a *later add-on
 * **Privacy:** India's DPDP Act 2023 and institutional ethics: explicit consent, data minimisation, pseudonymous IDs, export/delete on request, no health data from learners.
 * **Accessibility:** WCAG 2.2 AA (contrast, focus order, keyboard-only play, screen-reader labels, no colour-only cues), automated axe checks plus manual audit.
 * **Performance and offline:** each page under ~1 MB of JS/CSS; optional PWA for full offline use in low-connectivity settings.
-* **Localisation:** string tables so stems and feedback can be translated (Hindi first, others by demand); keep statistical terms bilingual.
+* **Language:** English only. Keep strings in one place for maintainability, but no translation work is planned.
 * **Mobile first:** all item types operable by touch (order-items need drag + buttons).
 * **Security:** no secrets client-side; CSP headers; never execute learner code outside the sandbox.
 
@@ -347,7 +374,7 @@ regression-quest/
 
 ### 9.4 Statistical correctness review
 
-Every briefing, item and explanation is reviewed by a biostatistician for correctness; numeric answers are *computed in R in the build* (never hand-typed) wherever they depend on data; and any claim about data ("OR 5.1, PR 3.1") is generated from the dataset at render time.
+Every briefing, item and explanation is reviewed by the author (community-medicine faculty) for correctness, with an optional external statistician check before wide release; numeric answers are *computed in R in the build* (never hand-typed) wherever they depend on data; and any claim about data ("OR 5.1, PR 3.1") is generated from the dataset at render time.
 
 ---
 
@@ -367,7 +394,7 @@ Every briefing, item and explanation is reviewed by a biostatistician for correc
 
 ## 11. Phased roadmap
 
-Effort is in person-weeks (PW) for one developer + one content author + part-time statistician review; timelines assume part-time academic capacity and can compress with more people.
+Effort is in person-weeks (PW) for one developer + one content author/reviewer (community-medicine faculty); timelines assume part-time academic capacity and can compress with more people.
 
 ### Phase 0 — Done: foundation (✔)
 * Full-day workshop: 6 decks, 6 labs with solutions, quiz engine, simulated NCD dataset, cheat sheet.
@@ -408,7 +435,7 @@ Effort is in person-weeks (PW) for one developer + one content author + part-tim
 ### Phase 6 — Cohort mode and credentials (Q5–Q6, ~16 PW)
 * Optional sign-in, sync, instructor dashboard, cohort leaderboards (opt-in), xAPI/LTI.
 * Server-side grading and signed attempts for certificates.
-* Localisation (Hindi), PWA/offline bundle, calm mode refinements.
+* **Completion certificate** (needs accounts + server verification), PWA/offline bundle, calm mode refinements.
 * **Exit:** a department runs a full cohort with the dashboard; DPDP/ethics review documented.
 
 ### Phase 7 — Evaluate, publish, sustain (continuous)
@@ -426,7 +453,7 @@ Effort is in person-weeks (PW) for one developer + one content author + part-tim
 | Q3 | Worlds 9–11; analytics; accessibility audit |
 | Q4 | Hybrid R labs (`rqlab`); Worlds 12–14 |
 | Q5 | Causal + capstone; electives start; cohort-mode design |
-| Q6 | Sign-in, dashboard, credentials; localisation; study write-up |
+| Q6 | Sign-in, dashboard, certificate/credentials; study write-up |
 
 ---
 
