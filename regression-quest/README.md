@@ -1,4 +1,6 @@
-# Regression Quest — gamified self-learning path
+# Dungeons & Dataframes — gamified medical statistics in R
+
+Track 1 (Regression) is under construction here.
 
 A gamified, *tested* self-learning copy of the regression workshop. Playable now: **pre-test, World 1, World 2, post-test**, quest map, XP / streak / ranks / badges. Everything else is in [ROADMAP.md](ROADMAP.md) (16 worlds, 9 electives, 7 phases) and the site concept in [SITE_DESIGN.md](SITE_DESIGN.md) (skill tree, case files, arcade, hybrid R labs, state model).
 

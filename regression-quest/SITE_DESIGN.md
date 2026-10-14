@@ -1,6 +1,6 @@
 ## 1. Concept
 
-**The game** (working title; name pending) is a website for learning **medical statistics in R**, for community-medicine residents and faculty who already have **basic-to-moderate R**. It is organised into **tracks** (Track 1 = Regression, others planned: comparing groups, epidemiological measures, study design and sample size, surveys, evidence synthesis, reporting). It is not a course with a game bolted on; it is a place you *play in*: a map of worlds, a skill tree that shows what you can and cannot do yet, case files that feel like real thesis problems, an arcade for quick drills, and a lab bench where you run real R.
+**Dungeons & Dataframes** is a website for learning **medical statistics in R**, for community-medicine residents and faculty who already have **basic-to-moderate R**. It is organised into **tracks** (Track 1 = Regression, others planned: comparing groups, epidemiological measures, study design and sample size, surveys, evidence synthesis, reporting). It is not a course with a game bolted on; it is a place you *play in*: a map of worlds, a skill tree that shows what you can and cannot do yet, case files that feel like real thesis problems, an arcade for quick drills, and a lab bench where you run real R.
 
 | Design goal | How the site delivers it |
 |---|---|
@@ -18,7 +18,7 @@
 ## 2. Information architecture
 
 ```
-The game (name pending)
+Dungeons & Dataframes
 ├── 🏠 Campus (home)            today's plan, streak, daily review, continue, news
 ├── 🌳 Skill tree               ~70 skills in 16 branches; mastery levels; "what next?"
 ├── 🧭 Tracks                   Regression (live) · Comparing groups · Epi measures · …
@@ -43,7 +43,7 @@ The game (name pending)
 
 ```
 ┌───────────────────────────────────────────────────────────────────────────┐
-│ 🧭 [Game name]         🔥 5-day streak  ⭐ 640 XP  Epidemiologist ▓▓▓░  🏅 9 │
+│ 🧭 Dungeons & Dataframes 🔥 5-day streak  ⭐ 640 XP  Epidemiologist ▓▓▓░  🏅 9 │
 ├───────────────────────────────────────────────────────────────────────────┤
 │  Welcome back, Dr. A.            [ ▶ Continue: World 3 · Confounding Caves ]│
 │                                                                           │
@@ -357,7 +357,7 @@ Object exists and has the right class/formula; estimates within tolerance (relat
 
 ## 13. Open questions
 
-1. **Name and branding:** pending (must suit *medical statistics in R* and be playful; not regression-specific). Shortlist in the project notes.
+1. ~~Name~~ **Decided: Dungeons & Dataframes** (D&D pun; tagline: *medical statistics in R, one dungeon at a time*). Not checked for trademark/domain availability.
 2. ~~Language scope~~ **Decided: English only.**
 3. ~~Who reviews statistics~~ **Decided: the author (community-medicine faculty)**; optional external statistician check before wide release.
 4. **Pilot cohort:** which residents/department, and when can a first cohort test Worlds 1–2 and the pre/post forms?

@@ -1,10 +1,10 @@
 ## 1. Vision and principles
 
-**Goal:** turn the one-day *Theory of Regression Analysis* workshop into a **game for learning medical statistics in R** (working title; name pending): a self-paced, gamified, *tested* environment for community-medicine residents and faculty. The platform is organised into **tracks**; **Track 1 is Regression** (the worlds in §3), and further tracks follow (§1.1). Within Regression, a learner goes from "I can run `lm()`" to "I can plan, run, check and report the right regression for my thesis", and on into the models the workshop only names.
+**Goal:** turn the one-day *Theory of Regression Analysis* workshop into a **game for learning medical statistics in R** (**Dungeons & Dataframes**): a self-paced, gamified, *tested* environment for community-medicine residents and faculty. The platform is organised into **tracks**; **Track 1 is Regression** (the worlds in §3), and further tracks follow (§1.1). Within Regression, a learner goes from "I can run `lm()`" to "I can plan, run, check and report the right regression for my thesis", and on into the models the workshop only names.
 
 **Scope decisions (v3):**
 
-* **Platform = medical statistics in R; regression is its first track.** The name and branding must therefore *not* be regression-specific.
+* **Platform = medical statistics in R; regression is its first track.** Name: **Dungeons & Dataframes** (deliberately not regression-specific). Worlds can be presented as *dungeons*.
 * **R basics are a prerequisite.** Learners are assumed to have basic-to-moderate R (import data, tidyverse verbs, simple plots, run a model and read `summary()`); a short **readiness check** (§2.3) advises anyone who is not ready (it points to the repo's existing R Foundations track).
 * **English only.** It is a coding place; no translation work is planned.
 * **Certificate: later.** Completion certificates are a later-phase priority (Phase 6, with accounts and server verification).
