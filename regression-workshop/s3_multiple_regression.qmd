@@ -548,11 +548,11 @@ Red line = full-model β (`r round(coef(m_full)[["alcoholYes"]], 1)`). Alcohol s
 #| echo: false
 #| output: asis
 quiz_mcq("s3q1", "The salt coefficient has p = 0.0003. Which statement is correct?",
-         c("There is a 0.03% chance the null hypothesis is true",
-           "If the true β were 0, data this extreme would occur about 0.03% of the time",
-           "Salt explains 99.97% of the variation in SBP",
-           "The effect is clinically important"), answer = 2,
-         explain = "A p-value is a probability of the DATA given H0 (and the model). It says nothing about effect size or clinical importance.")
+         c("There is a 0.03% chance that the null hypothesis is true",
+           "Data this extreme would be rare if the true β were exactly 0",
+           "Salt explains 99.97% of the variation in systolic pressure",
+           "The effect of salt on blood pressure is clearly clinically important"), answer = 2,
+         explain = "A p-value is the probability of data this extreme IF H0 (and the model) were true. It says nothing about effect size or clinical importance.")
 ```
 
 ## Self-check quiz (2/6) {.smaller}
@@ -561,8 +561,11 @@ quiz_mcq("s3q1", "The salt coefficient has p = 0.0003. Which statement is correc
 #| echo: false
 #| output: asis
 quiz_mcq("s3q2", "The salt β falls from 3.4 (crude) to 1.8 after adjusting for age, BMI and others. What does this mainly suggest?",
-         c("Salt has no effect", "The crude estimate was confounded by those variables", "The model has too many variables", "A calculation error"), answer = 2,
-         explain = "Age and BMI are related to both salt intake and SBP, so part of the crude association was due to them. Adjusting removes (measured) confounding.")
+         c("Salt has no effect on systolic pressure at all",
+           "Part of the crude association was due to confounding",
+           "The adjusted model contains too many variables",
+           "The crude model must have contained a calculation error"), answer = 2,
+         explain = "Age and BMI relate to both salt intake and SBP, so part of the crude association was theirs. Adjusting removes measured confounding.")
 ```
 
 ## Self-check quiz (3/6) {.smaller}
@@ -570,12 +573,12 @@ quiz_mcq("s3q2", "The salt β falls from 3.4 (crude) to 1.8 after adjusting for 
 ```{r}
 #| echo: false
 #| output: asis
-quiz_mcq("s3q3", "In the adjusted model with reference group 'low' activity, the coefficient for `phys_acthigh` is −5.0. Interpretation?",
-         c("High-activity people have 5.0 mmHg lower mean SBP than low-activity people, all else equal",
-           "SBP falls 5.0 mmHg for every extra hour of activity",
-           "High activity lowers SBP by 5% in everyone",
-           "High activity is 5.0 times as common"), answer = 1,
-         explain = "A dummy coefficient is the difference vs the REFERENCE level, holding the other covariates constant. Always name the reference.")
+quiz_mcq("s3q3", "In the adjusted model with low activity as the reference, phys_acthigh = −5.0. What does this mean?",
+         c("Each additional hour of weekly activity lowers a person's SBP by 5.0 mmHg on average",
+           "High-activity adults average 5.0 mmHg less SBP than low-activity ones, others equal",
+           "Physical activity reduces systolic pressure by 5% in everyone who exercises more",
+           "High-activity adults are five times as common as low-activity adults in the sample"), answer = 2,
+         explain = "A dummy coefficient is the difference versus the REFERENCE level, holding the other covariates constant. Always name the reference.")
 ```
 
 ## Self-check quiz (4/6) {.smaller}
@@ -584,9 +587,11 @@ quiz_mcq("s3q3", "In the adjusted model with reference group 'low' activity, the
 #| echo: false
 #| output: asis
 quiz_mcq("s3q4", "Which statement about stepwise (AIC) selection is TRUE?",
-         c("It guarantees the best causal model", "Its final-model CIs and p-values are too optimistic because they ignore the search",
-           "It always picks the same variables in every sample", "It protects against dropping confounders"), answer = 2,
-         explain = "After selection the usual SEs ignore the data-driven search: β are biased away from 0, CIs are too narrow, and the chosen set is unstable.")
+         c("It identifies the model with the most plausible causal structure in the data",
+           "The final p-values and CIs ignore the search, so they look too optimistic",
+           "It tends to pick the same variables in each resample of the dataset",
+           "It can never remove a variable that confounds the exposure-outcome link"), answer = 2,
+         explain = "After selection the usual SEs ignore the data-driven search: estimates are biased away from 0, CIs are too narrow and the chosen set is unstable.")
 ```
 
 ## Self-check quiz (5/6) {.smaller}
@@ -594,9 +599,9 @@ quiz_mcq("s3q4", "Which statement about stepwise (AIC) selection is TRUE?",
 ```{r}
 #| echo: false
 #| output: asis
-quiz_fill("s3q5", "Lab 3, Task 7: which value of `direction` ran selection starting from an intercept-only model and only adding terms?",
-          accept = c("forward", "\"forward\"", "'forward'"),
-          explain = "`direction = \"forward\"` adds terms; `\"backward\"` drops them; `\"both\"` can do either.")
+quiz_fill("s3q5", "An algorithm starts from an intercept-only model, adds the variable that most improves AIC at each step, and stops when none helps. What is this strategy called? (one word)",
+          accept = c("forward", "forward selection"),
+          explain = "Forward selection adds terms; backward elimination starts full and drops terms; stepwise can do both.")
 ```
 
 ## Self-check quiz (6/6) {.smaller}
@@ -604,9 +609,9 @@ quiz_fill("s3q5", "Lab 3, Task 7: which value of `direction` ran selection start
 ```{r}
 #| echo: false
 #| output: asis
-quiz_fill("s3q6", "Lab 3, Task 6: which function changed the reference level of `education`?",
-          accept = c("relevel", "relevel()"),
-          explain = "`relevel(x, ref = \"Graduate+\")` makes a different level the reference; `fct_relevel()` in forcats does the same.")
+quiz_fill("s3q6", "With low activity as reference, phys_actmoderate = −3.4 and phys_acthigh = −5.0. How many mmHg lower is mean SBP in the high group than in the moderate group, all else equal? (1 decimal)",
+          accept = c("1.6", "-1.6", "−1.6"),
+          explain = "Both coefficients are differences from the same reference, so high versus moderate is −5.0 − (−3.4) = −1.6 mmHg.")
 ```
 
 ## Score and take-home

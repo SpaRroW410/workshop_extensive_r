@@ -10,11 +10,13 @@ project:
   # Added here (not in _quarto.yml) so only the regression track renders them.
   render:
     - "regression-workshop/*.qmd"
+    - "regression-quest/*.qmd"
   # Student-facing files only — facilitator solutions are deliberately NOT listed.
   resources:
     - data/ncd_survey.csv
     - regression-workshop/make_data.R
     - regression-workshop/labs/*.R
+    - regression-quest/assets/*
 
 website:
   title: "Data Visualization Workshop — Regression"
@@ -32,6 +34,16 @@ website:
             href: r-foundations/data-wrangling.qmd
       - text: "Regression Analysis"
         href: statistical-analysis/regression.qmd
+      - text: "Regression Quest"
+        menu:
+          - text: "🗺️ Quest map (start here)"
+            href: regression-quest/index.qmd
+          - text: "Pre-test (baseline)"
+            href: regression-quest/pretest.qmd
+          - text: "Post-test (growth)"
+            href: regression-quest/posttest.qmd
+          - text: "Roadmap"
+            href: regression-quest/roadmap.qmd
       - text: "Regression Workshop"
         menu:
           - text: "Session 1 — Foundations"

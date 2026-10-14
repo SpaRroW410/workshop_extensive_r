@@ -1,0 +1,35 @@
+---
+title: "Pre-test · Baseline check"
+subtitle: "12 questions across the core topics. No feedback while you answer."
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-lesson}
+This baseline is **not graded**. Answer from what you know; rate your confidence honestly. Your skill breakdown shows which worlds to prioritise, and your post-test later shows your gain. Order of options is shuffled every time.
+:::
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(sprintf("pre-%02d", 1:12), ITEMS, test = "pre")
+```

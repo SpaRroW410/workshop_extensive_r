@@ -358,8 +358,11 @@ quiz_mcq("s1q1", "A study asks: *Is tobacco use (yes/no) associated with having 
 #| echo: false
 #| output: asis
 quiz_mcq("s1q2", "Time from starting TB treatment to death, with some patients lost to follow-up (censored). Which model?",
-         c("Linear regression", "Ordinal logistic", "Cox proportional hazards", "Multinomial logistic"), answer = 3,
-         explain = "Time-to-event data with censoring → Cox regression.")
+         c("Linear regression",
+           "Poisson regression",
+           "Cox regression",
+           "Ordinal logistic"), answer = 3,
+         explain = "Time-to-event data with censoring call for Cox regression.")
 ```
 
 ## Self-check quiz (3/5) {.smaller}
@@ -368,10 +371,11 @@ quiz_mcq("s1q2", "Time from starting TB treatment to death, with some patients l
 #| echo: false
 #| output: asis
 quiz_mcq("s1q3", "Which statement about correlation vs regression is TRUE?",
-         c("Correlation gives the change in Y per unit of X", "Regression treats X and Y symmetrically",
-           "Regression gives a slope in the units of the outcome and can adjust for other variables",
-           "Both always give the same number"), answer = 3,
-         explain = "Correlation is symmetric and unit-free; regression gives a directional effect in real units and can include other variables.")
+         c("Correlation reports the change in Y per one-unit change in X",
+           "Regression treats X and Y interchangeably, like correlation does",
+           "Regression gives a slope in units and can include other variables",
+           "Swapping X and Y changes the correlation but not the regression slope"), answer = 3,
+         explain = "Correlation is symmetric and unit-free. Regression is directional (swapping roles changes the slope), gives an effect in outcome units and can adjust for other variables.")
 ```
 
 ## Self-check quiz (4/5) {.smaller}
@@ -379,9 +383,9 @@ quiz_mcq("s1q3", "Which statement about correlation vs regression is TRUE?",
 ```{r}
 #| echo: false
 #| output: asis
-quiz_fill("s1q4", "Lab 1, Task 5: which `gtsummary` function did you use to build Table 1?",
-          accept = c("tbl_summary", "tbl_summary()"),
-          explain = "`tbl_summary()` builds descriptive tables; `by =` splits by group; `add_p()` adds tests.")
+quiz_fill("s1q4", "A study records whether each patient is alive or dead one year after diagnosis. What type of outcome is this? (one word)",
+          accept = c("binary", "dichotomous"),
+          explain = "Two possible categories means a binary outcome, which points to logistic regression.")
 ```
 
 ## Self-check quiz (5/5) {.smaller}
@@ -389,9 +393,9 @@ quiz_fill("s1q4", "Lab 1, Task 5: which `gtsummary` function did you use to buil
 ```{r}
 #| echo: false
 #| output: asis
-quiz_fill("s1q5", "Lab 1, Task 7: `cor()` has an argument that controls how missing values are handled. What is the *name* of the argument?",
-          accept = c("use"),
-          explain = "`use = \"complete.obs\"` (or `\"pairwise.complete.obs\"`) tells `cor()` how to treat NAs.")
+quiz_fill("s1q5", "About 3% of salt_g values are missing and a model silently drops those people. What is this default approach called? (two words)",
+          accept = c("complete case", "complete-case", "complete case analysis", "complete-case analysis", "listwise deletion"),
+          explain = "Analysing only rows with no missing model variable is complete-case analysis, so n can change from model to model.")
 ```
 
 ## Score and take-home {.smaller}

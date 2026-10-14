@@ -662,9 +662,11 @@ tibble(measure  = c("OR (logistic)", "PR (Poisson, robust SE)"),
 #| echo: false
 #| output: asis
 quiz_mcq("s5q1", "Why is ordinary linear regression a poor choice for a 0/1 outcome?",
-         c("It cannot include more than one predictor", "Predicted 'probabilities' can fall below 0 or above 1, and the variance is not constant",
-           "It needs a larger sample size", "It only works with categorical predictors"), answer = 2,
-         explain = "A straight line is unbounded and the variance of a binary outcome depends on its mean. Logistic regression models the log-odds, which is unbounded.")
+         c("It cannot include more than one predictor at a time",
+           "Predicted probabilities can leave the 0–1 range",
+           "It requires a much larger sample than other models",
+           "It only accepts categorical predictor variables"), answer = 2,
+         explain = "A straight line is unbounded, so fitted 'probabilities' can fall below 0 or above 1 (and the variance of a 0/1 outcome depends on its mean). Logistic regression models the log-odds.")
 ```
 
 ## Self-check quiz (2/6) {.smaller}
@@ -672,10 +674,10 @@ quiz_mcq("s5q1", "Why is ordinary linear regression a poor choice for a 0/1 outc
 ```{r}
 #| echo: false
 #| output: asis
-quiz_mcq("s5q2", "In a logistic model the coefficient for salt is β = 0.21, so e^β = 1.24. Which is the correct interpretation?",
-         c("Each extra g/day of salt raises the probability of hypertension by 24 percentage points",
-           "Each extra g/day of salt multiplies the odds of hypertension by 1.24, other variables held constant",
-           "24% of hypertension is due to salt",
+quiz_mcq("s5q2", "In a logistic model β = 0.21 for salt, so e^β = 1.24. Which interpretation is correct?",
+         c("Each extra g/day raises the probability of hypertension by 24 percentage points",
+           "Each extra g/day multiplies the odds of hypertension by 1.24, others constant",
+           "24% of all hypertension in the community is attributable to salt intake",
            "People eating more salt are 1.24 times as likely to be hypertensive"), answer = 2,
          explain = "exp(β) is the odds ratio for a one-unit increase: odds(x+1)/odds(x) = e^β. It is a ratio of ODDS, not of probabilities or risks.")
 ```
@@ -686,11 +688,11 @@ quiz_mcq("s5q2", "In a logistic model the coefficient for salt is β = 0.21, so 
 #| echo: false
 #| output: asis
 quiz_mcq("s5q3", "Which statement about pseudo-R² (McFadden, Nagelkerke, Tjur) is TRUE?",
-         c("It is the percentage of variance in the outcome explained by the model",
-           "Different pseudo-R² measures give the same value for a given model",
-           "It is not interpreted like linear R²; use it descriptively and compare models with LRT or AIC",
-           "A value below 0.5 means the model is useless"), answer = 3,
-         explain = "Pseudo-R² values are on different scales, run low (McFadden 0.2–0.4 is already excellent) and are not 'variance explained'. Likelihood-based comparison is better.")
+         c("It gives the percentage of outcome variance the model explains",
+           "All three measures return the same value for a given model",
+           "It is a descriptive index, not read like linear R-squared",
+           "A value below 0.5 shows that the model is of no use"), answer = 3,
+         explain = "Pseudo-R² values are on different scales, run low (McFadden 0.2–0.4 is already excellent) and are not 'variance explained'. Compare models by likelihood (LRT, AIC).")
 ```
 
 ## Self-check quiz (4/6) {.smaller}
@@ -698,12 +700,12 @@ quiz_mcq("s5q3", "Which statement about pseudo-R² (McFadden, Nagelkerke, Tjur) 
 ```{r}
 #| echo: false
 #| output: asis
-quiz_mcq("s5q4", "Prevalence of hypertension is 16% in people under 50 and 50% in those 50+ (OR ≈ 5.1, PR ≈ 3.1). What is the best statement?",
-         c("People aged 50+ are 5 times as likely to be hypertensive",
-           "People aged 50+ are about 3 times as likely; the OR exaggerates because the outcome is common",
-           "The OR and PR are always identical",
-           "The PR is only valid for rare diseases"), answer = 2,
-         explain = "For a common outcome the OR is further from 1 than the PR. Quote the PR (Poisson with robust SE or log-binomial) when you mean 'times as likely'.")
+quiz_mcq("s5q4", "Hypertension prevalence is 16% under 50 and 50% at 50+ (OR ≈ 5.1, PR ≈ 3.1). Which statement is best?",
+         c("People aged 50+ are about 5 times as likely to be hypertensive",
+           "People aged 50+ are about 3 times as likely; the OR overstates here",
+           "The OR and the PR are identical whenever prevalence is above 10%",
+           "The prevalence ratio can only be calculated when the disease is rare"), answer = 2,
+         explain = "For a common outcome the OR is further from 1 than the PR. Quote the PR (Poisson with robust SE, or log-binomial) when you mean 'times as likely'.")
 ```
 
 ## Self-check quiz (5/6) {.smaller}
@@ -711,9 +713,9 @@ quiz_mcq("s5q4", "Prevalence of hypertension is 16% in people under 50 and 50% i
 ```{r}
 #| echo: false
 #| output: asis
-quiz_fill("s5q5", "Lab 5, Task 3: which argument (set to `TRUE`) made `tidy()` return odds ratios instead of log-odds?",
-          accept = c("exponentiate", "exponentiate = TRUE", "exponentiate=TRUE"),
-          explain = "`exponentiate = TRUE` applies exp() to the estimates and to the confidence limits (also in `tbl_regression()`).")
+quiz_fill("s5q5", "A logistic model gives β = 0.69 for a binary exposure. What odds ratio is this? (nearest 0.1)",
+          accept = c("2", "2.0", "1.99", "2.00"),
+          explain = "OR = e^β = e^0.69 ≈ 2.0: the exposure doubles the odds. A CI is exponentiated the same way.")
 ```
 
 ## Self-check quiz (6/6) {.smaller}
@@ -721,9 +723,9 @@ quiz_fill("s5q5", "Lab 5, Task 3: which argument (set to `TRUE`) made `tidy()` r
 ```{r}
 #| echo: false
 #| output: asis
-quiz_fill("s5q6", "Lab 5, Task 5: in `anova(m_small, m_big, test = ...)`, what value gives the likelihood ratio test? (3–4 letters)",
-          accept = c("LRT", "\"LRT\"", "'LRT'", "Chisq", "\"Chisq\""),
-          explain = "`test = \"LRT\"` (equivalent to \"Chisq\" for a glm) compares nested models by deviance. It is preferred to Wald p-values when comparing models, especially for multi-df terms.")
+quiz_fill("s5q6", "Two nested logistic models have log-likelihoods of −284.2 and −255.9. What is the likelihood-ratio chi-square statistic? (nearest whole number)",
+          accept = c("57", "56.6", "56.5", "56.60"),
+          explain = "LR statistic = 2 × (logLik big − logLik small) = 2 × 28.3 = 56.6, compared with a chi-square distribution on df = number of extra parameters.")
 ```
 
 ## Score and take-home

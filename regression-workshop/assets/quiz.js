@@ -46,7 +46,9 @@
  * Optional: <span class="quiz-score"></span> anywhere shows "x / y".
  *
  * BEHAVIOUR
- *   - MCQ: click an option -> instant ✔/✘; explanation appears after the
+ *   - MCQ: options are SHUFFLED at load (hash uses the authored index, so
+ *     data-hash is unaffected; add data-shuffle="0" to keep authored order).
+ *     Click an option -> instant ✔/✘; explanation appears after the
  *     attempt (or after "Show answer").
  *   - Fill: type + Enter / "Check". Answers are normalised (case,
  *     surrounding/duplicate whitespace, backticks, trailing "()") before
@@ -143,15 +145,22 @@
     var correctHash = q.getAttribute('data-hash');
     var list = q.querySelector('ul, ol');
     if (!list) return;
-    var items = Array.prototype.slice.call(list.children);
+    // authored index is what the hash is built on; DISPLAY order is shuffled so the
+    // answer position (and any length/position tell) cannot be learned.
+    var items = Array.prototype.slice.call(list.children).map(function (li, i) { return { li: li, i: i }; });
+    if (q.getAttribute('data-shuffle') !== '0') {
+      for (var k = items.length - 1; k > 0; k--) {
+        var r = Math.floor(Math.random() * (k + 1)), t = items[k]; items[k] = items[r]; items[r] = t;
+      }
+    }
     var wrap = document.createElement('div');
     wrap.className = 'quiz-options';
-    var btns = items.map(function (li, i) {
+    var btns = items.map(function (it, pos) {
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'quiz-option';
-      b.setAttribute('data-i', i);
-      b.innerHTML = '<span class="quiz-letter">' + String.fromCharCode(65 + i) + '</span>' + li.innerHTML;
+      b.setAttribute('data-i', it.i);
+      b.innerHTML = '<span class="quiz-letter">' + String.fromCharCode(65 + pos) + '</span>' + it.li.innerHTML;
       wrap.appendChild(b);
       return b;
     });
@@ -159,13 +168,14 @@
     var c = buildCommon(q);
 
     function isCorrect(i) { return hash(qid + '|' + i) === correctHash; }
+    function orig(b) { return parseInt(b.getAttribute('data-i'), 10); }
     function reveal() {
-      btns.forEach(function (b, i) { if (isCorrect(i)) b.classList.add('is-correct'); });
+      btns.forEach(function (b) { if (isCorrect(orig(b))) b.classList.add('is-correct'); });
     }
 
-    btns.forEach(function (b, i) {
+    btns.forEach(function (b) {
       b.addEventListener('click', function () {
-        var ok = isCorrect(i);
+        var ok = isCorrect(orig(b));
         b.classList.add(ok ? 'is-correct' : 'is-wrong');
         record(qid, ok);
         feedback(q, ok, explanation(q));

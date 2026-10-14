@@ -395,9 +395,12 @@ check_outliers(m)
 ```{r}
 #| echo: false
 #| output: asis
-quiz_mcq("s4q1", "A residuals-vs-fitted plot shows points fanning out like a funnel as fitted values increase. Which assumption is violated?",
-         c("Linearity", "Independence", "Equal variance (homoscedasticity)", "Normality of the outcome"), answer = 3,
-         explain = "A funnel means the spread of residuals changes with the fitted value: heteroscedasticity. Robust (sandwich) SEs are an easy remedy.")
+quiz_mcq("s4q1", "The smoothed line through the residuals plotted against age is a shallow U-shape. What is the most direct fix?",
+         c("Add a squared age term to the model",
+           "Drop age from the model entirely",
+           "Log-transform the salt intake variable",
+           "Remove the oldest participants from the data"), answer = 1,
+         explain = "A U-shaped residual pattern signals curvature in age. A squared term (or a spline) lets the fitted line bend.")
 ```
 
 ## Self-check quiz (2/5) {.smaller}
@@ -405,10 +408,12 @@ quiz_mcq("s4q1", "A residuals-vs-fitted plot shows points fanning out like a fun
 ```{r}
 #| echo: false
 #| output: asis
-quiz_mcq("s4q2", "BMI and waist circumference (r = 0.95) both enter a model; each has a VIF of about 10. What is the best response?",
-         c("Keep both — a high VIF is harmless", "Drop whichever has the larger p-value",
-           "Choose one on clinical grounds (or combine them) and re-check the VIFs", "Log-transform the outcome"), answer = 3,
-         explain = "VIF > 10 signals serious collinearity. Choose one measure based on the research question (or combine), not on p-values alone.")
+quiz_mcq("s4q2", "BMI and waist (r = 0.95) both enter a model and each has a VIF of about 10. What is the best response?",
+         c("Keep both, since a high VIF does no harm",
+           "Drop whichever variable has the larger p-value",
+           "Log-transform the outcome and refit the model",
+           "Keep one on clinical grounds, or combine them"), answer = 4,
+         explain = "VIF above 10 signals serious collinearity. Choose one measure from the research question (or combine them), not from p-values alone.")
 ```
 
 ## Self-check quiz (3/5) {.smaller}
@@ -416,10 +421,12 @@ quiz_mcq("s4q2", "BMI and waist circumference (r = 0.95) both enter a model; eac
 ```{r}
 #| echo: false
 #| output: asis
-quiz_mcq("s4q3", "Participants are sampled from 20 villages and share village-level influences on BP. Ignoring this mainly makes…",
-         c("The coefficients biased towards zero", "The residuals non-normal",
-           "The standard errors too small (CIs too narrow), especially for village-level predictors", "The R² smaller"), answer = 3,
-         explain = "Clustered observations are not independent: the effective sample size is smaller than n, so naive SEs are too small.")
+quiz_mcq("s4q3", "Participants are sampled from 20 villages that share influences on blood pressure. Ignoring this mainly makes…",
+         c("the regression coefficients biased towards zero overall",
+           "the residuals markedly non-normal within each village",
+           "the R² smaller than it would otherwise be",
+           "the standard errors too small for village-level traits"), answer = 4,
+         explain = "Clustered observations are not independent, so the effective sample size is below n and naive SEs are too small, especially for village-level predictors.")
 ```
 
 ## Self-check quiz (4/5) {.smaller}
@@ -427,9 +434,9 @@ quiz_mcq("s4q3", "Participants are sampled from 20 villages and share village-le
 ```{r}
 #| echo: false
 #| output: asis
-quiz_fill("s4q4", "Lab 4, Task 1: which `performance` function produced the panel of diagnostic plots?",
-          accept = c("check_model", "check_model()"),
-          explain = "`check_model()` bundles linearity, homogeneity of variance, influential points, normality and collinearity checks.")
+quiz_fill("s4q4", "Residuals plotted against fitted values fan out like a funnel. Which assumption is violated? (two words)",
+          accept = c("equal variance", "constant variance", "homogeneity of variance", "homoscedasticity", "homoskedasticity"),
+          explain = "A funnel means residual spread changes with the fitted value: heteroscedasticity. Robust (sandwich) SEs are an easy remedy.")
 ```
 
 ## Self-check quiz (5/5) {.smaller}
@@ -437,9 +444,9 @@ quiz_fill("s4q4", "Lab 4, Task 1: which `performance` function produced the pane
 ```{r}
 #| echo: false
 #| output: asis
-quiz_fill("s4q5", "Lab 4, Task 5: which `performance` function reported the variance inflation factors?",
-          accept = c("check_collinearity", "check_collinearity()", "vif", "vif()"),
-          explain = "`performance::check_collinearity()` (or `car::vif()`) reports VIFs; > 5 is a concern, > 10 serious.")
+quiz_fill("s4q5", "When one predictor is regressed on all the others, R² = 0.90. What is its variance inflation factor? (whole number)",
+          accept = c("10", "10.0"),
+          explain = "VIF = 1 / (1 − R²) = 1 / 0.10 = 10, which is already in the serious range.")
 ```
 
 ## Score and take-home

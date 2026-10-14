@@ -1,0 +1,51 @@
+---
+title: "Regression Quest"
+subtitle: "A gamified self-learning path from first regression to thesis-ready reporting"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-lesson}
+**How it works.** Take the **[pre-test](pretest.qmd)** for a baseline, then clear worlds in order. Each world has a short briefing, levels of questions and a **boss**. Earn **XP** (★ = 10/20/30), keep a **daily streak**, collect **badges**, and rank up from *Field Volunteer* to *Chief Biostatistician*.
+
+- First try = full XP · second try = ½ · later = ¼ · **hints cost XP** (3, 5, 8) · *Show answer* = 0 XP
+- A world unlocks after you reach the pass mark in the previous one (you can always override: it is *your* learning)
+- Progress is saved **in this browser only**. Use *Export* to back it up or move devices
+:::
+
+## Quest map
+
+<div id="rq-map"></div>
+
+## Check-points
+
+[📋 Pre-test (baseline)](pretest.qmd){.rq-btn} &nbsp; [📈 Post-test (growth)](posttest.qmd){.rq-btn} &nbsp; [🧭 Roadmap](roadmap.qmd){.rq-btn}
+
+## Badges
+
+<div id="rq-badges"></div>
+
+## Your data
+
+<button class="rq-btn rq-ghost" id="rq-export">⬇ Export progress</button>
+<label class="rq-btn rq-ghost" style="cursor:pointer">⬆ Import progress<input type="file" id="rq-import" accept="application/json" hidden></label>
+<button class="rq-btn rq-ghost" id="rq-reset">🗑 Reset</button>

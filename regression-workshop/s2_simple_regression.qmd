@@ -395,12 +395,12 @@ tidy(lm(sbp ~ scale(age), data = ncd))  |> select(term, estimate) |> mutate(esti
 ```{r}
 #| echo: false
 #| output: asis
-quiz_mcq("s2q1", "The model `sbp ~ salt_g` gives a slope of 3.4. Which is the best interpretation?",
-         c("Salt causes a 3.4% rise in blood pressure",
-           "Each extra 1 g/day of salt is associated with a 3.4 mmHg higher mean SBP",
-           "3.4 mmHg of SBP is explained by salt in every person",
-           "If a person adds 1 g of salt, their SBP rises by exactly 3.4 mmHg"), answer = 2,
-         explain = "A slope is a difference in MEAN outcome per one-unit difference in the predictor, in the units of the outcome, across people — an association.")
+quiz_mcq("s2q1", "The model sbp ~ salt_g gives a slope of 3.4. Which is the best interpretation?",
+         c("Salt intake raises systolic pressure by 3.4 percent per gram",
+           "Each extra 1 g/day of salt goes with 3.4 mmHg higher mean SBP",
+           "Salt accounts for 3.4 mmHg of the SBP of each person studied",
+           "A person who adds 1 g of salt will see their SBP rise by 3.4 mmHg"), answer = 2,
+         explain = "A slope is a difference in MEAN outcome per one-unit difference in the predictor, in outcome units, across people. It is an association, not a within-person change.")
 ```
 
 ## Self-check quiz (2/5) {.smaller}
@@ -428,9 +428,9 @@ quiz_mcq("s2q3", "After centering age at 50 in `lm(sbp ~ age_c)`, what does the 
 ```{r}
 #| echo: false
 #| output: asis
-quiz_fill("s2q4", "Lab 2, Task 5: which value of the `interval` argument gave the interval for a single new individual?",
-          accept = c("prediction", "\"prediction\"", "'prediction'"),
-          explain = "`interval = \"prediction\"` includes individual scatter; `\"confidence\"` is for the mean.")
+quiz_fill("s2q4", "Residual SD is about 15 mmHg. A 95% prediction interval for ONE new patient is roughly the fitted mean plus or minus how many mmHg? (nearest 5)",
+          accept = c("30", "±30", "+/-30", "29", "29.4"),
+          explain = "A prediction interval is about mean ± 1.96 × residual SD, which is 1.96 × 15 ≈ 29 mmHg. The CI for the mean is far narrower.")
 ```
 
 ## Self-check quiz (5/5) {.smaller}
@@ -438,9 +438,9 @@ quiz_fill("s2q4", "Lab 2, Task 5: which value of the `interval` argument gave th
 ```{r}
 #| echo: false
 #| output: asis
-quiz_fill("s2q5", "Lab 2, Task 7: which function from the `performance` package reported R² for the model?",
-          accept = c("r2", "r2()", "performance::r2", "performance::r2()"),
-          explain = "`performance::r2()` gives R² (and adjusted R² for `lm`). For logistic models it returns Tjur's R² — a different quantity (Session 5).")
+quiz_fill("s2q5", "Adding 20 pure-noise variables nudged R-squared up from 0.20 to 0.23. Which statistic should you read to judge whether they helped? (two words)",
+          accept = c("adjusted r2", "adjusted r²", "adjusted r-squared", "adjusted r squared", "adjusted rsquared"),
+          explain = "Adjusted R² charges a penalty for every extra parameter, so noise variables do not raise it the way they raise plain R².")
 ```
 
 ## Score and take-home

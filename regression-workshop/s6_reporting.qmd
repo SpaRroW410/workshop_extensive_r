@@ -362,11 +362,11 @@ Our villages are exactly why Session 4's independence assumption matters: a **mi
 #| echo: false
 #| output: asis
 quiz_mcq("s6q1", "Which sentence reports a linear regression result correctly?",
-         c("Salt β = 1.8 (p < 0.001)",
-           "Salt had a significant effect on SBP",
-           "Each 1 g/day higher salt intake was associated with 1.8 mmHg higher SBP (95% CI 1.2 to 2.4), adjusted for age, BMI and other covariates",
-           "Salt explains 1.8% of blood pressure"), answer = 3,
-         explain = "Report direction, size WITH units, CI, adjustment set and use 'associated with'. A bare β or p-value is not enough.")
+         c("Salt had a statistically significant effect on SBP in this sample of adults (p < 0.001)",
+           "Each extra g/day of salt went with 1.8 mmHg higher SBP (95% CI 1.2–2.4), adjusted",
+           "The salt β was 1.8 with p < 0.001, so salt is a strong determinant of blood pressure",
+           "Salt explained 1.8% of the variance in blood pressure after adjusting for other factors"), answer = 2,
+         explain = "Report direction, size WITH units, a CI, the adjustment set, and use 'associated with'-style wording. A bare significance statement is not enough.")
 ```
 
 ## Self-check quiz (2/6) {.smaller}
@@ -375,9 +375,11 @@ quiz_mcq("s6q1", "Which sentence reports a linear regression result correctly?",
 #| echo: false
 #| output: asis
 quiz_mcq("s6q2", "Why is 'keep variables with univariable p < 0.2' a poor strategy?",
-         c("It keeps too few variables", "A variable can look unrelated alone yet matter after adjustment (confounding), and screening ignores causal reasoning",
-           "It always overfits", "p-values cannot be computed for single variables"), answer = 2,
-         explain = "In our data physical activity had univariable p ≈ 1 but an adjusted OR of about 0.57. Choose covariates from theory (DAG/literature), not crude p-values.")
+         c("It retains too few variables to build a model that is useful for prediction",
+           "A variable can look unrelated alone but matter after adjusting for others",
+           "It leads to overfitting in every dataset, whatever the sample size may be",
+           "Univariable p-values cannot be calculated for a single predictor variable"), answer = 2,
+         explain = "In our data physical activity had a univariable p near 1 but an adjusted OR of about 0.57. Choose covariates from theory (DAG/literature), not crude p-values.")
 ```
 
 ## Self-check quiz (3/6) {.smaller}
@@ -386,10 +388,11 @@ quiz_mcq("s6q2", "Why is 'keep variables with univariable p < 0.2' a poor strate
 #| echo: false
 #| output: asis
 quiz_mcq("s6q3", "A cross-sectional survey finds higher salt intake is associated with higher SBP. Which conclusion is appropriate?",
-         c("Salt intake causes hypertension", "Reducing salt will lower SBP by exactly the coefficient in everyone",
-           "Higher salt intake was associated with higher SBP; causation cannot be established from this design alone",
-           "There is no association because R² is low"), answer = 3,
-         explain = "Cross-sectional data show association, not temporal order. Adjustment only handles measured confounders. Use association language and discuss limitations.")
+         c("Salt intake causes hypertension in this whole community",
+           "Cutting salt will lower SBP by the coefficient amount in each person",
+           "Higher salt intake went with higher SBP; causation is unproven",
+           "No association exists because the R² is only moderate"), answer = 3,
+         explain = "Cross-sectional data show association, not temporal order, and adjustment only handles measured confounders. Use association language and discuss limitations.")
 ```
 
 ## Self-check quiz (4/6) {.smaller}
@@ -397,9 +400,9 @@ quiz_mcq("s6q3", "A cross-sectional survey finds higher salt intake is associate
 ```{r}
 #| echo: false
 #| output: asis
-quiz_mcq("s6q4", "Using the rule of thumb of at least 10 events per variable, about how many predictors can a logistic model with 60 events support?",
-         c("3", "6", "12", "60"), answer = 2,
-         explain = "60 events ÷ 10 events per variable ≈ 6 predictors (counting every dummy variable). More than that risks overfitting.")
+quiz_fill("s6q4", "Using at least 10 events per variable, about how many predictors (counting every dummy variable) can a logistic model with 60 events support? (number)",
+          accept = c("6", "six"),
+          explain = "60 events ÷ 10 events per variable = 6 predictors. More than that risks overfitting.")
 ```
 
 ## Self-check quiz (5/6) {.smaller}
@@ -407,9 +410,9 @@ quiz_mcq("s6q4", "Using the rule of thumb of at least 10 events per variable, ab
 ```{r}
 #| echo: false
 #| output: asis
-quiz_fill("s6q5", "Lab 6, Task 4: which `gtsummary` function pulls an estimate and CI from a table straight into text?",
-          accept = c("inline_text", "inline_text()"),
-          explain = "`inline_text(tbl, variable = \"salt_g\")` returns formatted text like '1.8 (95% CI 1.2, 2.4; p<0.001)', avoiding transcription errors.")
+quiz_fill("s6q5", "Participants in our survey come from 20 villages and resemble others in the same village. What feature of the design makes ordinary SEs too small for village-level predictors? (one word)",
+          accept = c("clustering", "cluster", "clusters", "clustered"),
+          explain = "Observations within a village are correlated, so the effective sample size is below n. Mixed models, GEE or cluster-robust SEs address it.")
 ```
 
 ## Self-check quiz (6/6) {.smaller}
@@ -417,9 +420,9 @@ quiz_fill("s6q5", "Lab 6, Task 4: which `gtsummary` function pulls an estimate a
 ```{r}
 #| echo: false
 #| output: asis
-quiz_fill("s6q6", "Lab 6, Task 3: which function placed the linear and logistic tables side by side?",
-          accept = c("tbl_merge", "tbl_merge()"),
-          explain = "`tbl_merge()` joins tables column-wise with `tab_spanner` headers; `tbl_stack()` would stack them vertically.")
+quiz_fill("s6q6", "Prevalence is 50% in adults aged 50+ and 16% in younger adults. What is the prevalence ratio? (1 decimal)",
+          accept = c("3.1", "3.13", "3.125"),
+          explain = "PR = 0.50 / 0.16 ≈ 3.1. The corresponding OR (5.1) is larger because the outcome is common.")
 ```
 
 ## Score and close

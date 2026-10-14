@@ -1,0 +1,35 @@
+---
+title: "Post-test · Show your growth"
+subtitle: "12 parallel questions (same skills, new numbers and contexts)."
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-lesson}
+Same skills as the pre-test, different questions. After submitting you will see your **gain** compared with your baseline.
+:::
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(sprintf("post-%02d", 1:12), ITEMS, test = "post")
+```

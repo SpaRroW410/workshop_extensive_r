@@ -1,0 +1,91 @@
+---
+title: "World 2 · The Straight Line"
+subtitle: "Slope in units, prediction, CI vs PI, residuals, R², centering"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-world data-world="w2" data-total="8" data-requires="w1:60"}
+:::
+
+## Briefing
+
+```{r}
+m1 <- lm(sbp ~ salt_g, data = ncd)
+round(coef(m1), 2)
+```
+
+::: {.rq-lesson}
+**Slope in units.** The slope is the difference in *mean* SBP (mmHg) per extra gram of daily salt, across people. The **intercept** is the mean at zero, often outside the data.
+:::
+
+```{r}
+new_salt <- tibble(salt_g = c(5, 8, 12))
+cbind(salt_g = new_salt$salt_g,
+      fit = round(predict(m1, new_salt), 1),
+      CI = apply(round(predict(m1, new_salt, interval = "confidence")[, 2:3], 0), 1, paste, collapse = "–"),
+      PI = apply(round(predict(m1, new_salt, interval = "prediction")[, 2:3], 0), 1, paste, collapse = "–"))
+```
+
+::: {.rq-lesson}
+**CI vs PI.** The confidence interval is about the *mean* of a group; the prediction interval is about *one new person* and includes the residual scatter, so it is far wider.
+:::
+
+```{r}
+r2(m1)
+```
+
+::: {.rq-lesson}
+**R² vs adjusted R².** R² never falls when variables are added; adjusted R² charges a penalty per parameter. **Centring** (for example age at 50) makes the intercept the expected outcome at a meaningful value without changing the slope.
+:::
+
+## Level 1 · Slope, prediction, residuals {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("w2-01", "w2-02", "w2-03"), ITEMS)
+```
+
+## Level 2 · Intervals and R² {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("w2-04", "w2-06"), ITEMS)
+```
+
+## Level 3 · Centring {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("w2-05", "w2-07"), ITEMS)
+```
+
+## Boss · Interpretation inspector {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render("w2-08", ITEMS)
+```

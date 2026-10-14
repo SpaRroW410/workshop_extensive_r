@@ -1,0 +1,98 @@
+---
+title: "World 1 · The Outcome Detective"
+subtitle: "What regression is, outcome types, choosing a model, Table 1, missing data"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-world data-world="w1" data-total="8" data-requires="pre:1"}
+:::
+
+## Briefing
+
+::: {.rq-lesson}
+**Regression** describes how the **average** of an **outcome** changes with one or more **predictors**, in real units. The first decision in any analysis is *not* the software; it is **what type of outcome you have**.
+:::
+
+```{r}
+#| echo: false
+ggplot(ncd, aes(salt_g, sbp)) + geom_point(alpha = .3, colour = col_blue) +
+  geom_smooth(method = "lm", colour = col_red, formula = y ~ x) +
+  labs(x = "Salt intake (g/day)", y = "Systolic BP (mmHg)")
+```
+
+::: {.rq-lesson}
+**Outcome → model family:** continuous → linear · binary → logistic · count → Poisson / negative binomial · ordered categories → ordinal logistic · unordered categories → multinomial · time-to-event → Cox · clustered or repeated → mixed models / GEE.
+:::
+
+::: {.rq-lesson}
+**Correlation vs regression.** Correlation is symmetric and unit-free; regression gives a directional slope in outcome units and can adjust for other variables.
+:::
+
+```{r}
+cor(ncd$sbp, ncd$salt_g, use = "complete.obs")
+coef(lm(sbp ~ salt_g, data = ncd))
+```
+
+::: {.rq-lesson}
+**Missing data.** A model silently drops any row with a missing model variable (complete-case analysis), so check missingness *before* modelling.
+:::
+
+```{r}
+ncd |> summarise(across(c(bmi, salt_g, education), ~ sum(is.na(.x))))
+```
+
+## Level 1 · Roles and types {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("w1-08", "w1-01", "w1-02", "w1-07"), ITEMS)
+```
+
+## Level 2 · Reading output {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("w1-03", "w1-04"), ITEMS)
+```
+
+## Level 3 · Workflow {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render("w1-05", ITEMS)
+```
+
+## Boss · The Table 1 detective {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render("w1-06", ITEMS)
+```
+
+::: {.rq-lesson}
+**World cleared?** Solve all eight items (the boss included) to earn the world badge, then head back to the [quest map](index.qmd).
+:::
