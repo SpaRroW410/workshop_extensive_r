@@ -3,7 +3,6 @@
    Keep in sync with ROADMAP.md (phase column). */
 window.RQ_HOME = 'index.html';
 window.RQ_WORLDS = [
-  { id: 'w0', icon: '🧰', title: 'World 0 · Base Camp', blurb: 'R, RStudio/Quarto, importing and tidying survey data.', status: 'soon', phase: 'Phase 2' },
   { id: 'w1', icon: '🕵️', title: 'World 1 · The Outcome Detective', blurb: 'What regression is, outcome types, choosing a model, Table 1, missing data.', status: 'playable', total: 8, href: 'world1_outcome_detective.html', requires: 'pre:1' },
   { id: 'w2', icon: '📏', title: 'World 2 · The Straight Line', blurb: 'Slope in units, prediction, CI vs PI, residuals, R², centering.', status: 'playable', total: 8, href: 'world2_straight_line.html', requires: 'w1:60' },
   { id: 'w3', icon: '🧩', title: 'World 3 · Confounding Caves', blurb: 'Inference, adjustment, dummy variables, model-building strategies.', status: 'soon', phase: 'Phase 2' },

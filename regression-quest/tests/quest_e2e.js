@@ -69,8 +69,8 @@ const hudXP = p => p.evaluate(() => +document.querySelector('.rq-hud .rq-xp').te
   // ── 2. fresh learner: quest map, locks ───────────────────────────────────
   let ctx = await newCtx(); let p = await open(ctx, 'index.html');
   const cards = await p.locator('.rq-card').count();
-  ok(cards === 17, `quest map shows all 17 worlds (${cards})`);
-  ok(await p.locator('.rq-card.rq-locked').count() >= 1 && await p.locator('.rq-card.rq-soon').count() === 15, 'World 1 locked until pre-test; 15 worlds marked coming soon');
+  ok(cards === 16, `quest map shows all 16 worlds (${cards})`);
+  ok(await p.locator('.rq-card.rq-locked').count() >= 1 && await p.locator('.rq-card.rq-soon').count() === 14, 'World 1 locked until pre-test; 14 worlds marked coming soon');
   ok(await hudXP(p) === 0, 'HUD starts at 0 XP'); ok(p._errs.length === 0, 'index: no JS errors ' + p._errs.join());
   const w1 = await open(ctx, 'world1_outcome_detective.html');
   ok(await w1.evaluate(() => document.body.classList.contains('rq-locked')), 'World 1 is locked before the pre-test');

@@ -1,6 +1,8 @@
 ## 1. Vision and principles
 
-**Goal:** turn the one-day *Theory of Regression Analysis* workshop into a self-paced, gamified, *tested* learning path that takes an MD (Community Medicine) resident from "I can run `lm()`" to "I can plan, run, check and report the right regression for my thesis", and keeps going into the models the workshop only names.
+**Goal:** turn the one-day *Theory of Regression Analysis* workshop into a **regression-only game website** ("Regression Campus"): a self-paced, gamified, *tested* learning environment that takes an MD (Community Medicine) resident from "I can run `lm()`" to "I can plan, run, check and report the right regression for my thesis", and keeps going into the models the workshop only names.
+
+**Scope decision (v2):** the site teaches *regression*, not R. Learners are assumed to have **basic-to-moderate R** (import data, tidyverse verbs, simple plots, run a model and read `summary()`). A short **readiness check** (§2.3) routes anyone who is not ready to the repo's existing R Foundations track. The full site design (information architecture, game modes, skill tree, hybrid R labs, state model) is in [Site design](site-design.qmd).
 
 | Principle | What it means in practice |
 |---|---|
@@ -8,6 +10,9 @@
 | **Test what matters** | Interpretation, judgement and error-spotting beat function recall. No "which function does X?" items. |
 | **Honest assessment** | No giveaways: balanced option lengths, no "all of the above", shuffled display, no key-first markup, explanations only after an attempt. Enforced by a linter in CI. |
 | **Real public-health context** | Indian community-medicine scenarios and datasets (NCD survey, TB cohort, dengue counts, NFHS-type surveys). |
+| **Regression only, deeply** | No detours into general R teaching; every minute goes to modelling, interpretation, checking and reporting. |
+| **Three ways to practise** | *Quests* (guided path), *Case files* (realistic thesis scenarios with decisions), *Arcade* (short repeatable drills): so mastery comes from varied retrieval, not one pass. |
+| **Real R, hybrid** | Learners also run real R on the project datasets; the game checks results through verifiable codes (no server needed), with in-browser R as an optional later mode. |
 | **Works anywhere** | Static files, offline-capable, no login needed for the core path; optional server features come later. |
 | **Evidence of gain** | Every learner gets a baseline (pre-test) and a parallel post-test; the project measures learning gain, not just completion. |
 | **Reproducible content** | One source of truth per item and per lab; everything built and verified by scripts. |
@@ -25,7 +30,7 @@
 | **Resident writing a thesis** | Right model, correct interpretation, reviewer-proof write-up | Core worlds 1–6, then 10, 11, 13, capstone |
 | **Faculty / examiner** | Judge others' analyses; spot pitfalls | Pitfall bosses, reporting world, spot-the-error items |
 | **Public-health programme officer** | Count and survey data, dashboards | Worlds 7, 11, 14 |
-| **Self-taught R user** | Concepts behind the code | Pre-test, then skip to weak skills |
+| **Self-taught R user** | Concepts behind the code | Readiness check, pre-test, then skip to weak skills |
 | **Facilitator** | Run a cohort, see who is stuck | Cohort mode and instructor dashboard (Phase 6) |
 
 ### 2.2 Programme-level outcomes (ILOs)
@@ -43,15 +48,21 @@ After the full path a learner can:
 
 Outcomes are mapped to Bloom levels (remember → evaluate) per world in §3 and drive the item mix in §6.
 
+### 2.3 Prerequisites and the readiness check
+
+**Assumed:** basic-to-moderate R: projects/scripts, `read_csv`, `dplyr` verbs (filter, mutate, group/summarise), factors, `ggplot2` basics, running `lm()`/`glm()` and printing `summary()`. **Not assumed:** any regression theory.
+
+**Readiness check (≈ 10 minutes, ungraded):** 8 short items (reading a `mutate`/`summarise` pipeline, spotting a factor-level problem, interpreting a plot, reading a `summary()` table) plus 2 hands-on R tasks. Outcome: **Ready** → straight to the pre-test; **Nearly** → a 5-item brush-up list of skills plus links to the existing R Foundations pages; **Not yet** → R Foundations first. The check never blocks anyone: it advises.
+
 ---
 
 ## 3. Curriculum map (all worlds)
 
-**Status:** ✅ playable now · 🟡 content exists as workshop slides/labs, needs gamified conversion · ⬜ new content.
+**Status:** ✅ playable now · 🟡 content exists as workshop slides/labs, needs gamified conversion · ⬜ new content. Worlds are *story containers*; the real unit of progress is the **skill** (see the skill tree in [Site design](site-design.qmd)), and every world's items, case files and arcade drills are tagged to skills.
 
 | # | World | Core topics | Key dataset | Boss (capstone item) | Phase | Status |
 |---|---|---|---|---|---|---|
-| 0 | **Base Camp** | R/RStudio/Quarto basics, projects, import, tidy data, factors, dates, missing codes | NCD survey (raw) | Clean a messy extract; reproduce Table 1 | 2 | ⬜ |
+| – | *Readiness check* (replaces former World 0) | R prerequisites only; routes learners (§2.3) | NCD survey (raw) | n/a (advisory) | 2 | ⬜ |
 | 1 | **The Outcome Detective** | What regression is; outcome types; flowchart; correlation vs regression; Table 1; missing data | NCD survey | Table 1 write-up inspector | 1 | ✅ |
 | 2 | **The Straight Line** | Slope in units; prediction; CI vs PI; residuals/OLS; R²/adj R²; centring/scaling | NCD survey | Interpretation inspector | 1 | ✅ |
 | 3 | **Confounding Caves** | β/p/CI; statistical vs clinical significance; confounding; adjustment; dummy coding; model-building (DAG vs stepwise) | NCD survey | Rebuild a confounded analysis | 2 | 🟡 |
@@ -79,7 +90,7 @@ Outcomes are mapped to Bloom levels (remember → evaluate) per world in §3 and
 | **E4 Meta-regression & evidence synthesis** | Random-effects models, heterogeneity, meta-regression basics |
 | **E5 Bayesian regression** | Priors, posteriors, `brms`, credible vs confidence intervals |
 | **E6 Regression vs machine learning** | Trees/forests/boosting vs GLMs; when interpretability wins |
-| **E7 Reproducible thesis workflow** | Quarto, Git, project structure, dynamic tables, STROBE checklists |
+| **E7 Reproducible regression reporting** | Quarto, dynamic tables with `gtsummary`/`modelsummary`, STROBE checklists (R-basics refreshers are out of scope) |
 | **E8 Spatial and small-area analysis** | Mapping rates, spatial autocorrelation, hierarchical smoothing |
 | **E9 Quasi-experiments** | Difference-in-differences, regression discontinuity, synthetic controls (intro) |
 
@@ -88,10 +99,12 @@ Outcomes are mapped to Bloom levels (remember → evaluate) per world in §3 and
 1. **Briefing** (≤ 600 words + live R output): concept, one worked example, one common misconception.
 2. **Levels** (3–4): ≥ 8 items per world at difficulty 1–3, mixed types (MCQ, numeric, order, spot-the-error, output-reading).
 3. **Boss**: one multi-part or spot-the-error item, 50 bonus XP.
-4. **Lab**: fill-in-the-blank script with auto-graded checks (Phase 4).
-5. **Misconception log**: 3–5 documented wrong beliefs, each with ≥ 1 diagnostic item.
-6. **Parallel items** for the pre/post forms (≥ 2 per world).
-7. **Facilitator notes**: answer keys, timing, discussion prompts.
+4. **Case file**: at least one realistic thesis scenario with decision points (§5.4 and Site design §5).
+5. **Arcade drills**: ≥ 2 repeatable drill generators tied to the world's skills.
+6. **Lab**: hybrid R lab (fill-in script + verifiable result codes; Phase 4).
+7. **Misconception log**: 3–5 documented wrong beliefs, each with ≥ 1 diagnostic item.
+8. **Parallel items** for the pre/post forms (≥ 2 per world).
+9. **Facilitator notes**: answer keys, timing, discussion prompts.
 
 ---
 
@@ -141,10 +154,14 @@ Field Volunteer (0) → Health Worker (100) → Medical Officer (250) → Epidem
 * **Growth:** Baseline Set, Growth Mindset (post-test done), Big Gain (+20 points)
 * **Community (Phase 6):** Peer Reviewer, Mentor
 
-### 5.4 Quests, bosses and events
+### 5.4 Game modes, bosses and events
 
-* **Daily five:** five spaced-retrieval items from skills where the learner is weakest.
-* **Case files:** a 20-minute mini-investigation (e.g. *"The salt study reviewer"*): read output, choose actions, defend choices.
+The site has **three play modes** (details in [Site design](site-design.qmd) §4–6):
+
+* **Quests:** the guided world-by-world path (briefing → levels → boss).
+* **Case files:** 15–25 minute branching investigations (e.g. *"The salt study reviewer"*, *"The village anomaly"*): read output, choose actions, defend choices; scored by rubric.
+* **Arcade:** short repeatable drills built from generators (*Residual Reader*, *Interval Invaders*, *OR↔PR Converter*, *Spot the Pitfall* …) so a skill can be rehearsed with fresh numbers each time.
+* **Daily review:** a spaced queue (Leitner boxes) of the skills that are due or fading.
 * **Boss fights:** each world ends with a multi-part scenario; failing is cheap, retrying free.
 * **Seasonal events (optional):** e.g. *Thesis Month* with double-XP review quests.
 
@@ -226,8 +243,12 @@ All feedback is colour-independent (icons and text); `prefers-reduced-motion` ho
 | Option | Pros | Cons | Verdict |
 |---|---|---|---|
 | **`learnr` + `gradethis`** (Shiny) | Mature, real R, hints/solutions built in | Needs a Shiny server or shinyapps.io | Good for cohort deployments |
-| **webR / Quarto-live** | R in the browser, static hosting, offline | Some packages unavailable/heavy (check `gtsummary`, `performance`) | **Preferred for the open path** |
-| **Local scripts + `testthat` grader** | Works today, real RStudio workflow | Learner must run a grader command | Fallback / power users |
+| **webR / Quarto-live** | R in the browser, static hosting, offline | Some packages unavailable/heavy (check `gtsummary`, `performance`) | Optional later mode (Phase 5), after a package-compatibility spike |
+| **Local scripts + verifiable result codes (hybrid)** | Real RStudio workflow, real packages, no server, works offline | Codes can be shared unless seeded per learner | **Chosen for Phases 3–4** |
+
+### 7.1b The hybrid design (chosen)
+
+Learners work in their own R (RStudio/Posit Cloud) on the repo's labs. A tiny helper package/script (`rqlab`) provides `rq_start(seed)`, `rq_check("task-3", obj)` for instant local feedback, and `rq_submit()` which prints a **short result code** (task results hashed with the learner's seed and a lab version). The learner pastes the code into the site; the site verifies it and awards XP. No server, works offline, and the per-learner seed makes codes non-transferable. Details: [Site design](site-design.qmd) §6.
 
 ### 7.2 Pipeline (reuses what exists)
 
@@ -256,6 +277,10 @@ Quarto pages (html)  →  quest.js (engine)  →  localStorage (progress)
 
 * Hosting: GitHub Pages (already used by the repo); decks and pages work offline once downloaded.
 * Progress: per-browser; export/import JSON backup.
+
+### 8.1b Hosting decision (v2): static now, accounts later
+
+Phases 1–5 stay fully static on GitHub Pages. To make accounts a *later add-on rather than a rewrite*, the engine must be built now around a **storage adapter** (`load/save/sync`), an **append-only event log**, **XP and mastery recomputed from events/items** (never stored as authoritative totals), and **versioned state with migrations**. Specified in [Site design](site-design.qmd) §8.
 
 ### 8.2 Target architecture (phased)
 
@@ -353,21 +378,23 @@ Effort is in person-weeks (PW) for one developer + one content author + part-tim
 * Item bank + linter; Worlds 1–2; pre-test (Form A) and post-test (Form B); quest map and roadmap page.
 * **Exit criteria:** linter 0 failures; engine test matrix green; a pilot of 5 learners completes Worlds 1–2 without help.
 
-### Phase 2 — Core curriculum conversion (Q1–Q2, ~12 PW)
+### Phase 2 — Core curriculum conversion and the Campus shell (Q1–Q2, ~14 PW)
 * Convert Worlds 3–6 from the workshop (briefings, ≥ 8 items each, bosses).
-* World 0 *Base Camp* (R onboarding) so true beginners can start.
+* **Site shell:** Campus home, skill tree, profile, daily-review queue, storage adapter + state v2 with migration (see Site design §8, §12).
+* Readiness check (replaces the former World 0).
 * Complete pre/post forms across all core worlds; add per-skill recommendations.
 * Cheat-sheet and facilitator pack unified under the quest brand.
 * **Exit:** 56+ new items, all linted; pre/post gain measured on a pilot of 20+ residents.
 
-### Phase 3 — Richer interactions and new models (Q2–Q3, ~16 PW)
+### Phase 3 — Arcade, case files and new models (Q2–Q3, ~18 PW)
+* **Arcade** with 6+ drill generators; **case-file engine** (branching YAML scenarios) with 4 case files.
 * New item types: click-the-plot, slider/parameter-play, match, multi-select.
 * Worlds 7–11 (counts, ordinal/nominal, survival, clusters, surveys) with their datasets.
 * Spaced-retrieval "daily five"; mastery model by tag.
 * **Exit:** item analytics dashboard (notebook) running on pilot data; accessibility audit passed.
 
-### Phase 4 — Auto-graded labs and personalisation (Q3–Q4, ~14 PW)
-* webR (or learnr) labs for every world; grader generator from solutions; tiered hints.
+### Phase 4 — Hybrid R labs and personalisation (Q3–Q4, ~14 PW)
+* `rqlab` helper package, result-code verification on the site, a lab for every world; grader generated from solutions; tiered hints.
 * Per-learner seeds and item pools; free-text rubric self-check.
 * Worlds 12–14 (curves/interactions, missing data, prediction models).
 * **Exit:** all labs gradeable; CI proves solution passes and blank fails; webR package compatibility documented.
@@ -394,10 +421,10 @@ Effort is in person-weeks (PW) for one developer + one content author + part-tim
 | Quarter | Milestones |
 |---|---|
 | Q0 | Workshop + quest engine + Worlds 1–2 + pre/post (**now**) |
-| Q1 | Worlds 3–4, World 0; pilot 1 |
-| Q2 | Worlds 5–6; new item types; Worlds 7–8 |
+| Q1 | Campus shell + skill tree + review queue; Worlds 3–4; readiness check; pilot 1 |
+| Q2 | Worlds 5–6; arcade + case-file engine; Worlds 7–8 |
 | Q3 | Worlds 9–11; analytics; accessibility audit |
-| Q4 | Auto-graded labs; Worlds 12–14 |
+| Q4 | Hybrid R labs (`rqlab`); Worlds 12–14 |
 | Q5 | Causal + capstone; electives start; cohort-mode design |
 | Q6 | Sign-in, dashboard, credentials; localisation; study write-up |
 
@@ -466,7 +493,7 @@ Effort is in person-weeks (PW) for one developer + one content author + part-tim
 
 1. Pilot Worlds 1–2 and the pre/post forms with 5 residents; capture think-aloud notes and item timings.
 2. Write the World 3 (*Confounding Caves*) bank: ≥ 8 items, boss, misconception log.
-3. Spike **webR package compatibility** for the five core packages.
+3. Prototype `rqlab` (`rq_start`, `rq_check`, `rq_submit`) for one lab and the code-verification box on the site.
 4. Add the Playwright suite and the R↔JS parity test to CI.
-5. Draft the Base Camp (World 0) outline with a short placement quiz.
+5. Draft the **readiness check** (8 items + 2 R tasks) and the skill-tree node list; prototype the skill tree page on the existing 40 items.
 6. Decide the hosting/privacy stance for Phase 6 (local-first stays the default).
