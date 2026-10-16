@@ -42,6 +42,9 @@ execute:
   freeze: auto
 
 format:
+  revealjs:
+    filters:
+      - _filters/level.lua
   html:
     theme: flatly
     css: assets/theme_webp.css

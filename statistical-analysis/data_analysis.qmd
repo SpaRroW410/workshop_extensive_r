@@ -8,7 +8,7 @@ format:
     lightbox: auto
 ---
 
-::: {.content-visible when-profile="moderate"}
+::: {when-level="moderate"}
 
 # Data Analysis for Medical Datasets
 
@@ -99,10 +99,6 @@ qqline(p$sbp_in_mm_hg, col = "red")
 
 These examples show the R workflow for medical data: import, clean, summarize, test, and visualize.
 
-:::
-
-::: {.content-visible when-profile="advanced"}
-
 ## Automating Analysis with Loops
 
 Real datasets often need the same test or summary repeated across many variables. Loops (and their `apply`/`purrr` equivalents) let you do that without copy-pasting code.
@@ -118,6 +114,21 @@ for (v in vars) {
   cat("\n")
 }
 ```
+
+### A shorter alternative: `sapply()`
+
+For simple per-column operations the `apply` family avoids manual bookkeeping:
+
+```{r}
+# Same variables as the for-loop above, without the explicit loop
+sapply(p[vars], mean, na.rm = TRUE)
+```
+
+Use a `for` loop when each iteration has side effects (printing, saving files, building up a report) or when the logic is easier to follow step-by-step; reach for `sapply()` when you just need one result per element.
+
+:::
+
+::: {when-level="advanced"}
 
 ### `while` loops
 
@@ -145,19 +156,14 @@ repeat {
 count
 ```
 
-### Vectorized alternatives: `sapply()` and `purrr::map()`
+### Tidy iteration with `purrr::map()`
 
-Loops are explicit and easy to read, but for simple per-column operations the `apply` family or `purrr::map()` are usually shorter and avoid manual bookkeeping:
+`purrr::map()` and its typed variants return exactly the type you ask for, which makes them safer than `sapply()` inside larger pipelines:
 
 ```{r}
 library(purrr)
 
-# Same summaries as the for-loop above, without the explicit loop
-sapply(p[vars], mean, na.rm = TRUE)
-
 map_dbl(p[vars], ~ sd(.x, na.rm = TRUE))
 ```
-
-Use a `for` loop when each iteration has side effects (printing, saving files, building up a report) or when the logic is easier to follow step-by-step; reach for `sapply()`/`map()` when you just need one result per element.
 
 :::

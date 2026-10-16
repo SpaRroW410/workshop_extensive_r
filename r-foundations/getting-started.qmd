@@ -134,22 +134,7 @@ sidebar:
 - **R Documentation** — help files for packages and functions
 - **Text File** — plain text for notes, configs, or simple drafts
 
-::: {.content-visible when-profile="moderate"}
-
-## New File — Other Languages & Tools {.smaller}
-
-- **Python Script** — Python code file for reticulate and Python work
-- **C++ File** — C++ source for Rcpp or performance-critical code
-- **SQL Script** — SQL queries and database interactions
-- **Stan File** — Stan model code for Bayesian modeling
-- **D3 Script** — D3 JavaScript visualizations
-- **R Sweave** — LaTeX+R documents for PDF reporting
-- **Shiny Web App** — interactive apps built with Shiny
-- **Plumber API** — R APIs exposed as web services
-
-:::
-
-::: {.content-visible when-profile="advanced"}
+::: {when-level="moderate"}
 
 ## New File — Other Languages & Tools {.smaller}
 
