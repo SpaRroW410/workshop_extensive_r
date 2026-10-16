@@ -1,0 +1,15 @@
+{
+  "hash": "5b925cd1d0933bab2c663d5d3a5942b3",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Welcome\"\nformat:\n  html:\n    toc: true\n    toc-depth: 2\n---\n\n\n<div style=\"background:#f1f8f1;border-left:5px solid #2e7d32;border-radius:10px;\n            padding:1.5rem 2rem;margin-bottom:2rem;\">\n  <span style=\"display:inline-block;background:#2e7d32;color:white;font-size:0.8rem;\n               font-weight:600;padding:0.2rem 0.75rem;border-radius:999px;\n               margin-bottom:0.75rem;\">🟢 Open Access</span>\n  <h2 style=\"color:#2e7d32;margin-top:0.4rem;margin-bottom:0.6rem;\">Basic Track</h2>\n  <p style=\"font-size:1.05rem;line-height:1.7;margin:0;\">Welcome to the **Basic Track** of the R Data Visualization Workshop — an open-access, self-paced learning platform for data wrangling, visualization, and statistical analysis in R. This site contains hands-on examples, best practices, and plotting techniques all in one place.</p>\n</div>\n\n## 🎯 Workshop Goals\n\n- Learn the basics of good data visualization\n- Use R to wrangle and prepare data\n- Explore basic visualization and statistical testing\n- Create reproducible reports using Quarto\n\n\n## 📚 What This Track Covers\n\n- 📁 R Foundations & Data Wrangling\n- 📊 Basic Visualization with ggplot2\n- 🧪 Statistical Test Selection\n- 📈 ggstatsplot — Introduction\n- 📝 Quarto Basics\n\n\n## 🧭 Find Your Way Around\n\nUse the navigation bar above to browse all modules. Key starting points:\n\n- 📁 **[R Foundations](r-foundations/getting-started.qmd)** — R syntax, data cleaning, and tidy workflows\n- 📊 **[Data Visualization](data-visualization/ggplot_grammar.qmd)** — Grammar of graphics and basic ggplot2\n- 🧪 **[Statistical Analysis](statistical-analysis/statistical_tests.qmd)** — Choosing the right statistical test\n- 📝 **[Reproducibility](statistical-analysis/reproducible_writing.qmd)** — Creating reports with Quarto\n\n> Use the navbar above to explore topics in any order.\n\n\n## 📥 Downloadable Resources\n\nAll files for this track are available below, grouped by type.\n\n### 📄 R Scripts\n\n- [Basic r Foundations](downloads/basic_r_foundations.R)\n- [Basic Visualization](downloads/basic_visualization.R)\n\n### 🗄️ Datasets\n\n- 📊 [Workshop Data](downloads/workshop_data.csv) `.csv`\n- 📗 [Workshop Data](downloads/workshop_data.xlsx) `.xlsx`\n- 🔵 [Workshop Data](downloads/workshop_data.rds) `.rds`\n\n### 📋 Cheatsheets\n\n- [ggplot2 Cheatsheet](downloads/ggplot2_cheatsheet.pdf)\n- [Dplyr Cheatsheet](downloads/dplyr_cheatsheet.pdf)\n\n### 📝 Quarto Template\n\n- [Quarto Basics](downloads/quarto_basics.qmd) — starter `.qmd` file covering Quarto basics\n\n\n---\n\n> 💡 **Tip:** New to R? Start with **R Foundations → Getting Started** before anything else.\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "hash": "4d990f0b7576ab655c34a8368a5eeb31",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Reproducible Writing with Quarto\"\nformat:\n  html:\n    code-copy: true\n    theme: cosmo\n    toc: true\n    lightbox: auto\n---\n\n::: {when-level=\"basic\"}\n\n## Reproducible Research with Quarto\n\nQuarto enables reproducible research by combining code, text, and output in a single document.\n\n### Creating Reports\n\n\n\n### Inline Code\n\nThe mean age is NA years.\n\n### Figures\n\n\n::: {.cell}\n\n```{.r .cell-code}\nggplot(gtsummary::trial, aes(x = age)) +\n  geom_histogram(binwidth = 5, fill = \"blue\", alpha = 0.7) +\n  theme_minimal()\n```\n\n::: {.cell-output .cell-output-stderr}\n\n```\nWarning: Removed 11 rows containing non-finite outside the scale range\n(`stat_bin()`).\n```\n\n\n:::\n\n::: {.cell-output-display}\n![Distribution of Age](reproducible_writing_files/figure-html/fig-age-dist-1.png){#fig-age-dist width=672}\n:::\n:::\n\n\n### Tables\n\n\n::: {#tbl-summary .cell tbl-cap='Summary Statistics'}\n\n```{.r .cell-code}\ndata_1 %>% \n  summarise(\n    Mean_Age = mean(Age),\n    SD_Age = sd(Age),\n    Mean_SBP = mean(SysBP_0m),\n    SD_SBP = sd(SysBP_0m)\n  ) %>% \n  knitr::kable()\n```\n\n::: {.cell-output-display}\n\n\n| Mean_Age|   SD_Age| Mean_SBP|   SD_SBP|\n|--------:|--------:|--------:|--------:|\n|   49.745| 17.71466|   135.08| 13.58256|\n\n\n:::\n:::\n\n\n### Citations and References\n\nQuarto supports citations using BibTeX or DOI.\n\n:::",
+    "supporting": [
+      "reproducible_writing_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
