@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>World 2 · The Straight Line – Data Visualization Workshop — Regression</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-574f58f4068bb8f43535e6e9c10c5508.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="assets/fitty-init.js"></script>
+
+
+<link rel="stylesheet" href="../assets/theme_webp.css">
+<link rel="stylesheet" href="assets/quest.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="welcome.html">
+    <span class="navbar-title">Data Visualization Workshop — Regression</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-r-foundations" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">R Foundations</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-r-foundations">    
+        <li>
+    <a class="dropdown-item" href="../r-foundations/getting-started.html">
+ <span class="dropdown-text">Getting Started</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../r-foundations/data-wrangling.html">
+ <span class="dropdown-text">Data Wrangling (Tidyverse)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../statistical-analysis/regression.html"> 
+<span class="menu-text">Regression Analysis</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-dungeons--dataframes" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Dungeons &amp; Dataframes</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-dungeons--dataframes">    
+        <li>
+    <a class="dropdown-item" href="../regression-quest/index.html">
+ <span class="dropdown-text">🗺️ Quest map (start here)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/pretest.html">
+ <span class="dropdown-text">Pre-test (baseline)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/posttest.html">
+ <span class="dropdown-text">Post-test (growth)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/roadmap.html">
+ <span class="dropdown-text">Roadmap</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/site-design.html">
+ <span class="dropdown-text">Site design</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-regression-workshop" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Regression Workshop</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-regression-workshop">    
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s1_foundations.html">
+ <span class="dropdown-text">Session 1 — Foundations</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s2_simple_regression.html">
+ <span class="dropdown-text">Session 2 — Simple Linear Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s3_multiple_regression.html">
+ <span class="dropdown-text">Session 3 — Inference &amp; Multiple Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s4_assumptions.html">
+ <span class="dropdown-text">Session 4 — Assumptions</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s5_logistic_regression.html">
+ <span class="dropdown-text">Session 5 — Logistic Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s6_reporting.html">
+ <span class="dropdown-text">Session 6 — Interpreting &amp; Reporting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/cheatsheet.html">
+ <span class="dropdown-text">Interpretation Cheat Sheet</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-reference" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-book" role="img">
+</i> 
+ <span class="menu-text">Reference</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-reference">    
+        <li>
+    <a class="dropdown-item" href="../contact.html">
+ <span class="dropdown-text">Contact Us</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../references.html">
+ <span class="dropdown-text">References</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../downloads.html">
+ <span class="dropdown-text">Downloads</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">World 2 · The Straight Line</h1>
+<p class="subtitle lead">Slope in units, prediction, CI vs PI, residuals, R², centering</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="rq-world" data-world="w2" data-total="8" data-requires="w1:60">
+
+</div>
+<section id="briefing" class="level2">
+<h2 class="anchored" data-anchor-id="briefing">Briefing</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(sbp <span class="sc">~</span> salt_g, <span class="at">data =</span> ncd)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(m1), <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)      salt_g 
+     107.42        3.39 </code></pre>
+</div>
+</div>
+<div class="rq-lesson">
+<p><strong>Slope in units.</strong> The slope is the difference in <em>mean</em> SBP (mmHg) per extra gram of daily salt, across people. The <strong>intercept</strong> is the mean at zero, often outside the data.</p>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>new_salt <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">salt_g =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">12</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="at">salt_g =</span> new_salt<span class="sc">$</span>salt_g,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">fit =</span> <span class="fu">round</span>(<span class="fu">predict</span>(m1, new_salt), <span class="dv">1</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">CI =</span> <span class="fu">apply</span>(<span class="fu">round</span>(<span class="fu">predict</span>(m1, new_salt, <span class="at">interval =</span> <span class="st">"confidence"</span>)[, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>], <span class="dv">0</span>), <span class="dv">1</span>, paste, <span class="at">collapse =</span> <span class="st">"–"</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">PI =</span> <span class="fu">apply</span>(<span class="fu">round</span>(<span class="fu">predict</span>(m1, new_salt, <span class="at">interval =</span> <span class="st">"prediction"</span>)[, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>], <span class="dv">0</span>), <span class="dv">1</span>, paste, <span class="at">collapse =</span> <span class="st">"–"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  salt_g fit     CI        PI       
+1 "5"    "124.4" "123–126" "95–154" 
+2 "8"    "134.5" "133–136" "105–164"
+3 "12"   "148.1" "145–151" "118–178"</code></pre>
+</div>
+</div>
+<div class="rq-lesson">
+<p><strong>CI vs PI.</strong> The confidence interval is about the <em>mean</em> of a group; the prediction interval is about <em>one new person</em> and includes the residual scatter, so it is far wider.</p>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">r2</span>(m1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># R2 for Linear Regression
+       R2: 0.202
+  adj. R2: 0.200</code></pre>
+</div>
+</div>
+<div class="rq-lesson">
+<p><strong>R² vs adjusted R².</strong> R² never falls when variables are added; adjusted R² charges a penalty per parameter. <strong>Centring</strong> (for example age at 50) makes the intercept the expected outcome at a meaningful value without changing the slope.</p>
+</div>
+</section>
+<section id="level-1-slope-prediction-residuals" class="level2 rq-level">
+<h2 class="rq-level anchored" data-anchor-id="level-1-slope-prediction-residuals">Level 1 · Slope, prediction, residuals</h2>
+<div class="rq-item" data-id="w2-01" data-world="w2" data-type="mcq" data-diff="1" data-tags="slope-units" data-hash="hrt1jh.i9ko51" data-show="TWVhbiBTQlAgaXMgMy40IG1tSGcgaGlnaGVyIHBlciBleHRyYSBncmFtIG9mIGRhaWx5IHNhbHQ=" data-explain="QSBzbG9wZSBpcyBhIGRpZmZlcmVuY2UgaW4gTUVBTiBvdXRjb21lLCBpbiBvdXRjb21lIHVuaXRzLCBwZXIgb25lLXVuaXQgZGlmZmVyZW5jZSBpbiB0aGUgcHJlZGljdG9yLCBhY3Jvc3MgcGVvcGxlLg==" data-hints="WyJVbml0cyBvZiBhIHNsb3BlIGFyZSBvdXRjb21lIHVuaXRzIHBlciBwcmVkaWN0b3IgdW5pdC4iXQ==">
+<p>A model gives sbp = 107.4 + 3.4 × salt_g. What does the 3.4 mean?</p>
+<ul>
+<li>Daily salt accounts for 3.4 mmHg of each person’s own SBP</li>
+<li>Mean SBP is 3.4 mmHg higher per extra gram of daily salt</li>
+<li>Each extra gram of daily salt raises SBP by 3.4 percent</li>
+<li>Each person’s SBP rises 3.4 mmHg whenever their daily salt rises 1 g</li>
+</ul>
+</div>
+<div class="rq-item" data-id="w2-02" data-world="w2" data-type="num" data-diff="2" data-tags="prediction" data-dp="0" data-hashes="pzvr38.8rrwr0" data-show="MTQx" data-explain="MTA3LjQgKyAzLjQgw5cgMTAgPSAxNDEuNCwgc28gYWJvdXQgMTQxIG1tSGcu" data-hints="WyJSZXBsYWNlIHNhbHRfZyBieSB0aGUgbnVtYmVyIHlvdSBhcmUgZ2l2ZW4uIiwiTXVsdGlwbHkgZmlyc3QsIHRoZW4gYWRkIHRoZSBpbnRlcmNlcHQuIl0=">
+<p>Using sbp = 107.4 + 3.4 × salt_g, what mean SBP (mmHg, nearest whole number) is predicted at 10 g/day?</p>
+</div>
+<div class="rq-item" data-id="w2-03" data-world="w2" data-type="num" data-diff="2" data-tags="residuals" data-dp="1" data-hashes="uvagrr.ell6wj" data-show="OC42" data-explain="UmVzaWR1YWwgPSBvYnNlcnZlZCDiiJIgZml0dGVkID0gMTUwIOKIkiAxNDEuNCA9IDguNiBtbUhnOiBoZSBzaXRzIGFib3ZlIHRoZSBsaW5lLg==" data-hints="WyJTdWJ0cmFjdCB0aGUgZml0dGVkIHZhbHVlIGZyb20gdGhlIG9ic2VydmVkIHZhbHVlLiJd">
+<p>A man eating 10 g/day has SBP 150 mmHg while the line predicts 141.4. What is his residual (observed − fitted)?</p>
+</div>
+</section>
+<section id="level-2-intervals-and-r²" class="level2 rq-level">
+<h2 class="rq-level anchored" data-anchor-id="level-2-intervals-and-r²">Level 2 · Intervals and R²</h2>
+<div class="rq-item" data-id="w2-04" data-world="w2" data-type="mcq" data-diff="2" data-tags="ci-pi" data-hash="hru59k.i9lvl4" data-show="SXQgYWRkcyBwZXJzb24tdG8tcGVyc29uIHNjYXR0ZXIgdG8gdGhlIHVuY2VydGFpbnR5IG9mIHRoZSBsaW5l" data-explain="QSBwcmVkaWN0aW9uIGludGVydmFsIGNvdmVycyBvbmUgbmV3IGluZGl2aWR1YWwsIHNvIGl0IGluY2x1ZGVzIHJlc2lkdWFsIHNjYXR0ZXIgKGFib3V0IDE1IG1tSGcgU0QpIG9uIHRvcCBvZiB0aGUgbGluZSdzIG93biB1bmNlcnRhaW50eS4=" data-hints="WyJXaGljaCBpbnRlcnZhbCBpcyBhYm91dCBhIGdyb3VwIG1lYW4sIGFuZCB3aGljaCBhYm91dCBvbmUgcGVyc29uPyJd">
+<p>At 8 g/day the 95% CI for mean SBP is 133–136 but the 95% prediction interval is 105–164. Why is the second so much wider?</p>
+<ul>
+<li>Prediction intervals are built from the sample range directly</li>
+<li>It adds person-to-person scatter to the uncertainty of the line</li>
+<li>Prediction intervals are computed at a higher confidence level than 95%</li>
+<li>The line is less precisely estimated at 8 g than at 10 g</li>
+</ul>
+</div>
+<div class="rq-item" data-id="w2-06" data-world="w2" data-type="mcq" data-diff="3" data-tags="r-squared" data-hash="hruvr0.i9mojw" data-show="VGhlIG5vaXNlIGNvbHVtbnMgZGlkIG5vdCBoZWxwOiBhZGp1c3RlZCBSwrIgZGlkIG5vdCBpbXByb3Zl" data-explain="UGxhaW4gUsKyIGNhbiBvbmx5IGdvIHVwIHdoZW4gdmFyaWFibGVzIGFyZSBhZGRlZC4gQWRqdXN0ZWQgUsKyIGNoYXJnZXMgZm9yIGVhY2ggcGFyYW1ldGVyIGFuZCBmZWxsIHNsaWdodGx5LCB3aGljaCBleHBvc2VzIG5vaXNlLg==" data-hints="WyJXaGljaCBvZiB0aGUgdHdvIHN0YXRpc3RpY3MgcGVuYWxpc2VzIGV4dHJhIHBhcmFtZXRlcnM/Il0=">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">r2</span>(<span class="fu">lm</span>(sbp <span class="sc">~</span> salt_g))           <span class="co"># R2: 0.202   adj. R2: 0.200</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">r2</span>(<span class="fu">lm</span>(sbp <span class="sc">~</span> salt_g <span class="sc">+</span> z1<span class="sc">:</span>z20))  <span class="co"># R2: 0.227   adj. R2: 0.198</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>z1:z20 are twenty random-noise columns. What should you conclude?</p>
+<ul>
+<li>Adjusted R² must exceed R², so one of the lines is wrong</li>
+<li>An R² near 0.2 means the salt model is of no use</li>
+<li>The twenty extra variables clearly helped because R² rose by 0.025</li>
+<li>The noise columns did not help: adjusted R² did not improve</li>
+</ul>
+</div>
+</section>
+<section id="level-3-centring" class="level2 rq-level">
+<h2 class="rq-level anchored" data-anchor-id="level-3-centring">Level 3 · Centring</h2>
+<div class="rq-item" data-id="w2-05" data-world="w2" data-type="mcq" data-diff="2" data-tags="centering" data-hash="hruii9.i9ma2h" data-show="Q2VudHJlIGFnZSBhdCA1MCBzbyB0aGUgaW50ZXJjZXB0IGlzIGV4cGVjdGVkIFNCUCBhdCA1MA==" data-explain="Q2VudHJpbmcgbW92ZXMgdGhlIHplcm8gcG9pbnQgdG8gYSBtZWFuaW5nZnVsIHZhbHVlOyB0aGUgc2xvcGUgaXMgdW5jaGFuZ2VkIGFuZCB0aGUgaW50ZXJjZXB0IGJlY29tZXMgdGhlIGV4cGVjdGVkIG91dGNvbWUgdGhlcmUu" data-hints="WyJUaGUgcHJvYmxlbSBpcyB3aGVyZSAnemVybycgc2l0cywgbm90IHRoZSBzbG9wZS4iXQ==">
+<p>Age spans 30–69 years and the intercept of sbp ~ age is 96 mmHg, which describes nobody. What makes it interpretable?</p>
+<ul>
+<li>Standardise SBP so that its mean becomes zero</li>
+<li>Centre age at 50 so the intercept is expected SBP at 50</li>
+<li>Delete everyone younger than 30 from the dataset</li>
+<li>Multiply age by 100 so that the slope looks much bigger</li>
+</ul>
+</div>
+<div class="rq-item" data-id="w2-07" data-world="w2" data-type="order" data-diff="2" data-tags="centering" data-hash="ldqx8u.16g0v0" data-show="MS4gQ2hvb3NlIGEgbWVhbmluZ2Z1bCByZWZlcmVuY2UgdmFsdWUgc3VjaCBhcyBhZ2UgNTAgIDIuIENyZWF0ZSB0aGUgY2VudHJlZCB2YXJpYWJsZSBieSBzdWJ0cmFjdGluZyB0aGF0IHZhbHVlICAzLiBSZWZpdCB0aGUgbW9kZWwgdXNpbmcgdGhlIGNlbnRyZWQgdmFyaWFibGUgIDQuIFJlYWQgdGhlIGludGVyY2VwdCBhcyB0aGUgbWVhbiBvdXRjb21lIGF0IHRoZSByZWZlcmVuY2UgdmFsdWUgIDUuIENvbmZpcm0gdGhhdCB0aGUgc2xvcGUgZGlkIG5vdCBjaGFuZ2U=" data-explain="UGljayB0aGUgcmVmZXJlbmNlLCBidWlsZCB0aGUgY2VudHJlZCB2YXJpYWJsZSwgcmVmaXQsIGludGVycHJldCB0aGUgaW50ZXJjZXB0LCB0aGVuIGNoZWNrIHRoZSBzbG9wZSBpcyB1bmNoYW5nZWQu" data-hints="WyJZb3UgY2Fubm90IHJlZml0IGJlZm9yZSB0aGUgbmV3IHZhcmlhYmxlIGV4aXN0cy4iXQ==">
+<p>Put the steps for a centred model in order, from first to last:</p>
+<ol type="1">
+<li>Choose a meaningful reference value such as age 50</li>
+<li>Read the intercept as the mean outcome at the reference value</li>
+<li>Refit the model using the centred variable</li>
+<li>Create the centred variable by subtracting that value</li>
+<li>Confirm that the slope did not change</li>
+</ol>
+</div>
+</section>
+<section id="boss-interpretation-inspector" class="level2 rq-level">
+<h2 class="rq-level anchored" data-anchor-id="boss-interpretation-inspector">Boss · Interpretation inspector</h2>
+<div class="rq-item" data-id="w2-08" data-world="w2" data-type="spot" data-diff="3" data-tags="interpretation,ci-pi,r-squared" data-boss="1" data-hash="pdk53b.h6tp69" data-show="Rmxhd2VkOiAzLCA0LCA1LCA2" data-explain="MyBleHRyYXBvbGF0ZXMgYmV5b25kIHRoZSBkYXRhIGFuZCBzYXlzICdleGFjdGx5JzsgNCB0dXJucyBhIGJldHdlZW4tcGVyc29uIHNsb3BlIGludG8gYSB3aXRoaW4tcGVyc29uIHByb21pc2UgKDE3ID0gNSDDlyAzLjQgd291bGQgYWxzbyBuZWVkIGNhdXNhdGlvbik7IDUgcmV2ZXJzZXMgQ0kgYW5kIFBJOyA2IGNvbmZ1c2VzIFLCsiB3aXRoIGltcG9ydGFuY2UuIDEgYW5kIDIgYXJlIGNvcnJlY3Qu" data-hints="WyJBc2s6IGlzIHRoaXMgYWJvdXQgYSBncm91cCBtZWFuIG9yIG9uZSBwZXJzb24/IiwiRG9lcyBhbnlvbmUgaW4gdGhlIGRhdGEgZWF0IDAgZz8iXQ==">
+<p>Boss: flag every flawed sentence about sbp = 107 + 3.4 × salt_g (R² = 0.20, n = 582, cross-sectional survey).</p>
+<ul>
+<li>Each extra gram of daily salt goes with 3.4 mmHg higher mean SBP.</li>
+<li>The model accounts for about 20% of the variability in SBP.</li>
+<li>An adult eating 0 g of salt would have an SBP of exactly 107 mmHg.</li>
+<li>Adding 5 g of salt to one patient’s diet will raise that patient’s SBP by 17 mmHg.</li>
+<li>The 95% prediction interval at 8 g/day is narrower than the 95% CI for the mean.</li>
+<li>Because R² is only 0.20, the salt association is clinically unimportant.</li>
+</ul>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script src="assets/worlds.js"></script>
+
+<script src="assets/quest.js"></script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("\.");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>
+// Quarto's navbar `logo-href` is emitted as a literal string and is
+// not depth-adjusted for nested pages (unlike navbar.left/right items
+// and the theme <link>), so it 404s from any page below the project
+// root. Derive the correct relative prefix from the theme stylesheet
+// link, which Quarto *does* resolve correctly, and reuse it here.
+(function () {
+  var css = document.querySelector('link[href$="assets/theme_webp.css"]');
+  var brand = document.querySelector('a.navbar-brand');
+  if (css && brand) {
+    var prefix = css.getAttribute('href').replace(/assets\/theme_webp\.css$/, '');
+    brand.setAttribute('href', prefix + 'welcome.html');
+
+    // Floating bottom-right icon cluster: track home / site index /
+    // close. Kiosk mode (start-workshop.bat) hides all browser
+    // chrome, so these give a way back without relying on the
+    // browser's own controls. Positioned bottom-right to avoid the
+    // top navbar and the bottom-center "Home | Next Module" footer
+    // some pages already include.
+    var isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+
+    var style = document.createElement('style');
+    style.textContent =
+      '.ws-nav-cluster{position:fixed;bottom:10px;right:10px;z-index:10000;' +
+      'display:flex;gap:6px;background:rgba(255,255,255,0.9);' +
+      'border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,0.2);}' +
+      '.ws-nav-cluster a,.ws-nav-cluster button{width:36px;height:36px;' +
+      'border-radius:50%;border:none;background:#fff;font-size:1.1rem;' +
+      'display:flex;align-items:center;justify-content:center;cursor:pointer;' +
+      'text-decoration:none;color:inherit;box-shadow:0 1px 3px rgba(0,0,0,0.15);}' +
+      '.ws-nav-cluster a:hover,.ws-nav-cluster button:hover{background:#f0f0f0;}' +
+      '.ws-nav-hint{position:fixed;bottom:54px;right:10px;z-index:10000;' +
+      'background:#2c3e50;color:#fff;font-size:0.8rem;padding:6px 10px;' +
+      'border-radius:6px;display:none;white-space:nowrap;}';
+    document.head.appendChild(style);
+
+    var cluster = document.createElement('div');
+    cluster.className = 'ws-nav-cluster';
+
+    var trackHome = document.createElement('a');
+    trackHome.href = prefix + 'welcome.html';
+    trackHome.title = 'Back to track home';
+    trackHome.textContent = '🏠';
+    cluster.appendChild(trackHome);
+
+    var siteIndex = document.createElement('a');
+    siteIndex.href = prefix + '../index.html';
+    siteIndex.title = 'All workshop tracks';
+    siteIndex.textContent = '🧭';
+    cluster.appendChild(siteIndex);
+
+    if (isLocal) {
+      var hint = document.createElement('div');
+      hint.className = 'ws-nav-hint';
+      hint.textContent = 'Press Alt+F4 to exit full-screen';
+      document.body.appendChild(hint);
+
+      var closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.title = 'Exit full-screen';
+      closeBtn.textContent = '✕';
+      closeBtn.addEventListener('click', function () {
+        window.close();
+        hint.style.display = 'block';
+        setTimeout(function () { hint.style.display = 'none'; }, 3000);
+      });
+      cluster.appendChild(closeBtn);
+    }
+
+    document.body.appendChild(cluster);
+  }
+})();
+</script>
+
+
+
+
+</body></html>

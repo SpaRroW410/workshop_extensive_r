@@ -6,11 +6,11 @@
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.38">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Sparrow">
-  <meta name="dcterms.date" content="2026-08-27">
+  <meta name="dcterms.date" content="2026-10-16">
   <title>Data Visualization — Complete – Grammar of Graphics: Module 1</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -21,10 +21,13 @@
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
     */
-    code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -206,12 +209,12 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-Sparrow 
+Sparrow
 </div>
 </div>
 </div>
 
-  <p class="date">2026-08-27</p>
+  <p class="date">2026-10-16</p>
 </section>
 <section id="what-is-grammar-of-graphics" class="slide level2 smaller center">
 <h2>What is Grammar of Graphics?</h2>
@@ -413,11 +416,11 @@ Sparrow
 <h2>Building Plots Progressively</h2>
 <p>The power of layering</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" data-code-line-numbers="|1|2|3|4|5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> systolic_bp)) <span class="sc">+</span>        <span class="co"># 1. Data + aesthetics</span></span>
-<span id="cb7-2"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span>                                       <span class="co"># 2. Add points</span></span>
-<span id="cb7-3"><a></a>  <span class="fu">geom_smooth</span>() <span class="sc">+</span>                                      <span class="co"># 3. Add trend line</span></span>
-<span id="cb7-4"><a></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> treatment_group) <span class="sc">+</span>                      <span class="co"># 4. Add facets</span></span>
-<span id="cb7-5"><a></a>  <span class="fu">theme_minimal</span>()                                      <span class="co"># 5. Apply theme</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" data-code-line-numbers="|1|2|3|4|5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a aria-label="1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> systolic_bp)) <span class="sc">+</span>        <span class="co"># 1. Data + aesthetics</span></span>
+<span id="cb7-2"><a aria-label="2"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span>                                       <span class="co"># 2. Add points</span></span>
+<span id="cb7-3"><a aria-label="3"></a>  <span class="fu">geom_smooth</span>() <span class="sc">+</span>                                      <span class="co"># 3. Add trend line</span></span>
+<span id="cb7-4"><a aria-label="4"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> treatment_group) <span class="sc">+</span>                      <span class="co"># 4. Add facets</span></span>
+<span id="cb7-5"><a aria-label="5"></a>  <span class="fu">theme_minimal</span>()                                      <span class="co"># 5. Apply theme</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
 <p><strong>Each layer builds on the previous</strong>, creating complex visualizations from simple components</p>
@@ -433,17 +436,17 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="co"># Load required packages</span></span>
-<span id="cb8-2"><a></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb8-3"><a></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb8-4"><a></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb8-5"><a></a><span class="fu">library</span>(readxl)</span>
-<span id="cb8-6"><a></a></span>
-<span id="cb8-7"><a></a><span class="co"># Load the blood pressure dataset</span></span>
-<span id="cb8-8"><a></a>bp_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"../../data/PublicHealth_BP_Dataset.xlsx"</span>)</span>
-<span id="cb8-9"><a></a></span>
-<span id="cb8-10"><a></a><span class="co"># Preview the data</span></span>
-<span id="cb8-11"><a></a><span class="fu">glimpse</span>(bp_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a aria-label="1"></a><span class="co"># Load required packages</span></span>
+<span id="cb8-2"><a aria-label="2"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb8-3"><a aria-label="3"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb8-4"><a aria-label="4"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb8-5"><a aria-label="5"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb8-6"><a aria-label="6"></a></span>
+<span id="cb8-7"><a aria-label="7"></a><span class="co"># Load the blood pressure dataset</span></span>
+<span id="cb8-8"><a aria-label="8"></a>bp_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"../../data/PublicHealth_BP_Dataset.xlsx"</span>)</span>
+<span id="cb8-9"><a aria-label="9"></a></span>
+<span id="cb8-10"><a aria-label="10"></a><span class="co"># Preview the data</span></span>
+<span id="cb8-11"><a aria-label="11"></a><span class="fu">glimpse</span>(bp_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 200
@@ -476,39 +479,39 @@ $ DiaBP_6m       &lt;dbl&gt; 96, 98, 90, 75, 92, 75, 84, 74, 75, 86, 79, 73, 65,
 <section id="data-preparation" class="slide level2 smaller center">
 <h2>Data Preparation</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="co"># Create derived variables</span></span>
-<span id="cb10-2"><a></a>bp_data <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
-<span id="cb10-3"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb10-4"><a></a>    <span class="co"># BP change from baseline to 6 months</span></span>
-<span id="cb10-5"><a></a>    <span class="at">SysBP_Change =</span> SysBP_6m <span class="sc">-</span> SysBP_0m,</span>
-<span id="cb10-6"><a></a>    <span class="at">DiaBP_Change =</span> DiaBP_6m <span class="sc">-</span> DiaBP_0m,</span>
-<span id="cb10-7"><a></a>    </span>
-<span id="cb10-8"><a></a>    <span class="co"># Age groups</span></span>
-<span id="cb10-9"><a></a>    <span class="at">AgeGroup =</span> <span class="fu">cut</span>(Age, </span>
-<span id="cb10-10"><a></a>                   <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">65</span>, <span class="dv">100</span>),</span>
-<span id="cb10-11"><a></a>                   <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"18-30"</span>, <span class="st">"31-50"</span>, <span class="st">"51-65"</span>, <span class="st">"65+"</span>)),</span>
-<span id="cb10-12"><a></a>    </span>
-<span id="cb10-13"><a></a>    <span class="co"># Hypertension status (Systolic ≥140 or Diastolic ≥90)</span></span>
-<span id="cb10-14"><a></a>    <span class="at">Hypertension_Baseline =</span> <span class="fu">ifelse</span>(SysBP_0m <span class="sc">&gt;=</span> <span class="dv">140</span> <span class="sc">|</span> DiaBP_0m <span class="sc">&gt;=</span> <span class="dv">90</span>, </span>
-<span id="cb10-15"><a></a>                                   <span class="st">"Hypertensive"</span>, <span class="st">"Normal"</span>),</span>
-<span id="cb10-16"><a></a>    </span>
-<span id="cb10-17"><a></a>    <span class="co"># BMI categories</span></span>
-<span id="cb10-18"><a></a>    <span class="at">BMI_Category =</span> <span class="fu">cut</span>(BMI,</span>
-<span id="cb10-19"><a></a>                       <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">18.5</span>, <span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">100</span>),</span>
-<span id="cb10-20"><a></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Underweight"</span>, <span class="st">"Normal"</span>, <span class="st">"Overweight"</span>, <span class="st">"Obese"</span>))</span>
-<span id="cb10-21"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a aria-label="1"></a><span class="co"># Create derived variables</span></span>
+<span id="cb10-2"><a aria-label="2"></a>bp_data <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a aria-label="3"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb10-4"><a aria-label="4"></a>    <span class="co"># BP change from baseline to 6 months</span></span>
+<span id="cb10-5"><a aria-label="5"></a>    <span class="at">SysBP_Change =</span> SysBP_6m <span class="sc">-</span> SysBP_0m,</span>
+<span id="cb10-6"><a aria-label="6"></a>    <span class="at">DiaBP_Change =</span> DiaBP_6m <span class="sc">-</span> DiaBP_0m,</span>
+<span id="cb10-7"><a aria-label="7"></a>    </span>
+<span id="cb10-8"><a aria-label="8"></a>    <span class="co"># Age groups</span></span>
+<span id="cb10-9"><a aria-label="9"></a>    <span class="at">AgeGroup =</span> <span class="fu">cut</span>(Age, </span>
+<span id="cb10-10"><a aria-label="10"></a>                   <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">65</span>, <span class="dv">100</span>),</span>
+<span id="cb10-11"><a aria-label="11"></a>                   <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"18-30"</span>, <span class="st">"31-50"</span>, <span class="st">"51-65"</span>, <span class="st">"65+"</span>)),</span>
+<span id="cb10-12"><a aria-label="12"></a>    </span>
+<span id="cb10-13"><a aria-label="13"></a>    <span class="co"># Hypertension status (Systolic ≥140 or Diastolic ≥90)</span></span>
+<span id="cb10-14"><a aria-label="14"></a>    <span class="at">Hypertension_Baseline =</span> <span class="fu">ifelse</span>(SysBP_0m <span class="sc">&gt;=</span> <span class="dv">140</span> <span class="sc">|</span> DiaBP_0m <span class="sc">&gt;=</span> <span class="dv">90</span>, </span>
+<span id="cb10-15"><a aria-label="15"></a>                                   <span class="st">"Hypertensive"</span>, <span class="st">"Normal"</span>),</span>
+<span id="cb10-16"><a aria-label="16"></a>    </span>
+<span id="cb10-17"><a aria-label="17"></a>    <span class="co"># BMI categories</span></span>
+<span id="cb10-18"><a aria-label="18"></a>    <span class="at">BMI_Category =</span> <span class="fu">cut</span>(BMI,</span>
+<span id="cb10-19"><a aria-label="19"></a>                       <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">18.5</span>, <span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">100</span>),</span>
+<span id="cb10-20"><a aria-label="20"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Underweight"</span>, <span class="st">"Normal"</span>, <span class="st">"Overweight"</span>, <span class="st">"Obese"</span>))</span>
+<span id="cb10-21"><a aria-label="21"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="handling-missing-data" class="slide level2 smaller center">
 <h2>Handling Missing Data</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="co"># Check missing data</span></span>
-<span id="cb11-2"><a></a>missing_summary <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
-<span id="cb11-3"><a></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">sum</span>(<span class="fu">is.na</span>(.))))</span>
-<span id="cb11-4"><a></a></span>
-<span id="cb11-5"><a></a><span class="co"># Display columns with missing data</span></span>
-<span id="cb11-6"><a></a>missing_summary <span class="sc">%&gt;%</span></span>
-<span id="cb11-7"><a></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span>. <span class="sc">&gt;</span> <span class="dv">0</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a aria-label="1"></a><span class="co"># Check missing data</span></span>
+<span id="cb11-2"><a aria-label="2"></a>missing_summary <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a aria-label="3"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">sum</span>(<span class="fu">is.na</span>(.))))</span>
+<span id="cb11-4"><a aria-label="4"></a></span>
+<span id="cb11-5"><a aria-label="5"></a><span class="co"># Display columns with missing data</span></span>
+<span id="cb11-6"><a aria-label="6"></a>missing_summary <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a aria-label="7"></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span>. <span class="sc">&gt;</span> <span class="dv">0</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 2
   ExerciseFreq ChronicDisease
@@ -523,18 +526,18 @@ $ DiaBP_6m       &lt;dbl&gt; 96, 98, 90, 75, 92, 75, 84, 74, 75, 86, 79, 73, 65,
 <section id="handling-missing-data-strategies" class="slide level2 center">
 <h2>Handling Missing Data: Strategies</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="co"># Strategy 1: Filter complete cases for specific analysis</span></span>
-<span id="cb13-2"><a></a>bp_complete <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
-<span id="cb13-3"><a></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ExerciseFreq), <span class="sc">!</span><span class="fu">is.na</span>(ChronicDisease))</span>
-<span id="cb13-4"><a></a></span>
-<span id="cb13-5"><a></a><span class="co"># Strategy 2: Use na.rm in calculations</span></span>
-<span id="cb13-6"><a></a>bp_data <span class="sc">%&gt;%</span></span>
-<span id="cb13-7"><a></a>  <span class="fu">group_by</span>(TreatmentGroup) <span class="sc">%&gt;%</span></span>
-<span id="cb13-8"><a></a>  <span class="fu">summarise</span>(<span class="at">Mean_SysBP =</span> <span class="fu">mean</span>(SysBP_0m, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb13-9"><a></a></span>
-<span id="cb13-10"><a></a><span class="co"># Strategy 3: Explicitly show missing as category</span></span>
-<span id="cb13-11"><a></a>bp_data <span class="sc">%&gt;%</span></span>
-<span id="cb13-12"><a></a>  <span class="fu">mutate</span>(<span class="at">ExerciseFreq =</span> <span class="fu">replace_na</span>(ExerciseFreq, <span class="st">"Unknown"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a aria-label="1"></a><span class="co"># Strategy 1: Filter complete cases for specific analysis</span></span>
+<span id="cb13-2"><a aria-label="2"></a>bp_complete <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a aria-label="3"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ExerciseFreq), <span class="sc">!</span><span class="fu">is.na</span>(ChronicDisease))</span>
+<span id="cb13-4"><a aria-label="4"></a></span>
+<span id="cb13-5"><a aria-label="5"></a><span class="co"># Strategy 2: Use na.rm in calculations</span></span>
+<span id="cb13-6"><a aria-label="6"></a>bp_data <span class="sc">%&gt;%</span></span>
+<span id="cb13-7"><a aria-label="7"></a>  <span class="fu">group_by</span>(TreatmentGroup) <span class="sc">%&gt;%</span></span>
+<span id="cb13-8"><a aria-label="8"></a>  <span class="fu">summarise</span>(<span class="at">Mean_SysBP =</span> <span class="fu">mean</span>(SysBP_0m, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb13-9"><a aria-label="9"></a></span>
+<span id="cb13-10"><a aria-label="10"></a><span class="co"># Strategy 3: Explicitly show missing as category</span></span>
+<span id="cb13-11"><a aria-label="11"></a>bp_data <span class="sc">%&gt;%</span></span>
+<span id="cb13-12"><a aria-label="12"></a>  <span class="fu">mutate</span>(<span class="at">ExerciseFreq =</span> <span class="fu">replace_na</span>(ExerciseFreq, <span class="st">"Unknown"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section></section>
 <section>
@@ -546,9 +549,9 @@ $ DiaBP_6m       &lt;dbl&gt; 96, 98, 90, 75, 92, 75, 84, 74, 75, 86, 79, 73, 65,
 <h2>geom_point(): Scatter Plots</h2>
 <p><strong>Minimum Arguments</strong>: <code>aes(x, y)</code></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" data-code-line-numbers="|1|2|3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="co"># Basic scatter plot</span></span>
-<span id="cb14-2"><a></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m)) <span class="sc">+</span></span>
-<span id="cb14-3"><a></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" data-code-line-numbers="|1|2|3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a aria-label="1"></a><span class="co"># Basic scatter plot</span></span>
+<span id="cb14-2"><a aria-label="2"></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m)) <span class="sc">+</span></span>
+<span id="cb14-3"><a aria-label="3"></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
 <p><strong>Use for</strong>: Showing relationships between two continuous variables</p>
@@ -561,9 +564,9 @@ $ DiaBP_6m       &lt;dbl&gt; 96, 98, 90, 75, 92, 75, 84, 74, 75, 86, 79, 73, 65,
 <section id="geom_point-enhanced-version" class="slide level2 center">
 <h2>geom_point(): Enhanced Version</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15" data-code-line-numbers="|2|3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m, </span>
-<span id="cb15-2"><a></a>                    <span class="at">color =</span> TreatmentGroup)) <span class="sc">+</span></span>
-<span id="cb15-3"><a></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15" data-code-line-numbers="|2|3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a aria-label="1"></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m, </span>
+<span id="cb15-2"><a aria-label="2"></a>                    <span class="at">color =</span> TreatmentGroup)) <span class="sc">+</span></span>
+<span id="cb15-3"><a aria-label="3"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
 <p><strong>Adding aesthetics</strong>: Color by treatment group for comparison</p>
@@ -577,12 +580,12 @@ $ DiaBP_6m       &lt;dbl&gt; 96, 98, 90, 75, 92, 75, 84, 74, 75, 86, 79, 73, 65,
 <h2>geom_line(): Line Graphs</h2>
 <p><strong>Minimum Arguments</strong>: <code>aes(x, y)</code></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" data-code-line-numbers="|1-4|5|6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="co"># Reshape data for time series</span></span>
-<span id="cb16-2"><a></a>bp_time <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
-<span id="cb16-3"><a></a>  <span class="fu">select</span>(PatientID, TreatmentGroup, SysBP_0m, SysBP_3m, SysBP_6m) <span class="sc">%&gt;%</span></span>
-<span id="cb16-4"><a></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"SysBP"</span>),</span>
-<span id="cb16-5"><a></a>               <span class="at">names_to =</span> <span class="st">"Time"</span>, <span class="at">values_to =</span> <span class="st">"SysBP"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb16-6"><a></a>  <span class="fu">mutate</span>(<span class="at">Months =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"SysBP_|m"</span>, <span class="st">""</span>, Time)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" data-code-line-numbers="|1-4|5|6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a aria-label="1"></a><span class="co"># Reshape data for time series</span></span>
+<span id="cb16-2"><a aria-label="2"></a>bp_time <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a aria-label="3"></a>  <span class="fu">select</span>(PatientID, TreatmentGroup, SysBP_0m, SysBP_3m, SysBP_6m) <span class="sc">%&gt;%</span></span>
+<span id="cb16-4"><a aria-label="4"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"SysBP"</span>),</span>
+<span id="cb16-5"><a aria-label="5"></a>               <span class="at">names_to =</span> <span class="st">"Time"</span>, <span class="at">values_to =</span> <span class="st">"SysBP"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-6"><a aria-label="6"></a>  <span class="fu">mutate</span>(<span class="at">Months =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"SysBP_|m"</span>, <span class="st">""</span>, Time)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="geom_line-time-series-code" class="slide level2 center">
@@ -590,14 +593,14 @@ $ DiaBP_6m       &lt;dbl&gt; 96, 98, 90, 75, 92, 75, 84, 74, 75, 86, 79, 73, 65,
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="co"># Average BP over time by treatment</span></span>
-<span id="cb17-2"><a></a>bp_summary <span class="ot">&lt;-</span> bp_time <span class="sc">%&gt;%</span></span>
-<span id="cb17-3"><a></a>  <span class="fu">group_by</span>(TreatmentGroup, Months) <span class="sc">%&gt;%</span></span>
-<span id="cb17-4"><a></a>  <span class="fu">summarise</span>(<span class="at">Mean_SysBP =</span> <span class="fu">mean</span>(SysBP, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb17-5"><a></a></span>
-<span id="cb17-6"><a></a><span class="fu">ggplot</span>(bp_summary, <span class="fu">aes</span>(<span class="at">x =</span> Months, <span class="at">y =</span> Mean_SysBP, </span>
-<span id="cb17-7"><a></a>                       <span class="at">color =</span> TreatmentGroup)) <span class="sc">+</span></span>
-<span id="cb17-8"><a></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a aria-label="1"></a><span class="co"># Average BP over time by treatment</span></span>
+<span id="cb17-2"><a aria-label="2"></a>bp_summary <span class="ot">&lt;-</span> bp_time <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a aria-label="3"></a>  <span class="fu">group_by</span>(TreatmentGroup, Months) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a aria-label="4"></a>  <span class="fu">summarise</span>(<span class="at">Mean_SysBP =</span> <span class="fu">mean</span>(SysBP, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb17-5"><a aria-label="5"></a></span>
+<span id="cb17-6"><a aria-label="6"></a><span class="fu">ggplot</span>(bp_summary, <span class="fu">aes</span>(<span class="at">x =</span> Months, <span class="at">y =</span> Mean_SysBP, </span>
+<span id="cb17-7"><a aria-label="7"></a>                       <span class="at">color =</span> TreatmentGroup)) <span class="sc">+</span></span>
+<span id="cb17-8"><a aria-label="8"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="fragment">
@@ -614,14 +617,14 @@ $ DiaBP_6m       &lt;dbl&gt; 96, 98, 90, 75, 92, 75, 84, 74, 75, 86, 79, 73, 65,
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="co"># Average BP change by treatment group</span></span>
-<span id="cb18-2"><a></a>bp_change_summary <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
-<span id="cb18-3"><a></a>  <span class="fu">group_by</span>(TreatmentGroup) <span class="sc">%&gt;%</span></span>
-<span id="cb18-4"><a></a>  <span class="fu">summarise</span>(<span class="at">Mean_Change =</span> <span class="fu">mean</span>(SysBP_Change, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb18-5"><a></a></span>
-<span id="cb18-6"><a></a><span class="fu">ggplot</span>(bp_change_summary, <span class="fu">aes</span>(<span class="at">x =</span> TreatmentGroup, <span class="at">y =</span> Mean_Change,</span>
-<span id="cb18-7"><a></a>                               <span class="at">fill =</span> TreatmentGroup)) <span class="sc">+</span></span>
-<span id="cb18-8"><a></a>  <span class="fu">geom_col</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a aria-label="1"></a><span class="co"># Average BP change by treatment group</span></span>
+<span id="cb18-2"><a aria-label="2"></a>bp_change_summary <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a aria-label="3"></a>  <span class="fu">group_by</span>(TreatmentGroup) <span class="sc">%&gt;%</span></span>
+<span id="cb18-4"><a aria-label="4"></a>  <span class="fu">summarise</span>(<span class="at">Mean_Change =</span> <span class="fu">mean</span>(SysBP_Change, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb18-5"><a aria-label="5"></a></span>
+<span id="cb18-6"><a aria-label="6"></a><span class="fu">ggplot</span>(bp_change_summary, <span class="fu">aes</span>(<span class="at">x =</span> TreatmentGroup, <span class="at">y =</span> Mean_Change,</span>
+<span id="cb18-7"><a aria-label="7"></a>                               <span class="at">fill =</span> TreatmentGroup)) <span class="sc">+</span></span>
+<span id="cb18-8"><a aria-label="8"></a>  <span class="fu">geom_col</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="fragment">
@@ -638,9 +641,9 @@ $ DiaBP_6m       &lt;dbl&gt; 96, 98, 90, 75, 92, 75, 84, 74, 75, 86, 79, 73, 65,
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="co"># Count of patients by smoking status</span></span>
-<span id="cb19-2"><a></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> SmokingStatus, <span class="at">fill =</span> SmokingStatus)) <span class="sc">+</span></span>
-<span id="cb19-3"><a></a>  <span class="fu">geom_bar</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a aria-label="1"></a><span class="co"># Count of patients by smoking status</span></span>
+<span id="cb19-2"><a aria-label="2"></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> SmokingStatus, <span class="at">fill =</span> SmokingStatus)) <span class="sc">+</span></span>
+<span id="cb19-3"><a aria-label="3"></a>  <span class="fu">geom_bar</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="fragment">
@@ -660,9 +663,9 @@ $ DiaBP_6m       &lt;dbl&gt; 96, 98, 90, 75, 92, 75, 84, 74, 75, 86, 79, 73, 65,
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> BMI)) <span class="sc">+</span></span>
-<span id="cb20-2"><a></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>, <span class="at">fill =</span> <span class="st">"steelblue"</span>, </span>
-<span id="cb20-3"><a></a>                 <span class="at">color =</span> <span class="st">"white"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a aria-label="1"></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> BMI)) <span class="sc">+</span></span>
+<span id="cb20-2"><a aria-label="2"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>, <span class="at">fill =</span> <span class="st">"steelblue"</span>, </span>
+<span id="cb20-3"><a aria-label="3"></a>                 <span class="at">color =</span> <span class="st">"white"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="fragment">
@@ -682,9 +685,9 @@ $ DiaBP_6m       &lt;dbl&gt; 96, 98, 90, 75, 92, 75, 84, 74, 75, 86, 79, 73, 65,
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> SmokingStatus, <span class="at">y =</span> SysBP_0m,</span>
-<span id="cb21-2"><a></a>                    <span class="at">fill =</span> SmokingStatus)) <span class="sc">+</span></span>
-<span id="cb21-3"><a></a>  <span class="fu">geom_boxplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a aria-label="1"></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> SmokingStatus, <span class="at">y =</span> SysBP_0m,</span>
+<span id="cb21-2"><a aria-label="2"></a>                    <span class="at">fill =</span> SmokingStatus)) <span class="sc">+</span></span>
+<span id="cb21-3"><a aria-label="3"></a>  <span class="fu">geom_boxplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="fragment">
@@ -704,9 +707,9 @@ $ DiaBP_6m       &lt;dbl&gt; 96, 98, 90, 75, 92, 75, 84, 74, 75, 86, 79, 73, 65,
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Region, <span class="at">y =</span> Cholesterol,</span>
-<span id="cb22-2"><a></a>                    <span class="at">fill =</span> Region)) <span class="sc">+</span></span>
-<span id="cb22-3"><a></a>  <span class="fu">geom_violin</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a aria-label="1"></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Region, <span class="at">y =</span> Cholesterol,</span>
+<span id="cb22-2"><a aria-label="2"></a>                    <span class="at">fill =</span> Region)) <span class="sc">+</span></span>
+<span id="cb22-3"><a aria-label="3"></a>  <span class="fu">geom_violin</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="fragment">
@@ -724,9 +727,9 @@ $ DiaBP_6m       &lt;dbl&gt; 96, 98, 90, 75, 92, 75, 84, 74, 75, 86, 79, 73, 65,
 <h2>geom_smooth(): Trend Lines</h2>
 <p><strong>Minimum Arguments</strong>: <code>aes(x, y)</code></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m)) <span class="sc">+</span></span>
-<span id="cb23-2"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
-<span id="cb23-3"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a aria-label="1"></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m)) <span class="sc">+</span></span>
+<span id="cb23-2"><a aria-label="2"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb23-3"><a aria-label="3"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
 <p><strong>Use for</strong>: Adding trend lines and confidence intervals</p>
@@ -745,8 +748,8 @@ $ DiaBP_6m       &lt;dbl&gt; 96, 98, 90, 75, 92, 75, 84, 74, 75, 86, 79, 73, 65,
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> BloodSugar, <span class="at">fill =</span> TreatmentGroup)) <span class="sc">+</span></span>
-<span id="cb24-2"><a></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a aria-label="1"></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> BloodSugar, <span class="at">fill =</span> TreatmentGroup)) <span class="sc">+</span></span>
+<span id="cb24-2"><a aria-label="2"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="fragment">
@@ -766,9 +769,9 @@ $ DiaBP_6m       &lt;dbl&gt; 96, 98, 90, 75, 92, 75, 84, 74, 75, 86, 79, 73, 65,
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> AgeGroup, <span class="at">y =</span> SysBP_0m,</span>
-<span id="cb25-2"><a></a>                    <span class="at">color =</span> TreatmentGroup)) <span class="sc">+</span></span>
-<span id="cb25-3"><a></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a aria-label="1"></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> AgeGroup, <span class="at">y =</span> SysBP_0m,</span>
+<span id="cb25-2"><a aria-label="2"></a>                    <span class="at">color =</span> TreatmentGroup)) <span class="sc">+</span></span>
+<span id="cb25-3"><a aria-label="3"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="fragment">
@@ -812,11 +815,11 @@ $ DiaBP_6m       &lt;dbl&gt; 96, 98, 90, 75, 92, 75, 84, 74, 75, 86, 79, 73, 65,
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="co"># Your code here</span></span>
-<span id="cb26-2"><a></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> ___, <span class="at">y =</span> ___, <span class="at">color =</span> ___)) <span class="sc">+</span></span>
-<span id="cb26-3"><a></a>  <span class="fu">geom___</span>() <span class="sc">+</span></span>
-<span id="cb26-4"><a></a>  <span class="fu">geom_smooth</span>(___) <span class="sc">+</span></span>
-<span id="cb26-5"><a></a>  <span class="fu">labs</span>(___)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a aria-label="1"></a><span class="co"># Your code here</span></span>
+<span id="cb26-2"><a aria-label="2"></a><span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> ___, <span class="at">y =</span> ___, <span class="at">color =</span> ___)) <span class="sc">+</span></span>
+<span id="cb26-3"><a aria-label="3"></a>  <span class="fu">geom___</span>() <span class="sc">+</span></span>
+<span id="cb26-4"><a aria-label="4"></a>  <span class="fu">geom_smooth</span>(___) <span class="sc">+</span></span>
+<span id="cb26-5"><a aria-label="5"></a>  <span class="fu">labs</span>(___)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>

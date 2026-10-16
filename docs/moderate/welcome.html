@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -39,10 +42,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-de1d9db716a7ad7caf9a7f73279c5ec9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-7bb31cd2f4999533cab70d7f7b501715.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -110,11 +113,6 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="./r-foundations/merging_dataset.html">
  <span class="dropdown-text">Merging Datasets</span></a>
   </li>  
-        <li><hr class="dropdown-divider"></li>
-        <li>
-    <a class="dropdown-item" href="./nctoh/data_wrangle.qmd">
- <span class="dropdown-text">Applied: Wrangling Examples</span></a>
-  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -151,11 +149,6 @@ ul.task-list li input[type="checkbox"] {
         <li>
     <a class="dropdown-item" href="./plot-gallery/moderate.html">
  <span class="dropdown-text">Intermediate Plot Gallery</span></a>
-  </li>  
-        <li><hr class="dropdown-divider"></li>
-        <li>
-    <a class="dropdown-item" href="./nctoh/data_visualization.qmd">
- <span class="dropdown-text">Applied: Visualization Examples</span></a>
   </li>  
     </ul>
   </li>
@@ -198,11 +191,6 @@ ul.task-list li input[type="checkbox"] {
         <li>
     <a class="dropdown-item" href="./gtsummary/gtsummary_tutorial.html">
  <span class="dropdown-text">gtsummary Tables</span></a>
-  </li>  
-        <li><hr class="dropdown-divider"></li>
-        <li>
-    <a class="dropdown-item" href="./nctoh/data_analysis_abridged.qmd">
- <span class="dropdown-text">Applied: Analysis Examples</span></a>
   </li>  
     </ul>
   </li>
@@ -304,52 +292,48 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div style="background:#f0f4ff;border-left:5px solid #1565c0;border-radius:10px;
+<div style="background:#f1f8f1;border-left:5px solid #2e7d32;border-radius:10px;
             padding:1.5rem 2rem;margin-bottom:2rem;">
-<span style="display:inline-block;background:#1565c0;color:white;font-size:0.8rem;
+<span style="display:inline-block;background:#2e7d32;color:white;font-size:0.8rem;
                font-weight:600;padding:0.2rem 0.75rem;border-radius:999px;
-               margin-bottom:0.75rem;">🔵 Workshop Key Unlocked</span>
-<h2 style="color:#1565c0;margin-top:0.4rem;margin-bottom:0.6rem;" class="anchored">
-Moderate Track
+               margin-bottom:0.75rem;">🟢 Open Access</span>
+<h2 style="color:#2e7d32;margin-top:0.4rem;margin-bottom:0.6rem;" class="anchored">
+Basic Track
 </h2>
 <p style="font-size:1.05rem;line-height:1.7;margin:0;">
-Welcome to the <strong>Moderate Track</strong> — unlocked for workshop participants. This track builds on the basics with best practices, intermediate plots, ggplot2 modules 1–2, gtsummary tables, and applied healthcare examples from real public health datasets.
+Welcome to the <strong>Basic Track</strong> of the R Data Visualization Workshop — an open-access, self-paced learning platform for data wrangling, visualization, and statistical analysis in R. This site contains hands-on examples, best practices, and plotting techniques all in one place.
 </p>
 </div>
 <section id="workshop-goals" class="level2">
 <h2 class="anchored" data-anchor-id="workshop-goals">🎯 Workshop Goals</h2>
 <ul>
-<li>Apply best practices to plot design</li>
-<li>Use ggplot2 modules 1–2 for intermediate visualization</li>
-<li>Summarise data with gtsummary tables</li>
-<li>Create dynamic Quarto documents with inline R code</li>
+<li>Learn the basics of good data visualization</li>
+<li>Use R to wrangle and prepare data</li>
+<li>Explore basic visualization and statistical testing</li>
+<li>Create reproducible reports using Quarto</li>
 </ul>
 </section>
 <section id="what-this-track-covers" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-track-covers">📚 What This Track Covers</h2>
 <ul>
-<li>📁 R Foundations &amp; Data Wrangling (+ Applied Examples)</li>
-<li>📊 Best Practices &amp; Plot Matching</li>
-<li>🎨 ggplot2 Modules 1–2</li>
-<li>🖼️ Basic &amp; Intermediate Plot Gallery</li>
-<li>🔗 Specialized Plots — Merged &amp; Statistical</li>
-<li>🧪 ggstatsplot — Intro &amp; Intermediate</li>
-<li>📋 gtsummary Tables</li>
-<li>📝 Quarto Basics &amp; Dynamic Documents</li>
-<li>⚙️ Exporting &amp; Plotting Tools</li>
+<li>📁 R Foundations &amp; Data Wrangling</li>
+<li>📊 Basic Visualization with ggplot2</li>
+<li>🧪 Statistical Test Selection</li>
+<li>📈 ggstatsplot — Introduction</li>
+<li>📝 Quarto Basics</li>
 </ul>
 </section>
 <section id="find-your-way-around" class="level2">
 <h2 class="anchored" data-anchor-id="find-your-way-around">🧭 Find Your Way Around</h2>
 <p>Use the navigation bar above to browse all modules. Key starting points:</p>
 <ul>
-<li>📁 <strong><a href="./r-foundations/getting-started.html">R Foundations</a></strong> — R syntax, wrangling, and applied healthcare examples</li>
-<li>📊 <strong><a href="./data-visualization/ggplot_grammar.html">Data Visualization</a></strong> — Best practices, plot matching, and ggplot2 modules 1–2</li>
-<li>🧪 <strong><a href="./statistical-analysis/statistical_tests.html">Statistical Analysis</a></strong> — ggstatsplot intermediate and gtsummary tables</li>
-<li>📝 <strong><a href="statistical-analysis/reproducible_writing.qmd">Reproducibility</a></strong> — Quarto basics and dynamic documents with inline R</li>
+<li>📁 <strong><a href="./r-foundations/getting-started.html">R Foundations</a></strong> — R syntax, data cleaning, and tidy workflows</li>
+<li>📊 <strong><a href="./data-visualization/ggplot_grammar.html">Data Visualization</a></strong> — Grammar of graphics and basic ggplot2</li>
+<li>🧪 <strong><a href="./statistical-analysis/statistical_tests.html">Statistical Analysis</a></strong> — Choosing the right statistical test</li>
+<li>📝 <strong><a href="statistical-analysis/reproducible_writing.qmd">Reproducibility</a></strong> — Creating reports with Quarto</li>
 </ul>
 <blockquote class="blockquote">
-<p>All Basic content remains accessible from the navbar above.</p>
+<p>Use the navbar above to explore topics in any order.</p>
 </blockquote>
 </section>
 <section id="downloadable-resources" class="level2">
@@ -360,8 +344,6 @@ Welcome to the <strong>Moderate Track</strong> — unlocked for workshop partici
 <ul>
 <li><a href="downloads/basic_r_foundations.R">Basic r Foundations</a></li>
 <li><a href="downloads/basic_visualization.R">Basic Visualization</a></li>
-<li><a href="downloads/moderate_visualization.R">Moderate Visualization</a></li>
-<li><a href="downloads/gtsummary_examples.R">Gtsummary Examples</a></li>
 </ul>
 </section>
 <section id="datasets" class="level3">
@@ -370,7 +352,6 @@ Welcome to the <strong>Moderate Track</strong> — unlocked for workshop partici
 <li>📊 <a href="downloads/workshop_data.csv">Workshop Data</a> <code>.csv</code></li>
 <li>📗 <a href="downloads/workshop_data.xlsx">Workshop Data</a> <code>.xlsx</code></li>
 <li>🔵 <a href="downloads/workshop_data.rds">Workshop Data</a> <code>.rds</code></li>
-<li>🔵 <a href="downloads/nctoh_data.rds">Nctoh Data</a> <code>.rds</code></li>
 </ul>
 </section>
 <section id="cheatsheets" class="level3">
@@ -378,7 +359,6 @@ Welcome to the <strong>Moderate Track</strong> — unlocked for workshop partici
 <ul>
 <li><a href="downloads/ggplot2_cheatsheet.pdf">ggplot2 Cheatsheet</a></li>
 <li><a href="downloads/dplyr_cheatsheet.pdf">Dplyr Cheatsheet</a></li>
-<li><a href="downloads/gtsummary_cheatsheet.pdf">Gtsummary Cheatsheet</a></li>
 </ul>
 </section>
 <section id="quarto-template" class="level3">
@@ -388,7 +368,7 @@ Welcome to the <strong>Moderate Track</strong> — unlocked for workshop partici
 </ul>
 <hr>
 <blockquote class="blockquote">
-<p>💡 <strong>Tip:</strong> Already comfortable with basics? Jump to <strong>ggplot2 Module 1</strong> or <strong>Best Practices</strong> directly.</p>
+<p>💡 <strong>Tip:</strong> New to R? Start with <strong>R Foundations → Getting Started</strong> before anything else.</p>
 </blockquote>
 
 

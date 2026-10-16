@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -39,10 +42,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-de1d9db716a7ad7caf9a7f73279c5ec9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-7bb31cd2f4999533cab70d7f7b501715.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -166,10 +169,6 @@ ul.task-list li input[type="checkbox"] {
   </li>  
     </ul>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="./nctoh/data_visualization.qmd"> 
-<span class="menu-text">Applied: Viz Examples</span></a>
-  </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item dropdown ">
@@ -238,51 +237,48 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div style="background:#faf0ff;border-left:5px solid #6a1b9a;border-radius:10px;
+<div style="background:#f1f8f1;border-left:5px solid #2e7d32;border-radius:10px;
             padding:1.5rem 2rem;margin-bottom:2rem;">
-<span style="display:inline-block;background:#6a1b9a;color:white;font-size:0.8rem;
+<span style="display:inline-block;background:#2e7d32;color:white;font-size:0.8rem;
                font-weight:600;padding:0.2rem 0.75rem;border-radius:999px;
-               margin-bottom:0.75rem;">🟣 Workshop Key Unlocked</span>
-<h2 style="color:#6a1b9a;margin-top:0.4rem;margin-bottom:0.6rem;" class="anchored">
-Data Visualization — Foundations
+               margin-bottom:0.75rem;">🟢 Open Access</span>
+<h2 style="color:#2e7d32;margin-top:0.4rem;margin-bottom:0.6rem;" class="anchored">
+Basic Track
 </h2>
 <p style="font-size:1.05rem;line-height:1.7;margin:0;">
-Welcome to the <strong>Data Visualization Foundations</strong> track. This focused track covers the grammar of graphics, visualization best practices, ggplot2 Modules 1–2, and the basic and intermediate plot galleries. No statistical analysis or Quarto modules are included.
+Welcome to the <strong>Basic Track</strong> of the R Data Visualization Workshop — an open-access, self-paced learning platform for data wrangling, visualization, and statistical analysis in R. This site contains hands-on examples, best practices, and plotting techniques all in one place.
 </p>
 </div>
 <section id="workshop-goals" class="level2">
 <h2 class="anchored" data-anchor-id="workshop-goals">🎯 Workshop Goals</h2>
 <ul>
-<li>Understand the grammar of graphics</li>
-<li>Apply best practices to plot design</li>
-<li>Use ggplot2 Modules 1–2 for effective visualization</li>
-<li>Export and share publication-ready plots</li>
+<li>Learn the basics of good data visualization</li>
+<li>Use R to wrangle and prepare data</li>
+<li>Explore basic visualization and statistical testing</li>
+<li>Create reproducible reports using Quarto</li>
 </ul>
 </section>
 <section id="what-this-track-covers" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-track-covers">📚 What This Track Covers</h2>
 <ul>
-<li>📐 Grammar of Graphics</li>
-<li>✅ Best Practices</li>
-<li>🗂️ Matching Data to Plots</li>
-<li>🎨 ggplot2 Modules 1–2</li>
-<li>🖼️ Basic &amp; Intermediate Plot Gallery</li>
-<li>🔗 Specialized Plots — Merged &amp; Statistical</li>
-<li>⚙️ Exporting &amp; Plotting Tools</li>
-<li>🏥 Applied Visualization Examples</li>
+<li>📁 R Foundations &amp; Data Wrangling</li>
+<li>📊 Basic Visualization with ggplot2</li>
+<li>🧪 Statistical Test Selection</li>
+<li>📈 ggstatsplot — Introduction</li>
+<li>📝 Quarto Basics</li>
 </ul>
 </section>
 <section id="find-your-way-around" class="level2">
 <h2 class="anchored" data-anchor-id="find-your-way-around">🧭 Find Your Way Around</h2>
 <p>Use the navigation bar above to browse all modules. Key starting points:</p>
 <ul>
-<li>📐 <strong><a href="./data-visualization/ggplot_grammar.html">Data Visualization</a></strong> — Grammar of graphics, best practices, and plot matching</li>
-<li>🎨 <strong><a href="./data-visualization/gram_ggplot/module_1_foundations_geoms.html">ggplot2 Modules</a></strong> — Modules 1–2: foundations, geoms, aesthetics, and faceting</li>
-<li>🖼️ <strong><a href="./plot-gallery/basic.html">Plot Gallery</a></strong> — Basic and intermediate plot examples</li>
-<li>⚙️ <strong><a href="./exporting_tools/exporting_plots.html">Exporting &amp; Tools</a></strong> — Export plots and use plotting tools effectively</li>
+<li>📁 <strong><a href="./r-foundations/getting-started.html">R Foundations</a></strong> — R syntax, data cleaning, and tidy workflows</li>
+<li>📊 <strong><a href="./data-visualization/ggplot_grammar.html">Data Visualization</a></strong> — Grammar of graphics and basic ggplot2</li>
+<li>🧪 <strong><a href="./statistical-analysis/statistical_tests.html">Statistical Analysis</a></strong> — Choosing the right statistical test</li>
+<li>📝 <strong><a href="statistical-analysis/reproducible_writing.qmd">Reproducibility</a></strong> — Creating reports with Quarto</li>
 </ul>
 <blockquote class="blockquote">
-<p>Use the navbar above to move through visualization topics in sequence.</p>
+<p>Use the navbar above to explore topics in any order.</p>
 </blockquote>
 </section>
 <section id="downloadable-resources" class="level2">
@@ -291,8 +287,8 @@ Welcome to the <strong>Data Visualization Foundations</strong> track. This focus
 <section id="r-scripts" class="level3">
 <h3 class="anchored" data-anchor-id="r-scripts">📄 R Scripts</h3>
 <ul>
+<li><a href="downloads/basic_r_foundations.R">Basic r Foundations</a></li>
 <li><a href="downloads/basic_visualization.R">Basic Visualization</a></li>
-<li><a href="downloads/moderate_visualization.R">Moderate Visualization</a></li>
 </ul>
 </section>
 <section id="datasets" class="level3">
@@ -309,9 +305,15 @@ Welcome to the <strong>Data Visualization Foundations</strong> track. This focus
 <li><a href="downloads/ggplot2_cheatsheet.pdf">ggplot2 Cheatsheet</a></li>
 <li><a href="downloads/dplyr_cheatsheet.pdf">Dplyr Cheatsheet</a></li>
 </ul>
+</section>
+<section id="quarto-template" class="level3">
+<h3 class="anchored" data-anchor-id="quarto-template">📝 Quarto Template</h3>
+<ul>
+<li><a href="downloads/quarto_basics.qmd">Quarto Basics</a> — starter <code>.qmd</code> file covering Quarto basics</li>
+</ul>
 <hr>
 <blockquote class="blockquote">
-<p>💡 <strong>Tip:</strong> Start with <strong>Grammar of Graphics</strong> for a solid conceptual foundation before the modules.</p>
+<p>💡 <strong>Tip:</strong> New to R? Start with <strong>R Foundations → Getting Started</strong> before anything else.</p>
 </blockquote>
 
 

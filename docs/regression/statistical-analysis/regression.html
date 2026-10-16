@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -74,10 +77,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2c169b83e1fc2996b25bcc8774810429.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-574f58f4068bb8f43535e6e9c10c5508.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -150,6 +153,69 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link active" href="../statistical-analysis/regression.html" aria-current="page"> 
 <span class="menu-text">Regression Analysis</span></a>
   </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-dungeons--dataframes" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Dungeons &amp; Dataframes</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-dungeons--dataframes">    
+        <li>
+    <a class="dropdown-item" href="../regression-quest/index.html">
+ <span class="dropdown-text">🗺️ Quest map (start here)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/pretest.html">
+ <span class="dropdown-text">Pre-test (baseline)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/posttest.html">
+ <span class="dropdown-text">Post-test (growth)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/roadmap.html">
+ <span class="dropdown-text">Roadmap</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/site-design.html">
+ <span class="dropdown-text">Site design</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-regression-workshop" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Regression Workshop</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-regression-workshop">    
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s1_foundations.html">
+ <span class="dropdown-text">Session 1 — Foundations</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s2_simple_regression.html">
+ <span class="dropdown-text">Session 2 — Simple Linear Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s3_multiple_regression.html">
+ <span class="dropdown-text">Session 3 — Inference &amp; Multiple Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s4_assumptions.html">
+ <span class="dropdown-text">Session 4 — Assumptions</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s5_logistic_regression.html">
+ <span class="dropdown-text">Session 5 — Logistic Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s6_reporting.html">
+ <span class="dropdown-text">Session 6 — Interpreting &amp; Reporting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/cheatsheet.html">
+ <span class="dropdown-text">Interpretation Cheat Sheet</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item dropdown ">
@@ -189,13 +255,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#simple-linear-regression" id="toc-simple-linear-regression" class="nav-link active" data-scroll-target="#simple-linear-regression">Simple Linear Regression</a></li>
-  <li><a href="#multiple-regression-2" id="toc-multiple-regression-2" class="nav-link" data-scroll-target="#multiple-regression-2">Multiple Regression</a></li>
-  <li><a href="#regression-diagnostics-1" id="toc-regression-diagnostics-1" class="nav-link" data-scroll-target="#regression-diagnostics-1">Regression Diagnostics</a></li>
-  <li><a href="#logistic-regression-1" id="toc-logistic-regression-1" class="nav-link" data-scroll-target="#logistic-regression-1">Logistic Regression</a></li>
-  <li><a href="#univariate-regression-screening" id="toc-univariate-regression-screening" class="nav-link" data-scroll-target="#univariate-regression-screening">Univariate Regression Screening</a></li>
-  <li><a href="#cox-proportional-hazards-regression" id="toc-cox-proportional-hazards-regression" class="nav-link" data-scroll-target="#cox-proportional-hazards-regression">Cox Proportional Hazards Regression</a></li>
-  <li><a href="#model-diagnostics-with-performance" id="toc-model-diagnostics-with-performance" class="nav-link" data-scroll-target="#model-diagnostics-with-performance">Model Diagnostics with <code>performance</code></a></li>
+  <li><a href="#full-day-workshop-theory-of-regression-analysis" id="toc-full-day-workshop-theory-of-regression-analysis" class="nav-link active" data-scroll-target="#full-day-workshop-theory-of-regression-analysis">Full-day workshop: Theory of Regression Analysis</a></li>
+  <li><a href="#simple-linear-regression" id="toc-simple-linear-regression" class="nav-link" data-scroll-target="#simple-linear-regression">Simple Linear Regression</a></li>
+  <li><a href="#multiple-regression" id="toc-multiple-regression" class="nav-link" data-scroll-target="#multiple-regression">Multiple Regression</a></li>
   </ul>
 </nav>
     </div>
@@ -222,6 +284,59 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Regression models describe and quantify the relationship between an outcome and one or more predictors. This module builds up in tiers — start with a single predictor, then add predictors, then move on to diagnostics and logistic regression.</p>
+<section id="full-day-workshop-theory-of-regression-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="full-day-workshop-theory-of-regression-analysis">Full-day workshop: Theory of Regression Analysis</h2>
+<p>This page is a quick tour. For the full-day, thesis-level treatment — six slide decks, six fill-in-the-blank R labs and a self-check quiz after every session — use the <strong>Regression Workshop</strong> menu above. Everything runs on one simulated adult NCD survey (n = 600, 20 villages).</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Session</th>
+<th>Topics</th>
+<th>Deck</th>
+<th>Lab</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1 · Foundations</td>
+<td>What regression is · model-selection flowchart</td>
+<td><a href="../regression-workshop/s1_foundations.html">Slides</a></td>
+<td><code>lab1_explore.R</code></td>
+</tr>
+<tr class="even">
+<td>2 · Simple linear regression</td>
+<td>Slope in units · CI vs PI · R² · centering</td>
+<td><a href="../regression-workshop/s2_simple_regression.html">Slides</a></td>
+<td><code>lab2_simple.R</code></td>
+</tr>
+<tr class="odd">
+<td>3 · Inference &amp; multiple regression</td>
+<td>Confounding · dummy coding · model building</td>
+<td><a href="../regression-workshop/s3_multiple_regression.html">Slides</a></td>
+<td><code>lab3_multiple.R</code></td>
+</tr>
+<tr class="even">
+<td>4 · Assumptions</td>
+<td>LINE + collinearity, with fixes</td>
+<td><a href="../regression-workshop/s4_assumptions.html">Slides</a></td>
+<td><code>lab4_assumptions.R</code></td>
+</tr>
+<tr class="odd">
+<td>5 · Logistic regression</td>
+<td>Odds · likelihood · ROC · OR vs PR</td>
+<td><a href="../regression-workshop/s5_logistic_regression.html">Slides</a></td>
+<td><code>lab5_logistic.R</code></td>
+</tr>
+<tr class="even">
+<td>6 · Interpreting &amp; reporting</td>
+<td>Writing results · pitfalls · what next</td>
+<td><a href="../regression-workshop/s6_reporting.html">Slides</a></td>
+<td><code>lab6_reporting.R</code></td>
+</tr>
+</tbody>
+</table>
+<p>Also: the <a href="../regression-workshop/cheatsheet.html">interpretation cheat sheet</a>, the <a href="../data/ncd_survey.csv">dataset</a> and the <a href="../downloads.html">labs and data-simulation script</a>.</p>
+</section>
 <section id="simple-linear-regression" class="level2">
 <h2 class="anchored" data-anchor-id="simple-linear-regression">Simple Linear Regression</h2>
 <div class="cell">
@@ -253,18 +368,18 @@ lm(formula = blood_pressure ~ age, data = data)
 
 Residuals:
     Min      1Q  Median      3Q     Max 
--36.980  -9.415   0.886   8.811  37.841 
+-37.046  -9.588   0.812   7.527  35.667 
 
 Coefficients:
             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) 132.0300     6.8519  19.269   &lt;2e-16 ***
-age          -0.1799     0.1308  -1.375    0.172    
+(Intercept) 107.9348     7.4527  14.483   &lt;2e-16 ***
+age           0.2712     0.1478   1.834   0.0697 .  
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 15.22 on 98 degrees of freedom
-Multiple R-squared:  0.01893,   Adjusted R-squared:  0.008924 
-F-statistic: 1.891 on 1 and 98 DF,  p-value: 0.1722</code></pre>
+Residual standard error: 14.62 on 98 degrees of freedom
+Multiple R-squared:  0.03318,   Adjusted R-squared:  0.02332 
+F-statistic: 3.364 on 1 and 98 DF,  p-value: 0.06968</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -288,8 +403,8 @@ F-statistic: 1.891 on 1 and 98 DF,  p-value: 0.1722</code></pre>
 </div>
 <p><code>geom_smooth(method = "lm")</code> draws the same fitted line as <code>lm()</code>, with a shaded confidence band around it.</p>
 </section>
-<section id="multiple-regression-2" class="level2">
-<h2 class="anchored" data-anchor-id="multiple-regression-2">Multiple Regression</h2>
+<section id="multiple-regression" class="level2">
+<h2 class="anchored" data-anchor-id="multiple-regression">Multiple Regression</h2>
 <p>Adding more predictors lets the model account for other sources of variation at the same time.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span>
@@ -303,40 +418,40 @@ lm(formula = blood_pressure ~ age + treatment, data = data)
 
 Residuals:
     Min      1Q  Median      3Q     Max 
--37.837  -9.964   0.675   8.740  36.812 
+-34.982  -9.991   0.545   7.998  34.017 
 
 Coefficients:
             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) 130.4298     7.2245  18.054   &lt;2e-16 ***
-age          -0.1713     0.1317  -1.301    0.196    
-treatmentB    2.1951     3.0702   0.715    0.476    
+(Intercept) 109.2000     7.4954  14.569   &lt;2e-16 ***
+age           0.2796     0.1475   1.895   0.0611 .  
+treatmentB   -3.7335     2.9328  -1.273   0.2060    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 15.26 on 97 degrees of freedom
-Multiple R-squared:  0.02408,   Adjusted R-squared:  0.003955 
-F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
+Residual standard error: 14.58 on 97 degrees of freedom
+Multiple R-squared:  0.04907,   Adjusted R-squared:  0.02947 
+F-statistic: 2.503 on 2 and 97 DF,  p-value: 0.08713</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using gtsummary for a publication-ready table</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="aspibjeeev" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#aspibjeeev table {
+<div id="cacgnmqdin" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#cacgnmqdin table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#aspibjeeev thead, #aspibjeeev tbody, #aspibjeeev tfoot, #aspibjeeev tr, #aspibjeeev td, #aspibjeeev th {
+#cacgnmqdin thead, #cacgnmqdin tbody, #cacgnmqdin tfoot, #cacgnmqdin tr, #cacgnmqdin td, #cacgnmqdin th {
   border-style: none;
 }
 
-#aspibjeeev p {
+#cacgnmqdin p {
   margin: 0;
   padding: 0;
 }
 
-#aspibjeeev .gt_table {
+#cacgnmqdin .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -362,12 +477,12 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#aspibjeeev .gt_caption {
+#cacgnmqdin .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#aspibjeeev .gt_title {
+#cacgnmqdin .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -379,7 +494,7 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   border-bottom-width: 0;
 }
 
-#aspibjeeev .gt_subtitle {
+#cacgnmqdin .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -391,7 +506,7 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   border-top-width: 0;
 }
 
-#aspibjeeev .gt_heading {
+#cacgnmqdin .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -403,13 +518,13 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#aspibjeeev .gt_bottom_border {
+#cacgnmqdin .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#aspibjeeev .gt_col_headings {
+#cacgnmqdin .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -424,7 +539,7 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#aspibjeeev .gt_col_heading {
+#cacgnmqdin .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -444,7 +559,7 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   overflow-x: hidden;
 }
 
-#aspibjeeev .gt_column_spanner_outer {
+#cacgnmqdin .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -456,15 +571,15 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   padding-right: 4px;
 }
 
-#aspibjeeev .gt_column_spanner_outer:first-child {
+#cacgnmqdin .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#aspibjeeev .gt_column_spanner_outer:last-child {
+#cacgnmqdin .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#aspibjeeev .gt_column_spanner {
+#cacgnmqdin .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -476,11 +591,11 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   width: 100%;
 }
 
-#aspibjeeev .gt_spanner_row {
+#cacgnmqdin .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#aspibjeeev .gt_group_heading {
+#cacgnmqdin .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -506,7 +621,7 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   text-align: left;
 }
 
-#aspibjeeev .gt_empty_group_heading {
+#cacgnmqdin .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -521,15 +636,15 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   vertical-align: middle;
 }
 
-#aspibjeeev .gt_from_md > :first-child {
+#cacgnmqdin .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#aspibjeeev .gt_from_md > :last-child {
+#cacgnmqdin .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#aspibjeeev .gt_row {
+#cacgnmqdin .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -548,7 +663,7 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   overflow-x: hidden;
 }
 
-#aspibjeeev .gt_stub {
+#cacgnmqdin .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -561,7 +676,7 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   padding-right: 5px;
 }
 
-#aspibjeeev .gt_stub_row_group {
+#cacgnmqdin .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -575,15 +690,15 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   vertical-align: top;
 }
 
-#aspibjeeev .gt_row_group_first td {
+#cacgnmqdin .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#aspibjeeev .gt_row_group_first th {
+#cacgnmqdin .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#aspibjeeev .gt_summary_row {
+#cacgnmqdin .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -593,16 +708,16 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   padding-right: 5px;
 }
 
-#aspibjeeev .gt_first_summary_row {
+#cacgnmqdin .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#aspibjeeev .gt_first_summary_row.thick {
+#cacgnmqdin .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#aspibjeeev .gt_last_summary_row {
+#cacgnmqdin .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -612,7 +727,7 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#aspibjeeev .gt_grand_summary_row {
+#cacgnmqdin .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -622,7 +737,7 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   padding-right: 5px;
 }
 
-#aspibjeeev .gt_first_grand_summary_row {
+#cacgnmqdin .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -632,7 +747,7 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#aspibjeeev .gt_last_grand_summary_row_top {
+#cacgnmqdin .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -642,11 +757,11 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#aspibjeeev .gt_striped {
+#cacgnmqdin .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#aspibjeeev .gt_table_body {
+#cacgnmqdin .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -655,7 +770,7 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#aspibjeeev .gt_footnotes {
+#cacgnmqdin .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -669,7 +784,7 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#aspibjeeev .gt_footnote {
+#cacgnmqdin .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -678,7 +793,7 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   padding-right: 5px;
 }
 
-#aspibjeeev .gt_sourcenotes {
+#cacgnmqdin .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -692,7 +807,7 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#aspibjeeev .gt_sourcenote {
+#cacgnmqdin .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -700,72 +815,72 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
   padding-right: 5px;
 }
 
-#aspibjeeev .gt_left {
+#cacgnmqdin .gt_left {
   text-align: left;
 }
 
-#aspibjeeev .gt_center {
+#cacgnmqdin .gt_center {
   text-align: center;
 }
 
-#aspibjeeev .gt_right {
+#cacgnmqdin .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#aspibjeeev .gt_font_normal {
+#cacgnmqdin .gt_font_normal {
   font-weight: normal;
 }
 
-#aspibjeeev .gt_font_bold {
+#cacgnmqdin .gt_font_bold {
   font-weight: bold;
 }
 
-#aspibjeeev .gt_font_italic {
+#cacgnmqdin .gt_font_italic {
   font-style: italic;
 }
 
-#aspibjeeev .gt_super {
+#cacgnmqdin .gt_super {
   font-size: 65%;
 }
 
-#aspibjeeev .gt_footnote_marks {
+#cacgnmqdin .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#aspibjeeev .gt_asterisk {
+#cacgnmqdin .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#aspibjeeev .gt_indent_1 {
+#cacgnmqdin .gt_indent_1 {
   text-indent: 5px;
 }
 
-#aspibjeeev .gt_indent_2 {
+#cacgnmqdin .gt_indent_2 {
   text-indent: 10px;
 }
 
-#aspibjeeev .gt_indent_3 {
+#cacgnmqdin .gt_indent_3 {
   text-indent: 15px;
 }
 
-#aspibjeeev .gt_indent_4 {
+#cacgnmqdin .gt_indent_4 {
   text-indent: 20px;
 }
 
-#aspibjeeev .gt_indent_5 {
+#cacgnmqdin .gt_indent_5 {
   text-indent: 25px;
 }
 
-#aspibjeeev .katex-display {
+#cacgnmqdin .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#aspibjeeev div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#cacgnmqdin div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -788,9 +903,9 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">age</td>
-<td class="gt_row gt_center" headers="estimate">-0.17</td>
-<td class="gt_row gt_center" headers="conf.low">-0.43, 0.09</td>
-<td class="gt_row gt_center" headers="p.value">0.2</td>
+<td class="gt_row gt_center" headers="estimate">0.28</td>
+<td class="gt_row gt_center" headers="conf.low">-0.01, 0.57</td>
+<td class="gt_row gt_center" headers="p.value">0.061</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">treatment</td>
@@ -810,9 +925,9 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;B</td>
-<td class="gt_row gt_center" headers="estimate">2.2</td>
-<td class="gt_row gt_center" headers="conf.low">-3.9, 8.3</td>
-<td class="gt_row gt_center" headers="p.value">0.5</td>
+<td class="gt_row gt_center" headers="estimate">-3.7</td>
+<td class="gt_row gt_center" headers="conf.low">-9.6, 2.1</td>
+<td class="gt_row gt_center" headers="p.value">0.2</td>
 </tr>
 </tbody><tfoot>
 <tr class="gt_sourcenotes odd">
@@ -827,8 +942,9 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
 </div>
 <p>Each coefficient is now interpreted “holding the other predictors constant” — the <code>treatment</code> effect is adjusted for <code>age</code>, and vice versa.</p>
 </section>
-<section id="regression-diagnostics-1" class="level2">
-<h2 class="anchored" data-anchor-id="regression-diagnostics-1">Regression Diagnostics</h2>
+<div>
+<section id="regression-diagnostics" class="level2">
+<h2 class="anchored" data-anchor-id="regression-diagnostics">Regression Diagnostics</h2>
 <p>A fitted model is only trustworthy once its assumptions have been checked.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
@@ -836,7 +952,7 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="regression_files/figure-html/unnamed-chunk-9-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="regression_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="regression_files/figure-html/unnamed-chunk-4-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="regression_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -848,15 +964,15 @@ F-statistic: 1.197 on 2 and 97 DF,  p-value: 0.3067</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="regression_files/figure-html/unnamed-chunk-10-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="regression_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="regression_files/figure-html/unnamed-chunk-5-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="regression_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Watch for: non-random patterns in residuals-vs-fitted (non-linearity), points far off the Q-Q line (non-normal residuals), and high-leverage points in the residuals-vs-leverage panel.</p>
 </section>
-<section id="logistic-regression-1" class="level2">
-<h2 class="anchored" data-anchor-id="logistic-regression-1">Logistic Regression</h2>
+<section id="logistic-regression" class="level2">
+<h2 class="anchored" data-anchor-id="logistic-regression">Logistic Regression</h2>
 <p>When the outcome is binary rather than continuous, use <code>glm()</code> with a binomial family instead of <code>lm()</code>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>outcome <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"Improved"</span>, <span class="st">"Not Improved"</span>), <span class="dv">100</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
@@ -871,41 +987,39 @@ glm(formula = outcome_bin ~ age + treatment, family = binomial,
     data = data)
 
 Coefficients:
-            Estimate Std. Error z value Pr(&gt;|z|)  
-(Intercept)  1.72500    0.99908   1.727   0.0842 .
-age         -0.02716    0.01807  -1.503   0.1329  
-treatmentB  -0.01381    0.41237  -0.033   0.9733  
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+            Estimate Std. Error z value Pr(&gt;|z|)
+(Intercept)  0.80206    1.04009   0.771    0.441
+age         -0.01112    0.02042  -0.545    0.586
+treatmentB  -0.20225    0.40446  -0.500    0.617
 
 (Dispersion parameter for binomial family taken to be 1)
 
-    Null deviance: 136.06  on 99  degrees of freedom
-Residual deviance: 133.71  on 97  degrees of freedom
-AIC: 139.71
+    Null deviance: 137.99  on 99  degrees of freedom
+Residual deviance: 137.42  on 97  degrees of freedom
+AIC: 143.42
 
 Number of Fisher Scoring iterations: 4</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Odds ratios instead of raw log-odds</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(model_log, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="irzwmdwwyl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#irzwmdwwyl table {
+<div id="crpcrdojvo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#crpcrdojvo table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#irzwmdwwyl thead, #irzwmdwwyl tbody, #irzwmdwwyl tfoot, #irzwmdwwyl tr, #irzwmdwwyl td, #irzwmdwwyl th {
+#crpcrdojvo thead, #crpcrdojvo tbody, #crpcrdojvo tfoot, #crpcrdojvo tr, #crpcrdojvo td, #crpcrdojvo th {
   border-style: none;
 }
 
-#irzwmdwwyl p {
+#crpcrdojvo p {
   margin: 0;
   padding: 0;
 }
 
-#irzwmdwwyl .gt_table {
+#crpcrdojvo .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -931,12 +1045,12 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#irzwmdwwyl .gt_caption {
+#crpcrdojvo .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#irzwmdwwyl .gt_title {
+#crpcrdojvo .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -948,7 +1062,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-bottom-width: 0;
 }
 
-#irzwmdwwyl .gt_subtitle {
+#crpcrdojvo .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -960,7 +1074,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-top-width: 0;
 }
 
-#irzwmdwwyl .gt_heading {
+#crpcrdojvo .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -972,13 +1086,13 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#irzwmdwwyl .gt_bottom_border {
+#crpcrdojvo .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#irzwmdwwyl .gt_col_headings {
+#crpcrdojvo .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -993,7 +1107,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#irzwmdwwyl .gt_col_heading {
+#crpcrdojvo .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1013,7 +1127,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   overflow-x: hidden;
 }
 
-#irzwmdwwyl .gt_column_spanner_outer {
+#crpcrdojvo .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1025,15 +1139,15 @@ Number of Fisher Scoring iterations: 4</code></pre>
   padding-right: 4px;
 }
 
-#irzwmdwwyl .gt_column_spanner_outer:first-child {
+#crpcrdojvo .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#irzwmdwwyl .gt_column_spanner_outer:last-child {
+#crpcrdojvo .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#irzwmdwwyl .gt_column_spanner {
+#crpcrdojvo .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1045,11 +1159,11 @@ Number of Fisher Scoring iterations: 4</code></pre>
   width: 100%;
 }
 
-#irzwmdwwyl .gt_spanner_row {
+#crpcrdojvo .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#irzwmdwwyl .gt_group_heading {
+#crpcrdojvo .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1075,7 +1189,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   text-align: left;
 }
 
-#irzwmdwwyl .gt_empty_group_heading {
+#crpcrdojvo .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1090,15 +1204,15 @@ Number of Fisher Scoring iterations: 4</code></pre>
   vertical-align: middle;
 }
 
-#irzwmdwwyl .gt_from_md > :first-child {
+#crpcrdojvo .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#irzwmdwwyl .gt_from_md > :last-child {
+#crpcrdojvo .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#irzwmdwwyl .gt_row {
+#crpcrdojvo .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1117,7 +1231,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   overflow-x: hidden;
 }
 
-#irzwmdwwyl .gt_stub {
+#crpcrdojvo .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1130,7 +1244,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   padding-right: 5px;
 }
 
-#irzwmdwwyl .gt_stub_row_group {
+#crpcrdojvo .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1144,15 +1258,15 @@ Number of Fisher Scoring iterations: 4</code></pre>
   vertical-align: top;
 }
 
-#irzwmdwwyl .gt_row_group_first td {
+#crpcrdojvo .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#irzwmdwwyl .gt_row_group_first th {
+#crpcrdojvo .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#irzwmdwwyl .gt_summary_row {
+#crpcrdojvo .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1162,16 +1276,16 @@ Number of Fisher Scoring iterations: 4</code></pre>
   padding-right: 5px;
 }
 
-#irzwmdwwyl .gt_first_summary_row {
+#crpcrdojvo .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#irzwmdwwyl .gt_first_summary_row.thick {
+#crpcrdojvo .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#irzwmdwwyl .gt_last_summary_row {
+#crpcrdojvo .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1181,7 +1295,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#irzwmdwwyl .gt_grand_summary_row {
+#crpcrdojvo .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1191,7 +1305,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   padding-right: 5px;
 }
 
-#irzwmdwwyl .gt_first_grand_summary_row {
+#crpcrdojvo .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1201,7 +1315,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#irzwmdwwyl .gt_last_grand_summary_row_top {
+#crpcrdojvo .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1211,11 +1325,11 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#irzwmdwwyl .gt_striped {
+#crpcrdojvo .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#irzwmdwwyl .gt_table_body {
+#crpcrdojvo .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1224,7 +1338,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#irzwmdwwyl .gt_footnotes {
+#crpcrdojvo .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1238,7 +1352,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#irzwmdwwyl .gt_footnote {
+#crpcrdojvo .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1247,7 +1361,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   padding-right: 5px;
 }
 
-#irzwmdwwyl .gt_sourcenotes {
+#crpcrdojvo .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1261,7 +1375,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#irzwmdwwyl .gt_sourcenote {
+#crpcrdojvo .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1269,72 +1383,72 @@ Number of Fisher Scoring iterations: 4</code></pre>
   padding-right: 5px;
 }
 
-#irzwmdwwyl .gt_left {
+#crpcrdojvo .gt_left {
   text-align: left;
 }
 
-#irzwmdwwyl .gt_center {
+#crpcrdojvo .gt_center {
   text-align: center;
 }
 
-#irzwmdwwyl .gt_right {
+#crpcrdojvo .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#irzwmdwwyl .gt_font_normal {
+#crpcrdojvo .gt_font_normal {
   font-weight: normal;
 }
 
-#irzwmdwwyl .gt_font_bold {
+#crpcrdojvo .gt_font_bold {
   font-weight: bold;
 }
 
-#irzwmdwwyl .gt_font_italic {
+#crpcrdojvo .gt_font_italic {
   font-style: italic;
 }
 
-#irzwmdwwyl .gt_super {
+#crpcrdojvo .gt_super {
   font-size: 65%;
 }
 
-#irzwmdwwyl .gt_footnote_marks {
+#crpcrdojvo .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#irzwmdwwyl .gt_asterisk {
+#crpcrdojvo .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#irzwmdwwyl .gt_indent_1 {
+#crpcrdojvo .gt_indent_1 {
   text-indent: 5px;
 }
 
-#irzwmdwwyl .gt_indent_2 {
+#crpcrdojvo .gt_indent_2 {
   text-indent: 10px;
 }
 
-#irzwmdwwyl .gt_indent_3 {
+#crpcrdojvo .gt_indent_3 {
   text-indent: 15px;
 }
 
-#irzwmdwwyl .gt_indent_4 {
+#crpcrdojvo .gt_indent_4 {
   text-indent: 20px;
 }
 
-#irzwmdwwyl .gt_indent_5 {
+#crpcrdojvo .gt_indent_5 {
   text-indent: 25px;
 }
 
-#irzwmdwwyl .katex-display {
+#crpcrdojvo .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#irzwmdwwyl div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#crpcrdojvo div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1357,9 +1471,9 @@ Number of Fisher Scoring iterations: 4</code></pre>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">age</td>
-<td class="gt_row gt_center" headers="estimate">0.97</td>
-<td class="gt_row gt_center" headers="conf.low">0.94, 1.01</td>
-<td class="gt_row gt_center" headers="p.value">0.13</td>
+<td class="gt_row gt_center" headers="estimate">0.99</td>
+<td class="gt_row gt_center" headers="conf.low">0.95, 1.03</td>
+<td class="gt_row gt_center" headers="p.value">0.6</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">treatment</td>
@@ -1379,9 +1493,9 @@ Number of Fisher Scoring iterations: 4</code></pre>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;B</td>
-<td class="gt_row gt_center" headers="estimate">0.99</td>
-<td class="gt_row gt_center" headers="conf.low">0.44, 2.21</td>
-<td class="gt_row gt_center" headers="p.value">&gt;0.9</td>
+<td class="gt_row gt_center" headers="estimate">0.82</td>
+<td class="gt_row gt_center" headers="conf.low">0.37, 1.81</td>
+<td class="gt_row gt_center" headers="p.value">0.6</td>
 </tr>
 </tbody><tfoot>
 <tr class="gt_sourcenotes odd">
@@ -1409,23 +1523,23 @@ Number of Fisher Scoring iterations: 4</code></pre>
 <span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">hide_n =</span> <span class="cn">TRUE</span></span>
 <span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="wgeqrmrfwt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#wgeqrmrfwt table {
+<div id="hsvggffbbf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#hsvggffbbf table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#wgeqrmrfwt thead, #wgeqrmrfwt tbody, #wgeqrmrfwt tfoot, #wgeqrmrfwt tr, #wgeqrmrfwt td, #wgeqrmrfwt th {
+#hsvggffbbf thead, #hsvggffbbf tbody, #hsvggffbbf tfoot, #hsvggffbbf tr, #hsvggffbbf td, #hsvggffbbf th {
   border-style: none;
 }
 
-#wgeqrmrfwt p {
+#hsvggffbbf p {
   margin: 0;
   padding: 0;
 }
 
-#wgeqrmrfwt .gt_table {
+#hsvggffbbf .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1451,12 +1565,12 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#wgeqrmrfwt .gt_caption {
+#hsvggffbbf .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#wgeqrmrfwt .gt_title {
+#hsvggffbbf .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1468,7 +1582,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-bottom-width: 0;
 }
 
-#wgeqrmrfwt .gt_subtitle {
+#hsvggffbbf .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1480,7 +1594,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-top-width: 0;
 }
 
-#wgeqrmrfwt .gt_heading {
+#hsvggffbbf .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1492,13 +1606,13 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#wgeqrmrfwt .gt_bottom_border {
+#hsvggffbbf .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#wgeqrmrfwt .gt_col_headings {
+#hsvggffbbf .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1513,7 +1627,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#wgeqrmrfwt .gt_col_heading {
+#hsvggffbbf .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1533,7 +1647,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   overflow-x: hidden;
 }
 
-#wgeqrmrfwt .gt_column_spanner_outer {
+#hsvggffbbf .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1545,15 +1659,15 @@ Number of Fisher Scoring iterations: 4</code></pre>
   padding-right: 4px;
 }
 
-#wgeqrmrfwt .gt_column_spanner_outer:first-child {
+#hsvggffbbf .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#wgeqrmrfwt .gt_column_spanner_outer:last-child {
+#hsvggffbbf .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#wgeqrmrfwt .gt_column_spanner {
+#hsvggffbbf .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1565,11 +1679,11 @@ Number of Fisher Scoring iterations: 4</code></pre>
   width: 100%;
 }
 
-#wgeqrmrfwt .gt_spanner_row {
+#hsvggffbbf .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#wgeqrmrfwt .gt_group_heading {
+#hsvggffbbf .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1595,7 +1709,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   text-align: left;
 }
 
-#wgeqrmrfwt .gt_empty_group_heading {
+#hsvggffbbf .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1610,15 +1724,15 @@ Number of Fisher Scoring iterations: 4</code></pre>
   vertical-align: middle;
 }
 
-#wgeqrmrfwt .gt_from_md > :first-child {
+#hsvggffbbf .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#wgeqrmrfwt .gt_from_md > :last-child {
+#hsvggffbbf .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#wgeqrmrfwt .gt_row {
+#hsvggffbbf .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1637,7 +1751,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   overflow-x: hidden;
 }
 
-#wgeqrmrfwt .gt_stub {
+#hsvggffbbf .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1650,7 +1764,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   padding-right: 5px;
 }
 
-#wgeqrmrfwt .gt_stub_row_group {
+#hsvggffbbf .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1664,15 +1778,15 @@ Number of Fisher Scoring iterations: 4</code></pre>
   vertical-align: top;
 }
 
-#wgeqrmrfwt .gt_row_group_first td {
+#hsvggffbbf .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#wgeqrmrfwt .gt_row_group_first th {
+#hsvggffbbf .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#wgeqrmrfwt .gt_summary_row {
+#hsvggffbbf .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1682,16 +1796,16 @@ Number of Fisher Scoring iterations: 4</code></pre>
   padding-right: 5px;
 }
 
-#wgeqrmrfwt .gt_first_summary_row {
+#hsvggffbbf .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#wgeqrmrfwt .gt_first_summary_row.thick {
+#hsvggffbbf .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#wgeqrmrfwt .gt_last_summary_row {
+#hsvggffbbf .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1701,7 +1815,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#wgeqrmrfwt .gt_grand_summary_row {
+#hsvggffbbf .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1711,7 +1825,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   padding-right: 5px;
 }
 
-#wgeqrmrfwt .gt_first_grand_summary_row {
+#hsvggffbbf .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1721,7 +1835,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#wgeqrmrfwt .gt_last_grand_summary_row_top {
+#hsvggffbbf .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1731,11 +1845,11 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#wgeqrmrfwt .gt_striped {
+#hsvggffbbf .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#wgeqrmrfwt .gt_table_body {
+#hsvggffbbf .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1744,7 +1858,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#wgeqrmrfwt .gt_footnotes {
+#hsvggffbbf .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1758,7 +1872,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#wgeqrmrfwt .gt_footnote {
+#hsvggffbbf .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1767,7 +1881,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   padding-right: 5px;
 }
 
-#wgeqrmrfwt .gt_sourcenotes {
+#hsvggffbbf .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1781,7 +1895,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#wgeqrmrfwt .gt_sourcenote {
+#hsvggffbbf .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1789,72 +1903,72 @@ Number of Fisher Scoring iterations: 4</code></pre>
   padding-right: 5px;
 }
 
-#wgeqrmrfwt .gt_left {
+#hsvggffbbf .gt_left {
   text-align: left;
 }
 
-#wgeqrmrfwt .gt_center {
+#hsvggffbbf .gt_center {
   text-align: center;
 }
 
-#wgeqrmrfwt .gt_right {
+#hsvggffbbf .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#wgeqrmrfwt .gt_font_normal {
+#hsvggffbbf .gt_font_normal {
   font-weight: normal;
 }
 
-#wgeqrmrfwt .gt_font_bold {
+#hsvggffbbf .gt_font_bold {
   font-weight: bold;
 }
 
-#wgeqrmrfwt .gt_font_italic {
+#hsvggffbbf .gt_font_italic {
   font-style: italic;
 }
 
-#wgeqrmrfwt .gt_super {
+#hsvggffbbf .gt_super {
   font-size: 65%;
 }
 
-#wgeqrmrfwt .gt_footnote_marks {
+#hsvggffbbf .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#wgeqrmrfwt .gt_asterisk {
+#hsvggffbbf .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#wgeqrmrfwt .gt_indent_1 {
+#hsvggffbbf .gt_indent_1 {
   text-indent: 5px;
 }
 
-#wgeqrmrfwt .gt_indent_2 {
+#hsvggffbbf .gt_indent_2 {
   text-indent: 10px;
 }
 
-#wgeqrmrfwt .gt_indent_3 {
+#hsvggffbbf .gt_indent_3 {
   text-indent: 15px;
 }
 
-#wgeqrmrfwt .gt_indent_4 {
+#hsvggffbbf .gt_indent_4 {
   text-indent: 20px;
 }
 
-#wgeqrmrfwt .gt_indent_5 {
+#hsvggffbbf .gt_indent_5 {
   text-indent: 25px;
 }
 
-#wgeqrmrfwt .katex-display {
+#hsvggffbbf .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#wgeqrmrfwt div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#hsvggffbbf div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1877,9 +1991,9 @@ Number of Fisher Scoring iterations: 4</code></pre>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">age</td>
-<td class="gt_row gt_center" headers="estimate">-0.18</td>
-<td class="gt_row gt_center" headers="conf.low">-0.44, 0.08</td>
-<td class="gt_row gt_center" headers="p.value">0.2</td>
+<td class="gt_row gt_center" headers="estimate">0.27</td>
+<td class="gt_row gt_center" headers="conf.low">-0.02, 0.56</td>
+<td class="gt_row gt_center" headers="p.value">0.070</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">treatment</td>
@@ -1899,15 +2013,15 @@ Number of Fisher Scoring iterations: 4</code></pre>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;B</td>
-<td class="gt_row gt_center" headers="estimate">2.6</td>
-<td class="gt_row gt_center" headers="conf.low">-3.5, 8.6</td>
-<td class="gt_row gt_center" headers="p.value">0.4</td>
+<td class="gt_row gt_center" headers="estimate">-3.5</td>
+<td class="gt_row gt_center" headers="conf.low">-9.4, 2.4</td>
+<td class="gt_row gt_center" headers="p.value">0.2</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">bmi</td>
-<td class="gt_row gt_center" headers="estimate">-0.29</td>
-<td class="gt_row gt_center" headers="conf.low">-1.1, 0.48</td>
-<td class="gt_row gt_center" headers="p.value">0.5</td>
+<td class="gt_row gt_center" headers="estimate">0.05</td>
+<td class="gt_row gt_center" headers="conf.low">-0.62, 0.73</td>
+<td class="gt_row gt_center" headers="p.value">0.9</td>
 </tr>
 </tbody><tfoot>
 <tr class="gt_sourcenotes odd">
@@ -1939,39 +2053,39 @@ coxph(formula = Surv(time, event) ~ age + treatment, data = data)
 
   n= 100, number of events= 71 
 
-               coef exp(coef) se(coef)     z Pr(&gt;|z|)
-age        0.003845  1.003852 0.010962 0.351    0.726
-treatmentB 0.033705  1.034280 0.244526 0.138    0.890
+                coef exp(coef)  se(coef)      z Pr(&gt;|z|)
+age        -0.008734  0.991304  0.012967 -0.674    0.501
+treatmentB  0.272566  1.313330  0.244225  1.116    0.264
 
            exp(coef) exp(-coef) lower .95 upper .95
-age            1.004     0.9962    0.9825     1.026
-treatmentB     1.034     0.9669    0.6405     1.670
+age           0.9913     1.0088    0.9664     1.017
+treatmentB    1.3133     0.7614    0.8137     2.120
 
-Concordance= 0.527  (se = 0.043 )
-Likelihood ratio test= 0.13  on 2 df,   p=0.9
-Wald test            = 0.13  on 2 df,   p=0.9
-Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
+Concordance= 0.507  (se = 0.038 )
+Likelihood ratio test= 1.72  on 2 df,   p=0.4
+Wald test            = 1.71  on 2 df,   p=0.4
+Score (logrank) test = 1.72  on 2 df,   p=0.4</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Hazard ratios instead of raw log-hazard coefficients</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(cox_model, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="nkhbikmcvo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#nkhbikmcvo table {
+<div id="cvuhfoyzgx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#cvuhfoyzgx table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#nkhbikmcvo thead, #nkhbikmcvo tbody, #nkhbikmcvo tfoot, #nkhbikmcvo tr, #nkhbikmcvo td, #nkhbikmcvo th {
+#cvuhfoyzgx thead, #cvuhfoyzgx tbody, #cvuhfoyzgx tfoot, #cvuhfoyzgx tr, #cvuhfoyzgx td, #cvuhfoyzgx th {
   border-style: none;
 }
 
-#nkhbikmcvo p {
+#cvuhfoyzgx p {
   margin: 0;
   padding: 0;
 }
 
-#nkhbikmcvo .gt_table {
+#cvuhfoyzgx .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1997,12 +2111,12 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#nkhbikmcvo .gt_caption {
+#cvuhfoyzgx .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#nkhbikmcvo .gt_title {
+#cvuhfoyzgx .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2014,7 +2128,7 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   border-bottom-width: 0;
 }
 
-#nkhbikmcvo .gt_subtitle {
+#cvuhfoyzgx .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2026,7 +2140,7 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   border-top-width: 0;
 }
 
-#nkhbikmcvo .gt_heading {
+#cvuhfoyzgx .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2038,13 +2152,13 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#nkhbikmcvo .gt_bottom_border {
+#cvuhfoyzgx .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#nkhbikmcvo .gt_col_headings {
+#cvuhfoyzgx .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2059,7 +2173,7 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#nkhbikmcvo .gt_col_heading {
+#cvuhfoyzgx .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2079,7 +2193,7 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   overflow-x: hidden;
 }
 
-#nkhbikmcvo .gt_column_spanner_outer {
+#cvuhfoyzgx .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2091,15 +2205,15 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   padding-right: 4px;
 }
 
-#nkhbikmcvo .gt_column_spanner_outer:first-child {
+#cvuhfoyzgx .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#nkhbikmcvo .gt_column_spanner_outer:last-child {
+#cvuhfoyzgx .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#nkhbikmcvo .gt_column_spanner {
+#cvuhfoyzgx .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2111,11 +2225,11 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   width: 100%;
 }
 
-#nkhbikmcvo .gt_spanner_row {
+#cvuhfoyzgx .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#nkhbikmcvo .gt_group_heading {
+#cvuhfoyzgx .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2141,7 +2255,7 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   text-align: left;
 }
 
-#nkhbikmcvo .gt_empty_group_heading {
+#cvuhfoyzgx .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2156,15 +2270,15 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   vertical-align: middle;
 }
 
-#nkhbikmcvo .gt_from_md > :first-child {
+#cvuhfoyzgx .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#nkhbikmcvo .gt_from_md > :last-child {
+#cvuhfoyzgx .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#nkhbikmcvo .gt_row {
+#cvuhfoyzgx .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2183,7 +2297,7 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   overflow-x: hidden;
 }
 
-#nkhbikmcvo .gt_stub {
+#cvuhfoyzgx .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2196,7 +2310,7 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   padding-right: 5px;
 }
 
-#nkhbikmcvo .gt_stub_row_group {
+#cvuhfoyzgx .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2210,15 +2324,15 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   vertical-align: top;
 }
 
-#nkhbikmcvo .gt_row_group_first td {
+#cvuhfoyzgx .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#nkhbikmcvo .gt_row_group_first th {
+#cvuhfoyzgx .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#nkhbikmcvo .gt_summary_row {
+#cvuhfoyzgx .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2228,16 +2342,16 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   padding-right: 5px;
 }
 
-#nkhbikmcvo .gt_first_summary_row {
+#cvuhfoyzgx .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#nkhbikmcvo .gt_first_summary_row.thick {
+#cvuhfoyzgx .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#nkhbikmcvo .gt_last_summary_row {
+#cvuhfoyzgx .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2247,7 +2361,7 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#nkhbikmcvo .gt_grand_summary_row {
+#cvuhfoyzgx .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2257,7 +2371,7 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   padding-right: 5px;
 }
 
-#nkhbikmcvo .gt_first_grand_summary_row {
+#cvuhfoyzgx .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2267,7 +2381,7 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#nkhbikmcvo .gt_last_grand_summary_row_top {
+#cvuhfoyzgx .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2277,11 +2391,11 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#nkhbikmcvo .gt_striped {
+#cvuhfoyzgx .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#nkhbikmcvo .gt_table_body {
+#cvuhfoyzgx .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2290,7 +2404,7 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#nkhbikmcvo .gt_footnotes {
+#cvuhfoyzgx .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2304,7 +2418,7 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#nkhbikmcvo .gt_footnote {
+#cvuhfoyzgx .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2313,7 +2427,7 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   padding-right: 5px;
 }
 
-#nkhbikmcvo .gt_sourcenotes {
+#cvuhfoyzgx .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2327,7 +2441,7 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#nkhbikmcvo .gt_sourcenote {
+#cvuhfoyzgx .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2335,72 +2449,72 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
   padding-right: 5px;
 }
 
-#nkhbikmcvo .gt_left {
+#cvuhfoyzgx .gt_left {
   text-align: left;
 }
 
-#nkhbikmcvo .gt_center {
+#cvuhfoyzgx .gt_center {
   text-align: center;
 }
 
-#nkhbikmcvo .gt_right {
+#cvuhfoyzgx .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#nkhbikmcvo .gt_font_normal {
+#cvuhfoyzgx .gt_font_normal {
   font-weight: normal;
 }
 
-#nkhbikmcvo .gt_font_bold {
+#cvuhfoyzgx .gt_font_bold {
   font-weight: bold;
 }
 
-#nkhbikmcvo .gt_font_italic {
+#cvuhfoyzgx .gt_font_italic {
   font-style: italic;
 }
 
-#nkhbikmcvo .gt_super {
+#cvuhfoyzgx .gt_super {
   font-size: 65%;
 }
 
-#nkhbikmcvo .gt_footnote_marks {
+#cvuhfoyzgx .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#nkhbikmcvo .gt_asterisk {
+#cvuhfoyzgx .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#nkhbikmcvo .gt_indent_1 {
+#cvuhfoyzgx .gt_indent_1 {
   text-indent: 5px;
 }
 
-#nkhbikmcvo .gt_indent_2 {
+#cvuhfoyzgx .gt_indent_2 {
   text-indent: 10px;
 }
 
-#nkhbikmcvo .gt_indent_3 {
+#cvuhfoyzgx .gt_indent_3 {
   text-indent: 15px;
 }
 
-#nkhbikmcvo .gt_indent_4 {
+#cvuhfoyzgx .gt_indent_4 {
   text-indent: 20px;
 }
 
-#nkhbikmcvo .gt_indent_5 {
+#cvuhfoyzgx .gt_indent_5 {
   text-indent: 25px;
 }
 
-#nkhbikmcvo .katex-display {
+#cvuhfoyzgx .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#nkhbikmcvo div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#cvuhfoyzgx div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2423,9 +2537,9 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">age</td>
-<td class="gt_row gt_center" headers="estimate">1.00</td>
-<td class="gt_row gt_center" headers="conf.low">0.98, 1.03</td>
-<td class="gt_row gt_center" headers="p.value">0.7</td>
+<td class="gt_row gt_center" headers="estimate">0.99</td>
+<td class="gt_row gt_center" headers="conf.low">0.97, 1.02</td>
+<td class="gt_row gt_center" headers="p.value">0.5</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">treatment</td>
@@ -2445,9 +2559,9 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;B</td>
-<td class="gt_row gt_center" headers="estimate">1.03</td>
-<td class="gt_row gt_center" headers="conf.low">0.64, 1.67</td>
-<td class="gt_row gt_center" headers="p.value">0.9</td>
+<td class="gt_row gt_center" headers="estimate">1.31</td>
+<td class="gt_row gt_center" headers="conf.low">0.81, 2.12</td>
+<td class="gt_row gt_center" headers="p.value">0.3</td>
 </tr>
 </tbody><tfoot>
 <tr class="gt_sourcenotes odd">
@@ -2473,7 +2587,7 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="regression_files/figure-html/unnamed-chunk-14-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="regression_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="regression_files/figure-html/unnamed-chunk-9-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="regression_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -2490,7 +2604,7 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="regression_files/figure-html/unnamed-chunk-15-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="regression_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="regression_files/figure-html/unnamed-chunk-10-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="regression_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -2499,8 +2613,8 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">r2</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># R2 for Linear Regression
-       R2: 0.024
-  adj. R2: 0.004</code></pre>
+       R2: 0.049
+  adj. R2: 0.029</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_collinearity</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -2508,15 +2622,16 @@ Score (logrank) test = 0.13  on 2 df,   p=0.9</code></pre>
 
 Low Correlation
 
-      Term  VIF       VIF 95% CI adj. VIF Tolerance Tolerance 95% CI
-       age 1.01 [1.00, 5.68e+07]     1.00      0.99     [0.00, 1.00]
- treatment 1.01 [1.00, 5.68e+07]     1.00      0.99     [0.00, 1.00]</code></pre>
+      Term  VIF  VIF 95% CI adj. VIF Tolerance Tolerance 95% CI
+       age 1.00 [1.00, Inf]     1.00      1.00     [0.00, 1.00]
+ treatment 1.00 [1.00, Inf]     1.00      1.00     [0.00, 1.00]</code></pre>
 </div>
 </div>
 <p><code>check_model()</code> bundles several checks — linearity, homogeneity of variance, normality of residuals, influential observations, and collinearity — into one panel. <code>check_collinearity()</code> reports Variance Inflation Factors (VIF) on their own; values above roughly 5 suggest predictors are too correlated with each other to interpret their individual coefficients reliably.</p>
-
-
 </section>
+</div>
+
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

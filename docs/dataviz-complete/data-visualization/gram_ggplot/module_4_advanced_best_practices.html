@@ -6,11 +6,11 @@
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.38">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Sparrow">
-  <meta name="dcterms.date" content="2026-08-27">
+  <meta name="dcterms.date" content="2026-10-16">
   <title>Data Visualization — Complete – Grammar of Graphics: Module 4</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -21,10 +21,13 @@
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
     */
-    code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -206,12 +209,12 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-Sparrow 
+Sparrow
 </div>
 </div>
 </div>
 
-  <p class="date">2026-08-27</p>
+  <p class="date">2026-10-16</p>
 </section>
 <section id="module-4-overview" class="slide level2 smaller center">
 <h2>Module 4 Overview</h2>
@@ -223,71 +226,71 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-2"><a></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-3"><a></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb1-4"><a></a><span class="fu">library</span>(readxl)</span>
-<span id="cb1-5"><a></a><span class="fu">library</span>(ggthemes)</span>
-<span id="cb1-6"><a></a><span class="fu">library</span>(paletteer)</span>
-<span id="cb1-7"><a></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb1-8"><a></a><span class="co"># remotes::install_github("haleyjeppson/ggmosaic")</span></span>
-<span id="cb1-9"><a></a><span class="fu">library</span>(ggmosaic)  <span class="co"># For mosaic plots</span></span>
-<span id="cb1-10"><a></a></span>
-<span id="cb1-11"><a></a><span class="co"># Load data with all transformations</span></span>
-<span id="cb1-12"><a></a>bp_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"../../data/PublicHealth_BP_Dataset.xlsx"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-13"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb1-14"><a></a>    <span class="at">SysBP_Change =</span> SysBP_6m <span class="sc">-</span> SysBP_0m,</span>
-<span id="cb1-15"><a></a>    <span class="at">DiaBP_Change =</span> DiaBP_6m <span class="sc">-</span> DiaBP_0m,</span>
-<span id="cb1-16"><a></a>    <span class="at">AgeGroup =</span> <span class="fu">cut</span>(Age, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">65</span>, <span class="dv">100</span>),</span>
-<span id="cb1-17"><a></a>                   <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"18-30"</span>, <span class="st">"31-50"</span>, <span class="st">"51-65"</span>, <span class="st">"65+"</span>)),</span>
-<span id="cb1-18"><a></a>    <span class="at">Hypertension_Baseline =</span> <span class="fu">ifelse</span>(SysBP_0m <span class="sc">&gt;=</span> <span class="dv">140</span> <span class="sc">|</span> DiaBP_0m <span class="sc">&gt;=</span> <span class="dv">90</span>, </span>
-<span id="cb1-19"><a></a>                                   <span class="st">"Hypertensive"</span>, <span class="st">"Normal"</span>),</span>
-<span id="cb1-20"><a></a>    <span class="at">BMI_Category =</span> <span class="fu">cut</span>(BMI, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">18.5</span>, <span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">100</span>),</span>
-<span id="cb1-21"><a></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Underweight"</span>, <span class="st">"Normal"</span>, <span class="st">"Overweight"</span>, <span class="st">"Obese"</span>))</span>
-<span id="cb1-22"><a></a>  )</span>
-<span id="cb1-23"><a></a></span>
-<span id="cb1-24"><a></a><span class="co"># Time series</span></span>
-<span id="cb1-25"><a></a>bp_time <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
-<span id="cb1-26"><a></a>  <span class="fu">select</span>(PatientID, TreatmentGroup, SysBP_0m, SysBP_3m, SysBP_6m) <span class="sc">%&gt;%</span></span>
-<span id="cb1-27"><a></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"SysBP"</span>),</span>
-<span id="cb1-28"><a></a>               <span class="at">names_to =</span> <span class="st">"Time"</span>, <span class="at">values_to =</span> <span class="st">"SysBP"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-29"><a></a>  <span class="fu">mutate</span>(<span class="at">Months =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"SysBP_|m"</span>, <span class="st">""</span>, Time)))</span>
-<span id="cb1-30"><a></a></span>
-<span id="cb1-31"><a></a><span class="co"># Summary data</span></span>
-<span id="cb1-32"><a></a>bp_summary <span class="ot">&lt;-</span> bp_time <span class="sc">%&gt;%</span></span>
-<span id="cb1-33"><a></a>  <span class="fu">group_by</span>(TreatmentGroup, Months) <span class="sc">%&gt;%</span></span>
-<span id="cb1-34"><a></a>  <span class="fu">summarise</span>(<span class="at">Mean_SysBP =</span> <span class="fu">mean</span>(SysBP, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb1-35"><a></a></span>
-<span id="cb1-36"><a></a>ci_data <span class="ot">&lt;-</span> bp_time <span class="sc">%&gt;%</span></span>
-<span id="cb1-37"><a></a>  <span class="fu">group_by</span>(TreatmentGroup, Months) <span class="sc">%&gt;%</span></span>
-<span id="cb1-38"><a></a>  <span class="fu">summarise</span>(<span class="at">Mean =</span> <span class="fu">mean</span>(SysBP), <span class="at">SE =</span> <span class="fu">sd</span>(SysBP) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">n</span>()), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb1-39"><a></a></span>
-<span id="cb1-40"><a></a><span class="co"># Custom theme from Module 3</span></span>
-<span id="cb1-41"><a></a>theme_clinical_report <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">base_size =</span> <span class="dv">12</span>, <span class="at">base_family =</span> <span class="st">"serif"</span>) {</span>
-<span id="cb1-42"><a></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> base_size, <span class="at">base_family =</span> base_family) <span class="sc">+</span></span>
-<span id="cb1-43"><a></a>  <span class="fu">theme</span>(</span>
-<span id="cb1-44"><a></a>    <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> base_family),</span>
-<span id="cb1-45"><a></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">1.3</span>, <span class="at">face =</span> <span class="st">"bold"</span>, </span>
-<span id="cb1-46"><a></a>                              <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">10</span>)),</span>
-<span id="cb1-47"><a></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">1.1</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
-<span id="cb1-48"><a></a>                                 <span class="at">color =</span> <span class="st">"gray30"</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">15</span>)),</span>
-<span id="cb1-49"><a></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">0.9</span>, <span class="at">hjust =</span> <span class="dv">1</span>,</span>
-<span id="cb1-50"><a></a>                                <span class="at">face =</span> <span class="st">"italic"</span>, <span class="at">color =</span> <span class="st">"gray50"</span>),</span>
-<span id="cb1-51"><a></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">1.1</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb1-52"><a></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">0.9</span>, <span class="at">color =</span> <span class="st">"gray20"</span>),</span>
-<span id="cb1-53"><a></a>    <span class="at">axis.line =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>),</span>
-<span id="cb1-54"><a></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"gray90"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>),</span>
-<span id="cb1-55"><a></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb1-56"><a></a>    <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"gray40"</span>, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">linewidth =</span> <span class="dv">1</span>),</span>
-<span id="cb1-57"><a></a>    <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>),</span>
-<span id="cb1-58"><a></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
-<span id="cb1-59"><a></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb1-60"><a></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">0.9</span>),</span>
-<span id="cb1-61"><a></a>    <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
-<span id="cb1-62"><a></a>    <span class="at">legend.key =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
-<span id="cb1-63"><a></a>    <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>)</span>
-<span id="cb1-64"><a></a>  )</span>
-<span id="cb1-65"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a aria-label="2"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a aria-label="3"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-4"><a aria-label="4"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-5"><a aria-label="5"></a><span class="fu">library</span>(ggthemes)</span>
+<span id="cb1-6"><a aria-label="6"></a><span class="fu">library</span>(paletteer)</span>
+<span id="cb1-7"><a aria-label="7"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-8"><a aria-label="8"></a><span class="co"># remotes::install_github("haleyjeppson/ggmosaic")</span></span>
+<span id="cb1-9"><a aria-label="9"></a><span class="fu">library</span>(ggmosaic)  <span class="co"># For mosaic plots</span></span>
+<span id="cb1-10"><a aria-label="10"></a></span>
+<span id="cb1-11"><a aria-label="11"></a><span class="co"># Load data with all transformations</span></span>
+<span id="cb1-12"><a aria-label="12"></a>bp_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"../../data/PublicHealth_BP_Dataset.xlsx"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-13"><a aria-label="13"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-14"><a aria-label="14"></a>    <span class="at">SysBP_Change =</span> SysBP_6m <span class="sc">-</span> SysBP_0m,</span>
+<span id="cb1-15"><a aria-label="15"></a>    <span class="at">DiaBP_Change =</span> DiaBP_6m <span class="sc">-</span> DiaBP_0m,</span>
+<span id="cb1-16"><a aria-label="16"></a>    <span class="at">AgeGroup =</span> <span class="fu">cut</span>(Age, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">65</span>, <span class="dv">100</span>),</span>
+<span id="cb1-17"><a aria-label="17"></a>                   <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"18-30"</span>, <span class="st">"31-50"</span>, <span class="st">"51-65"</span>, <span class="st">"65+"</span>)),</span>
+<span id="cb1-18"><a aria-label="18"></a>    <span class="at">Hypertension_Baseline =</span> <span class="fu">ifelse</span>(SysBP_0m <span class="sc">&gt;=</span> <span class="dv">140</span> <span class="sc">|</span> DiaBP_0m <span class="sc">&gt;=</span> <span class="dv">90</span>, </span>
+<span id="cb1-19"><a aria-label="19"></a>                                   <span class="st">"Hypertensive"</span>, <span class="st">"Normal"</span>),</span>
+<span id="cb1-20"><a aria-label="20"></a>    <span class="at">BMI_Category =</span> <span class="fu">cut</span>(BMI, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">18.5</span>, <span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">100</span>),</span>
+<span id="cb1-21"><a aria-label="21"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Underweight"</span>, <span class="st">"Normal"</span>, <span class="st">"Overweight"</span>, <span class="st">"Obese"</span>))</span>
+<span id="cb1-22"><a aria-label="22"></a>  )</span>
+<span id="cb1-23"><a aria-label="23"></a></span>
+<span id="cb1-24"><a aria-label="24"></a><span class="co"># Time series</span></span>
+<span id="cb1-25"><a aria-label="25"></a>bp_time <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
+<span id="cb1-26"><a aria-label="26"></a>  <span class="fu">select</span>(PatientID, TreatmentGroup, SysBP_0m, SysBP_3m, SysBP_6m) <span class="sc">%&gt;%</span></span>
+<span id="cb1-27"><a aria-label="27"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"SysBP"</span>),</span>
+<span id="cb1-28"><a aria-label="28"></a>               <span class="at">names_to =</span> <span class="st">"Time"</span>, <span class="at">values_to =</span> <span class="st">"SysBP"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-29"><a aria-label="29"></a>  <span class="fu">mutate</span>(<span class="at">Months =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"SysBP_|m"</span>, <span class="st">""</span>, Time)))</span>
+<span id="cb1-30"><a aria-label="30"></a></span>
+<span id="cb1-31"><a aria-label="31"></a><span class="co"># Summary data</span></span>
+<span id="cb1-32"><a aria-label="32"></a>bp_summary <span class="ot">&lt;-</span> bp_time <span class="sc">%&gt;%</span></span>
+<span id="cb1-33"><a aria-label="33"></a>  <span class="fu">group_by</span>(TreatmentGroup, Months) <span class="sc">%&gt;%</span></span>
+<span id="cb1-34"><a aria-label="34"></a>  <span class="fu">summarise</span>(<span class="at">Mean_SysBP =</span> <span class="fu">mean</span>(SysBP, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb1-35"><a aria-label="35"></a></span>
+<span id="cb1-36"><a aria-label="36"></a>ci_data <span class="ot">&lt;-</span> bp_time <span class="sc">%&gt;%</span></span>
+<span id="cb1-37"><a aria-label="37"></a>  <span class="fu">group_by</span>(TreatmentGroup, Months) <span class="sc">%&gt;%</span></span>
+<span id="cb1-38"><a aria-label="38"></a>  <span class="fu">summarise</span>(<span class="at">Mean =</span> <span class="fu">mean</span>(SysBP), <span class="at">SE =</span> <span class="fu">sd</span>(SysBP) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">n</span>()), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb1-39"><a aria-label="39"></a></span>
+<span id="cb1-40"><a aria-label="40"></a><span class="co"># Custom theme from Module 3</span></span>
+<span id="cb1-41"><a aria-label="41"></a>theme_clinical_report <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">base_size =</span> <span class="dv">12</span>, <span class="at">base_family =</span> <span class="st">"serif"</span>) {</span>
+<span id="cb1-42"><a aria-label="42"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> base_size, <span class="at">base_family =</span> base_family) <span class="sc">+</span></span>
+<span id="cb1-43"><a aria-label="43"></a>  <span class="fu">theme</span>(</span>
+<span id="cb1-44"><a aria-label="44"></a>    <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> base_family),</span>
+<span id="cb1-45"><a aria-label="45"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">1.3</span>, <span class="at">face =</span> <span class="st">"bold"</span>, </span>
+<span id="cb1-46"><a aria-label="46"></a>                              <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">10</span>)),</span>
+<span id="cb1-47"><a aria-label="47"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">1.1</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb1-48"><a aria-label="48"></a>                                 <span class="at">color =</span> <span class="st">"gray30"</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">15</span>)),</span>
+<span id="cb1-49"><a aria-label="49"></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">0.9</span>, <span class="at">hjust =</span> <span class="dv">1</span>,</span>
+<span id="cb1-50"><a aria-label="50"></a>                                <span class="at">face =</span> <span class="st">"italic"</span>, <span class="at">color =</span> <span class="st">"gray50"</span>),</span>
+<span id="cb1-51"><a aria-label="51"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">1.1</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb1-52"><a aria-label="52"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">0.9</span>, <span class="at">color =</span> <span class="st">"gray20"</span>),</span>
+<span id="cb1-53"><a aria-label="53"></a>    <span class="at">axis.line =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>),</span>
+<span id="cb1-54"><a aria-label="54"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"gray90"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>),</span>
+<span id="cb1-55"><a aria-label="55"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb1-56"><a aria-label="56"></a>    <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"gray40"</span>, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">linewidth =</span> <span class="dv">1</span>),</span>
+<span id="cb1-57"><a aria-label="57"></a>    <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>),</span>
+<span id="cb1-58"><a aria-label="58"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb1-59"><a aria-label="59"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb1-60"><a aria-label="60"></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">0.9</span>),</span>
+<span id="cb1-61"><a aria-label="61"></a>    <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb1-62"><a aria-label="62"></a>    <span class="at">legend.key =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb1-63"><a aria-label="63"></a>    <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>)</span>
+<span id="cb1-64"><a aria-label="64"></a>  )</span>
+<span id="cb1-65"><a aria-label="65"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -301,13 +304,13 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" data-code-line-numbers="|1-3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co"># Step 1: Basic plot</span></span>
-<span id="cb2-2"><a></a>p_base <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, </span>
-<span id="cb2-3"><a></a>                 <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m,</span>
-<span id="cb2-4"><a></a>                     <span class="at">color =</span> TreatmentGroup)) <span class="sc">+</span></span>
-<span id="cb2-5"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">size =</span> <span class="dv">2</span>)</span>
-<span id="cb2-6"><a></a></span>
-<span id="cb2-7"><a></a>p_base</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" data-code-line-numbers="|1-3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-label="1"></a><span class="co"># Step 1: Basic plot</span></span>
+<span id="cb2-2"><a aria-label="2"></a>p_base <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, </span>
+<span id="cb2-3"><a aria-label="3"></a>                 <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m,</span>
+<span id="cb2-4"><a aria-label="4"></a>                     <span class="at">color =</span> TreatmentGroup)) <span class="sc">+</span></span>
+<span id="cb2-5"><a aria-label="5"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">size =</span> <span class="dv">2</span>)</span>
+<span id="cb2-6"><a aria-label="6"></a></span>
+<span id="cb2-7"><a aria-label="7"></a>p_base</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 
 </div>
@@ -321,12 +324,12 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" data-code-line-numbers="|2-3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="co"># Step 2: Add smooth trends</span></span>
-<span id="cb3-2"><a></a>p_trend <span class="ot">&lt;-</span> p_base <span class="sc">+</span></span>
-<span id="cb3-3"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb3-4"><a></a>              <span class="at">linewidth =</span> <span class="fl">1.2</span>)</span>
-<span id="cb3-5"><a></a></span>
-<span id="cb3-6"><a></a>p_trend</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" data-code-line-numbers="|2-3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a><span class="co"># Step 2: Add smooth trends</span></span>
+<span id="cb3-2"><a aria-label="2"></a>p_trend <span class="ot">&lt;-</span> p_base <span class="sc">+</span></span>
+<span id="cb3-3"><a aria-label="3"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb3-4"><a aria-label="4"></a>              <span class="at">linewidth =</span> <span class="fl">1.2</span>)</span>
+<span id="cb3-5"><a aria-label="5"></a></span>
+<span id="cb3-6"><a aria-label="6"></a>p_trend</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 
 </div>
@@ -340,11 +343,11 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" data-code-line-numbers="|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="co"># Step 3: Apply professional theme</span></span>
-<span id="cb4-2"><a></a>p_themed <span class="ot">&lt;-</span> p_trend <span class="sc">+</span></span>
-<span id="cb4-3"><a></a>  <span class="fu">theme_clinical_report</span>(<span class="at">base_size =</span> <span class="dv">14</span>)</span>
-<span id="cb4-4"><a></a></span>
-<span id="cb4-5"><a></a>p_themed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" data-code-line-numbers="|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-label="1"></a><span class="co"># Step 3: Apply professional theme</span></span>
+<span id="cb4-2"><a aria-label="2"></a>p_themed <span class="ot">&lt;-</span> p_trend <span class="sc">+</span></span>
+<span id="cb4-3"><a aria-label="3"></a>  <span class="fu">theme_clinical_report</span>(<span class="at">base_size =</span> <span class="dv">14</span>)</span>
+<span id="cb4-4"><a aria-label="4"></a></span>
+<span id="cb4-5"><a aria-label="5"></a>p_themed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 
 </div>
@@ -360,17 +363,17 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" data-code-line-numbers="|2-8|9-11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="co"># Step 4: Final customization</span></span>
-<span id="cb5-2"><a></a>p_final <span class="ot">&lt;-</span> p_themed <span class="sc">+</span></span>
-<span id="cb5-3"><a></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb5-4"><a></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Control"</span> <span class="ot">=</span> <span class="st">"steelblue"</span>,</span>
-<span id="cb5-5"><a></a>               <span class="st">"Intervention"</span> <span class="ot">=</span> <span class="st">"darkred"</span>),</span>
-<span id="cb5-6"><a></a>    <span class="at">name =</span> <span class="st">"Treatment Group"</span>) <span class="sc">+</span></span>
-<span id="cb5-7"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Age vs Baseline Systolic BP"</span>,</span>
-<span id="cb5-8"><a></a>       <span class="at">subtitle =</span> <span class="st">"With linear trend lines"</span>,</span>
-<span id="cb5-9"><a></a>       <span class="at">x =</span> <span class="st">"Age (years)"</span>,</span>
-<span id="cb5-10"><a></a>       <span class="at">y =</span> <span class="st">"Systolic BP (mmHg)"</span>,</span>
-<span id="cb5-11"><a></a>       <span class="at">caption =</span> <span class="st">"n=200 patients"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" data-code-line-numbers="|2-8|9-11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-label="1"></a><span class="co"># Step 4: Final customization</span></span>
+<span id="cb5-2"><a aria-label="2"></a>p_final <span class="ot">&lt;-</span> p_themed <span class="sc">+</span></span>
+<span id="cb5-3"><a aria-label="3"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb5-4"><a aria-label="4"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Control"</span> <span class="ot">=</span> <span class="st">"steelblue"</span>,</span>
+<span id="cb5-5"><a aria-label="5"></a>               <span class="st">"Intervention"</span> <span class="ot">=</span> <span class="st">"darkred"</span>),</span>
+<span id="cb5-6"><a aria-label="6"></a>    <span class="at">name =</span> <span class="st">"Treatment Group"</span>) <span class="sc">+</span></span>
+<span id="cb5-7"><a aria-label="7"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Age vs Baseline Systolic BP"</span>,</span>
+<span id="cb5-8"><a aria-label="8"></a>       <span class="at">subtitle =</span> <span class="st">"With linear trend lines"</span>,</span>
+<span id="cb5-9"><a aria-label="9"></a>       <span class="at">x =</span> <span class="st">"Age (years)"</span>,</span>
+<span id="cb5-10"><a aria-label="10"></a>       <span class="at">y =</span> <span class="st">"Systolic BP (mmHg)"</span>,</span>
+<span id="cb5-11"><a aria-label="11"></a>       <span class="at">caption =</span> <span class="st">"n=200 patients"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </div><div class="column" style="width:40%;">
@@ -392,22 +395,22 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" data-code-line-numbers="|6-8|9-11|12-14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">ggplot</span>(ci_data, </span>
-<span id="cb6-2"><a></a>       <span class="fu">aes</span>(<span class="at">x =</span> Months, <span class="at">y =</span> Mean,</span>
-<span id="cb6-3"><a></a>           <span class="at">color =</span> TreatmentGroup,</span>
-<span id="cb6-4"><a></a>           <span class="at">fill =</span> TreatmentGroup)) <span class="sc">+</span></span>
-<span id="cb6-5"><a></a>  <span class="co"># Confidence band</span></span>
-<span id="cb6-6"><a></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> Mean <span class="sc">-</span> <span class="fl">1.96</span><span class="sc">*</span>SE,</span>
-<span id="cb6-7"><a></a>                  <span class="at">ymax =</span> Mean <span class="sc">+</span> <span class="fl">1.96</span><span class="sc">*</span>SE),</span>
-<span id="cb6-8"><a></a>              <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb6-9"><a></a>  <span class="co"># Trend line</span></span>
-<span id="cb6-10"><a></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
-<span id="cb6-11"><a></a>  <span class="co"># Data points</span></span>
-<span id="cb6-12"><a></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb6-13"><a></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb6-14"><a></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"steelblue"</span>, <span class="st">"darkred"</span>)) <span class="sc">+</span></span>
-<span id="cb6-15"><a></a>  <span class="fu">scale_fill_manual</span>(</span>
-<span id="cb6-16"><a></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"steelblue"</span>, <span class="st">"darkred"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" data-code-line-numbers="|6-8|9-11|12-14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a aria-label="1"></a><span class="fu">ggplot</span>(ci_data, </span>
+<span id="cb6-2"><a aria-label="2"></a>       <span class="fu">aes</span>(<span class="at">x =</span> Months, <span class="at">y =</span> Mean,</span>
+<span id="cb6-3"><a aria-label="3"></a>           <span class="at">color =</span> TreatmentGroup,</span>
+<span id="cb6-4"><a aria-label="4"></a>           <span class="at">fill =</span> TreatmentGroup)) <span class="sc">+</span></span>
+<span id="cb6-5"><a aria-label="5"></a>  <span class="co"># Confidence band</span></span>
+<span id="cb6-6"><a aria-label="6"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> Mean <span class="sc">-</span> <span class="fl">1.96</span><span class="sc">*</span>SE,</span>
+<span id="cb6-7"><a aria-label="7"></a>                  <span class="at">ymax =</span> Mean <span class="sc">+</span> <span class="fl">1.96</span><span class="sc">*</span>SE),</span>
+<span id="cb6-8"><a aria-label="8"></a>              <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb6-9"><a aria-label="9"></a>  <span class="co"># Trend line</span></span>
+<span id="cb6-10"><a aria-label="10"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb6-11"><a aria-label="11"></a>  <span class="co"># Data points</span></span>
+<span id="cb6-12"><a aria-label="12"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb6-13"><a aria-label="13"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb6-14"><a aria-label="14"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"steelblue"</span>, <span class="st">"darkred"</span>)) <span class="sc">+</span></span>
+<span id="cb6-15"><a aria-label="15"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb6-16"><a aria-label="16"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"steelblue"</span>, <span class="st">"darkred"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </div><div class="column" style="width:40%;">
@@ -429,18 +432,18 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" data-code-line-numbers="|4-7|8-9|10-11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">ggplot</span>(bp_data, </span>
-<span id="cb7-2"><a></a>       <span class="fu">aes</span>(<span class="at">x =</span> AgeGroup, <span class="at">y =</span> SysBP_Change,</span>
-<span id="cb7-3"><a></a>           <span class="at">fill =</span> TreatmentGroup)) <span class="sc">+</span></span>
-<span id="cb7-4"><a></a>  <span class="co"># Individual points with jitter</span></span>
-<span id="cb7-5"><a></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">color =</span> TreatmentGroup),</span>
-<span id="cb7-6"><a></a>              <span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">width =</span> <span class="fl">0.2</span>,</span>
-<span id="cb7-7"><a></a>              <span class="at">size =</span> <span class="fl">1.5</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb7-8"><a></a>  <span class="co"># Box plot overlay</span></span>
-<span id="cb7-9"><a></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb7-10"><a></a>  <span class="co"># Add mean as point</span></span>
-<span id="cb7-11"><a></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>,</span>
-<span id="cb7-12"><a></a>               <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">shape =</span> <span class="dv">18</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" data-code-line-numbers="|4-7|8-9|10-11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a aria-label="1"></a><span class="fu">ggplot</span>(bp_data, </span>
+<span id="cb7-2"><a aria-label="2"></a>       <span class="fu">aes</span>(<span class="at">x =</span> AgeGroup, <span class="at">y =</span> SysBP_Change,</span>
+<span id="cb7-3"><a aria-label="3"></a>           <span class="at">fill =</span> TreatmentGroup)) <span class="sc">+</span></span>
+<span id="cb7-4"><a aria-label="4"></a>  <span class="co"># Individual points with jitter</span></span>
+<span id="cb7-5"><a aria-label="5"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">color =</span> TreatmentGroup),</span>
+<span id="cb7-6"><a aria-label="6"></a>              <span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">width =</span> <span class="fl">0.2</span>,</span>
+<span id="cb7-7"><a aria-label="7"></a>              <span class="at">size =</span> <span class="fl">1.5</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb7-8"><a aria-label="8"></a>  <span class="co"># Box plot overlay</span></span>
+<span id="cb7-9"><a aria-label="9"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb7-10"><a aria-label="10"></a>  <span class="co"># Add mean as point</span></span>
+<span id="cb7-11"><a aria-label="11"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>,</span>
+<span id="cb7-12"><a aria-label="12"></a>               <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">shape =</span> <span class="dv">18</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </div><div class="column" style="width:40%;">
@@ -460,35 +463,35 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" data-code-line-numbers="|1-15|16-23|24-27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>publication_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, </span>
-<span id="cb8-2"><a></a>                           <span class="fu">aes</span>(<span class="at">x =</span> BMI, <span class="at">y =</span> Cholesterol,</span>
-<span id="cb8-3"><a></a>                               <span class="at">color =</span> Hypertension_Baseline)) <span class="sc">+</span></span>
-<span id="cb8-4"><a></a>  <span class="co"># Data layer</span></span>
-<span id="cb8-5"><a></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb8-6"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
-<span id="cb8-7"><a></a>  </span>
-<span id="cb8-8"><a></a>  <span class="co"># Scales</span></span>
-<span id="cb8-9"><a></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb8-10"><a></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Normal"</span> <span class="ot">=</span> <span class="st">"forestgreen"</span>, <span class="st">"Hypertensive"</span> <span class="ot">=</span> <span class="st">"darkred"</span>),</span>
-<span id="cb8-11"><a></a>    <span class="at">name =</span> <span class="st">"Baseline BP Status"</span>) <span class="sc">+</span></span>
-<span id="cb8-12"><a></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">15</span>, <span class="dv">40</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
-<span id="cb8-13"><a></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">100</span>, <span class="dv">300</span>, <span class="dv">50</span>)) <span class="sc">+</span></span>
-<span id="cb8-14"><a></a>  </span>
-<span id="cb8-15"><a></a>  <span class="co"># Labels</span></span>
-<span id="cb8-16"><a></a>  <span class="fu">labs</span>(</span>
-<span id="cb8-17"><a></a>    <span class="at">title =</span> <span class="st">"Relationship Between BMI and Cholesterol"</span>,</span>
-<span id="cb8-18"><a></a>    <span class="at">subtitle =</span> <span class="st">"Stratified by baseline hypertension status"</span>,</span>
-<span id="cb8-19"><a></a>    <span class="at">x =</span> <span class="st">"Body Mass Index (kg/m²)"</span>,</span>
-<span id="cb8-20"><a></a>    <span class="at">y =</span> <span class="st">"Total Cholesterol (mg/dL)"</span>,</span>
-<span id="cb8-21"><a></a>    <span class="at">caption =</span> <span class="st">"Data: Public Health BP Dataset | n=200 patients | Linear regression with 95% CI"</span></span>
-<span id="cb8-22"><a></a>  ) <span class="sc">+</span></span>
-<span id="cb8-23"><a></a>  </span>
-<span id="cb8-24"><a></a>  <span class="co"># Theme</span></span>
-<span id="cb8-25"><a></a>  <span class="fu">theme_clinical_report</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
-<span id="cb8-26"><a></a>  <span class="fu">theme</span>(</span>
-<span id="cb8-27"><a></a>    <span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.85</span>, <span class="fl">0.15</span>),</span>
-<span id="cb8-28"><a></a>    <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>)</span>
-<span id="cb8-29"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" data-code-line-numbers="|1-15|16-23|24-27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a aria-label="1"></a>publication_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, </span>
+<span id="cb8-2"><a aria-label="2"></a>                           <span class="fu">aes</span>(<span class="at">x =</span> BMI, <span class="at">y =</span> Cholesterol,</span>
+<span id="cb8-3"><a aria-label="3"></a>                               <span class="at">color =</span> Hypertension_Baseline)) <span class="sc">+</span></span>
+<span id="cb8-4"><a aria-label="4"></a>  <span class="co"># Data layer</span></span>
+<span id="cb8-5"><a aria-label="5"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb8-6"><a aria-label="6"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb8-7"><a aria-label="7"></a>  </span>
+<span id="cb8-8"><a aria-label="8"></a>  <span class="co"># Scales</span></span>
+<span id="cb8-9"><a aria-label="9"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb8-10"><a aria-label="10"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Normal"</span> <span class="ot">=</span> <span class="st">"forestgreen"</span>, <span class="st">"Hypertensive"</span> <span class="ot">=</span> <span class="st">"darkred"</span>),</span>
+<span id="cb8-11"><a aria-label="11"></a>    <span class="at">name =</span> <span class="st">"Baseline BP Status"</span>) <span class="sc">+</span></span>
+<span id="cb8-12"><a aria-label="12"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">15</span>, <span class="dv">40</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb8-13"><a aria-label="13"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">100</span>, <span class="dv">300</span>, <span class="dv">50</span>)) <span class="sc">+</span></span>
+<span id="cb8-14"><a aria-label="14"></a>  </span>
+<span id="cb8-15"><a aria-label="15"></a>  <span class="co"># Labels</span></span>
+<span id="cb8-16"><a aria-label="16"></a>  <span class="fu">labs</span>(</span>
+<span id="cb8-17"><a aria-label="17"></a>    <span class="at">title =</span> <span class="st">"Relationship Between BMI and Cholesterol"</span>,</span>
+<span id="cb8-18"><a aria-label="18"></a>    <span class="at">subtitle =</span> <span class="st">"Stratified by baseline hypertension status"</span>,</span>
+<span id="cb8-19"><a aria-label="19"></a>    <span class="at">x =</span> <span class="st">"Body Mass Index (kg/m²)"</span>,</span>
+<span id="cb8-20"><a aria-label="20"></a>    <span class="at">y =</span> <span class="st">"Total Cholesterol (mg/dL)"</span>,</span>
+<span id="cb8-21"><a aria-label="21"></a>    <span class="at">caption =</span> <span class="st">"Data: Public Health BP Dataset | n=200 patients | Linear regression with 95% CI"</span></span>
+<span id="cb8-22"><a aria-label="22"></a>  ) <span class="sc">+</span></span>
+<span id="cb8-23"><a aria-label="23"></a>  </span>
+<span id="cb8-24"><a aria-label="24"></a>  <span class="co"># Theme</span></span>
+<span id="cb8-25"><a aria-label="25"></a>  <span class="fu">theme_clinical_report</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb8-26"><a aria-label="26"></a>  <span class="fu">theme</span>(</span>
+<span id="cb8-27"><a aria-label="27"></a>    <span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.85</span>, <span class="fl">0.15</span>),</span>
+<span id="cb8-28"><a aria-label="28"></a>    <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>)</span>
+<span id="cb8-29"><a aria-label="29"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -508,11 +511,11 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="co"># Smooth UNDER points</span></span>
-<span id="cb9-2"><a></a><span class="fu">ggplot</span>(bp_data, </span>
-<span id="cb9-3"><a></a>       <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m)) <span class="sc">+</span></span>
-<span id="cb9-4"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span>  <span class="co"># First</span></span>
-<span id="cb9-5"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)        <span class="co"># Second</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a aria-label="1"></a><span class="co"># Smooth UNDER points</span></span>
+<span id="cb9-2"><a aria-label="2"></a><span class="fu">ggplot</span>(bp_data, </span>
+<span id="cb9-3"><a aria-label="3"></a>       <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m)) <span class="sc">+</span></span>
+<span id="cb9-4"><a aria-label="4"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span>  <span class="co"># First</span></span>
+<span id="cb9-5"><a aria-label="5"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)        <span class="co"># Second</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
@@ -528,11 +531,11 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="co"># Smooth OVER points</span></span>
-<span id="cb10-2"><a></a><span class="fu">ggplot</span>(bp_data, </span>
-<span id="cb10-3"><a></a>       <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m)) <span class="sc">+</span></span>
-<span id="cb10-4"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span>      <span class="co"># First</span></span>
-<span id="cb10-5"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)     <span class="co"># Second</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a aria-label="1"></a><span class="co"># Smooth OVER points</span></span>
+<span id="cb10-2"><a aria-label="2"></a><span class="fu">ggplot</span>(bp_data, </span>
+<span id="cb10-3"><a aria-label="3"></a>       <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m)) <span class="sc">+</span></span>
+<span id="cb10-4"><a aria-label="4"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span>      <span class="co"># First</span></span>
+<span id="cb10-5"><a aria-label="5"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)     <span class="co"># Second</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
@@ -553,15 +556,15 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" data-code-line-numbers="|6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>region_summary <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a></a>  <span class="fu">group_by</span>(Region) <span class="sc">%&gt;%</span></span>
-<span id="cb11-3"><a></a>  <span class="fu">summarise</span>(<span class="at">Mean_SysBP =</span> <span class="fu">mean</span>(SysBP_0m), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb11-4"><a></a></span>
-<span id="cb11-5"><a></a><span class="fu">ggplot</span>(region_summary, </span>
-<span id="cb11-6"><a></a>       <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(Region, Mean_SysBP),</span>
-<span id="cb11-7"><a></a>           <span class="at">y =</span> Mean_SysBP, <span class="at">fill =</span> Region)) <span class="sc">+</span></span>
-<span id="cb11-8"><a></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb11-9"><a></a>  <span class="fu">coord_flip</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" data-code-line-numbers="|6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a aria-label="1"></a>region_summary <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a aria-label="2"></a>  <span class="fu">group_by</span>(Region) <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a aria-label="3"></a>  <span class="fu">summarise</span>(<span class="at">Mean_SysBP =</span> <span class="fu">mean</span>(SysBP_0m), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb11-4"><a aria-label="4"></a></span>
+<span id="cb11-5"><a aria-label="5"></a><span class="fu">ggplot</span>(region_summary, </span>
+<span id="cb11-6"><a aria-label="6"></a>       <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(Region, Mean_SysBP),</span>
+<span id="cb11-7"><a aria-label="7"></a>           <span class="at">y =</span> Mean_SysBP, <span class="at">fill =</span> Region)) <span class="sc">+</span></span>
+<span id="cb11-8"><a aria-label="8"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb11-9"><a aria-label="9"></a>  <span class="fu">coord_flip</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="fragment">
@@ -589,16 +592,16 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" data-code-line-numbers="|1-3|5-10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="co"># Create a plot</span></span>
-<span id="cb12-2"><a></a>my_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m, <span class="at">color =</span> TreatmentGroup)) <span class="sc">+</span></span>
-<span id="cb12-3"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb12-4"><a></a></span>
-<span id="cb12-5"><a></a><span class="co"># Save the plot</span></span>
-<span id="cb12-6"><a></a><span class="fu">ggsave</span>(</span>
-<span id="cb12-7"><a></a>  <span class="at">filename =</span> <span class="st">"blood_pressure_analysis.png"</span>,</span>
-<span id="cb12-8"><a></a>  <span class="at">plot =</span> my_plot,</span>
-<span id="cb12-9"><a></a>  <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">units =</span> <span class="st">"in"</span>,</span>
-<span id="cb12-10"><a></a>  <span class="at">dpi =</span> <span class="dv">300</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" data-code-line-numbers="|1-3|5-10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a aria-label="1"></a><span class="co"># Create a plot</span></span>
+<span id="cb12-2"><a aria-label="2"></a>my_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m, <span class="at">color =</span> TreatmentGroup)) <span class="sc">+</span></span>
+<span id="cb12-3"><a aria-label="3"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb12-4"><a aria-label="4"></a></span>
+<span id="cb12-5"><a aria-label="5"></a><span class="co"># Save the plot</span></span>
+<span id="cb12-6"><a aria-label="6"></a><span class="fu">ggsave</span>(</span>
+<span id="cb12-7"><a aria-label="7"></a>  <span class="at">filename =</span> <span class="st">"blood_pressure_analysis.png"</span>,</span>
+<span id="cb12-8"><a aria-label="8"></a>  <span class="at">plot =</span> my_plot,</span>
+<span id="cb12-9"><a aria-label="9"></a>  <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">units =</span> <span class="st">"in"</span>,</span>
+<span id="cb12-10"><a aria-label="10"></a>  <span class="at">dpi =</span> <span class="dv">300</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ul>
@@ -622,9 +625,9 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">ggsave</span>(<span class="st">"plot.png"</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span>
-<span id="cb13-2"><a></a><span class="fu">ggsave</span>(<span class="st">"plot.jpg"</span>, <span class="at">dpi =</span> <span class="dv">150</span>)</span>
-<span id="cb13-3"><a></a><span class="fu">ggsave</span>(<span class="st">"plot.tiff"</span>, <span class="at">dpi =</span> <span class="dv">600</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a aria-label="1"></a><span class="fu">ggsave</span>(<span class="st">"plot.png"</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span>
+<span id="cb13-2"><a aria-label="2"></a><span class="fu">ggsave</span>(<span class="st">"plot.jpg"</span>, <span class="at">dpi =</span> <span class="dv">150</span>)</span>
+<span id="cb13-3"><a aria-label="3"></a><span class="fu">ggsave</span>(<span class="st">"plot.tiff"</span>, <span class="at">dpi =</span> <span class="dv">600</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </div><div class="column" style="width:50%;">
@@ -637,10 +640,10 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">ggsave</span>(<span class="st">"plot.pdf"</span>, <span class="at">width =</span> <span class="dv">8</span>, </span>
-<span id="cb14-2"><a></a>       <span class="at">height =</span> <span class="dv">6</span>)</span>
-<span id="cb14-3"><a></a><span class="fu">ggsave</span>(<span class="st">"plot.svg"</span>)</span>
-<span id="cb14-4"><a></a><span class="fu">ggsave</span>(<span class="st">"plot.eps"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a aria-label="1"></a><span class="fu">ggsave</span>(<span class="st">"plot.pdf"</span>, <span class="at">width =</span> <span class="dv">8</span>, </span>
+<span id="cb14-2"><a aria-label="2"></a>       <span class="at">height =</span> <span class="dv">6</span>)</span>
+<span id="cb14-3"><a aria-label="3"></a><span class="fu">ggsave</span>(<span class="st">"plot.svg"</span>)</span>
+<span id="cb14-4"><a aria-label="4"></a><span class="fu">ggsave</span>(<span class="st">"plot.eps"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </div></div>
@@ -707,7 +710,7 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a aria-label="1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="2" type="1">
@@ -716,7 +719,7 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a aria-label="1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="3" type="1">
@@ -725,8 +728,8 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="co"># Good: read_excel("data/bp_data.xlsx")</span></span>
-<span id="cb17-2"><a></a><span class="co"># Bad:  read_excel("C:/Users/John/Documents/data/bp_data.xlsx")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a aria-label="1"></a><span class="co"># Good: read_excel("data/bp_data.xlsx")</span></span>
+<span id="cb17-2"><a aria-label="2"></a><span class="co"># Bad:  read_excel("C:/Users/John/Documents/data/bp_data.xlsx")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="4" type="1">
@@ -760,14 +763,14 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="co"># Use ggmosaic package instead</span></span>
-<span id="cb18-2"><a></a><span class="fu">library</span>(ggmosaic)</span>
-<span id="cb18-3"><a></a></span>
-<span id="cb18-4"><a></a><span class="fu">ggplot</span>(bp_data) <span class="sc">+</span></span>
-<span id="cb18-5"><a></a>  <span class="fu">geom_mosaic</span>(</span>
-<span id="cb18-6"><a></a>    <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">product</span>(TreatmentGroup, </span>
-<span id="cb18-7"><a></a>                    SmokingStatus),</span>
-<span id="cb18-8"><a></a>        <span class="at">fill =</span> TreatmentGroup))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a aria-label="1"></a><span class="co"># Use ggmosaic package instead</span></span>
+<span id="cb18-2"><a aria-label="2"></a><span class="fu">library</span>(ggmosaic)</span>
+<span id="cb18-3"><a aria-label="3"></a></span>
+<span id="cb18-4"><a aria-label="4"></a><span class="fu">ggplot</span>(bp_data) <span class="sc">+</span></span>
+<span id="cb18-5"><a aria-label="5"></a>  <span class="fu">geom_mosaic</span>(</span>
+<span id="cb18-6"><a aria-label="6"></a>    <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">product</span>(TreatmentGroup, </span>
+<span id="cb18-7"><a aria-label="7"></a>                    SmokingStatus),</span>
+<span id="cb18-8"><a aria-label="8"></a>        <span class="at">fill =</span> TreatmentGroup))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="fragment">
@@ -899,16 +902,16 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> var1, <span class="at">y =</span> var2)) <span class="sc">+</span>           <span class="co"># 1. Data + Aesthetics</span></span>
-<span id="cb19-2"><a></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> var3, <span class="at">size =</span> var4)) <span class="sc">+</span>     <span class="co"># 2. Geometry + Local aes</span></span>
-<span id="cb19-3"><a></a>  <span class="fu">scale_color_viridis_d</span>() <span class="sc">+</span>                        <span class="co"># 3. Scales</span></span>
-<span id="cb19-4"><a></a>  <span class="fu">scale_size_continuous</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">6</span>)) <span class="sc">+</span>         <span class="co"># 4. More scales</span></span>
-<span id="cb19-5"><a></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> var5) <span class="sc">+</span>                             <span class="co"># 5. Facets</span></span>
-<span id="cb19-6"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"My Plot"</span>,                          <span class="co"># 6. Labels</span></span>
-<span id="cb19-7"><a></a>       <span class="at">x =</span> <span class="st">"X Label"</span>, <span class="at">y =</span> <span class="st">"Y Label"</span>) <span class="sc">+</span></span>
-<span id="cb19-8"><a></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span>                                <span class="co"># 7. Theme</span></span>
-<span id="cb19-9"><a></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>,                <span class="co"># 8. Theme customization</span></span>
-<span id="cb19-10"><a></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a aria-label="1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> var1, <span class="at">y =</span> var2)) <span class="sc">+</span>           <span class="co"># 1. Data + Aesthetics</span></span>
+<span id="cb19-2"><a aria-label="2"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> var3, <span class="at">size =</span> var4)) <span class="sc">+</span>     <span class="co"># 2. Geometry + Local aes</span></span>
+<span id="cb19-3"><a aria-label="3"></a>  <span class="fu">scale_color_viridis_d</span>() <span class="sc">+</span>                        <span class="co"># 3. Scales</span></span>
+<span id="cb19-4"><a aria-label="4"></a>  <span class="fu">scale_size_continuous</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">6</span>)) <span class="sc">+</span>         <span class="co"># 4. More scales</span></span>
+<span id="cb19-5"><a aria-label="5"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> var5) <span class="sc">+</span>                             <span class="co"># 5. Facets</span></span>
+<span id="cb19-6"><a aria-label="6"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"My Plot"</span>,                          <span class="co"># 6. Labels</span></span>
+<span id="cb19-7"><a aria-label="7"></a>       <span class="at">x =</span> <span class="st">"X Label"</span>, <span class="at">y =</span> <span class="st">"Y Label"</span>) <span class="sc">+</span></span>
+<span id="cb19-8"><a aria-label="8"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span>                                <span class="co"># 7. Theme</span></span>
+<span id="cb19-9"><a aria-label="9"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>,                <span class="co"># 8. Theme customization</span></span>
+<span id="cb19-10"><a aria-label="10"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section></section>
@@ -950,20 +953,20 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">geom_point</span>()       <span class="co"># Scatter plots</span></span>
-<span id="cb20-2"><a></a><span class="fu">geom_line</span>()        <span class="co"># Line graphs</span></span>
-<span id="cb20-3"><a></a><span class="fu">geom_bar</span>()         <span class="co"># Bar charts (count)</span></span>
-<span id="cb20-4"><a></a><span class="fu">geom_col</span>()         <span class="co"># Column charts (values)</span></span>
-<span id="cb20-5"><a></a><span class="fu">geom_histogram</span>()   <span class="co"># Histograms</span></span>
-<span id="cb20-6"><a></a><span class="fu">geom_boxplot</span>()     <span class="co"># Box plots</span></span>
-<span id="cb20-7"><a></a><span class="fu">geom_violin</span>()      <span class="co"># Violin plots</span></span>
-<span id="cb20-8"><a></a><span class="fu">geom_smooth</span>()      <span class="co"># Trend lines</span></span>
-<span id="cb20-9"><a></a><span class="fu">geom_density</span>()     <span class="co"># Density plots</span></span>
-<span id="cb20-10"><a></a><span class="fu">geom_jitter</span>()      <span class="co"># Jittered points</span></span>
-<span id="cb20-11"><a></a><span class="fu">geom_tile</span>()        <span class="co"># Heatmaps</span></span>
-<span id="cb20-12"><a></a><span class="fu">geom_text</span>()        <span class="co"># Text annotations</span></span>
-<span id="cb20-13"><a></a><span class="fu">geom_errorbar</span>()    <span class="co"># Error bars</span></span>
-<span id="cb20-14"><a></a><span class="fu">geom_ribbon</span>()      <span class="co"># Confidence bands</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a aria-label="1"></a><span class="fu">geom_point</span>()       <span class="co"># Scatter plots</span></span>
+<span id="cb20-2"><a aria-label="2"></a><span class="fu">geom_line</span>()        <span class="co"># Line graphs</span></span>
+<span id="cb20-3"><a aria-label="3"></a><span class="fu">geom_bar</span>()         <span class="co"># Bar charts (count)</span></span>
+<span id="cb20-4"><a aria-label="4"></a><span class="fu">geom_col</span>()         <span class="co"># Column charts (values)</span></span>
+<span id="cb20-5"><a aria-label="5"></a><span class="fu">geom_histogram</span>()   <span class="co"># Histograms</span></span>
+<span id="cb20-6"><a aria-label="6"></a><span class="fu">geom_boxplot</span>()     <span class="co"># Box plots</span></span>
+<span id="cb20-7"><a aria-label="7"></a><span class="fu">geom_violin</span>()      <span class="co"># Violin plots</span></span>
+<span id="cb20-8"><a aria-label="8"></a><span class="fu">geom_smooth</span>()      <span class="co"># Trend lines</span></span>
+<span id="cb20-9"><a aria-label="9"></a><span class="fu">geom_density</span>()     <span class="co"># Density plots</span></span>
+<span id="cb20-10"><a aria-label="10"></a><span class="fu">geom_jitter</span>()      <span class="co"># Jittered points</span></span>
+<span id="cb20-11"><a aria-label="11"></a><span class="fu">geom_tile</span>()        <span class="co"># Heatmaps</span></span>
+<span id="cb20-12"><a aria-label="12"></a><span class="fu">geom_text</span>()        <span class="co"># Text annotations</span></span>
+<span id="cb20-13"><a aria-label="13"></a><span class="fu">geom_errorbar</span>()    <span class="co"># Error bars</span></span>
+<span id="cb20-14"><a aria-label="14"></a><span class="fu">geom_ribbon</span>()      <span class="co"># Confidence bands</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -972,12 +975,12 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">scale_color_manual</span>()      <span class="co"># Custom colors</span></span>
-<span id="cb21-2"><a></a><span class="fu">scale_fill_viridis_d</span>()    <span class="co"># Colorblind-friendly discrete</span></span>
-<span id="cb21-3"><a></a><span class="fu">scale_x_continuous</span>()      <span class="co"># Continuous x-axis</span></span>
-<span id="cb21-4"><a></a><span class="fu">scale_y_log10</span>()           <span class="co"># Log transformation</span></span>
-<span id="cb21-5"><a></a><span class="fu">scale_color_brewer</span>()      <span class="co"># ColorBrewer palettes</span></span>
-<span id="cb21-6"><a></a><span class="fu">scale_color_gradient2</span>()   <span class="co"># Diverging gradient</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a aria-label="1"></a><span class="fu">scale_color_manual</span>()      <span class="co"># Custom colors</span></span>
+<span id="cb21-2"><a aria-label="2"></a><span class="fu">scale_fill_viridis_d</span>()    <span class="co"># Colorblind-friendly discrete</span></span>
+<span id="cb21-3"><a aria-label="3"></a><span class="fu">scale_x_continuous</span>()      <span class="co"># Continuous x-axis</span></span>
+<span id="cb21-4"><a aria-label="4"></a><span class="fu">scale_y_log10</span>()           <span class="co"># Log transformation</span></span>
+<span id="cb21-5"><a aria-label="5"></a><span class="fu">scale_color_brewer</span>()      <span class="co"># ColorBrewer palettes</span></span>
+<span id="cb21-6"><a aria-label="6"></a><span class="fu">scale_color_gradient2</span>()   <span class="co"># Diverging gradient</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -986,19 +989,19 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="co"># Text elements</span></span>
-<span id="cb22-2"><a></a>axis.title, axis.text, plot.title, plot.subtitle, </span>
-<span id="cb22-3"><a></a>plot.caption, legend.title, legend.text</span>
-<span id="cb22-4"><a></a></span>
-<span id="cb22-5"><a></a><span class="co"># Line elements</span></span>
-<span id="cb22-6"><a></a>axis.line, panel.grid.major, panel.grid.minor</span>
-<span id="cb22-7"><a></a></span>
-<span id="cb22-8"><a></a><span class="co"># Rectangle elements</span></span>
-<span id="cb22-9"><a></a>plot.background, panel.background, panel.border,</span>
-<span id="cb22-10"><a></a>legend.background, legend.key</span>
-<span id="cb22-11"><a></a></span>
-<span id="cb22-12"><a></a><span class="co"># Position</span></span>
-<span id="cb22-13"><a></a>legend.position <span class="ot">=</span> <span class="st">"top"</span> <span class="sc">|</span> <span class="st">"bottom"</span> <span class="sc">|</span> <span class="st">"left"</span> <span class="sc">|</span> <span class="st">"right"</span> <span class="sc">|</span> <span class="st">"none"</span> <span class="sc">|</span> <span class="fu">c</span>(x,y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a aria-label="1"></a><span class="co"># Text elements</span></span>
+<span id="cb22-2"><a aria-label="2"></a>axis.title, axis.text, plot.title, plot.subtitle, </span>
+<span id="cb22-3"><a aria-label="3"></a>plot.caption, legend.title, legend.text</span>
+<span id="cb22-4"><a aria-label="4"></a></span>
+<span id="cb22-5"><a aria-label="5"></a><span class="co"># Line elements</span></span>
+<span id="cb22-6"><a aria-label="6"></a>axis.line, panel.grid.major, panel.grid.minor</span>
+<span id="cb22-7"><a aria-label="7"></a></span>
+<span id="cb22-8"><a aria-label="8"></a><span class="co"># Rectangle elements</span></span>
+<span id="cb22-9"><a aria-label="9"></a>plot.background, panel.background, panel.border,</span>
+<span id="cb22-10"><a aria-label="10"></a>legend.background, legend.key</span>
+<span id="cb22-11"><a aria-label="11"></a></span>
+<span id="cb22-12"><a aria-label="12"></a><span class="co"># Position</span></span>
+<span id="cb22-13"><a aria-label="13"></a>legend.position <span class="ot">=</span> <span class="st">"top"</span> <span class="sc">|</span> <span class="st">"bottom"</span> <span class="sc">|</span> <span class="st">"left"</span> <span class="sc">|</span> <span class="st">"right"</span> <span class="sc">|</span> <span class="st">"none"</span> <span class="sc">|</span> <span class="fu">c</span>(x,y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -1016,14 +1019,14 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="co"># Your code here - combine everything you've learned!</span></span>
-<span id="cb23-2"><a></a><span class="fu">ggplot</span>(bp_data, ...) <span class="sc">+</span></span>
-<span id="cb23-3"><a></a>  <span class="fu">geom_...</span>() <span class="sc">+</span></span>
-<span id="cb23-4"><a></a>  <span class="fu">scale_...</span>() <span class="sc">+</span></span>
-<span id="cb23-5"><a></a>  <span class="fu">facet_...</span>() <span class="sc">+</span></span>
-<span id="cb23-6"><a></a>  <span class="fu">labs</span>(...) <span class="sc">+</span></span>
-<span id="cb23-7"><a></a>  <span class="fu">theme_...</span>() <span class="sc">+</span></span>
-<span id="cb23-8"><a></a>  <span class="fu">theme</span>(...)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a aria-label="1"></a><span class="co"># Your code here - combine everything you've learned!</span></span>
+<span id="cb23-2"><a aria-label="2"></a><span class="fu">ggplot</span>(bp_data, ...) <span class="sc">+</span></span>
+<span id="cb23-3"><a aria-label="3"></a>  <span class="fu">geom_...</span>() <span class="sc">+</span></span>
+<span id="cb23-4"><a aria-label="4"></a>  <span class="fu">scale_...</span>() <span class="sc">+</span></span>
+<span id="cb23-5"><a aria-label="5"></a>  <span class="fu">facet_...</span>() <span class="sc">+</span></span>
+<span id="cb23-6"><a aria-label="6"></a>  <span class="fu">labs</span>(...) <span class="sc">+</span></span>
+<span id="cb23-7"><a aria-label="7"></a>  <span class="fu">theme_...</span>() <span class="sc">+</span></span>
+<span id="cb23-8"><a aria-label="8"></a>  <span class="fu">theme</span>(...)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -1051,8 +1054,8 @@ Sparrow
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="co"># Document your R environment</span></span>
-<span id="cb24-2"><a></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a aria-label="1"></a><span class="co"># Document your R environment</span></span>
+<span id="cb24-2"><a aria-label="2"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.6.1 (2026-06-24 ucrt)
@@ -1089,8 +1092,8 @@ loaded via a namespace (and not attached):
 [33] stringr_1.6.0      htmlwidgets_1.6.4  pkgconfig_2.0.3    pillar_1.11.1     
 [37] gtable_0.3.6       glue_1.8.1         data.table_1.18.4  Rcpp_1.1.2        
 [41] xfun_0.60          tibble_3.3.1       tidyselect_1.2.1   rstudioapi_0.19.0 
-[45] knitr_1.51         farver_2.1.2       nlme_3.1-169       htmltools_0.5.9   
-[49] rmarkdown_2.31     labeling_0.4.3     compiler_4.6.1     S7_0.2.2          </code></pre>
+[45] knitr_1.52         farver_2.1.2       nlme_3.1-169       htmltools_0.5.9   
+[49] rmarkdown_2.32     labeling_0.4.3     compiler_4.6.1     S7_0.2.2          </code></pre>
 </div>
 </div>
 </section>
@@ -1104,18 +1107,18 @@ loaded via a namespace (and not attached):
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb26-2"><a></a></span>
-<span id="cb26-3"><a></a><span class="co"># Create individual plots</span></span>
-<span id="cb26-4"><a></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
-<span id="cb26-5"><a></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> BMI, <span class="at">y =</span> Cholesterol)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
-<span id="cb26-6"><a></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Region, <span class="at">y =</span> SysBP_0m)) <span class="sc">+</span> <span class="fu">geom_boxplot</span>()</span>
-<span id="cb26-7"><a></a>p4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> SysBP_Change)) <span class="sc">+</span> <span class="fu">geom_histogram</span>()</span>
-<span id="cb26-8"><a></a></span>
-<span id="cb26-9"><a></a><span class="co"># Combine in various layouts</span></span>
-<span id="cb26-10"><a></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> p3 <span class="sc">+</span> p4                    <span class="co"># Side by side</span></span>
-<span id="cb26-11"><a></a>(p1 <span class="sc">|</span> p2) <span class="sc">/</span> (p3 <span class="sc">|</span> p4)                <span class="co"># Grid</span></span>
-<span id="cb26-12"><a></a>p1 <span class="sc">/</span> (p2 <span class="sc">|</span> p3)                       <span class="co"># Complex layout</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a aria-label="1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb26-2"><a aria-label="2"></a></span>
+<span id="cb26-3"><a aria-label="3"></a><span class="co"># Create individual plots</span></span>
+<span id="cb26-4"><a aria-label="4"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> SysBP_0m)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb26-5"><a aria-label="5"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> BMI, <span class="at">y =</span> Cholesterol)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb26-6"><a aria-label="6"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> Region, <span class="at">y =</span> SysBP_0m)) <span class="sc">+</span> <span class="fu">geom_boxplot</span>()</span>
+<span id="cb26-7"><a aria-label="7"></a>p4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bp_data, <span class="fu">aes</span>(<span class="at">x =</span> SysBP_Change)) <span class="sc">+</span> <span class="fu">geom_histogram</span>()</span>
+<span id="cb26-8"><a aria-label="8"></a></span>
+<span id="cb26-9"><a aria-label="9"></a><span class="co"># Combine in various layouts</span></span>
+<span id="cb26-10"><a aria-label="10"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> p3 <span class="sc">+</span> p4                    <span class="co"># Side by side</span></span>
+<span id="cb26-11"><a aria-label="11"></a>(p1 <span class="sc">|</span> p2) <span class="sc">/</span> (p3 <span class="sc">|</span> p4)                <span class="co"># Grid</span></span>
+<span id="cb26-12"><a aria-label="12"></a>p1 <span class="sc">/</span> (p2 <span class="sc">|</span> p3)                       <span class="co"># Complex layout</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="fragment">

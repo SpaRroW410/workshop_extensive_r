@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -74,10 +77,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2c169b83e1fc2996b25bcc8774810429.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-574f58f4068bb8f43535e6e9c10c5508.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -148,11 +151,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../r-foundations/merging_dataset.html">
  <span class="dropdown-text">Merging Datasets</span></a>
   </li>  
-        <li><hr class="dropdown-divider"></li>
-        <li>
-    <a class="dropdown-item" href="../nctoh/data_wrangle.qmd">
- <span class="dropdown-text">Applied: Wrangling Examples</span></a>
-  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -189,11 +187,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li>
     <a class="dropdown-item" href="../plot-gallery/moderate.html">
  <span class="dropdown-text">Intermediate Plot Gallery</span></a>
-  </li>  
-        <li><hr class="dropdown-divider"></li>
-        <li>
-    <a class="dropdown-item" href="../nctoh/data_visualization.qmd">
- <span class="dropdown-text">Applied: Visualization Examples</span></a>
   </li>  
     </ul>
   </li>
@@ -237,10 +230,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../gtsummary/gtsummary_tutorial.html">
  <span class="dropdown-text">gtsummary Tables</span></a>
   </li>  
-        <li><hr class="dropdown-divider"></li>
         <li>
-    <a class="dropdown-item" href="../nctoh/data_analysis_abridged.qmd">
- <span class="dropdown-text">Applied: Analysis Examples</span></a>
+    <a class="dropdown-item" href="../statistical-analysis/data_analysis.html">
+ <span class="dropdown-text">Data Analysis</span></a>
   </li>  
     </ul>
   </li>
@@ -327,6 +319,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#chi-square-test-for-association" id="toc-chi-square-test-for-association" class="nav-link" data-scroll-target="#chi-square-test-for-association">Chi-square test for association</a></li>
   <li><a href="#mcnemar-test-for-paired-binary-responses" id="toc-mcnemar-test-for-paired-binary-responses" class="nav-link" data-scroll-target="#mcnemar-test-for-paired-binary-responses">McNemar test for paired binary responses</a></li>
   <li><a href="#normality-diagnostics" id="toc-normality-diagnostics" class="nav-link" data-scroll-target="#normality-diagnostics">Normality diagnostics</a></li>
+  </ul></li>
+  <li><a href="#automating-analysis-with-loops" id="toc-automating-analysis-with-loops" class="nav-link" data-scroll-target="#automating-analysis-with-loops">Automating Analysis with Loops</a>
+  <ul class="collapse">
+  <li><a href="#for-loops" id="toc-for-loops" class="nav-link" data-scroll-target="#for-loops"><code>for</code> loops</a></li>
+  <li><a href="#a-shorter-alternative-sapply" id="toc-a-shorter-alternative-sapply" class="nav-link" data-scroll-target="#a-shorter-alternative-sapply">A shorter alternative: <code>sapply()</code></a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -534,11 +531,53 @@ McNemar's chi-squared = 0.20712, df = 1, p-value = 0.649</code></pre>
 </div>
 </div>
 <p>These examples show the R workflow for medical data: import, clean, summarize, test, and visualize.</p>
+</section>
+</section>
+<section id="automating-analysis-with-loops" class="level2">
+<h2 class="anchored" data-anchor-id="automating-analysis-with-loops">Automating Analysis with Loops</h2>
+<p>Real datasets often need the same test or summary repeated across many variables. Loops (and their <code>apply</code>/<code>purrr</code> equivalents) let you do that without copy-pasting code.</p>
+<section id="for-loops" class="level3">
+<h3 class="anchored" data-anchor-id="for-loops"><code>for</code> loops</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"age_of_participants"</span>, <span class="st">"sbp_in_mm_hg"</span>, <span class="st">"dbp_in_mm_hg"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (v <span class="cf">in</span> vars) {</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Summary of"</span>, v, <span class="st">":</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">summary</span>(p[[v]]))</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary of age_of_participants :
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  18.00   29.00   42.00   43.85   58.00   95.00 
+
+Summary of sbp_in_mm_hg :
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   83.0   108.0   120.0   120.8   130.5   199.0 
+
+Summary of dbp_in_mm_hg :
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  52.00   86.00  108.00   97.31  108.00  125.00 </code></pre>
+</div>
+</div>
+</section>
+<section id="a-shorter-alternative-sapply" class="level3">
+<h3 class="anchored" data-anchor-id="a-shorter-alternative-sapply">A shorter alternative: <code>sapply()</code></h3>
+<p>For simple per-column operations the <code>apply</code> family avoids manual bookkeeping:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Same variables as the for-loop above, without the explicit loop</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(p[vars], mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>age_of_participants        sbp_in_mm_hg        dbp_in_mm_hg 
+           43.84786           120.75911            97.30586 </code></pre>
+</div>
+</div>
+<p>Use a <code>for</code> loop when each iteration has side effects (printing, saving files, building up a report) or when the logic is easier to follow step-by-step; reach for <code>sapply()</code> when you just need one result per element.</p>
+</section>
+</section>
+</section>
 
 
-</section>
-</section>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

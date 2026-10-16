@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Dungeons &amp; Dataframes — Site design – Data Visualization Workshop — Regression</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-574f58f4068bb8f43535e6e9c10c5508.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="assets/fitty-init.js"></script>
+
+
+<link rel="stylesheet" href="../assets/theme_webp.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="welcome.html">
+    <span class="navbar-title">Data Visualization Workshop — Regression</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-r-foundations" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">R Foundations</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-r-foundations">    
+        <li>
+    <a class="dropdown-item" href="../r-foundations/getting-started.html">
+ <span class="dropdown-text">Getting Started</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../r-foundations/data-wrangling.html">
+ <span class="dropdown-text">Data Wrangling (Tidyverse)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../statistical-analysis/regression.html"> 
+<span class="menu-text">Regression Analysis</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-dungeons--dataframes" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Dungeons &amp; Dataframes</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-dungeons--dataframes">    
+        <li>
+    <a class="dropdown-item" href="../regression-quest/index.html">
+ <span class="dropdown-text">🗺️ Quest map (start here)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/pretest.html">
+ <span class="dropdown-text">Pre-test (baseline)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/posttest.html">
+ <span class="dropdown-text">Post-test (growth)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/roadmap.html">
+ <span class="dropdown-text">Roadmap</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/site-design.html">
+ <span class="dropdown-text">Site design</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-regression-workshop" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Regression Workshop</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-regression-workshop">    
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s1_foundations.html">
+ <span class="dropdown-text">Session 1 — Foundations</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s2_simple_regression.html">
+ <span class="dropdown-text">Session 2 — Simple Linear Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s3_multiple_regression.html">
+ <span class="dropdown-text">Session 3 — Inference &amp; Multiple Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s4_assumptions.html">
+ <span class="dropdown-text">Session 4 — Assumptions</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s5_logistic_regression.html">
+ <span class="dropdown-text">Session 5 — Logistic Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s6_reporting.html">
+ <span class="dropdown-text">Session 6 — Interpreting &amp; Reporting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/cheatsheet.html">
+ <span class="dropdown-text">Interpretation Cheat Sheet</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-reference" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-book" role="img">
+</i> 
+ <span class="menu-text">Reference</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-reference">    
+        <li>
+    <a class="dropdown-item" href="../contact.html">
+ <span class="dropdown-text">Contact Us</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../references.html">
+ <span class="dropdown-text">References</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../downloads.html">
+ <span class="dropdown-text">Downloads</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#concept" id="toc-concept" class="nav-link active" data-scroll-target="#concept">1. Concept</a></li>
+  <li><a href="#information-architecture" id="toc-information-architecture" class="nav-link" data-scroll-target="#information-architecture">2. Information architecture</a></li>
+  <li><a href="#key-screens-wireframes" id="toc-key-screens-wireframes" class="nav-link" data-scroll-target="#key-screens-wireframes">3. Key screens (wireframes)</a></li>
+  <li><a href="#the-skill-tree" id="toc-the-skill-tree" class="nav-link" data-scroll-target="#the-skill-tree">4. The skill tree</a></li>
+  <li><a href="#game-modes-in-detail" id="toc-game-modes-in-detail" class="nav-link" data-scroll-target="#game-modes-in-detail">5. Game modes in detail</a></li>
+  <li><a href="#the-hybrid-r-lab-bench" id="toc-the-hybrid-r-lab-bench" class="nav-link" data-scroll-target="#the-hybrid-r-lab-bench">6. The hybrid R lab bench</a></li>
+  <li><a href="#progression-and-economy" id="toc-progression-and-economy" class="nav-link" data-scroll-target="#progression-and-economy">7. Progression and economy</a></li>
+  <li><a href="#state-and-data-design-static-now-accounts-later" id="toc-state-and-data-design-static-now-accounts-later" class="nav-link" data-scroll-target="#state-and-data-design-static-now-accounts-later">8. State and data design (static now, accounts later)</a></li>
+  <li><a href="#content-specification" id="toc-content-specification" class="nav-link" data-scroll-target="#content-specification">9. Content specification</a></li>
+  <li><a href="#technology" id="toc-technology" class="nav-link" data-scroll-target="#technology">10. Technology</a></li>
+  <li><a href="#look-feel-and-voice" id="toc-look-feel-and-voice" class="nav-link" data-scroll-target="#look-feel-and-voice">11. Look, feel and voice</a></li>
+  <li><a href="#build-plan-for-the-site-maps-onto-roadmap-phases" id="toc-build-plan-for-the-site-maps-onto-roadmap-phases" class="nav-link" data-scroll-target="#build-plan-for-the-site-maps-onto-roadmap-phases">12. Build plan for the site (maps onto Roadmap phases)</a></li>
+  <li><a href="#open-questions" id="toc-open-questions" class="nav-link" data-scroll-target="#open-questions">13. Open questions</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Dungeons &amp; Dataframes — Site design</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="concept" class="level2">
+<h2 class="anchored" data-anchor-id="concept">1. Concept</h2>
+<p><strong>Dungeons &amp; Dataframes</strong> is a website for learning <strong>medical statistics in R</strong>, for community-medicine residents and faculty who already have <strong>basic-to-moderate R</strong>. It is organised into <strong>tracks</strong> (Track 1 = Regression, others planned: comparing groups, epidemiological measures, study design and sample size, surveys, evidence synthesis, reporting). It is not a course with a game bolted on; it is a place you <em>play in</em>: a map of worlds, a skill tree that shows what you can and cannot do yet, case files that feel like real thesis problems, an arcade for quick drills, and a lab bench where you run real R.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Design goal</th>
+<th>How the site delivers it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Mastery, not completion</strong></td>
+<td>Progress is measured per <strong>skill</strong> (≈ 70 nodes), with spaced review. Worlds are story containers.</td>
+</tr>
+<tr class="even">
+<td><strong>Varied retrieval</strong></td>
+<td>Every skill is practised in three modes (Quest, Case file, Arcade) so it is learned, not memorised.</td>
+</tr>
+<tr class="odd">
+<td><strong>Judgement over recall</strong></td>
+<td>Items ask what a result <em>means</em>, what to <em>do</em>, or compute something. Never function recall (enforced by <code>lint_bank.R</code>).</td>
+</tr>
+<tr class="even">
+<td><strong>Real R, real data</strong></td>
+<td>Hybrid R labs on the project datasets, verified by result codes (no server).</td>
+</tr>
+<tr class="odd">
+<td><strong>Works anywhere</strong></td>
+<td>Static site, offline-capable, local progress; accounts and dashboards can be added later without a rewrite.</td>
+</tr>
+<tr class="even">
+<td><strong>Kind to learners</strong></td>
+<td>A <strong>calm mode</strong> removes streaks, toasts and ranks; hints are cheap; nothing locks permanently.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Audience assumption:</strong> can import data, use <code>dplyr</code>/<code>ggplot2</code> basics, and run and print a model. A readiness check advises anyone who is not there yet (Roadmap §2.3).</p>
+<hr>
+</section>
+<section id="information-architecture" class="level2">
+<h2 class="anchored" data-anchor-id="information-architecture">2. Information architecture</h2>
+<pre><code>Dungeons &amp; Dataframes
+├── 🏠 Campus (home)            today's plan, streak, daily review, continue, news
+├── 🌳 Skill tree               ~70 skills in 16 branches; mastery levels; "what next?"
+├── 🧭 Tracks                   Regression (live) · Comparing groups · Epi measures · …
+├── 🗺️ Quests (worlds)          briefing → levels → boss        (guided path, per track)
+├── 📁 Case files               branching thesis scenarios       (judgement)
+├── 🕹️ Arcade                   short repeatable drills          (fluency)
+├── 🧪 R Lab bench              downloadable labs + result-code check (real R)
+├── 📚 Field guide              cheat sheets, flowchart, glossary, pitfalls, dataset dictionaries
+├── 👤 Profile                  rank, XP, badges, skills radar, history, export/import, settings
+├── 📋 Check-points             readiness check, pre-test, post-test, (delayed test)
+├── 🧑‍🏫 Instructor (later)       cohorts, dashboards, item analytics
+└── 🧭 Roadmap / About          roadmap, credits, versions, feedback</code></pre>
+<p><strong>Navigation rules:</strong> one persistent top bar (HUD: streak, XP, rank, calm-mode toggle); every page shows “which skills does this train?”; every item links back to its skill; no dead ends: each result screen offers a next action (“review 3 weak skills”, “start case file”, “play arcade drill”).</p>
+<hr>
+</section>
+<section id="key-screens-wireframes" class="level2">
+<h2 class="anchored" data-anchor-id="key-screens-wireframes">3. Key screens (wireframes)</h2>
+<section id="campus-home" class="level3">
+<h3 class="anchored" data-anchor-id="campus-home">3.1 Campus (home)</h3>
+<pre><code>┌───────────────────────────────────────────────────────────────────────────┐
+│ 🧭 Dungeons &amp; Dataframes 🔥 5-day streak  ⭐ 640 XP  Epidemiologist ▓▓▓░  🏅 9 │
+├───────────────────────────────────────────────────────────────────────────┤
+│  Welcome back, Dr. A.            [ ▶ Continue: World 3 · Confounding Caves ]│
+│                                                                           │
+│  TODAY                                                                     │
+│  ┌─ Daily review (5 items, ~6 min) ─┐ ┌─ Daily challenge ────────────────┐ │
+│  │ due: VIF · centring · PI vs CI   │ │ Arcade: Interval Invaders  x2 XP │ │
+│  │         [ Start review ]         │ │ Case file: "Village anomaly"  ▶  │ │
+│  └──────────────────────────────────┘ └──────────────────────────────────┘ │
+│  YOUR SKILLS  radar: Linear ■■■■□  Logistic ■■□□□  Assumptions ■■■□□ …     │
+│  WORLD MAP  (0–16, current highlighted)                                    │
+└───────────────────────────────────────────────────────────────────────────┘</code></pre>
+</section>
+<section id="skill-tree" class="level3">
+<h3 class="anchored" data-anchor-id="skill-tree">3.2 Skill tree</h3>
+<pre><code> Foundations ──► Linear ──► Inference ──► Confounding ──► Model building ──► Reporting
+      │             │            │                                  ▲
+      │             ├► Prediction/PI                                │
+      │             └► R² / centring      Assumptions ──► Remedies ─┘
+      └► Outcome types ──► Logistic ──► Likelihood ──► Calibration/ROC ──► OR vs PR
+                    ├► Counts ──► Overdispersion ──► Rates/offsets
+                    ├► Ordinal / Nominal
+                    └► Survival ──► Cox ──► PH check
+ (node colour = mastery: grey unseen · blue seen · amber practising · green proficient · gold mastered)
+ click a node → what it means · prerequisites · items/case files/drills that train it · your history</code></pre>
+</section>
+<section id="quest-page-world" class="level3">
+<h3 class="anchored" data-anchor-id="quest-page-world">3.3 Quest page (world)</h3>
+<pre><code>┌ World 3 · Confounding Caves ───────────────── progress ▓▓▓▓░░ 5/9 ───────┐
+│ Briefing (collapsible, live R output)                                      │
+│ Level 1 ▸ items…   Level 2 ▸ items…   Level 3 ▸ items…   👑 Boss           │
+│ Trains: confounding · crude-vs-adjusted · dummy coding · model building    │
+│ Also in this world: [📁 Case file: The salt-study reviewer] [🕹️ Drills ×2] │
+│ [🧪 Lab 3 (R)]                                                             │
+└───────────────────────────────────────────────────────────────────────────┘</code></pre>
+</section>
+<section id="case-file" class="level3">
+<h3 class="anchored" data-anchor-id="case-file">3.4 Case file</h3>
+<pre><code>┌ 📁 CASE FILE 07 · "Reviewer #2 doesn't believe your odds ratio"  (20 min) ┐
+│ Scenario: your cross-sectional NCD thesis reports "aOR 5.1: 50+ years are  │
+│ 5 times as likely to be hypertensive". Evidence panel: [output] [Table 1]  │
+│ Decision 1 of 5: What is the first problem you raise?      ○ … ○ … ○ …     │
+│   → branch feedback ("Good: outcome prevalence is 32%, so …")              │
+│ Decision 3: Write the corrected sentence (select the best from 4)          │
+│ Score: judgement 4/5 · evidence used 3/4 · wording 5/5      +120 XP        │
+└───────────────────────────────────────────────────────────────────────────┘</code></pre>
+</section>
+<section id="arcade" class="level3">
+<h3 class="anchored" data-anchor-id="arcade">3.5 Arcade</h3>
+<pre><code> 🕹️ ARCADE   [Residual Reader] [Interval Invaders] [OR↔PR Converter] [Spot the Pitfall] …
+ Round 4/10   ⏱ optional   streak ×3
+ ┌ plot (generated) ┐   Which assumption is violated?   ( ) linearity ( ) equal variance
+ │ residuals vs fitted │   ( ) independence ( ) none     [ Lock in ]
+ └────────────────────┘   score 340 · best 520 · skill: heteroscedasticity (proficient)</code></pre>
+</section>
+<section id="profile" class="level3">
+<h3 class="anchored" data-anchor-id="profile">3.6 Profile</h3>
+<p>Rank + XP bar · skills radar and tree snapshot · badge shelf · pre/post gain chart · calibration (confidence vs accuracy) · activity heat-map · settings (calm mode, theme, text size, reduced motion) · <strong>Export / Import / Reset</strong> · (later) account, cohort.</p>
+<hr>
+</section>
+</section>
+<section id="the-skill-tree" class="level2">
+<h2 class="anchored" data-anchor-id="the-skill-tree">4. The skill tree</h2>
+<section id="mastery-model" class="level3">
+<h3 class="anchored" data-anchor-id="mastery-model">4.1 Mastery model</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Level</th>
+<th>Name</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>Unseen</td>
+<td>No attempts</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>Seen</td>
+<td>≥ 1 attempt</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>Practising</td>
+<td>≥ 2 correct (any attempt count)</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>Proficient</td>
+<td>≥ 3 correct <strong>first-try</strong>, from ≥ 2 distinct items, ≥ 2 modes</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>Mastered</td>
+<td>Proficient <strong>and</strong> one correct recall ≥ 7 days later</td>
+</tr>
+<tr class="even">
+<td>↓</td>
+<td>Fading</td>
+<td>No correct recall for 30 days → drops one level → enters the review queue</td>
+</tr>
+</tbody>
+</table>
+<p>Mastery uses <strong>tags on items</strong> (every item carries 1–3 skill ids), so quests, case-file decisions and arcade rounds all feed the same skill state.</p>
+</section>
+<section id="skill-nodes-70-id-branch.node" class="level3">
+<h3 class="anchored" data-anchor-id="skill-nodes-70-id-branch.node">4.2 Skill nodes (≈ 70; id = branch.node)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Branch</th>
+<th>Skills (prerequisites in brackets)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>F · Foundations</strong></td>
+<td>F1 what regression models [–] · F2 outcome types [F1] · F3 model-choice flowchart [F2] · F4 correlation vs regression [F1] · F5 variable roles [F1] · F6 missing data &amp; complete cases [F1] · F7 Table 1 reading [F5]</td>
+</tr>
+<tr class="even">
+<td><strong>L · Linear</strong></td>
+<td>L1 slope in units [F4] · L2 intercept &amp; extrapolation [L1] · L3 prediction [L1] · L4 CI vs PI [L3] · L5 residuals &amp; OLS [L1] · L6 R² vs adjusted R² [L5] · L7 centring &amp; scaling [L2]</td>
+</tr>
+<tr class="odd">
+<td><strong>I · Inference</strong></td>
+<td>I1 hypothesis test for β [L1] · I2 p-value meaning [I1] · I3 CI reading [I1] · I4 statistical vs clinical significance [I2, I3]</td>
+</tr>
+<tr class="even">
+<td><strong>C · Confounding &amp; adjustment</strong></td>
+<td>C1 confounder definition [I3] · C2 crude vs adjusted [C1] · C3 adjusted interpretation [C2] · C4 dummy coding &amp; reference [L1] · C5 DAG reasoning [C1] · C6 mediator/collider [C5]</td>
+</tr>
+<tr class="odd">
+<td><strong>M · Model building</strong></td>
+<td>M1 purposeful selection [C2] · M2 DAG-driven selection [C5] · M3 stepwise: how &amp; why not [M1] · M4 screening pitfalls (p &lt; 0.2) [M1] · M5 events per variable [M1]</td>
+</tr>
+<tr class="even">
+<td><strong>A · Assumptions</strong></td>
+<td>A1 linearity [L5] · A2 independence &amp; clustering [L5] · A3 normality [L5] · A4 equal variance [L5] · A5 collinearity &amp; VIF [C3] · A6 influence [L5] · A7 remedies (terms, robust SE, drop/combine) [A1–A6]</td>
+</tr>
+<tr class="odd">
+<td><strong>G · Logistic</strong></td>
+<td>G1 probability/odds/log-odds [F2] · G2 logit model [G1] · G3 why exponentiate [G2] · G4 OR &amp; CI reading [G3] · G5 crude vs adjusted OR [G4, C2] · G6 OR ≠ risk (OR vs PR) [G4] · G7 getting PRs (Poisson-robust, log-binomial) [G6]</td>
+</tr>
+<tr class="even">
+<td><strong>K · Likelihood &amp; fit</strong></td>
+<td>K1 likelihood &amp; deviance [G2] · K2 LR test [K1] · K3 Wald vs LR [K2] · K4 AIC [K1] · K5 pseudo-R² honesty [K1] · K6 calibration [G2] · K7 discrimination/ROC/AUC [G2] · K8 overfitting &amp; validation [K7, M5]</td>
+</tr>
+<tr class="odd">
+<td><strong>R · Reporting</strong></td>
+<td>R1 annotated output [L1, G4] · R2 results sentences [R1] · R3 methods paragraph [R1] · R4 units &amp; reference categories [C4] · R5 association vs causation [C5] · R6 tables &amp; figures [R1] · R7 reviewer replies [R2–R6]</td>
+</tr>
+<tr class="even">
+<td><strong>N · Counts</strong></td>
+<td>N1 count outcomes &amp; Poisson [F3] · N2 rate ratios &amp; offsets [N1] · N3 overdispersion [N1] · N4 negative binomial [N3]</td>
+</tr>
+<tr class="odd">
+<td><strong>O · Ordinal / nominal</strong></td>
+<td>O1 ordinal logistic [G4] · O2 proportional-odds check [O1] · O3 multinomial logistic [G4]</td>
+</tr>
+<tr class="even">
+<td><strong>S · Survival</strong></td>
+<td>S1 censoring [F3] · S2 Kaplan–Meier [S1] · S3 Cox &amp; hazard ratios [S2, G3] · S4 PH assumption [S3]</td>
+</tr>
+<tr class="odd">
+<td><strong>V · Clusters</strong></td>
+<td>V1 ICC &amp; design effect [A2] · V2 random intercepts [V1] · V3 GEE &amp; robust SE [V1] · V4 repeated measures [V2]</td>
+</tr>
+<tr class="even">
+<td><strong>W · Survey</strong></td>
+<td>W1 weights, strata, PSUs [A2] · W2 weighted estimates [W1] · W3 design-based regression [W2]</td>
+</tr>
+<tr class="odd">
+<td><strong>X · Curves &amp; interaction</strong></td>
+<td>X1 polynomials &amp; splines [A1] · X2 effect modification [C3] · X3 plotting predictions [X1, X2]</td>
+</tr>
+<tr class="even">
+<td><strong>U · Missing data</strong></td>
+<td>U1 MCAR/MAR/MNAR [F6] · U2 complete-case bias [U1] · U3 multiple imputation [U2] · U4 sensitivity analysis [U3]</td>
+</tr>
+<tr class="odd">
+<td><strong>P · Prediction</strong></td>
+<td>P1 apparent vs validated performance [K8] · P2 cross-validation/bootstrap [P1] · P3 shrinkage &amp; penalised models [P2] · P4 risk-score reporting (TRIPOD) [P3]</td>
+</tr>
+<tr class="even">
+<td><strong>Z · Causal</strong></td>
+<td>Z1 DAG building [C5] · Z2 propensity scores [Z1] · Z3 IPW [Z2] · Z4 mediation basics [C6]</td>
+</tr>
+<tr class="odd">
+<td><strong>Ω · Capstone</strong></td>
+<td>Ω1 analysis plan · Ω2 run &amp; check · Ω3 write-up · Ω4 peer review [many]</td>
+</tr>
+</tbody>
+</table>
+<p>The tree is <strong>data</strong> (<code>skills.json</code>): adding a skill is a row, not code.</p>
+</section>
+<section id="what-next-recommender" class="level3">
+<h3 class="anchored" data-anchor-id="what-next-recommender">4.3 “What next?” recommender</h3>
+<ol type="1">
+<li>Fading skills with the oldest due date → <strong>daily review</strong>.</li>
+<li>Otherwise the unlocked skill with the lowest level whose prerequisites are ≥ Proficient.</li>
+<li>Prefer a <strong>mode the learner has used least</strong> for that skill (Quest → Case file → Arcade).</li>
+<li>Surface weak branches from the pre-test breakdown.</li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="game-modes-in-detail" class="level2">
+<h2 class="anchored" data-anchor-id="game-modes-in-detail">5. Game modes in detail</h2>
+<section id="quests-guided-path" class="level3">
+<h3 class="anchored" data-anchor-id="quests-guided-path">5.1 Quests (guided path)</h3>
+<p>Briefing (≤ 600 words, live R output) → 3–4 levels (≥ 8 items) → boss → world badge. Items types: MCQ, output-reading, numeric, order, spot-the-error (all built). Quests give the structure for first exposure.</p>
+</section>
+<section id="case-files-judgement" class="level3">
+<h3 class="anchored" data-anchor-id="case-files-judgement">5.2 Case files (judgement)</h3>
+<p><strong>Format:</strong> YAML scenario → rendered as a branching page. Components: <em>scenario</em>, <em>evidence panels</em> (R output, Table 1, plot), <em>decision points</em> (single-choice, multi-select, “write the sentence”), <em>branch feedback</em>, <em>rubric scoring</em> (judgement / evidence used / wording), <em>debrief</em> with the expert path.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">id</span><span class="kw">:</span><span class="at"> cf-07</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">"Reviewer #2 doesn't believe your odds ratio"</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">skills</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">G6</span><span class="kw">,</span><span class="at"> G7</span><span class="kw">,</span><span class="at"> R2</span><span class="kw">,</span><span class="at"> R5</span><span class="kw">]</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">evidence</span><span class="kw">:</span><span class="at"> </span><span class="kw">[{</span><span class="fu">type</span><span class="kw">:</span><span class="at"> output</span><span class="kw">,</span><span class="at"> </span><span class="fu">ref</span><span class="kw">:</span><span class="at"> or-vs-pr</span><span class="kw">},</span><span class="at"> </span><span class="kw">{</span><span class="fu">type</span><span class="kw">:</span><span class="at"> table</span><span class="kw">,</span><span class="at"> </span><span class="fu">ref</span><span class="kw">:</span><span class="at"> table1</span><span class="kw">}]</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">decisions</span><span class="kw">:</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> d1</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">prompt</span><span class="kw">:</span><span class="at"> </span><span class="st">"What is the first problem you raise?"</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">options</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at"> </span><span class="kw">{</span><span class="fu">text</span><span class="kw">:</span><span class="at"> </span><span class="st">"..."</span><span class="kw">,</span><span class="at"> </span><span class="fu">correct</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span><span class="kw">,</span><span class="at"> </span><span class="fu">feedback</span><span class="kw">:</span><span class="at"> </span><span class="st">"..."</span><span class="kw">},</span><span class="at"> ... </span><span class="kw">]</span><span class="co">   # linter-checked like MCQs</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">skills</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">G6</span><span class="kw">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Launch list (12 case files):</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>#</th>
+<th>Case file</th>
+<th>Skills</th>
+<th>Hook</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><em>The salt-study reviewer</em></td>
+<td>C2, C3, R5</td>
+<td>Crude vs adjusted; causal wording</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><em>The village anomaly</em></td>
+<td>A2, V1</td>
+<td>Residuals cluster by village</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><em>Two measures of fat</em></td>
+<td>A5, M2</td>
+<td>BMI + waist in one model</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><em>The stepwise thesis</em></td>
+<td>M3, M4</td>
+<td>A thesis built on <code>step()</code></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><em>Reviewer #2 and the OR</em></td>
+<td>G6, G7, R2</td>
+<td>OR for a 32%-prevalence outcome</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><em>Too many predictors</em></td>
+<td>M5, K8</td>
+<td>60 variables, 40 events</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td><em>The curved age effect</em></td>
+<td>A1, X1</td>
+<td>U-shaped residuals</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td><em>Dengue by ward</em></td>
+<td>N2, N3</td>
+<td>Rates, offsets, overdispersion</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td><em>Time to treatment failure</em></td>
+<td>S1–S4</td>
+<td>Censoring, PH violation</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td><em>Weights in the NFHS table</em></td>
+<td>W1–W2</td>
+<td>Unweighted vs weighted prevalence</td>
+</tr>
+<tr class="odd">
+<td>11</td>
+<td><em>Missing BMI</em></td>
+<td>U1–U3</td>
+<td>MAR missingness in the NCD survey</td>
+</tr>
+<tr class="even">
+<td>12</td>
+<td><em>Is the risk score any good?</em></td>
+<td>K6, K7, P1</td>
+<td>Apparent vs validated AUC</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="arcade-fluency" class="level3">
+<h3 class="anchored" data-anchor-id="arcade-fluency">5.3 Arcade (fluency)</h3>
+<p>Each game is a <strong>generator</strong> (new numbers/plots every round; deterministic from a seed) so skills can be drilled indefinitely. Rounds of 10; optional timer; difficulty adapts to mastery level.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Game</th>
+<th>Skill(s)</th>
+<th>Mechanic</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Residual Reader</strong></td>
+<td>A1, A3, A4, A6</td>
+<td>Generated residual plot → name the violated assumption</td>
+</tr>
+<tr class="even">
+<td><strong>Interval Invaders</strong></td>
+<td>L4, L3</td>
+<td>Given CI/PI numbers and a question, shoot the right interval</td>
+</tr>
+<tr class="odd">
+<td><strong>OR↔︎PR Converter</strong></td>
+<td>G6</td>
+<td>Given prevalences, drag sliders to match OR and PR; learn how the gap grows</td>
+</tr>
+<tr class="even">
+<td><strong>Spot the Pitfall</strong></td>
+<td>R2–R5, M4</td>
+<td>Flag flawed sentences in generated paragraphs (spot-the-error engine)</td>
+</tr>
+<tr class="odd">
+<td><strong>Odds Dojo</strong></td>
+<td>G1, G3</td>
+<td>Rapid conversion probability ↔︎ odds ↔︎ log-odds ↔︎ OR (numeric)</td>
+</tr>
+<tr class="even">
+<td><strong>VIF Duel</strong></td>
+<td>A5</td>
+<td>From a correlation matrix choose which predictor to drop/keep</td>
+</tr>
+<tr class="odd">
+<td><strong>Units Police</strong></td>
+<td>L1, R4</td>
+<td>Fix reports lacking units/reference categories</td>
+</tr>
+<tr class="even">
+<td><strong>Model Match</strong></td>
+<td>F2, F3</td>
+<td>Drag outcome descriptions onto the model flowchart</td>
+</tr>
+<tr class="odd">
+<td><strong>DAG Builder</strong></td>
+<td>C5, C6, Z1</td>
+<td>Place arrows from a story; the game computes the adjustment set</td>
+</tr>
+<tr class="even">
+<td><strong>Output Autopsy</strong></td>
+<td>R1</td>
+<td>Click the number that answers a question in a long <code>summary()</code></td>
+</tr>
+<tr class="odd">
+<td><strong>p-value or not?</strong></td>
+<td>I2, I4</td>
+<td>True/false rapid fire on p-value and CI statements</td>
+</tr>
+<tr class="even">
+<td><strong>Fit or Fade</strong></td>
+<td>K2–K5</td>
+<td>Choose between models using LRT/AIC tables</td>
+</tr>
+</tbody>
+</table>
+<p>All arcade items obey the same quality standards (no recall, no giveaways) and feed skill mastery at a reduced weight (so drilling cannot “buy” mastery alone: Proficient needs ≥ 2 modes).</p>
+</section>
+<section id="daily-review" class="level3">
+<h3 class="anchored" data-anchor-id="daily-review">5.4 Daily review</h3>
+<p>Spaced queue: Leitner boxes with intervals 1–3–7–14–30 days; correct first-try promotes, otherwise demotes one box; capped at 5–8 items per day; shows <em>why</em> each skill is due.</p>
+<hr>
+</section>
+</section>
+<section id="the-hybrid-r-lab-bench" class="level2">
+<h2 class="anchored" data-anchor-id="the-hybrid-r-lab-bench">6. The hybrid R lab bench</h2>
+<p><strong>Principle:</strong> learners practise in <strong>their own R</strong> with the real packages; the site verifies via short <strong>result codes</strong>: no server, works offline, and codes are not transferable.</p>
+<section id="flow" class="level3">
+<h3 class="anchored" data-anchor-id="flow">6.1 Flow</h3>
+<ol type="1">
+<li>Open the world’s <strong>lab</strong> (the existing fill-in-the-blank scripts, regenerated from solutions with <code>build_labs.R</code>).</li>
+<li><code>source("rqlab.R")</code> (or <code>library(rqlab)</code>) → <code>rq_start(seed = "dr-a-2026")</code>. The seed regenerates the dataset (or a subsample) so <strong>numbers differ per learner</strong>.</li>
+<li>After each task: <code>rq_check("task-3", m_adj)</code> gives <strong>instant local feedback</strong> (“right outcome, wrong predictor”) and costs nothing.</li>
+<li>At the end: <code>rq_submit()</code> prints a <strong>result code</strong>, e.g.&nbsp;<code>RQ3-7F2K-91XA-Q0MD</code>: a hash of (lab id, lab version, seed, per-task results).</li>
+<li>Paste the code into the site’s <strong>Lab bench</strong> page; the page recomputes the hash from the task results encoded in the code’s payload and awards XP + skill credit.</li>
+</ol>
+</section>
+<section id="what-is-checked" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-checked">6.2 What is checked</h3>
+<p>Object exists and has the right class/formula; estimates within tolerance (relative 1%); required output produced; for write-up tasks a <strong>self-check rubric</strong> (checklist) instead of auto-grading.</p>
+</section>
+<section id="strengths-and-limits" class="level3">
+<h3 class="anchored" data-anchor-id="strengths-and-limits">6.3 Strengths and limits</h3>
+<ul>
+<li>✔ No server; real R; instant feedback; per-learner numbers.</li>
+<li>✔ Same grader runs in CI against the solution (must pass) and the blank lab (must fail).</li>
+<li>✖ A determined learner can forge a code (it is a hash, not a signature). Acceptable for self-learning; <strong>credentialed attempts</strong> use server-side verification in the accounts phase.</li>
+<li>Optional later: webR mode (R in the browser) after a package-compatibility spike; same checks, no copy-paste.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="progression-and-economy" class="level2">
+<h2 class="anchored" data-anchor-id="progression-and-economy">7. Progression and economy</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Source</th>
+<th>XP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Quest items</td>
+<td>★ 10 / 20 / 30 × attempt factor − hints</td>
+</tr>
+<tr class="even">
+<td>Boss</td>
+<td>+50</td>
+</tr>
+<tr class="odd">
+<td>Case file</td>
+<td>up to 150 by rubric (judgement, evidence, wording)</td>
+</tr>
+<tr class="even">
+<td>Arcade round</td>
+<td>up to 40, <strong>diminishing returns</strong> after 3 rounds/day per game</td>
+</tr>
+<tr class="odd">
+<td>Daily review</td>
+<td>5 per correct first-try, no penalty for misses</td>
+</tr>
+<tr class="even">
+<td>Lab</td>
+<td>40–80 per verified lab</td>
+</tr>
+<tr class="odd">
+<td>Pre/post tests</td>
+<td>participation badge only (no XP, to keep them honest)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Ranks</strong> (6 now, extendable): Field Volunteer → … → Chief Biostatistician.</li>
+<li><strong>Daily challenge:</strong> one case file or arcade game at ×2 XP (cap 1/day).</li>
+<li><strong>Streaks</strong> with one <strong>freeze</strong> per week; calm mode hides streaks entirely.</li>
+<li><strong>Cosmetics only</strong> for unlocks (themes, avatar frames, guide-character outfits): never gating learning.</li>
+<li><strong>Anti-grind:</strong> XP per item pays once; arcade has diminishing returns; mastery needs ≥ 2 modes.</li>
+</ul>
+<hr>
+</section>
+<section id="state-and-data-design-static-now-accounts-later" class="level2">
+<h2 class="anchored" data-anchor-id="state-and-data-design-static-now-accounts-later">8. State and data design (static now, accounts later)</h2>
+<section id="principles" class="level3">
+<h3 class="anchored" data-anchor-id="principles">8.1 Principles</h3>
+<ol type="1">
+<li><strong>Events are truth, totals are derived.</strong> Store an append-only <strong>event log</strong> (attempt, hint, show-answer, review result, lab submitted, test submitted); recompute XP, mastery, rank and badges from it. This makes sync and re-balancing safe.</li>
+<li><strong>Storage adapter interface</strong> <code>{ load(), append(events), snapshot(), sync?() }</code> with a <code>LocalAdapter</code> today; <code>RemoteAdapter</code> later (same interface).</li>
+<li><strong>Versioned schema + migrations</strong> (<code>v: 2</code> …); import validates and migrates.</li>
+<li><strong>Idempotent items:</strong> an item pays XP once; replays are recorded but pay 0.</li>
+<li><strong>Pseudonymous IDs</strong>; no personal health data from learners.</li>
+</ol>
+</section>
+<section id="schema-v2-sketch" class="level3">
+<h3 class="anchored" data-anchor-id="schema-v2-sketch">8.2 Schema v2 (sketch)</h3>
+<pre class="jsonc"><code>{
+  "v": 2, "learner": {"id": "uuid", "seed": "dr-a-2026", "created": "2026-10-14"},
+  "settings": {"calm": false, "theme": "light", "reducedMotion": false, "textSize": 1},
+  "events": [ {"t": 1760400000, "type": "attempt", "item": "w3-04", "mode": "quest", "ok": true, "hints": 1, "tries": 1},
+              {"t": …, "type": "review", "skill": "A5", "ok": true},
+              {"t": …, "type": "lab", "lab": "lab3", "code": "RQ3-…", "tasks": {"t1": true}},
+              {"t": …, "type": "test", "kind": "pre", "score": 6, "total": 12, "byTag": {…}, "conf": {…}} ],
+  "derived": {"xp": 640, "rank": "Epidemiologist", "badges": {…}, "skills": {"A5": {"level": 3, "box": 2, "due": "2026-10-21"}}}
+}</code></pre>
+<p><code>derived</code> is a cache that can always be rebuilt from <code>events</code>.</p>
+</section>
+<section id="accounts-later-what-changes-and-what-does-not" class="level3">
+<h3 class="anchored" data-anchor-id="accounts-later-what-changes-and-what-does-not">8.3 Accounts later: what changes (and what does not)</h3>
+<ul>
+<li><strong>Unchanged:</strong> content, engine logic, item markup, skills.json, event schema.</li>
+<li><strong>Added:</strong> <code>RemoteAdapter</code> (sign-in via magic link/SSO), server endpoints for event append and snapshot, conflict policy (union of events by <code>(t, id)</code>; derived recomputed), instructor read-only views, server-side lab/code verification, consent and data-deletion endpoints (DPDP Act 2023).</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="content-specification" class="level2">
+<h2 class="anchored" data-anchor-id="content-specification">9. Content specification</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Content type</th>
+<th>Format</th>
+<th>Source of truth</th>
+<th>Quality gate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Items</td>
+<td>R list in <code>bank/*.R</code></td>
+<td>bank + <code>skills.json</code></td>
+<td><code>lint_bank.R</code> (standards in Roadmap §6.2)</td>
+</tr>
+<tr class="even">
+<td>Item generators (arcade)</td>
+<td>R/JS pairs with seed</td>
+<td><code>bank/generators/</code></td>
+<td>Unit tests: deterministic, answer recomputed in R</td>
+</tr>
+<tr class="odd">
+<td>Case files</td>
+<td>YAML</td>
+<td><code>bank/casefiles/</code></td>
+<td>Linter: every decision lints as an item; evidence refs resolve; ≥ 3 skills</td>
+</tr>
+<tr class="even">
+<td>Briefings</td>
+<td>Quarto text with live R</td>
+<td><code>worlds/</code></td>
+<td>Review + render</td>
+</tr>
+<tr class="odd">
+<td>Labs</td>
+<td>Solution scripts with <code>#@</code> markers</td>
+<td><code>solutions/</code></td>
+<td>CI: solution passes, blank fails</td>
+</tr>
+<tr class="even">
+<td>Skills</td>
+<td><code>skills.json</code></td>
+<td>one file</td>
+<td>Graph check: acyclic, every skill has ≥ 8 items across ≥ 2 modes</td>
+</tr>
+<tr class="odd">
+<td>Datasets</td>
+<td><code>make_data_*.R</code></td>
+<td>scripts</td>
+<td>Feature checks must pass</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Content targets by end of Phase 5 (Track 1 only):</strong> 70 skills · ≥ 8 items each (≈ 600 items) · 12 case files · 12 arcade games · 16 quests · 16 hybrid labs · 2 parallel test forms per world.</p>
+<hr>
+</section>
+<section id="technology" class="level2">
+<h2 class="anchored" data-anchor-id="technology">10. Technology</h2>
+<ul>
+<li><strong>Stay static and vanilla:</strong> Quarto pages + modular ES modules (<code>engine/</code>, <code>modes/</code>, <code>ui/</code>) bundled without a framework; no runtime dependencies; offline-first; optional PWA.</li>
+<li><strong>Refactor <code>quest.js</code></strong> into modules in Phase 2: <code>state</code> (events, derive), <code>items</code> (renderers), <code>modes</code> (quest, casefile, arcade, review), <code>skills</code> (graph, recommender), <code>adapters</code> (local, remote), <code>ui</code> (HUD, toasts, tree).</li>
+<li><strong>Skill-tree rendering:</strong> inline SVG generated from <code>skills.json</code> (no library), keyboard navigable.</li>
+<li><strong>Arcade generators:</strong> plots pre-generated as SVG/PNG variants at build time (R) for the first release; client-side generation later for numeric games.</li>
+<li><strong>Accessibility:</strong> WCAG 2.2 AA; all interactions keyboard operable; no colour-only cues; reduced-motion honoured; screen-reader labels for tree nodes and drag-like items (button alternatives exist).</li>
+<li><strong>Performance budget:</strong> &lt; 150 KB JS, &lt; 60 KB CSS per page; pages usable on low-end phones.</li>
+<li><strong>English only:</strong> strings kept in one place for maintainability; no translation planned.</li>
+</ul>
+<hr>
+</section>
+<section id="look-feel-and-voice" class="level2">
+<h2 class="anchored" data-anchor-id="look-feel-and-voice">11. Look, feel and voice</h2>
+<ul>
+<li>A friendly guide character (<strong>“Dr.&nbsp;Beta”</strong>) gives hints and debriefs: short, kind, never sarcastic about mistakes.</li>
+<li>Visual style: clean field-medicine palette (navy/teal/amber), generous spacing, large touch targets, one accent for “correct”, one for “try again” (never red-only).</li>
+<li>Microcopy: feedback explains <em>why</em> (“The OR is 5.1 but 50% of the exposed group have the outcome, so …”) before saying <em>do this</em>.</li>
+<li><strong>Calm mode:</strong> no streaks, ranks, toasts or timers; XP hidden; mastery shown as plain checkmarks.</li>
+</ul>
+<hr>
+</section>
+<section id="build-plan-for-the-site-maps-onto-roadmap-phases" class="level2">
+<h2 class="anchored" data-anchor-id="build-plan-for-the-site-maps-onto-roadmap-phases">12. Build plan for the site (maps onto Roadmap phases)</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>Deliverable</th>
+<th>Roadmap phase</th>
+<th>Exit criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>A. Foundations</strong></td>
+<td><code>skills.json</code>; tag all 40 current items with skills; state v2 (events + derived); <code>LocalAdapter</code>; migration from v1</td>
+<td>2</td>
+<td>v1 progress migrates; mastery recomputes identically from events</td>
+</tr>
+<tr class="even">
+<td><strong>B. Campus shell</strong></td>
+<td>Home, profile, skill tree (SVG), daily-review queue, recommender, settings (calm mode)</td>
+<td>2</td>
+<td>Tree reflects mastery; review queue works with a mocked clock; E2E tests green</td>
+</tr>
+<tr class="odd">
+<td><strong>C. Content wave 1</strong></td>
+<td>Worlds 3–6 quests; readiness check; 2 case files</td>
+<td>2</td>
+<td>≥ 8 items/skill for F, L, I, C, M, A, G, K, R branches; linter clean</td>
+</tr>
+<tr class="even">
+<td><strong>D. Arcade</strong></td>
+<td>Engine + 6 games (Residual Reader, Interval Invaders, OR↔︎PR Converter, Spot the Pitfall, Odds Dojo, Model Match)</td>
+<td>3</td>
+<td>Generators deterministic; answers recomputed in R; diminishing returns tested</td>
+</tr>
+<tr class="odd">
+<td><strong>E. Case-file engine</strong></td>
+<td>YAML → page renderer, rubric scoring, linter, 4 case files</td>
+<td>3</td>
+<td>Branching tested; rubric XP verified</td>
+</tr>
+<tr class="even">
+<td><strong>F. Hybrid labs</strong></td>
+<td><code>rqlab</code> helper, result-code verification page, labs for worlds 1–6</td>
+<td>4</td>
+<td>CI proves solution ⇒ code verifies; blank lab ⇒ fails</td>
+</tr>
+<tr class="odd">
+<td><strong>G. Content wave 2</strong></td>
+<td>Worlds 7–14 + case files 5–12 + remaining arcade games</td>
+<td>3–4</td>
+<td>Dataset feature checks pass; statistician sign-off</td>
+</tr>
+<tr class="even">
+<td><strong>H. Causal + capstone</strong></td>
+<td>World 15–16, DAG Builder, peer-review flow</td>
+<td>5</td>
+<td>Pilot capstones completed</td>
+</tr>
+<tr class="odd">
+<td><strong>I. Accounts &amp; instructor</strong></td>
+<td><code>RemoteAdapter</code>, dashboard, server verification</td>
+<td>6</td>
+<td>Cohort pilot; privacy review</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Testing at every step:</strong> extend the existing suites (hash parity, quest E2E, leak scan, linters); add <em>tree/mastery unit tests</em>, <em>review-queue clock tests</em>, <em>case-file branching tests</em>, <em>arcade generator determinism tests</em>, and <em>accessibility scans</em>.</p>
+<hr>
+</section>
+<section id="open-questions" class="level2">
+<h2 class="anchored" data-anchor-id="open-questions">13. Open questions</h2>
+<ol type="1">
+<li><del>Name</del> <strong>Decided: Dungeons &amp; Dataframes</strong> (D&amp;D pun; tagline: <em>medical statistics in R, one dungeon at a time</em>). Not checked for trademark/domain availability.</li>
+<li><del>Language scope</del> <strong>Decided: English only.</strong></li>
+<li><del>Who reviews statistics</del> <strong>Decided: the author (community-medicine faculty)</strong>; optional external statistician check before wide release.</li>
+<li><strong>Pilot cohort:</strong> which residents/department, and when can a first cohort test Worlds 1–2 and the pre/post forms?</li>
+<li><del>Credentialing</del> <strong>Decided: completion certificate is a later priority</strong> (needs accounts and server verification; Phase 6).</li>
+<li><strong>R environment:</strong> Posit Cloud, local RStudio, or both, for the hybrid labs?</li>
+<li><strong>Dataset licensing:</strong> open-license the simulated datasets and item bank?</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("\.");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>
+// Quarto's navbar `logo-href` is emitted as a literal string and is
+// not depth-adjusted for nested pages (unlike navbar.left/right items
+// and the theme <link>), so it 404s from any page below the project
+// root. Derive the correct relative prefix from the theme stylesheet
+// link, which Quarto *does* resolve correctly, and reuse it here.
+(function () {
+  var css = document.querySelector('link[href$="assets/theme_webp.css"]');
+  var brand = document.querySelector('a.navbar-brand');
+  if (css && brand) {
+    var prefix = css.getAttribute('href').replace(/assets\/theme_webp\.css$/, '');
+    brand.setAttribute('href', prefix + 'welcome.html');
+
+    // Floating bottom-right icon cluster: track home / site index /
+    // close. Kiosk mode (start-workshop.bat) hides all browser
+    // chrome, so these give a way back without relying on the
+    // browser's own controls. Positioned bottom-right to avoid the
+    // top navbar and the bottom-center "Home | Next Module" footer
+    // some pages already include.
+    var isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+
+    var style = document.createElement('style');
+    style.textContent =
+      '.ws-nav-cluster{position:fixed;bottom:10px;right:10px;z-index:10000;' +
+      'display:flex;gap:6px;background:rgba(255,255,255,0.9);' +
+      'border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,0.2);}' +
+      '.ws-nav-cluster a,.ws-nav-cluster button{width:36px;height:36px;' +
+      'border-radius:50%;border:none;background:#fff;font-size:1.1rem;' +
+      'display:flex;align-items:center;justify-content:center;cursor:pointer;' +
+      'text-decoration:none;color:inherit;box-shadow:0 1px 3px rgba(0,0,0,0.15);}' +
+      '.ws-nav-cluster a:hover,.ws-nav-cluster button:hover{background:#f0f0f0;}' +
+      '.ws-nav-hint{position:fixed;bottom:54px;right:10px;z-index:10000;' +
+      'background:#2c3e50;color:#fff;font-size:0.8rem;padding:6px 10px;' +
+      'border-radius:6px;display:none;white-space:nowrap;}';
+    document.head.appendChild(style);
+
+    var cluster = document.createElement('div');
+    cluster.className = 'ws-nav-cluster';
+
+    var trackHome = document.createElement('a');
+    trackHome.href = prefix + 'welcome.html';
+    trackHome.title = 'Back to track home';
+    trackHome.textContent = '🏠';
+    cluster.appendChild(trackHome);
+
+    var siteIndex = document.createElement('a');
+    siteIndex.href = prefix + '../index.html';
+    siteIndex.title = 'All workshop tracks';
+    siteIndex.textContent = '🧭';
+    cluster.appendChild(siteIndex);
+
+    if (isLocal) {
+      var hint = document.createElement('div');
+      hint.className = 'ws-nav-hint';
+      hint.textContent = 'Press Alt+F4 to exit full-screen';
+      document.body.appendChild(hint);
+
+      var closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.title = 'Exit full-screen';
+      closeBtn.textContent = '✕';
+      closeBtn.addEventListener('click', function () {
+        window.close();
+        hint.style.display = 'block';
+        setTimeout(function () { hint.style.display = 'none'; }, 3000);
+      });
+      cluster.appendChild(closeBtn);
+    }
+
+    document.body.appendChild(cluster);
+  }
+})();
+</script>
+
+
+
+
+</body></html>
