@@ -1,0 +1,319 @@
+# curriculum.yml — SINGLE SOURCE for the profile navbars (and, later, the quest literature).
+# Edit this file, then run:  Rscript scripts/build_profiles.R
+# That regenerates _quarto-<profile>.yml (do not edit those by hand).
+#
+# pages:    path -> default title
+# profiles: layout per profile. A menu item is a path, "---" (separator),
+#           or {path:, text:} to override the title in that profile only.
+
+pages:
+  r-foundations/getting-started.qmd: {title: "Getting Started"}
+  r-foundations/data-wrangling.qmd: {title: "Data Wrangling (Tidyverse)"}
+  r-foundations/merging_dataset.qmd: {title: "Merging Datasets"}
+  r-foundations/data_wrangling_prac_s.qmd: {title: "Practice Slides"}
+  data-visualization/ggplot_grammar.qmd: {title: "Grammar of Graphics"}
+  plot-gallery/basic.qmd: {title: "Basic Plot Gallery"}
+  statistical-analysis/statistical_tests.qmd: {title: "Test Selection Guide"}
+  statistical-analysis/regression.qmd: {title: "Regression Analysis"}
+  ggstatsplot/ggstatsplot_intro.qmd: {title: "ggstatsplot — Intro"}
+  quarto_repro_w/reproducible_writing.qmd: {title: "Quarto Basics"}
+  contact.qmd: {title: "Contact Us"}
+  references.qmd: {title: "References"}
+  downloads.qmd: {title: "Downloads"}
+  data-visualization/best_practices.qmd: {title: "Best Practices"}
+  data-visualization/plot_data.qmd: {title: "Matching Data to Plots"}
+  data-visualization/gram_ggplot/module_1_foundations_geoms.qmd: {title: "Module 1 — Foundations & Geoms"}
+  data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd: {title: "Module 2 — Aesthetics, Faceting & Themes"}
+  plot-gallery/moderate.qmd: {title: "Intermediate Plot Gallery"}
+  specialized/merge_visuals.qmd: {title: "Merged Visuals"}
+  specialized/plot_stats.qmd: {title: "Statistical Plots"}
+  ggstatsplot/ggstatsplot_moderate.qmd: {title: "ggstatsplot — Intermediate"}
+  gtsummary/gtsummary_tutorial.qmd: {title: "gtsummary Tables"}
+  quarto_repro_w/quarto_moderate.qmd: {title: "Quarto — Dynamic Documents"}
+  exporting_tools/exporting_plots.qmd: {title: "Exporting Plots"}
+  exporting_tools/plotting_tools.qmd: {title: "Plotting Tools"}
+  regression-quest/index.qmd: {title: "🗺️ Quest map (start here)"}
+  regression-quest/pretest.qmd: {title: "Pre-test (baseline)"}
+  regression-quest/posttest.qmd: {title: "Post-test (growth)"}
+  regression-quest/roadmap.qmd: {title: "Roadmap"}
+  regression-quest/site-design.qmd: {title: "Site design"}
+  regression-workshop/s1_foundations.qmd: {title: "Session 1 — Foundations"}
+  regression-workshop/s2_simple_regression.qmd: {title: "Session 2 — Simple Linear Regression"}
+  regression-workshop/s3_multiple_regression.qmd: {title: "Session 3 — Inference & Multiple Regression"}
+  regression-workshop/s4_assumptions.qmd: {title: "Session 4 — Assumptions"}
+  regression-workshop/s5_logistic_regression.qmd: {title: "Session 5 — Logistic Regression"}
+  regression-workshop/s6_reporting.qmd: {title: "Session 6 — Interpreting & Reporting"}
+  regression-workshop/cheatsheet.qmd: {title: "Interpretation Cheat Sheet"}
+  data-visualization/gram_ggplot/module_3_colors_scales_themes.qmd: {title: "Module 3 — Colors, Scales & Themes"}
+  data-visualization/gram_ggplot/module_4_advanced_best_practices.qmd: {title: "Module 4 — Advanced Best Practices"}
+  plot-gallery/advanced.qmd: {title: "Advanced Plot Gallery"}
+  plot-gallery/practical_application.qmd: {title: "Practical Applications"}
+  specialized/interactive.qmd: {title: "Interactive Plots"}
+  ggstatsplot/ggstatsplot_advanced.qmd: {title: "ggstatsplot — Advanced"}
+  statistical-analysis/data_analysis.qmd: {title: "Data Analysis"}
+  quarto_repro_w/quarto_advanced.qmd: {title: "Quarto — Publication"}
+  exporting_tools/debugging_plots.qmd: {title: "Debugging Plots"}
+  exporting_tools/advanced_exporting.qmd: {title: "Advanced Exporting"}
+
+profiles:
+  basic:
+    title: "Data Visualization Workshop — Basic"
+    output-dir: docs/basic
+    logo-href: welcome.html
+    left:
+      - text: "R Foundations"
+        items:
+          - r-foundations/getting-started.qmd
+          - r-foundations/data-wrangling.qmd
+          - r-foundations/merging_dataset.qmd
+          - r-foundations/data_wrangling_prac_s.qmd
+      - text: "Data Visualization"
+        items:
+          - data-visualization/ggplot_grammar.qmd
+          - plot-gallery/basic.qmd
+      - text: "Statistical Analysis"
+        items:
+          - statistical-analysis/statistical_tests.qmd
+          - statistical-analysis/regression.qmd
+          - ggstatsplot/ggstatsplot_intro.qmd
+      - text: "Quarto"
+        items:
+          - quarto_repro_w/reproducible_writing.qmd
+    right:
+      - text: "Reference"
+        icon: book
+        items:
+          - contact.qmd
+          - references.qmd
+          - downloads.qmd
+  moderate:
+    title: "Data Visualization Workshop — Moderate"
+    output-dir: docs/moderate
+    logo-href: welcome.html
+    left:
+      - text: "R Foundations"
+        items:
+          - r-foundations/getting-started.qmd
+          - r-foundations/data-wrangling.qmd
+          - r-foundations/merging_dataset.qmd
+          - "---"
+      - text: "Data Visualization"
+        items:
+          - data-visualization/ggplot_grammar.qmd
+          - data-visualization/best_practices.qmd
+          - data-visualization/plot_data.qmd
+          - "---"
+          - data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
+          - data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd
+          - "---"
+          - plot-gallery/basic.qmd
+          - plot-gallery/moderate.qmd
+          - "---"
+      - text: "Specialized Plots"
+        items:
+          - specialized/merge_visuals.qmd
+          - specialized/plot_stats.qmd
+      - text: "Statistical Analysis"
+        items:
+          - statistical-analysis/statistical_tests.qmd
+          - statistical-analysis/regression.qmd
+          - ggstatsplot/ggstatsplot_intro.qmd
+          - ggstatsplot/ggstatsplot_moderate.qmd
+          - gtsummary/gtsummary_tutorial.qmd
+          - "---"
+      - text: "Quarto"
+        items:
+          - quarto_repro_w/reproducible_writing.qmd
+          - quarto_repro_w/quarto_moderate.qmd
+      - text: "Exporting & Tools"
+        items:
+          - exporting_tools/exporting_plots.qmd
+          - exporting_tools/plotting_tools.qmd
+    right:
+      - text: "Reference"
+        icon: book
+        items:
+          - contact.qmd
+          - references.qmd
+          - downloads.qmd
+  regression:
+    title: "Data Visualization Workshop — Regression"
+    output-dir: docs/regression
+    logo-href: welcome.html
+    # Theory of Regression Analysis workshop (6 reveal.js decks + cheat sheet) and the quest.
+    # Added here (not in the shared _quarto.yml) so only this track renders them.
+    # Resources are student-facing only — facilitator solutions are deliberately NOT listed.
+    project-extra:
+      render:
+      - regression-workshop/*.qmd
+      - regression-quest/*.qmd
+      resources:
+      - data/ncd_survey.csv
+      - regression-workshop/make_data.R
+      - regression-workshop/labs/*.R
+      - regression-quest/assets/*
+    left:
+      - text: "R Foundations"
+        items:
+          - r-foundations/getting-started.qmd
+          - r-foundations/data-wrangling.qmd
+      - text: "Regression Analysis"
+        href: statistical-analysis/regression.qmd
+      - text: "Dungeons & Dataframes"
+        items:
+          - regression-quest/index.qmd
+          - regression-quest/pretest.qmd
+          - regression-quest/posttest.qmd
+          - regression-quest/roadmap.qmd
+          - regression-quest/site-design.qmd
+      - text: "Regression Workshop"
+        items:
+          - regression-workshop/s1_foundations.qmd
+          - regression-workshop/s2_simple_regression.qmd
+          - regression-workshop/s3_multiple_regression.qmd
+          - regression-workshop/s4_assumptions.qmd
+          - regression-workshop/s5_logistic_regression.qmd
+          - regression-workshop/s6_reporting.qmd
+          - "---"
+          - regression-workshop/cheatsheet.qmd
+    right:
+      - text: "Reference"
+        icon: book
+        items:
+          - contact.qmd
+          - references.qmd
+          - downloads.qmd
+  advanced:
+    title: "Data Visualization Workshop — Advanced"
+    output-dir: docs/advanced
+    logo-href: welcome.html
+    left:
+      - text: "R Foundations"
+        items:
+          - r-foundations/getting-started.qmd
+          - r-foundations/data-wrangling.qmd
+          - r-foundations/merging_dataset.qmd
+          - "---"
+      - text: "Data Visualization"
+        items:
+          - data-visualization/ggplot_grammar.qmd
+          - data-visualization/best_practices.qmd
+          - data-visualization/plot_data.qmd
+          - "---"
+          - data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
+          - data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd
+          - data-visualization/gram_ggplot/module_3_colors_scales_themes.qmd
+          - data-visualization/gram_ggplot/module_4_advanced_best_practices.qmd
+          - "---"
+          - plot-gallery/basic.qmd
+          - plot-gallery/moderate.qmd
+          - plot-gallery/advanced.qmd
+          - plot-gallery/practical_application.qmd
+          - "---"
+      - text: "Specialized Plots"
+        items:
+          - specialized/merge_visuals.qmd
+          - specialized/plot_stats.qmd
+          - specialized/interactive.qmd
+      - text: "Statistical Analysis"
+        items:
+          - statistical-analysis/statistical_tests.qmd
+          - statistical-analysis/regression.qmd
+          - ggstatsplot/ggstatsplot_intro.qmd
+          - ggstatsplot/ggstatsplot_moderate.qmd
+          - ggstatsplot/ggstatsplot_advanced.qmd
+          - gtsummary/gtsummary_tutorial.qmd
+          - statistical-analysis/data_analysis.qmd
+          - "---"
+      - text: "Quarto"
+        items:
+          - quarto_repro_w/reproducible_writing.qmd
+          - quarto_repro_w/quarto_moderate.qmd
+          - quarto_repro_w/quarto_advanced.qmd
+      - text: "Exporting & Tools"
+        items:
+          - exporting_tools/exporting_plots.qmd
+          - exporting_tools/plotting_tools.qmd
+          - exporting_tools/debugging_plots.qmd
+          - exporting_tools/advanced_exporting.qmd
+    right:
+      - text: "Reference"
+        icon: book
+        items:
+          - contact.qmd
+          - references.qmd
+          - downloads.qmd
+  dataviz-base:
+    title: "Data Visualization — Foundations"
+    output-dir: docs/dataviz-base
+    logo-href: welcome.html
+    left:
+      - text: "Data Visualization"
+        items:
+          - data-visualization/ggplot_grammar.qmd
+          - data-visualization/best_practices.qmd
+          - data-visualization/plot_data.qmd
+          - "---"
+          - data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
+          - data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd
+      - text: "Plot Gallery"
+        items:
+          - {path: plot-gallery/basic.qmd, text: "Basic Plots"}
+          - {path: plot-gallery/moderate.qmd, text: "Intermediate Plots"}
+      - text: "Specialized Plots"
+        items:
+          - specialized/merge_visuals.qmd
+          - specialized/plot_stats.qmd
+      - text: "Exporting & Tools"
+        items:
+          - exporting_tools/exporting_plots.qmd
+          - exporting_tools/plotting_tools.qmd
+      - text: "Applied: Viz Examples"
+    right:
+      - text: "Reference"
+        icon: book
+        items:
+          - contact.qmd
+          - references.qmd
+          - downloads.qmd
+  dataviz-complete:
+    title: "Data Visualization — Complete"
+    output-dir: docs/dataviz-complete
+    logo-href: welcome.html
+    left:
+      - text: "Data Visualization"
+        items:
+          - data-visualization/ggplot_grammar.qmd
+          - data-visualization/best_practices.qmd
+          - data-visualization/plot_data.qmd
+          - "---"
+          - data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
+          - data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd
+          - data-visualization/gram_ggplot/module_3_colors_scales_themes.qmd
+          - data-visualization/gram_ggplot/module_4_advanced_best_practices.qmd
+      - text: "Plot Gallery"
+        items:
+          - {path: plot-gallery/basic.qmd, text: "Basic Plots"}
+          - {path: plot-gallery/moderate.qmd, text: "Intermediate Plots"}
+          - {path: plot-gallery/advanced.qmd, text: "Advanced Plots"}
+          - plot-gallery/practical_application.qmd
+      - text: "Specialized Plots"
+        items:
+          - specialized/merge_visuals.qmd
+          - specialized/plot_stats.qmd
+          - specialized/interactive.qmd
+      - text: "Exporting & Tools"
+        items:
+          - exporting_tools/exporting_plots.qmd
+          - exporting_tools/plotting_tools.qmd
+          - exporting_tools/debugging_plots.qmd
+          - exporting_tools/advanced_exporting.qmd
+      - text: "Applied Examples"
+        items:
+    right:
+      - text: "Reference"
+        icon: book
+        items:
+          - contact.qmd
+          - references.qmd
+          - downloads.qmd

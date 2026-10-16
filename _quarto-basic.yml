@@ -1,55 +1,54 @@
 # ═══════════════════════════════════════════════════════════════
-# _quarto-basic.yml  — BASIC PROFILE
+# _quarto-basic.yml — GENERATED from curriculum.yml. DO NOT EDIT BY HAND.
+# Edit curriculum.yml, then run:  Rscript scripts/build_profiles.R
 # Render with:  quarto render --profile basic
-# Output goes to:  docs/basic/
 # ═══════════════════════════════════════════════════════════════
 
 project:
   output-dir: docs/basic
-
 website:
-  title: "Data Visualization Workshop — Basic"
-  site-url: "."
+  title: Data Visualization Workshop — Basic
+  site-url: '.'
   search: true
-
   navbar:
     logo-href: welcome.html
     left:
-      - text: "R Foundations"
+      - text: R Foundations
         menu:
-          - text: "Getting Started"
+          - text: Getting Started
             href: r-foundations/getting-started.qmd
-          - text: "Data Wrangling (Tidyverse)"
+          - text: Data Wrangling (Tidyverse)
             href: r-foundations/data-wrangling.qmd
-          - text: "Merging Datasets"
+          - text: Merging Datasets
             href: r-foundations/merging_dataset.qmd
-          - text: "Practice Slides"
+          - text: Practice Slides
             href: r-foundations/data_wrangling_prac_s.qmd
-      - text: "Data Visualization"
+      - text: Data Visualization
         menu:
-          - text: "Grammar of Graphics"
+          - text: Grammar of Graphics
             href: data-visualization/ggplot_grammar.qmd
-          - text: "Basic Plot Gallery"
+          - text: Basic Plot Gallery
             href: plot-gallery/basic.qmd
-      - text: "Statistical Analysis"
+      - text: Statistical Analysis
         menu:
-          - text: "Test Selection Guide"
+          - text: Test Selection Guide
             href: statistical-analysis/statistical_tests.qmd
-          - text: "Regression Analysis"
+          - text: Regression Analysis
             href: statistical-analysis/regression.qmd
-          - text: "ggstatsplot — Intro"
+          - text: ggstatsplot — Intro
             href: ggstatsplot/ggstatsplot_intro.qmd
-      - text: "Quarto"
+      - text: Quarto
         menu:
-          - text: "Quarto Basics"
+          - text: Quarto Basics
             href: quarto_repro_w/reproducible_writing.qmd
     right:
-      - text: "Reference"
+      - text: Reference
         icon: book
         menu:
-          - text: "Contact Us"
+          - text: Contact Us
             href: contact.qmd
-          - text: "References"
+          - text: References
             href: references.qmd
-          - text: "Downloads"
+          - text: Downloads
             href: downloads.qmd
+

@@ -15,7 +15,7 @@ project:
     - config.json
     - navigation.json
     - navigation.yml
-    - assets/
+    - /assets/
   render:
     - "!docs/**"
     - "!_site/**"
@@ -38,12 +38,17 @@ project:
     - "quarto_repro_w/quarto_moderate.qmd"
     - "quarto_repro_w/quarto_advanced.qmd"
 
+execute:
+  freeze: auto
+
 format:
   html:
     theme: flatly
     css: assets/theme_webp.css
     code-copy: true
     toc: true
+    filters:
+      - _filters/level.lua
     lightbox: auto
     include-in-header:
       text: |

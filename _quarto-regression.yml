@@ -1,75 +1,71 @@
 # ═══════════════════════════════════════════════════════════════
-# _quarto-regression.yml  — REGRESSION PROFILE
+# _quarto-regression.yml — GENERATED from curriculum.yml. DO NOT EDIT BY HAND.
+# Edit curriculum.yml, then run:  Rscript scripts/build_profiles.R
 # Render with:  quarto render --profile regression
-# Output goes to:  docs/regression/
 # ═══════════════════════════════════════════════════════════════
 
 project:
   output-dir: docs/regression
-  # Theory of Regression Analysis workshop (6 reveal.js decks + cheat sheet).
-  # Added here (not in _quarto.yml) so only the regression track renders them.
   render:
-    - "regression-workshop/*.qmd"
-    - "regression-quest/*.qmd"
-  # Student-facing files only — facilitator solutions are deliberately NOT listed.
+    - regression-workshop/*.qmd
+    - regression-quest/*.qmd
   resources:
     - data/ncd_survey.csv
     - regression-workshop/make_data.R
     - regression-workshop/labs/*.R
     - regression-quest/assets/*
-
 website:
-  title: "Data Visualization Workshop — Regression"
-  site-url: "."
+  title: Data Visualization Workshop — Regression
+  site-url: '.'
   search: true
-
   navbar:
     logo-href: welcome.html
     left:
-      - text: "R Foundations"
+      - text: R Foundations
         menu:
-          - text: "Getting Started"
+          - text: Getting Started
             href: r-foundations/getting-started.qmd
-          - text: "Data Wrangling (Tidyverse)"
+          - text: Data Wrangling (Tidyverse)
             href: r-foundations/data-wrangling.qmd
-      - text: "Regression Analysis"
+      - text: Regression Analysis
         href: statistical-analysis/regression.qmd
-      - text: "Dungeons & Dataframes"
+      - text: Dungeons & Dataframes
         menu:
-          - text: "🗺️ Quest map (start here)"
+          - text: "\U0001F5FA️ Quest map (start here)"
             href: regression-quest/index.qmd
-          - text: "Pre-test (baseline)"
+          - text: Pre-test (baseline)
             href: regression-quest/pretest.qmd
-          - text: "Post-test (growth)"
+          - text: Post-test (growth)
             href: regression-quest/posttest.qmd
-          - text: "Roadmap"
+          - text: Roadmap
             href: regression-quest/roadmap.qmd
-          - text: "Site design"
+          - text: Site design
             href: regression-quest/site-design.qmd
-      - text: "Regression Workshop"
+      - text: Regression Workshop
         menu:
-          - text: "Session 1 — Foundations"
+          - text: Session 1 — Foundations
             href: regression-workshop/s1_foundations.qmd
-          - text: "Session 2 — Simple Linear Regression"
+          - text: Session 2 — Simple Linear Regression
             href: regression-workshop/s2_simple_regression.qmd
-          - text: "Session 3 — Inference & Multiple Regression"
+          - text: Session 3 — Inference & Multiple Regression
             href: regression-workshop/s3_multiple_regression.qmd
-          - text: "Session 4 — Assumptions"
+          - text: Session 4 — Assumptions
             href: regression-workshop/s4_assumptions.qmd
-          - text: "Session 5 — Logistic Regression"
+          - text: Session 5 — Logistic Regression
             href: regression-workshop/s5_logistic_regression.qmd
-          - text: "Session 6 — Interpreting & Reporting"
+          - text: Session 6 — Interpreting & Reporting
             href: regression-workshop/s6_reporting.qmd
-          - text: "---"
-          - text: "Interpretation Cheat Sheet"
+          - text: '---'
+          - text: Interpretation Cheat Sheet
             href: regression-workshop/cheatsheet.qmd
     right:
-      - text: "Reference"
+      - text: Reference
         icon: book
         menu:
-          - text: "Contact Us"
+          - text: Contact Us
             href: contact.qmd
-          - text: "References"
+          - text: References
             href: references.qmd
-          - text: "Downloads"
+          - text: Downloads
             href: downloads.qmd
+

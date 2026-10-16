@@ -1,60 +1,57 @@
 # ═══════════════════════════════════════════════════════════════
-# _quarto-dataviz-base.yml  — DATAVIZ FOUNDATIONS PROFILE
+# _quarto-dataviz-base.yml — GENERATED from curriculum.yml. DO NOT EDIT BY HAND.
+# Edit curriculum.yml, then run:  Rscript scripts/build_profiles.R
 # Render with:  quarto render --profile dataviz-base
-# Output goes to:  docs/dataviz-base/
 # ═══════════════════════════════════════════════════════════════
 
 project:
   output-dir: docs/dataviz-base
-
 website:
-  title: "Data Visualization — Foundations"
-  site-url: "."
+  title: Data Visualization — Foundations
+  site-url: '.'
   search: true
-
   navbar:
     logo-href: welcome.html
     left:
-      - text: "Data Visualization"
+      - text: Data Visualization
         menu:
-          - text: "Grammar of Graphics"
+          - text: Grammar of Graphics
             href: data-visualization/ggplot_grammar.qmd
-          - text: "Best Practices"
+          - text: Best Practices
             href: data-visualization/best_practices.qmd
-          - text: "Matching Data to Plots"
+          - text: Matching Data to Plots
             href: data-visualization/plot_data.qmd
-          - text: "---"
-          - text: "Module 1 — Foundations & Geoms"
+          - text: '---'
+          - text: Module 1 — Foundations & Geoms
             href: data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
-          - text: "Module 2 — Aesthetics, Faceting & Themes"
+          - text: Module 2 — Aesthetics, Faceting & Themes
             href: data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd
-      - text: "Plot Gallery"
+      - text: Plot Gallery
         menu:
-          - text: "Basic Plots"
+          - text: Basic Plots
             href: plot-gallery/basic.qmd
-          - text: "Intermediate Plots"
+          - text: Intermediate Plots
             href: plot-gallery/moderate.qmd
-      - text: "Specialized Plots"
+      - text: Specialized Plots
         menu:
-          - text: "Merged Visuals"
+          - text: Merged Visuals
             href: specialized/merge_visuals.qmd
-          - text: "Statistical Plots"
+          - text: Statistical Plots
             href: specialized/plot_stats.qmd
-      - text: "Exporting & Tools"
+      - text: Exporting & Tools
         menu:
-          - text: "Exporting Plots"
+          - text: Exporting Plots
             href: exporting_tools/exporting_plots.qmd
-          - text: "Plotting Tools"
+          - text: Plotting Tools
             href: exporting_tools/plotting_tools.qmd
-      - text: "Applied: Viz Examples"
-        href: nctoh/data_visualization.qmd
     right:
-      - text: "Reference"
+      - text: Reference
         icon: book
         menu:
-          - text: "Contact Us"
+          - text: Contact Us
             href: contact.qmd
-          - text: "References"
+          - text: References
             href: references.qmd
-          - text: "Downloads"
+          - text: Downloads
             href: downloads.qmd
+
