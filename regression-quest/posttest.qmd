@@ -31,5 +31,11 @@ Same skills as the pre-test, different questions. After submitting you will see 
 ```{r}
 #| echo: false
 #| output: asis
+rq_tagmap(ITEMS)
+```
+
+```{r}
+#| echo: false
+#| output: asis
 rq_render(sprintf("post-%02d", 1:20), ITEMS, test = "post")
 ```

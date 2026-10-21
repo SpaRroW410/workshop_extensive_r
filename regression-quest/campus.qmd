@@ -27,11 +27,7 @@ source("bank/items.R")
 ```{r}
 #| echo: false
 #| output: asis
-# tag -> world -> item count, from the bank (world items only), so the browser knows what exists per skill
-rows <- do.call(rbind, lapply(Filter(function(x) grepl("^w[0-9]+$", x$world), ITEMS),
-                              function(x) data.frame(tag = x$tags, world = x$world)))
-tm <- lapply(split(rows, rows$tag), function(d) as.list(table(d$world)))
-cat("\n```{=html}\n<script>window.RQ_TAGMAP=", jsonlite::toJSON(tm, auto_unbox = TRUE), ";</script>\n```\n", sep = "")
+rq_tagmap(ITEMS)
 ```
 
 ::: {.rq-lesson}

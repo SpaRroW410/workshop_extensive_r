@@ -255,6 +255,12 @@
   }
 
   /* ── test mode (pre / post) ─────────────────────────────────────────── */
+  function practiseNext(r) {
+    var SK = window.RQ_SK; if (!SK || !window.RQ_TAGMAP) return '';
+    var list = SK.missed(state, r.byTag, window.RQ_TAGMAP, today(), 6);
+    if (!list.length) return '<p><b>Practise next:</b> nothing flagged. Try the next world on the <a href="campus.html">Campus</a>.</p>';
+    return '<h4>Practise next</h4><ul class="rq-practise">' + list.map(function (x) { return '<li><b>' + esc(x.skill.id + ' · ' + x.skill.name) + '</b>' + (x.m.worlds.length ? ' — ' + worldLinks(x.m.worlds) : '') + '</li>'; }).join('') + '</ul><p class="rq-small">See the whole picture on the <a href="campus.html">Campus</a>.</p>';
+  }
   function readyAdvice(r) {
     var weak = Object.keys(r.byTag).filter(function (t) { return r.byTag[t][0] < r.byTag[t][1]; }).sort().join(', ');
     var tier = r.pct >= 80 ? ['Ready', 'Go straight to the <a href="pretest.html">pre-test</a>.']
@@ -277,7 +283,7 @@
       var tags = Object.keys(r.byTag).sort().map(function (t) { var v = r.byTag[t]; return '<tr><td>' + esc(t) + '</td><td>' + v[0] + ' / ' + v[1] + '</td><td><span class="rq-bar"><i style="width:' + Math.round(100 * v[0] / v[1]) + '%"></i></span></td></tr>'; }).join('');
       var cal = r.confN ? '<p>Confidence check: you were “certain” on ' + r.certain + ' answers and ' + r.certainRight + ' were right' + (r.certain && r.certainRight < r.certain ? ' — keep an eye on over-confidence.' : '.') + '</p>' : '';
       res.innerHTML = '<h3>' + r.score + ' / ' + r.total + ' (' + r.pct + '%)</h3>' + gain + cal + '<table class="rq-tagtable"><thead><tr><th>Skill</th><th>Right</th><th></th></tr></thead><tbody>' + tags + '</tbody></table>' +
-        (kind === 'ready' ? readyAdvice(r) : '<p class="rq-small">Skills with a low bar are your next quests. Answers are not shown in test mode.</p>');
+        (kind === 'ready' ? readyAdvice(r) : '<p class="rq-small">Answers are not shown in test mode.</p>' + practiseNext(r));
     }
     if (done) showResult(done);
     sub.addEventListener('click', function () {

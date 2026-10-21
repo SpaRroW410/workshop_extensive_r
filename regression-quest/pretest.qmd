@@ -31,5 +31,11 @@ This baseline is **not graded**. Answer from what you know; rate your confidence
 ```{r}
 #| echo: false
 #| output: asis
+rq_tagmap(ITEMS)
+```
+
+```{r}
+#| echo: false
+#| output: asis
 rq_render(sprintf("pre-%02d", 1:20), ITEMS, test = "pre")
 ```

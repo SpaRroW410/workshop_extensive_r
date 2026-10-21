@@ -106,6 +106,13 @@
     cand.sort(function (a, b) { return (b.weak - a.weak) || (a.m.level - b.m.level) || (bi[a.skill.branch] - bi[b.skill.branch]) || (a.skill.id < b.skill.id ? -1 : 1); });
     return cand.slice(0, cap || 3);
   }
-  var api = { SKILLS: SKILLS, BYID: BYID, BRANCHES: BRANCHES, PLANNED: PLANNED, mastery: mastery, all: all, unlocked: unlocked, dueReview: dueReview, recommend: recommend, FADE_DAYS: FADE_DAYS };
+  /* skills behind the tags a test result got wrong (not already Proficient), earliest branch first */
+  function missed(state, byTag, tagmap, today, cap) {
+    var m = all(state, tagmap, today), bi = {}; BRANCHES.forEach(function (b, i) { bi[b[0]] = i; });
+    var out = SKILLS.filter(function (s) { return !m[s.id].empty && m[s.id].level < 3 && s.tags.some(function (t) { return byTag[t] && byTag[t][0] < byTag[t][1]; }); })
+      .sort(function (a, b) { return (bi[a.branch] - bi[b.branch]) || (a.id < b.id ? -1 : 1); });
+    return out.slice(0, cap || 6).map(function (s) { return { skill: s, m: m[s.id] }; });
+  }
+  var api = { missed: missed, SKILLS: SKILLS, BYID: BYID, BRANCHES: BRANCHES, PLANNED: PLANNED, mastery: mastery, all: all, unlocked: unlocked, dueReview: dueReview, recommend: recommend, FADE_DAYS: FADE_DAYS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.RQ_SK = api;
 })(typeof window !== 'undefined' ? window : this);
