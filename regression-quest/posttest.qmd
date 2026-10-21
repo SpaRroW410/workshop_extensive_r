@@ -1,6 +1,6 @@
 ---
 title: "Post-test · Show your growth"
-subtitle: "12 parallel questions (same skills, new numbers and contexts)."
+subtitle: "20 parallel questions (same skills, new numbers and contexts)."
 format:
   html:
     theme: cosmo
@@ -31,5 +31,5 @@ Same skills as the pre-test, different questions. After submitting you will see 
 ```{r}
 #| echo: false
 #| output: asis
-rq_render(sprintf("post-%02d", 1:12), ITEMS, test = "post")
+rq_render(sprintf("post-%02d", 1:20), ITEMS, test = "post")
 ```

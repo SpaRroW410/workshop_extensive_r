@@ -1,6 +1,6 @@
 ---
 title: "Pre-test · Baseline check"
-subtitle: "12 questions across the core topics. No feedback while you answer."
+subtitle: "20 questions across the core topics, Worlds 1–6. No feedback while you answer."
 format:
   html:
     theme: cosmo
@@ -31,5 +31,5 @@ This baseline is **not graded**. Answer from what you know; rate your confidence
 ```{r}
 #| echo: false
 #| output: asis
-rq_render(sprintf("pre-%02d", 1:12), ITEMS, test = "pre")
+rq_render(sprintf("pre-%02d", 1:20), ITEMS, test = "pre")
 ```

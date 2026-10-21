@@ -78,7 +78,7 @@ const hudXP = p => p.evaluate(() => +document.querySelector('.rq-hud .rq-xp').te
 
   // ── 3. pre-test (test mode) ──────────────────────────────────────────────
   p = await open(ctx, 'pretest.html');
-  const nIt = await p.locator('.rq-item').count(); ok(nIt === 12, 'pre-test has 12 items');
+  const nIt = await p.locator('.rq-item').count(); ok(nIt === 20, 'pre-test has 20 items');
   ok(await p.locator('.rq-item .rq-actions').count() === 0 && await p.locator('.rq-item .rq-hintbox').count() === 0, 'test mode: no hints / show-answer buttons');
   await p.evaluate(() => { document.querySelectorAll('.rq-item').forEach((q, i) => { window.__solve(q, i < 6); const r = q.querySelector('input[type=radio][value="' + (i % 2 ? 3 : 1) + '"]'); if (r) r.checked = true; }); });
   ok((await p.locator('.rq-feedback').allInnerTexts()).every(t => t.trim() === ''), 'test mode: no feedback shown while answering');
@@ -148,7 +148,7 @@ const hudXP = p => p.evaluate(() => +document.querySelector('.rq-hud .rq-xp').te
 
   // ── 6. post-test shows gain ──────────────────────────────────────────────
   ctx = await newCtx(); p = await open(ctx, 'pretest.html');
-  await p.evaluate(() => { document.querySelectorAll('.rq-item').forEach((q, i) => window.__solve(q, i < 3)); [...document.querySelectorAll('.rq-big')].find(b => /Submit/.test(b.textContent)).click(); }); await p.close();
+  await p.evaluate(() => { document.querySelectorAll('.rq-item').forEach((q, i) => window.__solve(q, i < 5)); [...document.querySelectorAll('.rq-big')].find(b => /Submit/.test(b.textContent)).click(); }); await p.close();
   p = await open(ctx, 'posttest.html');
   await p.evaluate(() => { document.querySelectorAll('.rq-item').forEach(q => window.__solve(q, true)); [...document.querySelectorAll('.rq-big')].find(b => /Submit/.test(b.textContent)).click(); });
   const gainTxt = await p.locator('.rq-gain').innerText(); ok(/25%.*100%/.test(gainTxt) && /\+75/.test(gainTxt), 'post-test shows pre → post gain: ' + gainTxt);

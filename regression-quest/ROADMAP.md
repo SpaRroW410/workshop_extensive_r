@@ -249,7 +249,7 @@ All feedback is colour-independent (icons and text); `prefers-reduced-motion` ho
 
 ### 6.4 Pre-/post-testing
 
-* Two **parallel forms** (A/B), 12 items each, mapped to the same skill tags; difficulty-balanced.
+* Two **parallel forms** (A/B), 20 items each (12 for Worlds 1–2 and core ideas, 8 added for Worlds 3–6), mapped to the same skill tags; difficulty-balanced.
 * Confidence rating per answer (Guess/Probably/Certain) → calibration feedback ("you were certain and wrong on 3 items").
 * Output: skill-by-skill profile → recommended next worlds → **post-test gain** (percentage points and normalised gain).
 * Planned extension: Form C for a delayed (3-month) retention test.
@@ -519,7 +519,7 @@ Effort is in person-weeks (PW) for one developer + one content author/reviewer (
 ## 16. Next four weeks
 
 1. Pilot Worlds 1–2 and the pre/post forms with 5 residents; capture think-aloud notes and item timings.
-2. ~~Write the World 3 (*Confounding Caves*) bank~~ ✔ drafted (9 items + boss); still to do: run the linter and render, then the misconception log. World 4 (*Assumption Ruins*) bank also drafted. World 5 (*Odds Arena*) bank also drafted. World 6 (*The Reporting Guild*) bank also drafted, so Phase 2's four core-world conversions (Worlds 3–6) are drafted. Readiness check also built (`readiness.qmd`, items `rd-01`–`rd-10`, routing in `quest.js`). Campus shell built (`campus.qmd`, `assets/skills.js`: 62-skill tree, mastery, fading/review list, "what next?" recommender, profile, calm mode; unit tests in `tests/skills_test.js`). **Deferred from Phase 2 shell:** state v2 event log + storage adapter (mastery is derived from v1 item records, additive fields only), an answerable daily-review quiz (needs item replay, Phase 3 with spaced retrieval), level 4 "mastered". **Next: lint/render pass, complete pre/post forms across Worlds 3–6, per-skill recommendations after tests.**
+2. ~~Write the World 3 (*Confounding Caves*) bank~~ ✔ drafted (9 items + boss); still to do: run the linter and render, then the misconception log. World 4 (*Assumption Ruins*) bank also drafted. World 5 (*Odds Arena*) bank also drafted. World 6 (*The Reporting Guild*) bank also drafted, so Phase 2's four core-world conversions (Worlds 3–6) are drafted. Readiness check also built (`readiness.qmd`, items `rd-01`–`rd-10`, routing in `quest.js`). Campus shell built (`campus.qmd`, `assets/skills.js`: 62-skill tree, mastery, fading/review list, "what next?" recommender, profile, calm mode; unit tests in `tests/skills_test.js`). **Deferred from Phase 2 shell:** state v2 event log + storage adapter (mastery is derived from v1 item records, additive fields only), an answerable daily-review quiz (needs item replay, Phase 3 with spaced retrieval), level 4 "mastered". Pre/post forms now 20 parallel items each covering Worlds 1–6 (`pre-13`–`20`, `post-13`–`20`). **Next: lint/render pass (you), then Phase 2 exit: pilot of 20+ residents, per-skill recommendations after tests, cheat-sheet/facilitator pack.**
 3. Prototype `rqlab` (`rq_start`, `rq_check`, `rq_submit`) for one lab and the code-verification box on the site.
 4. Add the Playwright suite and the R↔JS parity test to CI.
 5. Draft the **readiness check** (8 items + 2 R tasks) and the skill-tree node list; prototype the skill tree page on the existing 40 items.
