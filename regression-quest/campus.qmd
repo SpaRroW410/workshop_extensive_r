@@ -1,0 +1,41 @@
+---
+title: "Campus"
+subtitle: "Your skill tree, what to do next, and what is fading"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+# tag -> world -> item count, from the bank (world items only), so the browser knows what exists per skill
+rows <- do.call(rbind, lapply(Filter(function(x) grepl("^w[0-9]+$", x$world), ITEMS),
+                              function(x) data.frame(tag = x$tags, world = x$world)))
+tm <- lapply(split(rows, rows$tag), function(d) as.list(table(d$world)))
+cat("\n```{=html}\n<script>window.RQ_TAGMAP=", jsonlite::toJSON(tm, auto_unbox = TRUE), ";</script>\n```\n", sep = "")
+```
+
+::: {.rq-lesson}
+Your progress lives in this browser. Skills are earned by solving items without hints: the tree shows where you stand, the recommender picks the next skill, and anything you have not used for 30 days is queued for review.
+:::
+
+<div id="rq-campus"></div>

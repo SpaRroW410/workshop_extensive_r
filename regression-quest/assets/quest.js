@@ -63,8 +63,8 @@
   var BASE = { 1: 10, 2: 20, 3: 30 }, BOSS_BONUS = 50, HINT_COST = [3, 5, 8];
   var RANKS = [[0, 'Field Volunteer'], [100, 'Health Worker'], [250, 'Medical Officer'], [500, 'Epidemiologist'], [900, 'Senior Epidemiologist'], [1500, 'Chief Biostatistician']];
   var state = load();
-  function blank() { return { v: 1, items: {}, badges: {}, streak: { last: null, count: 0, best: 0 }, tests: {}, created: today() }; }
-  function load() { try { var s = JSON.parse(localStorage.getItem(KEY)); if (s && s.v === 1) return s; } catch (e) {} return blank(); }
+  function blank() { return { v: 1, items: {}, badges: {}, streak: { last: null, count: 0, best: 0 }, tests: {}, settings: {}, created: today() }; }
+  function load() { try { var s = JSON.parse(localStorage.getItem(KEY)); if (s && s.v === 1) { s.settings = s.settings || {}; return s; } } catch (e) {} return blank(); }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
   function attemptFactor(t) { return t <= 1 ? 1 : t === 2 ? 0.5 : 0.25; }
   function itemXP(r) {
@@ -118,7 +118,7 @@
     if (!document.body.classList.contains('rq-page')) return;
     if (!hud) { hud = document.createElement('div'); hud.className = 'rq-hud'; document.body.insertBefore(hud, document.body.firstChild); }
     var xp = totalXP(), rk = rankOf(xp), pct = rk.next ? Math.round(100 * (xp - rk.from) / (rk.next[0] - rk.from)) : 100;
-    hud.innerHTML = '<a class="rq-home" href="' + (window.RQ_HOME || 'index.html') + '">🗺️ Quest map</a>' +
+    hud.innerHTML = '<a class="rq-home" href="' + (window.RQ_HOME || 'index.html') + '">🗺️ Quest map</a><a href="campus.html">🏛️ Campus</a>' +
       '<span class="rq-pill">🔥 <b class="rq-streak">' + state.streak.count + '</b>-day streak</span>' +
       '<span class="rq-pill">⭐ <b class="rq-xp">' + xp + '</b> XP</span>' +
       '<span class="rq-pill rq-rankpill"><b class="rq-rank">' + esc(rk.name) + '</b><span class="rq-bar"><i style="width:' + pct + '%"></i></span>' +
@@ -142,7 +142,7 @@
   }
   function commit(q, ok) {
     var r = rec(q), before = totalXP(), rkBefore = rankOf(before).name;
-    if (!r.solved) { r.tries++; if (ok) r.solved = true; }
+    if (!r.solved) { r.tries++; if (ok) { r.solved = true; r.last = today(); } }
     touchStreak(); save();
     var gained = totalXP() - before;
     if (ok && gained > 0) toast('+' + gained + ' XP');
@@ -339,6 +339,36 @@
     if (rs) rs.addEventListener('click', function () { if (confirm('Erase all progress on this device?')) { state = blank(); save(); location.reload(); } });
   }
 
+  /* ── campus: recommender, review queue, skill tree, profile, settings ─── */
+  function worldLinks(worlds) {
+    return worlds.map(function (id) { var w = worldCfg(id); return w && w.href ? '<a href="' + w.href + '">' + esc(w.title.replace(/^World \d+ · /, '')) + '</a>' : ''; }).filter(Boolean).join(', ');
+  }
+  function initCampus(el) {
+    var SK = window.RQ_SK, tm = window.RQ_TAGMAP || {}, t = today(), m = SK.all(state, tm, t), html = '';
+    var rec3 = SK.recommend(state, tm, t, 3), due = SK.dueReview(state, tm, t, 5), xp = totalXP(), rk = rankOf(xp);
+    var card = function (x, tag) { return '<div class="rq-rec"><b>' + esc(x.skill.id + ' · ' + x.skill.name) + '</b><small>' + esc(x.why) + '</small>' +
+      (x.m.worlds.length ? '<span>Practise in: ' + worldLinks(x.m.worlds) + '</span>' : '') + '</div>'; };
+    html += '<h2>What next?</h2>' + (rec3.length ? '<div class="rq-recs">' + rec3.map(card).join('') + '</div>' : '<p>Nothing recommended yet: start with the <a href="readiness.html">readiness check</a> and the <a href="pretest.html">pre-test</a>, then open World 1.</p>');
+    html += '<h2>Daily review</h2>' + (due.length ? '<div class="rq-recs">' + due.map(card).join('') + '</div>' : '<p>Nothing is fading. Skills you have not used for ' + SK.FADE_DAYS + ' days appear here.</p>');
+    html += '<h2>Skill tree</h2><p class="rq-small">Level 0 unseen · 1 seen · 2 practising · 3 proficient (first-try solves, no hints). Greyed skills have no items yet. Hover a skill for its prerequisites.</p>';
+    SK.BRANCHES.forEach(function (b) {
+      var sk = SK.SKILLS.filter(function (s) { return s.branch === b[0]; });
+      html += '<h3>' + esc(b[0] + ' · ' + b[1]) + '</h3><div class="rq-tree">' + sk.map(function (s) {
+        var x = m[s.id], st = x.empty ? 'none' : (SK.unlocked(s, m) ? 'l' + x.level : 'lock');
+        var req = s.req.length ? 'Needs: ' + s.req.join(', ') : 'No prerequisites';
+        return '<div class="rq-skill rq-' + st + (x.fading ? ' rq-fading' : '') + '" title="' + esc(req + (x.empty ? ' · no items yet' : ' · ' + x.first + '/' + x.need + ' first-try')) + '"><small>' + s.id + '</small><b>' + esc(s.name) + '</b>' +
+          '<span class="rq-pips">' + [1, 2, 3].map(function (i) { return '<i' + (x.level >= i ? ' class="on"' : '') + '></i>'; }).join('') + '</span>' + (x.fading ? '<em>fading</em>' : '') + '</div>';
+      }).join('') + '</div>';
+    });
+    html += '<p class="rq-small"><b>Coming in later phases:</b> ' + SK.PLANNED.map(esc).join(' · ') + '</p>';
+    var n = Object.keys(state.items).filter(function (k) { return state.items[k].solved; }).length, tests = ['ready', 'pre', 'post'].filter(function (k) { return state.tests[k]; }).map(function (k) { return k + ' ' + state.tests[k].pct + '%'; });
+    html += '<h2>Profile</h2><p>' + esc(rk.name) + ' · ⭐ ' + xp + ' XP · 🔥 ' + state.streak.count + '-day streak (best ' + state.streak.best + ') · ' + n + ' items solved · ' + Object.keys(state.badges).length + ' badges' + (tests.length ? ' · tests: ' + esc(tests.join(', ')) : '') + '</p>' +
+      '<h2>Settings</h2><label><input type="checkbox" id="rq-calm"' + (state.settings.calm ? ' checked' : '') + '> Calm mode: hide streaks and pop-up toasts</label>';
+    el.innerHTML = html;
+    var c = el.querySelector('#rq-calm'); if (c) c.addEventListener('change', function () { state.settings.calm = c.checked; applySettings(); save(); });
+  }
+  function applySettings() { document.body.classList.toggle('rq-calm', !!state.settings.calm); }
+
   /* ── boot ───────────────────────────────────────────────────────────── */
   function init() {
     if (!document.body.classList.contains('rq-page')) document.body.classList.add('rq-page');
@@ -352,8 +382,10 @@
     document.querySelectorAll('.rq-test').forEach(initTest);
     document.querySelectorAll('.rq-world').forEach(initWorld);
     var m = document.getElementById('rq-map'); if (m) initMap(m);
+    var cp = document.getElementById('rq-campus'); if (cp && window.RQ_SK) initCampus(cp);
+    applySettings();
     initData(); renderHUD(); save();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
-  window.Quest = { hash: hash, normalise: normalise, numKey: numKey, state: function () { return state; }, totalXP: totalXP, rankOf: rankOf, BADGES: BADGES, itemXP: itemXP };
+  window.Quest = { today: today, hash: hash, normalise: normalise, numKey: numKey, state: function () { return state; }, totalXP: totalXP, rankOf: rankOf, BADGES: BADGES, itemXP: itemXP };
 })();
