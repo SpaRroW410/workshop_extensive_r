@@ -1,0 +1,79 @@
+---
+title: "World 6 · The Reporting Guild"
+subtitle: "Results wording, common pitfalls, overfitting, reviewer replies"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-world data-world="w6" data-total="9" data-requires="w5:60"}
+:::
+
+## Briefing
+
+```{r}
+m_lin <- lm(sbp ~ salt_g + age + bmi + sex, data = cc)
+tbl_regression(m_lin, intercept = FALSE) |> bold_labels()
+```
+
+::: {.rq-lesson}
+**A results sentence has five parts:** direction, size **in units**, comparison or **reference**, a **95% CI**, and what was adjusted for. "Significant predictor, p < 0.001" is not a result.
+:::
+
+::: {.rq-lesson}
+**The pitfalls.** Stepwise selection or "p < 0.2" screens as *the* analysis; β without units or reference; an OR read as "times as likely" for a common outcome; a pseudo-R² called variance explained; statistical significance called clinical importance; overfitting (aim for about 10 or more events per variable); ignored clustering; causal words from cross-sectional data.
+:::
+
+::: {.rq-lesson}
+**Answering a reviewer.** Change the analysis or its framing, do not merely defend it: pre-specify covariates, report one model, label exploratory work as exploratory, validate prediction models, and state limitations.
+:::
+
+## Level 1 · Say it properly {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("w6-01", "w6-02", "w6-03"), ITEMS)
+```
+
+## Level 2 · Pitfalls {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("w6-04", "w6-05"), ITEMS)
+```
+
+## Level 3 · Reviewers and wording {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("w6-06", "w6-07", "w6-08"), ITEMS)
+```
+
+## Boss · Reviewer #2 simulator {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render("w6-09", ITEMS)
+```
