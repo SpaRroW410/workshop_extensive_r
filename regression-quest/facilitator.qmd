@@ -1,0 +1,101 @@
+---
+title: "Facilitator pack"
+subtitle: "Run Dungeons & Dataframes with a cohort: formats, session plans, discussion prompts, pilot protocol"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-lesson}
+For faculty and senior residents who run the game with a group. Everything stays in each learner's browser; there is no server and no dashboard yet (that is Phase 6). To see a cohort at a glance, collect each learner's exported progress file and open the **[cohort summary](cohort.qmd)** tool.
+:::
+
+## 1 · Two ways to run it
+
+| Format | Shape | Best for |
+|---|---|---|
+| **A · Guided lab session** | One 2-hour session in a computer room, after the one-day regression workshop | Residents who just attended the workshop |
+| **B · Self-paced weeks** | Worlds 1–6 over about 6 weeks, one world per week, 30 to 45 minutes each, plus a 20-minute check-in | Part-time learners, journal-club style groups |
+
+Learners need a browser only. R is assumed (basic-to-moderate); anyone unsure takes the **[readiness check](readiness.qmd)** first. It advises and never blocks.
+
+## 2 · Before you start (10 minutes)
+
+1. Open the **[Campus](campus.qmd)** and each world page on a learner machine to confirm they load offline or on the department network.
+2. Agree **pseudonymous file names** (for example `dr-01`, `dr-02`). Do not use names or hospital numbers.
+3. Decide whether you want **calm mode** for the group (hides streaks and pop-ups; learners can switch it on from the Campus).
+4. Tell learners that scores are for learning, that **hints cost XP but never marks**, and that "show answer" is always allowed.
+
+## 3 · Format A: a 2-hour session plan
+
+| Time | Activity | Notes |
+|---|---|---|
+| 0:00 | Frame the game (5 min) | XP rewards understanding, not speed. Bosses are the mastery check. |
+| 0:05 | **Pre-test** (20 min, silent) | 20 items, confidence rating on each. No feedback while answering. |
+| 0:25 | World 3 *Confounding Caves* (25 min) | Pairs. Pause after Level 2 for the discussion prompt below. |
+| 0:50 | Break (10 min) | |
+| 1:00 | World 4 *Assumption Ruins* (25 min) | Show `check_model()` on the NCD data next to the plot items. |
+| 1:25 | Boss round (15 min) | Each pair defends one flagged sentence aloud. |
+| 1:40 | Debrief (10 min) | Cohort weakest skills (use the cohort tool); agree what to do next week. |
+| 1:50 | Pointers | Worlds 5 and 6, post-test in 2 to 4 weeks. |
+
+Worlds 1 and 2 are best done as homework before the session.
+
+## 4. World by world: timing, prompt, misconception
+
+| World | Time | Discussion prompt | Misconception to listen for |
+|---|---|---|---|
+| **1 · Outcome Detective** | 30 min | "Which model family would you pick for each outcome in your thesis?" | The predictors choose the model, not the outcome |
+| **2 · Straight Line** | 35 min | "Why is a prediction interval so much wider than a confidence interval?" | A slope is a promise about one person |
+| **3 · Confounding Caves** | 40 min | "A slope falls from 3.0 to 1.8 after adjustment. What does that tell you, and what does it not?" | Adjusting removes all confounding; dropping variables that "shrink" the slope |
+| **4 · Assumption Ruins** | 40 min | "Which residual plot would make you change your analysis, and which would not?" | Normality tests decide everything; deleting influential people |
+| **5 · Odds Arena** | 40 min | "Convert an OR of 2.0 into a prevalence ratio for a 30% outcome. Which would you report?" | An OR is 'times as likely'; pseudo-R² is variance explained |
+| **6 · Reporting Guild** | 40 min | "Rewrite the worst sentence in the boss paragraph the way you would for a reviewer." | Significant means important; causal verbs in cross-sectional data |
+
+Every world ends with a **boss** (a spot-the-flaw item). If a group clears it in one go, ask them to write a *new* flawed sentence for the next group.
+
+## 5. Pilot protocol (Phase 2 exit)
+
+The roadmap's Phase 2 exit is a pilot of **20 or more residents** showing a measurable pre to post gain.
+
+1. **Recruit** 20+ residents; record only a pseudonym, year of training and prior R experience.
+2. **Day 0:** readiness check, then pre-test. Learners export their progress file (Campus or index page, *Export*).
+3. **Weeks 1 to 6:** Worlds 3 to 6 (and 1 to 2 if new). Keep a short log of questions asked and where people got stuck.
+4. **Post-test** 2 to 4 weeks after the last world. Export again.
+5. **Think-aloud:** watch 3 to 5 learners work through one world and note item wording that confuses people and any item that takes more than 3 minutes.
+6. **Analyse** with the cohort tool: mean gain, learners with no gain, weakest skills. Report items most often missed first-try to the item author for review.
+7. **Decide:** if mean gain is positive and no item is systematically misread, Phase 2 passes. If not, revise those items and re-pilot.
+
+### What to record per item (for the author)
+
+* Stem or option the learners misread (quote it)
+* Whether the explanation after a wrong answer was enough
+* Time taken, and whether hints were used
+
+## 6. Cheat sheet and printouts
+
+The two-page **[interpretation cheat sheet](../regression-workshop/cheatsheet.qmd)** from the workshop is the take-home companion to Worlds 2 to 6. Print it for the session.
+
+## 7. Privacy and good practice
+
+* Progress is stored in the learner's own browser and moves only when they export it. The cohort tool reads files **locally** and uploads nothing.
+* Use pseudonymous file names, store exports on a department drive, and delete them after the analysis.
+* This is a learning tool: do not use scores for grading or promotion. Certificates come later (Phase 6, with server-side checking).

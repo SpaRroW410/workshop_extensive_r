@@ -1,0 +1,33 @@
+---
+title: "Cohort summary"
+subtitle: "Combine your learners' exported progress files. Nothing leaves this browser."
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-lesson}
+Ask each learner to press **Export** on the quest map, saving a file such as `dr-01.json`. Select all of the files below. The file name is used as the learner's name, so use pseudonyms.
+:::
+
+<script src="assets/cohort.js"></script>
+
+<div id="rq-cohort"></div>
