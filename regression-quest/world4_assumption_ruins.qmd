@@ -1,0 +1,79 @@
+---
+title: "World 4 · Assumption Ruins"
+subtitle: "Linearity, independence, normality, equal variance, collinearity, influence"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-world data-world="w4" data-total="9" data-requires="w3:60"}
+:::
+
+## Briefing
+
+```{r}
+m <- lm(sbp ~ salt_g + age + bmi + sex, data = cc)
+check_model(m, check = c("linearity", "homogeneity", "qq", "outliers"))
+```
+
+::: {.rq-lesson}
+**Read the plot, name the assumption.** A curve in residuals vs fitted means non-linearity; a funnel means unequal variance; a heavy-tailed Q–Q plot means non-normality; a few extreme Cook's distances mean influential points. Residuals grouped by village mean non-independence.
+:::
+
+::: {.rq-lesson}
+**Match the fix to the violation.** Curve: add a term or spline. Funnel: robust SEs, transformation or weights. Clusters: mixed model, GEE or cluster-robust SEs. Collinearity (VIF around 10): keep one variable, chosen from the question. Influence: check the record, then show results with and without.
+:::
+
+::: {.rq-lesson}
+**Size matters more than tests.** In large samples, normality tests flag trivial departures and slope CIs stay approximately valid; normality matters most for prediction intervals and small samples.
+:::
+
+## Level 1 · Reading the plots {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("w4-01", "w4-02", "w4-03"), ITEMS)
+```
+
+## Level 2 · Collinearity and clusters {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("w4-04", "w4-05"), ITEMS)
+```
+
+## Level 3 · Judgement calls {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("w4-06", "w4-07", "w4-08"), ITEMS)
+```
+
+## Boss · Diagnose the crime scenes {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render("w4-09", ITEMS)
+```
