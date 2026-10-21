@@ -89,7 +89,7 @@ Outcomes are mapped to Bloom levels (remember → evaluate) per world in §3 and
 
 | # | World | Core topics | Key dataset | Boss (capstone item) | Phase | Status |
 |---|---|---|---|---|---|---|
-| – | *Readiness check* (replaces former World 0) | R prerequisites only; routes learners (§2.3) | NCD survey (raw) | n/a (advisory) | 2 | ⬜ |
+| – | *Readiness check* (replaces former World 0) | R prerequisites only; routes learners (§2.3) | NCD survey (raw) | n/a (advisory) | 2 | ✅ (10 items; the 2 R tasks are computed by hand until Phase 4 labs) |
 | 1 | **The Outcome Detective** | What regression is; outcome types; flowchart; correlation vs regression; Table 1; missing data | NCD survey | Table 1 write-up inspector | 1 | ✅ |
 | 2 | **The Straight Line** | Slope in units; prediction; CI vs PI; residuals/OLS; R²/adj R²; centring/scaling | NCD survey | Interpretation inspector | 1 | ✅ |
 | 3 | **Confounding Caves** | β/p/CI; statistical vs clinical significance; confounding; adjustment; dummy coding; model-building (DAG vs stepwise) | NCD survey | Rebuild a confounded analysis | 2 | ✅ (9 items; needs lint + pilot) |
@@ -519,7 +519,7 @@ Effort is in person-weeks (PW) for one developer + one content author/reviewer (
 ## 16. Next four weeks
 
 1. Pilot Worlds 1–2 and the pre/post forms with 5 residents; capture think-aloud notes and item timings.
-2. ~~Write the World 3 (*Confounding Caves*) bank~~ ✔ drafted (9 items + boss); still to do: run the linter and render, then the misconception log. World 4 (*Assumption Ruins*) bank also drafted. World 5 (*Odds Arena*) bank also drafted. World 6 (*The Reporting Guild*) bank also drafted, so Phase 2's four core-world conversions (Worlds 3–6) are drafted. **Next: Phase 2 shell (Campus home, skill tree, readiness check) and the lint/render pass.**
+2. ~~Write the World 3 (*Confounding Caves*) bank~~ ✔ drafted (9 items + boss); still to do: run the linter and render, then the misconception log. World 4 (*Assumption Ruins*) bank also drafted. World 5 (*Odds Arena*) bank also drafted. World 6 (*The Reporting Guild*) bank also drafted, so Phase 2's four core-world conversions (Worlds 3–6) are drafted. Readiness check also built (`readiness.qmd`, items `rd-01`–`rd-10`, routing in `quest.js`). **Next: lint/render pass, then the Phase 2 Campus shell (home, skill tree, daily-review queue, profile) and the complete pre/post forms.**
 3. Prototype `rqlab` (`rq_start`, `rq_check`, `rq_submit`) for one lab and the code-verification box on the site.
 4. Add the Playwright suite and the R↔JS parity test to CI.
 5. Draft the **readiness check** (8 items + 2 R tasks) and the skill-tree node list; prototype the skill tree page on the existing 40 items.

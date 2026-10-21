@@ -255,6 +255,13 @@
   }
 
   /* ── test mode (pre / post) ─────────────────────────────────────────── */
+  function readyAdvice(r) {
+    var weak = Object.keys(r.byTag).filter(function (t) { return r.byTag[t][0] < r.byTag[t][1]; }).sort().join(', ');
+    var tier = r.pct >= 80 ? ['Ready', 'Go straight to the <a href="pretest.html">pre-test</a>.']
+      : r.pct >= 50 ? ['Nearly ready', 'Brush up on: <b>' + esc(weak) + '</b> in <a href="../r-foundations/data-wrangling.html">R Foundations</a>, then take the <a href="pretest.html">pre-test</a>.']
+      : ['Not yet', 'Start with <a href="../r-foundations/getting-started.html">R Foundations</a> and <a href="../r-foundations/data-wrangling.html">Data Wrangling</a>, then retake this check.'];
+    return '<p class="rq-gain"><b>' + tier[0] + '.</b> ' + tier[1] + '</p><p class="rq-small">This check is advice only; nothing is locked. The two task items are paper-and-pencil here; real R labs arrive in a later phase.</p>';
+  }
   function initTest(box) {
     var kind = box.getAttribute('data-test'), items = box.querySelectorAll('.rq-item');
     items.forEach(function (q) {
@@ -270,7 +277,7 @@
       var tags = Object.keys(r.byTag).sort().map(function (t) { var v = r.byTag[t]; return '<tr><td>' + esc(t) + '</td><td>' + v[0] + ' / ' + v[1] + '</td><td><span class="rq-bar"><i style="width:' + Math.round(100 * v[0] / v[1]) + '%"></i></span></td></tr>'; }).join('');
       var cal = r.confN ? '<p>Confidence check: you were “certain” on ' + r.certain + ' answers and ' + r.certainRight + ' were right' + (r.certain && r.certainRight < r.certain ? ' — keep an eye on over-confidence.' : '.') + '</p>' : '';
       res.innerHTML = '<h3>' + r.score + ' / ' + r.total + ' (' + r.pct + '%)</h3>' + gain + cal + '<table class="rq-tagtable"><thead><tr><th>Skill</th><th>Right</th><th></th></tr></thead><tbody>' + tags + '</tbody></table>' +
-        '<p class="rq-small">Skills with a low bar are your next quests. Answers are not shown in test mode.</p>';
+        (kind === 'ready' ? readyAdvice(r) : '<p class="rq-small">Skills with a low bar are your next quests. Answers are not shown in test mode.</p>');
     }
     if (done) showResult(done);
     sub.addEventListener('click', function () {
@@ -280,7 +287,7 @@
         (q.getAttribute('data-tags') || 'other').split(',').filter(Boolean).forEach(function (t) { byTag[t] = byTag[t] || [0, 0]; byTag[t][1]++; if (ok) byTag[t][0]++; }); });
       var r = { score: score, total: items.length, pct: Math.round(100 * score / items.length), byTag: byTag, certain: certain, certainRight: certainRight, confN: confN, ts: today() };
       state.tests[kind] = r; if (state.tests.pre && state.tests.post) {} touchStreak(); save(); showResult(r); checkBadges(); save(); renderHUD();
-      toast('📋 ' + (kind === 'pre' ? 'Baseline' : 'Post-test') + ' saved: ' + r.pct + '%');
+      toast('📋 ' + (kind === 'pre' ? 'Baseline' : kind === 'ready' ? 'Readiness' : 'Post-test') + ' saved: ' + r.pct + '%');
     });
   }
 
