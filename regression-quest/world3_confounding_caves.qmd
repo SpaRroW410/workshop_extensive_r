@@ -1,0 +1,85 @@
+---
+title: "World 3 · Confounding Caves"
+subtitle: "Confounding, adjustment, significance vs importance, dummy variables, model building"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-world data-world="w3" data-total="9" data-requires="w2:60"}
+:::
+
+## Briefing
+
+```{r}
+m_crude <- lm(sbp ~ salt_g, data = cc)
+m_adj   <- lm(sbp ~ salt_g + age + bmi + sex + residence + education +
+                tobacco + alcohol + phys_act, data = cc)
+c(crude = coef(m_crude)[["salt_g"]], adjusted = coef(m_adj)[["salt_g"]])
+```
+
+::: {.rq-lesson}
+**Confounding.** A confounder is linked to the exposure *and* the outcome and is not on the path between them. Compare the **crude** and **adjusted** slope: a change of about 10% or more says the added variable matters. Adjusting removes only **measured** confounding.
+:::
+
+::: {.rq-lesson}
+**Significance is not importance.** A small p-value or a CI that excludes zero speaks to precision. Judge the size of the effect, in its units, against what is clinically meaningful. Do not adjust for **mediators** when you want the total effect.
+:::
+
+::: {.rq-lesson}
+**Dummy variables.** A factor with *k* levels becomes *k − 1* dummies; each coefficient is a difference **from the reference level**, so always name the reference. To compare two non-reference levels, subtract their coefficients.
+:::
+
+::: {.rq-lesson}
+**Building the model.** Choose covariates from a causal diagram drawn *before* looking at results. Automatic stepwise selection is for exploration: its p-values and CIs are optimistic and the selected set is unstable.
+:::
+
+## Level 1 · Confounders and adjustment {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("w3-01", "w3-02", "w3-03"), ITEMS)
+```
+
+## Level 2 · Mediators and dummy variables {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("w3-04", "w3-05", "w3-06"), ITEMS)
+```
+
+## Level 3 · Building a model {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("w3-07", "w3-08"), ITEMS)
+```
+
+## Boss · Rebuild a confounded analysis {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render("w3-09", ITEMS)
+```

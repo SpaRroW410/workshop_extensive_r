@@ -5,7 +5,7 @@ window.RQ_HOME = 'index.html';
 window.RQ_WORLDS = [
   { id: 'w1', icon: '🕵️', title: 'World 1 · The Outcome Detective', blurb: 'What regression is, outcome types, choosing a model, Table 1, missing data.', status: 'playable', total: 8, href: 'world1_outcome_detective.html', requires: 'pre:1' },
   { id: 'w2', icon: '📏', title: 'World 2 · The Straight Line', blurb: 'Slope in units, prediction, CI vs PI, residuals, R², centering.', status: 'playable', total: 8, href: 'world2_straight_line.html', requires: 'w1:60' },
-  { id: 'w3', icon: '🧩', title: 'World 3 · Confounding Caves', blurb: 'Inference, adjustment, dummy variables, model-building strategies.', status: 'soon', phase: 'Phase 2' },
+  { id: 'w3', icon: '🧩', title: 'World 3 · Confounding Caves', blurb: 'Inference, adjustment, dummy variables, model-building strategies.', status: 'playable', total: 9, href: 'world3_confounding_caves.html', requires: 'w2:60' },
   { id: 'w4', icon: '🩻', title: 'World 4 · Assumption Ruins', blurb: 'Linearity, independence, normality, variance, collinearity.', status: 'soon', phase: 'Phase 2' },
   { id: 'w5', icon: '🎲', title: 'World 5 · Odds Arena', blurb: 'Logistic regression, likelihood, ROC, OR vs PR.', status: 'soon', phase: 'Phase 2' },
   { id: 'w6', icon: '✍️', title: 'World 6 · The Reporting Guild', blurb: 'Annotated output, write-ups, pitfalls, reviewer-proofing.', status: 'soon', phase: 'Phase 2' },
