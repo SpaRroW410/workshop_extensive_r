@@ -7,7 +7,7 @@ window.RQ_WORLDS = [
   { id: 'w2', icon: '📏', title: 'World 2 · The Straight Line', blurb: 'Slope in units, prediction, CI vs PI, residuals, R², centering.', status: 'playable', total: 8, href: 'world2_straight_line.html', requires: 'w1:60' },
   { id: 'w3', icon: '🧩', title: 'World 3 · Confounding Caves', blurb: 'Inference, adjustment, dummy variables, model-building strategies.', status: 'playable', total: 9, href: 'world3_confounding_caves.html', requires: 'w2:60' },
   { id: 'w4', icon: '🩻', title: 'World 4 · Assumption Ruins', blurb: 'Linearity, independence, normality, variance, collinearity.', status: 'playable', total: 9, href: 'world4_assumption_ruins.html', requires: 'w3:60' },
-  { id: 'w5', icon: '🎲', title: 'World 5 · Odds Arena', blurb: 'Logistic regression, likelihood, ROC, OR vs PR.', status: 'soon', phase: 'Phase 2' },
+  { id: 'w5', icon: '🎲', title: 'World 5 · Odds Arena', blurb: 'Logistic regression, likelihood, ROC, OR vs PR.', status: 'playable', total: 9, href: 'world5_odds_arena.html', requires: 'w4:60' },
   { id: 'w6', icon: '✍️', title: 'World 6 · The Reporting Guild', blurb: 'Annotated output, write-ups, pitfalls, reviewer-proofing.', status: 'soon', phase: 'Phase 2' },
   { id: 'w7', icon: '🔢', title: 'World 7 · Count Country', blurb: 'Poisson, negative binomial, offsets and rates.', status: 'soon', phase: 'Phase 3' },
   { id: 'w8', icon: '🪜', title: 'World 8 · Ordinal & Nominal Outcomes', blurb: 'Ordinal and multinomial logistic regression.', status: 'soon', phase: 'Phase 3' },

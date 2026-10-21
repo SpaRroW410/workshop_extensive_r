@@ -1,0 +1,84 @@
+---
+title: "World 5 · Odds Arena"
+subtitle: "Odds, odds ratios, model comparison, ROC and calibration, OR vs PR"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-world data-world="w5" data-total="9" data-requires="w4:60"}
+:::
+
+## Briefing
+
+```{r}
+g <- glm(htn ~ salt_g + age + bmi + sex, data = cc, family = binomial)
+tidy(g, exponentiate = TRUE, conf.int = TRUE) |>
+  mutate(across(where(is.numeric), \(x) round(x, 2)))
+```
+
+::: {.rq-lesson}
+**Odds and odds ratios.** Odds = p / (1 − p). A logistic coefficient is a **log-odds** difference; exponentiate it to get an **odds ratio** and its CI. An OR compares odds, not probabilities.
+:::
+
+```{r}
+c(AIC = AIC(g), AUC = as.numeric(pROC::auc(pROC::roc(g$y, fitted(g), quiet = TRUE))))
+```
+
+::: {.rq-lesson}
+**Judging a model.** Lower **AIC** is better (same data, penalty built in). **AUC** measures discrimination: the chance a case is ranked above a non-case. **Calibration** asks whether predicted risks match observed ones. A pseudo-R² is not variance explained.
+:::
+
+::: {.rq-lesson}
+**OR vs PR.** When the outcome is common (roughly above 10%), the OR is further from 1 than the prevalence ratio. Do not read it as "times as likely"; report a PR (log-binomial or Poisson with robust SE) or convert from the baseline risk.
+:::
+
+## Level 1 · Odds and odds ratios {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("w5-01", "w5-02", "w5-03"), ITEMS)
+```
+
+## Level 2 · Comparing and judging models {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("w5-04", "w5-05", "w5-06"), ITEMS)
+```
+
+## Level 3 · OR to PR and workflow {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("w5-07", "w5-08"), ITEMS)
+```
+
+## Boss · Convert an OR story into a PR story {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render("w5-09", ITEMS)
+```

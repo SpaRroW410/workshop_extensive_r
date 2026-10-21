@@ -36,7 +36,7 @@ The skill tree and engine are **track-agnostic**: a track is a set of worlds, sk
 
 | Track | Focus | Status |
 |---|---|---|
-| **1 · Regression** | Linear, logistic, counts, survival, clusters, surveys, missing data, prediction, causal (Worlds 1–16, §3) | ✅ started (Worlds 1–4 playable) |
+| **1 · Regression** | Linear, logistic, counts, survival, clusters, surveys, missing data, prediction, causal (Worlds 1–16, §3) | ✅ started (Worlds 1–5 playable) |
 | **2 · Comparing groups** | t-tests, non-parametric tests, chi-square/Fisher, ANOVA, choosing a test, multiple testing, effect sizes | ⬜ planned |
 | **3 · Epidemiological measures** | Risk/odds/rate ratios, attributable fractions, standardisation, confounding by stratification (Mantel–Haenszel), screening metrics | ⬜ planned |
 | **4 · Study design & sample size** | Sampling, power and precision, randomisation, bias catalogue, cluster designs, reporting standards | ⬜ planned |
@@ -94,7 +94,7 @@ Outcomes are mapped to Bloom levels (remember → evaluate) per world in §3 and
 | 2 | **The Straight Line** | Slope in units; prediction; CI vs PI; residuals/OLS; R²/adj R²; centring/scaling | NCD survey | Interpretation inspector | 1 | ✅ |
 | 3 | **Confounding Caves** | β/p/CI; statistical vs clinical significance; confounding; adjustment; dummy coding; model-building (DAG vs stepwise) | NCD survey | Rebuild a confounded analysis | 2 | ✅ (9 items; needs lint + pilot) |
 | 4 | **Assumption Ruins** | Linearity, independence, normality, equal variance, collinearity, influence; remedies | NCD survey | Diagnose five residual-plot "crime scenes" | 2 | ✅ (9 items, text-based; click-the-plot version in Phase 3) |
-| 5 | **Odds Arena** | Odds/log-odds; why exponentiate; likelihood, LRT, AIC; pseudo-R²; calibration/ROC; OR vs PR | NCD survey | Convert an OR story into a PR story | 2 | 🟡 |
+| 5 | **Odds Arena** | Odds/log-odds; why exponentiate; likelihood, LRT, AIC; pseudo-R²; calibration/ROC; OR vs PR | NCD survey | Convert an OR story into a PR story | 2 | ✅ (9 items; needs lint + pilot) |
 | 6 | **The Reporting Guild** | Annotated output; results/methods wording; nine pitfalls; reviewer replies | NCD survey | Reviewer #2 simulator | 2 | 🟡 |
 | 7 | **Count Country** | Poisson; overdispersion; negative binomial; offsets and rates; zero inflation (mention) | Dengue counts per ward-month | Rate ratio for a ward-level intervention | 3 | ⬜ |
 | 8 | **Ordinal & Nominal Outcomes** | Ordinal logistic; proportional-odds check; multinomial logistic; baseline category logic | BP stage; place-of-delivery survey | Choose and interpret ordinal vs multinomial | 3 | ⬜ |
@@ -447,7 +447,7 @@ Effort is in person-weeks (PW) for one developer + one content author/reviewer (
 
 | Quarter | Milestones |
 |---|---|
-| Q0 | Workshop + quest engine + Worlds 1–4 + pre/post (**now**) |
+| Q0 | Workshop + quest engine + Worlds 1–5 + pre/post (**now**) |
 | Q1 | Campus shell + skill tree + review queue; Worlds 3–4; readiness check; pilot 1 |
 | Q2 | Worlds 5–6; arcade + case-file engine; Worlds 7–8 |
 | Q3 | Worlds 9–11; analytics; accessibility audit |
@@ -519,7 +519,7 @@ Effort is in person-weeks (PW) for one developer + one content author/reviewer (
 ## 16. Next four weeks
 
 1. Pilot Worlds 1–2 and the pre/post forms with 5 residents; capture think-aloud notes and item timings.
-2. ~~Write the World 3 (*Confounding Caves*) bank~~ ✔ drafted (9 items + boss); still to do: run the linter and render, then the misconception log. World 4 (*Assumption Ruins*) bank also drafted. **Next: World 5 (*Odds Arena*) bank.**
+2. ~~Write the World 3 (*Confounding Caves*) bank~~ ✔ drafted (9 items + boss); still to do: run the linter and render, then the misconception log. World 4 (*Assumption Ruins*) bank also drafted. World 5 (*Odds Arena*) bank also drafted. **Next: World 6 (*The Reporting Guild*) bank.**
 3. Prototype `rqlab` (`rq_start`, `rq_check`, `rq_submit`) for one lab and the code-verification box on the site.
 4. Add the Playwright suite and the R↔JS parity test to CI.
 5. Draft the **readiness check** (8 items + 2 R tasks) and the skill-tree node list; prototype the skill tree page on the existing 40 items.
