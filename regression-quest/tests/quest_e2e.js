@@ -80,11 +80,11 @@ const hudXP = p => p.evaluate(() => +document.querySelector('.rq-hud .rq-xp').te
   p = await open(ctx, 'pretest.html');
   const nIt = await p.locator('.rq-item').count(); ok(nIt === 20, 'pre-test has 20 items');
   ok(await p.locator('.rq-item .rq-actions').count() === 0 && await p.locator('.rq-item .rq-hintbox').count() === 0, 'test mode: no hints / show-answer buttons');
-  await p.evaluate(() => { document.querySelectorAll('.rq-item').forEach((q, i) => { window.__solve(q, i < 6); const r = q.querySelector('input[type=radio][value="' + (i % 2 ? 3 : 1) + '"]'); if (r) r.checked = true; }); });
+  await p.evaluate(() => { document.querySelectorAll('.rq-item').forEach((q, i) => { window.__solve(q, i < 10); const r = q.querySelector('input[type=radio][value="' + (i % 2 ? 3 : 1) + '"]'); if (r) r.checked = true; }); });
   ok((await p.locator('.rq-feedback').allInnerTexts()).every(t => t.trim() === ''), 'test mode: no feedback shown while answering');
   await p.evaluate(() => [...document.querySelectorAll('.rq-big')].find(b => /Submit/.test(b.textContent)).click());
   let st = await state(p);
-  ok(st.tests.pre && st.tests.pre.score === 6 && st.tests.pre.pct === 50, 'pre-test scored 6/12 = 50% and saved ' + JSON.stringify(st.tests.pre && [st.tests.pre.score, st.tests.pre.pct]));
+  ok(st.tests.pre && st.tests.pre.score === 10 && st.tests.pre.pct === 50, 'pre-test scored 10/20 = 50% and saved ' + JSON.stringify(st.tests.pre && [st.tests.pre.score, st.tests.pre.pct]));
   ok(Object.keys(st.tests.pre.byTag).length >= 8, 'per-skill breakdown recorded');
   ok(!!st.badges.pre, 'Baseline Set badge awarded');
   ok(/50%/.test(await p.locator('.rq-results').innerText()), 'result panel shown');
