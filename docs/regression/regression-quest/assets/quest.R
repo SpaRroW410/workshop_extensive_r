@@ -52,3 +52,10 @@ rq_item_md <- function(it) {
 `%||%` <- function(a, b) if (is.null(a)) b else a
 rq_render <- function(ids, bank, test = NULL) { if (!is.null(test)) cat(sprintf('\n::: {.rq-test data-test="%s"}\n', test)); for (i in ids) { it <- Filter(function(x) x$id == i, bank); if (length(it) != 1) stop("item not found/unique: ", i); cat(rq_item_md(it[[1]])) }; if (!is.null(test)) cat("\n:::\n"); invisible(NULL) }
 rq_total <- function(world, bank) sum(vapply(bank, function(x) identical(x$world, world), TRUE))
+
+# Emit window.RQ_TAGMAP (tag -> world -> n items, world items only) for the Campus and the test result panels.
+rq_tagmap <- function(bank) {
+  rows <- do.call(rbind, lapply(Filter(function(x) grepl("^w[0-9]+$", x$world), bank), function(x) data.frame(tag = x$tags, world = x$world)))
+  tm <- lapply(split(rows, rows$tag), function(d) as.list(table(d$world)))
+  cat("\n```{=html}\n<script>window.RQ_TAGMAP=", jsonlite::toJSON(tm, auto_unbox = TRUE), ";</script>\n```\n", sep = "")
+}

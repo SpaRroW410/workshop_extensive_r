@@ -33,8 +33,12 @@ pages:
   exporting_tools/exporting_plots.qmd: {title: "Exporting Plots"}
   exporting_tools/plotting_tools.qmd: {title: "Plotting Tools"}
   regression-quest/index.qmd: {title: "🗺️ Quest map (start here)"}
+  regression-quest/campus.qmd: {title: "Campus (skill tree)"}
+  regression-quest/readiness.qmd: {title: "Readiness check"}
   regression-quest/pretest.qmd: {title: "Pre-test (baseline)"}
   regression-quest/posttest.qmd: {title: "Post-test (growth)"}
+  regression-quest/facilitator.qmd: {title: "Facilitator pack"}
+  regression-quest/cohort.qmd: {title: "Cohort summary"}
   regression-quest/roadmap.qmd: {title: "Roadmap"}
   regression-quest/site-design.qmd: {title: "Site design"}
   regression-workshop/s1_foundations.qmd: {title: "Session 1 — Foundations"}
@@ -163,8 +167,12 @@ profiles:
       - text: "Dungeons & Dataframes"
         items:
           - regression-quest/index.qmd
+          - regression-quest/campus.qmd
+          - regression-quest/readiness.qmd
           - regression-quest/pretest.qmd
           - regression-quest/posttest.qmd
+          - regression-quest/facilitator.qmd
+          - regression-quest/cohort.qmd
           - regression-quest/roadmap.qmd
           - regression-quest/site-design.qmd
       - text: "Regression Workshop"

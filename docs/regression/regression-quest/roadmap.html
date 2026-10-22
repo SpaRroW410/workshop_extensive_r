@@ -125,12 +125,28 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">🗺️ Quest map (start here)</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="../regression-quest/campus.html">
+ <span class="dropdown-text">Campus (skill tree)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/readiness.html">
+ <span class="dropdown-text">Readiness check</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="../regression-quest/pretest.html">
  <span class="dropdown-text">Pre-test (baseline)</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../regression-quest/posttest.html">
  <span class="dropdown-text">Post-test (growth)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/facilitator.html">
+ <span class="dropdown-text">Facilitator pack</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/cohort.html">
+ <span class="dropdown-text">Cohort summary</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../regression-quest/roadmap.html">
@@ -347,7 +363,7 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td><strong>1 · Regression</strong></td>
 <td>Linear, logistic, counts, survival, clusters, surveys, missing data, prediction, causal (Worlds 1–16, §3)</td>
-<td>✅ started (Worlds 1–2 playable)</td>
+<td>✅ started (Worlds 1–6 playable)</td>
 </tr>
 <tr class="even">
 <td><strong>2 · Comparing groups</strong></td>
@@ -485,7 +501,7 @@ ul.task-list li input[type="checkbox"] {
 <td>NCD survey (raw)</td>
 <td>n/a (advisory)</td>
 <td>2</td>
-<td>⬜</td>
+<td>✅ (10 items; the 2 R tasks are computed by hand until Phase 4 labs)</td>
 </tr>
 <tr class="even">
 <td>1</td>
@@ -512,7 +528,7 @@ ul.task-list li input[type="checkbox"] {
 <td>NCD survey</td>
 <td>Rebuild a confounded analysis</td>
 <td>2</td>
-<td>🟡</td>
+<td>✅ (9 items; needs lint + pilot)</td>
 </tr>
 <tr class="odd">
 <td>4</td>
@@ -521,7 +537,7 @@ ul.task-list li input[type="checkbox"] {
 <td>NCD survey</td>
 <td>Diagnose five residual-plot “crime scenes”</td>
 <td>2</td>
-<td>🟡</td>
+<td>✅ (9 items, text-based; click-the-plot version in Phase 3)</td>
 </tr>
 <tr class="even">
 <td>5</td>
@@ -530,7 +546,7 @@ ul.task-list li input[type="checkbox"] {
 <td>NCD survey</td>
 <td>Convert an OR story into a PR story</td>
 <td>2</td>
-<td>🟡</td>
+<td>✅ (9 items; needs lint + pilot)</td>
 </tr>
 <tr class="odd">
 <td>6</td>
@@ -539,7 +555,7 @@ ul.task-list li input[type="checkbox"] {
 <td>NCD survey</td>
 <td>Reviewer #2 simulator</td>
 <td>2</td>
-<td>🟡</td>
+<td>✅ (9 items; needs lint + pilot)</td>
 </tr>
 <tr class="even">
 <td>7</td>
@@ -979,7 +995,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="pre-post-testing" class="level3">
 <h3 class="anchored" data-anchor-id="pre-post-testing">6.4 Pre-/post-testing</h3>
 <ul>
-<li>Two <strong>parallel forms</strong> (A/B), 12 items each, mapped to the same skill tags; difficulty-balanced.</li>
+<li>Two <strong>parallel forms</strong> (A/B), 20 items each (12 for Worlds 1–2 and core ideas, 8 added for Worlds 3–6), mapped to the same skill tags; difficulty-balanced.</li>
 <li>Confidence rating per answer (Guess/Probably/Certain) → calibration feedback (“you were certain and wrong on 3 items”).</li>
 <li>Output: skill-by-skill profile → recommended next worlds → <strong>post-test gain</strong> (percentage points and normalised gain).</li>
 <li>Planned extension: Form C for a delayed (3-month) retention test.</li>
@@ -1330,7 +1346,7 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd">
 <td>Q0</td>
-<td>Workshop + quest engine + Worlds 1–2 + pre/post (<strong>now</strong>)</td>
+<td>Workshop + quest engine + Worlds 1–6 + pre/post (<strong>now</strong>)</td>
 </tr>
 <tr class="even">
 <td>Q1</td>
@@ -1517,7 +1533,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="next-four-weeks">16. Next four weeks</h2>
 <ol type="1">
 <li>Pilot Worlds 1–2 and the pre/post forms with 5 residents; capture think-aloud notes and item timings.</li>
-<li>Write the World 3 (<em>Confounding Caves</em>) bank: ≥ 8 items, boss, misconception log.</li>
+<li><del>Write the World 3 (<em>Confounding Caves</em>) bank</del> ✔ drafted (9 items + boss); still to do: run the linter and render, then the misconception log. World 4 (<em>Assumption Ruins</em>) bank also drafted. World 5 (<em>Odds Arena</em>) bank also drafted. World 6 (<em>The Reporting Guild</em>) bank also drafted, so Phase 2’s four core-world conversions (Worlds 3–6) are drafted. Readiness check also built (<code>readiness.qmd</code>, items <code>rd-01</code>–<code>rd-10</code>, routing in <code>quest.js</code>). Campus shell built (<code>campus.qmd</code>, <code>assets/skills.js</code>: 62-skill tree, mastery, fading/review list, “what next?” recommender, profile, calm mode; unit tests in <code>tests/skills_test.js</code>). <strong>Deferred from Phase 2 shell:</strong> state v2 event log + storage adapter (mastery is derived from v1 item records, additive fields only), an answerable daily-review quiz (needs item replay, Phase 3 with spaced retrieval), level 4 “mastered”. Pre/post forms now 20 parallel items each covering Worlds 1–6 (<code>pre-13</code>–<code>20</code>, <code>post-13</code>–<code>20</code>). Per-skill “Practise next” added to pre/post results. Facilitator pack (<code>facilitator.qmd</code>: formats, 2-hour plan, per-world prompts, pilot protocol) and browser-only cohort summary tool (<code>cohort.qmd</code>, <code>assets/cohort.js</code>, unit-tested) built; the workshop cheat sheet is linked from the quest. <strong>Remaining for the Phase 2 exit: lint/render pass, then the 20+ resident pilot (real-world).</strong></li>
 <li>Prototype <code>rqlab</code> (<code>rq_start</code>, <code>rq_check</code>, <code>rq_submit</code>) for one lab and the code-verification box on the site.</li>
 <li>Add the Playwright suite and the R↔︎JS parity test to CI.</li>
 <li>Draft the <strong>readiness check</strong> (8 items + 2 R tasks) and the skill-tree node list; prototype the skill tree page on the existing 40 items.</li>

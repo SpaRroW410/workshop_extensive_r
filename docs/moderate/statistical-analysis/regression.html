@@ -364,18 +364,18 @@ lm(formula = blood_pressure ~ age, data = data)
 
 Residuals:
     Min      1Q  Median      3Q     Max 
--42.701  -9.198   0.157  11.513  30.495 
+-41.562  -9.294   1.229   9.768  37.078 
 
 Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) 108.8894     7.6136  14.302   &lt;2e-16 ***
-age           0.2434     0.1498   1.625    0.107    
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 118.73815    7.39632  16.054   &lt;2e-16 ***
+age           0.02347    0.14249   0.165    0.869    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 14.42 on 98 degrees of freedom
-Multiple R-squared:  0.02624,   Adjusted R-squared:  0.0163 
-F-statistic: 2.641 on 1 and 98 DF,  p-value: 0.1074</code></pre>
+Residual standard error: 15.19 on 98 degrees of freedom
+Multiple R-squared:  0.0002769, Adjusted R-squared:  -0.009924 
+F-statistic: 0.02714 on 1 and 98 DF,  p-value: 0.8695</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -414,40 +414,40 @@ lm(formula = blood_pressure ~ age + treatment, data = data)
 
 Residuals:
     Min      1Q  Median      3Q     Max 
--42.772  -9.220   0.084  11.589  30.624 
+-41.450  -9.232   1.240   9.875  36.964 
 
 Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) 108.7459     7.9424  13.692   &lt;2e-16 ***
-age           0.2436     0.1506   1.618    0.109    
-treatmentB    0.2038     3.0196   0.068    0.946    
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 118.86733    7.64781  15.543   &lt;2e-16 ***
+age           0.02301    0.14337   0.161    0.873    
+treatmentB   -0.22012    3.05880  -0.072    0.943    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 14.49 on 97 degrees of freedom
-Multiple R-squared:  0.02628,   Adjusted R-squared:  0.006206 
-F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
+Residual standard error: 15.27 on 97 degrees of freedom
+Multiple R-squared:  0.0003302, Adjusted R-squared:  -0.02028 
+F-statistic: 0.01602 on 2 and 97 DF,  p-value: 0.9841</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using gtsummary for a publication-ready table</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="jcymeridal" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#jcymeridal table {
+<div id="kjkbaygdku" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#kjkbaygdku table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#jcymeridal thead, #jcymeridal tbody, #jcymeridal tfoot, #jcymeridal tr, #jcymeridal td, #jcymeridal th {
+#kjkbaygdku thead, #kjkbaygdku tbody, #kjkbaygdku tfoot, #kjkbaygdku tr, #kjkbaygdku td, #kjkbaygdku th {
   border-style: none;
 }
 
-#jcymeridal p {
+#kjkbaygdku p {
   margin: 0;
   padding: 0;
 }
 
-#jcymeridal .gt_table {
+#kjkbaygdku .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -473,12 +473,12 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#jcymeridal .gt_caption {
+#kjkbaygdku .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#jcymeridal .gt_title {
+#kjkbaygdku .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -490,7 +490,7 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   border-bottom-width: 0;
 }
 
-#jcymeridal .gt_subtitle {
+#kjkbaygdku .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -502,7 +502,7 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   border-top-width: 0;
 }
 
-#jcymeridal .gt_heading {
+#kjkbaygdku .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -514,13 +514,13 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#jcymeridal .gt_bottom_border {
+#kjkbaygdku .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#jcymeridal .gt_col_headings {
+#kjkbaygdku .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -535,7 +535,7 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#jcymeridal .gt_col_heading {
+#kjkbaygdku .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -555,7 +555,7 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   overflow-x: hidden;
 }
 
-#jcymeridal .gt_column_spanner_outer {
+#kjkbaygdku .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -567,15 +567,15 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   padding-right: 4px;
 }
 
-#jcymeridal .gt_column_spanner_outer:first-child {
+#kjkbaygdku .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#jcymeridal .gt_column_spanner_outer:last-child {
+#kjkbaygdku .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#jcymeridal .gt_column_spanner {
+#kjkbaygdku .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -587,11 +587,11 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   width: 100%;
 }
 
-#jcymeridal .gt_spanner_row {
+#kjkbaygdku .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#jcymeridal .gt_group_heading {
+#kjkbaygdku .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -617,7 +617,7 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   text-align: left;
 }
 
-#jcymeridal .gt_empty_group_heading {
+#kjkbaygdku .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -632,15 +632,15 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   vertical-align: middle;
 }
 
-#jcymeridal .gt_from_md > :first-child {
+#kjkbaygdku .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#jcymeridal .gt_from_md > :last-child {
+#kjkbaygdku .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#jcymeridal .gt_row {
+#kjkbaygdku .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -659,7 +659,7 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   overflow-x: hidden;
 }
 
-#jcymeridal .gt_stub {
+#kjkbaygdku .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -672,7 +672,7 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   padding-right: 5px;
 }
 
-#jcymeridal .gt_stub_row_group {
+#kjkbaygdku .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -686,15 +686,15 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   vertical-align: top;
 }
 
-#jcymeridal .gt_row_group_first td {
+#kjkbaygdku .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#jcymeridal .gt_row_group_first th {
+#kjkbaygdku .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#jcymeridal .gt_summary_row {
+#kjkbaygdku .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -704,16 +704,16 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   padding-right: 5px;
 }
 
-#jcymeridal .gt_first_summary_row {
+#kjkbaygdku .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#jcymeridal .gt_first_summary_row.thick {
+#kjkbaygdku .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#jcymeridal .gt_last_summary_row {
+#kjkbaygdku .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -723,7 +723,7 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#jcymeridal .gt_grand_summary_row {
+#kjkbaygdku .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -733,7 +733,7 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   padding-right: 5px;
 }
 
-#jcymeridal .gt_first_grand_summary_row {
+#kjkbaygdku .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -743,7 +743,7 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#jcymeridal .gt_last_grand_summary_row_top {
+#kjkbaygdku .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -753,11 +753,11 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#jcymeridal .gt_striped {
+#kjkbaygdku .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#jcymeridal .gt_table_body {
+#kjkbaygdku .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -766,7 +766,7 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#jcymeridal .gt_footnotes {
+#kjkbaygdku .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -780,7 +780,7 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#jcymeridal .gt_footnote {
+#kjkbaygdku .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -789,7 +789,7 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   padding-right: 5px;
 }
 
-#jcymeridal .gt_sourcenotes {
+#kjkbaygdku .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -803,7 +803,7 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#jcymeridal .gt_sourcenote {
+#kjkbaygdku .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -811,72 +811,72 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
   padding-right: 5px;
 }
 
-#jcymeridal .gt_left {
+#kjkbaygdku .gt_left {
   text-align: left;
 }
 
-#jcymeridal .gt_center {
+#kjkbaygdku .gt_center {
   text-align: center;
 }
 
-#jcymeridal .gt_right {
+#kjkbaygdku .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#jcymeridal .gt_font_normal {
+#kjkbaygdku .gt_font_normal {
   font-weight: normal;
 }
 
-#jcymeridal .gt_font_bold {
+#kjkbaygdku .gt_font_bold {
   font-weight: bold;
 }
 
-#jcymeridal .gt_font_italic {
+#kjkbaygdku .gt_font_italic {
   font-style: italic;
 }
 
-#jcymeridal .gt_super {
+#kjkbaygdku .gt_super {
   font-size: 65%;
 }
 
-#jcymeridal .gt_footnote_marks {
+#kjkbaygdku .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#jcymeridal .gt_asterisk {
+#kjkbaygdku .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#jcymeridal .gt_indent_1 {
+#kjkbaygdku .gt_indent_1 {
   text-indent: 5px;
 }
 
-#jcymeridal .gt_indent_2 {
+#kjkbaygdku .gt_indent_2 {
   text-indent: 10px;
 }
 
-#jcymeridal .gt_indent_3 {
+#kjkbaygdku .gt_indent_3 {
   text-indent: 15px;
 }
 
-#jcymeridal .gt_indent_4 {
+#kjkbaygdku .gt_indent_4 {
   text-indent: 20px;
 }
 
-#jcymeridal .gt_indent_5 {
+#kjkbaygdku .gt_indent_5 {
   text-indent: 25px;
 }
 
-#jcymeridal .katex-display {
+#kjkbaygdku .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#jcymeridal div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#kjkbaygdku div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -899,9 +899,9 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">age</td>
-<td class="gt_row gt_center" headers="estimate">0.24</td>
-<td class="gt_row gt_center" headers="conf.low">-0.06, 0.54</td>
-<td class="gt_row gt_center" headers="p.value">0.11</td>
+<td class="gt_row gt_center" headers="estimate">0.02</td>
+<td class="gt_row gt_center" headers="conf.low">-0.26, 0.31</td>
+<td class="gt_row gt_center" headers="p.value">0.9</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">treatment</td>
@@ -921,8 +921,8 @@ F-statistic: 1.309 on 2 and 97 DF,  p-value: 0.2748</code></pre>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;B</td>
-<td class="gt_row gt_center" headers="estimate">0.20</td>
-<td class="gt_row gt_center" headers="conf.low">-5.8, 6.2</td>
+<td class="gt_row gt_center" headers="estimate">-0.22</td>
+<td class="gt_row gt_center" headers="conf.low">-6.3, 5.9</td>
 <td class="gt_row gt_center" headers="p.value">&gt;0.9</td>
 </tr>
 </tbody><tfoot>

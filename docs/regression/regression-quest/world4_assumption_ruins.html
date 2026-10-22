@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>World 4 · Assumption Ruins – Data Visualization Workshop — Regression</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-574f58f4068bb8f43535e6e9c10c5508.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="assets/fitty-init.js"></script>
+
+
+<link rel="stylesheet" href="../assets/theme_webp.css">
+<link rel="stylesheet" href="assets/quest.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="welcome.html">
+    <span class="navbar-title">Data Visualization Workshop — Regression</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-r-foundations" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">R Foundations</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-r-foundations">    
+        <li>
+    <a class="dropdown-item" href="../r-foundations/getting-started.html">
+ <span class="dropdown-text">Getting Started</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../r-foundations/data-wrangling.html">
+ <span class="dropdown-text">Data Wrangling (Tidyverse)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../statistical-analysis/regression.html"> 
+<span class="menu-text">Regression Analysis</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-dungeons--dataframes" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Dungeons &amp; Dataframes</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-dungeons--dataframes">    
+        <li>
+    <a class="dropdown-item" href="../regression-quest/index.html">
+ <span class="dropdown-text">🗺️ Quest map (start here)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/campus.html">
+ <span class="dropdown-text">Campus (skill tree)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/readiness.html">
+ <span class="dropdown-text">Readiness check</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/pretest.html">
+ <span class="dropdown-text">Pre-test (baseline)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/posttest.html">
+ <span class="dropdown-text">Post-test (growth)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/facilitator.html">
+ <span class="dropdown-text">Facilitator pack</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/cohort.html">
+ <span class="dropdown-text">Cohort summary</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/roadmap.html">
+ <span class="dropdown-text">Roadmap</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-quest/site-design.html">
+ <span class="dropdown-text">Site design</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-regression-workshop" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Regression Workshop</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-regression-workshop">    
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s1_foundations.html">
+ <span class="dropdown-text">Session 1 — Foundations</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s2_simple_regression.html">
+ <span class="dropdown-text">Session 2 — Simple Linear Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s3_multiple_regression.html">
+ <span class="dropdown-text">Session 3 — Inference &amp; Multiple Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s4_assumptions.html">
+ <span class="dropdown-text">Session 4 — Assumptions</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s5_logistic_regression.html">
+ <span class="dropdown-text">Session 5 — Logistic Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s6_reporting.html">
+ <span class="dropdown-text">Session 6 — Interpreting &amp; Reporting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/cheatsheet.html">
+ <span class="dropdown-text">Interpretation Cheat Sheet</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-reference" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-book" role="img">
+</i> 
+ <span class="menu-text">Reference</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-reference">    
+        <li>
+    <a class="dropdown-item" href="../contact.html">
+ <span class="dropdown-text">Contact Us</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../references.html">
+ <span class="dropdown-text">References</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../downloads.html">
+ <span class="dropdown-text">Downloads</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">World 4 · Assumption Ruins</h1>
+<p class="subtitle lead">Linearity, independence, normality, equal variance, collinearity, influence</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="rq-world" data-world="w4" data-total="9" data-requires="w3:60">
+
+</div>
+<section id="briefing" class="level2">
+<h2 class="anchored" data-anchor-id="briefing">Briefing</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(sbp <span class="sc">~</span> salt_g <span class="sc">+</span> age <span class="sc">+</span> bmi <span class="sc">+</span> sex, <span class="at">data =</span> cc)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(m, <span class="at">check =</span> <span class="fu">c</span>(<span class="st">"linearity"</span>, <span class="st">"homogeneity"</span>, <span class="st">"qq"</span>, <span class="st">"outliers"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="world4_assumption_ruins_files/figure-html/unnamed-chunk-2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="world4_assumption_ruins_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="800"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="rq-lesson">
+<p><strong>Read the plot, name the assumption.</strong> A curve in residuals vs fitted means non-linearity; a funnel means unequal variance; a heavy-tailed Q–Q plot means non-normality; a few extreme Cook’s distances mean influential points. Residuals grouped by village mean non-independence.</p>
+</div>
+<div class="rq-lesson">
+<p><strong>Match the fix to the violation.</strong> Curve: add a term or spline. Funnel: robust SEs, transformation or weights. Clusters: mixed model, GEE or cluster-robust SEs. Collinearity (VIF around 10): keep one variable, chosen from the question. Influence: check the record, then show results with and without.</p>
+</div>
+<div class="rq-lesson">
+<p><strong>Size matters more than tests.</strong> In large samples, normality tests flag trivial departures and slope CIs stay approximately valid; normality matters most for prediction intervals and small samples.</p>
+</div>
+</section>
+<section id="level-1-reading-the-plots" class="level2 rq-level">
+<h2 class="rq-level anchored" data-anchor-id="level-1-reading-the-plots">Level 1 · Reading the plots</h2>
+<div class="rq-item" data-id="w4-01" data-world="w4" data-type="mcq" data-diff="1" data-tags="linearity,diagnostics" data-hash="fa8rz2.ge3znj" data-show="VGhlIHN0cmFpZ2h0LWxpbmUgZm9ybSBpcyB3cm9uZyBmb3IgYWdl" data-explain="QSBzeXN0ZW1hdGljIGN1cnZlIGluIHJlc2lkdWFscyB2ZXJzdXMgZml0dGVkIG1lYW5zIHRoZSBtZWFuIG9mIHRoZSBvdXRjb21lIGlzIG5vdCBhIHN0cmFpZ2h0IGxpbmUgaW4gdGhlIHByZWRpY3Rvci4gQWRkIGEgc3F1YXJlZCB0ZXJtIG9yIGEgc3BsaW5lLg==" data-hints="WyJXaGljaCBhc3N1bXB0aW9uIGlzIGFib3V0IHRoZSBzaGFwZSBvZiB0aGUgcmVsYXRpb25zaGlwPyJd">
+<p>A residuals-vs-fitted plot for sbp ~ age shows a clear U-shaped smoother instead of a flat line near zero. What does this indicate?</p>
+<ul>
+<li>The straight-line form is wrong for age</li>
+<li>The outcome has too many missing values</li>
+<li>The residuals are not normally distributed</li>
+<li>The observations are not independent</li>
+</ul>
+</div>
+<div class="rq-item" data-id="w4-02" data-world="w4" data-type="mcq" data-diff="2" data-tags="equal-variance,diagnostics" data-hash="fa957u.ge4e4z" data-show="VW5lcXVhbCB2YXJpYW5jZTsgdXNlIHJvYnVzdCBzdGFuZGFyZCBlcnJvcnM=" data-explain="QSBmdW5uZWwgc2hhcGUgbWVhbnMgdGhlIHNwcmVhZCBjaGFuZ2VzIHdpdGggdGhlIGZpdHRlZCB2YWx1ZS4gQ29lZmZpY2llbnRzIHN0YXkgcm91Z2hseSBmaW5lLCBidXQgdGhlIHVzdWFsIFNFcyBhcmUgb2ZmLCBzbyB1c2Ugcm9idXN0IFNFcywgYSB0cmFuc2Zvcm1hdGlvbiBvciB3ZWlnaHRzLg==" data-hints="WyJOYW1lIHRoZSBzaGFwZSBmaXJzdCwgdGhlbiBtYXRjaCB0aGUgcmVtZWR5IHRvIGl0LiJd">
+<p>Residuals are tight around zero for young adults and fan out widely for older adults. Which pair is the correct diagnosis and a reasonable response?</p>
+<ul>
+<li>Non-linearity; use robust standard errors</li>
+<li>Unequal variance; drop the oldest adults</li>
+<li>Non-normality; add a squared age term</li>
+<li>Unequal variance; use robust standard errors</li>
+</ul>
+</div>
+<div class="rq-item" data-id="w4-03" data-world="w4" data-type="num" data-diff="2" data-tags="collinearity,vif" data-dp="0" data-hashes="fa9igl.ge4sme" data-show="NQ==" data-explain="VklGID0gMSAvICgxIOKIkiBSwrIpID0gMSAvIDAuMjAgPSA1Lg==" data-hints="WyJVc2UgdGhlIHNoYXJlIG9mIHdhaXN0IE5PVCBleHBsYWluZWQgYnkgdGhlIG90aGVyIHByZWRpY3RvcnMuIl0=">
+<p>Regressing waist on all the other predictors gives R² = 0.80. What is the VIF for waist? (whole number)</p>
+</div>
+</section>
+<section id="level-2-collinearity-and-clusters" class="level2 rq-level">
+<h2 class="rq-level anchored" data-anchor-id="level-2-collinearity-and-clusters">Level 2 · Collinearity and clusters</h2>
+<div class="rq-item" data-id="w4-04" data-world="w4" data-type="mcq" data-diff="2" data-tags="collinearity,interpretation" data-hash="fa9vp8.ge573p" data-show="S2VlcCBvbmUsIGNob3NlbiBmcm9tIHRoZSByZXNlYXJjaCBxdWVzdGlvbg==" data-explain="VGhlIHR3byB2YXJpYWJsZXMgY2FycnkgYWxtb3N0IHRoZSBzYW1lIGluZm9ybWF0aW9uLCBzbyB0aGVpciBzZXBhcmF0ZSBjb2VmZmljaWVudHMgYXJlIHVuc3RhYmxlIHdpdGggd2lkZSBDSXMuIENob29zZSBvbmUgb24gc3ViamVjdC1tYXR0ZXIgZ3JvdW5kcywgbm90IG9uIHAtdmFsdWVzLg==" data-hints="WyJDaG9vc2luZyBieSBwLXZhbHVlIGlzIGl0c2VsZiBhIGRhdGEtZHJpdmVuIHN0ZXAuIl0=">
+<p>BMI and waist (r = 0.95) are both in a model and each has a VIF near 10. Which is the best response?</p>
+<ul>
+<li>Keep both because the overall fit is good</li>
+<li>Standardise both variables and keep both</li>
+<li>Keep whichever has the smaller p-value</li>
+<li>Keep one, chosen from the research question</li>
+</ul>
+</div>
+<div class="rq-item" data-id="w4-05" data-world="w4" data-type="mcq" data-diff="2" data-tags="independence,clustering" data-hash="faa8xu.ge5lkz" data-show="c3RhbmRhcmQgZXJyb3JzIGFyZSB0b28gc21hbGwgYW5kIENJcyB0b28gbmFycm93" data-explain="Q29ycmVsYXRlZCBvYnNlcnZhdGlvbnMgY2FycnkgbGVzcyBpbmZvcm1hdGlvbiB0aGFuIGluZGVwZW5kZW50IG9uZXMuIE5haXZlIFNFcyBwcmV0ZW5kIHRoZSBzYW1wbGUgaXMgYmlnZ2VyIHRoYW4gaXQgaXMuIFVzZSBtaXhlZCBtb2RlbHMsIEdFRSBvciBjbHVzdGVyLXJvYnVzdCBTRXMu" data-hints="WyJIb3cgbXVjaCBuZXcgaW5mb3JtYXRpb24gZG9lcyBhIHNlY29uZCBwZXJzb24gZnJvbSB0aGUgc2FtZSB2aWxsYWdlIGFkZD8iXQ==">
+<p>600 adults were sampled from 20 villages, and residents of one village resemble each other. If this is ignored in a plain linear model, the usual…</p>
+<ul>
+<li>standard errors are too small and CIs too narrow</li>
+<li>R² is inflated but the SEs stay valid</li>
+<li>coefficients are biased towards zero in every case</li>
+<li>residuals become perfectly normal in each village</li>
+</ul>
+</div>
+</section>
+<section id="level-3-judgement-calls" class="level2 rq-level">
+<h2 class="rq-level anchored" data-anchor-id="level-3-judgement-calls">Level 3 · Judgement calls</h2>
+<div class="rq-item" data-id="w4-06" data-world="w4" data-type="mcq" data-diff="3" data-tags="normality,interpretation" data-hash="faam6l.ge602e" data-show="RmluZSBpbiBhIGxhcmdlIHNhbXBsZTsgY2hlY2sgb3V0bGllcnMgYW5kIG5vdGUgdGhlIHNrZXc=" data-explain="SW4gbGFyZ2Ugc2FtcGxlcyBzbG9wZSBlc3RpbWF0ZXMgYXJlIGFwcHJveGltYXRlbHkgbm9ybWFsIHdoYXRldmVyIHRoZSByZXNpZHVhbHMgbG9vayBsaWtlLCBhbmQgbm9ybWFsaXR5IHRlc3RzIGZsYWcgdHJpdmlhbCBkZXBhcnR1cmVzLiBOb3JtYWxpdHkgbWF0dGVycyBtb3N0IGZvciBwcmVkaWN0aW9uIGludGVydmFscyBhbmQgc21hbGwgc2FtcGxlcy4=" data-hints="WyJXaGljaCBtYXR0ZXJzIG1vcmUgaGVyZTogdGhlIHRlc3QgcC12YWx1ZSBvciB0aGUgc2l6ZSBvZiB0aGUgZGVwYXJ0dXJlPyJd">
+<p>With n = 600 the residual Q–Q plot shows mild skew in the upper tail, and the Shapiro–Wilk test gives p = 0.01. For the CIs of the slopes, the sensible conclusion is…</p>
+<ul>
+<li>Invalid; switch to a non-parametric test of the slope</li>
+<li>Invalid; transform the outcome before any reporting</li>
+<li>Fine in a large sample; check outliers and note the skew</li>
+<li>Fine, because a significant test shows normality holds</li>
+</ul>
+</div>
+<div class="rq-item" data-id="w4-07" data-world="w4" data-type="mcq" data-diff="3" data-tags="influence,outliers" data-hash="faazf8.ge6ejp" data-show="Q2hlY2sgdGhlIHJlY29yZCBmb3IgZXJyb3JzLCB0aGVuIHJlcG9ydCBmaXRzIHdpdGggYW5kIHdpdGhvdXQ=" data-explain="QW4gaW5mbHVlbnRpYWwgcG9pbnQgaXMgYSByZWFzb24gdG8gaW52ZXN0aWdhdGUsIG5vdCB0byBkZWxldGUgc2lsZW50bHkuIFZlcmlmeSB0aGUgZGF0YSwgdGhlbiBzaG93IGhvdyBzZW5zaXRpdmUgdGhlIHJlc3VsdCBpcyB0byB0aGF0IHBlcnNvbi4=" data-hints="WyJXb3VsZCB5b3Ugd2FudCB0byBoaWRlIHRoaXMgZnJvbSBhIHJlYWRlcj8iXQ==">
+<p>One participant has a Cook’s distance far above all others, and the salt slope changes from 1.8 to 1.2 when this person is removed. What should you do first?</p>
+<ul>
+<li>Check the record for errors, then report fits with and without</li>
+<li>Ignore it because one of 600 participants is too few to matter</li>
+<li>Add a quadratic term until the point is no longer flagged</li>
+<li>Delete the person from the dataset and refit quietly</li>
+</ul>
+</div>
+<div class="rq-item" data-id="w4-08" data-world="w4" data-type="order" data-diff="2" data-tags="workflow,diagnostics" data-hash="c0tha9.21ma4p" data-show="MS4gRml0IHRoZSBwbGFubmVkIG1vZGVsLCBjaG9zZW4gYmVmb3JlIGxvb2tpbmcgYXQgZGlhZ25vc3RpY3MgIDIuIFBsb3QgcmVzaWR1YWxzIGFnYWluc3QgZml0dGVkIHZhbHVlcyBhbmQgZWFjaCBwcmVkaWN0b3IgIDMuIENoZWNrIHRoZSBR4oCTUSBwbG90LCBWSUZzIGFuZCBDb29rJ3MgZGlzdGFuY2VzICA0LiBNYXRjaCBlYWNoIHByb2JsZW0gdG8gaXRzIHJlbWVkeSBhbmQgcmVmaXQgIDUuIENvbXBhcmUgcmVzdWx0cyBiZWZvcmUgYW5kIGFmdGVyIHRoZSBmaXggIDYuIFJlcG9ydCB0aGUgY2hlY2tzIGFuZCBhbnkgY2hhbmdlcyBtYWRl" data-explain="Rml0IHRoZSBwcmUtcGxhbm5lZCBtb2RlbCwgbG9vayBhdCB0aGUgcGxvdHMsIGNoZWNrIHRoZSByZW1haW5pbmcgZGlhZ25vc3RpY3MsIGFwcGx5IHRoZSBtYXRjaGluZyBmaXgsIGNvbXBhcmUsIGFuZCByZXBvcnQgd2hhdCB5b3UgZGlkLg==" data-hints="WyJZb3UgbmVlZCBhIGZpdHRlZCBtb2RlbCBiZWZvcmUgdGhlcmUgYXJlIHJlc2lkdWFscyB0byBwbG90LiJd">
+<p>Put a sensible assumption-checking routine in order, from first to last:</p>
+<ol type="1">
+<li>Plot residuals against fitted values and each predictor</li>
+<li>Report the checks and any changes made</li>
+<li>Compare results before and after the fix</li>
+<li>Match each problem to its remedy and refit</li>
+<li>Check the Q–Q plot, VIFs and Cook’s distances</li>
+<li>Fit the planned model, chosen before looking at diagnostics</li>
+</ol>
+</div>
+</section>
+<section id="boss-diagnose-the-crime-scenes" class="level2 rq-level">
+<h2 class="rq-level anchored" data-anchor-id="boss-diagnose-the-crime-scenes">Boss · Diagnose the crime scenes</h2>
+<div class="rq-item" data-id="w4-09" data-world="w4" data-type="spot" data-diff="3" data-tags="diagnostics,remedies" data-boss="1" data-hash="d5lecj.fblmb3" data-show="Rmxhd2VkOiAyLCA0LCA1" data-explain="MiBjb25mdXNlcyB1bmVxdWFsIHZhcmlhbmNlIHdpdGggbm9uLW5vcm1hbGl0eSAodGhlIGZpeCBpcyByb2J1c3QgU0VzIG9yIGEgdHJhbnNmb3JtYXRpb24pOyA0IHJldmVyc2VzIGNsdXN0ZXJpbmc6IHJlc2lkdWFscyBncm91cGVkIGJ5IHZpbGxhZ2Ugc2hvdyBpbmRlcGVuZGVuY2UgaXMgdmlvbGF0ZWQ7IDUga2VlcHMgY29sbGluZWFyIHByZWRpY3RvcnMgd2hvc2Ugc2VwYXJhdGUgZWZmZWN0cyBjYW5ub3QgYmUgZXN0aW1hdGVkLiAxLCAzIGFuZCA2IGFyZSBzb3VuZC4=" data-hints="WyJNYXRjaCBlYWNoIHBsb3Qgc2hhcGUgdG8gdGhlIGFzc3VtcHRpb24gaXQgdGVzdHMuIiwiRG9lcyBjbHVzdGVyaW5nIHN1cHBvcnQgb3IgYnJlYWsgaW5kZXBlbmRlbmNlPyJd">
+<p>Boss: flag every sentence that pairs a residual-plot finding with the wrong conclusion or fix (linear model for SBP, n = 600).</p>
+<ul>
+<li>A curved smoother in residuals vs fitted suggests adding a spline or squared term for the predictor.</li>
+<li>A funnel shape in residuals vs fitted means the residuals are not normal, so a Q–Q plot test is needed.</li>
+<li>Points far above all others in the Cook’s distance plot should be checked and the model refitted without them.</li>
+<li>Residuals clustered by village mean the independence assumption holds because villages are different.</li>
+<li>Two predictors with a VIF of 10 should both stay in so that each effect can be reported.</li>
+<li>A slightly heavy upper tail on the Q–Q plot in a sample of 600 is not by itself a reason to abandon the model.</li>
+</ul>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script src="assets/worlds.js"></script>
+
+<script src="assets/skills.js"></script>
+
+<script src="assets/quest.js"></script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("\.");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>
+// Quarto's navbar `logo-href` is emitted as a literal string and is
+// not depth-adjusted for nested pages (unlike navbar.left/right items
+// and the theme <link>), so it 404s from any page below the project
+// root. Derive the correct relative prefix from the theme stylesheet
+// link, which Quarto *does* resolve correctly, and reuse it here.
+(function () {
+  var css = document.querySelector('link[href$="assets/theme_webp.css"]');
+  var brand = document.querySelector('a.navbar-brand');
+  if (css && brand) {
+    var prefix = css.getAttribute('href').replace(/assets\/theme_webp\.css$/, '');
+    brand.setAttribute('href', prefix + 'welcome.html');
+
+    // Floating bottom-right icon cluster: track home / site index /
+    // close. Kiosk mode (start-workshop.bat) hides all browser
+    // chrome, so these give a way back without relying on the
+    // browser's own controls. Positioned bottom-right to avoid the
+    // top navbar and the bottom-center "Home | Next Module" footer
+    // some pages already include.
+    var isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+
+    var style = document.createElement('style');
+    style.textContent =
+      '.ws-nav-cluster{position:fixed;bottom:10px;right:10px;z-index:10000;' +
+      'display:flex;gap:6px;background:rgba(255,255,255,0.9);' +
+      'border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,0.2);}' +
+      '.ws-nav-cluster a,.ws-nav-cluster button{width:36px;height:36px;' +
+      'border-radius:50%;border:none;background:#fff;font-size:1.1rem;' +
+      'display:flex;align-items:center;justify-content:center;cursor:pointer;' +
+      'text-decoration:none;color:inherit;box-shadow:0 1px 3px rgba(0,0,0,0.15);}' +
+      '.ws-nav-cluster a:hover,.ws-nav-cluster button:hover{background:#f0f0f0;}' +
+      '.ws-nav-hint{position:fixed;bottom:54px;right:10px;z-index:10000;' +
+      'background:#2c3e50;color:#fff;font-size:0.8rem;padding:6px 10px;' +
+      'border-radius:6px;display:none;white-space:nowrap;}';
+    document.head.appendChild(style);
+
+    var cluster = document.createElement('div');
+    cluster.className = 'ws-nav-cluster';
+
+    var trackHome = document.createElement('a');
+    trackHome.href = prefix + 'welcome.html';
+    trackHome.title = 'Back to track home';
+    trackHome.textContent = '🏠';
+    cluster.appendChild(trackHome);
+
+    var siteIndex = document.createElement('a');
+    siteIndex.href = prefix + '../index.html';
+    siteIndex.title = 'All workshop tracks';
+    siteIndex.textContent = '🧭';
+    cluster.appendChild(siteIndex);
+
+    if (isLocal) {
+      var hint = document.createElement('div');
+      hint.className = 'ws-nav-hint';
+      hint.textContent = 'Press Alt+F4 to exit full-screen';
+      document.body.appendChild(hint);
+
+      var closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.title = 'Exit full-screen';
+      closeBtn.textContent = '✕';
+      closeBtn.addEventListener('click', function () {
+        window.close();
+        hint.style.display = 'block';
+        setTimeout(function () { hint.style.display = 'none'; }, 3000);
+      });
+      cluster.appendChild(closeBtn);
+    }
+
+    document.body.appendChild(cluster);
+  }
+})();
+</script>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>
