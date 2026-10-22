@@ -1,0 +1,2127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Dungeons &amp; Dataframes — Roadmap – Dungeons &amp; Dataframes</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-2872a7511705894b565d6ebf33be87ff.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="assets/fitty-init.js"></script>
+
+
+<link rel="stylesheet" href="../assets/theme_webp.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="dungeons/index.html">
+    <span class="navbar-title">Dungeons &amp; Dataframes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../dungeons/index.html"> 
+<span class="menu-text">🗺️ Quest map</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-play" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Play</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-play">    
+        <li>
+    <a class="dropdown-item" href="../dungeons/campus.html">
+ <span class="dropdown-text">Campus (skill tree)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/readiness.html">
+ <span class="dropdown-text">Placement check</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../dungeons/r1pretest.html">
+ <span class="dropdown-text">Region 1 pre-test</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/r1posttest.html">
+ <span class="dropdown-text">Region 1 post-test</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../dungeons/pretest.html">
+ <span class="dropdown-text">Region 3 pre-test</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/posttest.html">
+ <span class="dropdown-text">Region 3 post-test</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-region-1-·-basics" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Region 1 · Basics</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-region-1-·-basics">    
+        <li>
+    <a class="dropdown-item" href="../dungeons/b1_first_script.html">
+ <span class="dropdown-text">Your First Script</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/b2_tidy_tavern.html">
+ <span class="dropdown-text">Tidy Tavern</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/b3_join_junction.html">
+ <span class="dropdown-text">Join Junction</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/b4_first_plots.html">
+ <span class="dropdown-text">First Plots</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/b5_which_test.html">
+ <span class="dropdown-text">Which Test?</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-region-3-·-regression" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Region 3 · Regression</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-region-3-·-regression">    
+        <li>
+    <a class="dropdown-item" href="../dungeons/world1_outcome_detective.html">
+ <span class="dropdown-text">World 1 · The Outcome Detective</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/world2_straight_line.html">
+ <span class="dropdown-text">World 2 · The Straight Line</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/world3_confounding_caves.html">
+ <span class="dropdown-text">World 3 · Confounding Caves</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/world4_assumption_ruins.html">
+ <span class="dropdown-text">World 4 · Assumption Ruins</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/world5_odds_arena.html">
+ <span class="dropdown-text">World 5 · Odds Arena</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/world6_reporting_guild.html">
+ <span class="dropdown-text">World 6 · The Reporting Guild</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-library" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">📖 Library</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-library">    
+        <li>
+    <a class="dropdown-item" href="../r-foundations/getting-started.html">
+ <span class="dropdown-text">Getting Started</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../r-foundations/data-wrangling.html">
+ <span class="dropdown-text">Data Wrangling (Tidyverse)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../r-foundations/merging_dataset.html">
+ <span class="dropdown-text">Merging Datasets</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../data-visualization/ggplot_grammar.html">
+ <span class="dropdown-text">Grammar of Graphics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../plot-gallery/basic.html">
+ <span class="dropdown-text">Basic Plot Gallery</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../statistical-analysis/statistical_tests.html">
+ <span class="dropdown-text">Test Selection Guide</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../gtsummary/gtsummary_tutorial.html">
+ <span class="dropdown-text">gtsummary Tables</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../quarto_repro_w/reproducible_writing.html">
+ <span class="dropdown-text">Quarto Basics</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../statistical-analysis/regression.html">
+ <span class="dropdown-text">Regression Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s1_foundations.html">
+ <span class="dropdown-text">Session 1 — Foundations</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s2_simple_regression.html">
+ <span class="dropdown-text">Session 2 — Simple Linear Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s3_multiple_regression.html">
+ <span class="dropdown-text">Session 3 — Inference &amp; Multiple Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s4_assumptions.html">
+ <span class="dropdown-text">Session 4 — Assumptions</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s5_logistic_regression.html">
+ <span class="dropdown-text">Session 5 — Logistic Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s6_reporting.html">
+ <span class="dropdown-text">Session 6 — Interpreting &amp; Reporting</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/cheatsheet.html">
+ <span class="dropdown-text">Interpretation Cheat Sheet</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-facilitators" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Facilitators</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-facilitators">    
+        <li>
+    <a class="dropdown-item" href="../dungeons/facilitator.html">
+ <span class="dropdown-text">Facilitator pack</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/cohort.html">
+ <span class="dropdown-text">Cohort summary</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../dungeons/roadmap.html">
+ <span class="dropdown-text">Roadmap</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/site-design.html">
+ <span class="dropdown-text">Site design</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-reference" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-book" role="img">
+</i> 
+ <span class="menu-text">Reference</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-reference">    
+        <li>
+    <a class="dropdown-item" href="../contact.html">
+ <span class="dropdown-text">Contact Us</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../references.html">
+ <span class="dropdown-text">References</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../downloads.html">
+ <span class="dropdown-text">Downloads</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#vision-and-principles" id="toc-vision-and-principles" class="nav-link active" data-scroll-target="#vision-and-principles">1. Vision and principles</a></li>
+  <li><a href="#audience-and-learning-outcomes" id="toc-audience-and-learning-outcomes" class="nav-link" data-scroll-target="#audience-and-learning-outcomes">2. Audience and learning outcomes</a></li>
+  <li><a href="#curriculum-map-all-worlds" id="toc-curriculum-map-all-worlds" class="nav-link" data-scroll-target="#curriculum-map-all-worlds">3. Curriculum map (all worlds)</a></li>
+  <li><a href="#datasets-plan" id="toc-datasets-plan" class="nav-link" data-scroll-target="#datasets-plan">4. Datasets plan</a></li>
+  <li><a href="#gamification-design" id="toc-gamification-design" class="nav-link" data-scroll-target="#gamification-design">5. Gamification design</a></li>
+  <li><a href="#assessment-design-and-the-item-bank" id="toc-assessment-design-and-the-item-bank" class="nav-link" data-scroll-target="#assessment-design-and-the-item-bank">6. Assessment design and the item bank</a></li>
+  <li><a href="#auto-graded-r-labs-the-biggest-build" id="toc-auto-graded-r-labs-the-biggest-build" class="nav-link" data-scroll-target="#auto-graded-r-labs-the-biggest-build">7. Auto-graded R labs (the biggest build)</a></li>
+  <li><a href="#platform-architecture" id="toc-platform-architecture" class="nav-link" data-scroll-target="#platform-architecture">8. Platform architecture</a></li>
+  <li><a href="#engineering-and-qa" id="toc-engineering-and-qa" class="nav-link" data-scroll-target="#engineering-and-qa">9. Engineering and QA</a></li>
+  <li><a href="#content-production-workflow" id="toc-content-production-workflow" class="nav-link" data-scroll-target="#content-production-workflow">10. Content production workflow</a></li>
+  <li><a href="#phased-roadmap" id="toc-phased-roadmap" class="nav-link" data-scroll-target="#phased-roadmap">11. Phased roadmap</a></li>
+  <li><a href="#risks-and-mitigations" id="toc-risks-and-mitigations" class="nav-link" data-scroll-target="#risks-and-mitigations">12. Risks and mitigations</a></li>
+  <li><a href="#success-metrics" id="toc-success-metrics" class="nav-link" data-scroll-target="#success-metrics">13. Success metrics</a></li>
+  <li><a href="#backlog-idea-parking-lot" id="toc-backlog-idea-parking-lot" class="nav-link" data-scroll-target="#backlog-idea-parking-lot">14. Backlog / idea parking lot</a></li>
+  <li><a href="#definitions-of-done" id="toc-definitions-of-done" class="nav-link" data-scroll-target="#definitions-of-done">15. Definitions of done</a></li>
+  <li><a href="#next-four-weeks" id="toc-next-four-weeks" class="nav-link" data-scroll-target="#next-four-weeks">16. Next four weeks</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Dungeons &amp; Dataframes — Roadmap</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="vision-and-principles" class="level2">
+<h2 class="anchored" data-anchor-id="vision-and-principles">1. Vision and principles</h2>
+<p><strong>Goal:</strong> turn the one-day <em>Theory of Regression Analysis</em> workshop into a <strong>game for learning medical statistics in R</strong> (<strong>Dungeons &amp; Dataframes</strong>): a self-paced, gamified, <em>tested</em> environment for community-medicine residents and faculty. The platform is organised into <strong>tracks</strong>; <strong>Track 1 is Regression</strong> (the worlds in §3), and further tracks follow (§1.1). Within Regression, a learner goes from “I can run <code>lm()</code>” to “I can plan, run, check and report the right regression for my thesis”, and on into the models the workshop only names.</p>
+<p><strong>Scope decisions (v4, 2026-10-22):</strong> the game now <strong>starts from the basics</strong> and is its own site (profile <code>dungeons</code>, open-access card on the landing page). It is organised into four <strong>regions</strong> that follow the workshop ladder: <strong>Region 1 · Basics → Region 2 · Moderate → Region 3 · Regression → Region 4 · Advanced</strong> (see <code>SITE_PLAN.md</code> Part 2). The regression worlds in §3 are Region 3; the workshop pages are the game’s library (“📖 Read first” links). Where v3 below says <em>track</em>, read <em>region</em>; where it says R basics are a prerequisite, that is replaced by Region 1, and the readiness check becomes a <strong>placement check</strong> for skipping ahead.</p>
+<p><strong>Scope decisions (v3):</strong></p>
+<ul>
+<li><strong>Platform = medical statistics in R; regression is its first track.</strong> Name: <strong>Dungeons &amp; Dataframes</strong> (deliberately not regression-specific). Worlds can be presented as <em>dungeons</em>.</li>
+<li><strong>R basics are a prerequisite.</strong> Learners are assumed to have basic-to-moderate R (import data, tidyverse verbs, simple plots, run a model and read <code>summary()</code>); a short <strong>readiness check</strong> (§2.3) advises anyone who is not ready (it points to the repo’s existing R Foundations track).</li>
+<li><strong>English only.</strong> It is a coding place; no translation work is planned.</li>
+<li><strong>Certificate: later.</strong> Completion certificates are a later-phase priority (Phase 6, with accounts and server verification).</li>
+<li><strong>Reviewer:</strong> content and statistics are reviewed by the author (community-medicine faculty); an optional external statistician check can be added before wide release.</li>
+<li><strong>Hosting:</strong> static now, accounts later. R practice: hybrid (§7).</li>
+</ul>
+<p>The full site design (information architecture, game modes, skill tree, hybrid R labs, state model) is in <a href="../dungeons/site-design.html">Site design</a>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Principle</th>
+<th>What it means in practice</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Learning first, game second</strong></td>
+<td>Points reward <em>understanding</em> (first-try accuracy, no hints), never time spent or guessing.</td>
+</tr>
+<tr class="even">
+<td><strong>Test what matters</strong></td>
+<td>Interpretation, judgement and error-spotting beat function recall. No “which function does X?” items.</td>
+</tr>
+<tr class="odd">
+<td><strong>Honest assessment</strong></td>
+<td>No giveaways: balanced option lengths, no “all of the above”, shuffled display, no key-first markup, explanations only after an attempt. Enforced by a linter in CI.</td>
+</tr>
+<tr class="even">
+<td><strong>Real public-health context</strong></td>
+<td>Indian community-medicine scenarios and datasets (NCD survey, TB cohort, dengue counts, NFHS-type surveys).</td>
+</tr>
+<tr class="odd">
+<td><strong>Depth over breadth, track by track</strong></td>
+<td>No detours into general R teaching; each track goes deep (Track 1: modelling, interpretation, checking and reporting) before the next opens.</td>
+</tr>
+<tr class="even">
+<td><strong>Three ways to practise</strong></td>
+<td><em>Quests</em> (guided path), <em>Case files</em> (realistic thesis scenarios with decisions), <em>Arcade</em> (short repeatable drills): so mastery comes from varied retrieval, not one pass.</td>
+</tr>
+<tr class="odd">
+<td><strong>Real R, hybrid</strong></td>
+<td>Learners also run real R on the project datasets; the game checks results through verifiable codes (no server needed), with in-browser R as an optional later mode.</td>
+</tr>
+<tr class="even">
+<td><strong>Works anywhere</strong></td>
+<td>Static files, offline-capable, no login needed for the core path; optional server features come later.</td>
+</tr>
+<tr class="odd">
+<td><strong>Evidence of gain</strong></td>
+<td>Every learner gets a baseline (pre-test) and a parallel post-test; the project measures learning gain, not just completion.</td>
+</tr>
+<tr class="even">
+<td><strong>Reproducible content</strong></td>
+<td>One source of truth per item and per lab; everything built and verified by scripts.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Non-goals (for now):</strong> replacing a biostatistician, covering every statistical method in the first release, teaching R itself, translations, high-stakes certification (that needs proctoring and a server).</p>
+<hr>
+<section id="platform-tracks" class="level3">
+<h3 class="anchored" data-anchor-id="platform-tracks">1.1 Platform tracks</h3>
+<p>The skill tree and engine are <strong>track-agnostic</strong>: a track is a set of worlds, skills, items, case files and arcade games.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Track</th>
+<th>Focus</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>1 · Regression</strong></td>
+<td>Linear, logistic, counts, survival, clusters, surveys, missing data, prediction, causal (Worlds 1–16, §3)</td>
+<td>✅ started (Worlds 1–6 playable)</td>
+</tr>
+<tr class="even">
+<td><strong>2 · Comparing groups</strong></td>
+<td>t-tests, non-parametric tests, chi-square/Fisher, ANOVA, choosing a test, multiple testing, effect sizes</td>
+<td>⬜ planned</td>
+</tr>
+<tr class="odd">
+<td><strong>3 · Epidemiological measures</strong></td>
+<td>Risk/odds/rate ratios, attributable fractions, standardisation, confounding by stratification (Mantel–Haenszel), screening metrics</td>
+<td>⬜ planned</td>
+</tr>
+<tr class="even">
+<td><strong>4 · Study design &amp; sample size</strong></td>
+<td>Sampling, power and precision, randomisation, bias catalogue, cluster designs, reporting standards</td>
+<td>⬜ planned</td>
+</tr>
+<tr class="odd">
+<td><strong>5 · Survey &amp; health-systems analytics</strong></td>
+<td>Complex surveys, weights, small-area rates, time series for surveillance</td>
+<td>⬜ planned</td>
+</tr>
+<tr class="even">
+<td><strong>6 · Evidence synthesis &amp; diagnostics</strong></td>
+<td>Meta-analysis, heterogeneity, diagnostic accuracy, decision curves</td>
+<td>⬜ planned</td>
+</tr>
+<tr class="odd">
+<td><strong>7 · Reproducible reporting</strong></td>
+<td>Quarto, tables/figures, STROBE/CONSORT, thesis workflow</td>
+<td>⬜ planned</td>
+</tr>
+</tbody>
+</table>
+<p>Tracks unlock independently after the readiness check; a learner can start in any track whose prerequisite skills they hold.</p>
+<p><em>v4 note:</em> the regions (Basics, Moderate, Regression, Advanced) are now the main path; the topic tracks above become worlds or side quests inside those regions (for example <em>Comparing groups</em> → Region 1 <em>Which Test?</em> and Region 2 <em>Tests in Context</em>; <em>Reproducible reporting</em> → the Scriptorium side quest).</p>
+<hr>
+</section>
+</section>
+<section id="audience-and-learning-outcomes" class="level2">
+<h2 class="anchored" data-anchor-id="audience-and-learning-outcomes">2. Audience and learning outcomes</h2>
+<section id="personas" class="level3">
+<h3 class="anchored" data-anchor-id="personas">2.1 Personas</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Persona</th>
+<th>Needs</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Resident writing a thesis</strong></td>
+<td>Right model, correct interpretation, reviewer-proof write-up</td>
+<td>Core worlds 1–6, then 10, 11, 13, capstone</td>
+</tr>
+<tr class="even">
+<td><strong>Faculty / examiner</strong></td>
+<td>Judge others’ analyses; spot pitfalls</td>
+<td>Pitfall bosses, reporting world, spot-the-error items</td>
+</tr>
+<tr class="odd">
+<td><strong>Public-health programme officer</strong></td>
+<td>Count and survey data, dashboards</td>
+<td>Worlds 7, 11, 14</td>
+</tr>
+<tr class="even">
+<td><strong>Self-taught R user</strong></td>
+<td>Concepts behind the code</td>
+<td>Readiness check, pre-test, then skip to weak skills</td>
+</tr>
+<tr class="odd">
+<td><strong>Facilitator</strong></td>
+<td>Run a cohort, see who is stuck</td>
+<td>Cohort mode and instructor dashboard (Phase 6)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="programme-level-outcomes-ilos" class="level3">
+<h3 class="anchored" data-anchor-id="programme-level-outcomes-ilos">2.2 Programme-level outcomes (ILOs)</h3>
+<p>After the full path a learner can:</p>
+<ol type="1">
+<li><strong>Choose</strong> a regression family from the outcome type and study design, and justify it.</li>
+<li><strong>Fit and interpret</strong> linear, logistic, count, ordinal/nominal and survival models in units, with CIs.</li>
+<li><strong>Adjust</strong> for confounding using causal reasoning (DAGs) rather than significance filtering.</li>
+<li><strong>Diagnose</strong> and respond to violations (linearity, independence, variance, normality, collinearity, influence, proportional hazards).</li>
+<li><strong>Evaluate</strong> models (likelihood ratio, AIC, calibration, discrimination, validation).</li>
+<li><strong>Handle</strong> real-data problems: clustering, complex survey design, missing data, non-linearity, interaction.</li>
+<li><strong>Report</strong> to publication standards (STROBE/TRIPOD, units, reference categories, honest language).</li>
+<li><strong>Critique</strong> published analyses and <strong>avoid</strong> the nine standard pitfalls.</li>
+</ol>
+<p>Outcomes are mapped to Bloom levels (remember → evaluate) per world in §3 and drive the item mix in §6.</p>
+</section>
+<section id="prerequisites-and-the-readiness-check" class="level3">
+<h3 class="anchored" data-anchor-id="prerequisites-and-the-readiness-check">2.3 Prerequisites and the readiness check</h3>
+<p><strong>Assumed:</strong> basic-to-moderate R: projects/scripts, <code>read_csv</code>, <code>dplyr</code> verbs (filter, mutate, group/summarise), factors, <code>ggplot2</code> basics, running <code>lm()</code>/<code>glm()</code> and printing <code>summary()</code>. <strong>Not assumed:</strong> any regression theory.</p>
+<p><strong>Readiness check (≈ 10 minutes, ungraded):</strong> 8 short items (reading a <code>mutate</code>/<code>summarise</code> pipeline, spotting a factor-level problem, interpreting a plot, reading a <code>summary()</code> table) plus 2 hands-on R tasks. Outcome: <strong>Ready</strong> → straight to the pre-test; <strong>Nearly</strong> → a 5-item brush-up list of skills plus links to the existing R Foundations pages; <strong>Not yet</strong> → R Foundations first. The check never blocks anyone: it advises.</p>
+<hr>
+</section>
+</section>
+<section id="curriculum-map-all-worlds" class="level2">
+<h2 class="anchored" data-anchor-id="curriculum-map-all-worlds">3. Curriculum map (all worlds)</h2>
+<p><strong>Status:</strong> ✅ playable now · 🟡 content exists as workshop slides/labs, needs gamified conversion · ⬜ new content. Worlds are <em>story containers</em>; the real unit of progress is the <strong>skill</strong> (see the skill tree in <a href="../dungeons/site-design.html">Site design</a>), and every world’s items, case files and arcade drills are tagged to skills.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>#</th>
+<th>World</th>
+<th>Core topics</th>
+<th>Key dataset</th>
+<th>Boss (capstone item)</th>
+<th>Phase</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>–</td>
+<td><em>Readiness check</em> (replaces former World 0)</td>
+<td>R prerequisites only; routes learners (§2.3)</td>
+<td>NCD survey (raw)</td>
+<td>n/a (advisory)</td>
+<td>2</td>
+<td>✅ (10 items; the 2 R tasks are computed by hand until Phase 4 labs)</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><strong>The Outcome Detective</strong></td>
+<td>What regression is; outcome types; flowchart; correlation vs regression; Table 1; missing data</td>
+<td>NCD survey</td>
+<td>Table 1 write-up inspector</td>
+<td>1</td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td><strong>The Straight Line</strong></td>
+<td>Slope in units; prediction; CI vs PI; residuals/OLS; R²/adj R²; centring/scaling</td>
+<td>NCD survey</td>
+<td>Interpretation inspector</td>
+<td>1</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td><strong>Confounding Caves</strong></td>
+<td>β/p/CI; statistical vs clinical significance; confounding; adjustment; dummy coding; model-building (DAG vs stepwise)</td>
+<td>NCD survey</td>
+<td>Rebuild a confounded analysis</td>
+<td>2</td>
+<td>✅ (9 items; needs lint + pilot)</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td><strong>Assumption Ruins</strong></td>
+<td>Linearity, independence, normality, equal variance, collinearity, influence; remedies</td>
+<td>NCD survey</td>
+<td>Diagnose five residual-plot “crime scenes”</td>
+<td>2</td>
+<td>✅ (9 items, text-based; click-the-plot version in Phase 3)</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td><strong>Odds Arena</strong></td>
+<td>Odds/log-odds; why exponentiate; likelihood, LRT, AIC; pseudo-R²; calibration/ROC; OR vs PR</td>
+<td>NCD survey</td>
+<td>Convert an OR story into a PR story</td>
+<td>2</td>
+<td>✅ (9 items; needs lint + pilot)</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td><strong>The Reporting Guild</strong></td>
+<td>Annotated output; results/methods wording; nine pitfalls; reviewer replies</td>
+<td>NCD survey</td>
+<td>Reviewer #2 simulator</td>
+<td>2</td>
+<td>✅ (9 items; needs lint + pilot)</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td><strong>Count Country</strong></td>
+<td>Poisson; overdispersion; negative binomial; offsets and rates; zero inflation (mention)</td>
+<td>Dengue counts per ward-month</td>
+<td>Rate ratio for a ward-level intervention</td>
+<td>3</td>
+<td>⬜</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td><strong>Ordinal &amp; Nominal Outcomes</strong></td>
+<td>Ordinal logistic; proportional-odds check; multinomial logistic; baseline category logic</td>
+<td>BP stage; place-of-delivery survey</td>
+<td>Choose and interpret ordinal vs multinomial</td>
+<td>3</td>
+<td>⬜</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td><strong>Survival Summit</strong></td>
+<td>Censoring; Kaplan–Meier; log-rank; Cox; hazard ratios; PH assumption; time-varying covariates (mention)</td>
+<td>DOTS TB cohort</td>
+<td>Fix a violated PH assumption</td>
+<td>3</td>
+<td>⬜</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td><strong>Villages &amp; Clusters</strong></td>
+<td>ICC, design effect; random intercepts (<code>lme4</code>); GEE (<code>geepack</code>); cluster-robust SE; repeated measures</td>
+<td>NCD survey (villages) + repeated BP visits</td>
+<td>Compare naive vs mixed vs GEE</td>
+<td>3</td>
+<td>⬜</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td><strong>Survey Science</strong></td>
+<td>Weights, strata, PSUs; <code>survey</code>/<code>srvyr</code>; weighted proportions and regression; NFHS-style design</td>
+<td>NFHS-type synthetic survey</td>
+<td>Weighted vs unweighted prevalence ratios</td>
+<td>3</td>
+<td>⬜</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td><strong>Curves &amp; Interactions</strong></td>
+<td>Splines, GAMs, polynomials; effect modification; centred interactions; plotting predictions</td>
+<td>NCD survey</td>
+<td>Is the salt effect different by sex?</td>
+<td>4</td>
+<td>⬜</td>
+</tr>
+<tr class="even">
+<td>13</td>
+<td><strong>Missing Data</strong></td>
+<td>MCAR/MAR/MNAR; complete-case bias; multiple imputation (<code>mice</code>); sensitivity analysis</td>
+<td>NCD survey with MAR missingness</td>
+<td>Imputation report card</td>
+<td>4</td>
+<td>⬜</td>
+</tr>
+<tr class="odd">
+<td>14</td>
+<td><strong>Prediction Models</strong></td>
+<td>Apparent vs validated performance; bootstrap/CV; calibration; shrinkage; lasso/ridge (<code>glmnet</code>); sample size for prediction; TRIPOD</td>
+<td>Diabetes screening cohort</td>
+<td>Build, validate and report a risk score</td>
+<td>4</td>
+<td>⬜</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td><strong>Causal Thinking</strong></td>
+<td>DAGs; confounder/mediator/collider; propensity scores; IPW; mediation basics; E-values</td>
+<td>Observational programme-evaluation data</td>
+<td>Draw the DAG, then pick the estimator</td>
+<td>5</td>
+<td>⬜</td>
+</tr>
+<tr class="odd">
+<td>16</td>
+<td><strong>Capstone: Your Thesis</strong></td>
+<td>Analysis plan, SAP template, run, check, report, peer review</td>
+<td>Learner’s own (de-identified) or provided</td>
+<td>Peer-reviewed mini-manuscript</td>
+<td>5</td>
+<td>⬜</td>
+</tr>
+</tbody>
+</table>
+<section id="elective-track-any-time-after-world-5" class="level3">
+<h3 class="anchored" data-anchor-id="elective-track-any-time-after-world-5">3.1 Elective track (any time after World 5)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Elective</th>
+<th>Topics</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>E1 Sample size &amp; power for regression</strong></td>
+<td>Events-per-variable, precision-based planning, simulation-based power</td>
+</tr>
+<tr class="even">
+<td><strong>E2 Diagnostic accuracy</strong></td>
+<td>Sensitivity/specificity, ROC, likelihood ratios, decision curves</td>
+</tr>
+<tr class="odd">
+<td><strong>E3 Interrupted time series</strong></td>
+<td>Segmented regression, autocorrelation, seasonality</td>
+</tr>
+<tr class="even">
+<td><strong>E4 Meta-regression &amp; evidence synthesis</strong></td>
+<td>Random-effects models, heterogeneity, meta-regression basics</td>
+</tr>
+<tr class="odd">
+<td><strong>E5 Bayesian regression</strong></td>
+<td>Priors, posteriors, <code>brms</code>, credible vs confidence intervals</td>
+</tr>
+<tr class="even">
+<td><strong>E6 Regression vs machine learning</strong></td>
+<td>Trees/forests/boosting vs GLMs; when interpretability wins</td>
+</tr>
+<tr class="odd">
+<td><strong>E7 Reproducible regression reporting</strong></td>
+<td>Quarto, dynamic tables with <code>gtsummary</code>/<code>modelsummary</code>, STROBE checklists (R-basics refreshers are out of scope)</td>
+</tr>
+<tr class="even">
+<td><strong>E8 Spatial and small-area analysis</strong></td>
+<td>Mapping rates, spatial autocorrelation, hierarchical smoothing</td>
+</tr>
+<tr class="odd">
+<td><strong>E9 Quasi-experiments</strong></td>
+<td>Difference-in-differences, regression discontinuity, synthetic controls (intro)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="per-world-design-template-every-world-must-provide" class="level3">
+<h3 class="anchored" data-anchor-id="per-world-design-template-every-world-must-provide">3.2 Per-world design template (every world must provide)</h3>
+<ol type="1">
+<li><strong>Briefing</strong> (≤ 600 words + live R output): concept, one worked example, one common misconception.</li>
+<li><strong>Levels</strong> (3–4): ≥ 8 items per world at difficulty 1–3, mixed types (MCQ, numeric, order, spot-the-error, output-reading).</li>
+<li><strong>Boss</strong>: one multi-part or spot-the-error item, 50 bonus XP.</li>
+<li><strong>Case file</strong>: at least one realistic thesis scenario with decision points (§5.4 and Site design §5).</li>
+<li><strong>Arcade drills</strong>: ≥ 2 repeatable drill generators tied to the world’s skills.</li>
+<li><strong>Lab</strong>: hybrid R lab (fill-in script + verifiable result codes; Phase 4).</li>
+<li><strong>Misconception log</strong>: 3–5 documented wrong beliefs, each with ≥ 1 diagnostic item.</li>
+<li><strong>Parallel items</strong> for the pre/post forms (≥ 2 per world).</li>
+<li><strong>Facilitator notes</strong>: answer keys, timing, discussion prompts.</li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="datasets-plan" class="level2">
+<h2 class="anchored" data-anchor-id="datasets-plan">4. Datasets plan</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dataset</th>
+<th>Used in</th>
+<th>Built-in teaching features</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>NCD survey</strong> (n = 600, 20 villages)</td>
+<td>Worlds 0–6, 10, 12, 13</td>
+<td>Confounding, collinearity, heteroscedasticity, curvature, clustering, common outcome, 3% missing</td>
+<td>✅ exists (<code>make_data.R</code>)</td>
+</tr>
+<tr class="even">
+<td><strong>Dengue ward-month counts</strong></td>
+<td>World 7</td>
+<td>Overdispersion, exposure offset (population), seasonality, zero inflation</td>
+<td>⬜</td>
+</tr>
+<tr class="odd">
+<td><strong>BP-stage and delivery-site survey</strong></td>
+<td>World 8</td>
+<td>Ordinal (proportional odds holds/fails), nominal outcome</td>
+<td>⬜</td>
+</tr>
+<tr class="even">
+<td><strong>DOTS TB cohort</strong></td>
+<td>World 9</td>
+<td>Censoring, non-proportional hazards for one covariate, competing outcome (mention)</td>
+<td>⬜</td>
+</tr>
+<tr class="odd">
+<td><strong>Repeated-visit BP clinic data</strong></td>
+<td>World 10</td>
+<td>Within-person correlation, random slopes, missing visits</td>
+<td>⬜</td>
+</tr>
+<tr class="even">
+<td><strong>NFHS-style complex survey</strong></td>
+<td>World 11</td>
+<td>Stratification, PSUs, unequal weights, design effects</td>
+<td>⬜</td>
+</tr>
+<tr class="odd">
+<td><strong>Missing-data variants of NCD</strong></td>
+<td>World 13</td>
+<td>MCAR vs MAR vs MNAR versions of the same data</td>
+<td>⬜</td>
+</tr>
+<tr class="even">
+<td><strong>Diabetes screening cohort</strong></td>
+<td>World 14</td>
+<td>Many candidate predictors, low EPV trap, optimism</td>
+<td>⬜</td>
+</tr>
+<tr class="odd">
+<td><strong>Programme evaluation (observational)</strong></td>
+<td>World 15</td>
+<td>Known confounding structure and ground-truth causal effect</td>
+<td>⬜</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rules for every dataset:</strong> simulated with a documented seed; a <code>make_data_*.R</code> that <strong>prints a feature check and fails if a teaching feature disappears</strong>; a data dictionary; “ground truth” parameters stored for facilitators; no real patient data in the public repo.</p>
+<p><strong>Per-learner variation (Phase 4):</strong> a learner seed changes sample draws so numeric answers differ; hashes then depend on the seed (see §9.3).</p>
+<hr>
+</section>
+<section id="gamification-design" class="level2">
+<h2 class="anchored" data-anchor-id="gamification-design">5. Gamification design</h2>
+<section id="xp-economy" class="level3">
+<h3 class="anchored" data-anchor-id="xp-economy">5.1 XP economy</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Element</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Base XP</td>
+<td>Difficulty ★ = 10, ★★ = 20, ★★★ = 30</td>
+</tr>
+<tr class="even">
+<td>Attempt factor</td>
+<td>First try ×1, second ×0.5, later ×0.25</td>
+</tr>
+<tr class="odd">
+<td>Hints</td>
+<td>Tiered (−3, −5, −8 XP); a world’s hints never reveal the answer text</td>
+</tr>
+<tr class="even">
+<td>Show answer</td>
+<td>0 XP (never punished beyond that)</td>
+</tr>
+<tr class="odd">
+<td>Boss</td>
+<td>+50 XP bonus</td>
+</tr>
+<tr class="even">
+<td>Streak</td>
+<td>Daily; bonus badges at 3 and 7 days; <strong>no XP for streak itself</strong> (avoids grinding)</td>
+</tr>
+<tr class="odd">
+<td>Cap</td>
+<td>An item pays out once (re-solving gives nothing)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ranks" class="level3">
+<h3 class="anchored" data-anchor-id="ranks">5.2 Ranks</h3>
+<p>Field Volunteer (0) → Health Worker (100) → Medical Officer (250) → Epidemiologist (500) → Senior Epidemiologist (900) → Chief Biostatistician (1500). Thresholds are retuned from pilot data so a median learner reaches <em>Epidemiologist</em> by the end of World 6.</p>
+</section>
+<section id="badge-catalogue-rules-are-data-in-quest.js" class="level3">
+<h3 class="anchored" data-anchor-id="badge-catalogue-rules-are-data-in-quest.js">5.3 Badge catalogue (rules are data in <code>quest.js</code>)</h3>
+<ul>
+<li><strong>Progress:</strong> First Blood, world-clear badges (one per world), Elective Explorer</li>
+<li><strong>Mastery (tag-based):</strong> Confounder Catcher, VIF Vanquisher, Odds Whisperer, Calibration Captain, Residual Reader, Weight Watcher (survey), Hazard Handler, Imputation Inspector</li>
+<li><strong>Behaviour:</strong> Unaided (10 first-try, no hints), Pitfall Spotter (spot-the-error), Honest Estimator (well-calibrated confidence)</li>
+<li><strong>Growth:</strong> Baseline Set, Growth Mindset (post-test done), Big Gain (+20 points)</li>
+<li><strong>Community (Phase 6):</strong> Peer Reviewer, Mentor</li>
+</ul>
+</section>
+<section id="game-modes-bosses-and-events" class="level3">
+<h3 class="anchored" data-anchor-id="game-modes-bosses-and-events">5.4 Game modes, bosses and events</h3>
+<p>The site has <strong>three play modes</strong> (details in <a href="../dungeons/site-design.html">Site design</a> §4–6):</p>
+<ul>
+<li><strong>Quests:</strong> the guided world-by-world path (briefing → levels → boss).</li>
+<li><strong>Case files:</strong> 15–25 minute branching investigations (e.g.&nbsp;<em>“The salt study reviewer”</em>, <em>“The village anomaly”</em>): read output, choose actions, defend choices; scored by rubric.</li>
+<li><strong>Arcade:</strong> short repeatable drills built from generators (<em>Residual Reader</em>, <em>Interval Invaders</em>, <em>OR↔︎PR Converter</em>, <em>Spot the Pitfall</em> …) so a skill can be rehearsed with fresh numbers each time.</li>
+<li><strong>Daily review:</strong> a spaced queue (Leitner boxes) of the skills that are due or fading.</li>
+<li><strong>Boss fights:</strong> each world ends with a multi-part scenario; failing is cheap, retrying free.</li>
+<li><strong>Seasonal events (optional):</strong> e.g.&nbsp;<em>Thesis Month</em> with double-XP review quests.</li>
+</ul>
+</section>
+<section id="social-optional-and-safe" class="level3">
+<h3 class="anchored" data-anchor-id="social-optional-and-safe">5.5 Social, optional and safe</h3>
+<p>Cohort leaderboards are <strong>opt-in and off by default</strong> for residents; show relative <em>growth</em>, not just totals; team quests (pair review of each other’s analysis plan). No public ranking of identifiable learners without consent.</p>
+</section>
+<section id="anti-gaming" class="level3">
+<h3 class="anchored" data-anchor-id="anti-gaming">5.6 Anti-gaming</h3>
+<ul>
+<li>Hashing is anti-peeking only. For anything that counts (certificates), use server-side checking with signed attempts (Phase 6).</li>
+<li>Randomised option order; per-learner numeric seeds; item pools (several parallel versions of each item).</li>
+<li>Rate-limited hints; “show answer” forfeits XP; first-try rule stops trial-and-error farming.</li>
+<li>Analytics flag implausibly fast completions.</li>
+</ul>
+</section>
+<section id="inclusive-game-design" class="level3">
+<h3 class="anchored" data-anchor-id="inclusive-game-design">5.7 Inclusive game design</h3>
+<p>All feedback is colour-independent (icons and text); <code>prefers-reduced-motion</code> honoured; keyboard-operable everything; a <strong>“calm mode”</strong> with no streaks, toasts or ranks for learners who find gamification stressful.</p>
+<hr>
+</section>
+</section>
+<section id="assessment-design-and-the-item-bank" class="level2">
+<h2 class="anchored" data-anchor-id="assessment-design-and-the-item-bank">6. Assessment design and the item bank</h2>
+<section id="item-types" class="level3">
+<h3 class="anchored" data-anchor-id="item-types">6.1 Item types</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Best for</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>MCQ</strong> (single best answer, shuffled)</td>
+<td>Concepts, interpretation</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td><strong>Output-reading MCQ</strong> (code/output in stem)</td>
+<td>Reading real output</td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td><strong>Numeric</strong> (rounded tolerance)</td>
+<td>Calculation: odds, PR, VIF, predictions, df</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td><strong>Fill-in (short text)</strong></td>
+<td>Naming a concept (never a function recall)</td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td><strong>Order the steps</strong></td>
+<td>Workflows, derivations</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td><strong>Spot the error</strong> (flag flawed sentences)</td>
+<td>Reporting pitfalls, interpretation</td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td><strong>Click-the-plot</strong> (hotspot on a diagnostic plot)</td>
+<td>Diagnostics</td>
+<td>⬜ Phase 3</td>
+</tr>
+<tr class="even">
+<td><strong>Slider / parameter play</strong></td>
+<td>OR vs PR, CI width, R² vs n</td>
+<td>⬜ Phase 3</td>
+</tr>
+<tr class="odd">
+<td><strong>Match</strong> (drag outcome type to model)</td>
+<td>Flowchart</td>
+<td>⬜ Phase 3</td>
+</tr>
+<tr class="even">
+<td><strong>Free-text with rubric</strong></td>
+<td>Write-ups (self-check against model answer; instructor scoring later)</td>
+<td>⬜ Phase 4</td>
+</tr>
+<tr class="odd">
+<td><strong>Code lab check</strong> (auto-graded R)</td>
+<td>Applied skills</td>
+<td>⬜ Phase 4</td>
+</tr>
+<tr class="even">
+<td><strong>Code item</strong> (type/paste R, static equivalence check)</td>
+<td>Writing pipelines, models, plots</td>
+<td>✅ (<code>cx()</code>, <code>rcheck.js</code>)</td>
+</tr>
+<tr class="odd">
+<td><strong>Multi-select (select all that apply)</strong></td>
+<td>Assumption checklists</td>
+<td>⬜ Phase 3</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="item-writing-standards-hard-rules-linted" class="level3">
+<h3 class="anchored" data-anchor-id="item-writing-standards-hard-rules-linted">6.2 Item-writing standards (hard rules, linted)</h3>
+<ol type="1">
+<li><strong>Never</strong> make the key the longest option; keep option lengths within ±25% and within a 2.5× overall ratio.</li>
+<li><strong>No</strong> “all/none/both of the above”; no absolute words (<em>always, never, only, exactly</em>) in distractors alone.</li>
+<li><strong>No function-recall questions</strong> (e.g.&nbsp;“which function does <code>mutate</code>?”, “which argument gives odds ratios?”). Ask what a result <strong>means</strong>, what to <strong>do</strong>, or <strong>compute</strong> something.</li>
+<li>Answers must not appear in the stem, in a hint, or be implied by stem-key word overlap.</li>
+<li>Key position is irrelevant: markup order is permuted at build time (so the source never lists the key first) and display order is shuffled at run time.</li>
+<li>Every distractor is a <strong>real misconception</strong> from the world’s misconception log, not a throwaway.</li>
+<li>Every item has: world, 1–3 skill tags, difficulty 1–3, an explanation that teaches, and 1–3 non-revealing hints.</li>
+<li>Stems are self-contained, in a public-health context, and avoid trick wording or double negatives.</li>
+<li>Numeric items use values away from rounding ties; state the rounding in the stem.</li>
+<li>Explanations appear only after an attempt or an explicit <em>Show answer</em>.</li>
+</ol>
+</section>
+<section id="quality-gates" class="level3">
+<h3 class="anchored" data-anchor-id="quality-gates">6.3 Quality gates</h3>
+<ul>
+<li><code>lint_quizzes.R</code> (workshop decks) and <code>lint_bank.R</code> (quest bank) must pass in CI: zero hard failures.</li>
+<li>Peer review checklist for each new item (two reviewers: a content expert and a “naïve” learner).</li>
+<li><strong>Hash-parity tests</strong> between R and JS for every item type; Playwright tests for every interaction.</li>
+</ul>
+</section>
+<section id="pre-post-testing" class="level3">
+<h3 class="anchored" data-anchor-id="pre-post-testing">6.4 Pre-/post-testing</h3>
+<ul>
+<li>Two <strong>parallel forms</strong> (A/B), 20 items each (12 for Worlds 1–2 and core ideas, 8 added for Worlds 3–6), mapped to the same skill tags; difficulty-balanced.</li>
+<li>Confidence rating per answer (Guess/Probably/Certain) → calibration feedback (“you were certain and wrong on 3 items”).</li>
+<li>Output: skill-by-skill profile → recommended next worlds → <strong>post-test gain</strong> (percentage points and normalised gain).</li>
+<li>Planned extension: Form C for a delayed (3-month) retention test.</li>
+</ul>
+</section>
+<section id="psychometrics-once-100-learners" class="level3">
+<h3 class="anchored" data-anchor-id="psychometrics-once-100-learners">6.5 Psychometrics (once ≥ 100 learners)</h3>
+<ul>
+<li>Item difficulty (p-value), discrimination (point-biserial), <strong>distractor analysis</strong> (is any distractor never chosen?), time-on-item.</li>
+<li>Retire or rewrite items with discrimination &lt; 0.15 or difficulty outside 0.2–0.9.</li>
+<li>Differential item functioning by background (R vs no-R experience) to detect unfair items.</li>
+<li>Mastery model: a skill is “mastered” after 3 correct first-try items across ≥ 2 sessions (spaced).</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="auto-graded-r-labs-the-biggest-build" class="level2">
+<h2 class="anchored" data-anchor-id="auto-graded-r-labs-the-biggest-build">7. Auto-graded R labs (the biggest build)</h2>
+<section id="options" class="level3">
+<h3 class="anchored" data-anchor-id="options">7.1 Options</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Pros</th>
+<th>Cons</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong><code>learnr</code> + <code>gradethis</code></strong> (Shiny)</td>
+<td>Mature, real R, hints/solutions built in</td>
+<td>Needs a Shiny server or shinyapps.io</td>
+<td>Good for cohort deployments</td>
+</tr>
+<tr class="even">
+<td><strong>webR / Quarto-live</strong></td>
+<td>R in the browser, static hosting, offline</td>
+<td>Some packages unavailable/heavy (check <code>gtsummary</code>, <code>performance</code>)</td>
+<td>Optional later mode (Phase 5), after a package-compatibility spike</td>
+</tr>
+<tr class="odd">
+<td><strong>Local scripts + verifiable result codes (hybrid)</strong></td>
+<td>Real RStudio workflow, real packages, no server, works offline</td>
+<td>Codes can be shared unless seeded per learner</td>
+<td><strong>Chosen for Phases 3–4</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="b-the-hybrid-design-chosen" class="level3">
+<h3 class="anchored" data-anchor-id="b-the-hybrid-design-chosen">7.1b The hybrid design (chosen)</h3>
+<p>Learners work in their own R (RStudio/Posit Cloud) on the repo’s labs. A tiny helper package/script (<code>rqlab</code>) provides <code>rq_start(seed)</code>, <code>rq_check("task-3", obj)</code> for instant local feedback, and <code>rq_submit()</code> which prints a <strong>short result code</strong> (task results hashed with the learner’s seed and a lab version). The learner pastes the code into the site; the site verifies it and awards XP. No server, works offline, and the per-learner seed makes codes non-transferable. Details: <a href="../dungeons/site-design.html">Site design</a> §6.</p>
+</section>
+<section id="pipeline-reuses-what-exists" class="level3">
+<h3 class="anchored" data-anchor-id="pipeline-reuses-what-exists">7.2 Pipeline (reuses what exists)</h3>
+<ol type="1">
+<li>Solution scripts remain the single source of truth (<code>#@</code> markers define blanks).</li>
+<li>A <strong>grader generator</strong> produces <code>testthat</code>/gradethis checks per task: object exists, class/formula correct, estimate within tolerance, output text pattern.</li>
+<li><strong>Tiered hints</strong> per task (concept → structure → near-answer), each costing XP.</li>
+<li><strong>Tolerance policy:</strong> numeric checks use relative tolerance (e.g.&nbsp;1%); string checks normalise case and whitespace; accept equivalent formulas (<code>y ~ x1 + x2</code> ≡ <code>y ~ x2 + x1</code>).</li>
+<li><strong>Seeded variants:</strong> the learner seed regenerates the dataset, and checks compute expected values from the same seed.</li>
+<li>CI runs every solution through the grader to prove <em>solution ⇒ all checks pass</em> and <em>blank lab ⇒ checks fail</em>.</li>
+</ol>
+</section>
+<section id="fairness-and-safety" class="level3">
+<h3 class="anchored" data-anchor-id="fairness-and-safety">7.3 Fairness and safety</h3>
+<p>Sandboxed execution only (webR runs in the browser); time limits; no network; clear, non-punitive error messages (“your model has the right outcome but the wrong predictor”).</p>
+<hr>
+</section>
+</section>
+<section id="platform-architecture" class="level2">
+<h2 class="anchored" data-anchor-id="platform-architecture">8. Platform architecture</h2>
+<section id="today-static-serverless" class="level3">
+<h3 class="anchored" data-anchor-id="today-static-serverless">8.1 Today (static, serverless)</h3>
+<pre><code>Quarto pages (html)  →  quest.js (engine)  →  localStorage (progress)
+        ↑                      ↑
+  bank/items.R ──render──&gt; hashed markup (answers never in source)</code></pre>
+<ul>
+<li>Hosting: GitHub Pages (already used by the repo); decks and pages work offline once downloaded.</li>
+<li>Progress: per-browser; export/import JSON backup.</li>
+</ul>
+</section>
+<section id="b-hosting-decision-v2-static-now-accounts-later" class="level3">
+<h3 class="anchored" data-anchor-id="b-hosting-decision-v2-static-now-accounts-later">8.1b Hosting decision (v2): static now, accounts later</h3>
+<p>Phases 1–5 stay fully static on GitHub Pages. To make accounts a <em>later add-on rather than a rewrite</em>, the engine must be built now around a <strong>storage adapter</strong> (<code>load/save/sync</code>), an <strong>append-only event log</strong>, <strong>XP and mastery recomputed from events/items</strong> (never stored as authoritative totals), and <strong>versioned state with migrations</strong>. Specified in <a href="../dungeons/site-design.html">Site design</a> §8.</p>
+</section>
+<section id="target-architecture-phased" class="level3">
+<h3 class="anchored" data-anchor-id="target-architecture-phased">8.2 Target architecture (phased)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Layer</th>
+<th>Phase 1–3</th>
+<th>Phase 5–6</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Content</td>
+<td>Quarto + R item bank</td>
+<td>+ item metadata DB, versioned item IDs</td>
+</tr>
+<tr class="even">
+<td>Engine</td>
+<td><code>quest.js</code>, localStorage</td>
+<td>+ sync adapter (same state schema)</td>
+</tr>
+<tr class="odd">
+<td>Identity</td>
+<td>None</td>
+<td>Optional sign-in (institutional SSO / magic link)</td>
+</tr>
+<tr class="even">
+<td>Storage</td>
+<td>Browser</td>
+<td>Postgres/Supabase (or Firebase) with row-level security</td>
+</tr>
+<tr class="odd">
+<td>Grading</td>
+<td>Client hashes</td>
+<td>Server-side check for credentialed attempts; signed results</td>
+</tr>
+<tr class="even">
+<td>Analytics</td>
+<td>None</td>
+<td>Privacy-preserving event log, instructor dashboard</td>
+</tr>
+<tr class="odd">
+<td>Interop</td>
+<td>None</td>
+<td>xAPI/LRS or LTI 1.3 for LMS embedding</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="cross-cutting-requirements" class="level3">
+<h3 class="anchored" data-anchor-id="cross-cutting-requirements">8.3 Cross-cutting requirements</h3>
+<ul>
+<li><strong>State schema versioning</strong> (<code>v</code> field already present) with migration functions.</li>
+<li><strong>Privacy:</strong> India’s DPDP Act 2023 and institutional ethics: explicit consent, data minimisation, pseudonymous IDs, export/delete on request, no health data from learners.</li>
+<li><strong>Accessibility:</strong> WCAG 2.2 AA (contrast, focus order, keyboard-only play, screen-reader labels, no colour-only cues), automated axe checks plus manual audit.</li>
+<li><strong>Performance and offline:</strong> each page under ~1 MB of JS/CSS; optional PWA for full offline use in low-connectivity settings.</li>
+<li><strong>Language:</strong> English only. Keep strings in one place for maintainability, but no translation work is planned.</li>
+<li><strong>Mobile first:</strong> all item types operable by touch (order-items need drag + buttons).</li>
+<li><strong>Security:</strong> no secrets client-side; CSP headers; never execute learner code outside the sandbox.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="engineering-and-qa" class="level2">
+<h2 class="anchored" data-anchor-id="engineering-and-qa">9. Engineering and QA</h2>
+<section id="repository-layout-target" class="level3">
+<h3 class="anchored" data-anchor-id="repository-layout-target">9.1 Repository layout (target)</h3>
+<pre><code>dungeons/
+  bank/           items by world (one file each), metadata, form definitions
+  worlds/         one qmd per world + briefings
+  labs/           student labs, graders, solutions (generated)
+  assets/         quest.js, quest.R, css, worlds.js
+  tools/          lint_bank.R, parity tests, build scripts, analytics notebooks
+  tests/          Playwright E2E, unit tests (hash/XP/streak/badge logic)
+  ROADMAP.md      this file</code></pre>
+</section>
+<section id="continuous-integration-github-actions" class="level3">
+<h3 class="anchored" data-anchor-id="continuous-integration-github-actions">9.2 Continuous integration (GitHub Actions)</h3>
+<ol type="1">
+<li><code>Rscript lint_bank.R</code> and <code>lint_quizzes.R</code> → fail on any hard rule.</li>
+<li><code>Rscript run_solutions.R</code> and every dataset’s <code>make_data_*.R</code> feature check.</li>
+<li>R↔︎JS <strong>hash parity</strong> test across all item types.</li>
+<li>Render all pages (Quarto) with warnings as errors.</li>
+<li>Playwright E2E: engine behaviour, shuffling, XP/streak/badges, gates, test mode, export/import, <strong>no answers in page source</strong>.</li>
+<li>axe accessibility scan; link check; bundle-size budget.</li>
+<li>Publish to Pages only if all green.</li>
+</ol>
+</section>
+<section id="engine-test-matrix-must-pass-before-each-release" class="level3">
+<h3 class="anchored" data-anchor-id="engine-test-matrix-must-pass-before-each-release">9.3 Engine test matrix (must pass before each release)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Area</th>
+<th>Tests</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Hash parity</td>
+<td>R and JS produce identical hashes for MCQ/fill/num/order/spot</td>
+</tr>
+<tr class="even">
+<td>Shuffle</td>
+<td>Display order varies; key still validated by authored index; markup order never key-first</td>
+</tr>
+<tr class="odd">
+<td>XP rules</td>
+<td>First/second/third try factors; hint costs; show-answer = 0; boss bonus; idempotent re-load</td>
+</tr>
+<tr class="even">
+<td>Streaks</td>
+<td>Same day, next day, gap reset (mocked clock)</td>
+</tr>
+<tr class="odd">
+<td>Badges</td>
+<td>Each rule fires once; persists; world-clear needs the boss</td>
+</tr>
+<tr class="even">
+<td>Gates</td>
+<td>Locked until pass mark; override works; map shows state</td>
+</tr>
+<tr class="odd">
+<td>Test mode</td>
+<td>No feedback; confidence; per-tag breakdown; pre→post gain</td>
+</tr>
+<tr class="even">
+<td>Persistence</td>
+<td>Reload keeps state; export→import round trip; corrupt file rejected</td>
+</tr>
+<tr class="odd">
+<td>Leak scan</td>
+<td>Page source contains no answers, explanations or hint text in clear</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="statistical-correctness-review" class="level3">
+<h3 class="anchored" data-anchor-id="statistical-correctness-review">9.4 Statistical correctness review</h3>
+<p>Every briefing, item and explanation is reviewed by the author (community-medicine faculty) for correctness, with an optional external statistician check before wide release; numeric answers are <em>computed in R in the build</em> (never hand-typed) wherever they depend on data; and any claim about data (“OR 5.1, PR 3.1”) is generated from the dataset at render time.</p>
+<hr>
+</section>
+</section>
+<section id="content-production-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="content-production-workflow">10. Content production workflow</h2>
+<ol type="1">
+<li><strong>Spec</strong> the world (objectives, misconceptions, dataset, boss).</li>
+<li><strong>Draft</strong> briefing + items in the bank; run the linters locally.</li>
+<li><strong>Review</strong>: content expert + learner-pilot read-through; fix ambiguity.</li>
+<li><strong>Build</strong> the world page and lab; run solutions and graders.</li>
+<li><strong>Pilot</strong> with 5–10 residents (think-aloud); collect item stats.</li>
+<li><strong>Release</strong> behind a feature flag; monitor item analytics for two weeks.</li>
+<li><strong>Maintain</strong>: yearly review for R/package changes and clinical-example currency.</li>
+</ol>
+<p><strong>Style guide highlights:</strong> units always stated; reference category always named; “associated with” not “causes”; Indian public-health examples (NFHS, NCD screening, TB, dengue, ANC); gender-neutral language; short sentences.</p>
+<hr>
+</section>
+<section id="phased-roadmap" class="level2">
+<h2 class="anchored" data-anchor-id="phased-roadmap">11. Phased roadmap</h2>
+<p>Effort is in person-weeks (PW) for one developer + one content author/reviewer (community-medicine faculty); timelines assume part-time academic capacity and can compress with more people.</p>
+<section id="phase-0-done-foundation" class="level3">
+<h3 class="anchored" data-anchor-id="phase-0-done-foundation">Phase 0 — Done: foundation (✔)</h3>
+<ul>
+<li>Full-day workshop: 6 decks, 6 labs with solutions, quiz engine, simulated NCD dataset, cheat sheet.</li>
+<li>Quiz quality gate (<code>lint_quizzes.R</code>) and shuffled options in the existing decks.</li>
+</ul>
+</section>
+<section id="phase-1-quest-engine-and-first-worlds-built-in-this-folder-6-pw" class="level3">
+<h3 class="anchored" data-anchor-id="phase-1-quest-engine-and-first-worlds-built-in-this-folder-6-pw">Phase 1 — Quest engine and first worlds (✔ built in this folder, ~6 PW)</h3>
+<ul>
+<li><code>quest.js</code>: five item types, XP, hints, streaks, ranks, badges, gates, test mode, export/import.</li>
+<li>Item bank + linter; Worlds 1–2; pre-test (Form A) and post-test (Form B); quest map and roadmap page.</li>
+<li><strong>Exit criteria:</strong> linter 0 failures; engine test matrix green; a pilot of 5 learners completes Worlds 1–2 without help.</li>
+</ul>
+</section>
+<section id="phase-2-core-curriculum-conversion-and-the-campus-shell-q1q2-14-pw" class="level3">
+<h3 class="anchored" data-anchor-id="phase-2-core-curriculum-conversion-and-the-campus-shell-q1q2-14-pw">Phase 2 — Core curriculum conversion and the Campus shell (Q1–Q2, ~14 PW)</h3>
+<ul>
+<li>Convert Worlds 3–6 from the workshop (briefings, ≥ 8 items each, bosses).</li>
+<li><strong>Site shell:</strong> Campus home, skill tree, profile, daily-review queue, storage adapter + state v2 with migration (see Site design §8, §12).</li>
+<li>Readiness check (replaces the former World 0).</li>
+<li>Complete pre/post forms across all core worlds; add per-skill recommendations.</li>
+<li>Cheat-sheet and facilitator pack unified under the quest brand.</li>
+<li><strong>Exit:</strong> 56+ new items, all linted; pre/post gain measured on a pilot of 20+ residents.</li>
+</ul>
+</section>
+<section id="phase-3-arcade-case-files-and-new-models-q2q3-18-pw" class="level3">
+<h3 class="anchored" data-anchor-id="phase-3-arcade-case-files-and-new-models-q2q3-18-pw">Phase 3 — Arcade, case files and new models (Q2–Q3, ~18 PW)</h3>
+<ul>
+<li><strong>Arcade</strong> with 6+ drill generators; <strong>case-file engine</strong> (branching YAML scenarios) with 4 case files.</li>
+<li>New item types: click-the-plot, slider/parameter-play, match, multi-select.</li>
+<li>Worlds 7–11 (counts, ordinal/nominal, survival, clusters, surveys) with their datasets.</li>
+<li>Spaced-retrieval “daily five”; mastery model by tag.</li>
+<li><strong>Exit:</strong> item analytics dashboard (notebook) running on pilot data; accessibility audit passed.</li>
+</ul>
+</section>
+<section id="phase-4-hybrid-r-labs-and-personalisation-q3q4-14-pw" class="level3">
+<h3 class="anchored" data-anchor-id="phase-4-hybrid-r-labs-and-personalisation-q3q4-14-pw">Phase 4 — Hybrid R labs and personalisation (Q3–Q4, ~14 PW)</h3>
+<ul>
+<li><code>rqlab</code> helper package, result-code verification on the site, a lab for every world; grader generated from solutions; tiered hints.</li>
+<li>Per-learner seeds and item pools; free-text rubric self-check.</li>
+<li>Worlds 12–14 (curves/interactions, missing data, prediction models).</li>
+<li><strong>Exit:</strong> all labs gradeable; CI proves solution passes and blank fails; webR package compatibility documented.</li>
+</ul>
+</section>
+<section id="phase-5-causal-thinking-capstone-and-electives-q4q5-14-pw" class="level3">
+<h3 class="anchored" data-anchor-id="phase-5-causal-thinking-capstone-and-electives-q4q5-14-pw">Phase 5 — Causal thinking, capstone and electives (Q4–Q5, ~14 PW)</h3>
+<ul>
+<li>World 15 (causal), World 16 capstone with analysis-plan template and peer review.</li>
+<li>Electives E1–E9 (prioritised by demand).</li>
+<li>Case-file quests; reviewer-simulator bosses.</li>
+<li><strong>Exit:</strong> 10 learners complete the capstone; rubric inter-rater agreement measured.</li>
+</ul>
+</section>
+<section id="phase-6-cohort-mode-and-credentials-q5q6-16-pw" class="level3">
+<h3 class="anchored" data-anchor-id="phase-6-cohort-mode-and-credentials-q5q6-16-pw">Phase 6 — Cohort mode and credentials (Q5–Q6, ~16 PW)</h3>
+<ul>
+<li>Optional sign-in, sync, instructor dashboard, cohort leaderboards (opt-in), xAPI/LTI.</li>
+<li>Server-side grading and signed attempts for certificates.</li>
+<li><strong>Completion certificate</strong> (needs accounts + server verification), PWA/offline bundle, calm mode refinements.</li>
+<li><strong>Exit:</strong> a department runs a full cohort with the dashboard; DPDP/ethics review documented.</li>
+</ul>
+</section>
+<section id="phase-7-evaluate-publish-sustain-continuous" class="level3">
+<h3 class="anchored" data-anchor-id="phase-7-evaluate-publish-sustain-continuous">Phase 7 — Evaluate, publish, sustain (continuous)</h3>
+<ul>
+<li>Learning-gain study (pre/post, 3-month retention), gamification A/B (e.g.&nbsp;streaks vs calm mode).</li>
+<li>Publication in a medical-education journal; open-licence the item bank; contribution guide.</li>
+<li>Yearly content and dependency refresh.</li>
+</ul>
+</section>
+<section id="timeline-at-a-glance" class="level3">
+<h3 class="anchored" data-anchor-id="timeline-at-a-glance">Timeline at a glance</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Quarter</th>
+<th>Milestones</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Q0</td>
+<td>Workshop + quest engine + Worlds 1–6 + pre/post (<strong>now</strong>)</td>
+</tr>
+<tr class="even">
+<td>Q1</td>
+<td>Campus shell + skill tree + review queue; Worlds 3–4; readiness check; pilot 1</td>
+</tr>
+<tr class="odd">
+<td>Q2</td>
+<td>Worlds 5–6; arcade + case-file engine; Worlds 7–8</td>
+</tr>
+<tr class="even">
+<td>Q3</td>
+<td>Worlds 9–11; analytics; accessibility audit</td>
+</tr>
+<tr class="odd">
+<td>Q4</td>
+<td>Hybrid R labs (<code>rqlab</code>); Worlds 12–14</td>
+</tr>
+<tr class="even">
+<td>Q5</td>
+<td>Causal + capstone; electives start; cohort-mode design</td>
+</tr>
+<tr class="odd">
+<td>Q6</td>
+<td>Sign-in, dashboard, certificate/credentials; study write-up</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="risks-and-mitigations" class="level2">
+<h2 class="anchored" data-anchor-id="risks-and-mitigations">12. Risks and mitigations</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Risk</th>
+<th>Likelihood / impact</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Gamification replaces learning</strong> (chasing XP)</td>
+<td>Medium / High</td>
+<td>First-try rule, no streak XP, calm mode, mastery-based unlocks, track learning gain not points</td>
+</tr>
+<tr class="even">
+<td><strong>Leaky or guessable items</strong></td>
+<td>High / High</td>
+<td>Linter in CI, balanced options, shuffled display and markup, peer review, distractor analysis</td>
+</tr>
+<tr class="odd">
+<td><strong>Answers shared</strong> (static hashes)</td>
+<td>High / Medium</td>
+<td>Item pools, per-learner seeds, server grading for credentials</td>
+</tr>
+<tr class="even">
+<td><strong>webR package gaps</strong></td>
+<td>Medium / High</td>
+<td>Early compatibility spike (<code>gtsummary</code>, <code>performance</code>, <code>see</code>, <code>pROC</code>); fall back to learnr or local graders</td>
+</tr>
+<tr class="odd">
+<td><strong>Content errors</strong> (statistics)</td>
+<td>Medium / High</td>
+<td>Statistician review, computed (not typed) numbers, errata process</td>
+</tr>
+<tr class="even">
+<td><strong>Authoring bottleneck</strong></td>
+<td>High / Medium</td>
+<td>Templates, linters, item generators for numeric families, community contributions</td>
+</tr>
+<tr class="odd">
+<td><strong>Low engagement / drop-off</strong></td>
+<td>Medium / Medium</td>
+<td>Short levels, daily five, pilots, cohort mode, instructor nudges</td>
+</tr>
+<tr class="even">
+<td><strong>Accessibility gaps</strong></td>
+<td>Medium / Medium</td>
+<td>WCAG checks in CI, manual audits, keyboard-only testing</td>
+</tr>
+<tr class="odd">
+<td><strong>Privacy/regulatory</strong></td>
+<td>Low–Medium / High</td>
+<td>Local-first default, consent, minimal data, DPDP review before any server</td>
+</tr>
+<tr class="even">
+<td><strong>R/package drift</strong></td>
+<td>High / Low–Medium</td>
+<td>Pin versions in CI (<code>renv</code>), yearly refresh, solution-runner regression tests</td>
+</tr>
+<tr class="odd">
+<td><strong>Scope creep</strong></td>
+<td>High / Medium</td>
+<td>Phase gates with exit criteria; electives only after core is stable</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="success-metrics" class="level2">
+<h2 class="anchored" data-anchor-id="success-metrics">13. Success metrics</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Learning gain</strong> (post − pre, percentage points)</td>
+<td>≥ +25 median; normalised gain ≥ 0.4</td>
+</tr>
+<tr class="even">
+<td>Core-path completion (Worlds 1–6)</td>
+<td>≥ 60% of those who start World 1</td>
+</tr>
+<tr class="odd">
+<td>3-month retention (Form C vs post)</td>
+<td>≤ 10-point drop</td>
+</tr>
+<tr class="even">
+<td>Item health</td>
+<td>≥ 90% of items with discrimination ≥ 0.2 after 100 learners</td>
+</tr>
+<tr class="odd">
+<td>Over-confidence</td>
+<td>Share of “certain but wrong” answers falls pre → post</td>
+</tr>
+<tr class="even">
+<td>Accessibility</td>
+<td>0 critical axe violations; keyboard-only completion verified</td>
+</tr>
+<tr class="odd">
+<td>Quality</td>
+<td>0 hard linter failures on <code>main</code>; CI green before every publish</td>
+</tr>
+<tr class="even">
+<td>Satisfaction</td>
+<td>≥ 4/5 usefulness; ≥ 80% would recommend</td>
+</tr>
+<tr class="odd">
+<td>Reach</td>
+<td>Departments/institutions using it; capstones completed</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="backlog-idea-parking-lot" class="level2">
+<h2 class="anchored" data-anchor-id="backlog-idea-parking-lot">14. Backlog / idea parking lot</h2>
+<ul>
+<li>“Reviewer #2” simulator: a bot-free scripted rebuttal game with scored replies.</li>
+<li><strong>Mistake museum:</strong> a gallery of real-world (anonymised) analysis errors to diagnose.</li>
+<li>Interactive confounding sandbox: draw a DAG, simulate, watch crude vs adjusted estimates.</li>
+<li>Live <strong>OR ↔︎ PR</strong> and <strong>CI ↔︎ PI</strong> explorers.</li>
+<li>Printable certificates and a skills passport (tags mastered).</li>
+<li>Pair-programming quests; instructor “spot check” mode for classroom use.</li>
+<li>Voice-over/short video briefings; transcript for every clip.</li>
+<li>Teaching-assistant chatbot restricted to the item bank’s explanations (with safeguards).</li>
+<li>Open data challenge: learners contribute new simulated scenarios with feature checks.</li>
+<li>Dark mode and large-text themes.</li>
+</ul>
+<hr>
+</section>
+<section id="definitions-of-done" class="level2">
+<h2 class="anchored" data-anchor-id="definitions-of-done">15. Definitions of done</h2>
+<p><strong>An item is done when:</strong> it passes the linter; has world, tags, difficulty, explanation and hints; distractors map to real misconceptions; two reviewers approved it; numeric answers are computed in R; the hash-parity test passes; and a pilot learner read it without clarification questions.</p>
+<p><strong>A world is done when:</strong> briefing + ≥ 8 items (all types appropriate to the topic) + boss + lab with grader + two parallel items for the pre/post forms; objectives mapped to ILOs; statistician sign-off; accessibility checked; pilot with ≥ 5 learners; analytics shows no broken items.</p>
+<p><strong>A phase is done when:</strong> its exit criteria are met, CI is green, the roadmap is updated, and a short retrospective is recorded.</p>
+<hr>
+</section>
+<section id="next-four-weeks" class="level2">
+<h2 class="anchored" data-anchor-id="next-four-weeks">16. Next four weeks</h2>
+<ol type="1">
+<li>Pilot Worlds 1–2 and the pre/post forms with 5 residents; capture think-aloud notes and item timings.</li>
+<li><del>Write the World 3 (<em>Confounding Caves</em>) bank</del> ✔ drafted (9 items + boss); still to do: run the linter and render, then the misconception log. World 4 (<em>Assumption Ruins</em>) bank also drafted. World 5 (<em>Odds Arena</em>) bank also drafted. World 6 (<em>The Reporting Guild</em>) bank also drafted, so Phase 2’s four core-world conversions (Worlds 3–6) are drafted. Readiness check (now the <strong>placement check</strong>) also built (<code>readiness.qmd</code>, items <code>rd-01</code>–<code>rd-10</code>, routing in <code>quest.js</code>). Campus shell built (<code>campus.qmd</code>, <code>assets/skills.js</code>: 62-skill tree, mastery, fading/review list, “what next?” recommender, profile, calm mode; unit tests in <code>tests/skills_test.js</code>). <strong>Deferred from Phase 2 shell:</strong> state v2 event log + storage adapter (mastery is derived from v1 item records, additive fields only), an answerable daily-review quiz (needs item replay, Phase 3 with spaced retrieval), level 4 “mastered”. Pre/post forms now 20 parallel items each covering Worlds 1–6 (<code>pre-13</code>–<code>20</code>, <code>post-13</code>–<code>20</code>). Per-skill “Practise next” added to pre/post results. Facilitator pack (<code>facilitator.qmd</code>: formats, 2-hour plan, per-world prompts, pilot protocol) and browser-only cohort summary tool (<code>cohort.qmd</code>, <code>assets/cohort.js</code>, unit-tested) built; the workshop cheat sheet is linked from the quest. <strong>Remaining for the Phase 2 exit: lint/render pass, then the 20+ resident pilot (real-world).</strong> <strong>2026-10-22:</strong> moved out of the Regression track into its own site (<code>dungeons/</code>, profile <code>dungeons</code>, landing-page card); map regrouped into Regions 1–4 with “Read first” library links; old URLs redirect. <strong>Next: Region 1 · Basics worlds</strong> (Your First Script, Tidy Tavern, Join Junction, First Plots, Which Test?). <strong>Code items added (2026-10-22):</strong> learners type or paste R; <code>assets/rcheck.js</code> checks it without running R by normalising equivalent forms (unit tests <code>tests/rcheck_test.js</code>, browser-tested). The placement check’s two tasks are now code items. webR stays a later-phase option.</li>
+<li>Prototype <code>rqlab</code> (<code>rq_start</code>, <code>rq_check</code>, <code>rq_submit</code>) for one lab and the code-verification box on the site.</li>
+<li>Add the Playwright suite and the R↔︎JS parity test to CI.</li>
+<li>Draft the <strong>readiness check</strong> (8 items + 2 R tasks) and the skill-tree node list; prototype the skill tree page on the existing 40 items.</li>
+<li>Decide the hosting/privacy stance for Phase 6 (local-first stays the default).</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("\.");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>
+// Quarto's navbar `logo-href` is emitted as a literal string and is
+// not depth-adjusted for nested pages (unlike navbar.left/right items
+// and the theme <link>), so it 404s from any page below the project
+// root. Derive the correct relative prefix from the theme stylesheet
+// link, which Quarto *does* resolve correctly, and reuse it here.
+(function () {
+  var css = document.querySelector('link[href$="assets/theme_webp.css"]');
+  var brand = document.querySelector('a.navbar-brand');
+  if (css && brand) {
+    var prefix = css.getAttribute('href').replace(/assets\/theme_webp\.css$/, '');
+    brand.setAttribute('href', prefix + 'welcome.html');
+
+    // Floating bottom-right icon cluster: track home / site index /
+    // close. Kiosk mode (start-workshop.bat) hides all browser
+    // chrome, so these give a way back without relying on the
+    // browser's own controls. Positioned bottom-right to avoid the
+    // top navbar and the bottom-center "Home | Next Module" footer
+    // some pages already include.
+    var isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+
+    var style = document.createElement('style');
+    style.textContent =
+      '.ws-nav-cluster{position:fixed;bottom:10px;right:10px;z-index:10000;' +
+      'display:flex;gap:6px;background:rgba(255,255,255,0.9);' +
+      'border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,0.2);}' +
+      '.ws-nav-cluster a,.ws-nav-cluster button{width:36px;height:36px;' +
+      'border-radius:50%;border:none;background:#fff;font-size:1.1rem;' +
+      'display:flex;align-items:center;justify-content:center;cursor:pointer;' +
+      'text-decoration:none;color:inherit;box-shadow:0 1px 3px rgba(0,0,0,0.15);}' +
+      '.ws-nav-cluster a:hover,.ws-nav-cluster button:hover{background:#f0f0f0;}' +
+      '.ws-nav-hint{position:fixed;bottom:54px;right:10px;z-index:10000;' +
+      'background:#2c3e50;color:#fff;font-size:0.8rem;padding:6px 10px;' +
+      'border-radius:6px;display:none;white-space:nowrap;}';
+    document.head.appendChild(style);
+
+    var cluster = document.createElement('div');
+    cluster.className = 'ws-nav-cluster';
+
+    var trackHome = document.createElement('a');
+    trackHome.href = prefix + 'welcome.html';
+    trackHome.title = 'Back to track home';
+    trackHome.textContent = '🏠';
+    cluster.appendChild(trackHome);
+
+    var siteIndex = document.createElement('a');
+    siteIndex.href = prefix + '../index.html';
+    siteIndex.title = 'All workshop tracks';
+    siteIndex.textContent = '🧭';
+    cluster.appendChild(siteIndex);
+
+    if (isLocal) {
+      var hint = document.createElement('div');
+      hint.className = 'ws-nav-hint';
+      hint.textContent = 'Press Alt+F4 to exit full-screen';
+      document.body.appendChild(hint);
+
+      var closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.title = 'Exit full-screen';
+      closeBtn.textContent = '✕';
+      closeBtn.addEventListener('click', function () {
+        window.close();
+        hint.style.display = 'block';
+        setTimeout(function () { hint.style.display = 'none'; }, 3000);
+      });
+      cluster.appendChild(closeBtn);
+    }
+
+    document.body.appendChild(cluster);
+  }
+})();
+</script>
+
+
+
+
+</body></html>

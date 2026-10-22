@@ -1,0 +1,521 @@
+---
+title: "Continuous Plots - BASIC"
+subtitle: "Visualizing Numeric Data"
+format:
+  revealjs:
+    theme: serif
+    css: ../../assets/slide_deck.css
+    include-after-body: footer.html
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    code-fold: true
+    chalkboard: true
+    preview-links: true
+    center: true
+    zoom: true
+---
+
+# Continuous Data {.center}
+
+## What is Continuous Data?
+
+::: {.columns}
+::: {.column width="50%"}
+**Definition:**
+
+Data that represents **numeric measurements** or **quantities**
+
+- Can take any value within a range
+- Quantitative rather than qualitative
+- Often derived from measurements
+:::
+
+::: {.column width="50%"}
+**Examples in Our Dataset:**
+
+- Age (18-79 years)
+- BMI (11.4-37.3)
+- Cholesterol levels
+- Blood Sugar levels
+- Blood Pressure (Systolic & Diastolic)
+- Latitude & Longitude
+:::
+:::
+
+## Analytical Goals for Continuous Data
+
+::: {style="font-size: 0.9em;"}
+**What questions can we answer?**
+
+::: {.incremental}
+- 🟡 **Distribution** - What's the spread? Shape? Center?
+- ⚫ **Correlation** - How do two variables relate to each other?
+:::
+
+**Charts we'll learn:**
+
+1. Histogram
+2. Density Plot
+3. Scatter Plot
+4. Box Plot (covered in Category vs. Continuous)
+:::
+
+## Setup: Load Libraries and Data
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-3|5-6|8-11|13-15"
+
+# Load required libraries
+library(ggplot2)    # For creating plots
+library(dplyr)      # For data manipulation
+
+# Load the dataset
+data <- readxl::read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+
+# Handle missing data: select complete cases for key numeric variables
+data_clean <- data %>%
+  filter(!is.na(BMI), !is.na(Cholesterol), !is.na(Age))  # Remove missing values
+
+# Preview numeric variables
+summary(data_clean %>% 
+  select(Age, BMI, Cholesterol, BloodSugar, SysBP_0m, DiaBP_0m))
+```
+
+## Setup: Load Libraries and Data {.smaller}
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(ggplot2)
+library(dplyr)
+library(readxl)
+
+data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+data_clean <- data %>% filter(!is.na(BMI), !is.na(Cholesterol), !is.na(Age))
+
+summary(data_clean %>% select(Age, BMI, Cholesterol, BloodSugar, SysBP_0m, DiaBP_0m))
+```
+
+---
+
+# Histogram
+
+## Histogram - Code
+
+🟡 **Goal:** Distribution (show frequency across bins)
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-2|3|4-5|6|7-9"
+
+# Create histogram showing age distribution
+ggplot(data_clean, aes(x = Age)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "white", alpha = 0.8) +  # 30 bins
+  labs(title = "Distribution of Patient Ages",
+       x = "Age (years)", y = "Frequency (Number of Patients)") +
+  theme_minimal(base_family = "serif") +  # Serif font for professional look
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+```
+
+::: {.notes}
+- bins = 30 divides the data into 30 equal-width intervals
+- Adjust bins to find optimal visualization (too few = loss of detail, too many = noise)
+:::
+
+## Histogram - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(data_clean, aes(x = Age)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "white", alpha = 0.8) +
+  labs(title = "Distribution of Patient Ages",
+       x = "Age (years)", y = "Frequency (Number of Patients)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+```
+
+---
+
+# Interpreting Histograms
+
+## How to Read Histograms
+
+**Using the previous plot:**
+
+::: {.incremental style="font-size: 0.85em;"}
+**OBSERVATION:**
+- Distribution appears roughly uniform across age range
+- Ages range from ~18 to ~79 years
+- No clear peak (not normally distributed)
+- Relatively even frequency across all age groups
+- No obvious outliers or gaps
+
+**INTERPRETATION:**
+- Study successfully recruited across broad age spectrum
+- No age group dominates the sample
+- Good representation for age-stratified analysis
+- Uniform distribution suggests deliberate balanced recruitment
+
+**IMPLICATIONS:**
+- Results generalizable across adult age range
+- Can analyze age as continuous variable or create age groups
+- Sufficient sample in all age ranges for subgroup analysis
+
+**ACTIONS:**
+- Consider age as covariate in treatment analysis
+- May want to create age categories (e.g., 18-40, 41-60, 61+)
+- Check if age interacts with treatment effect
+:::
+:::
+
+---
+
+# Histogram - With Statistics
+
+## Histogram with Mean/Median Lines - Code
+
+🟡 **Goal:** Distribution with central tendency markers
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-4|6-7|8-11|12-15|16-18"
+
+# Calculate summary statistics
+age_mean <- mean(data_clean$Age, na.rm = TRUE)  # Calculate mean
+age_median <- median(data_clean$Age, na.rm = TRUE)  # Calculate median
+
+# Create histogram with reference lines
+ggplot(data_clean, aes(x = Age)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "white", alpha = 0.7) +
+  geom_vline(aes(xintercept = age_mean), color = "red", 
+             linetype = "dashed", size = 1) +  # Add mean line
+  geom_vline(aes(xintercept = age_median), color = "darkgreen", 
+             linetype = "solid", size = 1) +  # Add median line
+  annotate("text", x = age_mean + 5, y = 15, 
+           label = paste("Mean =", round(age_mean, 1)), 
+           color = "red", family = "serif", size = 4) +  # Label mean
+  annotate("text", x = age_median - 5, y = 15, 
+           label = paste("Median =", round(age_median, 1)), 
+           color = "darkgreen", family = "serif", size = 4) +  # Label median
+  labs(title = "Age Distribution with Mean and Median",
+       x = "Age (years)", y = "Frequency") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"))
+```
+
+## Histogram with Statistics - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+age_mean <- mean(data_clean$Age, na.rm = TRUE)
+age_median <- median(data_clean$Age, na.rm = TRUE)
+
+ggplot(data_clean, aes(x = Age)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "white", alpha = 0.7) +
+  geom_vline(aes(xintercept = age_mean), color = "red", 
+             linetype = "dashed", size = 1) +
+  geom_vline(aes(xintercept = age_median), color = "darkgreen", 
+             linetype = "solid", size = 1) +
+  annotate("text", x = age_mean + 5, y = 15, 
+           label = paste("Mean =", round(age_mean, 1)), 
+           color = "red", family = "serif", size = 4) +
+  annotate("text", x = age_median - 5, y = 15, 
+           label = paste("Median =", round(age_median, 1)), 
+           color = "darkgreen", family = "serif", size = 4) +
+  labs(title = "Age Distribution with Mean and Median",
+       x = "Age (years)", y = "Frequency") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+```
+
+---
+
+# Density Plot
+
+## Density Plot - Code
+
+🟡 **Goal:** Distribution (smooth curve, easier to compare)
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-2|3|4-5|6-8"
+
+# Create smooth density plot for BMI
+ggplot(data_clean, aes(x = BMI)) +
+  geom_density(fill = "coral", alpha = 0.6, color = "darkred", size = 1) +  # Smooth density
+  labs(title = "Density Distribution of BMI",
+       x = "Body Mass Index (BMI)", y = "Density") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12))
+```
+
+::: {.notes}
+Density plots smooth out histogram bins, showing underlying distribution shape
+Area under curve = 1 (100%)
+:::
+
+## Density Plot - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(data_clean, aes(x = BMI)) +
+  geom_density(fill = "coral", alpha = 0.6, color = "darkred", size = 1) +
+  labs(title = "Density Distribution of BMI",
+       x = "Body Mass Index (BMI)", y = "Density") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+```
+
+---
+
+# Scatter Plot
+
+## Scatter Plot - Code
+
+⚫ **Goal:** Correlation between two continuous variables
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-2|3|4-5|6-8"
+
+# Create scatter plot showing BMI vs. Cholesterol relationship
+ggplot(data_clean, aes(x = BMI, y = Cholesterol)) +
+  geom_point(alpha = 0.6, color = "darkblue", size = 3) +  # Add semi-transparent points
+  labs(title = "Relationship between BMI and Cholesterol",
+       x = "Body Mass Index (BMI)", y = "Cholesterol (mg/dL)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12))
+```
+
+::: {.notes}
+- alpha = 0.6 makes points semi-transparent to show overlapping
+- Look for patterns: positive correlation, negative, or no relationship
+:::
+
+## Scatter Plot - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(data_clean, aes(x = BMI, y = Cholesterol)) +
+  geom_point(alpha = 0.6, color = "darkblue", size = 3) +
+  labs(title = "Relationship between BMI and Cholesterol",
+       x = "Body Mass Index (BMI)", y = "Cholesterol (mg/dL)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+```
+
+---
+
+# Interpreting Scatter Plots
+
+## How to Read Scatter Plots
+
+**Using the previous plot:**
+
+::: {.incremental style="font-size: 0.85em;"}
+**OBSERVATION:**
+- Points scattered across the plot area
+- No clear linear pattern visible
+- BMI ranges from ~15 to ~37
+- Cholesterol ranges from ~120 to ~290
+- Some clustering but no strong trend
+
+**INTERPRETATION:**
+- Weak or no correlation between BMI and Cholesterol in this sample
+- Relationship appears to be random/independent
+- Both variables vary independently
+- No obvious outliers or extreme cases
+
+**IMPLICATIONS:**
+- BMI alone may not predict cholesterol levels
+- Other factors likely influence cholesterol (diet, genetics, medication)
+- Cannot use BMI as sole predictor of cholesterol risk
+- Need multivariate analysis for better understanding
+
+**CRITICAL WARNING:**
+- **Correlation ≠ Causation**
+- Even if correlation existed, wouldn't prove causal relationship
+- Always consider confounding variables
+- Use domain knowledge alongside statistical patterns
+:::
+:::
+
+---
+
+# Scatter Plot - Colored by Group
+
+## Scatter Plot with Categories - Code
+
+⚫ **Goal:** Correlation + Compare groups
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-2|3-4|5-7|8-10"
+
+# Scatter plot colored by Treatment Group
+ggplot(data_clean, aes(x = Age, y = SysBP_0m, color = TreatmentGroup)) +
+  geom_point(alpha = 0.7, size = 3) +  # Color points by group
+  scale_color_manual(values = c("Control" = "#E74C3C", 
+                                 "Intervention" = "#3498DB"),
+                     name = "Treatment Group") +  # Custom colors
+  labs(title = "Baseline Systolic BP by Age and Treatment Group",
+       x = "Age (years)", 
+       y = "Systolic Blood Pressure (mmHg)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        legend.position = "right")
+```
+
+## Scatter Plot with Categories - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(data_clean, aes(x = Age, y = SysBP_0m, color = TreatmentGroup)) +
+  geom_point(alpha = 0.7, size = 3) +
+  scale_color_manual(values = c("Control" = "#E74C3C", 
+                                 "Intervention" = "#3498DB"),
+                     name = "Treatment Group") +
+  labs(title = "Baseline Systolic BP by Age and Treatment Group",
+       x = "Age (years)", 
+       y = "Systolic Blood Pressure (mmHg)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        legend.title = element_text(size = 11, face = "bold"),
+        legend.text = element_text(size = 10))
+```
+
+---
+
+# Quick Reference
+
+## Continuous Plots - Summary
+
+| Chart Type | Goal | When to Use | Code Complexity |
+|------------|------|-------------|-----------------|
+| **Histogram** | 🟡 Distribution | Show frequency distribution, find shape | Simple (3-6 lines) |
+| **Histogram + Stats** | 🟡 Distribution | Add mean/median for context | Medium (8-12 lines) |
+| **Density Plot** | 🟡 Distribution | Smooth distribution, compare groups | Simple (3-6 lines) |
+| **Scatter Plot** | ⚫ Correlation | Show relationship between 2 variables | Simple (3-6 lines) |
+| **Scatter + Color** | ⚫ Correlation + Groups | Compare correlations across groups | Medium (6-8 lines) |
+
+## Common Distribution Shapes
+
+::: {.columns}
+::: {.column width="50%"}
+**Normal (Bell Curve)**
+- Symmetric around mean
+- Mean ≈ Median
+- Example: Heights
+
+**Right Skewed**
+- Long tail to the right
+- Mean > Median  
+- Example: Income
+
+**Left Skewed**
+- Long tail to the left
+- Mean < Median
+- Example: Age at retirement
+:::
+
+::: {.column width="50%"}
+**Bimodal**
+- Two peaks
+- Two distinct groups
+- Example: Customer segments
+
+**Uniform**
+- Flat distribution
+- All values equally likely
+- Example: Random numbers
+
+**Outliers**
+- Extreme values
+- Check for data errors
+- May need special handling
+:::
+:::
+
+## Key Takeaways
+
+::: {style="font-size: 0.9em;"}
+::: {.incremental}
+**Remember:**
+
+1. **Choose bins wisely** - test different values for histograms
+2. **Density vs. Histogram** - density better for comparing groups
+3. **Scatter plots reveal relationships** - but don't assume causation
+4. **Alpha transparency** - helps see overlapping points
+5. **Always handle missing data** - document your approach
+
+**Common Mistakes:**
+
+- Too many/few histogram bins
+- Not handling outliers
+- Assuming correlation = causation
+- Ignoring data transformations when needed
+- Poor color choices for scatter plot groups
+:::
+:::
+
+## Practice Exercise
+
+**Your Turn:**
+
+1. Create a histogram of `Cholesterol` with 20 bins
+2. Add mean and median lines
+3. Create a scatter plot of `BloodSugar` vs. `SysBP_0m`
+4. Color the scatter plot by `Gender`
+
+**Bonus:** Create a density plot comparing BMI between smokers and non-smokers
+
+## Next Steps {.center}
+
+**You've mastered Continuous - Basic!**
+
+**Next:** Category vs. Continuous - Basic
+
+Learn to combine categorical and continuous data with:
+- Box plots
+- Grouped bar charts
+- Violin plots (in Intermediate)

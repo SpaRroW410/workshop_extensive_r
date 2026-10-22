@@ -2,7 +2,9 @@
 const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'playwright');
 const fs = require('fs'), path = require('path');
 const DIR = process.argv[2];                       // .../docs/dungeons/dungeons
-const url = f => 'file://' + path.join(DIR, f);
+const SRCDIR = process.argv[3] || DIR;
+const ITEM_PAGES = fs.readdirSync(SRCDIR).filter(f => f.endsWith('.html') && fs.readFileSync(path.join(SRCDIR, f), 'utf8').includes('class="rq-item"'));   // every page that carries items           // folder with the same pages on disk (needed when DIR is an http URL)
+const url = f => /^https?:/.test(DIR) ? DIR.replace(/\/$/, '') + '/' + f : 'file://' + path.join(DIR, f);   // pass http://localhost:8080/dungeons/dungeons to avoid file:// module blocking
 let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++; };
 
 // same hash as quest.js / quest.R
@@ -41,8 +43,8 @@ const hudXP = p => p.evaluate(() => +document.querySelector('.rq-hud .rq-xp').te
 
   // ── 1. static page-source inspection (all pages with items) ──────────────
   let keyFirst = 0, mcqN = 0, orderIdent = 0, orderN = 0;
-  for (const f of ['world1_outcome_detective.html', 'world2_straight_line.html', 'pretest.html', 'posttest.html']) {
-    const src = fs.readFileSync(path.join(DIR, f), 'utf8');
+  for (const f of ITEM_PAGES) {
+    const src = fs.readFileSync(path.join(SRCDIR, f), 'utf8');
     const items = [...src.matchAll(/<div class="rq-item"([^>]*)>([\s\S]*?)<\/div>/g)];
     const leak = [];
     for (const m of src.matchAll(/<div class="rq-item"([^>]*)>/g)) {
@@ -56,8 +58,8 @@ const hudXP = p => p.evaluate(() => +document.querySelector('.rq-hud .rq-xp').te
   }
   // key-first and in-order markup check using real DOM (fast path: parse with regex on rendered html)
   const ctx0 = await newCtx(); 
-  for (const f of ['world1_outcome_detective.html', 'world2_straight_line.html', 'pretest.html', 'posttest.html']) {
-    const raw = fs.readFileSync(path.join(DIR, f), 'utf8');
+  for (const f of ITEM_PAGES) {
+    const raw = fs.readFileSync(path.join(SRCDIR, f), 'utf8');
     const items = [...raw.matchAll(/<div class="rq-item"([^>]*)>([\s\S]*?)(?=<div class="rq-item"|<\/main>|<\/body>)/g)];
     for (const m of items) { const a = m[1], g = n => ((a.match(new RegExp(n + '="([^"]*)"')) || [])[1] || ''); const t = g('data-type'), id = g('data-id');
       if (t === 'mcq') { mcqN++; if (hash(id + '|0') === g('data-hash')) keyFirst++; }
@@ -155,6 +157,25 @@ const hudXP = p => p.evaluate(() => +document.querySelector('.rq-hud .rq-xp').te
   await p.evaluate(() => { document.querySelectorAll('.rq-item').forEach(q => window.__solve(q, true)); [...document.querySelectorAll('.rq-big')].find(b => /Submit/.test(b.textContent)).click(); });
   const gainTxt = await p.locator('.rq-gain').innerText(); ok(/25%.*100%/.test(gainTxt) && /\+75/.test(gainTxt), 'post-test shows pre → post gain: ' + gainTxt);
   st = await state(p); ok(!!st.badges.post && !!st.badges.gain, 'Growth Mindset and Big Gain badges awarded');
+  await ctx.close();
+
+  // ── 7. Region 1: own pre/post, gate, code items, graduate badge ─────────
+  ctx = await newCtx(); p = await open(ctx, 'b1_first_script.html');
+  ok(await p.evaluate(() => document.body.classList.contains('rq-locked')), 'Region 1 world b1 is locked until the Region 1 pre-test');
+  await p.close(); p = await open(ctx, 'r1pretest.html');
+  ok(await p.locator('.rq-item').count() === 10 && await p.locator('.rq-item[data-type="code"]').count() >= 2, 'Region 1 pre-test: 10 items incl. code tasks');
+  await p.evaluate(() => { document.querySelectorAll('.rq-item').forEach((q, i) => window.__solve(q, i < 4)); [...document.querySelectorAll('.rq-big')].find(b => /Submit/.test(b.textContent)).click(); });
+  st = await state(p); ok(st.tests.r1pre && st.tests.r1pre.pct === 40, 'Region 1 pre-test scored 4/10 (code items graded in test mode): ' + (st.tests.r1pre && st.tests.r1pre.pct));
+  await p.close(); p = await open(ctx, 'b1_first_script.html');
+  ok(!(await p.evaluate(() => document.body.classList.contains('rq-locked'))), 'b1 unlocked after the Region 1 pre-test');
+  ok(await p.locator('.rq-read a').count() >= 1, 'world page shows Read first library links');
+  await p.evaluate(() => document.querySelectorAll('.rq-item').forEach(q => window.__solve(q, true)));
+  st = await state(p); ok(Object.keys(st.items).filter(k => k.startsWith('b1-') && st.items[k].solved).length === 9 && !!st.badges['clear-b1'], 'all 9 b1 items solvable (incl. code) → b1 cleared');
+  await p.close(); p = await open(ctx, 'r1posttest.html');
+  await p.evaluate(() => { document.querySelectorAll('.rq-item').forEach(q => window.__solve(q, true)); [...document.querySelectorAll('.rq-big')].find(b => /Submit/.test(b.textContent)).click(); });
+  const g1 = await p.locator('.rq-gain').first().innerText(); ok(/40%.*100%/.test(g1) && /\+60/.test(g1), 'Region 1 post-test shows gain: ' + g1);
+  st = await state(p); ok(!!st.badges.r1grad, 'Basics Graduate badge awarded at ≥ 70%');
+  ok(p._errs.length === 0, 'Region 1 pages: no JS errors ' + p._errs.join(','));
   await ctx.close();
 
   await browser.close(); console.log(fails ? `\n${fails} FAILURES` : '\nALL QUEST E2E TESTS PASSED'); process.exit(fails ? 1 : 0);

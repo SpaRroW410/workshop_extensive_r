@@ -1,0 +1,41 @@
+---
+title: "Region 1 · Pre-test"
+subtitle: "10 questions on the basics. Not graded; no feedback while you answer."
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+rq_tagmap(ITEMS)
+```
+
+::: {.rq-lesson}
+A **baseline** before Region 1. Answer from what you know (it is fine not to know yet) and rate your confidence. After Region 1, the post-test shows your gain.
+:::
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(sprintf("r1pre-%02d", 1:10), ITEMS, test = "r1pre")
+```

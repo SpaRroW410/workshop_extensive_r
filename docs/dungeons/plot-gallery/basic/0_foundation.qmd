@@ -1,0 +1,143 @@
+---
+title: "Navigating the Decision Tree with R"
+subtitle: "From Data to Visualization"
+author: "Data Visualization Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: ../../assets/slide_deck.css
+    include-after-body: footer.html
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    code-fold: true
+    chalkboard: true
+    preview-links: true
+    center: true
+    zoom: true
+---
+
+# Welcome {.center}
+
+## Navigating the Decision Tree
+
+::: {.columns}
+::: {.column width="50%"}
+**From Data to Viz**
+
+- Understand your data type
+- Define your analytical goal
+- Choose the right visualization
+:::
+
+::: {.column width="50%"}
+**Workshop Goals**
+
+- Master the decision framework
+- Learn R visualization techniques
+- Interpret complex plots
+- Apply to real healthcare data
+:::
+:::
+
+## The 3-Step Framework
+
+::: {.incremental}
+1. **Identify Your Data Type**
+   - Categorical
+   - Continuous (Numeric)
+   - Category vs. Continuous
+   - Time Series
+   - Relational/Network
+   - Geographic/Map
+
+2. **Define Your Analytical Goal**
+   - What story are you telling?
+
+3. **Select the Appropriate Chart**
+   - Match data + goal → visualization
+:::
+
+## The Seven Analytical Goals
+
+::: {style="font-size: 0.85em;"}
+| Color | Goal | Question | Examples |
+|-------|------|----------|----------|
+| 🟡 | **Distribution** | What's the spread? | Histogram, Density plot |
+| ⚫ | **Correlation** | How do things relate? | Scatter plot, Heatmap |
+| 🟢 | **Ranking** | What's the order? | Bar chart, Lollipop |
+| 🔴 | **Part of Whole** | What's the composition? | Pie, Treemap, Mosaic |
+| 🔵 | **Evolution** | How does it change? | Line chart, Area chart |
+| 🟣 | **Maps** | Where is it? | Choropleth, Bubble map |
+| 🟤 | **Flow** | How does it move? | Sankey, Network graph |
+:::
+
+## Your Learning Journey
+
+::: {style="font-size: 0.9em;"}
+**Three Progressive Levels:**
+
+::: {.incremental}
+- **BASIC** (5-10 lines of code)
+  - Essential plots for each data type
+  - Base R and ggplot2 fundamentals
+  
+- **INTERMEDIATE** (10-25 lines)
+  - Enhanced visualizations
+  - Data wrangling integration
+  - Statistical elements
+  
+- **ADVANCED** (25-100+ lines)
+  - Interactive visualizations
+  - Animations
+  - Dashboards
+:::
+:::
+
+## Workshop Structure
+
+::: {style="font-size: 0.85em;"}
+**By Data Type:**
+
+1. Categorical Plots
+2. Continuous Plots  
+3. Category vs. Continuous
+4. Time Series
+5. Relational/Network
+6. Geographic/Maps
+
+**Each deck includes:**
+
+- Plot creation with R code
+- Multiple variations
+- Interpretation guidance
+- Best practices
+:::
+
+## Dataset: Public Health Blood Pressure Study
+
+::: {style="font-size: 0.8em;"}
+- **200 patients** tracked over 6 months
+- **Treatment groups:** Control vs. Intervention
+- **Demographics:** Age, Gender, Region
+- **Health metrics:** BMI, BP, Cholesterol, Blood Sugar
+- **Behaviors:** Smoking, Alcohol, Exercise
+- **Outcomes:** Blood pressure at 0, 3, and 6 months
+
+**Perfect for demonstrating:**
+
+- All data types (categorical, continuous, time, geographic)
+- Real-world missing data handling
+- Clinical research visualization patterns
+:::
+
+## Let's Begin! {.center}
+
+**Ready to master data visualization?**
+
+Navigate through the decks by data type and skill level.
+
+Start with **Basic → Categorical Plots** when you're ready.
+
+---
+

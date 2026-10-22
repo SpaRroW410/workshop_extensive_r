@@ -1,0 +1,89 @@
+---
+title: "Region 1 · Your First Script"
+subtitle: "RStudio projects, objects and types, factors, packages, reading and inspecting data"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-world data-world="b1" data-total="9" data-requires="r1pre:1"}
+:::
+
+## Briefing
+
+::: {.rq-lesson}
+**Welcome to Region 1.** No statistics yet: just the habits that make every later analysis work. Read first: [Getting Started](../r-foundations/getting-started.qmd).
+:::
+
+```{r}
+bp <- c(118, 126, 140, 132)      # a numeric vector
+bp[2]                            # R counts from 1
+sex <- factor(c("Male", "Female", "Female"))
+levels(sex)                      # sorted alphabetically: the first is the reference
+```
+
+::: {.rq-lesson}
+**Objects and types.** `<-` stores a value under a name. Numbers in quotes are text, and text cannot be averaged. A **factor** is a categorical variable; its first level is the reference in models.
+:::
+
+```{r}
+#| eval: false
+# the start of every script
+library(tidyverse)                         # load packages (install once, load every session)
+ncd <- read_csv("data/ncd_survey.csv")     # path relative to the RStudio Project
+glimpse(ncd)                               # rows, columns and the type of each column
+```
+
+::: {.rq-lesson}
+**Projects and scripts.** Work inside an **RStudio Project** so paths like `data/ncd_survey.csv` work on any computer (no `setwd()`). Write everything in a **script**, never only in the console, and never overwrite the raw data.
+:::
+
+## Level 1 · Objects and types {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("b1-02", "b1-03", "b1-04"), ITEMS)
+```
+
+## Level 2 · Projects and packages {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("b1-01", "b1-05", "b1-06"), ITEMS)
+```
+
+## Level 3 · Your first code {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("b1-07", "b1-08"), ITEMS)
+```
+
+## Boss · Review a first script {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render("b1-09", ITEMS)
+```

@@ -37,7 +37,7 @@
       if (c === '#') { while (i < n && src[i] !== '\n') i++; continue; }
       if (c === '"' || c === "'") {
         var q = c, s = ''; i++;
-        while (i < n && src[i] !== q) { if (src[i] === '\\' && i + 1 < n) { s += src[i + 1]; i += 2; } else { if (src[i] === '\n') line++; s += src[i++]; } }
+        while (i < n && src[i] !== q) { if (src[i] === '\\' && i + 1 < n) { var esc1 = src[i + 1]; s += esc1 === 'n' ? '\n' : esc1 === 't' ? '\t' : esc1; i += 2; } else { if (src[i] === '\n') line++; s += src[i++]; } }
         if (i >= n) throw RErr('A string is missing its closing quote', line);
         i++; push('str', s); continue;
       }
@@ -135,7 +135,7 @@
   }
 
   /* ── normaliser ────────────────────────────────────────────────────── */
-  var ALIAS = { summarize: 'summarise', '%>%': '|>', 'read.csv': 'read_csv', 'subset': 'filter', 'n_distinct': 'n_distinct', 'tally': 'count', 'as.factor': 'factor', 'as_factor': 'factor' };
+  var ALIAS = { summarize: 'summarise', '%>%': '|>', 'read.csv': 'read_csv', 'subset': 'filter', 'n_distinct': 'n_distinct', 'tally': 'count', 'as.factor': 'factor', 'as_factor': 'factor', ifelse: 'if_else', rbind: 'bind_rows', cbind: 'bind_cols', color: 'colour' };
   var SIG = { lm: ['formula', 'data'], glm: ['formula', 'family', 'data'], ggplot: ['data', 'mapping'], aes: ['x', 'y'], mean: ['x'], median: ['x'], sd: ['x'], sum: [], read_csv: ['file'],
     summary: ['object'], tidy: ['x'], head: ['x', 'n'], factor: ['x', 'levels', 'labels'], 't.test': ['formula', 'data'], 'chisq.test': ['x', 'y'], table: [] };
   var VERBS = { filter: 1, select: 1, mutate: 1, summarise: 1, group_by: 1, arrange: 1, count: 1, ungroup: 1, rename: 1, distinct: 1, slice: 1, transmute: 1, relocate: 1, left_join: 1, inner_join: 1, right_join: 1, full_join: 1, pull: 1, drop_na: 1 };
@@ -265,7 +265,27 @@
       }
       if (!name) return C('?call', [A(norm(n.fn, ctx))].concat(n.args.map(function (a) { return A(norm(a.v, ctx), a.name); })));
       name = ALIAS[name] || name;
-      var args = n.args.filter(function (a) { return !(a.name && ignore[a.name]); });
+      var args = n.args.filter(function (a) { return !(a.name && ignore[a.name]); })
+        .map(function (a) { return a.name === 'color' ? A(a.v, 'colour') : a; });
+      // between(x, a, b) → x >= a & x <= b
+      if (name === 'between' && args.length === 3) return norm({ k: 'bin', op: '&', l: { k: 'bin', op: '>=', l: args[0].v, r: args[1].v }, r: { k: 'bin', op: '<=', l: args[0].v, r: args[2].v } }, ctx);
+      // case_when(…, .default = v) → case_when(…, TRUE ~ v)
+      if (name === 'case_when') args = args.map(function (a) { return a.name === '.default' ? A({ k: 'bin', op: '~', l: { k: 'id', v: 'TRUE' }, r: a.v }) : a; });
+      // joins: join_by(k) / c("k") → "k"; right_join(x, y) → left_join(y, x); merge(x, y, by, all.x/all.y/all)
+      if (/_join$/.test(name) || name === 'merge') {
+        args = args.map(function (a) { if (a.name !== 'by') return a; var v = a.v;
+          if (v.k === 'call' && (fnName(v.fn) === 'join_by' || fnName(v.fn) === 'c') && v.args.length === 1) v = v.args[0].v;
+          if (v.k === 'id') v = { k: 'str', v: v.v }; return A(v, 'by'); });
+        var posn = args.filter(function (a) { return !a.name; }), named = args.filter(function (a) { return a.name; });
+        if (name === 'merge') {
+          var flag = function (k) { var f = named.filter(function (a) { return a.name === k; })[0]; return f && f.v.k === 'id' && (f.v.v === 'TRUE' || f.v.v === 'T'); };
+          var kind = flag('all') || (flag('all.x') && flag('all.y')) ? 'full_join' : flag('all.x') ? 'left_join' : flag('all.y') ? 'right_join' : 'inner_join';
+          named = named.filter(function (a) { return !/^all(\.x|\.y)?$/.test(a.name); }); name = kind;
+        }
+        if (name === 'right_join' && posn.length >= 2) { posn = [posn[1], posn[0]].concat(posn.slice(2)); name = 'left_join'; }
+        var jout = posn.map(function (a) { return A(norm(a.v, ctx)); }).concat(sortBy(named.map(function (a) { return A(norm(a.v, ctx), a.name); }), function (a) { return a.name; }));
+        return C(name, jout);
+      }
       // positional → named, from the signature
       var sig = VERBS[name] ? ['.data'] : SIG[name];
       if (sig) {
@@ -339,7 +359,7 @@
       var stmts = parse(src), env = {}, last = null;
       stmts.forEach(function (s) {
         if (s.k === 'call' && IGNORE_FNS[fnName(s.fn)]) return;
-        if (s.k === 'call' && (fnName(s.fn) === 'print' || fnName(s.fn) === 'View' || fnName(s.fn) === 'glimpse') && s.args.length) s = s.args[0].v;
+        if (s.k === 'call' && (fnName(s.fn) === 'print' || fnName(s.fn) === 'View') && s.args.length) s = s.args[0].v;
         if (s.k === 'bin' && (s.op === '<-' || s.op === '<<-' || s.op === '=') && (s.l.k === 'id' || s.l.k === 'str')) { var v = norm(s.r, { env: env }); env[s.l.v] = v; last = v; return; }
         if (s.k === 'bin' && (s.op === '->' || s.op === '->>') && s.r.k === 'id') { var v2 = norm(s.l, { env: env }); env[s.r.v] = v2; last = v2; return; }
         last = norm(s, { env: env });

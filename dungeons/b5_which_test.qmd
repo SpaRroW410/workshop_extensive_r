@@ -1,0 +1,75 @@
+---
+title: "Region 1 · Which Test?"
+subtitle: "Matching the question and the data type to a test; reading t-test and chi-square output and p-values"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-world data-world="b5" data-total="9" data-requires="b4:60"}
+:::
+
+## Briefing
+
+::: {.rq-lesson}
+Read first: [Test Selection Guide](../statistical-analysis/statistical_tests.qmd). **The data types decide the test.** A continuous outcome between two independent groups: two-sample t-test. Two categorical variables: chi-square test on their cross-table.
+:::
+
+```{r}
+t.test(sbp ~ tobacco, data = ncd)
+chisq.test(table(ncd$residence, ncd$htn))
+```
+
+::: {.rq-lesson}
+**Reading the output.** The CI of a t-test is for the *first group minus the second*. A **p-value** is how surprising the data would be if there were no true difference: it is not the chance that the null hypothesis is true, and it says nothing about size or importance. A large p-value is *not* proof of no difference.
+:::
+
+## Level 1 · Pick the test {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("b5-01", "b5-02", "b5-04"), ITEMS)
+```
+
+## Level 2 · Read the output {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("b5-03", "b5-05", "b5-06"), ITEMS)
+```
+
+## Level 3 · Run it {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("b5-07", "b5-08"), ITEMS)
+```
+
+## Boss · Review the results {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render("b5-09", ITEMS)
+```

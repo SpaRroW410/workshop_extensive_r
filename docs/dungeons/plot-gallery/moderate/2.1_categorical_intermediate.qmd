@@ -1,0 +1,503 @@
+---
+title: "Categorical Plots - INTERMEDIATE"
+subtitle: "Enhanced Categorical Visualizations"
+format:
+  revealjs:
+    theme: serif
+    css: ../../assets/slide_deck.css
+    include-after-body: footer.html
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    code-fold: true
+    chalkboard: true
+    preview-links: true
+    center: true
+    zoom: true
+---
+
+# Categorical Intermediate {.center}
+
+## Enhanced Categorical Visualizations
+
+::: {style="font-size: 0.9em;"}
+**Building on Basic Skills:**
+
+Moving beyond simple bar and pie charts to professional-grade categorical visualizations.
+
+**New Techniques:**
+- Lollipop charts (cleaner than bars)
+- Cleveland dot plots (compare groups)
+- Mosaic plots (show associations)
+- Radial/circular charts (visual appeal)
+
+**New Packages:**
+- `forcats` for factor manipulation
+- `ggmosaic` for mosaic plots
+- Enhanced `ggplot2` techniques
+:::
+
+## Setup
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-5|7-8|10-12"
+
+# Load required libraries
+library(ggplot2)
+library(dplyr)
+library(forcats)     # For factor reordering
+library(ggmosaic)    # For mosaic plots
+
+# Load dataset
+data <- readxl::read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+
+# Clean data: remove missing values in key variables
+data_clean <- data %>%
+  filter(!is.na(ExerciseFreq), !is.na(ChronicDisease))
+```
+
+## Data Preview {.smaller}
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(ggplot2)
+library(dplyr)
+library(forcats)
+library(ggmosaic)
+library(readxl)
+
+data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+data_clean <- data %>% filter(!is.na(ExerciseFreq), !is.na(ChronicDisease))
+
+data_clean %>% 
+  count(Region, SmokingStatus) %>%
+  head(10)
+```
+
+---
+
+# Lollipop Chart
+
+## Lollipop Chart - Code
+
+🟢 **Goal:** Ranking (cleaner alternative to bars)
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-4|6-9|10-11|12-14"
+
+# Calculate counts and prepare for ordered lollipop
+region_counts <- data_clean %>%
+  count(Region) %>%
+  arrange(n)  # Sort for proper ordering
+
+# Create lollipop chart
+ggplot(region_counts, aes(x = n, y = fct_reorder(Region, n))) +
+  geom_segment(aes(x = 0, xend = n, y = Region, yend = Region),
+               color = "gray70", size = 1.5) +  # Draw lollipop sticks
+  geom_point(size = 5, color = "#2C5F8D") +  # Draw lollipop heads
+  geom_text(aes(label = n), hjust = -0.5, family = "serif", size = 4) +  # Add count labels
+  labs(title = "Patient Count by Region (Lollipop Chart)",
+       x = "Number of Patients", y = "Region") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        panel.grid.major.y = element_blank())  # Remove horizontal grid
+```
+
+## Lollipop Chart - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+region_counts <- data_clean %>%
+  count(Region) %>%
+  arrange(n)
+
+ggplot(region_counts, aes(x = n, y = fct_reorder(Region, n))) +
+  geom_segment(aes(x = 0, xend = n, y = Region, yend = Region),
+               color = "gray70", size = 1.5) +
+  geom_point(size = 5, color = "#2C5F8D") +
+  geom_text(aes(label = n), hjust = -0.5, family = "serif", size = 4) +
+  labs(title = "Patient Count by Region (Lollipop Chart)",
+       x = "Number of Patients", y = "Region") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        panel.grid.major.y = element_blank())
+```
+
+---
+
+# Interpreting Lollipop Charts
+
+## Reading Lollipop and Dot Plots
+
+**Using the previous plot:**
+
+::: {.incremental style="font-size: 0.85em;"}
+**OBSERVATION:**
+- East region: ~40 patients (lowest)
+- West and South: ~45 patients each (middle tier)
+- North region: ~65 patients (highest, ~60% more than East)
+- Clear ranking from bottom to top
+- Relatively balanced except North dominance
+
+**INTERPRETATION:**
+- North region significantly overrepresented
+- East region undersampled  
+- West and South balanced
+- May reflect population distribution or recruitment success
+- Geographic imbalance could affect generalizability
+
+**IMPLICATIONS:**
+- Regional stratification needed in analysis
+- Results may skew toward North region characteristics
+- Consider weighting by region for national estimates
+- Recruitment challenges in East region
+
+**ACTIONS:**
+- Include region as covariate in models
+- Report results stratified by region
+- Consider regional subgroup analyses
+- Investigate reasons for North oversampling
+:::
+:::
+
+---
+
+# Cleveland Dot Plot
+
+## Cleveland Dot Plot - Code
+
+🟢 **Goal:** Compare values across two groups
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-5|7-11|12-14|15-17"
+
+# Calculate mean BMI by smoking status and gender
+bmi_summary <- data_clean %>%
+  filter(Gender %in% c("Male", "Female")) %>%  # Focus on main genders
+  group_by(SmokingStatus, Gender) %>%
+  summarise(Mean_BMI = mean(BMI, na.rm = TRUE), .groups = "drop")
+
+# Create Cleveland dot plot
+ggplot(bmi_summary, aes(x = Mean_BMI, y = fct_reorder(SmokingStatus, Mean_BMI),
+                        color = Gender, group = Gender)) +
+  geom_line(aes(group = SmokingStatus), color = "gray80", size = 1.5) +  # Connect dots
+  geom_point(size = 5) +  # Add colored dots
+  scale_color_manual(values = c("Female" = "#E91E63", "Male" = "#2196F3"),
+                     name = "Gender") +
+  labs(title = "Mean BMI by Smoking Status and Gender",
+       x = "Mean BMI", y = "Smoking Status") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12))
+```
+
+## Cleveland Dot Plot - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+#| message: false
+
+bmi_summary <- data_clean %>%
+  filter(Gender %in% c("Male", "Female")) %>%
+  group_by(SmokingStatus, Gender) %>%
+  summarise(Mean_BMI = mean(BMI, na.rm = TRUE), .groups = "drop")
+
+ggplot(bmi_summary, aes(x = Mean_BMI, y = fct_reorder(SmokingStatus, Mean_BMI),
+                        color = Gender, group = Gender)) +
+  geom_line(aes(group = SmokingStatus), color = "gray80", size = 1.5) +
+  geom_point(size = 5) +
+  scale_color_manual(values = c("Female" = "#E91E63", "Male" = "#2196F3"),
+                     name = "Gender") +
+  labs(title = "Mean BMI by Smoking Status and Gender",
+       x = "Mean BMI", y = "Smoking Status") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        legend.title = element_text(size = 11, face = "bold"),
+        legend.text = element_text(size = 10))
+```
+
+---
+
+# Mosaic Plot
+
+## Mosaic Plot - Code
+
+🔴 **Goal:** Part of Whole + Show categorical associations
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-2|3-5|6-7|8-10"
+
+# Create mosaic plot showing relationship between Region and Treatment Group
+ggplot(data = data_clean) +
+  geom_mosaic(aes(x = product(TreatmentGroup, Region), 
+                  fill = TreatmentGroup)) +  # Create mosaic tiles
+  scale_fill_manual(values = c("Control" = "#E74C3C", 
+                                "Intervention" = "#3498DB"),
+                    name = "Treatment Group") +
+  labs(title = "Treatment Group Distribution by Region (Mosaic Plot)",
+       x = "Region", y = "Treatment Group Proportion") +
+  theme_mosaic(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text.x = element_text(angle = 0))
+```
+
+::: {.notes}
+In mosaic plots, area = proportion. Width = Region proportion, Height = Treatment proportion within region
+:::
+
+## Mosaic Plot - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(data = data_clean) +
+  geom_mosaic(aes(x = product(TreatmentGroup, Region), 
+                  fill = TreatmentGroup)) +
+  scale_fill_manual(values = c("Control" = "#E74C3C", 
+                                "Intervention" = "#3498DB"),
+                    name = "Treatment Group") +
+  labs(title = "Treatment Group Distribution by Region (Mosaic Plot)",
+       x = "Region", y = "Treatment Group Proportion") +
+  theme_mosaic(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        legend.title = element_text(size = 11, face = "bold"),
+        legend.text = element_text(size = 10))
+```
+
+---
+
+# Interpreting Mosaic Plots
+
+## How to Read Mosaic Plots
+
+**Using the previous plot:**
+
+::: {.incremental style="font-size: 0.8em;"}
+**Key Principle:** Area = Proportion (not just height or width!)
+
+**OBSERVATION:**
+- North region: Widest column (~40% of total width) = most patients
+- All regions: Treatment groups roughly 50-50 split (equal heights within columns)
+- Tiles aligned horizontally = no strong association
+- East region: Narrowest column (~20% width) = fewest patients
+
+**INTERPRETATION:**
+- **Width of columns:** Regional sample sizes (North > South ≈ West > East)
+- **Height within columns:** Treatment allocation within each region
+- **Alignment:** Horizontal edges align = random assignment successful
+- **No association:** Treatment group independent of region (good randomization!)
+
+**IMPLICATIONS:**
+- Randomization worked well across all regions
+- No geographic bias in treatment allocation
+- Can analyze regions separately without treatment imbalance concern
+- Balanced design supports causal inference
+
+**Reading Mosaic Tips:**
+- Misaligned tiles = association exists
+- Aligned tiles = independence (no association)
+- Area, not just height, represents proportion
+- Compare conditional distributions (within columns)
+:::
+:::
+
+---
+
+# Mosaic Plot - Three Variables
+
+## Complex Mosaic - Code
+
+🔴 **Goal:** Multi-way categorical analysis
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-3|4-7|8-10"
+
+# Three-way mosaic: Gender × Smoking × Treatment
+ggplot(data = data_clean %>% filter(Gender %in% c("Male", "Female"))) +
+  geom_mosaic(aes(x = product(SmokingStatus, Gender, TreatmentGroup), 
+                  fill = SmokingStatus),
+              divider = ddecker()) +  # Use double-decker layout
+  scale_fill_manual(values = c("Current smoker" = "#E74C3C",
+                                "Former smoker" = "#F39C12",
+                                "Non-smoker" = "#27AE60"),
+                    name = "Smoking Status") +
+  labs(title = "Smoking Status by Gender and Treatment Group",
+       x = "Gender : Treatment Group") +
+  theme_mosaic(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 15, face = "bold"),
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 9))
+```
+
+## Complex Mosaic - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(data = data_clean %>% filter(Gender %in% c("Male", "Female"))) +
+  geom_mosaic(aes(x = product(SmokingStatus, Gender, TreatmentGroup), 
+                  fill = SmokingStatus),
+              divider = ddecker()) +
+  scale_fill_manual(values = c("Current smoker" = "#E74C3C",
+                                "Former smoker" = "#F39C12",
+                                "Non-smoker" = "#27AE60"),
+                    name = "Smoking Status") +
+  labs(title = "Smoking Status by Gender and Treatment Group",
+       x = "Gender : Treatment Group") +
+  theme_mosaic(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 15, face = "bold"),
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 9),
+        legend.title = element_text(size = 11, face = "bold"),
+        legend.text = element_text(size = 10))
+```
+
+---
+
+# Radial Bar Chart
+
+## Radial Bar Chart - Code
+
+🟢 **Goal:** Ranking with visual appeal (use sparingly!)
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-4|6-8|9-11|12-15"
+
+# Prepare data for radial plot
+exercise_counts <- data_clean %>%
+  count(ExerciseFreq) %>%
+  mutate(ExerciseFreq = fct_reorder(ExerciseFreq, n))
+
+# Create radial bar chart
+ggplot(exercise_counts, aes(x = ExerciseFreq, y = n, fill = ExerciseFreq)) +
+  geom_col(alpha = 0.8, color = "white", size = 1) +  # Create bars
+  coord_polar(theta = "y") +  # Transform to circular coordinates
+  scale_fill_brewer(palette = "Set2", name = "Exercise Frequency") +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5),
+            family = "serif", size = 5, fontface = "bold") +  # Add labels
+  labs(title = "Exercise Frequency Distribution (Radial)",
+       x = NULL, y = NULL) +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank())
+```
+
+## Radial Bar Chart - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 7
+
+exercise_counts <- data_clean %>%
+  count(ExerciseFreq) %>%
+  mutate(ExerciseFreq = fct_reorder(ExerciseFreq, n))
+
+ggplot(exercise_counts, aes(x = ExerciseFreq, y = n, fill = ExerciseFreq)) +
+  geom_col(alpha = 0.8, color = "white", size = 1) +
+  coord_polar(theta = "y") +
+  scale_fill_brewer(palette = "Set2", name = "Exercise Frequency") +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5),
+            family = "serif", size = 5, fontface = "bold") +
+  labs(title = "Exercise Frequency Distribution (Radial)",
+       x = NULL, y = NULL) +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank(),
+        legend.position = "bottom",
+        legend.title = element_text(size = 11, face = "bold"),
+        legend.text = element_text(size = 10))
+```
+
+---
+
+# Quick Reference
+
+## Categorical Intermediate - Summary
+
+| Chart Type | Goal | When to Use | Code Lines |
+|------------|------|-------------|-----------|
+| **Lollipop** | 🟢 Ranking | Cleaner than bars, 5-20 categories | 10-15 |
+| **Cleveland Dot** | 🟢 Compare Groups | Show differences between 2 groups | 10-15 |
+| **Mosaic (2-way)** | 🔴 Part + Association | Test independence of 2 categorical variables | 10-15 |
+| **Mosaic (3-way)** | 🔴 Multi-way | Complex categorical relationships | 15-20 |
+| **Radial Bar** | 🟢 Ranking | Presentations, cyclical data | 12-18 |
+
+## Key Takeaways
+
+::: {style="font-size: 0.85em;"}
+::: {.incremental}
+**When to use each:**
+- **Lollipop > Bar:** When you have many categories or want cleaner look
+- **Cleveland Dot:** Perfect for before/after or male/female comparisons  
+- **Mosaic:** Test if two categorical variables are independent
+- **Radial:** Use sparingly (harder to read), good for presentations
+
+**Pro Tips:**
+- `fct_reorder()` from forcats package is essential for proper ordering
+- Mosaic aligned tiles = independent, misaligned = associated
+- Remove gridlines for cleaner lollipop charts
+- Always label mosaic plot axes clearly (area = proportion!)
+
+**Common Mistakes:**
+- Using radial charts for data without circular nature
+- Too many categories in mosaic plots (>12 becomes unreadable)
+- Not ordering lollipop charts by value
+- Misinterpreting mosaic plots (height alone doesn't show proportion)
+:::
+:::
+
+## Practice Exercise
+
+**Your Turn:**
+
+1. Create a lollipop chart of patient count by `ChronicDisease` type
+2. Make a Cleveland dot plot comparing mean `SysBP_0m` by `SmokingStatus` and `Gender`
+3. Create a mosaic plot testing independence of `AlcoholUse` and `SmokingStatus`
+4. Interpret: Are alcohol use and smoking independent or associated?
+
+## Next Steps {.center}
+
+**Categorical Intermediate Complete!**
+
+**Next:** Continuous Intermediate (Deck 2.2)
+
+Learn advanced continuous visualizations:
+- Violin plots
+- Ridge plots
+- 2D density
+- Enhanced scatter plots

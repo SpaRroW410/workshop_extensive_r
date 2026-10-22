@@ -1,6 +1,6 @@
 # Dungeons & Dataframes — gamified medical statistics in R
 
-The game is its own site (profile `dungeons`, output `docs/dungeons/`, open-access card on the landing page). It starts from the basics: **Region 1 · Basics → Region 2 · Moderate → Region 3 · Regression → Region 4 · Advanced**; the workshop tracks are its library ("📖 Read first" links). Playable now: **Region 3 Worlds 1–6**, placement check, pre/post tests, Campus (skill tree), facilitator pack and cohort tool. Everything else is in [ROADMAP.md](ROADMAP.md) (16 worlds, 9 electives, 7 phases) and the site concept in [SITE_DESIGN.md](SITE_DESIGN.md) (skill tree, case files, arcade, hybrid R labs, state model).
+The game is its own site (profile `dungeons`, output `docs/dungeons/`, open-access card on the landing page). It starts from the basics: **Region 1 · Basics → Region 2 · Moderate → Region 3 · Regression → Region 4 · Advanced**; the workshop tracks are its library ("📖 Read first" links). Playable now: **Region 1 Worlds b1–b5** with their own pre/post tests, **Region 3 Worlds 1–6**, placement check, Region 3 pre/post tests, Campus (skill tree), facilitator pack and cohort tool. Everything else is in [ROADMAP.md](ROADMAP.md) (16 worlds, 9 electives, 7 phases) and the site concept in [SITE_DESIGN.md](SITE_DESIGN.md) (skill tree, case files, arcade, hybrid R labs, state model).
 
 ```
 dungeons/
@@ -13,14 +13,15 @@ dungeons/
 ├── assets/rcheck.js    checks typed/pasted R without running R: parse → normalise → compare (tests/rcheck_test.js)
 ├── assets/cohort.js    facilitator cohort summary (tests/cohort_test.js)
 ├── lint_bank.R         question-quality gate  (Rscript dungeons/lint_bank.R)
+├── tests/lint_bank.js  same rules in Node + extra obvious-answer checks: node dungeons/tests/lint_bank.js --strict
 └── tests/quest_e2e.js  Playwright end-to-end suite (44 checks)
 ```
 
 ## Question standards (linted — see ROADMAP §6.2)
-Key never the longest option · no "all/none of the above" · **no function-recall questions** · answers never in stem/hints · every item explained, tagged and levelled · display order shuffled at run time **and** markup order permuted at build time.
+No answer leaks and no giveaway options. Key never the longest option, nor much the shortest · no option alone breaks the shared opening · only-the-key-fits grammar (a/an) · hedged key vs absolute distractors · duplicate options · flawed spot sentences marked by cue words · code solutions written or named in the stem · hints that are themselves answers · · no "all/none of the above" · **no function-recall questions** · answers never in stem/hints · every item explained, tagged and levelled · display order shuffled at run time **and** markup order permuted at build time.
 
 ## Code items (type or paste R)
 `cx(id, world, diff, tags, stem, solutions = c("…"), explain, opts = list(ignore = "na.rm"))`. The learner's code is never run: `assets/rcheck.js` reduces it and each solution to one canonical form, so pipes vs nested calls, `%>%` vs `|>`, intermediate objects, any new-column name (unless `opts = list(free_names = FALSE)`), argument order, `filter(a & b)` vs `filter(a, b)`, `count()` vs `group_by()+summarise(n())`, base `x[cond, ]`/`subset()`, formula term order and ggplot `aes()` placement all count as the same answer. Give extra `solutions` for genuinely different approaches (e.g. base R and dplyr). Wrong answers get targeted feedback (missing/extra step, wrong data, which step's arguments differ); syntax errors are explained and not counted as a try.
 
 ## Add an item
-Add a `mc()/nm()/fl()/od()/sp()` entry to `bank/items.R`, run `Rscript dungeons/lint_bank.R`, then reference its id from a world page with `rq_render(...)`.
+Add a `mc()/nm()/fl()/od()/sp()/cx()` entry to `bank/items.R`, run `Rscript dungeons/lint_bank.R` **and** `node dungeons/tests/lint_bank.js --strict` (both must be clean), then reference its id from a world page with `rq_render(...)`.

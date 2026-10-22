@@ -91,6 +91,7 @@
     { id: 'pitfall', icon: '🔍', name: 'Pitfall Spotter', desc: 'Solve 3 spot-the-error items', test: function () { var n = 0; for (var k in state.items) { var r = state.items[k]; if (r.solved && r.type === 'spot') n++; } return n >= 3; } },
     { id: 'pre', icon: '📋', name: 'Baseline Set', desc: 'Complete the pre-test', test: function () { return !!state.tests.pre; } },
     { id: 'post', icon: '📈', name: 'Growth Mindset', desc: 'Complete the post-test', test: function () { return !!state.tests.post; } },
+    { id: 'r1grad', icon: '🎒', name: 'Basics Graduate', desc: 'Score 70% or more in the Region 1 post-test', test: function () { return !!state.tests.r1post && state.tests.r1post.pct >= 70; } },
     { id: 'gain', icon: '🚀', name: 'Big Gain', desc: 'Post-test beats pre-test by 20+ points', test: function () { return state.tests.pre && state.tests.post && (state.tests.post.pct - state.tests.pre.pct) >= 20; } }
   ];
   function nSolved() { var n = 0; for (var k in state.items) if (state.items[k].solved) n++; return n; }
@@ -309,7 +310,7 @@
     var sub = document.createElement('button'); sub.type = 'button'; sub.className = 'rq-btn rq-big'; sub.textContent = done ? 'Retake: submit again' : 'Submit test'; box.appendChild(sub);
     var res = document.createElement('div'); res.className = 'rq-results'; box.appendChild(res);
     function showResult(r) {
-      var pre = state.tests.pre, gain = (kind === 'post' && pre) ? '<p class="rq-gain">Pre-test ' + pre.pct + '% → Post-test ' + r.pct + '% (<b>' + (r.pct - pre.pct >= 0 ? '+' : '') + (r.pct - pre.pct) + ' points</b>)</p>' : '';
+      var pre = /post$/.test(kind) ? state.tests[kind.replace(/post$/, 'pre')] : null, gain = pre ? '<p class="rq-gain">Pre-test ' + pre.pct + '% → Post-test ' + r.pct + '% (<b>' + (r.pct - pre.pct >= 0 ? '+' : '') + (r.pct - pre.pct) + ' points</b>)</p>' : '';
       var tags = Object.keys(r.byTag).sort().map(function (t) { var v = r.byTag[t]; return '<tr><td>' + esc(t) + '</td><td>' + v[0] + ' / ' + v[1] + '</td><td><span class="rq-bar"><i style="width:' + Math.round(100 * v[0] / v[1]) + '%"></i></span></td></tr>'; }).join('');
       var cal = r.confN ? '<p>Confidence check: you were “certain” on ' + r.certain + ' answers and ' + r.certainRight + ' were right' + (r.certain && r.certainRight < r.certain ? ' — keep an eye on over-confidence.' : '.') + '</p>' : '';
       res.innerHTML = '<h3>' + r.score + ' / ' + r.total + ' (' + r.pct + '%)</h3>' + gain + cal + '<table class="rq-tagtable"><thead><tr><th>Skill</th><th>Right</th><th></th></tr></thead><tbody>' + tags + '</tbody></table>' +
@@ -323,7 +324,7 @@
         (q.getAttribute('data-tags') || 'other').split(',').filter(Boolean).forEach(function (t) { byTag[t] = byTag[t] || [0, 0]; byTag[t][1]++; if (ok) byTag[t][0]++; }); });
       var r = { score: score, total: items.length, pct: Math.round(100 * score / items.length), byTag: byTag, certain: certain, certainRight: certainRight, confN: confN, ts: today() };
       state.tests[kind] = r; if (state.tests.pre && state.tests.post) {} touchStreak(); save(); showResult(r); checkBadges(); save(); renderHUD();
-      toast('📋 ' + (kind === 'pre' ? 'Baseline' : kind === 'ready' ? 'Placement' : 'Post-test') + ' saved: ' + r.pct + '%');
+      toast('📋 ' + (/pre$/.test(kind) ? 'Baseline' : kind === 'ready' ? 'Placement' : 'Post-test') + ' saved: ' + r.pct + '%');
     });
   }
 
@@ -333,6 +334,9 @@
     if (!req) return { ok: true };
     var p = req.split(':'), id = p[0], need = parseInt(p[1] || '70', 10), w = worldCfg(id), have = worldPct(id, w ? w.total : 0);
     if (id === 'pre') return { ok: !!state.tests.pre, msg: 'Complete the <b>pre-test</b> first.' };
+    var TESTS = { r1pre: ['Region 1 pre-test', 'r1pretest.html'], r1post: ['Region 1 post-test', 'r1posttest.html'] };
+    if (TESTS[id]) { var tr = state.tests[id], pre = /pre$/.test(id);       // a pre-test gate needs completion; a post-test gate needs the pass mark
+      return { ok: pre ? !!tr : !!tr && tr.pct >= need, msg: pre ? 'Take the <a href="' + TESTS[id][1] + '"><b>' + TESTS[id][0] + '</b></a> first (a baseline, not graded).' : 'Reach <b>' + need + '%</b> in the <a href="' + TESTS[id][1] + '"><b>' + TESTS[id][0] + '</b></a>' + (tr ? ' (you have ' + tr.pct + '%)' : '') + '.' }; }
     return { ok: have >= need, msg: 'Reach <b>' + need + '%</b> in <b>' + esc(w ? w.title : id) + '</b> (you have ' + have + '%).' };
   }
   function initWorld(el) {

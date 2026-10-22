@@ -1,0 +1,237 @@
+# Navigation Configuration for Workshop Modules
+# Used by footer.html to populate next module and next section links
+# Structure: profile -> section -> modules (in order)
+
+basic:
+  r-foundations:
+    - file: getting-started.qmd
+      label: "Getting Started"
+      next-module: data-wrangling.qmd
+      next-section: ../data-visualization/ggplot_grammar.qmd
+    
+    - file: data-wrangling.qmd
+      label: "Data Wrangling"
+      next-module: merging_dataset.qmd
+      next-section: ../data-visualization/ggplot_grammar.qmd
+    
+    - file: merging_dataset.qmd
+      label: "Merging Datasets"
+      next-module: null
+      next-section: ../data-visualization/ggplot_grammar.qmd
+  
+  data-visualization:
+    - file: ggplot_grammar.qmd
+      label: "Grammar of Graphics"
+      next-module: null
+      next-section: ../plot-gallery/basic.qmd
+    
+    - file: plot_data.qmd
+      label: "Plot Data"
+      next-module: null
+      next-section: ../plot-gallery/basic.qmd
+  
+  plot-gallery:
+    - file: basic.qmd
+      label: "Basic Plot Gallery"
+      next-module: null
+      next-section: ../statistical-analysis/statistical_tests.qmd
+  
+  statistical-analysis:
+    - file: statistical_tests.qmd
+      label: "Test Selection Guide"
+      next-module: ggstatsplot_intro.qmd
+      next-section: null
+    
+    - file: ggstatsplot_intro.qmd
+      label: "ggstatsplot — Intro"
+      next-module: reproducible_writing.qmd
+      next-section: null
+    
+    - file: reproducible_writing.qmd
+      label: "Quarto Basics"
+      next-module: null
+      next-section: null
+
+moderate:
+  r-foundations:
+    - file: getting-started.qmd
+      label: "Getting Started"
+      next-module: data-wrangling.qmd
+      next-section: ../data-visualization/ggplot_grammar.qmd
+    
+    - file: data-wrangling.qmd
+      label: "Data Wrangling"
+      next-module: merging_dataset.qmd
+      next-section: ../data-visualization/ggplot_grammar.qmd
+    
+    - file: merging_dataset.qmd
+      label: "Merging Datasets"
+      next-module: null
+      next-section: ../data-visualization/ggplot_grammar.qmd
+  
+  data-visualization:
+    - file: ggplot_grammar.qmd
+      label: "Grammar of Graphics"
+      next-module: plot_data.qmd
+      next-section: ../plot-gallery/moderate.qmd
+    
+    - file: plot_data.qmd
+      label: "Plot Data"
+      next-module: null
+      next-section: ../plot-gallery/moderate.qmd
+  
+  plot-gallery:
+    - file: moderate.qmd
+      label: "Moderate Plot Gallery"
+      next-module: null
+      next-section: ../specialized/interactive.qmd
+  
+  specialized:
+    - file: interactive.qmd
+      label: "Interactive Plots"
+      next-module: merge_visuals.qmd
+      next-section: ../statistical-analysis/statistical_tests.qmd
+    
+    - file: merge_visuals.qmd
+      label: "Merge Visuals"
+      next-module: plot_stats.qmd
+      next-section: ../statistical-analysis/statistical_tests.qmd
+    
+    - file: plot_stats.qmd
+      label: "Plot Stats"
+      next-module: null
+      next-section: ../statistical-analysis/statistical_tests.qmd
+  
+  statistical-analysis:
+    - file: statistical_tests.qmd
+      label: "Test Selection Guide"
+      next-module: ggstatsplot_moderate.qmd
+      next-section: null
+    
+    - file: ggstatsplot_moderate.qmd
+      label: "ggstatsplot — Moderate"
+      next-module: reproducible_writing.qmd
+      next-section: null
+    
+    - file: reproducible_writing.qmd
+      label: "Quarto Basics"
+      next-module: null
+      next-section: null
+
+advanced:
+  r-foundations:
+    - file: getting-started.qmd
+      label: "Getting Started"
+      next-module: data-wrangling.qmd
+      next-section: ../data-visualization/ggplot_grammar.qmd
+    
+    - file: data-wrangling.qmd
+      label: "Data Wrangling"
+      next-module: merging_dataset.qmd
+      next-section: ../data-visualization/ggplot_grammar.qmd
+    
+    - file: merging_dataset.qmd
+      label: "Merging Datasets"
+      next-module: null
+      next-section: ../data-visualization/ggplot_grammar.qmd
+  
+  data-visualization:
+    - file: ggplot_grammar.qmd
+      label: "Grammar of Graphics"
+      next-module: plot_data.qmd
+      next-section: ../data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
+    
+    - file: plot_data.qmd
+      label: "Plot Data"
+      next-module: best_practices.qmd
+      next-section: ../data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
+    
+    - file: best_practices.qmd
+      label: "Best Practices"
+      next-module: null
+      next-section: ../data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
+  
+  gram_ggplot:
+    - file: module_1_foundations_geoms.qmd
+      label: "Module 1: Foundations & Geoms"
+      next-module: module_2_aesthetics_faceting_themes.qmd
+      next-section: ../plot-gallery/advanced.qmd
+    
+    - file: module_2_aesthetics_faceting_themes.qmd
+      label: "Module 2: Aesthetics, Faceting & Themes"
+      next-module: module_3_colors_scales_themes.qmd
+      next-section: ../plot-gallery/advanced.qmd
+    
+    - file: module_3_colors_scales_themes.qmd
+      label: "Module 3: Colors, Scales & Themes"
+      next-module: module_4_advanced_best_practices.qmd
+      next-section: ../plot-gallery/advanced.qmd
+    
+    - file: module_4_advanced_best_practices.qmd
+      label: "Module 4: Advanced Best Practices"
+      next-module: null
+      next-section: ../plot-gallery/advanced.qmd
+  
+  plot-gallery:
+    - file: advanced.qmd
+      label: "Advanced Plot Gallery"
+      next-module: null
+      next-section: ../specialized/interactive.qmd
+  
+  specialized:
+    - file: interactive.qmd
+      label: "Interactive Plots"
+      next-module: merge_visuals.qmd
+      next-section: ../statistical-analysis/data_analysis.qmd
+    
+    - file: merge_visuals.qmd
+      label: "Merge Visuals"
+      next-module: plot_stats.qmd
+      next-section: ../statistical-analysis/data_analysis.qmd
+    
+    - file: plot_stats.qmd
+      label: "Plot Stats"
+      next-module: null
+      next-section: ../statistical-analysis/data_analysis.qmd
+  
+  statistical-analysis:
+    - file: statistical_tests.qmd
+      label: "Test Selection Guide"
+      next-module: data_analysis.qmd
+      next-section: null
+    
+    - file: data_analysis.qmd
+      label: "Data Analysis"
+      next-module: ggstatsplot_advanced.qmd
+      next-section: null
+    
+    - file: ggstatsplot_advanced.qmd
+      label: "ggstatsplot — Advanced"
+      next-module: quarto_advanced.qmd
+      next-section: null
+    
+    - file: quarto_advanced.qmd
+      label: "Quarto Advanced"
+      next-module: null
+      next-section: null
+
+exporting_tools:
+  - file: exporting_plots.qmd
+    label: "Exporting Plots"
+    next-module: plotting_tools.qmd
+    next-section: null
+  
+  - file: plotting_tools.qmd
+    label: "Plotting Tools"
+    next-module: debugging_plots.qmd
+    next-section: null
+  
+  - file: debugging_plots.qmd
+    label: "Debugging Plots"
+    next-module: advanced_exporting.qmd
+    next-section: null
+  
+  - file: advanced_exporting.qmd
+    label: "Advanced Exporting"
+    next-module: null
+    next-section: null

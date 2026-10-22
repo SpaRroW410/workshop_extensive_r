@@ -16,12 +16,12 @@ project:
     - dungeons/assets/*
 website:
   title: Dungeons & Dataframes
-  site-url: .
+  site-url: '.'
   search: true
   navbar:
     logo-href: dungeons/index.html
     left:
-      - text: 🗺️ Quest map
+      - text: "\U0001F5FA️ Quest map"
         href: dungeons/index.qmd
       - text: Play
         menu:
@@ -29,10 +29,28 @@ website:
             href: dungeons/campus.qmd
           - text: Placement check
             href: dungeons/readiness.qmd
-          - text: Pre-test (baseline)
+          - text: '---'
+          - text: Region 1 pre-test
+            href: dungeons/r1pretest.qmd
+          - text: Region 1 post-test
+            href: dungeons/r1posttest.qmd
+          - text: '---'
+          - text: Region 3 pre-test
             href: dungeons/pretest.qmd
-          - text: Post-test (growth)
+          - text: Region 3 post-test
             href: dungeons/posttest.qmd
+      - text: Region 1 · Basics
+        menu:
+          - text: Your First Script
+            href: dungeons/b1_first_script.qmd
+          - text: Tidy Tavern
+            href: dungeons/b2_tidy_tavern.qmd
+          - text: Join Junction
+            href: dungeons/b3_join_junction.qmd
+          - text: First Plots
+            href: dungeons/b4_first_plots.qmd
+          - text: Which Test?
+            href: dungeons/b5_which_test.qmd
       - text: Region 3 · Regression
         menu:
           - text: World 1 · The Outcome Detective
@@ -47,7 +65,7 @@ website:
             href: dungeons/world5_odds_arena.qmd
           - text: World 6 · The Reporting Guild
             href: dungeons/world6_reporting_guild.qmd
-      - text: 📖 Library
+      - text: "\U0001F4D6 Library"
         menu:
           - text: Getting Started
             href: r-foundations/getting-started.qmd
@@ -105,3 +123,4 @@ website:
             href: references.qmd
           - text: Downloads
             href: downloads.qmd
+

@@ -1,0 +1,158 @@
+---
+title: "Network - ADVANCED"
+subtitle: "Community Detection & Centrality"
+format:
+  revealjs:
+    theme: serif
+    slide-number: true
+    code-fold: true
+---
+
+# Network Analysis Advanced {.center}
+
+## Topics Covered
+
+- Community detection algorithms
+- Centrality measures visualization
+- Network statistics
+- Dynamic networks
+- Bipartite networks
+
+Goal: Advanced network insights
+
+## Setup
+
+```{r}
+library(readxl); library(tidyverse); library(ggplot2)
+library(igraph); library(ggraph)
+network_data <- read_excel("../../data/Healthcare_Network_Dataset.xlsx", sheet = 2)
+
+# Create network
+edges <- network_data %>%
+  select(from = FromProvider, to = ToProvider,
+           weight = NumReferrals) %>%
+  filter(!is.na(from), !is.na(to))
+
+net <- graph_from_data_frame(edges, directed = TRUE)
+```
+
+## Community Detection - Code
+
+```{r eval=FALSE, echo=TRUE}
+# Detect communities (Louvain algorithm)
+communities <- cluster_louvain(as.undirected(net))
+
+# Add to network
+V(net)$community <- membership(communities)
+
+# Visualize
+ggraph(net, layout = "fr") +
+  geom_edge_link(alpha = 0.3) +
+  geom_node_point(aes(color = factor(community)), size = 5) +
+  geom_node_text(aes(label = name), repel = TRUE, size = 3) +
+  scale_color_brewer(palette = "Set1", name = "Community") +
+  labs(title = "Network Communities (Louvain)") +
+  theme_void()
+```
+
+Identifies provider groups/clusters
+
+## Centrality Measures - Code
+
+```{r eval=FALSE, echo=TRUE}
+# Calculate multiple centralities
+V(net)$degree <- degree(net)
+V(net)$betweenness <- betweenness(net, normalized = TRUE)
+V(net)$closeness <- closeness(net, normalized = TRUE)
+V(net)$eigenvector <- eigen_centrality(net)$vector
+
+# Plot by importance
+ggraph(net, layout = "kk") +
+  geom_edge_link(alpha = 0.2) +
+  geom_node_point(aes(size = betweenness, color = degree)) +
+  geom_node_text(aes(label = name, size = betweenness),
+                repel = TRUE) +
+  scale_color_viridis_c() +
+  labs(title = "Provider Centrality Measures",
+       subtitle = "Size = Betweenness | Color = Degree") +
+  theme_void()
+```
+
+## Network Statistics Table
+
+```{r eval=FALSE, echo=TRUE}
+# Calculate network metrics
+stats <- data.frame(
+  Metric = c("Nodes", "Edges", "Density", "Avg Path Length",
+            "Clustering Coef", "Modularity"),
+  Value = c(
+    vcount(net),
+    ecount(net),
+    round(edge_density(net), 3),
+    round(mean_distance(net), 2),
+    round(transitivity(net), 3),
+    round(modularity(communities), 3)
+  )
+)
+
+knitr::kable(stats, caption = "Network Statistics")
+```
+
+Quantitative network description
+
+## Bipartite Network - Code
+
+```{r eval=FALSE, echo=TRUE}
+# Create bipartite: Patients <-> Providers
+bipartite_edges <- network_data %>%
+  select(from = PatientID, to = ReferringProvider) %>%
+  mutate(from = paste0("P", from))  # Prefix patients
+
+bp_net <- graph_from_data_frame(bipartite_edges, directed = FALSE)
+V(bp_net)$type <- grepl("^P", V(bp_net)$name)  # Patient = TRUE
+
+ggraph(bp_net, layout = "bipartite") +
+  geom_edge_link(alpha = 0.1) +
+  geom_node_point(aes(color = type), size = 3) +
+  scale_color_manual(values = c("Provider" = "blue",
+                               "Patient" = "orange"),
+                    labels = c("Provider", "Patient")) +
+  labs(title = "Patient-Provider Bipartite Network") +
+  theme_void()
+```
+
+## Dynamic Network (Time-based)
+
+```{r eval=FALSE, echo=TRUE}
+# Split network by time periods
+network_t1 <- network_data %>%
+  filter(TimePoint == "0m") %>%
+  graph_from_data_frame()
+
+network_t2 <- network_data %>%
+  filter(TimePoint == "6m") %>%
+  graph_from_data_frame()
+
+# Compare side-by-side
+library(patchwork)
+p1 <- ggraph(network_t1) + geom_edge_link() + 
+      geom_node_point() + labs(title = "Month 0")
+p2 <- ggraph(network_t2) + geom_edge_link() + 
+      geom_node_point() + labs(title = "Month 6")
+
+p1 + p2
+```
+
+Shows network evolution
+
+## Summary
+
+**Advanced network techniques:**
+
+1. Community detection - find clusters
+2. Centrality measures - identify key nodes
+3. Network statistics - quantitative metrics
+4. Bipartite networks - two node types
+5. Dynamic networks - temporal changes
+
+**Next:** Geographic Advanced

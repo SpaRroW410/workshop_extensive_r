@@ -14,14 +14,18 @@
 (function (root) {
   'use strict';
   var BRANCHES = [
-    ['B', 'R basics'], ['F', 'Foundations'], ['L', 'Linear'], ['I', 'Inference'], ['C', 'Confounding & adjustment'],
+    ['B', 'Basics (Region 1)'], ['F', 'Foundations'], ['L', 'Linear'], ['I', 'Inference'], ['C', 'Confounding & adjustment'],
     ['M', 'Model building'], ['A', 'Assumptions'], ['G', 'Logistic'], ['K', 'Likelihood & fit'], ['R', 'Reporting']
   ];
   var PLANNED = ['N · Counts', 'O · Ordinal / nominal', 'S · Survival', 'V · Clusters', 'W · Survey', 'X · Curves & interaction', 'U · Missing data', 'P · Prediction', 'Z · Causal', 'Ω · Capstone'];
   var S = function (id, name, req, tags) { return { id: id, branch: id.charAt(0), name: name, req: req || [], tags: tags || [] }; };
   var SKILLS = [
-    S('B1', 'Reading a dplyr pipeline', [], ['r-pipeline']), S('B2', 'Factors and levels', [], ['factors']),
-    S('B3', 'Reading a summary() table', [], ['summary-table']), S('B4', 'Plots and missing values in R', [], ['plots', 'missing-values']),
+    S('B6', 'Objects, vectors and types', [], ['r-objects']), S('B5', 'Projects, scripts and importing data', [], ['projects', 'import']),
+    S('B2', 'Factors and levels', ['B6'], ['factors']), S('B4', 'Missing values', ['B6'], ['missing-values']),
+    S('B1', 'Writing a dplyr pipeline', ['B5'], ['r-pipeline', 'summarise', 'mutate']), S('B7', 'Joining and stacking tables', ['B1'], ['joins']),
+    S('B8', 'Choosing a plot', [], ['plot-choice']), S('B9', 'Building a ggplot', ['B8'], ['ggplot', 'plots']),
+    S('B10', 'Choosing a test', [], ['test-choice']), S('B11', 'Running and reading a t-test or chi-square test', ['B10'], ['t-test', 'chi-square']),
+    S('B3', 'Reading a summary() table', ['B1'], ['summary-table']),
     S('F1', 'What regression models', [], ['workflow']), S('F2', 'Outcome types', ['F1'], ['outcome-type']), S('F3', 'Model-choice flowchart', ['F2'], ['flowchart']),
     S('F4', 'Correlation vs regression', ['F1'], ['regression-vs-correlation']), S('F5', 'Variable roles', ['F1'], ['variable-roles']),
     S('F6', 'Missing data and complete cases', ['F1'], ['missing-data']), S('F7', 'Reading Table 1', ['F5'], ['table1']),

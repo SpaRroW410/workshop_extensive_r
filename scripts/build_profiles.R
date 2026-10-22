@@ -36,7 +36,8 @@ entry <- function(m, prof) {
 
 build <- function(prof) {
   p <- cur$profiles[[prof]]
-  proj <- c(list(`output-dir` = p$`output-dir`), p$`project-extra`)
+  # as.list(): keep one-element render/resources lists as YAML sequences (Quarto rejects a bare string there)
+  proj <- c(list(`output-dir` = p$`output-dir`), lapply(p$`project-extra`, as.list))
   list(
     project = proj,
     website = list(
@@ -61,15 +62,16 @@ bad <- character()
 for (prof in names(cur$profiles)) {
   new  <- build(prof)
   file <- sprintf("_quarto-%s.yml", prof)
-  same <- file.exists(file) && isTRUE(all.equal(read_yaml(file), new))
+  body <- as.yaml(new, indent.mapping.sequence = TRUE, line.sep = "\n")
+  # as.yaml writes TRUE as 'yes'; Quarto reads either, but keep it explicit
+  body <- gsub("(?m): yes$", ": true", body, perl = TRUE)
+  body <- gsub("(?m): no$", ": false", body, perl = TRUE)
+  text <- c(header(prof), strsplit(body, "\n", fixed = TRUE)[[1]], "")   # same bytes as writeLines(c(header, body))
+  same <- file.exists(file) && identical(readLines(file, encoding = "UTF-8", warn = FALSE), enc2utf8(text))
   if (check) {
     if (!same) bad <- c(bad, prof)
   } else {
-    body <- as.yaml(new, indent.mapping.sequence = TRUE, line.sep = "\n")
-    # as.yaml writes TRUE as 'yes'; Quarto reads either, but keep it explicit
-    body <- gsub("(?m): yes$", ": true", body, perl = TRUE)
-    body <- gsub("(?m): no$", ": false", body, perl = TRUE)
-    if (!same) writeLines(c(header(prof), body), file, useBytes = TRUE)
+    if (!same) writeLines(text, file, useBytes = TRUE)
     cat(sprintf("%-18s %s\n", prof, if (same) "unchanged" else "written"))
   }
 }

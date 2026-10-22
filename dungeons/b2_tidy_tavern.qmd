@@ -1,0 +1,88 @@
+---
+title: "Region 1 · Tidy Tavern"
+subtitle: "filter, select, mutate, group_by and summarise; pipes, conditions and missing values"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-world data-world="b2" data-total="9" data-requires="b1:60"}
+:::
+
+## Briefing
+
+::: {.rq-lesson}
+Read first: [Data Wrangling](../r-foundations/data-wrangling.qmd). Five verbs do most of the work: `filter()` rows, `select()` columns, `mutate()` new columns, `group_by()` + `summarise()` summaries, `arrange()` order. The pipe `|>` (or `%>%`) passes the result of one step into the next.
+:::
+
+```{r}
+ncd |>
+  filter(residence == "Rural", age >= 60) |>      # comma = AND
+  group_by(sex) |>
+  summarise(n = n(), mean_sbp = mean(sbp, na.rm = TRUE)) |>
+  arrange(desc(mean_sbp))
+```
+
+::: {.rq-lesson}
+**Conditions.** `,` or `&` means AND, `|` means OR, `%in% c(...)` means "one of these". **Missing values** make a mean `NA` unless you add `na.rm = TRUE`. **`case_when()`** checks conditions from the top and uses the first that is true.
+:::
+
+```{r}
+ncd |>
+  mutate(bp_cat = case_when(sbp >= 140 ~ "High", sbp >= 120 ~ "Elevated", TRUE ~ "Normal")) |>
+  count(bp_cat)
+```
+
+::: {.rq-lesson}
+**Coding tasks** in this world are checked without running R: pipes or nested calls, intermediate objects and your own column names all count, as long as the result would be the same.
+:::
+
+## Level 1 · Rows and conditions {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("b2-01", "b2-02", "b2-03"), ITEMS)
+```
+
+## Level 2 · New columns and summaries {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("b2-04", "b2-05", "b2-06"), ITEMS)
+```
+
+## Level 3 · Write the pipeline {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("b2-07", "b2-08"), ITEMS)
+```
+
+## Boss · The full pipeline {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render("b2-09", ITEMS)
+```

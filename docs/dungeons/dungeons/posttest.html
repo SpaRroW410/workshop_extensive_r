@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Post-test · Show your growth – Dungeons &amp; Dataframes</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-2872a7511705894b565d6ebf33be87ff.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="assets/fitty-init.js"></script>
+
+
+<link rel="stylesheet" href="../assets/theme_webp.css">
+<link rel="stylesheet" href="assets/quest.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="dungeons/index.html">
+    <span class="navbar-title">Dungeons &amp; Dataframes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../dungeons/index.html"> 
+<span class="menu-text">🗺️ Quest map</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-play" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Play</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-play">    
+        <li>
+    <a class="dropdown-item" href="../dungeons/campus.html">
+ <span class="dropdown-text">Campus (skill tree)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/readiness.html">
+ <span class="dropdown-text">Placement check</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../dungeons/r1pretest.html">
+ <span class="dropdown-text">Region 1 pre-test</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/r1posttest.html">
+ <span class="dropdown-text">Region 1 post-test</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../dungeons/pretest.html">
+ <span class="dropdown-text">Region 3 pre-test</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/posttest.html">
+ <span class="dropdown-text">Region 3 post-test</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-region-1-·-basics" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Region 1 · Basics</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-region-1-·-basics">    
+        <li>
+    <a class="dropdown-item" href="../dungeons/b1_first_script.html">
+ <span class="dropdown-text">Your First Script</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/b2_tidy_tavern.html">
+ <span class="dropdown-text">Tidy Tavern</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/b3_join_junction.html">
+ <span class="dropdown-text">Join Junction</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/b4_first_plots.html">
+ <span class="dropdown-text">First Plots</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/b5_which_test.html">
+ <span class="dropdown-text">Which Test?</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-region-3-·-regression" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Region 3 · Regression</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-region-3-·-regression">    
+        <li>
+    <a class="dropdown-item" href="../dungeons/world1_outcome_detective.html">
+ <span class="dropdown-text">World 1 · The Outcome Detective</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/world2_straight_line.html">
+ <span class="dropdown-text">World 2 · The Straight Line</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/world3_confounding_caves.html">
+ <span class="dropdown-text">World 3 · Confounding Caves</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/world4_assumption_ruins.html">
+ <span class="dropdown-text">World 4 · Assumption Ruins</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/world5_odds_arena.html">
+ <span class="dropdown-text">World 5 · Odds Arena</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/world6_reporting_guild.html">
+ <span class="dropdown-text">World 6 · The Reporting Guild</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-library" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">📖 Library</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-library">    
+        <li>
+    <a class="dropdown-item" href="../r-foundations/getting-started.html">
+ <span class="dropdown-text">Getting Started</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../r-foundations/data-wrangling.html">
+ <span class="dropdown-text">Data Wrangling (Tidyverse)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../r-foundations/merging_dataset.html">
+ <span class="dropdown-text">Merging Datasets</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../data-visualization/ggplot_grammar.html">
+ <span class="dropdown-text">Grammar of Graphics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../plot-gallery/basic.html">
+ <span class="dropdown-text">Basic Plot Gallery</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../statistical-analysis/statistical_tests.html">
+ <span class="dropdown-text">Test Selection Guide</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../gtsummary/gtsummary_tutorial.html">
+ <span class="dropdown-text">gtsummary Tables</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../quarto_repro_w/reproducible_writing.html">
+ <span class="dropdown-text">Quarto Basics</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../statistical-analysis/regression.html">
+ <span class="dropdown-text">Regression Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s1_foundations.html">
+ <span class="dropdown-text">Session 1 — Foundations</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s2_simple_regression.html">
+ <span class="dropdown-text">Session 2 — Simple Linear Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s3_multiple_regression.html">
+ <span class="dropdown-text">Session 3 — Inference &amp; Multiple Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s4_assumptions.html">
+ <span class="dropdown-text">Session 4 — Assumptions</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s5_logistic_regression.html">
+ <span class="dropdown-text">Session 5 — Logistic Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/s6_reporting.html">
+ <span class="dropdown-text">Session 6 — Interpreting &amp; Reporting</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../regression-workshop/cheatsheet.html">
+ <span class="dropdown-text">Interpretation Cheat Sheet</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-facilitators" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Facilitators</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-facilitators">    
+        <li>
+    <a class="dropdown-item" href="../dungeons/facilitator.html">
+ <span class="dropdown-text">Facilitator pack</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/cohort.html">
+ <span class="dropdown-text">Cohort summary</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../dungeons/roadmap.html">
+ <span class="dropdown-text">Roadmap</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/site-design.html">
+ <span class="dropdown-text">Site design</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-reference" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-book" role="img">
+</i> 
+ <span class="menu-text">Reference</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-reference">    
+        <li>
+    <a class="dropdown-item" href="../contact.html">
+ <span class="dropdown-text">Contact Us</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../references.html">
+ <span class="dropdown-text">References</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../downloads.html">
+ <span class="dropdown-text">Downloads</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Post-test · Show your growth</h1>
+<p class="subtitle lead">20 parallel questions (same skills, new numbers and contexts).</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="rq-lesson">
+<p>Same skills as the pre-test, different questions. After submitting you will see your <strong>gain</strong> compared with your baseline.</p>
+</div>
+<script>window.RQ_TAGMAP={"aic":{"w5":1},"calibration":{"w5":1},"causation":{"w1":1,"w3":1,"w6":2},"centering":{"w2":2},"ci-pi":{"w2":2},"clinical-relevance":{"w3":1},"clustering":{"w4":1,"w6":1},"collinearity":{"w4":2},"confounding":{"w3":3,"w6":1},"crude-vs-adjusted":{"w3":1},"dag":{"w3":1},"diagnostics":{"w4":4},"dummy-coding":{"w3":2,"w6":1},"equal-variance":{"w4":1},"events-per-variable":{"w6":1},"flowchart":{"w1":2},"independence":{"w4":1},"influence":{"w4":1},"interpretation":{"w2":1,"w4":2,"w5":2},"linearity":{"w4":1},"log-odds":{"w5":1},"logistic":{"w5":1},"mediator":{"w3":1},"missing-data":{"w1":1},"model-building":{"w3":4,"w6":2},"model-comparison":{"w5":1},"normality":{"w4":1},"odds":{"w5":1},"or":{"w5":2},"or-vs-pr":{"w5":2,"w6":1},"outcome-type":{"w1":3},"outliers":{"w4":1},"overfitting":{"w6":2},"prediction":{"w2":1},"pseudo-r2":{"w5":2},"r-squared":{"w2":2},"regression-vs-correlation":{"w1":1},"remedies":{"w4":1},"reporting":{"w6":5},"residuals":{"w2":1},"reviewer-reply":{"w6":1},"roc":{"w5":2,"w6":1},"significance":{"w3":1},"slope-units":{"w2":1,"w6":1},"stepwise":{"w3":1},"table1":{"w1":1},"variable-roles":{"w1":1},"vif":{"w4":1},"workflow":{"w1":1,"w4":1,"w5":1,"w6":1}};</script>
+<div class="rq-test" data-test="post">
+<div class="rq-item" data-id="post-01" data-world="post" data-type="mcq" data-diff="1" data-tags="outcome-type" data-form="B" data-hash="lbatpg.3a4cwl" data-show="TXVsdGlub21pYWwgbG9naXN0aWMgcmVncmVzc2lvbg==" data-explain="VW5vcmRlcmVkIGNhdGVnb3JpZXMgd2l0aCBtb3JlIHRoYW4gdHdvIGxldmVscyBjYWxsIGZvciBhIG11bHRpbm9taWFsIG1vZGVsLg==">
+<p>Each TB patient ends as cured, failed, died or lost to follow-up (four unordered categories). Which family suits this outcome?</p>
+<ul>
+<li>Ordinal logistic regression</li>
+<li>Poisson regression for counts</li>
+<li>Ordinary least-squares linear regression</li>
+<li>Multinomial logistic regression</li>
+</ul>
+</div>
+<div class="rq-item" data-id="post-02" data-world="post" data-type="mcq" data-diff="1" data-tags="slope-units" data-form="B" data-hash="lbb6y2.3a4rdv" data-show="TWVhbiBIYiBpcyAwLjE1IGcvZEwgaGlnaGVyIHBlciBleHRyYSB3ZWFsdGggdW5pdCwgb3RoZXJzIGZpeGVk" data-explain="QSBzbG9wZSBpcyBhIGRpZmZlcmVuY2UgaW4gbWVhbiBvdXRjb21lIHBlciBwcmVkaWN0b3IgdW5pdCwgaG9sZGluZyBvdGhlciB2YXJpYWJsZXMgZml4ZWQu">
+<p>In a model for haemoglobin (g/dL), a household wealth score has β = 0.15. Which statement is correct?</p>
+<ul>
+<li>Mean Hb is 0.15 g/dL higher per extra wealth unit, others fixed</li>
+<li>Wealth explains 0.15 of the variance in haemoglobin</li>
+<li>Each woman’s Hb rises 0.15 if her wealth score rises 1</li>
+<li>Hb is 0.15 percent higher for each extra wealth unit in the sample</li>
+</ul>
+</div>
+<div class="rq-item" data-id="post-03" data-world="post" data-type="num" data-diff="2" data-tags="ci-pi" data-form="B" data-dp="0" data-hashes="lzod0l.nez0w4" data-show="Mzk=" data-explain="SGFsZi13aWR0aCDiiYggMS45NiDDlyByZXNpZHVhbCBTRCA9IDEuOTYgw5cgMjAg4omIIDM5IG1tSGcu">
+<p>The residual SD is 20 mmHg. About how many mmHg is the half-width of a 95% prediction interval for one new patient? (whole number)</p>
+</div>
+<div class="rq-item" data-id="post-04" data-world="post" data-type="mcq" data-diff="2" data-tags="r-squared" data-form="B" data-hash="lbbxfj.3a5kco" data-show="Y2hhcmdlcyBhIHBlbmFsdHkgZm9yIGVhY2ggZXh0cmEgcGFyYW1ldGVyIGluIHRoZSBtb2RlbA==" data-explain="QWRqdXN0ZWQgUsKyIGRlZHVjdHMgYSBwZW5hbHR5IHBlciBwYXJhbWV0ZXIsIHNvIHVzZWxlc3MgdmFyaWFibGVzIGRvIG5vdCBpbmZsYXRlIGl0Lg==">
+<p>Adjusted R² is preferred to R² when comparing models of different size because it…</p>
+<ul>
+<li>is unaffected by the number of observations used</li>
+<li>measures how well the model predicts a new sample</li>
+<li>always returns a value that is higher than plain R² itself</li>
+<li>charges a penalty for each extra parameter in the model</li>
+</ul>
+</div>
+<div class="rq-item" data-id="post-05" data-world="post" data-type="mcq" data-diff="2" data-tags="centering" data-form="B" data-hash="lbcao8.3a5yu1" data-show="aXMgaWRlbnRpY2FsIHRvIHRoZSBzbG9wZSBmcm9tIHRoZSB1bmNlbnRyZWQgbW9kZWw=" data-explain="Q2VudHJpbmcgc2hpZnRzIHRoZSBvcmlnaW4gb25seTogdGhlIHNsb3BlIGlzIHVuY2hhbmdlZCwgdGhlIGludGVyY2VwdCBjaGFuZ2VzLg==">
+<p>Age is centred at 40 years before fitting. In the centred model the slope for age…</p>
+<ul>
+<li>is smaller because the ages are now smaller</li>
+<li>now describes the outcome at the age of 40 years alone</li>
+<li>must be re-estimated as a percentage change</li>
+<li>is identical to the slope from the uncentred model</li>
+</ul>
+</div>
+<div class="rq-item" data-id="post-06" data-world="post" data-type="mcq" data-diff="2" data-tags="confounding" data-form="B" data-hash="lbcnww.3a6dbd" data-show="c2V4IGNvbmZvdW5kcyB0aGUgYXNzb2NpYXRpb24gYW5kIGV4cGxhaW5zIG11Y2ggb2YgdGhlIHNsb3Bl" data-explain="TWVuIGRyaW5rIG1vcmUgYW5kIGhhdmUgaGlnaGVyIFNCUCwgc28gcGFydCBvZiB0aGUgY3J1ZGUgYXNzb2NpYXRpb24gYmVsb25ncyB0byBzZXgu">
+<p>The crude β of alcohol on SBP is +6; adjusted for sex it is +2. The most sensible reading is that…</p>
+<ul>
+<li>sex is a mediator, so adjusting for it is a mistake</li>
+<li>the sex-adjusted model contains a calculation error somewhere</li>
+<li>sex confounds the association and explains much of the slope</li>
+<li>alcohol has no real effect once sex is included in the model</li>
+</ul>
+</div>
+<div class="rq-item" data-id="post-07" data-world="post" data-type="num" data-diff="2" data-tags="dummy-coding" data-form="B" data-dp="1" data-hashes="njxed8.yw5jkm,v01i1p.l2y0t5" data-show="Mi4w" data-explain="Qm90aCBhcmUgZGlmZmVyZW5jZXMgZnJvbSB0aGUgc2FtZSByZWZlcmVuY2U6IGdyYWR1YXRlIOKIkiBwcmltYXJ5ID0g4oiSMy4wIOKIkiAo4oiSMS4wKSA9IOKIkjIuMCwgaS5lLiAyLjAgbW1IZyBsb3dlci4=">
+<p>With no schooling as the reference, primary = −1.0 and graduate = −3.0 mmHg. How many mmHg lower is graduate than primary? (1 decimal)</p>
+</div>
+<div class="rq-item" data-id="post-08" data-world="post" data-type="mcq" data-diff="2" data-tags="model-building" data-form="B" data-hash="lbdee9.3a76a2" data-show="UHJlLXNwZWNpZnkgdGhlbSBmcm9tIGEgY2F1c2FsIGRpYWdyYW0gYmVmb3JlIHNlZWluZyByZXN1bHRz" data-explain="VGhlb3J5LWRyaXZlbiwgcHJlLXNwZWNpZmllZCBjb3ZhcmlhdGVzIGF2b2lkIGRhdGEtZHJpdmVuIHNlbGVjdGlvbiBiaWFzLg==">
+<p>Which practice best protects against bias when choosing covariates?</p>
+<ul>
+<li>Keep whichever variables are significant on their own</li>
+<li>Pre-specify them from a causal diagram before seeing results</li>
+<li>Add all available variables to maximise R-squared</li>
+<li>Let stepwise selection decide and report the final model alone</li>
+</ul>
+</div>
+<div class="rq-item" data-id="post-09" data-world="post" data-type="mcq" data-diff="2" data-tags="assumptions,collinearity" data-form="B" data-hash="lbdrmy.3a7krf" data-show="SW5mbGF0ZWQgc3RhbmRhcmQgZXJyb3JzIGFuZCB1bnN0YWJsZSBjb2VmZmljaWVudHM=" data-explain="TmVhci1kdXBsaWNhdGUgcHJlZGljdG9ycyBnaXZlIGhpZ2ggVklGcywgaW5mbGF0ZWQgU0VzIGFuZCB1bnN0YWJsZSAoZXZlbiBzaWduLWZsaXBwaW5nKSBjb2VmZmljaWVudHMu">
+<p>BMI and waist circumference correlate at r = 0.95 and both enter a model. Which problem should you expect?</p>
+<ul>
+<li>Non-independence of the observations collected</li>
+<li>Inflated standard errors and unstable coefficients</li>
+<li>Residuals that clearly fail the normality assumption</li>
+<li>A curved relationship with the outcome variable</li>
+</ul>
+</div>
+<div class="rq-item" data-id="post-10" data-world="post" data-type="num" data-diff="2" data-tags="odds" data-form="B" data-dp="2" data-hashes="ixc8l5.5y1n7n" data-show="MC42Nw==" data-explain="T2RkcyA9IHAgLyAoMSDiiJIgcCkgPSAwLjQwIC8gMC42MCDiiYggMC42Ny4=">
+<p>Disease prevalence is 40%. What are the odds of disease? (2 decimals)</p>
+</div>
+<div class="rq-item" data-id="post-11" data-world="post" data-type="mcq" data-diff="2" data-tags="odds-ratio" data-form="B" data-hash="lcn0cf.3bngz2" data-show="SGlnaC1hY3Rpdml0eSBhZHVsdHMgaGFkIDQ1JSBsb3dlciBvZGRzLCBhZGp1c3RlZA==" data-explain="T1IgMC41NSA9IG9kZHMgNDUlIGxvd2VyOyBhbiBvZGRzIHJhdGlvIGlzIG5vdCBhIHJpc2sgcmF0aW8sIGFuZCB0aGUgd2hvbGUgQ0kgaXMgYmVsb3cgMS4=">
+<p>The adjusted OR for high versus low activity is 0.55 (95% CI 0.33–0.95). Which wording is correct?</p>
+<ul>
+<li>The CI lower limit is below 1, so it is not significant</li>
+<li>Activity prevents 45% of cases in this population</li>
+<li>High-activity adults were 45% less likely overall</li>
+<li>High-activity adults had 45% lower odds, adjusted</li>
+</ul>
+</div>
+<div class="rq-item" data-id="post-12" data-world="post" data-type="spot" data-diff="3" data-tags="reporting,odds-ratio,pseudo-r2" data-form="B" data-hash="47evvs.qu3swa" data-show="Rmxhd2VkOiAyLCA0LCA1LCA2" data-explain="MiByZWFkcyBhbiBPUiBhcyBhIHJpc2sgcmF0aW8gZm9yIGEgY29tbW9uIG91dGNvbWU7IDQgdHJlYXRzIGEgcHNldWRvLVLCsiBhcyB2YXJpYW5jZSBleHBsYWluZWQ7IDUgcmVsaWVzIG9uIHN0ZXB3aXNlIHNlbGVjdGlvbjsgNiBvbWl0cyB1bml0cywgQ0kgYW5kIHRoZSB1bml0IG9mIGFnZS4=">
+<p>Flag every flawed sentence from this results paragraph (cross-sectional study, 40% prevalence).</p>
+<ul>
+<li>Rural residents had 1.8 times the odds of anaemia (95% CI 1.2–2.7).</li>
+<li>So rural residents were 1.8 times as likely to be anaemic.</li>
+<li>Each additional year of schooling was associated with 0.12 g/dL higher Hb (95% CI 0.05–0.19).</li>
+<li>The model explains 31% of the variance in anaemia (McFadden R² = 0.31).</li>
+<li>Wealth was kept because stepwise selection retained it.</li>
+<li>Age had β = 0.04.</li>
+</ul>
+</div>
+<div class="rq-item" data-id="post-13" data-world="post" data-type="mcq" data-diff="2" data-tags="significance,clinical-relevance" data-form="B" data-hash="lcnqtt.3bo9xs" data-show="VGhlIGVzdGltYXRlIGlzIHByZWNpc2UsIGJ1dCB0aGUgZGlmZmVyZW5jZSBpcyBzbWFsbCBpbiBwcmFjdGljZQ==" data-explain="UHJlY2lzaW9uIGFuZCBpbXBvcnRhbmNlIGFyZSBkaWZmZXJlbnQuIEEgdmVyeSBsYXJnZSBzYW1wbGUgbWFrZXMgYSBzbWFsbCBkaWZmZXJlbmNlIHN0YXRpc3RpY2FsbHkgY2xlYXIgYnV0IHN0aWxsIHNtYWxsIGluIGtpbG9ncmFtcy4=">
+<p>A registry of 90,000 women finds that each extra 10 g/day of fibre goes with 0.4 kg lower weight (95% CI 0.3–0.5, p &lt; 0.001). What is the best reading?</p>
+<ul>
+<li>The finding is unreliable because the registry is so large</li>
+<li>The tiny p-value proves fibre is a powerful weight-loss tool</li>
+<li>The CI excludes zero, so women will notice a clear change in weight</li>
+<li>The estimate is precise, but the difference is small in practice</li>
+</ul>
+</div>
+<div class="rq-item" data-id="post-14" data-world="post" data-type="mcq" data-diff="2" data-tags="mediator,confounding" data-form="B" data-hash="lco42i.3boof5" data-show="bGVhdmUgb3V0IGZhc3RpbmcgZ2x1Y29zZSwgd2hpY2ggbGllcyBvbiB0aGUgY2F1c2FsIHBhdGg=" data-explain="RmFzdGluZyBnbHVjb3NlIGlzIGEgbWVkaWF0b3IuIEFkanVzdGluZyBmb3IgaXQgcmVtb3ZlcyB0aGUgcGFydCBvZiB0aGUgZWZmZWN0IHRoYXQgdHJhdmVscyB0aHJvdWdoIGl0LCBnaXZpbmcgYSBkaXJlY3QgcmF0aGVyIHRoYW4gdG90YWwgZWZmZWN0Lg==">
+<p>Obesity raises diabetes risk partly by raising fasting glucose. To estimate the TOTAL effect of obesity on diabetes, the model should…</p>
+<ul>
+<li>include fasting glucose to improve the precision of the estimate</li>
+<li>include fasting glucose and then drop obesity itself</li>
+<li>include fasting glucose because adjusting always reduces bias</li>
+<li>leave out fasting glucose, which lies on the causal path</li>
+</ul>
+</div>
+<div class="rq-item" data-id="post-15" data-world="post" data-type="mcq" data-diff="2" data-tags="equal-variance,diagnostics" data-form="B" data-hash="lcohb6.3bp2wh" data-show="VXNlIHJvYnVzdCBzdGFuZGFyZCBlcnJvcnMgb3IgdHJhbnNmb3JtIHRoZSBvdXRjb21l" data-explain="QSBmYW4gc2hhcGUgbWVhbnMgdGhlIHNwcmVhZCBjaGFuZ2VzIHdpdGggdGhlIGZpdHRlZCB2YWx1ZS4gTWF0Y2ggdGhlIHJlbWVkeSB0byBpdDogcm9idXN0IFNFcywgYSB0cmFuc2Zvcm1hdGlvbiBvciB3ZWlnaHRzLg==">
+<p>Residuals of a model for birth weight are tightly clustered at low predicted weights and spread out at high predicted weights. What is the best next step?</p>
+<ul>
+<li>Delete the babies with the largest predicted weights</li>
+<li>Add a squared term for every predictor in the model</li>
+<li>Use robust standard errors or transform the outcome</li>
+<li>Switch to a model that assumes normal residuals</li>
+</ul>
+</div>
+<div class="rq-item" data-id="post-16" data-world="post" data-type="mcq" data-diff="2" data-tags="influence,outliers" data-form="B" data-hash="lcoujv.3bphdu" data-show="Q2hlY2sgdGhlIG9yaWdpbmFsIGZvcm0sIGNvcnJlY3QgdGhlIGVudHJ5IGlmIHdyb25nIGFuZCByZWZpdA==" data-explain="Q2hlY2sgdGhlIHNvdXJjZSBmaXJzdC4gQSBjbGVhciBlbnRyeSBlcnJvciBpcyBjb3JyZWN0ZWQ7IGEgZ2VudWluZSBleHRyZW1lIHZhbHVlIHN0YXlzIGFuZCByZXN1bHRzIGFyZSBzaG93biB3aXRoIGFuZCB3aXRob3V0IGl0Lg==">
+<p>One participant’s height is recorded as 17 cm and the record has a Cook’s distance far above all others. What is the best action?</p>
+<ul>
+<li>Add a quadratic term until the record stops standing out</li>
+<li>Delete the record quietly so the slope looks stable</li>
+<li>Check the original form, correct the entry if wrong and refit</li>
+<li>Leave it alone, because one record cannot matter in 600</li>
+</ul>
+</div>
+<div class="rq-item" data-id="post-17" data-world="post" data-type="mcq" data-diff="2" data-tags="roc,pseudo-r2" data-form="B" data-hash="lcp7sl.3bpvv8" data-show="Q2FzZXMgZ2V0IGEgaGlnaGVyIHJpc2sgdGhhbiBub24tY2FzZXMgaW4gNzElIG9mIHJhbmRvbSBwYWlycw==" data-explain="QVVDIG1lYXN1cmVzIHJhbmtpbmcgKGRpc2NyaW1pbmF0aW9uKTogdGhlIGNoYW5jZSB0aGF0IGEgcmFuZG9tIGNhc2Ugb3V0cmFua3MgYSByYW5kb20gbm9uLWNhc2UuIEl0IHNheXMgbm90aGluZyBhYm91dCBhY2N1cmFjeSBvciBjYWxpYnJhdGlvbi4=">
+<p>A logistic model has AUC = 0.71. Which statement is correct?</p>
+<ul>
+<li>The model explains 71% of the variance in the outcome</li>
+<li>71% of the people in the sample are classified correctly</li>
+<li>Predicted risks are 71% higher than the observed risks on average</li>
+<li>Cases get a higher risk than non-cases in 71% of random pairs</li>
+</ul>
+</div>
+<div class="rq-item" data-id="post-18" data-world="post" data-type="num" data-diff="2" data-tags="or-vs-pr" data-form="B" data-dp="1" data-hashes="r6hf6e.m0vo9n" data-show="Mi4w" data-explain="VW5leHBvc2VkIG9kZHMgMC4yNS8wLjc1ID0gMC4zMzM7IGV4cG9zZWQgb2RkcyA9IDEuMCwgc28gZXhwb3NlZCBwcmV2YWxlbmNlID0gMC41MC4gUFIgPSAwLjUwLzAuMjUgPSAyLjAsIGJlbG93IHRoZSBPUiBvZiAzLjAu">
+<p>In unexposed adults 25% have the outcome and the adjusted OR for exposure is 3.0. Using the unexposed odds, what is the prevalence ratio? (1 decimal)</p>
+</div>
+<div class="rq-item" data-id="post-19" data-world="post" data-type="num" data-diff="2" data-tags="events-per-variable,overfitting" data-form="B" data-dp="0" data-hashes="lcpya4.3bqou3" data-show="OA==" data-explain="OTYgZXZlbnRzIC8gMTIgcGFyYW1ldGVycyA9IDgsIGJlbG93IHRoZSB1c3VhbCBndWlkZSBvZiBhYm91dCAxMCBldmVudHMgcGVyIHZhcmlhYmxlLg==">
+<p>A logistic model has 12 predictor parameters and 96 people with the outcome (the smaller group). How many events per variable is that? (whole number)</p>
+</div>
+<div class="rq-item" data-id="post-20" data-world="post" data-type="mcq" data-diff="2" data-tags="reporting,causation" data-form="B" data-hash="ldytqp.3d66k6" data-show="SW5hY3RpdmUgYWR1bHRzIGhhZCAzLjEgbW1IZyBoaWdoZXIgbWVhbiBTQlAgKDk1JSBDSSAwLjjigJM1LjQpLCBhZGp1c3RlZA==" data-explain="UmVwb3J0IHRoZSBvYnNlcnZlZCBncm91cCBkaWZmZXJlbmNlIHdpdGggaXRzIENJLiBXb3JkcyBsaWtlICdyYWlzZWQnIGltcGx5IGNhdXNhdGlvbiwgYW5kIGEgYmFyZSDOsiBvciBhIHBlcmNlbnRhZ2Ugb2YgdmFyaWF0aW9uIG1pc2xlYWRzLg==">
+<p>A cross-sectional survey finds an adjusted SBP difference of 3.1 mmHg (95% CI 0.8–5.4) for physical inactivity. Which sentence reports it best?</p>
+<ul>
+<li>Physical inactivity was a significant predictor of SBP in this survey (β = 3.1)</li>
+<li>Inactivity raised the SBP of inactive adults by 3.1 mmHg (95% CI 0.8–5.4)</li>
+<li>Inactivity explains 3.1% of the variation in SBP among the adults sampled</li>
+<li>Inactive adults had 3.1 mmHg higher mean SBP (95% CI 0.8–5.4), adjusted</li>
+</ul>
+</div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script src="assets/worlds.js"></script>
+<script src="assets/skills.js"></script>
+<script src="assets/rcheck.js"></script>
+<script src="assets/quest.js"></script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("\.");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>
+// Quarto's navbar `logo-href` is emitted as a literal string and is
+// not depth-adjusted for nested pages (unlike navbar.left/right items
+// and the theme <link>), so it 404s from any page below the project
+// root. Derive the correct relative prefix from the theme stylesheet
+// link, which Quarto *does* resolve correctly, and reuse it here.
+(function () {
+  var css = document.querySelector('link[href$="assets/theme_webp.css"]');
+  var brand = document.querySelector('a.navbar-brand');
+  if (css && brand) {
+    var prefix = css.getAttribute('href').replace(/assets\/theme_webp\.css$/, '');
+    brand.setAttribute('href', prefix + 'welcome.html');
+
+    // Floating bottom-right icon cluster: track home / site index /
+    // close. Kiosk mode (start-workshop.bat) hides all browser
+    // chrome, so these give a way back without relying on the
+    // browser's own controls. Positioned bottom-right to avoid the
+    // top navbar and the bottom-center "Home | Next Module" footer
+    // some pages already include.
+    var isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+
+    var style = document.createElement('style');
+    style.textContent =
+      '.ws-nav-cluster{position:fixed;bottom:10px;right:10px;z-index:10000;' +
+      'display:flex;gap:6px;background:rgba(255,255,255,0.9);' +
+      'border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,0.2);}' +
+      '.ws-nav-cluster a,.ws-nav-cluster button{width:36px;height:36px;' +
+      'border-radius:50%;border:none;background:#fff;font-size:1.1rem;' +
+      'display:flex;align-items:center;justify-content:center;cursor:pointer;' +
+      'text-decoration:none;color:inherit;box-shadow:0 1px 3px rgba(0,0,0,0.15);}' +
+      '.ws-nav-cluster a:hover,.ws-nav-cluster button:hover{background:#f0f0f0;}' +
+      '.ws-nav-hint{position:fixed;bottom:54px;right:10px;z-index:10000;' +
+      'background:#2c3e50;color:#fff;font-size:0.8rem;padding:6px 10px;' +
+      'border-radius:6px;display:none;white-space:nowrap;}';
+    document.head.appendChild(style);
+
+    var cluster = document.createElement('div');
+    cluster.className = 'ws-nav-cluster';
+
+    var trackHome = document.createElement('a');
+    trackHome.href = prefix + 'welcome.html';
+    trackHome.title = 'Back to track home';
+    trackHome.textContent = '🏠';
+    cluster.appendChild(trackHome);
+
+    var siteIndex = document.createElement('a');
+    siteIndex.href = prefix + '../index.html';
+    siteIndex.title = 'All workshop tracks';
+    siteIndex.textContent = '🧭';
+    cluster.appendChild(siteIndex);
+
+    if (isLocal) {
+      var hint = document.createElement('div');
+      hint.className = 'ws-nav-hint';
+      hint.textContent = 'Press Alt+F4 to exit full-screen';
+      document.body.appendChild(hint);
+
+      var closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.title = 'Exit full-screen';
+      closeBtn.textContent = '✕';
+      closeBtn.addEventListener('click', function () {
+        window.close();
+        hint.style.display = 'block';
+        setTimeout(function () { hint.style.display = 'none'; }, 3000);
+      });
+      cluster.appendChild(closeBtn);
+    }
+
+    document.body.appendChild(cluster);
+  }
+})();
+</script>
+
+
+
+
+</body></html>

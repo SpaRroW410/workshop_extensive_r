@@ -84,4 +84,17 @@ ok(R.check('ncd |> filter(`age group` == "50+")', ['filter(ncd, `age group` == "
 // ── 10. order of steps matters when it changes the result ────────────────
 diff('ncd |> group_by(sex) |> summarise(m = mean(sbp)) |> filter(m > 130)', ['ncd |> filter(sbp > 130) |> group_by(sex) |> summarise(m = mean(sbp))']);
 
+// ── 11. Region 1 forms: between, ifelse/case_when, joins, colour, glimpse ──
+same('ncd |> filter(age >= 40, age <= 59)', ['ncd |> filter(between(age, 40, 59))', 'filter(ncd, age <= 59 & age >= 40)']);
+const S11 = 'mutate(ncd, bmi_cat = if_else(bmi >= 30, "Obese", "Not obese"))';
+same(S11, ['ncd |> mutate(bmi_cat = ifelse(bmi >= 30, "Obese", "Not obese"))'], { free_names: false });
+same('mutate(ncd, c = case_when(bmi >= 30 ~ "Obese", TRUE ~ "Not obese"))', ['mutate(ncd, c = case_when(bmi >= 30 ~ "Obese", .default = "Not obese"))', 'mutate(ncd, c = case_when(bmi >= 30 ~ "Obese", T ~ "Not obese"))']);
+const S12 = 'left_join(ncd, villages, by = "village")';
+same(S12, ['ncd |> left_join(villages, by = join_by(village))', 'right_join(villages, ncd, by = "village")', 'merge(ncd, villages, by = "village", all.x = TRUE)', 'left_join(ncd, villages, by = c("village"))']);
+diff(S12, ['inner_join(ncd, villages, by = "village")', 'merge(ncd, villages, by = "village")', 'left_join(villages, ncd, by = "village")']);
+same('bind_rows(round1, round2)', ['rbind(round1, round2)']);
+diff('bind_rows(round1, round2)', ['bind_rows(round2, round1)']);
+same('ggplot(ncd, aes(salt_g, sbp, colour = sex)) + geom_point()', ['ggplot(ncd, aes(x = salt_g, y = sbp, color = sex)) + geom_point()', 'ggplot(ncd) + geom_point(aes(salt_g, sbp, color = sex))']);
+diff('glimpse(ncd)', ['ncd', 'print(ncd)']);
+
 console.log(fails ? `\n${fails} FAILURES` : '\nALL RCHECK TESTS PASSED'); process.exit(fails ? 1 : 0);

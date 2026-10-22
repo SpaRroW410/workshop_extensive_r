@@ -1,0 +1,142 @@
+---
+title: "Time Series - ADVANCED"
+subtitle: "Forecasting & Decomposition"
+format:
+  revealjs:
+    theme: serif
+    slide-number: true
+    code-fold: true
+---
+
+# Time Series Advanced {.center}
+
+## Topics Covered
+
+- STL decomposition (trend/seasonal)
+- Forecasting with ARIMA
+- Prophet models
+- Change point detection
+- Spectral analysis (FFT)
+
+Goal: Advanced temporal patterns
+
+## Setup
+
+```{r}
+library(readxl); library(tidyverse); library(ggplot2)
+library(forecast); library(prophet)
+health_data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+
+# Create time series
+ts_data <- health_data %>%
+  pivot_longer(c(SysBP_0m, SysBP_3m, SysBP_6m),
+              names_to = "Time", values_to = "BP") %>%
+  group_by(Time, TreatmentGroup) %>%
+  summarise(mean_bp = mean(BP, na.rm = TRUE))
+```
+
+## STL Decomposition - Code
+
+```{r eval=FALSE, echo=TRUE}
+# Create proper time series (conceptual with more timepoints)
+bp_ts <- ts(monthly_bp_data$mean_bp, frequency = 12)
+
+# STL decomposition
+stl_result <- stl(bp_ts, s.window = "periodic")
+
+# Plot components
+autoplot(stl_result) +
+  labs(title = "STL Decomposition of Blood Pressure",
+       subtitle = "Trend + Seasonal + Remainder") +
+  theme_minimal()
+```
+
+Separates trend, seasonality, and noise
+
+## Forecasting - Code
+
+```{r eval=FALSE, echo=TRUE}
+# Fit ARIMA model
+arima_model <- auto.arima(bp_ts)
+
+# Forecast 12 months ahead
+forecast_result <- forecast(arima_model, h = 12)
+
+# Plot
+autoplot(forecast_result) +
+  labs(title = "12-Month Blood Pressure Forecast",
+       y = "Mean Systolic BP") +
+  theme_minimal()
+```
+
+Blue band = 80% CI, gray = 95% CI
+
+## Prophet Forecasting
+
+```{r eval=FALSE, echo=TRUE}
+library(prophet)
+# Prepare data for Prophet
+prophet_data <- data.frame(
+  ds = as.Date(monthly_bp_data$date),
+  y = monthly_bp_data$mean_bp
+)
+
+# Fit and predict
+m <- prophet(prophet_data)
+future <- make_future_dataframe(m, periods = 12, freq = "month")
+forecast <- predict(m, future)
+
+# Plot
+plot(m, forecast) +
+  labs(title = "Prophet Forecast with Trend")
+```
+
+Handles holidays, changepoints automatically
+
+## Change Point Detection
+
+```{r eval=FALSE, echo=TRUE}
+library(changepoint)
+# Detect change points in mean
+cpt_result <- cpt.mean(bp_ts, method = "PELT")
+
+# Plot
+plot(cpt_result, cpt.col = "red", cpt.width = 3,
+    main = "Change Point Detection in BP Time Series")
+```
+
+Identifies when trend shifts significantly
+
+## Rolling Statistics Plot
+
+```{r eval=FALSE, echo=TRUE}
+library(zoo)
+# Calculate rolling mean and SD
+rolling_data <- monthly_bp_data %>%
+  mutate(
+    roll_mean = rollmean(mean_bp, k = 3, fill = NA),
+    roll_sd = rollapply(mean_bp, width = 3, FUN = sd,
+                       fill = NA)
+  )
+
+ggplot(rolling_data, aes(x = date)) +
+  geom_line(aes(y = mean_bp), color = "gray70") +
+  geom_line(aes(y = roll_mean), color = "blue", size = 1) +
+  geom_ribbon(aes(ymin = roll_mean - roll_sd,
+                 ymax = roll_mean + roll_sd),
+             alpha = 0.2, fill = "blue") +
+  labs(title = "3-Month Rolling Mean ± SD") +
+  theme_minimal()
+```
+
+## Summary
+
+**Advanced time series:**
+
+1. STL decomposition - separate components
+2. ARIMA forecasting - statistical predictions
+3. Prophet - flexible, interpretable forecasts
+4. Change points - detect regime shifts
+5. Rolling statistics - smoothed trends
+
+**Next:** Network Advanced

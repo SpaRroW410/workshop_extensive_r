@@ -1,0 +1,78 @@
+---
+title: "Region 1 · First Plots"
+subtitle: "The grammar of graphics; choosing a histogram, bar chart, box plot or scatter plot"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-world data-world="b4" data-total="9" data-requires="b3:60"}
+:::
+
+## Briefing
+
+::: {.rq-lesson}
+Read first: [Grammar of Graphics](../data-visualization/ggplot_grammar.qmd) and the [Basic Plot Gallery](../plot-gallery/basic.qmd). A ggplot is **data** + **aesthetic mappings** (`aes()`: which variable goes to x, y, colour) + **geoms** (the marks), plus labels, facets and themes.
+:::
+
+```{r}
+#| fig-height: 3.5
+ggplot(ncd, aes(x = salt_g, y = sbp, colour = sex)) +
+  geom_point(alpha = 0.6) +
+  facet_wrap(~ residence) +
+  labs(x = "Salt intake (g/day)", y = "Systolic BP (mmHg)")
+```
+
+::: {.rq-lesson}
+**Choose by variable type.** One continuous variable: histogram. Counts of a category: bar chart. A continuous variable across groups: box plots. Two continuous variables: scatter plot. Put a fixed colour *outside* `aes()`; inside, it is treated as data.
+:::
+
+## Level 1 · Which plot? {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("b4-01", "b4-02", "b4-04"), ITEMS)
+```
+
+## Level 2 · Grammar details {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("b4-03", "b4-05", "b4-06"), ITEMS)
+```
+
+## Level 3 · Draw it {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("b4-07", "b4-08"), ITEMS)
+```
+
+## Boss · A faceted scatter plot {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render("b4-09", ITEMS)
+```

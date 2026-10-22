@@ -1,0 +1,78 @@
+---
+title: "Region 1 · Join Junction"
+subtitle: "Stacking rows, binding columns and joining tables by a key without losing or duplicating people"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-world data-world="b3" data-total="9" data-requires="b2:60"}
+:::
+
+## Briefing
+
+::: {.rq-lesson}
+Read first: [Merging Datasets](../r-foundations/merging_dataset.qmd). **Same columns, different people:** stack rows with `bind_rows()`. **Same people, different columns:** *join* by a key such as `id`, never paste side by side with `cbind()`.
+:::
+
+```{r}
+patients <- tibble(id = 1:5, name = c("Asha", "Bina", "Chetan", "Dev", "Esha"))
+scores   <- tibble(id = c(2, 3, 5, 6), score = c(85, 90, 88, 92))
+inner_join(patients, scores, by = "id")   # ids in both
+left_join(patients, scores, by = "id")    # every patient; NA where no score
+full_join(patients, scores, by = "id")    # every id from either table
+```
+
+::: {.rq-lesson}
+**Check the key first.** If an id appears twice in the right-hand table, a left join returns that person twice. Count rows before and after every join.
+:::
+
+## Level 1 · Stack or join? {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("b3-01", "b3-04", "b3-05"), ITEMS)
+```
+
+## Level 2 · Count the rows {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("b3-02", "b3-03", "b3-06"), ITEMS)
+```
+
+## Level 3 · Write the join {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("b3-07", "b3-08"), ITEMS)
+```
+
+## Boss · Audit a merge {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render("b3-09", ITEMS)
+```
