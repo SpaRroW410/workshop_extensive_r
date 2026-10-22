@@ -2,7 +2,7 @@
 # Item bank — single source for world pages, pre-test (Form A), post-test (Form B)
 # Standards (enforced by lint_bank.R): balanced option lengths, no "longest = right",
 # no function-recall questions, answers never in stem/hints, every item explained+tagged.
-# Types: mcq · fill · num · order · spot.  Output-reading = mcq whose stem has a code block.
+# Types: mcq · fill · num · order · spot · code.  Output-reading = mcq whose stem has a code block.
 # ═══════════════════════════════════════════════════════════════
 `%||%` <- function(a, b) if (is.null(a)) b else a
 mk <- function(type, id, world, diff, tags, stem, explain, ..., hints = NULL, form = NULL, boss = FALSE)
@@ -12,6 +12,10 @@ nm <- function(id, world, diff, tags, stem, accept, dp, explain, ...) mk("num", 
 fl <- function(id, world, diff, tags, stem, accept, explain, ...) mk("fill", id, world, diff, tags, stem, explain, accept = accept, ...)
 od <- function(id, world, diff, tags, stem, steps, explain, ...) mk("order", id, world, diff, tags, stem, explain, steps = steps, ...)
 sp <- function(id, world, diff, tags, stem, sentences, flawed, explain, ...) mk("spot", id, world, diff, tags, stem, explain, sentences = sentences, flawed = flawed, ...)
+# code: the learner types or pastes R. `solutions` = one or more accepted programs (any equivalent form also passes:
+# pipes or nesting, intermediate objects, any new-column name, argument order …; see assets/rcheck.js).
+# opts: list(free_names = FALSE) to require column names; list(ignore = "na.rm") to ignore an argument. starter = prefilled code.
+cx <- function(id, world, diff, tags, stem, solutions, explain, ..., opts = NULL, starter = NULL) mk("code", id, world, diff, tags, stem, explain, solutions = solutions, opts = opts, starter = starter, ...)
 
 ITEMS <- list(
 
@@ -56,14 +60,16 @@ mc("rd-08", "rd", 3, c("factors", "r-pipeline"),
    c("To label the 0/1 outcome so tables show readable names", "To change the values of htn from 0 and 1 to 1 and 2 in the data", "To remove the people with no hypertension from the data", "To make the model treat htn as a continuous measure"), 1,
    "factor() with levels and labels turns codes into named categories. The underlying data are unchanged and the first level becomes the reference.",
    hints = c("Look at the labels argument.")),
-nm("rd-09", "rd", 2, c("r-pipeline", "hands-on"),
-   "Task: a participant weighs 72 kg and is 160 cm tall. You run `mutate(bmi = wt / (ht / 100)^2)`. What BMI does this row get, in kg/m²? (1 decimal)",
-   28.1, 1, "Height in metres is 1.6, squared 2.56, and 72 / 2.56 = 28.125, which rounds to 28.1. The unit conversion inside the parentheses is the step people forget.",
-   hints = c("Convert centimetres to metres before squaring.")),
-nm("rd-10", "rd", 2, c("r-pipeline", "hands-on"),
-   "Task: SBP values for four women are 110, 120, 130 and 140. For three men they are 112, 128 and 135. Using `group_by(sex) |> summarise(m = mean(sbp))`, what is the mean for men? (whole number)",
-   125, 0, "Each group is summarised separately: (112 + 128 + 135) / 3 = 125.",
-   hints = c("Only the men's three values enter the men's mean.")),
+cx("rd-09", "rd", 2, c("r-pipeline", "hands-on"),
+   "Task: using `ncd`, write code that gives the mean systolic BP (`sbp`) for each `residence` group, among adults who use tobacco (`tobacco == \"Yes\"`).",
+   c("ncd |> filter(tobacco == \"Yes\") |> group_by(residence) |> summarise(mean_sbp = mean(sbp))"),
+   "Keep the tobacco users, group by residence, then summarise. Pipes, nested calls or intermediate objects all count, and the new column can have any name.",
+   opts = list(ignore = "na.rm"), hints = c("Three steps: keep some rows, form groups, summarise each group.")),
+cx("rd-10", "rd", 2, c("summary-table", "hands-on"),
+   "Task: fit a linear model of `sbp` on `salt_g` and `age` using `ncd`, and print its summary table.",
+   c("summary(lm(sbp ~ salt_g + age, data = ncd))"),
+   "lm() takes a formula (outcome ~ predictors) and the data; summary() prints the coefficient table. Saving the model first (m <- lm(...); summary(m)) is equally fine.",
+   hints = c("The outcome goes on the left of the ~.")),
 
 # ───────────────────────── WORLD 1 · The Outcome Detective ─────────────────────────
 mc("w1-01", "w1", 1, c("outcome-type"),

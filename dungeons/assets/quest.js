@@ -2,7 +2,8 @@
  * quest.js — gamified self-learning engine (vanilla JS, offline, no deps)
  * ---------------------------------------------------------------------
  * Extends the idea of regression-workshop/assets/quiz.js:
- *   • 5 item types: mcq (shuffled) · fill · num · order · spot
+ *   • 6 item types: mcq (shuffled) · fill · num · order · spot · code (R typed or pasted,
+ *     checked by assets/rcheck.js against several accepted solutions; no R is run)
  *   • XP (difficulty x attempt factor − hint cost), daily streak, ranks, badges
  *   • world gates (unlock after a pass mark), boss items, tag mastery
  *   • TEST MODE (pre/post): no feedback while answering, confidence rating,
@@ -178,7 +179,7 @@
     c.show.addEventListener('click', function () {
       var r = rec(q); if (!r.solved) { r.shown = true; r.solved = true; r.tries = Math.max(r.tries, 1); } save();
       var fb = q.querySelector('.rq-feedback'); fb.className = 'rq-feedback is-info';
-      fb.innerHTML = 'Answer: <strong>' + lite(revealText(q)) + '</strong><br>' + lite(b64(q.getAttribute('data-explain')));
+      fb.innerHTML = (q.getAttribute('data-type') === 'code' ? 'One correct answer:<pre class="rq-sol">' + esc(revealText(q)) + '</pre>' : 'Answer: <strong>' + lite(revealText(q)) + '</strong><br>') + lite(b64(q.getAttribute('data-explain')));
       if (lockFn) lockFn(); checkBadges(); save(); renderHUD(); updateWorldBars();
     });
   }
@@ -213,6 +214,35 @@
     chk.addEventListener('click', go);
     showAnswer(q, c, function () { inp.disabled = true; chk.disabled = true; });
     var p = prior(q); if (p) { inp.value = revealText(q); inp.disabled = true; chk.disabled = true; inp.classList.add('is-correct'); feedback(q, true); }
+  }
+  /* code: learner types/pastes R; RCheck normalises it and compares with the author's solutions (no R is run) */
+  function initCode(q, tm) {
+    var sols = []; try { sols = JSON.parse(b64(q.getAttribute('data-sol')) || '[]'); } catch (e) {}
+    var opts = {}; try { opts = JSON.parse(b64(q.getAttribute('data-opts')) || '{}') || {}; } catch (e) {}
+    var ta = document.createElement('textarea'); ta.className = 'rq-code'; ta.rows = parseInt(q.getAttribute('data-lines') || '6', 10);
+    ta.setAttribute('spellcheck', 'false'); ta.setAttribute('autocapitalize', 'off'); ta.setAttribute('autocomplete', 'off'); ta.setAttribute('aria-label', 'Your R code');
+    ta.placeholder = '# type or paste your R code here'; ta.value = b64(q.getAttribute('data-starter')) || '';
+    var chk = document.createElement('button'); chk.type = 'button'; chk.className = 'rq-btn'; chk.textContent = 'Check code';
+    var row = document.createElement('div'); row.className = 'rq-coderow'; row.appendChild(ta); if (!tm) row.appendChild(chk); q.appendChild(row);
+    var c = common(q, tm);
+    var run = function () { if (!window.RCheck) return { ok: false, msg: 'The code checker did not load.' }; try { return window.RCheck.check(ta.value, sols, opts); } catch (e) { return { ok: false, msg: 'The checker could not handle this code.' }; } };
+    ta.addEventListener('keydown', function (e) {
+      e.stopPropagation();
+      if (e.key === 'Tab' && !e.shiftKey) { e.preventDefault(); var a = ta.selectionStart; ta.value = ta.value.slice(0, a) + '  ' + ta.value.slice(ta.selectionEnd); ta.selectionStart = ta.selectionEnd = a + 2; }
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && !tm) { e.preventDefault(); go(); }
+    });
+    if (tm) { ta.addEventListener('input', function () { q._answer = { ok: !!run().ok, given: ta.value, blank: !ta.value.trim() }; }); return; }
+    function go() {
+      if (!ta.value.trim()) return;
+      var r = run(), fb = q.querySelector('.rq-feedback');
+      ta.classList.remove('is-correct', 'is-wrong');
+      if (!r.ok && /^Could not read/.test(r.msg)) { fb.className = 'rq-feedback is-info'; fb.innerHTML = '⚠ ' + lite(r.msg) + ' <small>(not counted as a try)</small>'; return; }
+      ta.classList.add(r.ok ? 'is-correct' : 'is-wrong'); commit(q, r.ok); feedback(q, r.ok, r.ok ? '' : '<br>' + lite(r.msg));
+      if (r.ok) { ta.readOnly = true; chk.disabled = true; }
+    }
+    chk.addEventListener('click', go);
+    showAnswer(q, c, function () { ta.readOnly = true; chk.disabled = true; });
+    var p = prior(q); if (p) { ta.value = revealText(q); ta.readOnly = true; chk.disabled = true; ta.classList.add('is-correct'); feedback(q, true); }
   }
   function initOrder(q, tm) {
     var id = q.getAttribute('data-id'), want = q.getAttribute('data-hash'), list = q.querySelector('ul,ol'); if (!list) return;
@@ -266,7 +296,7 @@
     var tier = r.pct >= 80 ? ['Ready', 'You can skip Regions 1–2: take the <a href="pretest.html">pre-test</a>, then start <b>Region 3 · Regression</b> on the <a href="index.html">map</a>.']
       : r.pct >= 50 ? ['Nearly ready', 'Brush up on <b>' + esc(weak) + '</b> with the library pages (<a href="../r-foundations/data-wrangling.html">Data Wrangling</a>, <a href="../r-foundations/getting-started.html">Getting Started</a>), then take the <a href="pretest.html">pre-test</a>.']
       : ['Not yet', 'Start at <b>Region 1 · Basics</b> on the <a href="index.html">map</a>. Until its worlds open, read <a href="../r-foundations/getting-started.html">Getting Started</a> and <a href="../r-foundations/data-wrangling.html">Data Wrangling</a>, then retake this check.'];
-    return '<p class="rq-gain"><b>' + tier[0] + '.</b> ' + tier[1] + '</p><p class="rq-small">This check is advice only; nothing is locked. The two task items are paper-and-pencil here; real R labs arrive in a later phase.</p>';
+    return '<p class="rq-gain"><b>' + tier[0] + '.</b> ' + tier[1] + '</p><p class="rq-small">This check is advice only; nothing is locked. The two coding tasks are checked without running R: any correct way of writing the code passes.</p>';
   }
   function initTest(box) {
     var kind = box.getAttribute('data-test'), items = box.querySelectorAll('.rq-item');
@@ -391,7 +421,7 @@
       var tm = !!q.closest('.rq-test'), t = q.getAttribute('data-type');
       if (!tm) rec(q);
       if (t === 'mcq') initMCQ(q, tm); else if (t === 'fill') textLike(q, tm, 'fill'); else if (t === 'num') textLike(q, tm, 'num');
-      else if (t === 'order') initOrder(q, tm); else if (t === 'spot') initSpot(q, tm);
+      else if (t === 'order') initOrder(q, tm); else if (t === 'spot') initSpot(q, tm); else if (t === 'code') initCode(q, tm);
     });
     document.querySelectorAll('.rq-test').forEach(initTest);
     document.querySelectorAll('.rq-world').forEach(initWorld);

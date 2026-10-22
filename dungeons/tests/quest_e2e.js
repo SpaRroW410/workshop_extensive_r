@@ -16,6 +16,7 @@ window.__solve = function (q, good) {
   const click = el => el.click();
   if (t === 'mcq') { const b = [...q.querySelectorAll('.rq-option')]; const key = b.find(x => H(id + '|' + x.dataset.i) === q.dataset.hash); click(good ? key : b.find(x => x !== key)); return; }
   if (t === 'fill' || t === 'num') { const inp = q.querySelector('.rq-input'); inp.value = good ? new TextDecoder().decode(Uint8Array.from(atob(q.dataset.show), c => c.charCodeAt(0))) : '-999zzz'; inp.dispatchEvent(new Event('input')); const c = q.querySelector('.rq-fill .rq-btn'); if (c) click(c); return; }
+  if (t === 'code') { const ta = q.querySelector('.rq-code'); ta.value = good ? new TextDecoder().decode(Uint8Array.from(atob(q.dataset.show), c => c.charCodeAt(0))) : 'ncd |> nrow()'; ta.dispatchEvent(new Event('input')); const c = [...q.querySelectorAll('.rq-btn')].find(b => /Check code/.test(b.textContent)); if (c) click(c); return; }
   if (t === 'order') {
     const lis = () => [...q.querySelectorAll('.rq-order li')]; const n = lis().length; const idx = [...Array(n).keys()];
     let target = null; (function perm(a, k) { if (target) return; if (k === a.length) { if (H(id + '|' + a.join('-')) === q.dataset.hash) target = a.slice(); return; } for (let i = k; i < a.length; i++) { [a[k], a[i]] = [a[i], a[k]]; perm(a, k + 1); [a[k], a[i]] = [a[i], a[k]]; } })(idx.slice(), 0);
@@ -48,7 +49,7 @@ const hudXP = p => p.evaluate(() => +document.querySelector('.rq-hud .rq-xp').te
       const a = m[1], g = n => ((a.match(new RegExp(n + '="([^"]*)"')) || [])[1] || '');
       const ex = dec(g('data-explain')), sh = dec(g('data-show')); let hints = []; try { hints = JSON.parse(dec(g('data-hints')) || '[]'); } catch (e) {}
       for (const t of [ex, ...hints]) if (t.length > 25 && src.includes(t.slice(0, 30))) leak.push(g('data-id'));
-      if (g('data-type') === 'fill' || g('data-type') === 'num') if ((g('data-hashes')).includes(sh)) leak.push(g('data-id') + ':hash');
+      if (g('data-type') === 'fill' || g('data-type') === 'num') if (g('data-hashes').split(',').includes(sh)) leak.push(g('data-id') + ':hash');
     }
     ok(leak.length === 0, `${f}: no explanation/hint/answer text in page source ${leak.join(',')}`);
     ok(!/data-answer=/.test(src), `${f}: no plain data-answer`);

@@ -10,6 +10,7 @@ dungeons/
 ├── assets/quest.R      authoring helpers (salted hashes; markup order permuted so the source never lists the key first)
 ├── assets/worlds.js    regions + worlds on the map, with their "Read first" library pages
 ├── assets/skills.js    skill tree, mastery, review, recommender (tests/skills_test.js)
+├── assets/rcheck.js    checks typed/pasted R without running R: parse → normalise → compare (tests/rcheck_test.js)
 ├── assets/cohort.js    facilitator cohort summary (tests/cohort_test.js)
 ├── lint_bank.R         question-quality gate  (Rscript dungeons/lint_bank.R)
 └── tests/quest_e2e.js  Playwright end-to-end suite (44 checks)
@@ -17,6 +18,9 @@ dungeons/
 
 ## Question standards (linted — see ROADMAP §6.2)
 Key never the longest option · no "all/none of the above" · **no function-recall questions** · answers never in stem/hints · every item explained, tagged and levelled · display order shuffled at run time **and** markup order permuted at build time.
+
+## Code items (type or paste R)
+`cx(id, world, diff, tags, stem, solutions = c("…"), explain, opts = list(ignore = "na.rm"))`. The learner's code is never run: `assets/rcheck.js` reduces it and each solution to one canonical form, so pipes vs nested calls, `%>%` vs `|>`, intermediate objects, any new-column name (unless `opts = list(free_names = FALSE)`), argument order, `filter(a & b)` vs `filter(a, b)`, `count()` vs `group_by()+summarise(n())`, base `x[cond, ]`/`subset()`, formula term order and ggplot `aes()` placement all count as the same answer. Give extra `solutions` for genuinely different approaches (e.g. base R and dplyr). Wrong answers get targeted feedback (missing/extra step, wrong data, which step's arguments differ); syntax errors are explained and not counted as a try.
 
 ## Add an item
 Add a `mc()/nm()/fl()/od()/sp()` entry to `bank/items.R`, run `Rscript dungeons/lint_bank.R`, then reference its id from a world page with `rq_render(...)`.

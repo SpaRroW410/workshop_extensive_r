@@ -8,7 +8,7 @@
 #  H4 every item has an explanation, tags, difficulty 1–3 and a world
 #  H5 MCQ option lengths within 2.5x of each other
 #  H6 fill/num answers must not appear verbatim in the stem
-#  H7 MCQ/order/spot need >=4 options/steps/sentences; spot needs a flawed set
+#  H7 MCQ/order/spot need >=4 options/steps/sentences; spot needs a flawed set; code needs >=1 solution
 #  H8 ids unique; hints (if any) never contain the answer text
 #  S1 stem/key word overlap · S2 absolutes only in distractors · S4 key-position skew
 # ═══════════════════════════════════════════════════════════════
@@ -39,6 +39,7 @@ for (it in ITEMS) {
     for (a in as.character(it$accept)) if (nchar(a) >= 3 && grepl(paste0("(^|[^a-z0-9])", tolower(gsub("([.|()\\^{}+$*?\\[\\]])", "\\\\\\1", a)), "([^a-z0-9]|$)"), tolower(it$stem))) H <- c(H, paste0("H6 answer '", a, "' appears in stem"))
     if (it$type == "fill" && all(grepl("^[A-Za-z_.][A-Za-z0-9_.:]*(\\(\\))?$", it$accept)) && grepl("function|argument", it$stem, ignore.case = TRUE)) H <- c(H, "H3 identifier answer to function/argument question")
   } else if (it$type == "order") { if (length(it$steps) < 4) H <- c(H, "H7 order needs >=4 steps"); ans_txt <- tolower(paste(it$steps, collapse = " "))
+  } else if (it$type == "code") { if (!length(it$solutions) || !all(nzchar(trimws(it$solutions)))) H <- c(H, "H7 code item needs at least one solution"); ans_txt <- ""
   } else if (it$type == "spot") { if (length(it$sentences) < 4 || !length(it$flawed) || length(it$flawed) >= length(it$sentences)) H <- c(H, "H7 spot needs >=4 sentences and some (not all) flawed"); ans_txt <- "" }
   if (length(it$hints) && nzchar(ans_txt) && it$type %in% c("fill", "num")) for (h in it$hints) if (grepl(ans_txt, tolower(h), fixed = TRUE)) H <- c(H, "H8 hint contains the answer")
   st <- if (length(H)) "FAIL" else if (length(S)) "warn" else "ok  "

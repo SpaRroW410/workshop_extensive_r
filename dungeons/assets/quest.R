@@ -43,6 +43,14 @@ rq_item_md <- function(it) {
   } else if (type == "spot") {
     a[["data-hash"]] <- rq_hash(paste0(id, "|", paste(sort(it$flawed - 1), collapse = ","))); show <- paste("Flawed:", paste(it$flawed, collapse = ", "))
     body <- paste0(body, "\n\n", paste0("- ", it$sentences, collapse = "\n"))
+  } else if (type == "code") {
+    # answers are R code; assets/rcheck.js normalises and compares (base64 = anti-peek only, like explanations)
+    stopifnot(length(it$solutions) >= 1)
+    a[["data-sol"]] <- .rq_q(.rq_b64(jsonlite::toJSON(it$solutions, auto_unbox = FALSE)))
+    if (length(it$opts)) a[["data-opts"]] <- .rq_q(.rq_b64(jsonlite::toJSON(it$opts, auto_unbox = TRUE)))
+    if (!is.null(it$starter)) a[["data-starter"]] <- .rq_q(.rq_b64(it$starter))
+    a[["data-lines"]] <- it$lines %||% max(4, length(strsplit(it$solutions[1], "\n")[[1]]) + 2)
+    show <- it$solutions[1]
   } else stop("unknown type ", type)
   a[["data-show"]] <- .rq_q(.rq_b64(show)); a[["data-explain"]] <- .rq_q(.rq_b64(it$explain %||% ""))
   if (length(it$hints)) a[["data-hints"]] <- .rq_q(.rq_b64(jsonlite::toJSON(it$hints, auto_unbox = FALSE)))
