@@ -1,0 +1,107 @@
+# ═══════════════════════════════════════════════════════════════
+# _quarto-dungeons.yml — GENERATED from curriculum.yml. DO NOT EDIT BY HAND.
+# Edit curriculum.yml, then run:  Rscript scripts/build_profiles.R
+# Render with:  quarto render --profile dungeons
+# ═══════════════════════════════════════════════════════════════
+
+project:
+  output-dir: docs/dungeons
+  render:
+    - regression-workshop/*.qmd
+    - dungeons/*.qmd
+  resources:
+    - data/ncd_survey.csv
+    - regression-workshop/make_data.R
+    - regression-workshop/labs/*.R
+    - dungeons/assets/*
+website:
+  title: Dungeons & Dataframes
+  site-url: .
+  search: true
+  navbar:
+    logo-href: dungeons/index.html
+    left:
+      - text: 🗺️ Quest map
+        href: dungeons/index.qmd
+      - text: Play
+        menu:
+          - text: Campus (skill tree)
+            href: dungeons/campus.qmd
+          - text: Placement check
+            href: dungeons/readiness.qmd
+          - text: Pre-test (baseline)
+            href: dungeons/pretest.qmd
+          - text: Post-test (growth)
+            href: dungeons/posttest.qmd
+      - text: Region 3 · Regression
+        menu:
+          - text: World 1 · The Outcome Detective
+            href: dungeons/world1_outcome_detective.qmd
+          - text: World 2 · The Straight Line
+            href: dungeons/world2_straight_line.qmd
+          - text: World 3 · Confounding Caves
+            href: dungeons/world3_confounding_caves.qmd
+          - text: World 4 · Assumption Ruins
+            href: dungeons/world4_assumption_ruins.qmd
+          - text: World 5 · Odds Arena
+            href: dungeons/world5_odds_arena.qmd
+          - text: World 6 · The Reporting Guild
+            href: dungeons/world6_reporting_guild.qmd
+      - text: 📖 Library
+        menu:
+          - text: Getting Started
+            href: r-foundations/getting-started.qmd
+          - text: Data Wrangling (Tidyverse)
+            href: r-foundations/data-wrangling.qmd
+          - text: Merging Datasets
+            href: r-foundations/merging_dataset.qmd
+          - text: '---'
+          - text: Grammar of Graphics
+            href: data-visualization/ggplot_grammar.qmd
+          - text: Basic Plot Gallery
+            href: plot-gallery/basic.qmd
+          - text: '---'
+          - text: Test Selection Guide
+            href: statistical-analysis/statistical_tests.qmd
+          - text: gtsummary Tables
+            href: gtsummary/gtsummary_tutorial.qmd
+          - text: Quarto Basics
+            href: quarto_repro_w/reproducible_writing.qmd
+          - text: '---'
+          - text: Regression Analysis
+            href: statistical-analysis/regression.qmd
+          - text: Session 1 — Foundations
+            href: regression-workshop/s1_foundations.qmd
+          - text: Session 2 — Simple Linear Regression
+            href: regression-workshop/s2_simple_regression.qmd
+          - text: Session 3 — Inference & Multiple Regression
+            href: regression-workshop/s3_multiple_regression.qmd
+          - text: Session 4 — Assumptions
+            href: regression-workshop/s4_assumptions.qmd
+          - text: Session 5 — Logistic Regression
+            href: regression-workshop/s5_logistic_regression.qmd
+          - text: Session 6 — Interpreting & Reporting
+            href: regression-workshop/s6_reporting.qmd
+          - text: Interpretation Cheat Sheet
+            href: regression-workshop/cheatsheet.qmd
+      - text: Facilitators
+        menu:
+          - text: Facilitator pack
+            href: dungeons/facilitator.qmd
+          - text: Cohort summary
+            href: dungeons/cohort.qmd
+          - text: '---'
+          - text: Roadmap
+            href: dungeons/roadmap.qmd
+          - text: Site design
+            href: dungeons/site-design.qmd
+    right:
+      - text: Reference
+        icon: book
+        menu:
+          - text: Contact Us
+            href: contact.qmd
+          - text: References
+            href: references.qmd
+          - text: Downloads
+            href: downloads.qmd

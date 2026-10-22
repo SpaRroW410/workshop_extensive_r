@@ -44,6 +44,22 @@ format:
   </p>
 
 
+  <!-- Top: the game, spanning all three columns -->
+  <a class="ws-game" href="dungeons/dungeons/index.html">
+    <div class="ws-game-icon">🗺️</div>
+    <div class="ws-game-body">
+      <div class="ws-card-badge ws-badge--open">🟢 Open Access · New</div>
+      <h3 class="ws-game-title">Dungeons &amp; Dataframes</h3>
+      <p class="ws-game-sub">Medical statistics in R as a game, from your first script to regression and beyond.
+        Clear worlds, beat bosses, earn XP and grow your skill tree. The workshop tracks below are its library.</p>
+      <ul class="ws-game-regions">
+        <li>Region 1 · Basics</li><li>Region 2 · Moderate</li><li>Region 3 · Regression</li><li>Region 4 · Advanced</li>
+      </ul>
+    </div>
+    <span class="ws-btn ws-btn--game">Start playing →</span>
+  </a>
+
+
   <!-- Row 1: Basic · Moderate · Advanced -->
   <div class="ws-cards-row" id="cards-row-1">
 

@@ -1,7 +1,7 @@
-// Usage: node regression-quest/tests/quest_e2e.js <rendered regression-quest/ folder>   (needs `npm i playwright`; set PLAYWRIGHT_PATH / CHROME_PATH if not on the default path)
+// Usage: node dungeons/tests/quest_e2e.js <rendered dungeons/ folder>   (needs `npm i playwright`; set PLAYWRIGHT_PATH / CHROME_PATH if not on the default path)
 const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'playwright');
 const fs = require('fs'), path = require('path');
-const DIR = process.argv[2];                       // .../docs/regression/regression-quest
+const DIR = process.argv[2];                       // .../docs/dungeons/dungeons
 const url = f => 'file://' + path.join(DIR, f);
 let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++; };
 
@@ -69,8 +69,9 @@ const hudXP = p => p.evaluate(() => +document.querySelector('.rq-hud .rq-xp').te
   // ── 2. fresh learner: quest map, locks ───────────────────────────────────
   let ctx = await newCtx(); let p = await open(ctx, 'index.html');
   const cards = await p.locator('.rq-card').count();
-  ok(cards === 16, `quest map shows all 16 worlds (${cards})`);
-  ok(await p.locator('.rq-card.rq-locked').count() >= 1 && await p.locator('.rq-card.rq-soon').count() === 14, 'World 1 locked until pre-test; 14 worlds marked coming soon');
+  const nW = await p.evaluate(() => window.RQ_WORLDS.length), nSoon = await p.evaluate(() => window.RQ_WORLDS.filter(w => w.status !== 'playable').length);
+  ok(cards === nW && (await p.locator('.rq-region').count()) === 4, `quest map shows every world (${cards}/${nW}) in 4 regions`);
+  ok(await p.locator('.rq-card.rq-locked').count() >= 1 && await p.locator('.rq-card.rq-soon').count() === nSoon, `World 1 locked until pre-test; ${nSoon} worlds marked coming soon`);
   ok(await hudXP(p) === 0, 'HUD starts at 0 XP'); ok(p._errs.length === 0, 'index: no JS errors ' + p._errs.join());
   const w1 = await open(ctx, 'world1_outcome_detective.html');
   ok(await w1.evaluate(() => document.body.classList.contains('rq-locked')), 'World 1 is locked before the pre-test');

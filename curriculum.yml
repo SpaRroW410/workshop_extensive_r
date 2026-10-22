@@ -32,15 +32,21 @@ pages:
   quarto_repro_w/quarto_moderate.qmd: {title: "Quarto — Dynamic Documents"}
   exporting_tools/exporting_plots.qmd: {title: "Exporting Plots"}
   exporting_tools/plotting_tools.qmd: {title: "Plotting Tools"}
-  regression-quest/index.qmd: {title: "🗺️ Quest map (start here)"}
-  regression-quest/campus.qmd: {title: "Campus (skill tree)"}
-  regression-quest/readiness.qmd: {title: "Readiness check"}
-  regression-quest/pretest.qmd: {title: "Pre-test (baseline)"}
-  regression-quest/posttest.qmd: {title: "Post-test (growth)"}
-  regression-quest/facilitator.qmd: {title: "Facilitator pack"}
-  regression-quest/cohort.qmd: {title: "Cohort summary"}
-  regression-quest/roadmap.qmd: {title: "Roadmap"}
-  regression-quest/site-design.qmd: {title: "Site design"}
+  dungeons/index.qmd: {title: "🗺️ Quest map (start here)"}
+  dungeons/campus.qmd: {title: "Campus (skill tree)"}
+  dungeons/readiness.qmd: {title: "Placement check"}
+  dungeons/pretest.qmd: {title: "Pre-test (baseline)"}
+  dungeons/posttest.qmd: {title: "Post-test (growth)"}
+  dungeons/facilitator.qmd: {title: "Facilitator pack"}
+  dungeons/cohort.qmd: {title: "Cohort summary"}
+  dungeons/roadmap.qmd: {title: "Roadmap"}
+  dungeons/site-design.qmd: {title: "Site design"}
+  dungeons/world1_outcome_detective.qmd: {title: "World 1 · The Outcome Detective"}
+  dungeons/world2_straight_line.qmd: {title: "World 2 · The Straight Line"}
+  dungeons/world3_confounding_caves.qmd: {title: "World 3 · Confounding Caves"}
+  dungeons/world4_assumption_ruins.qmd: {title: "World 4 · Assumption Ruins"}
+  dungeons/world5_odds_arena.qmd: {title: "World 5 · Odds Arena"}
+  dungeons/world6_reporting_guild.qmd: {title: "World 6 · The Reporting Guild"}
   regression-workshop/s1_foundations.qmd: {title: "Session 1 — Foundations"}
   regression-workshop/s2_simple_regression.qmd: {title: "Session 2 — Simple Linear Regression"}
   regression-workshop/s3_multiple_regression.qmd: {title: "Session 3 — Inference & Multiple Regression"}
@@ -145,18 +151,16 @@ profiles:
     title: "Data Visualization Workshop — Regression"
     output-dir: docs/regression
     logo-href: welcome.html
-    # Theory of Regression Analysis workshop (6 reveal.js decks + cheat sheet) and the quest.
+    # Theory of Regression Analysis workshop (6 reveal.js decks + cheat sheet).
     # Added here (not in the shared _quarto.yml) so only this track renders them.
     # Resources are student-facing only — facilitator solutions are deliberately NOT listed.
     project-extra:
       render:
       - regression-workshop/*.qmd
-      - regression-quest/*.qmd
       resources:
       - data/ncd_survey.csv
       - regression-workshop/make_data.R
       - regression-workshop/labs/*.R
-      - regression-quest/assets/*
     left:
       - text: "R Foundations"
         items:
@@ -164,17 +168,6 @@ profiles:
           - r-foundations/data-wrangling.qmd
       - text: "Regression Analysis"
         href: statistical-analysis/regression.qmd
-      - text: "Dungeons & Dataframes"
-        items:
-          - regression-quest/index.qmd
-          - regression-quest/campus.qmd
-          - regression-quest/readiness.qmd
-          - regression-quest/pretest.qmd
-          - regression-quest/posttest.qmd
-          - regression-quest/facilitator.qmd
-          - regression-quest/cohort.qmd
-          - regression-quest/roadmap.qmd
-          - regression-quest/site-design.qmd
       - text: "Regression Workshop"
         items:
           - regression-workshop/s1_foundations.qmd
@@ -185,6 +178,73 @@ profiles:
           - regression-workshop/s6_reporting.qmd
           - "---"
           - regression-workshop/cheatsheet.qmd
+    right:
+      - text: "Reference"
+        icon: book
+        items:
+          - contact.qmd
+          - references.qmd
+          - downloads.qmd
+  dungeons:
+    title: "Dungeons & Dataframes"
+    output-dir: docs/dungeons
+    logo-href: dungeons/index.html
+    # The game: its own site. Base pages (R Foundations, statistics, Quarto …) and the
+    # regression workshop also render here so every world can link to its "📖 Read first" pages.
+    project-extra:
+      render:
+      - regression-workshop/*.qmd
+      - dungeons/*.qmd
+      resources:
+      - data/ncd_survey.csv
+      - regression-workshop/make_data.R
+      - regression-workshop/labs/*.R
+      - dungeons/assets/*
+    left:
+      - text: "🗺️ Quest map"
+        href: dungeons/index.qmd
+      - text: "Play"
+        items:
+          - dungeons/campus.qmd
+          - dungeons/readiness.qmd
+          - dungeons/pretest.qmd
+          - dungeons/posttest.qmd
+      - text: "Region 3 · Regression"
+        items:
+          - dungeons/world1_outcome_detective.qmd
+          - dungeons/world2_straight_line.qmd
+          - dungeons/world3_confounding_caves.qmd
+          - dungeons/world4_assumption_ruins.qmd
+          - dungeons/world5_odds_arena.qmd
+          - dungeons/world6_reporting_guild.qmd
+      - text: "📖 Library"
+        items:
+          - r-foundations/getting-started.qmd
+          - r-foundations/data-wrangling.qmd
+          - r-foundations/merging_dataset.qmd
+          - "---"
+          - data-visualization/ggplot_grammar.qmd
+          - plot-gallery/basic.qmd
+          - "---"
+          - statistical-analysis/statistical_tests.qmd
+          - gtsummary/gtsummary_tutorial.qmd
+          - quarto_repro_w/reproducible_writing.qmd
+          - "---"
+          - statistical-analysis/regression.qmd
+          - regression-workshop/s1_foundations.qmd
+          - regression-workshop/s2_simple_regression.qmd
+          - regression-workshop/s3_multiple_regression.qmd
+          - regression-workshop/s4_assumptions.qmd
+          - regression-workshop/s5_logistic_regression.qmd
+          - regression-workshop/s6_reporting.qmd
+          - regression-workshop/cheatsheet.qmd
+      - text: "Facilitators"
+        items:
+          - dungeons/facilitator.qmd
+          - dungeons/cohort.qmd
+          - "---"
+          - dungeons/roadmap.qmd
+          - dungeons/site-design.qmd
     right:
       - text: "Reference"
         icon: book

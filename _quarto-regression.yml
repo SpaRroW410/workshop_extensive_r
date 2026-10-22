@@ -8,15 +8,13 @@ project:
   output-dir: docs/regression
   render:
     - regression-workshop/*.qmd
-    - regression-quest/*.qmd
   resources:
     - data/ncd_survey.csv
     - regression-workshop/make_data.R
     - regression-workshop/labs/*.R
-    - regression-quest/assets/*
 website:
   title: Data Visualization Workshop — Regression
-  site-url: '.'
+  site-url: .
   search: true
   navbar:
     logo-href: welcome.html
@@ -29,26 +27,6 @@ website:
             href: r-foundations/data-wrangling.qmd
       - text: Regression Analysis
         href: statistical-analysis/regression.qmd
-      - text: Dungeons & Dataframes
-        menu:
-          - text: "\U0001F5FA️ Quest map (start here)"
-            href: regression-quest/index.qmd
-          - text: Campus (skill tree)
-            href: regression-quest/campus.qmd
-          - text: Readiness check
-            href: regression-quest/readiness.qmd
-          - text: Pre-test (baseline)
-            href: regression-quest/pretest.qmd
-          - text: Post-test (growth)
-            href: regression-quest/posttest.qmd
-          - text: Facilitator pack
-            href: regression-quest/facilitator.qmd
-          - text: Cohort summary
-            href: regression-quest/cohort.qmd
-          - text: Roadmap
-            href: regression-quest/roadmap.qmd
-          - text: Site design
-            href: regression-quest/site-design.qmd
       - text: Regression Workshop
         menu:
           - text: Session 1 — Foundations
@@ -76,4 +54,3 @@ website:
             href: references.qmd
           - text: Downloads
             href: downloads.qmd
-

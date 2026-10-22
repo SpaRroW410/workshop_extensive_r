@@ -140,7 +140,7 @@ Rules: no copied pages; audience profiles are **views** (a page list plus option
 
 ## 2.1 The idea
 
-The quest is **its own site** (`docs/quest/`, own profile, own landing card), built **on top of** the workshop. **Workshop pages are its literature**: each world links "📖 Read first" to the pages that teach it.
+The quest is **its own site** (`docs/dungeons/`, profile `dungeons`, own landing card; folder `dungeons/`), built **on top of** the workshop. **Workshop pages are its literature**: each world links "📖 Read first" to the pages that teach it.
 
 > **Coverage rule:** the quest only tests what the workshop teaches. A missing topic is added to the workshop first.
 
@@ -153,7 +153,7 @@ The quest is **its own site** (`docs/quest/`, own profile, own landing card), bu
 | 3 | Later topics | Advanced Analysis roadmap (§2.7) |
 | 4 | Gating | Yes: region post-test **≥ 70%** unlocks the next; **retakes allowed** after a cooldown; placement test can unlock directly |
 | 5 | Name | Dungeons & Dataframes |
-| 6 | Old URLs | Redirect `docs/regression/regression-quest/*` → `docs/quest/*` |
+| 6 | Old URLs | Redirect `docs/regression/regression-quest/*` → `docs/dungeons/dungeons/*` (stubs written by `render-all-profiles.sh`) |
 | 7 | Advanced before A1 exists | Publish it with a **roadmap ("coming soon") page** |
 
 ## 2.3 Regions
@@ -179,12 +179,12 @@ Core visualisation stays in the main regions: R1 basic plots; R2 exploratory plo
 
 | Today | After |
 |---|---|
-| `regression-quest/` in the regression profile | `quest/` + `_quarto-quest.yml` → `docs/quest/` |
+| `regression-quest/` in the regression profile | ✔ `dungeons/` + `_quarto-dungeons.yml` → `docs/dungeons/` (2026-10-22) |
 | `bank/items.R` | `bank/r1_basic.R`, `r2_moderate.R`, `r3_regression.R`, `r4_<branch>.R`, `side_dataviz.R`, `side_publication.R` |
-| `worlds.js` flat W1–W16 | Regions + gates; side quests separate |
+| `worlds.js` flat W1–W16 | ✔ Regions (gates per region still to do); side quests separate |
 | One pre/post (regression) | Per-region pre/post (post = gate) + placement test |
 | Progress key `rq:v1` | `dd:v2` + one-time migration |
-| Quest menu in Regression navbar | "🎮 Practise in the Quest" in every navbar; quest links back |
+| Quest menu in Regression navbar | ✔ removed from Regression; the game has its own navbar with a 📖 Library menu and per-world "Read first" links. Still to do: "🎮 Practise in the Quest" link in every workshop navbar |
 | `regression-quest/ROADMAP.md`, `SITE_DESIGN.md` | Kept as the engine and Region 3 detail; this file is the umbrella |
 
 ## 2.6 Advanced Analysis modules (post-regression)
@@ -240,7 +240,7 @@ Then its quest worlds.
 |---|---|
 | **0 · Foundations** | Test `when-meta` level flags and `freeze`; `curriculum.yml` + profile generator; partial-aware incremental render |
 | **1 · Restructure profiles** | Cumulative level blocks on existing pages (start with `data_analysis`, `regression`, `getting-started`); Advanced with branch menus + roadmap page; new `publication` profile (move gtsummary/Quarto pages); landing page shows the main ladder + separate ladders |
-| **2 · Quest split-out** | `quest/` profile, regions, gates, migration, redirects, navbar links |
+| **2 · Quest split-out** | ✔ `dungeons` profile, regions, redirects, landing card (2026-10-22). Still to do: per-region gates, `dd:v2` migration, workshop navbar links |
 | **3 · New workshop content** | ANOVA vs regression; iteration page (Moderate + Advanced); citation page (all levels); flextable and bookdown pages; contributing profile |
 | **4 · Literature layer** | `check_literature.R` + gap report in CI |
 | **5 · Quest Region 3 complete** | Worlds 3–6 + ANOVA world + gate |

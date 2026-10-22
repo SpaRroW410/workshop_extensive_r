@@ -1,4 +1,4 @@
-// Unit tests for assets/skills.js (mastery, fading, review queue, recommender). Run: node regression-quest/tests/skills_test.js
+// Unit tests for assets/skills.js (mastery, fading, review queue, recommender). Run: node dungeons/tests/skills_test.js
 const SK = require('../assets/skills.js');
 let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++; };
 const TM = { confounding: { w3: 1 }, 'crude-vs-adjusted': { w3: 1 }, 'slope-units': { w2: 4 }, 'regression-vs-correlation': { w1: 1 }, workflow: { w1: 1, w3: 1 } };

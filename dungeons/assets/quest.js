@@ -263,9 +263,9 @@
   }
   function readyAdvice(r) {
     var weak = Object.keys(r.byTag).filter(function (t) { return r.byTag[t][0] < r.byTag[t][1]; }).sort().join(', ');
-    var tier = r.pct >= 80 ? ['Ready', 'Go straight to the <a href="pretest.html">pre-test</a>.']
-      : r.pct >= 50 ? ['Nearly ready', 'Brush up on: <b>' + esc(weak) + '</b> in <a href="../r-foundations/data-wrangling.html">R Foundations</a>, then take the <a href="pretest.html">pre-test</a>.']
-      : ['Not yet', 'Start with <a href="../r-foundations/getting-started.html">R Foundations</a> and <a href="../r-foundations/data-wrangling.html">Data Wrangling</a>, then retake this check.'];
+    var tier = r.pct >= 80 ? ['Ready', 'You can skip Regions 1–2: take the <a href="pretest.html">pre-test</a>, then start <b>Region 3 · Regression</b> on the <a href="index.html">map</a>.']
+      : r.pct >= 50 ? ['Nearly ready', 'Brush up on <b>' + esc(weak) + '</b> with the library pages (<a href="../r-foundations/data-wrangling.html">Data Wrangling</a>, <a href="../r-foundations/getting-started.html">Getting Started</a>), then take the <a href="pretest.html">pre-test</a>.']
+      : ['Not yet', 'Start at <b>Region 1 · Basics</b> on the <a href="index.html">map</a>. Until its worlds open, read <a href="../r-foundations/getting-started.html">Getting Started</a> and <a href="../r-foundations/data-wrangling.html">Data Wrangling</a>, then retake this check.'];
     return '<p class="rq-gain"><b>' + tier[0] + '.</b> ' + tier[1] + '</p><p class="rq-small">This check is advice only; nothing is locked. The two task items are paper-and-pencil here; real R labs arrive in a later phase.</p>';
   }
   function initTest(box) {
@@ -293,7 +293,7 @@
         (q.getAttribute('data-tags') || 'other').split(',').filter(Boolean).forEach(function (t) { byTag[t] = byTag[t] || [0, 0]; byTag[t][1]++; if (ok) byTag[t][0]++; }); });
       var r = { score: score, total: items.length, pct: Math.round(100 * score / items.length), byTag: byTag, certain: certain, certainRight: certainRight, confN: confN, ts: today() };
       state.tests[kind] = r; if (state.tests.pre && state.tests.post) {} touchStreak(); save(); showResult(r); checkBadges(); save(); renderHUD();
-      toast('📋 ' + (kind === 'pre' ? 'Baseline' : kind === 'ready' ? 'Readiness' : 'Post-test') + ' saved: ' + r.pct + '%');
+      toast('📋 ' + (kind === 'pre' ? 'Baseline' : kind === 'ready' ? 'Placement' : 'Post-test') + ' saved: ' + r.pct + '%');
     });
   }
 
@@ -309,6 +309,7 @@
     var req = el.getAttribute('data-requires'), g = gateMet(req);
     var total = parseInt(el.getAttribute('data-total') || '0', 10), id = el.getAttribute('data-world');
     el.innerHTML = '<div class="rq-worldbar"><span>World progress</span><span class="rq-bar"><i></i></span><b></b></div>';
+    var wc = worldCfg(id); if (wc && wc.read && wc.read.length) el.insertAdjacentHTML('beforeend', '<p class="rq-read">📖 <b>Read first:</b> ' + readLinks(wc) + '</p>');
     el.setAttribute('data-ready', '1');
     if (!g.ok) {
       var lock = document.createElement('div'); lock.className = 'rq-lock'; lock.innerHTML = '🔒 <b>Locked.</b> ' + g.msg + ' <button class="rq-btn rq-ghost" id="rq-skip">I know this — unlock anyway</button>';
@@ -325,13 +326,20 @@
   }
 
   /* ── quest map ──────────────────────────────────────────────────────── */
+  function readLinks(w) { return (w.read || []).map(function (r) { return '<a href="' + r[0] + '">' + esc(r[1]) + '</a>'; }).join(' · '); }
+  function worldCard(w) {
+    var pct = w.total ? worldPct(w.id, w.total) : 0, g = w.status === 'playable' ? gateMet(w.requires) : { ok: false }, st = w.status !== 'playable' ? 'soon' : (pct >= 100 ? 'cleared' : (g.ok ? 'open' : 'locked'));
+    return '<div class="rq-card rq-' + st + '"><div class="rq-ico">' + (w.icon || '★') + '</div><div class="rq-ct"><h3>' + esc(w.title) + '</h3><p>' + esc(w.blurb) + '</p>' +
+      (w.status === 'playable' ? '<span class="rq-bar"><i style="width:' + pct + '%"></i></span><small>' + solvedIn(w.id) + ' / ' + w.total + ' items · ' + (st === 'locked' ? '🔒 locked' : st === 'cleared' ? '✔ cleared' : 'open') + '</small>' : '<small>🚧 coming soon (' + esc(w.phase || 'see roadmap') + ')</small>') +
+      (w.read && w.read.length ? '<small class="rq-read">📖 Read first: ' + readLinks(w) + '</small>' : '') +
+      '</div>' + (w.status === 'playable' ? '<a class="rq-btn" href="' + w.href + '">' + (st === 'locked' ? 'Preview' : pct ? 'Continue' : 'Start') + '</a>' : '') + '</div>';
+  }
   function initMap(el) {
-    var W = window.RQ_WORLDS || [], html = '';
-    W.forEach(function (w) {
-      var pct = w.total ? worldPct(w.id, w.total) : 0, g = w.status === 'playable' ? gateMet(w.requires) : { ok: false }, st = w.status !== 'playable' ? 'soon' : (pct >= 100 ? 'cleared' : (g.ok ? 'open' : 'locked'));
-      html += '<div class="rq-card rq-' + st + '"><div class="rq-ico">' + (w.icon || '★') + '</div><div class="rq-ct"><h3>' + esc(w.title) + '</h3><p>' + esc(w.blurb) + '</p>' +
-        (w.status === 'playable' ? '<span class="rq-bar"><i style="width:' + pct + '%"></i></span><small>' + solvedIn(w.id) + ' / ' + w.total + ' items · ' + (st === 'locked' ? '🔒 locked' : st === 'cleared' ? '✔ cleared' : 'open') + '</small>' : '<small>🚧 coming soon — see roadmap (' + esc(w.phase || '') + ')</small>') +
-        '</div>' + (w.status === 'playable' ? '<a class="rq-btn" href="' + w.href + '">' + (st === 'locked' ? 'Preview' : pct ? 'Continue' : 'Start') + '</a>' : '') + '</div>';
+    var W = window.RQ_WORLDS || [], R = window.RQ_REGIONS || [{ id: undefined, title: '', blurb: '' }], html = '';
+    R.forEach(function (r) {
+      var ws = W.filter(function (w) { return w.region === r.id; }); if (!ws.length) return;
+      var playable = ws.filter(function (w) { return w.status === 'playable'; }).length;
+      html += '<section class="rq-region"><h2>' + esc(r.title) + (playable ? '' : ' <small>coming soon</small>') + '</h2><p>' + esc(r.blurb) + '</p>' + ws.map(worldCard).join('') + '</section>';
     });
     el.innerHTML = html;
     var sh = document.getElementById('rq-badges');
@@ -340,7 +348,7 @@
   }
   function initData() {
     var ex = document.getElementById('rq-export'), im = document.getElementById('rq-import'), rs = document.getElementById('rq-reset');
-    if (ex) ex.addEventListener('click', function () { var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(state, null, 1)], { type: 'application/json' })); a.download = 'regression-quest-progress.json'; a.click(); });
+    if (ex) ex.addEventListener('click', function () { var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(state, null, 1)], { type: 'application/json' })); a.download = 'dungeons-progress.json'; a.click(); });
     if (im) im.addEventListener('change', function () { var f = im.files[0]; if (!f) return; var fr = new FileReader(); fr.onload = function () { try { var s = JSON.parse(fr.result); if (s && s.v === 1) { state = s; save(); location.reload(); } else toast('Not a progress file'); } catch (e) { toast('Could not read file'); } }; fr.readAsText(f); });
     if (rs) rs.addEventListener('click', function () { if (confirm('Erase all progress on this device?')) { state = blank(); save(); location.reload(); } });
   }
@@ -354,7 +362,7 @@
     var rec3 = SK.recommend(state, tm, t, 3), due = SK.dueReview(state, tm, t, 5), xp = totalXP(), rk = rankOf(xp);
     var card = function (x, tag) { return '<div class="rq-rec"><b>' + esc(x.skill.id + ' · ' + x.skill.name) + '</b><small>' + esc(x.why) + '</small>' +
       (x.m.worlds.length ? '<span>Practise in: ' + worldLinks(x.m.worlds) + '</span>' : '') + '</div>'; };
-    html += '<h2>What next?</h2>' + (rec3.length ? '<div class="rq-recs">' + rec3.map(card).join('') + '</div>' : '<p>Nothing recommended yet: start with the <a href="readiness.html">readiness check</a> and the <a href="pretest.html">pre-test</a>, then open World 1.</p>');
+    html += '<h2>What next?</h2>' + (rec3.length ? '<div class="rq-recs">' + rec3.map(card).join('') + '</div>' : '<p>Nothing recommended yet: start with the <a href="readiness.html">placement check</a> and the <a href="pretest.html">pre-test</a>, then open World 1.</p>');
     html += '<h2>Daily review</h2>' + (due.length ? '<div class="rq-recs">' + due.map(card).join('') + '</div>' : '<p>Nothing is fading. Skills you have not used for ' + SK.FADE_DAYS + ' days appear here.</p>');
     html += '<h2>Skill tree</h2><p class="rq-small">Level 0 unseen · 1 seen · 2 practising · 3 proficient (first-try solves, no hints). Greyed skills have no items yet. Hover a skill for its prerequisites.</p>';
     SK.BRANCHES.forEach(function (b) {

@@ -1,0 +1,35 @@
+---
+title: "Placement check"
+subtitle: "10 short questions. Can you skip the basics? About 10 minutes, advisory only."
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-lesson}
+The game starts from the basics, so you never *need* this check. It is for people who already use R and want to skip ahead. It asks about the Region 1 skills (reading a `dplyr` pipeline, factors, plots, `summary()` tables, missing values). Results: **Ready** (skip to Region 3 · Regression), **Nearly ready** (brush up on a few library pages first) or **Not yet** (start at Region 1 · Basics). Not graded; nothing is locked.
+:::
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(sprintf("rd-%02d", 1:10), ITEMS, test = "ready")
+```

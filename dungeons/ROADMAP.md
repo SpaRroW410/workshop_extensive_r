@@ -2,6 +2,8 @@
 
 **Goal:** turn the one-day *Theory of Regression Analysis* workshop into a **game for learning medical statistics in R** (**Dungeons & Dataframes**): a self-paced, gamified, *tested* environment for community-medicine residents and faculty. The platform is organised into **tracks**; **Track 1 is Regression** (the worlds in §3), and further tracks follow (§1.1). Within Regression, a learner goes from "I can run `lm()`" to "I can plan, run, check and report the right regression for my thesis", and on into the models the workshop only names.
 
+**Scope decisions (v4, 2026-10-22):** the game now **starts from the basics** and is its own site (profile `dungeons`, open-access card on the landing page). It is organised into four **regions** that follow the workshop ladder: **Region 1 · Basics → Region 2 · Moderate → Region 3 · Regression → Region 4 · Advanced** (see `SITE_PLAN.md` Part 2). The regression worlds in §3 are Region 3; the workshop pages are the game's library ("📖 Read first" links). Where v3 below says *track*, read *region*; where it says R basics are a prerequisite, that is replaced by Region 1, and the readiness check becomes a **placement check** for skipping ahead.
+
 **Scope decisions (v3):**
 
 * **Platform = medical statistics in R; regression is its first track.** Name: **Dungeons & Dataframes** (deliberately not regression-specific). Worlds can be presented as *dungeons*.
@@ -45,6 +47,8 @@ The skill tree and engine are **track-agnostic**: a track is a set of worlds, sk
 | **7 · Reproducible reporting** | Quarto, tables/figures, STROBE/CONSORT, thesis workflow | ⬜ planned |
 
 Tracks unlock independently after the readiness check; a learner can start in any track whose prerequisite skills they hold.
+
+*v4 note:* the regions (Basics, Moderate, Regression, Advanced) are now the main path; the topic tracks above become worlds or side quests inside those regions (for example *Comparing groups* → Region 1 *Which Test?* and Region 2 *Tests in Context*; *Reproducible reporting* → the Scriptorium side quest).
 
 ---
 
@@ -338,7 +342,7 @@ Phases 1–5 stay fully static on GitHub Pages. To make accounts a *later add-on
 ### 9.1 Repository layout (target)
 
 ```
-regression-quest/
+dungeons/
   bank/           items by world (one file each), metadata, form definitions
   worlds/         one qmd per world + briefings
   labs/           student labs, graders, solutions (generated)
@@ -519,7 +523,7 @@ Effort is in person-weeks (PW) for one developer + one content author/reviewer (
 ## 16. Next four weeks
 
 1. Pilot Worlds 1–2 and the pre/post forms with 5 residents; capture think-aloud notes and item timings.
-2. ~~Write the World 3 (*Confounding Caves*) bank~~ ✔ drafted (9 items + boss); still to do: run the linter and render, then the misconception log. World 4 (*Assumption Ruins*) bank also drafted. World 5 (*Odds Arena*) bank also drafted. World 6 (*The Reporting Guild*) bank also drafted, so Phase 2's four core-world conversions (Worlds 3–6) are drafted. Readiness check also built (`readiness.qmd`, items `rd-01`–`rd-10`, routing in `quest.js`). Campus shell built (`campus.qmd`, `assets/skills.js`: 62-skill tree, mastery, fading/review list, "what next?" recommender, profile, calm mode; unit tests in `tests/skills_test.js`). **Deferred from Phase 2 shell:** state v2 event log + storage adapter (mastery is derived from v1 item records, additive fields only), an answerable daily-review quiz (needs item replay, Phase 3 with spaced retrieval), level 4 "mastered". Pre/post forms now 20 parallel items each covering Worlds 1–6 (`pre-13`–`20`, `post-13`–`20`). Per-skill "Practise next" added to pre/post results. Facilitator pack (`facilitator.qmd`: formats, 2-hour plan, per-world prompts, pilot protocol) and browser-only cohort summary tool (`cohort.qmd`, `assets/cohort.js`, unit-tested) built; the workshop cheat sheet is linked from the quest. **Remaining for the Phase 2 exit: lint/render pass, then the 20+ resident pilot (real-world).**
+2. ~~Write the World 3 (*Confounding Caves*) bank~~ ✔ drafted (9 items + boss); still to do: run the linter and render, then the misconception log. World 4 (*Assumption Ruins*) bank also drafted. World 5 (*Odds Arena*) bank also drafted. World 6 (*The Reporting Guild*) bank also drafted, so Phase 2's four core-world conversions (Worlds 3–6) are drafted. Readiness check (now the **placement check**) also built (`readiness.qmd`, items `rd-01`–`rd-10`, routing in `quest.js`). Campus shell built (`campus.qmd`, `assets/skills.js`: 62-skill tree, mastery, fading/review list, "what next?" recommender, profile, calm mode; unit tests in `tests/skills_test.js`). **Deferred from Phase 2 shell:** state v2 event log + storage adapter (mastery is derived from v1 item records, additive fields only), an answerable daily-review quiz (needs item replay, Phase 3 with spaced retrieval), level 4 "mastered". Pre/post forms now 20 parallel items each covering Worlds 1–6 (`pre-13`–`20`, `post-13`–`20`). Per-skill "Practise next" added to pre/post results. Facilitator pack (`facilitator.qmd`: formats, 2-hour plan, per-world prompts, pilot protocol) and browser-only cohort summary tool (`cohort.qmd`, `assets/cohort.js`, unit-tested) built; the workshop cheat sheet is linked from the quest. **Remaining for the Phase 2 exit: lint/render pass, then the 20+ resident pilot (real-world).** **2026-10-22:** moved out of the Regression track into its own site (`dungeons/`, profile `dungeons`, landing-page card); map regrouped into Regions 1–4 with "Read first" library links; old URLs redirect. **Next: Region 1 · Basics worlds** (Your First Script, Tidy Tavern, Join Junction, First Plots, Which Test?).
 3. Prototype `rqlab` (`rq_start`, `rq_check`, `rq_submit`) for one lab and the code-verification box on the site.
 4. Add the Playwright suite and the R↔JS parity test to CI.
 5. Draft the **readiness check** (8 items + 2 R tasks) and the skill-tree node list; prototype the skill tree page on the existing 40 items.

@@ -161,6 +161,15 @@ render_profile "Advanced"                   "advanced"        "docs/advanced"
 render_profile "DataViz — Foundations"      "dataviz-base"    "docs/dataviz-base"
 render_profile "DataViz — Complete"         "dataviz-complete" "docs/dataviz-complete"
 render_profile "Regression"                 "regression"       "docs/regression"
+render_profile "Dungeons & Dataframes"      "dungeons"         "docs/dungeons"
+
+# ── Old quest URLs (it lived inside the Regression track) → the game's own site ──
+mkdir -p docs/regression/regression-quest
+for f in docs/dungeons/dungeons/*.html; do
+  [ -f "$f" ] || continue
+  b="$(basename "$f")"
+  printf '<!doctype html><meta charset="utf-8"><title>Moved</title><meta http-equiv="refresh" content="0; url=../../dungeons/dungeons/%s"><link rel="canonical" href="../../dungeons/dungeons/%s"><p>Dungeons &amp; Dataframes has moved: <a href="../../dungeons/dungeons/%s">continue</a>.</p>\n' "$b" "$b" "$b" > "docs/regression/regression-quest/$b"
+done
 
 # ── Done ──────────────────────────────────────────────────────
 echo ""
@@ -176,6 +185,7 @@ echo "  docs/advanced/           ← Advanced track"
 echo "  docs/dataviz-base/       ← DataViz Foundations"
 echo "  docs/dataviz-complete/   ← DataViz Complete"
 echo "  docs/regression/         ← Regression"
+echo "  docs/dungeons/           ← Dungeons & Dataframes (the game)"
 echo ""
 echo "  Local preview:"
 echo "    cd docs && python -m http.server 8080"

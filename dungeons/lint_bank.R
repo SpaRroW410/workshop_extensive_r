@@ -1,6 +1,6 @@
 # ═══════════════════════════════════════════════════════════════
-# lint_bank.R — quality gate for regression-quest/bank/items.R
-# Usage (repo root):  Rscript regression-quest/lint_bank.R
+# lint_bank.R — quality gate for dungeons/bank/items.R
+# Usage (repo root):  Rscript dungeons/lint_bank.R
 # Question-writing standards enforced here (see ROADMAP.md §Assessment):
 #  H1 MCQ key not the strictly longest option, nor >1.25x the distractor mean
 #  H2 no "all/none/both of the above"
@@ -12,7 +12,7 @@
 #  H8 ids unique; hints (if any) never contain the answer text
 #  S1 stem/key word overlap · S2 absolutes only in distractors · S4 key-position skew
 # ═══════════════════════════════════════════════════════════════
-base <- if (dir.exists("regression-quest")) "regression-quest" else "."
+base <- if (dir.exists("dungeons")) "dungeons" else "."
 source(file.path(base, "bank", "items.R"))
 words <- function(s) { w <- tolower(unlist(strsplit(gsub("[^A-Za-z0-9_ ]", " ", s), "\\s+"))); setdiff(w[nchar(w) > 3], c("which","that","this","with","what","from","than","their","have","does","your","when","each","into","about","after","other","there","these","those","would","should","could","model","models","regression")) }
 absolutes <- c("always","never","only","exactly","guarantees","guarantee","every","must","completely","entirely","impossible","proves")

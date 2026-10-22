@@ -1,4 +1,4 @@
-// Unit tests for assets/cohort.js. Run: node regression-quest/tests/cohort_test.js
+// Unit tests for assets/cohort.js. Run: node dungeons/tests/cohort_test.js
 const C = require('../assets/cohort.js');
 let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++; };
 const it = (o) => Object.assign({ world: 'w1', diff: 2, tries: 1, hints: 0, solved: true, shown: false, boss: false, tags: [] }, o);
