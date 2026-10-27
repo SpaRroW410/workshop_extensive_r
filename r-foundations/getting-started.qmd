@@ -110,6 +110,13 @@ sidebar:
 -   Version Control Integration\
 -   Quicker Setup
 
+## Project: why not `setwd()`?
+
+-   A **Project** (`.Rproj`) makes its own folder the working directory every time you open it
+-   Paths are then **relative to the project**: `read_csv("data/ncd_survey.csv")` works on any computer
+-   `setwd("C:/Users/Asha/Desktop")` only works on one machine, and breaks when you share the script
+-   Keep raw data in `data/`, write all steps in a **script** (not only the console), and never overwrite the raw file
+
 ------------------------------------------------------------------------
 
 
@@ -203,6 +210,27 @@ gender <- factor(c("Male", "Female", "Male", "Female"),
 physical_activity <- factor(sample(c(1, 2), 10, replace = TRUE),
                             levels = c(1, 2),
                             labels = c("Yes", "No"))
+```
+
+## Factor levels and the reference level
+
+```{r}
+#| echo: true
+res <- factor(c("Urban", "Rural", "Urban"))
+levels(res)        # sorted alphabetically by default: "Rural" "Urban"
+```
+
+-   Unless you set `levels =` yourself, R sorts levels **alphabetically**; the **first level is the reference** in models
+-   Choose it deliberately: `factor(x, levels = c("Urban", "Rural"))`
+-   Text in quotes is a **character**, not a number: `mean(c("45", "52"))` fails. Convert with `as.numeric()`
+
+## Missing values spread
+
+```{r}
+#| echo: true
+wt <- c(60, 72, NA, 58)
+mean(wt)                  # NA: one unknown value makes the mean unknown
+mean(wt, na.rm = TRUE)    # drop the missing value for this calculation (and report it)
 ```
 
 ------------------------------------------------------------------------

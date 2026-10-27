@@ -6,8 +6,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.10.18">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.19">
 
   <meta name="author" content="SpaRroW">
   <title>Data Visualization Workshop — Advanced – Best Practices</title>
@@ -838,217 +838,111 @@ SpaRroW
       });
     </script>
     <div style="
-
       position: fixed;
-
       bottom: 10px;
-
       left: 50%;
-
       transform: translateX(-50%);
-
       font-size: 0.9em;
-
       color: black;
-
       background-color: transparent;
-
       z-index: 9999;
-
       text-align: center;
-
       display: flex;
-
       gap: 20px;
-
       justify-content: center;
-
     ">
-
       <a href="../welcome.html" style="color: black;">🏠 Home</a>
-
       <span id="nextModule" style="display: none;">
-
         | <a href="" id="nextModuleLink" style="color: black;">📚 Next Module</a>
-
       </span>
-
       <span id="nextSection" style="display: none;">
-
         | <a href="" id="nextSectionLink" style="color: black;">➡️ Next Section</a>
-
       </span>
-
     </div>
 
-    
-
     <script>
-
     (async function() {
-
       try {
-
         // Load navigation config
-
         const response = await fetch('../navigation.json');
-
         const navConfig = await response.json();
-
         
-
         // Detect current profile (basic, moderate, advanced)
-
         const pathParts = window.location.pathname.split('/');
-
         const profile = pathParts[pathParts.length - 3] || 'basic';
-
         
-
         // Get current filename (e.g., ggplot_grammar.html)
-
         const currentFile = pathParts[pathParts.length - 1].replace('.html', '.qmd');
-
         
-
         // Get section directory (e.g., data-visualization)
-
         const section = pathParts[pathParts.length - 2];
-
         
-
         // Look up current page in nav config
-
         if (navConfig[profile] && navConfig[profile][section]) {
-
           const modules = navConfig[profile][section];
-
           const currentModule = modules.find(m => m.file === currentFile);
-
           
-
           if (currentModule) {
-
             const convertLink = (link) => link.replace(/\.qmd$/i, '.html');
-
             // Set next module link
-
             if (currentModule['next-module']) {
-
               document.getElementById('nextModule').style.display = 'inline';
-
               const nextModuleHref = convertLink(currentModule['next-module']);
-
               document.getElementById('nextModuleLink').href = nextModuleHref;
-
               document.getElementById('nextModuleLink').textContent = '📚 ' + (currentModule['next-module'].split('/').pop().replace('.qmd', '') || 'Next Module');
-
             }
-
             
-
             // Set next section link
-
             if (currentModule['next-section']) {
-
               document.getElementById('nextSection').style.display = 'inline';
-
               const nextSectionHref = convertLink(currentModule['next-section']);
-
               document.getElementById('nextSectionLink').href = nextSectionHref;
-
               document.getElementById('nextSectionLink').textContent = '➡️ Next Section';
-
             }
-
           }
-
         }
-
       } catch (error) {
-
         console.warn('Navigation config not loaded:', error);
-
       }
-
     })();
-
     </script>
     
-
     <script>
-
       // htmlwidgets need to know to resize themselves when slides are shown/hidden.
-
       // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
-
       // slide changes (different for each slide format).
-
       (function () {
-
         // dispatch for htmlwidgets
-
         function fireSlideEnter() {
-
           const event = window.document.createEvent("Event");
-
           event.initEvent("slideenter", true, true);
-
           window.document.dispatchEvent(event);
-
         }
-
-    
 
         function fireSlideChanged(previousSlide, currentSlide) {
-
           fireSlideEnter();
 
-    
-
           // dispatch for shiny
-
           if (window.jQuery) {
-
             if (previousSlide) {
-
               window.jQuery(previousSlide).trigger("hidden");
-
             }
-
             if (currentSlide) {
-
               window.jQuery(currentSlide).trigger("shown");
-
             }
-
           }
-
         }
-
-    
 
         // hookup for slidy
-
         if (window.w3c_slidy) {
-
           window.w3c_slidy.add_observer(function (slide_num) {
-
             // slide_num starts at position 1
-
             fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
-
           });
-
         }
 
-    
-
       })();
-
     </script>
-
-    
 
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {

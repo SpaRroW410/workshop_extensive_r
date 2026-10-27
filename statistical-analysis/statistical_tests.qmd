@@ -52,6 +52,45 @@ data$outcome <- sample(c("Improved", "Not Improved"), 100, replace = TRUE)
 chisq.test(table(data$treatment, data$outcome))
 ```
 
+#### Which test? Match the data types
+
+| Outcome | Groups / predictor | Usual test |
+|---|---|---|
+| Continuous | 2 independent groups | Two-sample (Welch) t-test |
+| Continuous | same people measured twice (before/after) | Paired t-test |
+| Continuous, skewed or small sample | 2 independent groups | Wilcoxon rank-sum (Mann-Whitney) |
+| Continuous | 3 or more groups | One-way ANOVA (Kruskal-Wallis if skewed) |
+| Categorical (yes/no) | categorical | Chi-square test (Fisher's exact if expected counts are small) |
+
+#### Reading the t-test output
+
+```{r}
+t.test(blood_pressure ~ treatment, data = data)
+```
+
+-   R uses **Welch's** t-test by default (does not assume equal variances).
+-   The **confidence interval is for the first group minus the second** (A − B), so the sign follows the order of the groups.
+-   The sample estimates show each group's mean.
+
+#### Paired t-test and Wilcoxon test
+
+```{r}
+# paired: the same 30 people before and after
+before <- rnorm(30, 140, 12)
+after  <- before - rnorm(30, 5, 6)
+t.test(before, after, paired = TRUE)
+
+# non-parametric alternative for two independent groups
+wilcox.test(blood_pressure ~ treatment, data = data)
+```
+
+#### What a p-value does and does not say
+
+-   A **p-value** says how surprising the data would be **if there were no true difference**.
+-   It is **not** the probability that the null hypothesis is true, and not the probability the result is "due to chance".
+-   It says **nothing about the size or importance** of the difference: look at the estimate and its confidence interval.
+-   A **large** p-value is weak evidence against "no difference". It is **not proof** that there is none.
+
 ### Regression Analysis
 
 Regression modeling now has its own dedicated module — see **[Regression Analysis](regression.qmd)** for simple/multiple regression, diagnostics, and logistic regression.

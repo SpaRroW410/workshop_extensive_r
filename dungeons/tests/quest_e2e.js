@@ -94,9 +94,25 @@ const hudXP = p => p.evaluate(() => +document.querySelector('.rq-hud .rq-xp').te
   ok(/50%/.test(await p.locator('.rq-results').innerText()), 'result panel shown');
   await p.close();
 
-  // ── 4. world 1: unlocked, XP rules ───────────────────────────────────────
+  // ── 3b. Region 3 gate: pre-test AND (Region 1 post-test ≥ 70% OR placement check ≥ 80%) ──
   p = await open(ctx, 'world1_outcome_detective.html');
-  ok(!(await p.evaluate(() => document.body.classList.contains('rq-locked'))), 'World 1 unlocked after pre-test');
+  ok(await p.evaluate(() => document.body.classList.contains('rq-locked')) && /Region 1 post-test|placement check/.test(await p.locator('.rq-lock').innerText()), 'World 1 still locked after the pre-test alone; the lock names the Region 1 route');
+  await p.evaluate(() => { const s = Quest.state(); s.tests.ready = { pct: 70, score: 7, total: 10, byTag: {}, ts: '2026-01-01' }; localStorage.setItem('rq:v1', JSON.stringify(s)); });
+  await p.reload(); await p.waitForFunction(() => window.Quest);
+  ok(await p.evaluate(() => document.body.classList.contains('rq-locked')), 'a placement score of 70% (below 80%) does not open Region 3');
+  await p.evaluate(() => { const s = Quest.state(); s.tests.ready.pct = 85; localStorage.setItem('rq:v1', JSON.stringify(s)); });
+  await p.reload(); await p.waitForFunction(() => window.Quest);
+  ok(!(await p.evaluate(() => document.body.classList.contains('rq-locked'))), 'placement check ≥ 80% opens Region 3');
+  await p.evaluate(() => { const s = Quest.state(); delete s.tests.ready; s.tests.r1post = { pct: 75, score: 7, total: 10, byTag: {}, ts: '2026-01-01' }; localStorage.setItem('rq:v1', JSON.stringify(s)); });
+  await p.reload(); await p.waitForFunction(() => window.Quest);
+  ok(!(await p.evaluate(() => document.body.classList.contains('rq-locked'))), 'Region 1 post-test ≥ 70% also opens Region 3');
+  await p.evaluate(() => { const s = Quest.state(); delete s.tests.r1post; localStorage.setItem('rq:v1', JSON.stringify(s)); });
+  await p.close();
+
+  // ── 4. world 1: unlocked, XP rules ───────────────────────────────────────
+  await ctx.addInitScript(() => { try { const s = JSON.parse(localStorage.getItem('rq:v1') || 'null'); if (s && s.v === 1 && !s.tests.ready && !s.tests.r1post) { s.tests.ready = { pct: 90, score: 9, total: 10, byTag: {} }; localStorage.setItem('rq:v1', JSON.stringify(s)); } } catch (e) {} });
+  p = await open(ctx, 'world1_outcome_detective.html');
+  ok(!(await p.evaluate(() => document.body.classList.contains('rq-locked'))), 'World 1 unlocked once pre-test + placement are done');
   await p.evaluate(() => { window.__solve(__item('w1-08'), false); window.__solve(__item('w1-08'), true); });   // wrong then right, diff1 → 5 XP
   await p.evaluate(() => window.__solve(__item('w1-01'), true));                                              // first try diff1 → 10
   await p.evaluate(() => { const q = __item('w1-02'); q.querySelector('.rq-actions .rq-ghost').click(); window.__solve(q, true); });  // 1 hint (-3) diff2 → 17
@@ -157,6 +173,15 @@ const hudXP = p => p.evaluate(() => +document.querySelector('.rq-hud .rq-xp').te
   await p.evaluate(() => { document.querySelectorAll('.rq-item').forEach(q => window.__solve(q, true)); [...document.querySelectorAll('.rq-big')].find(b => /Submit/.test(b.textContent)).click(); });
   const gainTxt = await p.locator('.rq-gain').innerText(); ok(/25%.*100%/.test(gainTxt) && /\+75/.test(gainTxt), 'post-test shows pre → post gain: ' + gainTxt);
   st = await state(p); ok(!!st.badges.post && !!st.badges.gain, 'Growth Mindset and Big Gain badges awarded');
+  await ctx.close();
+
+  // ── 6b. dataset download buttons ──────────────────────────────────────────
+  ctx = await newCtx(); p = await open(ctx, 'b3_join_junction.html'); await p.evaluate(() => document.body.classList.remove('rq-locked'));
+  const bars = await p.locator('.rq-item .rq-data').count(); ok(bars >= 2, 'items that use a dataset get a download bar (' + bars + ' in b3)');
+  const link = p.locator('.rq-item[data-id="b3-07"] .rq-data a').first(); const href = await link.getAttribute('href');
+  ok(/data\/(ncd_survey|villages)\.csv$|\.\.\/data\//.test(href) && (await p.locator('.rq-item[data-id="b3-07"] .rq-data a').count()) === 2, 'join task offers both ncd and villages: ' + href);
+  const resp = await p.request.get(new URL(href, p.url()).href); ok(resp.ok() && /village/.test(await resp.text()), 'the download link resolves to a real CSV');
+  ok(await p.locator('.rq-item[data-id="b3-01"] .rq-data').count() === 0, 'items without data have no bar');
   await ctx.close();
 
   // ── 7. Region 1: own pre/post, gate, code items, graduate badge ─────────

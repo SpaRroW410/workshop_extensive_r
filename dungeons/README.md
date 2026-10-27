@@ -20,6 +20,9 @@ dungeons/
 ## Question standards (linted — see ROADMAP §6.2)
 No answer leaks and no giveaway options. Key never the longest option, nor much the shortest · no option alone breaks the shared opening · only-the-key-fits grammar (a/an) · hedged key vs absolute distractors · duplicate options · flawed spot sentences marked by cue words · code solutions written or named in the stem · hints that are themselves answers · · no "all/none of the above" · **no function-recall questions** · answers never in stem/hints · every item explained, tagged and levelled · display order shuffled at run time **and** markup order permuted at build time.
 
+## Datasets
+A question that names `ncd`, `villages`, `round1` or `round2` (in its stem or a code solution) automatically gets a download button, load line and column list. Add a dataset: a row in `RQ_DATA` (`assets/worlds.js`), its id in `RQ_DATA_IDS` (`assets/quest.R`), the file under `data/` and in the `dungeons` profile `resources` (`curriculum.yml`).
+
 ## Code items (type or paste R)
 `cx(id, world, diff, tags, stem, solutions = c("…"), explain, opts = list(ignore = "na.rm"))`. The learner's code is never run: `assets/rcheck.js` reduces it and each solution to one canonical form, so pipes vs nested calls, `%>%` vs `|>`, intermediate objects, any new-column name (unless `opts = list(free_names = FALSE)`), argument order, `filter(a & b)` vs `filter(a, b)`, `count()` vs `group_by()+summarise(n())`, base `x[cond, ]`/`subset()`, formula term order and ggplot `aes()` placement all count as the same answer. Give extra `solutions` for genuinely different approaches (e.g. base R and dplyr). Wrong answers get targeted feedback (missing/extra step, wrong data, which step's arguments differ); syntax errors are explained and not counted as a try.
 

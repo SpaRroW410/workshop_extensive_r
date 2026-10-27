@@ -322,3 +322,32 @@
 #quarto-margin-sidebar,
 #quarto-sidebar,
 .quarto-title-block { display: none !important; }
+
+/* ── Game card (Dungeons & Dataframes): full width above the track grid ── */
+.ws-game {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 0 0 1.75rem;
+  padding: 1.5rem 1.75rem;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 60%, #4a2c6e 100%);
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+  border: 2px solid #f1c40f;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.ws-game:hover { color: #fff; transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25); }
+.ws-game-icon { font-size: 3.2rem; line-height: 1; }
+.ws-game-title { font-size: 1.6rem; font-weight: 800; margin: 0.2rem 0 0.4rem; color: #fff; border: none; }
+.ws-game-sub { margin: 0 0 0.6rem; color: #ecf0f1; font-size: 0.95rem; line-height: 1.5; max-width: 720px; }
+.ws-game-regions { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.ws-game-regions li { background: rgba(255, 255, 255, 0.14); border-radius: 999px; padding: 0.15rem 0.7rem; font-size: 0.8rem; }
+.ws-btn--game { background: #f1c40f; color: #2c3e50; width: auto; white-space: nowrap; }
+.ws-game:hover .ws-btn--game { background: #f4d03f; }
+@media (max-width: 900px) {
+  .ws-game { grid-template-columns: 1fr; text-align: left; }
+  .ws-game-icon { display: none; }
+}

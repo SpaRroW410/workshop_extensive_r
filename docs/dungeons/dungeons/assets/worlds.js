@@ -23,7 +23,7 @@ window.RQ_WORLDS = [
   { id: 'm4', region: 'r2', icon: '🏛️', title: 'Table 1 Forge', blurb: 'Descriptive tables with gtsummary, and reading them honestly.', status: 'soon', phase: 'later', read: [['../gtsummary/gtsummary_tutorial.html', 'gtsummary Tables']] },
   { id: 'm5', region: 'r2', icon: '🧪', title: 'Tests in Context', blurb: 'Running and reporting tests on survey data, with assumptions.', status: 'soon', phase: 'later' },
   // ── Region 3 · Regression (literature: Regression track) ──
-  { id: 'w1', region: 'r3', icon: '🕵️', title: 'World 1 · The Outcome Detective', blurb: 'What regression is, outcome types, choosing a model, Table 1, missing data.', status: 'playable', total: 8, href: 'world1_outcome_detective.html', requires: 'pre:1', read: [['../regression-workshop/s1_foundations.html', 'Session 1 deck']] },
+  { id: 'w1', region: 'r3', icon: '🕵️', title: 'World 1 · The Outcome Detective', blurb: 'What regression is, outcome types, choosing a model, Table 1, missing data.', status: 'playable', total: 8, href: 'world1_outcome_detective.html', requires: 'pre:1;r1post:70|ready:80', read: [['../regression-workshop/s1_foundations.html', 'Session 1 deck']] },
   { id: 'w2', region: 'r3', icon: '📏', title: 'World 2 · The Straight Line', blurb: 'Slope in units, prediction, CI vs PI, residuals, R², centering.', status: 'playable', total: 8, href: 'world2_straight_line.html', requires: 'w1:60', read: [['../regression-workshop/s2_simple_regression.html', 'Session 2 deck']] },
   { id: 'w3', region: 'r3', icon: '🧩', title: 'World 3 · Confounding Caves', blurb: 'Inference, adjustment, dummy variables, model-building strategies.', status: 'playable', total: 9, href: 'world3_confounding_caves.html', requires: 'w2:60', read: [['../regression-workshop/s3_multiple_regression.html', 'Session 3 deck']] },
   { id: 'w4', region: 'r3', icon: '🩻', title: 'World 4 · Assumption Ruins', blurb: 'Linearity, independence, normality, variance, collinearity.', status: 'playable', total: 9, href: 'world4_assumption_ruins.html', requires: 'w3:60', read: [['../regression-workshop/s4_assumptions.html', 'Session 4 deck']] },
@@ -41,3 +41,12 @@ window.RQ_WORLDS = [
   { id: 'w15', region: 'r4', icon: '🧠', title: 'Causal Thinking', blurb: 'DAGs, propensity scores, IPW, mediation.', status: 'soon', phase: 'A9' },
   { id: 'w16', region: 'r4', icon: '🎓', title: 'Capstone: Your Thesis', blurb: 'Plan, analyse and write up your own dataset, with peer review.', status: 'soon', phase: 'Capstone' }
 ];
+
+/* Practice datasets. Items that mention one of these names get a "Download" button next to the question.
+   `file` is relative to the site's data/ folder (published as a resource). Add a dataset: add a row here and in assets/quest.R. */
+window.RQ_DATA = {
+  ncd: { file: 'ncd_survey.csv', label: 'ncd (NCD survey, 600 adults)', obj: 'ncd', cols: 'id, village, age, sex, residence, education, bmi, waist, salt_g, tobacco, alcohol, phys_act, sbp, dbp, htn' },
+  villages: { file: 'villages.csv', label: 'villages (20 villages)', obj: 'villages', cols: 'village, district, distance_to_phc_km, phc_in_village' },
+  round1: { file: 'ncd_round1.csv', label: 'round1 (survey round 1)', obj: 'round1', cols: 'same columns as ncd; first 300 people' },
+  round2: { file: 'ncd_round2.csv', label: 'round2 (survey round 2)', obj: 'round2', cols: 'same columns as ncd; next 300 people' }
+};

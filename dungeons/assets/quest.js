@@ -330,10 +330,20 @@
 
   /* ── world pages: gate + progress ───────────────────────────────────── */
   function worldCfg(id) { var w = (window.RQ_WORLDS || []).filter(function (x) { return x.id === id; })[0]; return w || null; }
+  /* requires: "a:60" one condition · "a:60|b:80" any of · "a:60;b:1" all of (";" binds loosest) */
   function gateMet(req) {
     if (!req) return { ok: true };
+    var unmet = [];
+    req.split(';').forEach(function (term) {
+      var alts = term.split('|').map(gateOne); if (alts.some(function (g) { return g.ok; })) return;
+      unmet.push(alts.map(function (g) { return g.msg; }).join(' <i>or</i> '));
+    });
+    return unmet.length ? { ok: false, msg: unmet.join(' <i>and</i> ') } : { ok: true };
+  }
+  function gateOne(req) {
     var p = req.split(':'), id = p[0], need = parseInt(p[1] || '70', 10), w = worldCfg(id), have = worldPct(id, w ? w.total : 0);
     if (id === 'pre') return { ok: !!state.tests.pre, msg: 'Complete the <b>pre-test</b> first.' };
+    if (id === 'ready') return { ok: !!state.tests.ready && state.tests.ready.pct >= need, msg: 'Score <b>' + need + '%</b> in the <a href="readiness.html"><b>placement check</b></a>' + (state.tests.ready ? ' (you have ' + state.tests.ready.pct + '%)' : '') + '.' };
     var TESTS = { r1pre: ['Region 1 pre-test', 'r1pretest.html'], r1post: ['Region 1 post-test', 'r1posttest.html'] };
     if (TESTS[id]) { var tr = state.tests[id], pre = /pre$/.test(id);       // a pre-test gate needs completion; a post-test gate needs the pass mark
       return { ok: pre ? !!tr : !!tr && tr.pct >= need, msg: pre ? 'Take the <a href="' + TESTS[id][1] + '"><b>' + TESTS[id][0] + '</b></a> first (a baseline, not graded).' : 'Reach <b>' + need + '%</b> in the <a href="' + TESTS[id][1] + '"><b>' + TESTS[id][0] + '</b></a>' + (tr ? ' (you have ' + tr.pct + '%)' : '') + '.' }; }
@@ -387,6 +397,20 @@
     if (rs) rs.addEventListener('click', function () { if (confirm('Erase all progress on this device?')) { state = blank(); save(); location.reload(); } });
   }
 
+  /* ── dataset bar: a download button beside every question that needs data ── */
+  function addDataBar(q) {
+    var ids = (q.getAttribute('data-data') || '').split(',').filter(Boolean), reg = window.RQ_DATA || {};
+    ids = ids.filter(function (d) { return reg[d]; }); if (!ids.length || q.querySelector('.rq-data')) return;
+    var bar = document.createElement('div'); bar.className = 'rq-data';
+    bar.innerHTML = '<span class="rq-data-t">📎 Data for this question</span>' + ids.map(function (d) {
+      var r = reg[d];
+      return '<span class="rq-data-i"><a class="rq-btn rq-ghost" href="../data/' + r.file + '" download="' + r.file + '">⬇ ' + esc(r.file) + '</a>' +
+        '<small>' + esc(r.label) + ' · load with <code>' + esc(r.obj) + ' &lt;- read_csv("data/' + esc(r.file) + '")</code> · columns: ' + esc(r.cols) + '</small></span>';
+    }).join('');
+    var anchor = q.querySelector('.rq-options, .rq-fill, .rq-order, .rq-spot, .rq-coderow, ul, ol');
+    if (anchor) anchor.parentNode.insertBefore(bar, anchor); else q.appendChild(bar);
+  }
+
   /* ── campus: recommender, review queue, skill tree, profile, settings ─── */
   function worldLinks(worlds) {
     return worlds.map(function (id) { var w = worldCfg(id); return w && w.href ? '<a href="' + w.href + '">' + esc(w.title.replace(/^World \d+ · /, '')) + '</a>' : ''; }).filter(Boolean).join(', ');
@@ -427,6 +451,7 @@
       if (t === 'mcq') initMCQ(q, tm); else if (t === 'fill') textLike(q, tm, 'fill'); else if (t === 'num') textLike(q, tm, 'num');
       else if (t === 'order') initOrder(q, tm); else if (t === 'spot') initSpot(q, tm); else if (t === 'code') initCode(q, tm);
     });
+    document.querySelectorAll('.rq-item').forEach(addDataBar);
     document.querySelectorAll('.rq-test').forEach(initTest);
     document.querySelectorAll('.rq-world').forEach(initWorld);
     var m = document.getElementById('rq-map'); if (m) initMap(m);

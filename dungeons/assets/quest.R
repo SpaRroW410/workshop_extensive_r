@@ -54,6 +54,8 @@ rq_item_md <- function(it) {
   } else stop("unknown type ", type)
   a[["data-show"]] <- .rq_q(.rq_b64(show)); a[["data-explain"]] <- .rq_q(.rq_b64(it$explain %||% ""))
   if (length(it$hints)) a[["data-hints"]] <- .rq_q(.rq_b64(jsonlite::toJSON(it$hints, auto_unbox = FALSE)))
+  ds <- rq_datasets(it)
+  if (length(ds)) a[["data-data"]] <- paste(ds, collapse = ",")
   attrs <- paste(sprintf('%s="%s"', names(a), vapply(a, as.character, "")), collapse = " ")
   sprintf("\n::: {.rq-item %s}\n%s\n:::\n", attrs, body)
 }
@@ -66,4 +68,12 @@ rq_tagmap <- function(bank) {
   rows <- do.call(rbind, lapply(Filter(function(x) grepl("^w[0-9]+$", x$world), bank), function(x) data.frame(tag = x$tags, world = x$world)))
   tm <- lapply(split(rows, rows$tag), function(d) as.list(table(d$world)))
   cat("\n```{=html}\n<script>window.RQ_TAGMAP=", jsonlite::toJSON(tm, auto_unbox = TRUE), ";</script>\n```\n", sep = "")
+}
+
+# Datasets an item needs: any of RQ_DATA_IDS named in the stem or in a code solution (whole word), plus it$data.
+RQ_DATA_IDS <- c("ncd", "villages", "round1", "round2")
+rq_datasets <- function(it) {
+  txt <- paste(c(it$stem, it$solutions), collapse = "\n")
+  hit <- RQ_DATA_IDS[vapply(RQ_DATA_IDS, function(d) grepl(paste0("(^|[^A-Za-z0-9_.])", d, "([^A-Za-z0-9_]|$)"), txt), TRUE)]
+  unique(c(it$data, hit))
 }

@@ -11,6 +11,9 @@ project:
     - dungeons/*.qmd
   resources:
     - data/ncd_survey.csv
+    - data/villages.csv
+    - data/ncd_round1.csv
+    - data/ncd_round2.csv
     - regression-workshop/make_data.R
     - regression-workshop/labs/*.R
     - dungeons/assets/*

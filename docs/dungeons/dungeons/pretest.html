@@ -459,7 +459,7 @@ ul.task-list li input[type="checkbox"] {
 <p>Rural residence raises SBP partly through higher salt intake. To estimate the TOTAL effect of rural residence on SBP, the model should…</p>
 <ul>
 <li>leave out salt intake, which lies on the causal path</li>
-<li>include salt intake and then drop rural residence itself</li>
+<li>drop rural residence and keep salt intake as the exposure</li>
 <li>include salt intake to improve the precision of the estimate</li>
 <li>include salt intake because adjusting always reduces bias</li>
 </ul>
@@ -478,7 +478,7 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li>Delete the record quietly so the slope looks stable</li>
 <li>Leave it alone, because one record cannot matter in 600</li>
-<li>Add a quadratic term until the record stops standing out</li>
+<li>Add a quadratic term to the model until the record stops standing out</li>
 <li>Verify it against the source form, correct it and refit</li>
 </ul>
 </div>

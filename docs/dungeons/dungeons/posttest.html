@@ -459,7 +459,7 @@ ul.task-list li input[type="checkbox"] {
 <p>Obesity raises diabetes risk partly by raising fasting glucose. To estimate the TOTAL effect of obesity on diabetes, the model should…</p>
 <ul>
 <li>include fasting glucose to improve the precision of the estimate</li>
-<li>include fasting glucose and then drop obesity itself</li>
+<li>drop obesity and keep fasting glucose as the exposure</li>
 <li>include fasting glucose because adjusting always reduces bias</li>
 <li>leave out fasting glucose, which lies on the causal path</li>
 </ul>
@@ -476,7 +476,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="rq-item" data-id="post-16" data-world="post" data-type="mcq" data-diff="2" data-tags="influence,outliers" data-form="B" data-hash="lcoujv.3bphdu" data-show="Q2hlY2sgdGhlIG9yaWdpbmFsIGZvcm0sIGNvcnJlY3QgdGhlIGVudHJ5IGlmIHdyb25nIGFuZCByZWZpdA==" data-explain="Q2hlY2sgdGhlIHNvdXJjZSBmaXJzdC4gQSBjbGVhciBlbnRyeSBlcnJvciBpcyBjb3JyZWN0ZWQ7IGEgZ2VudWluZSBleHRyZW1lIHZhbHVlIHN0YXlzIGFuZCByZXN1bHRzIGFyZSBzaG93biB3aXRoIGFuZCB3aXRob3V0IGl0Lg==">
 <p>One participant’s height is recorded as 17 cm and the record has a Cook’s distance far above all others. What is the best action?</p>
 <ul>
-<li>Add a quadratic term until the record stops standing out</li>
+<li>Add a quadratic term to the model until the record stops standing out</li>
 <li>Delete the record quietly so the slope looks stable</li>
 <li>Check the original form, correct the entry if wrong and refit</li>
 <li>Leave it alone, because one record cannot matter in 600</li>

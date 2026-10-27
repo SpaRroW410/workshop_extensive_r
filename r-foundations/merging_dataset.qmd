@@ -54,4 +54,31 @@ full_join(data1, data2, by = "ID")
 
 These join types are useful for combining medical records, survey forms, and measurement datasets.
 
+## Stack rows with `bind_rows()`
+
+`bind_rows()` (dplyr) does the same job as `rbind()`: tables with the same columns, different people.
+
+```{r}
+library(dplyr)
+round1 <- data.frame(id = 1:3, sbp = c(120, 135, 142))
+round2 <- data.frame(id = 4:6, sbp = c(128, 150, 118))
+bind_rows(round1, round2)
+```
+
+## Why not `cbind()` for the same people?
+
+`cbind()` pastes by **position** and never checks who is who. If the two tables are sorted differently, the columns are silently mixed up. **Join by a key** such as `id` instead.
+
+## Duplicate keys multiply rows
+
+```{r}
+patients <- data.frame(id = 1:5, name = c("Asha", "Bina", "Chetan", "Dev", "Esha"))
+labs     <- data.frame(id = c(3, 3, 5), hba1c = c(7.1, 6.8, 8.0))   # id 3 was tested twice
+nrow(patients)
+nrow(left_join(patients, labs, by = "id"))   # 6: patient 3 appears twice
+count(labs, id)                                # check the key before joining
+```
+
+A left join keeps every patient, but a patient who matches **two** lab rows appears **twice**. Count rows before and after every join, and check that the key is unique in the table you join *to*.
+
 :::

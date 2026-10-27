@@ -387,7 +387,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div class="rq-world" data-world="w1" data-total="8" data-requires="pre:1">
+<div class="rq-world" data-world="w1" data-total="8" data-requires="pre:1;r1post:70|ready:80">
 
 </div>
 <section id="briefing" class="level2">
@@ -450,7 +450,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>A count of events</li>
 <li>A nominal category</li>
-<li>A continuous measurement</li>
+<li>A continuous measure</li>
 <li>A time-to-event outcome</li>
 </ul>
 </div>
@@ -475,7 +475,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="level-2-reading-output" class="level2 rq-level">
 <h2 class="rq-level anchored" data-anchor-id="level-2-reading-output">Level 2 · Reading output</h2>
-<div class="rq-item" data-id="w1-03" data-world="w1" data-type="mcq" data-diff="2" data-tags="regression-vs-correlation" data-hash="j0lwt1.1g1svj" data-show="QSBtb2RlcmF0ZSBwb3NpdGl2ZSBhc3NvY2lhdGlvbiwgYnV0IG5vIHNsb3BlIGluIG1tSGcgcGVyIGdyYW0=" data-explain="ciBpcyB1bml0LWZyZWUgYW5kIHN5bW1ldHJpYzogaXQgZGVzY3JpYmVzIHN0cmVuZ3RoIGFuZCBkaXJlY3Rpb24gb25seS4gVGhlIHNsb3BlIG5lZWRzIHJlZ3Jlc3Npb24sIHZhcmlhbmNlIGV4cGxhaW5lZCB3b3VsZCBiZSBywrIgKGFib3V0IDIwJSksIGFuZCBuZWl0aGVyIHNheXMgYW55dGhpbmcgY2F1c2FsLg==" data-hints="WyJEb2VzIHRoZSBvdXRwdXQgY29udGFpbiBhbnkgdW5pdHM/IiwiV2hhdCB3b3VsZCB5b3Ugc3F1YXJlIHRvIGdldCB2YXJpYW5jZSBleHBsYWluZWQ/Il0=">
+<div class="rq-item" data-id="w1-03" data-world="w1" data-type="mcq" data-diff="2" data-tags="regression-vs-correlation" data-hash="j0lwt1.1g1svj" data-show="QSBtb2RlcmF0ZSBwb3NpdGl2ZSBhc3NvY2lhdGlvbiwgYnV0IG5vIHNsb3BlIGluIG1tSGcgcGVyIGdyYW0=" data-explain="ciBpcyB1bml0LWZyZWUgYW5kIHN5bW1ldHJpYzogaXQgZGVzY3JpYmVzIHN0cmVuZ3RoIGFuZCBkaXJlY3Rpb24gb25seS4gVGhlIHNsb3BlIG5lZWRzIHJlZ3Jlc3Npb24sIHZhcmlhbmNlIGV4cGxhaW5lZCB3b3VsZCBiZSBywrIgKGFib3V0IDIwJSksIGFuZCBuZWl0aGVyIHNheXMgYW55dGhpbmcgY2F1c2FsLg==" data-hints="WyJEb2VzIHRoZSBvdXRwdXQgY29udGFpbiBhbnkgdW5pdHM/IiwiV2hhdCB3b3VsZCB5b3Ugc3F1YXJlIHRvIGdldCB2YXJpYW5jZSBleHBsYWluZWQ/Il0=" data-data="ncd">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(ncd<span class="sc">$</span>sbp, ncd<span class="sc">$</span>salt_g, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.449</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>What does this number tell you?</p>
@@ -486,7 +486,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Salt intake explains 44.9% of the variation in systolic pressure</li>
 </ul>
 </div>
-<div class="rq-item" data-id="w1-04" data-world="w1" data-type="num" data-diff="2" data-tags="missing-data" data-dp="0" data-hashes="2ihdu8.8wcebf" data-show="NTY0" data-explain="Q29tcGxldGUtY2FzZSBhbmFseXNpcyBrZWVwcyBvbmx5IHJvd3Mgd2l0aCBubyBtaXNzaW5nIG1vZGVsIHZhcmlhYmxlOiA2MDAg4oiSIDE4IOKIkiAxOCA9IDU2NC4=" data-hints="WyJQZW9wbGUgbWlzc2luZyBlaXRoZXIgdmFyaWFibGUgYXJlIGRyb3BwZWQuIiwiQWRkIHVwIHRoZSBwZW9wbGUgcmVtb3ZlZCwgdGhlbiBzdWJ0cmFjdCBmcm9tIHRoZSB0b3RhbC4iXQ==">
+<div class="rq-item" data-id="w1-04" data-world="w1" data-type="num" data-diff="2" data-tags="missing-data" data-dp="0" data-hashes="2ihdu8.8wcebf" data-show="NTY0" data-explain="Q29tcGxldGUtY2FzZSBhbmFseXNpcyBrZWVwcyBvbmx5IHJvd3Mgd2l0aCBubyBtaXNzaW5nIG1vZGVsIHZhcmlhYmxlOiA2MDAg4oiSIDE4IOKIkiAxOCA9IDU2NC4=" data-hints="WyJQZW9wbGUgbWlzc2luZyBlaXRoZXIgdmFyaWFibGUgYXJlIGRyb3BwZWQuIiwiQWRkIHVwIHRoZSBwZW9wbGUgcmVtb3ZlZCwgdGhlbiBzdWJ0cmFjdCBmcm9tIHRoZSB0b3RhbC4iXQ==" data-data="ncd">
 <p>ncd has 600 rows. bmi is missing for 18 people and salt_g for a different 18 people (no overlap). How many people stay in a model that uses both?</p>
 </div>
 </section>
