@@ -246,6 +246,7 @@ meta <- list(
       "📐 Data Visualization — grammar, best practices, ggplot2 modules 1–4",
       "🖼️ Plot Gallery (basic to advanced) and Specialized & Interactive Plots",
       "⚙️ Exporting, Plotting Tools and Debugging",
+      "🎓 GIS Workshop — 5 sessions, 5 labs, quizzes, cheat sheet",
       "🗺️ Spatial Data with sf, Maps and Choropleths",
       "🧭 Neighbours and Spatial Weights",
       "📍 Global Moran's I and Local Moran's I (LISA)",
@@ -253,6 +254,8 @@ meta <- list(
       "📉 Spatial Regression and Residual Tests"
     ),
     nav = list(
+      list(icon="🎓", label="GIS Workshop", href="gis-workshop/s1_spatial_data.qmd", desc="Slides, labs and quizzes: start at Session 1 (spatial data and maps)"),
+      list(icon="📋", label="Cheat Sheet", href="gis-workshop/cheatsheet.qmd", desc="Two-page guide to choosing and reading spatial tests"),
       list(icon="🗺️", label="Spatial Data with sf", href="gis/spatial_data_sf.qmd", desc="Start here: spatial objects, coordinate systems, joining attributes"),
       list(icon="🧭", label="Neighbours and Weights", href="gis/spatial_weights.qmd", desc="Queen, rook and k-nearest neighbours, and row-standardised weights"),
       list(icon="📍", label="Global Moran's I", href="gis/morans_i.qmd", desc="Is the pattern clustered? Test, permutation p-value and Moran scatterplot"),
@@ -262,9 +265,10 @@ meta <- list(
     show_stats   = FALSE,
     show_quarto  = FALSE,
     downloads = list(
-      scripts    = c("gis/make_gis_data.R"),
+      scripts    = c("gis/make_gis_data.R", "gis-workshop/labs/lab1_data.R", "gis-workshop/labs/lab2_weights.R",
+                     "gis-workshop/labs/lab3_global.R", "gis-workshop/labs/lab4_local.R", "gis-workshop/labs/lab5_regression.R"),
       datasets   = c("data/gis/district_blocks.geojson", "data/gis/facilities.csv"),
-      cheatsheets= character(0),
+      cheatsheets= c("gis-workshop/cheatsheet.qmd"),
       quarto     = character(0)
     ),
     tip  = "Never mapped data in R? Read **Spatial Data with sf** and **Maps and Choropleths** first, then go straight to **Global Moran's I**.",

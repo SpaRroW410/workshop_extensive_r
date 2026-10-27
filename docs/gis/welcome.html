@@ -217,6 +217,38 @@ ul.task-list li input[type="checkbox"] {
     </ul>
   </li>
   <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-gis-workshop" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">GIS Workshop</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-gis-workshop">    
+        <li>
+    <a class="dropdown-item" href="./gis-workshop/s1_spatial_data.html">
+ <span class="dropdown-text">Session 1 — Spatial Data and Maps</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./gis-workshop/s2_neighbours_weights.html">
+ <span class="dropdown-text">Session 2 — Neighbours and Spatial Weights</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./gis-workshop/s3_global_autocorrelation.html">
+ <span class="dropdown-text">Session 3 — Global Spatial Autocorrelation (Moran’s I)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./gis-workshop/s4_local_clusters.html">
+ <span class="dropdown-text">Session 4 — Local Clusters and Hot Spots</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./gis-workshop/s5_spatial_regression.html">
+ <span class="dropdown-text">Session 5 — Spatial Regression and Reporting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./gis-workshop/cheatsheet.html">
+ <span class="dropdown-text">Spatial Statistics Cheat Sheet</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-gis--spatial-statistics" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">GIS &amp; Spatial Statistics</span>
     </a>
@@ -350,6 +382,7 @@ Welcome to the <strong>GIS and Spatial Statistics Track</strong>. It builds on t
 <li>📐 Data Visualization — grammar, best practices, ggplot2 modules 1–4</li>
 <li>🖼️ Plot Gallery (basic to advanced) and Specialized &amp; Interactive Plots</li>
 <li>⚙️ Exporting, Plotting Tools and Debugging</li>
+<li>🎓 GIS Workshop — 5 sessions, 5 labs, quizzes, cheat sheet</li>
 <li>🗺️ Spatial Data with sf, Maps and Choropleths</li>
 <li>🧭 Neighbours and Spatial Weights</li>
 <li>📍 Global Moran’s I and Local Moran’s I (LISA)</li>
@@ -361,6 +394,8 @@ Welcome to the <strong>GIS and Spatial Statistics Track</strong>. It builds on t
 <h2 class="anchored" data-anchor-id="find-your-way-around">🧭 Find Your Way Around</h2>
 <p>Use the navigation bar above to browse all modules. Key starting points:</p>
 <ul>
+<li>🎓 <strong><a href="./gis-workshop/s1_spatial_data.html">GIS Workshop</a></strong> — Slides, labs and quizzes: start at Session 1 (spatial data and maps)</li>
+<li>📋 <strong><a href="./gis-workshop/cheatsheet.html">Cheat Sheet</a></strong> — Two-page guide to choosing and reading spatial tests</li>
 <li>🗺️ <strong><a href="./gis/spatial_data_sf.html">Spatial Data with sf</a></strong> — Start here: spatial objects, coordinate systems, joining attributes</li>
 <li>🧭 <strong><a href="./gis/spatial_weights.html">Neighbours and Weights</a></strong> — Queen, rook and k-nearest neighbours, and row-standardised weights</li>
 <li>📍 <strong><a href="./gis/morans_i.html">Global Moran’s I</a></strong> — Is the pattern clustered? Test, permutation p-value and Moran scatterplot</li>
@@ -378,6 +413,11 @@ Welcome to the <strong>GIS and Spatial Statistics Track</strong>. It builds on t
 <h3 class="anchored" data-anchor-id="r-scripts">📄 R Scripts</h3>
 <ul>
 <li><a href="gis/make_gis_data.R">Make Gis Data</a></li>
+<li><a href="gis-workshop/labs/lab1_data.R">Lab1 Data</a></li>
+<li><a href="gis-workshop/labs/lab2_weights.R">Lab2 Weights</a></li>
+<li><a href="gis-workshop/labs/lab3_global.R">Lab3 Global</a></li>
+<li><a href="gis-workshop/labs/lab4_local.R">Lab4 Local</a></li>
+<li><a href="gis-workshop/labs/lab5_regression.R">Lab5 Regression</a></li>
 </ul>
 </section>
 <section id="datasets" class="level3">
@@ -385,6 +425,12 @@ Welcome to the <strong>GIS and Spatial Statistics Track</strong>. It builds on t
 <ul>
 <li>📦 <a href="data/gis/district_blocks.geojson">District Blocks</a> <code>.geojson</code></li>
 <li>📊 <a href="data/gis/facilities.csv">Facilities</a> <code>.csv</code></li>
+</ul>
+</section>
+<section id="cheatsheets" class="level3">
+<h3 class="anchored" data-anchor-id="cheatsheets">📋 Cheatsheets</h3>
+<ul>
+<li><a href="./gis-workshop/cheatsheet.html">Cheatsheet</a></li>
 </ul>
 <hr>
 <blockquote class="blockquote">

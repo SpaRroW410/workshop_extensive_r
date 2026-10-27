@@ -61,6 +61,12 @@ pages:
   gis/local_moran_lisa.qmd: {title: "Local Moran's I (LISA)"}
   gis/other_spatial_tests.qmd: {title: "Geary's C, Getis-Ord, Join Counts, Scan Statistic"}
   gis/spatial_regression.qmd: {title: "Spatial Regression and Residual Tests"}
+  gis-workshop/s1_spatial_data.qmd: {title: "Session 1 — Spatial Data and Maps"}
+  gis-workshop/s2_neighbours_weights.qmd: {title: "Session 2 — Neighbours and Spatial Weights"}
+  gis-workshop/s3_global_autocorrelation.qmd: {title: "Session 3 — Global Spatial Autocorrelation (Moran's I)"}
+  gis-workshop/s4_local_clusters.qmd: {title: "Session 4 — Local Clusters and Hot Spots"}
+  gis-workshop/s5_spatial_regression.qmd: {title: "Session 5 — Spatial Regression and Reporting"}
+  gis-workshop/cheatsheet.qmd: {title: "Spatial Statistics Cheat Sheet"}
   regression-workshop/s1_foundations.qmd: {title: "Session 1 — Foundations"}
   regression-workshop/s2_simple_regression.qmd: {title: "Session 2 — Simple Linear Regression"}
   regression-workshop/s3_multiple_regression.qmd: {title: "Session 3 — Inference & Multiple Regression"}
@@ -288,9 +294,11 @@ profiles:
     project-extra:
       render:
       - gis/*.qmd
+      - gis-workshop/*.qmd
       resources:
       - data/gis/*
       - gis/make_gis_data.R
+      - gis-workshop/labs/*.R
     left:
       - text: "R Foundations"
         items:
@@ -324,6 +332,15 @@ profiles:
           - exporting_tools/plotting_tools.qmd
           - exporting_tools/debugging_plots.qmd
           - exporting_tools/advanced_exporting.qmd
+      - text: "GIS Workshop"
+        items:
+          - gis-workshop/s1_spatial_data.qmd
+          - gis-workshop/s2_neighbours_weights.qmd
+          - gis-workshop/s3_global_autocorrelation.qmd
+          - gis-workshop/s4_local_clusters.qmd
+          - gis-workshop/s5_spatial_regression.qmd
+          - "---"
+          - gis-workshop/cheatsheet.qmd
       - text: "GIS & Spatial Statistics"
         items:
           - gis/spatial_data_sf.qmd

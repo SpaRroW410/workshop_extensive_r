@@ -1,0 +1,260 @@
+---
+title: "Session 2 — Neighbours and Spatial Weights"
+subtitle: "Contiguity · k-nearest · weights · the spatial lag · sensitivity · Lab 2"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 1: spatial data, CRS, joins, honest maps
+- Every spatial test asks: **are neighbouring areas more alike than chance?**
+- First we must **define "neighbour"**. That definition is the **spatial weights matrix**, the most influential choice in the analysis
+- By the end you can:
+  - build **queen, rook, k-nearest** and **distance** neighbours
+  - turn them into **row-standardised weights**
+  - compute and read a **spatial lag**
+  - check how sensitive a result is to the choice
+:::
+
+# Topic 1 — Who is a neighbour? {background-color="#2C3E50"}
+
+## Contiguity: share a boundary
+
+::: {.columns}
+::: {.column width="50%"}
+- **Rook:** share an **edge**
+- **Queen:** share an edge **or a corner** (the usual default)
+- Needs polygons; areas of similar size behave best
+- Watch for **islands**: areas with no neighbour
+:::
+::: {.column width="50%"}
+```{r}
+nb_q <- poly2nb(blocks, queen = TRUE,  snap = 1e-4)
+nb_r <- poly2nb(blocks, queen = FALSE, snap = 1e-4)
+c(queen_links = sum(card(nb_q)), rook_links = sum(card(nb_r)))
+```
+:::
+:::
+
+```{r}
+summary(nb_q)
+```
+
+## Seeing the links
+
+```{r}
+#| output-location: slide
+#| fig-height: 5.6
+cen <- st_coordinates(st_centroid(blocks))
+plot(st_geometry(blocks), border = "grey70", main = "Queen contiguity")
+plot(nb_q, cen, add = TRUE, col = "red", pch = 19, cex = 0.4)
+```
+
+::: {.key}
+Check three things in `summary()`: the **average number of neighbours** (about 5 here), the **least and most connected** blocks, and any **isolates** (they break most tests unless `zero.policy = TRUE`).
+:::
+
+## Distance and k-nearest neighbours
+
+```{r}
+#| output-location: slide
+#| fig-width: 11
+knn5 <- knn2nb(knearneigh(cen, k = 5))
+d <- unlist(nbdists(knn2nb(knearneigh(cen, k = 1)), cen))
+nb_d <- dnearneigh(cen, 0, max(d))
+par(mfrow = c(1, 2))
+plot(st_geometry(blocks), border = "grey80", main = "5 nearest neighbours"); plot(knn5, cen, add = TRUE, col = "blue", pch = 19, cex = 0.3)
+plot(st_geometry(blocks), border = "grey80", main = "Distance band"); plot(nb_d, cen, add = TRUE, col = "darkgreen", pch = 19, cex = 0.3)
+```
+
+| Definition | Neighbours per area | Good for | Watch out for |
+|---|---|---|---|
+| Queen / rook | varies | polygons of similar size | islands; large areas have many neighbours |
+| k nearest | exactly k | unequal areas, points | links across a gap that are not real |
+| Distance band | varies | points, a travel-distance idea | too short: isolates; too long: everyone linked |
+
+# Topic 2 — From neighbours to weights {background-color="#2C3E50"}
+
+## A neighbour list says who; weights say how much
+
+| Style | Meaning |
+|---|---|
+| `"B"` binary | 1 for every neighbour |
+| `"W"` **row-standardised** | each area's weights sum to 1; the usual choice |
+| `"S"` | variance-stabilising |
+
+```{r}
+lw <- nb2listw(nb_q, style = "W", zero.policy = TRUE)
+lw$weights[[1]]
+sum(lw$weights[[1]])
+```
+
+::: {.key}
+With `"W"`, area *i* gives each of its *k* neighbours weight 1/*k*. An area with 2 neighbours weights each by 0.5; one with 8 by 0.125.
+:::
+
+## The spatial lag
+
+::: {.eq}
+lag(x)~i~ = Σ~j~ w~ij~ x~j~ = **the average of i's neighbours**
+:::
+
+```{r}
+blocks$lag_rate <- lag.listw(lw, blocks$dengue_per_100k, zero.policy = TRUE)
+c(lag_from_function = blocks$lag_rate[1], mean_of_neighbours = mean(blocks$dengue_per_100k[nb_q[[1]]]))
+```
+
+```{r}
+#| output-location: slide
+#| fig-width: 11
+p1 <- ggplot(blocks) + geom_sf(aes(fill = dengue_per_100k)) + scale_fill_viridis_c(option = "magma", direction = -1, name = NULL) + labs(title = "Rate")
+p2 <- ggplot(blocks) + geom_sf(aes(fill = lag_rate)) + scale_fill_viridis_c(option = "magma", direction = -1, name = NULL) + labs(title = "Spatial lag (neighbours' average)")
+p1 + p2
+```
+
+The lag is **smoother** than the original. Moran's I (Session 3) is essentially the slope of the lag on the value.
+
+# Topic 3 — Does the choice matter? {background-color="#2C3E50"}
+
+## Sensitivity
+
+```{r}
+w_list <- list(queen = nb2listw(nb_q, style = "W", zero.policy = TRUE), rook = nb2listw(nb_r, style = "W", zero.policy = TRUE),
+               knn5 = nb2listw(knn5, style = "W"), distance = nb2listw(nb_d, style = "W"))
+map_dfr(w_list, \(w) { m <- moran.test(blocks$dengue_per_100k, w, zero.policy = TRUE); tibble(I = round(unname(m$estimate[1]), 3), p = signif(m$p.value, 2)) }, .id = "weights")
+```
+
+::: {.incremental}
+- Here the pattern is strong, so the conclusion barely moves
+- With a **weak** pattern the answer can change with the weights
+- **Justify** the choice with the biology: how far does a mosquito, a patient or an exposure travel?
+- **Report** the weights and check sensitivity
+:::
+
+## Common mistakes
+
+::: {.bad}
+- Using the default without saying which one
+- Ignoring isolates (silently dropping areas) or areas with 15 neighbours
+- Using contiguity for **points** (they have no boundaries)
+- Computing distances in **degrees** instead of a projected CRS
+:::
+
+## 🔧 Switch to R — Lab 2 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `gis-workshop/labs/lab2_weights.R`
+
+- `poly2nb()` queen vs rook · `summary()` of a neighbour list
+- `knearneigh()` · `nb2listw()` · row sums
+- `lag.listw()` and a check by hand · Moran's I under four weights
+:::
+
+**Time:** 30 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s2q1", "In row-standardised weights, what do the weights of one area add up to?",
+         c("The number of neighbours of that area",
+           "0, because the weights cancel out",
+           "1, whatever the number of neighbours",
+           "The area's value divided by its population"), answer = 3,
+         explain = "Row-standardisation divides each neighbour's weight by the area's neighbour count, so every row sums to 1. That makes the lag a weighted average.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s2q2", "An area has 4 neighbours and row-standardised weights. What is its spatial lag?",
+         c("The sum of its 4 neighbours' values",
+           "The mean of its 4 neighbours' values",
+           "Its own value minus the district mean",
+           "The value of its single nearest neighbour"), answer = 2,
+         explain = "With weights of 1/4 each, the lag is the plain average of the neighbours' values.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s2q3", "Why are queen contiguity neighbours a poor choice for point data such as patient homes?",
+         c("Points tend to have more than ten neighbours each",
+           "Queen contiguity needs the data in degrees, not in metres",
+           "Points have no boundaries to share, so contiguity does not exist",
+           "Contiguity can only be calculated for blocks with no missing data"), answer = 3,
+         explain = "Contiguity is defined by shared polygon boundaries. For points, use k-nearest or distance-based neighbours.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s2q4", "summary(nb) reports one region with no neighbours (an island). What is the safest response?",
+         c("Delete the region quietly so that the test runs without a warning",
+           "Give it the average value of the whole district to fill the gap",
+           "Ignore it, since one single area will not change the results",
+           "Check it is real, then link it sensibly or use zero.policy"), answer = 4,
+         explain = "Isolates have no neighbours, so the lag is undefined. Look at the map, decide a justified link (for example k-nearest) or analyse with zero.policy and say so.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s2q5", "Moran's I is 0.48 with queen weights and 0.12 with a distance band of 3 km. What is the best conclusion?",
+         c("It depends on the weights, so justify the choice and report sensitivity",
+           "Queen weights are the standard choice, so the 3 km result can simply be ignored",
+           "The two values should be averaged to give the true value of Moran's I",
+           "The analysis has failed, so the test should be dropped from the report"), answer = 1,
+         explain = "Different neighbour definitions can give different answers when the pattern is scale dependent. Report which weights you used, why, and what happens with others.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- Weights turn 'near' into numbers; **choose them deliberately**
+- **Row-standardised** weights make the lag the **average of neighbours**
+- Check **isolates** and areas with very many neighbours
+- **Report** the weights and test sensitivity
+:::
+
+**Next:** Session 3: global spatial autocorrelation

@@ -8,9 +8,11 @@ project:
   output-dir: docs/gis
   render:
     - gis/*.qmd
+    - gis-workshop/*.qmd
   resources:
     - data/gis/*
     - gis/make_gis_data.R
+    - gis-workshop/labs/*.R
 website:
   title: GIS and Spatial Statistics
   site-url: '.'
@@ -71,6 +73,21 @@ website:
             href: exporting_tools/debugging_plots.qmd
           - text: Advanced Exporting
             href: exporting_tools/advanced_exporting.qmd
+      - text: GIS Workshop
+        menu:
+          - text: Session 1 — Spatial Data and Maps
+            href: gis-workshop/s1_spatial_data.qmd
+          - text: Session 2 — Neighbours and Spatial Weights
+            href: gis-workshop/s2_neighbours_weights.qmd
+          - text: Session 3 — Global Spatial Autocorrelation (Moran's I)
+            href: gis-workshop/s3_global_autocorrelation.qmd
+          - text: Session 4 — Local Clusters and Hot Spots
+            href: gis-workshop/s4_local_clusters.qmd
+          - text: Session 5 — Spatial Regression and Reporting
+            href: gis-workshop/s5_spatial_regression.qmd
+          - text: '---'
+          - text: Spatial Statistics Cheat Sheet
+            href: gis-workshop/cheatsheet.qmd
       - text: GIS & Spatial Statistics
         menu:
           - text: Spatial Data with sf

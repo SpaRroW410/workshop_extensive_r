@@ -1,0 +1,256 @@
+---
+title: "Session 3 — Global Spatial Autocorrelation"
+subtitle: "Moran's I · permutation test · Moran scatterplot · Geary's C · General G · join counts · Lab 3"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Sessions 1–2: spatial data, maps, neighbours and weights
+- Today: **is the pattern clustered?** One test for the whole map
+- By the end you can:
+  - compute and interpret **Moran's I**, with analytic and **permutation** p-values
+  - read the **Moran scatterplot**
+  - choose between **Moran's I, Geary's C, General G and join counts**
+  - **report** a global result in one sentence
+:::
+
+# Topic 1 — Moran's I {background-color="#2C3E50"}
+
+## Are similar values neighbours?
+
+::: {.eq}
+I = ( n / Σ w~ij~ ) × Σ~i~Σ~j~ w~ij~ (x~i~ − x̄)(x~j~ − x̄) / Σ~i~ (x~i~ − x̄)²
+:::
+
+::: {.incremental}
+- Multiply each area's deviation from the mean by its **neighbours'** average deviation (the **lag**), then scale by the variance
+- High areas with high neighbours, low with low → products positive → **I > 0**
+- Expectation with no pattern: **E[I] = −1/(n−1)**, about 0
+:::
+
+| I | Meaning |
+|---|---|
+| ≈ 0 | no spatial pattern |
+| clearly > 0 | **clustering**: similar values are neighbours |
+| clearly < 0 | dispersion: neighbours differ (a checkerboard; rare) |
+
+## Four areas by hand
+
+```{r}
+v <- c(1, 2, 9, 10)
+nb4 <- list(2L, c(1L, 3L), c(2L, 4L), 3L); class(nb4) <- "nb"; attr(nb4, "region.id") <- as.character(1:4)
+lw4 <- nb2listw(nb4, style = "W"); z <- v - mean(v)
+c(by_hand = (4 / sum(unlist(lw4$weights))) * sum(z * lag.listw(lw4, z)) / sum(z^2), moran_test = unname(moran.test(v, lw4)$estimate[1]))
+```
+
+The two large values sit next to each other, so I is strongly positive. The function and the formula agree.
+
+## On the district
+
+```{r}
+mi <- moran.test(blocks$dengue_per_100k, lw, zero.policy = TRUE)
+mi
+```
+
+::: {.key}
+Read it from the bottom: **observed I** (about `r round(mi$estimate[1], 2)`), its **expectation** (about 0), and the **z-score and p-value**. Strong positive spatial autocorrelation.
+:::
+
+## The permutation (Monte Carlo) test
+
+Shuffle the values over the areas 999 times; how often does a shuffled map beat the real I?
+
+```{r}
+#| output-location: slide
+set.seed(1)
+mc <- moran.mc(blocks$dengue_per_100k, lw, nsim = 999, zero.policy = TRUE)
+ggplot(tibble(I = mc$res[-length(mc$res)]), aes(I)) + geom_histogram(bins = 30, fill = "grey75", colour = "white") +
+  geom_vline(xintercept = mc$statistic, colour = col_red, linewidth = 1) +
+  labs(x = "Moran's I of shuffled maps", title = paste0("Observed I (red) vs 999 shuffles: p = ", mc$p.value))
+```
+
+::: {.incremental}
+- Assumption-light; usually the better p-value to report
+- With 999 shuffles the **smallest p is 0.001**
+:::
+
+# Topic 2 — The Moran scatterplot {background-color="#2C3E50"}
+
+## Value against the average of its neighbours
+
+```{r}
+#| output-location: slide
+blocks$z <- as.numeric(scale(blocks$dengue_per_100k)); blocks$lag_z <- lag.listw(lw, blocks$z, zero.policy = TRUE)
+ggplot(blocks, aes(z, lag_z)) + geom_hline(yintercept = 0, colour = "grey60") + geom_vline(xintercept = 0, colour = "grey60") +
+  geom_point(aes(colour = high_burden), size = 2.4) + geom_smooth(method = "lm", se = FALSE, colour = "black") +
+  annotate("text", x = c(2.2, -2.2, 2.2, -2.2), y = c(2.2, -2.2, -2.2, 2.2), label = c("High-High", "Low-Low", "High-Low", "Low-High"), colour = "grey40") +
+  labs(x = "Rate (standardised)", y = "Neighbours' average (standardised)", colour = NULL)
+```
+
+::: {.incremental}
+- The **slope of the line is Moran's I** (here `r round(coef(lm(lag_z ~ z, blocks))[["z"]], 2)`)
+- **High-High / Low-Low** points make positive autocorrelation
+- **High-Low / Low-High** points are **spatial outliers**: LISA (Session 4) finds them
+:::
+
+# Topic 3 — Other global tests {background-color="#2C3E50"}
+
+## Which global test?
+
+| Test | Question | Variable | Reading |
+|---|---|---|---|
+| **Moran's I** | Are similar values neighbours? | continuous | I > E[I]: clustering |
+| **Geary's C** | Are neighbours' *differences* small? | continuous | **C < 1** clustering (opposite of I) |
+| **General G** | Do **high** or **low** values cluster? | continuous, positive | G > E[G]: highs cluster |
+| **Join counts** | Do same-category areas touch? | binary / categorical | more same-category joins than expected |
+
+## Geary's C, General G, join counts
+
+```{r}
+geary.test(blocks$dengue_per_100k, lw, zero.policy = TRUE)$estimate
+lw_b <- nb2listw(nb, style = "B", zero.policy = TRUE)
+globalG.test(blocks$dengue_per_100k, lw_b, zero.policy = TRUE)$estimate
+joincount.test(blocks$high_burden, lw_b, zero.policy = TRUE)[[2]]$estimate
+```
+
+::: {.key}
+Moran's I is **positive for both hot-spot and cold-spot clustering**. Only **General G** says whether the **high** values are the ones that cluster. Join counts suit a **yes/no** variable.
+:::
+
+## Pitfalls
+
+::: {.bad}
+- Not saying **which weights**; not saying **which variable** (counts and rates differ)
+- **Small areas** give noisy rates, which hides or mimics clustering (smooth with empirical Bayes)
+- **Edge effects** and the **modifiable areal unit problem**: a different grouping can change I
+- A **trend** (north-south gradient) also gives positive I
+- A global test **cannot say where**; a non-significant I can hide a local cluster
+:::
+
+## How to report
+
+::: {.good}
+*Dengue incidence was strongly clustered across the 79 blocks (global Moran's I = 0.50, queen contiguity, row-standardised weights; permutation p = 0.001, 999 simulations).*
+:::
+
+Give the statistic, the weights, the number of simulations and the p-value; then say where, with local methods.
+
+## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `gis-workshop/labs/lab3_global.R`
+
+- `moran.test()` · `moran.mc()` · the Moran scatterplot data
+- `geary.test()` · `globalG.test()` · `joincount.test()`
+- a variable with **no** spatial pattern for comparison
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q1", "Global Moran's I is 0.49 (permutation p = 0.001). What is the best interpretation?",
+         c("49% of the variation in the rate is explained by the location",
+           "Each area's rate is 0.49 higher than its neighbours' average rate",
+           "Neighbouring areas are more alike than expected by chance",
+           "About half of all the areas lie in a significant local cluster"), answer = 3,
+         explain = "A positive I with a small p-value means similar values are neighbours more often than random. It is not a percentage of variance explained and says nothing about which areas form clusters.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q2", "What is the expected value of Moran's I when there is no spatial pattern?",
+         c("Exactly 1, because every area is its own neighbour",
+           "About 0 (exactly −1/(n−1))",
+           "Exactly 0.5, halfway between the two extremes",
+           "It depends on the data, so there is no expected value"), answer = 2,
+         explain = "Under randomness I has expectation −1/(n−1), which is close to 0 for any realistic number of areas.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q3", "With 999 permutations, what is the smallest possible p-value from moran.mc()?",
+         c("0, if the observed I is larger than every one of the shuffled values",
+           "0.05, which is the usual cut-off used for a significant result",
+           "0.001, as the observed value is one of 1000 arrangements",
+           "It varies from one data set to another and has no fixed minimum"), answer = 3,
+         explain = "The observed statistic is ranked among the 999 shuffles plus itself, so the best rank gives (0+1)/(999+1) = 0.001.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q4", "Geary's C is 0.47. How should this be read?",
+         c("Neighbours differ strongly, so negative spatial autocorrelation",
+           "There is no spatial pattern, because C is not equal to zero",
+           "The result is invalid, because C must lie between 0 and 1",
+           "Neighbours are similar, so positive spatial autocorrelation"), answer = 4,
+         explain = "C is about 1 with no pattern, below 1 with positive autocorrelation and above 1 with negative autocorrelation. It runs in the opposite direction to Moran's I.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q5", "Moran's I is positive and significant. What does the General G test add?",
+         c("Whether high values (hot spots) or low values cluster",
+           "The exact location of each separate cluster on the map",
+           "A correction of the p-value for the multiple testing",
+           "Nothing, because it always gives the same answer as Moran's I"), answer = 1,
+         explain = "Both hot-spot and cold-spot clustering give a positive Moran's I. G is above its expectation when high values cluster and below when low values do.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Moran's I**: are similar values neighbours? Compare with about 0
+- Prefer the **permutation p-value**; always give the **weights**
+- The **Moran scatterplot** shows slope = I and the four quadrants
+- **Geary's C** (1 = none), **General G** (hot vs cold), **join counts** (binary)
+:::
+
+**Next:** Session 4: local clusters and hot spots

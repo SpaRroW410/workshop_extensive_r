@@ -267,4 +267,6 @@ Then its quest worlds.
 | `dungeons` | `docs/dungeons/` | The game (open access) | none |
 | `gis` (8th track, 2026-10-27) | `docs/gis/` | The advanced visualization pages (grammar modules 1–4, all galleries, specialized, exporting) plus `gis/*.qmd`: spatial data with sf, maps and choropleths, neighbours and weights, global Moran's I, local Moran's I (LISA), Geary's C / Getis-Ord G and Gi* / join counts / scan statistic, spatial regression and residual tests. Synthetic district of 79 blocks (`gis/make_gis_data.R`, `data/gis/`) with a planted hot spot, cold spot and spatial outlier | `GIS-SPATIAL` (in `config.json`; change it there) |
 
-Ideas to add later: raster data with `terra`, spatial interpolation (kriging), a GIS world in the game.
+**GIS workshop** (`gis-workshop/`, 2026-10-27): 5 decks, 5 labs with facilitator solutions, quizzes (lint clean), cheat sheet, same pattern as the regression workshop; the Dungeons & Dataframes GIS region comes **after** the workshop has been run and corrected.
+
+Ideas to add later: raster data with `terra`, spatial interpolation (kriging), a GIS region in the game.

@@ -1,0 +1,239 @@
+---
+title: "Session 5 — Spatial Regression and Reporting"
+subtitle: "Residual autocorrelation · LM tests · spatial lag and error models · impacts · reporting · Lab 5"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Sessions 3–4: the outcome is spatially clustered, and we know where
+- Today: **regression on areas**. The usual assumption of **independent residuals** often fails
+- By the end you can:
+  - test regression **residuals** for spatial autocorrelation
+  - use **Lagrange multiplier tests** to choose lag or error
+  - fit and compare **spatial lag** and **spatial error** models
+  - **report** a spatial analysis
+:::
+
+# Topic 1 — Check the residuals {background-color="#2C3E50"}
+
+## Fit OLS first
+
+```{r}
+ols <- lm(dengue_per_100k ~ poverty_index + literacy_pct, data = blocks)
+round(summary(ols)$coefficients, 3)
+```
+
+## Moran's I on the residuals
+
+```{r}
+lm.morantest(ols, lw, zero.policy = TRUE)
+```
+
+::: {.key}
+A significant **positive** residual Moran's I means the model leaves spatial structure unexplained: **independence fails** and standard errors are probably **too small**.
+:::
+
+```{r}
+#| output-location: slide
+blocks$res_ols <- residuals(ols)
+ggplot(blocks) + geom_sf(aes(fill = res_ols)) + scale_fill_gradient2(low = "#2166ac", mid = "white", high = "#b2182b", name = "Residual") +
+  labs(title = "OLS residuals: neighbours share the same sign")
+```
+
+# Topic 2 — Which spatial model? {background-color="#2C3E50"}
+
+## Two structures
+
+| Model | Idea | Think of |
+|---|---|---|
+| **Spatial lag (SAR)** | my outcome depends on my **neighbours' outcomes** | contagion, spillover |
+| **Spatial error (SEM)** | **omitted shared factors** make neighbouring errors alike | unmeasured exposures |
+
+::: {.eq}
+Lag: y = ρWy + Xβ + ε &nbsp;&nbsp;|&nbsp;&nbsp; Error: y = Xβ + u, u = λWu + ε
+:::
+
+## Lagrange multiplier tests
+
+```{r}
+#| output-location: slide
+lm.RStests(ols, lw, test = c("RSerr", "RSlag", "adjRSerr", "adjRSlag"), zero.policy = TRUE)
+```
+
+## Choosing from the LM tests
+
+::: {.incremental}
+- If **only one** plain test is significant, use that model
+- If **both** are, prefer the model whose **robust** test (`adjRSerr` or `adjRSlag`) is larger and significant
+- Use **theory** too: contagion points to lag, omitted exposures to error
+:::
+
+## Fit and compare
+
+```{r}
+sem <- errorsarlm(dengue_per_100k ~ poverty_index + literacy_pct, data = blocks, listw = lw, zero.policy = TRUE)
+sar <- lagsarlm(dengue_per_100k ~ poverty_index + literacy_pct, data = blocks, listw = lw, zero.policy = TRUE)
+c(lambda = sem$lambda, rho = sar$rho) |> round(3)
+AIC(ols, sem, sar)
+```
+
+```{r}
+c(OLS = unname(moran.test(residuals(ols), lw, zero.policy = TRUE)$estimate[1]), SEM = unname(moran.test(residuals(sem), lw, zero.policy = TRUE)$estimate[1])) |> round(3)
+```
+
+Lower AIC is better (same data). The residual Moran's I should fall towards 0.
+
+# Topic 3 — Interpreting and reporting {background-color="#2C3E50"}
+
+## Coefficients in the lag model {.smaller}
+
+::: {.warn}
+In a **lag** model a change in one block's poverty also changes its neighbours' rates, which feed back. The coefficient is **not** the whole effect. Report **impacts**: direct, indirect and total.
+:::
+
+```{r}
+set.seed(6)
+summary(impacts(sar, listw = lw, R = 199), zstats = TRUE, short = TRUE)
+```
+
+In the **error** model the coefficients keep the OLS meaning, with corrected standard errors.
+
+## Other routes
+
+::: {.incremental}
+- **Add covariates** that explain the clustering; the residual autocorrelation may vanish
+- **Count data with unequal populations**: Poisson models with a spatial random effect (CAR / BYM in `INLA`, `brms`)
+- **Geographically weighted regression** lets coefficients vary over space
+- Always **map the residuals**
+:::
+
+## Reporting checklist
+
+::: {.good}
+1. The **outcome** (rate, not count) and the **areas**, with the **CRS** if distances were used
+2. The **weights**: definition, standardisation, isolates
+3. **Global** result: Moran's I, p-value type, simulations
+4. **Local** results: method, adjustment, map; say they are exploratory
+5. **Regression**: residual Moran's I, LM tests, model chosen and why, parameter (`rho` or `lambda`), AIC vs OLS, impacts for a lag model
+6. **Limitations**: area size (MAUP), small numbers, edge effects, association not cause
+:::
+
+## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `gis-workshop/labs/lab5_regression.R`
+
+- `lm()` then `lm.morantest()` · map the residuals
+- `lm.RStests()` · `errorsarlm()` · `lagsarlm()` · `AIC()`
+- `impacts()` for the lag model
+:::
+
+**Time:** 40 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q1", "Residuals of an area-level regression have a significant positive Moran's I. What is the main consequence?",
+         c("The regression coefficients become zero in each of the fitted models",
+           "The model must be refitted using fewer of the areas in the data",
+           "Standard errors are probably too small, so p-values are optimistic",
+           "The outcome variable is spatially random and so should be dropped"), answer = 3,
+         explain = "Positive residual autocorrelation means neighbouring residuals share information, so there are fewer independent observations than the model assumes and standard errors are too small.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q2", "Which situation points to a spatial LAG model?",
+         c("An unmeasured exposure affects blocks that lie next to each other",
+           "The outcome in an area influences its neighbours' outcomes (contagion)",
+           "The residuals are normally distributed with a constant variance throughout",
+           "The covariates are strongly correlated with each other and with the outcome"), answer = 2,
+         explain = "A lag model includes the neighbours' outcomes as a predictor (spillover). Shared unmeasured factors are the typical reason for a spatial error model.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q3", "Both plain LM tests are significant, but only the robust lag test is. What do you conclude?",
+         c("A spatial error model is the better candidate",
+           "Neither model is needed, so ordinary regression is fine",
+           "A spatial lag model is the better candidate",
+           "The tests are contradictory, so they should be ignored"), answer = 3,
+         explain = "When both plain tests are significant, the robust versions help decide. Only the robust lag test remaining significant favours the lag model.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q4", "In a spatial lag model, why is the coefficient of a covariate not its full effect?",
+         c("The coefficient is divided by the number of areas in the study",
+           "Lag models estimate the effects for the neighbours, not for the area",
+           "The coefficient is measured on a different scale from the outcome",
+           "A change in one area also changes its neighbours' outcomes"), answer = 4,
+         explain = "Through the spatial multiplier, a change in x in one area changes y there and in neighbouring areas. Direct, indirect and total impacts report these effects.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q5", "After fitting a spatial error model, what should you check?",
+         c("The residual Moran's I, which should now be close to 0",
+           "Whether the number of blocks has doubled during fitting",
+           "That each covariate has become significant at the 5% level",
+           "Whether the lambda value has become equal to 1"), answer = 1,
+         explain = "A spatial model is meant to absorb the spatial structure. If residuals still show autocorrelation, the model (or weights) needs rethinking.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Always test residuals** of an area-level regression (`lm.morantest`)
+- **LM tests** (and robust versions) suggest lag or error; theory should agree
+- Report **rho / lambda**, AIC vs OLS, the residual check; use **impacts** for lag
+- For counts with unequal populations, consider **Poisson models with spatial random effects**
+:::
+
+**Next:** Back to the cheat sheet and the **Dungeons & Dataframes** GIS world (coming)
