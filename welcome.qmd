@@ -227,6 +227,50 @@ meta <- list(
     nav_note = "The full navbar above gives access to all visualization content."
   ),
 
+  gis = list(
+    title   = "GIS and Spatial Statistics Track",
+    badge   = "🟤 Workshop Key Unlocked",
+    colour  = "#00695c",
+    bg      = "#f1faf8",
+    intro   = "Welcome to the **GIS and Spatial Statistics Track**. It builds on the advanced visualization pages (ggplot2 modules, galleries, interactive plots, exporting) and adds a spatial toolkit: reading and mapping spatial data with `sf`, defining neighbours and spatial weights, testing for spatial autocorrelation with **Moran's I**, finding clusters with **local Moran's I (LISA)**, **Getis-Ord Gi\\***, **Geary's C**, join counts and the scan statistic, and checking regression residuals for spatial structure. All examples use a synthetic district of 80 blocks with a planted hot spot, so no real boundaries or personal data are involved.",
+    goals   = c(
+      "Read, transform and join spatial data with sf, and keep track of coordinate reference systems",
+      "Make clear static and interactive maps and choose a sensible classification",
+      "Define neighbours and spatial weights, and know how the choice changes the answer",
+      "Test for global spatial autocorrelation with Moran's I and read the Moran scatterplot",
+      "Locate clusters and outliers with local Moran's I (LISA) and hot spots with Getis-Ord Gi*",
+      "Use Geary's C, join counts and the scan statistic, and check regression residuals for spatial structure"
+    ),
+    modules = c(
+      "📁 R Foundations & Data Wrangling",
+      "📐 Data Visualization — grammar, best practices, ggplot2 modules 1–4",
+      "🖼️ Plot Gallery (basic to advanced) and Specialized & Interactive Plots",
+      "⚙️ Exporting, Plotting Tools and Debugging",
+      "🗺️ Spatial Data with sf, Maps and Choropleths",
+      "🧭 Neighbours and Spatial Weights",
+      "📍 Global Moran's I and Local Moran's I (LISA)",
+      "🔥 Geary's C, Getis-Ord, Join Counts and the Scan Statistic",
+      "📉 Spatial Regression and Residual Tests"
+    ),
+    nav = list(
+      list(icon="🗺️", label="Spatial Data with sf", href="gis/spatial_data_sf.qmd", desc="Start here: spatial objects, coordinate systems, joining attributes"),
+      list(icon="🧭", label="Neighbours and Weights", href="gis/spatial_weights.qmd", desc="Queen, rook and k-nearest neighbours, and row-standardised weights"),
+      list(icon="📍", label="Global Moran's I", href="gis/morans_i.qmd", desc="Is the pattern clustered? Test, permutation p-value and Moran scatterplot"),
+      list(icon="🔥", label="Local Moran's I (LISA)", href="gis/local_moran_lisa.qmd", desc="Where are the clusters and spatial outliers?"),
+      list(icon="🎨", label="Data Visualization", href="data-visualization/ggplot_grammar.qmd", desc="Grammar of graphics and all four ggplot2 modules")
+    ),
+    show_stats   = FALSE,
+    show_quarto  = FALSE,
+    downloads = list(
+      scripts    = c("gis/make_gis_data.R"),
+      datasets   = c("data/gis/district_blocks.geojson", "data/gis/facilities.csv"),
+      cheatsheets= character(0),
+      quarto     = character(0)
+    ),
+    tip  = "Never mapped data in R? Read **Spatial Data with sf** and **Maps and Choropleths** first, then go straight to **Global Moran's I**.",
+    nav_note = "The navbar has the full visualization library as well as the spatial pages."
+  ),
+
   regression = list(
     title   = "Regression Track",
     badge   = "🟡 Workshop Key Unlocked",

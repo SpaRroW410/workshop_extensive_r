@@ -1,0 +1,58 @@
+{
+  "profiles": {
+    "basic": {
+      "label": "Basic",
+      "description": "Wrangling · Basic Visualization · Test Selection · ggstatsplot · Quarto",
+      "locked": false,
+      "path": "basic/welcome.html"
+    },
+    "moderate": {
+      "label": "Moderate",
+      "description": "Best Practices · Intermediate Plots · ggplot Modules 1–2 · gtsummary · Applied Examples",
+      "locked": true,
+      "key": "WORKSHOP-MOD",
+      "path": "moderate/welcome.html"
+    },
+    "advanced": {
+      "label": "Advanced",
+      "description": "Advanced Plots · Interactive · All Modules · Publication Quarto · Deep Analysis",
+      "locked": true,
+      "key": "WORKSHOP-ADV",
+      "path": "advanced/welcome.html"
+    },
+    "dataviz-base": {
+      "label": "Data Visualization — Foundations",
+      "description": "Viz-only track: Grammar · Best Practices · Modules 1–2 · Basic & Intermediate Gallery",
+      "locked": true,
+      "key": "DATAVIZ-BASE",
+      "path": "dataviz-base/welcome.html"
+    },
+    "dataviz-complete": {
+      "label": "Data Visualization — Complete",
+      "description": "Full viz track: All modules · Advanced Gallery · Interactive · Practical Applications",
+      "locked": true,
+      "key": "DATAVIZ-FULL",
+      "path": "dataviz-complete/welcome.html"
+    },
+    "regression": {
+      "label": "Regression",
+      "description": "Intro to R · Data Import & Wrangling · Regression (Simple, Multiple, Logistic, Cox) · Model Diagnostics · Full-day Regression Workshop (slides, labs, quizzes)",
+      "locked": true,
+      "key": "REGRESSION",
+      "path": "regression/welcome.html"
+    },
+    "gis": {
+      "label": "GIS and Spatial Statistics",
+      "description": "Spatial data with sf · Maps · Spatial weights · Moran's I and LISA · Geary's C, Getis-Ord, join counts, scan statistic · Spatial regression · plus the advanced visualization pages",
+      "locked": true,
+      "key": "GIS-SPATIAL",
+      "path": "gis/welcome.html"
+    },
+    "dungeons": {
+      "label": "Dungeons & Dataframes",
+      "description": "The game: medical statistics in R from the basics up — regions, worlds, bosses, XP and a skill tree",
+      "locked": false,
+      "path": "dungeons/dungeons/index.html"
+    }
+  }
+}

@@ -162,6 +162,7 @@ render_profile "DataViz — Foundations"      "dataviz-base"    "docs/dataviz-ba
 render_profile "DataViz — Complete"         "dataviz-complete" "docs/dataviz-complete"
 render_profile "Regression"                 "regression"       "docs/regression"
 render_profile "Dungeons & Dataframes"      "dungeons"         "docs/dungeons"
+render_profile "GIS and Spatial Statistics" "gis"              "docs/gis"
 
 # ── Old quest URLs (it lived inside the Regression track) → the game's own site ──
 mkdir -p docs/regression/regression-quest
@@ -186,6 +187,7 @@ echo "  docs/dataviz-base/       ← DataViz Foundations"
 echo "  docs/dataviz-complete/   ← DataViz Complete"
 echo "  docs/regression/         ← Regression"
 echo "  docs/dungeons/           ← Dungeons & Dataframes (the game)"
+echo "  docs/gis/                ← GIS and Spatial Statistics"
 echo ""
 echo "  Local preview:"
 echo "    cd docs && python -m http.server 8080"

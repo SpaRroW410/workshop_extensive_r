@@ -257,3 +257,14 @@ Then its quest worlds.
 2. Iteration in **both**: a Moderate quest world (Loop Labyrinth) and the Advanced Programming branch.
 3. Publication requires **at least Basic** first (stated on its landing page; the Scriptorium side quest unlocks after the Region 1 gate).
 4. **Citation** is a cross-profile topic (Part 1 §1.3).
+
+---
+
+# Added profiles
+
+| Profile | Output | Content | Key |
+|---|---|---|---|
+| `dungeons` | `docs/dungeons/` | The game (open access) | none |
+| `gis` (8th track, 2026-10-27) | `docs/gis/` | The advanced visualization pages (grammar modules 1–4, all galleries, specialized, exporting) plus `gis/*.qmd`: spatial data with sf, maps and choropleths, neighbours and weights, global Moran's I, local Moran's I (LISA), Geary's C / Getis-Ord G and Gi* / join counts / scan statistic, spatial regression and residual tests. Synthetic district of 79 blocks (`gis/make_gis_data.R`, `data/gis/`) with a planted hot spot, cold spot and spatial outlier | `GIS-SPATIAL` (in `config.json`; change it there) |
+
+Ideas to add later: raster data with `terra`, spatial interpolation (kriging), a GIS world in the game.

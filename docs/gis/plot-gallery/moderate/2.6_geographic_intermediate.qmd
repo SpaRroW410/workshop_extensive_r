@@ -1,0 +1,683 @@
+---
+title: "Geographic - INTERMEDIATE"
+subtitle: "Spatial Data Visualization"
+format:
+  revealjs:
+    theme: serif
+    css: ../../assets/slide_deck.css
+    include-after-body: footer.html
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    code-fold: true
+    chalkboard: true
+    preview-links: true
+    center: true
+    zoom: true
+---
+
+# Geographic Visualization {.center}
+
+## What We'll Learn - Intermediate
+
+::: {.columns}
+::: {.column width="50%"}
+**Spatial Data Visualization:**
+
+- Choropleth maps (filled regions)
+- Point/bubble maps
+- Heat maps (density)
+- Faceted maps (small multiples)
+- Interactive maps
+:::
+
+::: {.column width="50%"}
+**Analytical Goals:**
+
+- 🟣 **Geographic** - Where things happen
+- 🟡 **Distribution** - Spatial patterns
+- 🟢 **Ranking** - Regional comparisons
+- ⚫ **Correlation** - Geographic relationships
+:::
+:::
+
+## Setup Code
+
+```{r}
+#| echo: true
+#| message: false
+
+# Load required packages
+library(readxl)
+library(tidyverse)
+library(ggplot2)
+library(sf)          # For spatial data
+library(maps)        # For map data
+library(viridis)     # For color scales
+
+# Load dataset
+health_data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+
+# Aggregate data by region
+region_summary <- health_data %>%
+  filter(!is.na(Region)) %>%
+  group_by(Region) %>%
+  summarise(
+    mean_bp = mean(SysBP_0m, na.rm = TRUE),
+    mean_cholesterol = mean(Cholesterol, na.rm = TRUE),
+    mean_bmi = mean(BMI, na.rm = TRUE),
+    n_patients = n(),
+    hypertension_rate = mean(SysBP_0m >= 140, na.rm = TRUE) * 100
+  )
+
+# Create theme
+theme_map <- function() {
+  theme_void() +
+  theme(
+    text = element_text(family = "serif", size = 12),
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 11, hjust = 0.5),
+    legend.position = "right",
+    legend.title = element_text(size = 10),
+    panel.background = element_rect(fill = "aliceblue")
+  )
+}
+```
+
+## Choropleth Map - Code
+
+::: {style="font-size: 0.75em;"}
+**Purpose:** Show values across geographic regions using color
+
+**Goal:** 🟣 Geographic + 🟢 Ranking
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Get US state map data
+us_states <- map_data("state")
+
+# Create region to state mapping (simplified for demonstration)
+region_states <- data.frame(
+  region_name = c("North", "South", "East", "West"),
+  states = c("new york,pennsylvania,ohio,michigan",
+            "texas,florida,georgia,alabama",
+            "massachusetts,connecticut,rhode island,maine",
+            "california,oregon,washington,nevada")
+)
+
+# Expand and join
+state_regions <- region_states %>%
+  separate_rows(states, sep = ",") %>%
+  rename(region_lower = states)
+
+# Join with map data
+map_data_full <- us_states %>%
+  left_join(state_regions, by = c("region" = "region_lower")) %>%
+  left_join(region_summary, by = c("region_name" = "Region"))
+
+# Create choropleth map
+ggplot(map_data_full, aes(x = long, y = lat, group = group, fill = mean_bp)) +
+  geom_polygon(color = "white", size = 0.3) +
+  coord_map("albers", lat0 = 39, lat1 = 45) +  # Albers projection
+  scale_fill_viridis_c(
+    option = "plasma",
+    name = "Mean Systolic BP\n(mmHg)",
+    na.value = "gray90",
+    guide = guide_colorbar(
+      barwidth = 1.5,
+      barheight = 15,
+      title.position = "top"
+    )
+  ) +
+  labs(title = "Average Blood Pressure by Region",
+       subtitle = "Darker colors indicate higher blood pressure",
+       caption = "Data: PublicHealth BP Dataset") +
+  theme_map()
+```
+:::
+
+## Choropleth Map - Output
+
+```{r}
+#| echo: false
+#| fig-width: 11
+#| fig-height: 7
+#| warning: false
+#| message: false
+
+us_states <- map_data("state")
+
+region_states <- data.frame(
+  region_name = c("North", "South", "East", "West"),
+  states = c("new york,pennsylvania,ohio,michigan",
+            "texas,florida,georgia,alabama",
+            "massachusetts,connecticut,rhode island,maine",
+            "california,oregon,washington,nevada")
+)
+
+state_regions <- region_states %>%
+  separate_rows(states, sep = ",") %>%
+  rename(region_lower = states)
+
+map_data_full <- us_states %>%
+  left_join(state_regions, by = c("region" = "region_lower")) %>%
+  left_join(region_summary, by = c("region_name" = "Region"))
+
+ggplot(map_data_full, aes(x = long, y = lat, group = group, fill = mean_bp)) +
+  geom_polygon(color = "white", size = 0.3) +
+  coord_map("albers", lat0 = 39, lat1 = 45) +
+  scale_fill_viridis_c(
+    option = "plasma",
+    name = "Mean Systolic BP\n(mmHg)",
+    na.value = "gray90",
+    guide = guide_colorbar(
+      barwidth = 1.5,
+      barheight = 15,
+      title.position = "top"
+    )
+  ) +
+  labs(title = "Average Blood Pressure by Region",
+       subtitle = "Darker colors indicate higher blood pressure",
+       caption = "Data: PublicHealth BP Dataset") +
+  theme_map()
+```
+
+## Interpreting Choropleth Maps
+
+::: {.columns style="font-size: 0.9em;"}
+::: {.column width="50%"}
+**Key Features:**
+
+- **Color intensity** = Value magnitude
+- **Patterns** reveal regional clustering
+- **White borders** separate regions
+- **Gray** indicates missing data
+
+**Best Practices:**
+
+- Use sequential color scales for continuous data
+- Use diverging scales for data with meaningful midpoint
+- Limit to 5-7 color bins for categorical
+- Always include legend with units
+:::
+
+::: {.column width="50%"}
+**Our Map Shows:**
+
+1. **Geographic variation** in BP
+   - Clear regional differences
+
+2. **Hot spots** identified
+   - East region shows highest BP
+
+3. **Cool spots** visible
+   - West region shows lowest BP
+
+4. **Spatial patterns** suggest
+   - Possible lifestyle/environmental factors
+   - Need for targeted interventions
+:::
+:::
+
+## Point/Bubble Map - Code
+
+::: {style="font-size: 0.8em;"}
+**Purpose:** Show individual locations with value-sized markers
+
+**Goal:** 🟣 Geographic + 🟡 Distribution
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Create sample patient locations (simulated for demonstration)
+set.seed(123)
+patient_locations <- health_data %>%
+  filter(!is.na(Region), !is.na(SysBP_0m)) %>%
+  mutate(
+    # Simulate coordinates within regions
+    lat = case_when(
+      Region == "North" ~ runif(n(), 40, 45),
+      Region == "South" ~ runif(n(), 30, 35),
+      Region == "East" ~ runif(n(), 39, 43),
+      Region == "West" ~ runif(n(), 35, 42)
+    ),
+    lon = case_when(
+      Region == "North" ~ runif(n(), -85, -75),
+      Region == "South" ~ runif(n(), -100, -80),
+      Region == "East" ~ runif(n(), -75, -70),
+      Region == "West" ~ runif(n(), -125, -115)
+    ),
+    hypertensive = ifelse(SysBP_0m >= 140, "Yes", "No")
+  ) %>%
+  sample_n(200)  # Sample for clarity
+
+# Create point map
+ggplot() +
+  geom_polygon(data = us_states, 
+               aes(x = long, y = lat, group = group),
+               fill = "white", color = "gray70") +
+  geom_point(data = patient_locations,
+            aes(x = lon, y = lat, color = hypertensive, size = SysBP_0m),
+            alpha = 0.6) +
+  coord_map("albers", lat0 = 39, lat1 = 45) +
+  scale_color_manual(values = c("No" = "#00A087", "Yes" = "#DC0000"),
+                    name = "Hypertensive") +
+  scale_size_continuous(range = c(1, 6), name = "Systolic BP\n(mmHg)") +
+  labs(title = "Patient Locations by Blood Pressure Status",
+       subtitle = "Point size = BP value | Color = Hypertension status (≥140 mmHg)",
+       caption = "Sample of 200 patients") +
+  theme_map()
+```
+:::
+
+## Point/Bubble Map - Output
+
+```{r}
+#| echo: false
+#| fig-width: 11
+#| fig-height: 7
+#| warning: false
+#| message: false
+
+set.seed(123)
+patient_locations <- health_data %>%
+  filter(!is.na(Region), !is.na(SysBP_0m)) %>%
+  mutate(
+    lat = case_when(
+      Region == "North" ~ runif(n(), 40, 45),
+      Region == "South" ~ runif(n(), 30, 35),
+      Region == "East" ~ runif(n(), 39, 43),
+      Region == "West" ~ runif(n(), 35, 42)
+    ),
+    lon = case_when(
+      Region == "North" ~ runif(n(), -85, -75),
+      Region == "South" ~ runif(n(), -100, -80),
+      Region == "East" ~ runif(n(), -75, -70),
+      Region == "West" ~ runif(n(), -125, -115)
+    ),
+    hypertensive = ifelse(SysBP_0m >= 140, "Yes", "No")
+  ) %>%
+  sample_n(200)
+
+ggplot() +
+  geom_polygon(data = us_states, 
+               aes(x = long, y = lat, group = group),
+               fill = "white", color = "gray70") +
+  geom_point(data = patient_locations,
+            aes(x = lon, y = lat, color = hypertensive, size = SysBP_0m),
+            alpha = 0.6) +
+  coord_map("albers", lat0 = 39, lat1 = 45) +
+  scale_color_manual(values = c("No" = "#00A087", "Yes" = "#DC0000"),
+                    name = "Hypertensive") +
+  scale_size_continuous(range = c(1, 6), name = "Systolic BP\n(mmHg)") +
+  labs(title = "Patient Locations by Blood Pressure Status",
+       subtitle = "Point size = BP value | Color = Hypertension status (≥140 mmHg)",
+       caption = "Sample of 200 patients") +
+  theme_map()
+```
+
+## Interpreting Point/Bubble Maps
+
+::: {style="font-size: 0.9em;"}
+**What Point Maps Show:**
+
+::: {.incremental}
+1. **Exact locations** of events/observations
+   - Each point = one patient
+
+2. **Clustering patterns**
+   - Where do high-BP patients concentrate?
+   - Red dots (hypertensive) cluster in certain areas
+
+3. **Spatial distribution**
+   - Uniform vs. clustered
+   - Our data shows regional clustering
+
+4. **Multiple attributes** simultaneously
+   - Size = BP value
+   - Color = hypertension status
+   - Position = location
+
+**Advantage:** Shows individual variation AND spatial pattern
+:::
+:::
+
+## Heat Map (Density) - Code
+
+::: {style="font-size: 0.8em;"}
+**Purpose:** Show density/concentration of observations
+
+**Goal:** 🟣 Geographic + 🟡 Distribution
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Create density heat map
+ggplot() +
+  # Base map
+  geom_polygon(data = us_states, 
+               aes(x = long, y = lat, group = group),
+               fill = "gray95", color = "white") +
+  # Density contours
+  stat_density_2d(data = patient_locations,
+                 aes(x = lon, y = lat, fill = after_stat(level)),
+                 geom = "polygon",
+                 alpha = 0.5,
+                 bins = 10) +
+  # Overlay points
+  geom_point(data = patient_locations,
+            aes(x = lon, y = lat),
+            size = 0.5, alpha = 0.3, color = "black") +
+  coord_map("albers", lat0 = 39, lat1 = 45) +
+  scale_fill_viridis_c(option = "inferno",
+                      name = "Patient\nDensity") +
+  labs(title = "Patient Density Heat Map",
+       subtitle = "Darker areas show higher patient concentration",
+       caption = "Contours show density levels") +
+  theme_map()
+```
+:::
+
+## Heat Map (Density) - Output
+
+```{r}
+#| echo: false
+#| fig-width: 11
+#| fig-height: 7
+#| warning: false
+#| message: false
+
+ggplot() +
+  geom_polygon(data = us_states, 
+               aes(x = long, y = lat, group = group),
+               fill = "gray95", color = "white") +
+  stat_density_2d(data = patient_locations,
+                 aes(x = lon, y = lat, fill = after_stat(level)),
+                 geom = "polygon",
+                 alpha = 0.5,
+                 bins = 10) +
+  geom_point(data = patient_locations,
+            aes(x = lon, y = lat),
+            size = 0.5, alpha = 0.3, color = "black") +
+  coord_map("albers", lat0 = 39, lat1 = 45) +
+  scale_fill_viridis_c(option = "inferno",
+                      name = "Patient\nDensity") +
+  labs(title = "Patient Density Heat Map",
+       subtitle = "Darker areas show higher patient concentration",
+       caption = "Contours show density levels") +
+  theme_map()
+```
+
+## Interpreting Heat Maps
+
+::: {.columns style="font-size: 0.9em;"}
+::: {.column width="50%"}
+**Heat Map Features:**
+
+- **Color intensity** = Density
+- **Contour lines** = Density levels
+- **Hot spots** = High concentration
+- **Cool areas** = Low concentration
+
+**When to Use:**
+
+- Many overlapping points
+- Want to show concentration
+- Exact locations less important than density
+- Identifying high-activity areas
+:::
+
+::: {.column width="50%"}
+**Our Heat Map:**
+
+1. **Clear hot spots** in East
+   - Highest patient density
+
+2. **Moderate density** in North & South
+   - Evenly distributed
+
+3. **Sparse areas** in West
+   - Lower patient numbers
+
+4. **Urban/rural patterns** visible
+   - Concentration suggests urban centers
+
+**Insight:** Resources should focus on high-density areas
+:::
+:::
+
+## Faceted Maps - Code
+
+::: {style="font-size: 0.8em;"}
+**Purpose:** Compare spatial patterns across categories
+
+**Goal:** 🟣 Geographic + 🟢 Comparison
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Create faceted map
+ggplot() +
+  geom_polygon(data = us_states, 
+               aes(x = long, y = lat, group = group),
+               fill = "white", color = "gray70") +
+  geom_point(data = patient_locations,
+            aes(x = lon, y = lat, color = hypertensive),
+            size = 2, alpha = 0.6) +
+  facet_wrap(~ TreatmentGroup, ncol = 2) +
+  coord_map("albers", lat0 = 39, lat1 = 45) +
+  scale_color_manual(values = c("No" = "#00A087", "Yes" = "#DC0000"),
+                    name = "Hypertensive") +
+  labs(title = "Patient Distribution by Treatment Group",
+       subtitle = "Geographic distribution across treatment assignments",
+       caption = "Each panel shows one treatment group") +
+  theme_map() +
+  theme(
+    strip.background = element_rect(fill = "gray90", color = "black"),
+    strip.text = element_text(face = "bold", size = 10),
+    legend.position = "bottom"
+  )
+```
+:::
+
+## Faceted Maps - Output
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 8
+#| warning: false
+#| message: false
+
+
+ggplot() +
+  geom_polygon(data = us_states, 
+               aes(x = long, y = lat, group = group),
+               fill = "white", color = "gray70") +
+  geom_point(data = patient_locations,
+            aes(x = lon, y = lat, color = hypertensive),
+            size = 2, alpha = 0.6) +
+  facet_wrap(~ TreatmentGroup, ncol = 2) +
+  coord_map("albers", lat0 = 39, lat1 = 45) +
+  scale_color_manual(values = c("No" = "#00A087", "Yes" = "#DC0000"),
+                    name = "Hypertensive") +
+  labs(title = "Patient Distribution by Treatment Group",
+       subtitle = "Geographic distribution across treatment assignments",
+       caption = "Each panel shows one treatment group") +
+  theme_map() +
+  theme(
+    strip.background = element_rect(fill = "gray90", color = "black"),
+    strip.text = element_text(face = "bold", size = 10),
+    legend.position = "bottom"
+  )
+```
+
+## Interpreting Faceted Maps
+
+::: {style="font-size: 0.9em;"}
+**Power of Faceted Maps:**
+
+::: {.incremental}
+1. **Direct comparison** across categories
+   - Same scale enables comparison
+
+2. **Pattern differences** immediately visible
+   - Treatment allocation varies by region
+
+3. **Consistency checks**
+   - Is treatment assignment geographically balanced?
+
+4. **Multiple variables** displayed
+   - Location + Treatment + Hypertension status
+
+**Our Finding:**
+
+- Treatment groups fairly balanced geographically
+- Hypertension prevalence similar across groups
+- Good randomization evident
+:::
+:::
+
+## Interactive Maps (Conceptual)
+
+::: {style="font-size: 0.9em;"}
+**Using Leaflet for Interactive Maps:**
+
+```{r}
+#| echo: true
+#| eval: false
+
+library(leaflet)
+
+# Create interactive map
+leaflet(patient_locations) %>%
+  addTiles() %>%  # Add OpenStreetMap tiles
+  addCircleMarkers(
+    ~lon, ~lat,
+    radius = ~SysBP_0m / 20,  # Size by BP
+    color = ~ifelse(hypertensive == "Yes", "red", "green"),
+    fillOpacity = 0.6,
+    popup = ~paste0(
+      "<b>Patient ID:</b> ", PatientID, "<br>",
+      "<b>Systolic BP:</b> ", SysBP_0m, " mmHg<br>",
+      "<b>Region:</b> ", Region, "<br>",
+      "<b>Hypertensive:</b> ", hypertensive
+    )
+  ) %>%
+  addLegend(
+    position = "bottomright",
+    colors = c("green", "red"),
+    labels = c("Normal BP", "Hypertensive"),
+    title = "BP Status"
+  )
+```
+
+**Features:** Zoom, pan, click for details, layer toggle
+:::
+
+## Chart Selection Guide
+
+::: {style="font-size: 0.85em;"}
+| Chart Type | Goal | Best For | Data Type |
+|------------|------|----------|-----------|
+| **Choropleth** | 🟣 + 🟢 | Regional comparisons | Aggregated by region |
+| **Point/Bubble** | 🟣 + 🟡 | Individual locations | Point data |
+| **Heat Map** | 🟣 + 🟡 | Density patterns | Many overlapping points |
+| **Faceted Maps** | 🟣 + 🟢 | Compare across categories | Point or regional data |
+| **Interactive** | All | Exploration, presentations | Any spatial data |
+
+**Pro Tip:** Consider your audience - static for reports, interactive for exploration
+:::
+
+## Common Mistakes
+
+::: {.incremental style="font-size: 0.9em;"}
+1. **Wrong projection**
+   - Solution: Use appropriate projection (Albers, Mercator, etc.)
+
+2. **Too many colors** in choropleth
+   - Solution: Limit to 5-7 bins, use sequential scales
+
+3. **Overlapping points** obscure patterns
+   - Solution: Use transparency, jittering, or heat maps
+
+4. **No context** (missing borders/labels)
+   - Solution: Add state/country borders, major cities
+
+5. **Color-blind unfriendly** palettes
+   - Solution: Use viridis, ColorBrewer palettes
+
+6. **Misleading scales**
+   - Solution: Show scale bar, use consistent scales across facets
+:::
+
+## Geographic Data Sources
+
+::: {style="font-size: 0.9em;"}
+**Common Data Sources:**
+
+::: {.incremental}
+- **R packages:** `maps`, `rnaturalearth`, `tigris` (US census)
+- **Shapefiles:** Government GIS data
+- **APIs:** Google Maps, OpenStreetMap
+- **Coordinates:** GPS, geocoding services
+
+**Data Requirements:**
+
+1. **Choropleth:** Region IDs matching map data
+2. **Point maps:** Latitude and longitude
+3. **Heat maps:** Many coordinate pairs
+4. **All:** Consistent coordinate reference system (CRS)
+
+**Tip:** Always verify coordinate system and projection!
+:::
+:::
+
+## Practice Exercise
+
+**Your Turn:**
+
+1. Create a choropleth map showing mean BMI by Region
+2. Build a point map of patients colored by SmokingStatus
+3. Create a density heat map of patient locations
+4. Make faceted maps showing patient distribution by Gender
+
+**Bonus Challenge:**
+
+Create an interactive leaflet map with popups showing patient details (ID, BP, BMI, Treatment).
+
+## Summary
+
+::: {style="font-size: 0.9em;"}
+**What You've Learned:**
+
+::: {.incremental}
+1. **Choropleth maps** show values across regions using color
+2. **Point/bubble maps** display individual locations and values
+3. **Heat maps** reveal density and concentration patterns
+4. **Faceted maps** enable categorical comparisons
+5. **Interactive maps** enhance exploration
+
+**Key Principle:**
+
+> Geographic visualization reveals spatial patterns that tables and charts cannot show
+:::
+:::
+
+## Next Steps {.center}
+
+**You've completed Intermediate Level!**
+
+**Next:** Advanced Level
+
+- Categorical Advanced (specialized plots)
+- Continuous Advanced (complex distributions)
+- Time Series Advanced (forecasting, decomposition)
+- And more!
+
+You now have tools to create professional, publication-quality visualizations! 🎉

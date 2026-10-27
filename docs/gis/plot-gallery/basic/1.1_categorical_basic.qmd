@@ -1,0 +1,480 @@
+---
+title: "Categorical Plots - BASIC"
+subtitle: "Visualizing Categories, Groups, and Labels"
+format:
+  revealjs:
+    theme: serif
+    css: ../../assets/slide_deck.css
+    include-after-body: footer.html
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    code-fold: true
+    chalkboard: true
+    preview-links: true
+    center: true
+    zoom: true
+---
+
+# Categorical Data {.center}
+
+## What is Categorical Data?
+
+::: {.columns}
+::: {.column width="50%"}
+**Definition:**
+
+Data that represents **categories**, **groups**, or **labels**
+
+- Finite set of discrete values
+- No inherent numerical order (usually)
+- Qualitative rather than quantitative
+:::
+
+::: {.column width="50%"}
+**Examples in Our Dataset:**
+
+- Treatment Group (Control, Intervention)
+- Gender (Male, Female, Other)
+- Region (North, South, East, West)
+- Smoking Status
+- Alcohol Use
+- Exercise Frequency
+- Chronic Disease
+:::
+:::
+
+## Analytical Goals for Categorical Data
+
+::: {style="font-size: 0.9em;"}
+**What questions can we answer?**
+
+::: {.incremental}
+- 🟢 **Ranking** - Which category is most/least common?
+- 🟡 **Distribution** - How are observations spread across categories?
+- 🔴 **Part of Whole** - What proportion does each category represent?
+:::
+
+**Charts we'll learn:**
+
+1. Bar Chart (Vertical & Horizontal)
+2. Pie Chart
+3. Donut Chart
+4. Stacked Bar Chart
+:::
+
+## Setup: Load Libraries and Data
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-3|5-6|8-10|12-15"
+
+# Load required libraries
+library(ggplot2)    # For creating plots
+library(dplyr)      # For data manipulation
+
+# Load the dataset
+data <- readxl::read_excel("PublicHealth_BP_Dataset.xlsx")
+
+# Handle missing data: filter to complete cases for ExerciseFreq
+data_clean <- data %>%
+  filter(!is.na(ExerciseFreq))  # Remove rows with missing exercise frequency
+
+# Preview the data
+head(data_clean %>% 
+  select(PatientID, TreatmentGroup, Gender, Region, SmokingStatus))
+```
+
+## Setup: Load Libraries and Data {.smaller}
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(ggplot2)
+library(dplyr)
+library(readxl)
+
+data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+data_clean <- data %>% filter(!is.na(ExerciseFreq))
+
+head(data_clean %>% select(PatientID, TreatmentGroup, Gender, Region, SmokingStatus), 10)
+```
+
+---
+
+# Bar Chart - Vertical
+
+## Bar Chart (Vertical) - Code
+
+🟢 **Goal:** Ranking / Distribution
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-2|3|4|5|6|7-9"
+
+# Create vertical bar chart showing patient count by region
+ggplot(data_clean, aes(x = Region)) +
+  geom_bar(fill = "steelblue", alpha = 0.8) +  # Add bars with color
+  labs(title = "Patient Distribution by Region",
+       x = "Region", y = "Count of Patients") +  # Add labels
+  theme_minimal(base_family = "serif") +  # Apply serif font theme
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+```
+
+::: {.notes}
+- Line 1-2: Set up plot with Region on x-axis, counts automatically calculated
+- Line 3: Add bar geometry with steel blue fill and transparency
+- Line 4-5: Add descriptive title and axis labels
+- Line 6: Apply minimal theme with serif font for professional look
+- Line 7-9: Customize title and axis text sizes
+:::
+
+## Bar Chart (Vertical) - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(data_clean, aes(x = Region)) +
+  geom_bar(fill = "steelblue", alpha = 0.8) +
+  labs(title = "Patient Distribution by Region",
+       x = "Region", y = "Count of Patients") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+```
+
+---
+
+# Bar Chart - Horizontal (Ordered)
+
+## Horizontal Bar Chart - Code
+
+🟢 **Goal:** Ranking (ordered by value)
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-3|4|5-6|7|8-10"
+
+# Create horizontal bar chart with categories ordered by count
+smoking_counts <- data_clean %>%
+  count(SmokingStatus) %>%  # Count observations per smoking status
+  arrange(n)  # Arrange from smallest to largest
+
+ggplot(smoking_counts, aes(x = n, y = reorder(SmokingStatus, n))) +
+  geom_col(fill = "darkgreen", alpha = 0.7) +  # Use geom_col for pre-counted data
+  labs(title = "Patient Count by Smoking Status (Ranked)",
+       x = "Number of Patients", y = "Smoking Status") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+```
+
+::: {.notes}
+- Lines 1-3: Count patients per smoking status category
+- Line 4: Sort ascending so chart displays with largest at top
+- Line 5: reorder() arranges y-axis by count value
+- Line 6: geom_col() used when you have pre-calculated counts
+:::
+
+## Horizontal Bar Chart - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+smoking_counts <- data_clean %>%
+  count(SmokingStatus) %>%
+  arrange(n)
+
+ggplot(smoking_counts, aes(x = n, y = reorder(SmokingStatus, n))) +
+  geom_col(fill = "darkgreen", alpha = 0.7) +
+  labs(title = "Patient Count by Smoking Status (Ranked)",
+       x = "Number of Patients", y = "Smoking Status") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+```
+
+---
+
+# Interpreting Bar Charts
+
+## How to Read Bar Charts
+
+**Using the previous plot as example:**
+
+::: {.incremental style="font-size: 0.9em;"}
+**OBSERVATION:**
+- Non-smokers: ~115 patients (largest group)
+- Former smokers: ~40 patients (middle)
+- Current smokers: ~35 patients (smallest)
+- Clear hierarchy in the data
+
+**INTERPRETATION:**
+- Majority of study participants are non-smokers (>70%)
+- Combined smokers (current + former) represent ~30%
+- Good representation across smoking statuses for analysis
+
+**IMPLICATIONS:**
+- Sufficient sample in each group for subgroup analysis
+- Non-smoker group may dominate overall results
+- Consider stratified analysis by smoking status
+
+**ACTIONS:**
+- Use smoking status as a key stratification variable
+- Ensure statistical power for smoker subgroups
+- Watch for interaction effects with treatment
+:::
+:::
+
+---
+
+# Pie Chart
+
+## Pie Chart - Code
+
+🔴 **Goal:** Part of a Whole
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-4|6-10|11-13|14-17"
+
+# Calculate percentages for treatment groups
+treatment_summary <- data_clean %>%
+  count(TreatmentGroup) %>%
+  mutate(percentage = n / sum(n) * 100)  # Calculate percentages
+
+# Create pie chart using coord_polar transformation
+ggplot(treatment_summary, aes(x = "", y = n, fill = TreatmentGroup)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +  # Create stacked bar
+  coord_polar("y", start = 0) +  # Transform to polar coordinates (pie)
+  scale_fill_manual(values = c("Control" = "#E74C3C", "Intervention" = "#3498DB")) +
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5),
+            family = "serif", size = 5) +  # Add percentage labels
+  labs(title = "Treatment Group Distribution",
+       fill = "Group") +
+  theme_void(base_family = "serif") +  # Remove axes for clean pie
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"))
+```
+
+::: {.notes}
+⚠️ **Warning:** Use pie charts only for 2-5 categories!
+:::
+
+## Pie Chart - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 6
+
+treatment_summary <- data_clean %>%
+  count(TreatmentGroup) %>%
+  mutate(percentage = n / sum(n) * 100)
+
+ggplot(treatment_summary, aes(x = "", y = n, fill = TreatmentGroup)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y", start = 0) +
+  scale_fill_manual(values = c("Control" = "#E74C3C", "Intervention" = "#3498DB")) +
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5),
+            family = "serif", size = 5, fontface = "bold") +
+  labs(title = "Treatment Group Distribution",
+       fill = "Group") +
+  theme_void(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        legend.text = element_text(size = 11))
+```
+
+---
+
+# Donut Chart
+
+## Donut Chart - Code
+
+🔴 **Goal:** Part of a Whole (modern alternative to pie)
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-4|6-10|11-13|14-16"
+
+# Calculate percentages for gender distribution
+gender_summary <- data_clean %>%
+  count(Gender) %>%
+  mutate(percentage = n / sum(n) * 100)
+
+# Create donut chart (pie with hole in center)
+ggplot(gender_summary, aes(x = 2, y = n, fill = Gender)) +  # x=2 creates the hole
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y", start = 0) +
+  xlim(0.5, 2.5) +  # Creates the "donut hole" effect
+  scale_fill_brewer(palette = "Set2") +  # Use professional color palette
+  geom_text(aes(label = paste0(Gender, "\n", round(percentage, 1), "%")),
+            position = position_stack(vjust = 0.5),
+            family = "serif", size = 4) +
+  labs(title = "Patient Gender Distribution") +
+  theme_void(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        legend.position = "right")
+```
+
+## Donut Chart - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 6
+
+gender_summary <- data_clean %>%
+  count(Gender) %>%
+  mutate(percentage = n / sum(n) * 100)
+
+ggplot(gender_summary, aes(x = 2, y = n, fill = Gender)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y", start = 0) +
+  xlim(0.5, 2.5) +
+  scale_fill_brewer(palette = "Set2") +
+  geom_text(aes(label = paste0(Gender, "\n", round(percentage, 1), "%")),
+            position = position_stack(vjust = 0.5),
+            family = "serif", size = 4.5, fontface = "bold") +
+  labs(title = "Patient Gender Distribution") +
+  theme_void(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        legend.text = element_text(size = 11),
+        legend.title = element_text(size = 12, face = "bold"))
+```
+
+---
+
+# Stacked Bar Chart
+
+## Stacked Bar Chart - Code
+
+🔴 **Goal:** Part of a Whole + Comparison across groups
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-2|4-8|9-11|12-15"
+
+# Create stacked bar showing smoking status by region
+ggplot(data_clean, aes(x = Region, fill = SmokingStatus)) +
+  geom_bar(position = "stack", alpha = 0.8) +  # Stack bars on top of each other
+  scale_fill_manual(values = c("Current smoker" = "#E74C3C",
+                                "Former smoker" = "#F39C12",
+                                "Non-smoker" = "#27AE60"),
+                    name = "Smoking Status") +  # Custom colors
+  labs(title = "Smoking Status Distribution by Region",
+       x = "Region",
+       y = "Number of Patients") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        legend.position = "right")
+```
+
+::: {.notes}
+Stacked bars show both total count AND composition within each category
+:::
+
+## Stacked Bar Chart - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(data_clean, aes(x = Region, fill = SmokingStatus)) +
+  geom_bar(position = "stack", alpha = 0.8) +
+  scale_fill_manual(values = c("Current smoker" = "#E74C3C",
+                                "Former smoker" = "#F39C12",
+                                "Non-smoker" = "#27AE60"),
+                    name = "Smoking Status") +
+  labs(title = "Smoking Status Distribution by Region",
+       x = "Region",
+       y = "Number of Patients") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        legend.title = element_text(size = 11, face = "bold"),
+        legend.text = element_text(size = 10))
+```
+
+---
+
+# Quick Reference
+
+## Categorical Plots - Summary
+
+| Chart Type | Goal | When to Use | Code Complexity |
+|------------|------|-------------|-----------------|
+| **Vertical Bar** | 🟢 Ranking / 🟡 Distribution | Few categories (3-7) | Simple (3-5 lines) |
+| **Horizontal Bar** | 🟢 Ranking (ordered) | Long category names, many categories | Simple (5-7 lines) |
+| **Pie Chart** | 🔴 Part of Whole | **Only 2-5 categories!** | Medium (8-10 lines) |
+| **Donut Chart** | 🔴 Part of Whole | Modern alternative to pie | Medium (8-10 lines) |
+| **Stacked Bar** | 🔴 Part + 🟢 Comparison | Composition across groups | Medium (8-12 lines) |
+
+## Key Takeaways
+
+::: {style="font-size: 0.9em;"}
+::: {.incremental}
+**Remember:**
+
+1. **Bar charts are versatile** - use for most categorical data
+2. **Order matters** - arrange by value for rankings
+3. **Avoid pie charts** beyond 5 categories
+4. **Color strategically** - use consistent, meaningful colors
+5. **Handle missing data** - filter or document approach
+
+**Common Mistakes:**
+
+- Using 3D effects (distorts perception)
+- Too many categories (>10)
+- Poor color choices (similar shades)
+- Missing labels or titles
+- Inconsistent formatting
+:::
+:::
+
+## Practice Exercise
+
+**Your Turn:**
+
+Using the healthcare dataset, create a horizontal bar chart showing:
+
+- Variable: `AlcoholUse` (Yes/No)
+- Sort by count
+- Use appropriate colors
+- Add percentage labels
+
+**Bonus:** Create a stacked bar of `AlcoholUse` by `Gender`
+
+## Next Steps {.center}
+
+**You've mastered Categorical - Basic!**
+
+**Next:** Continuous Plots - Basic
+
+Learn to visualize numeric data with:
+- Histograms
+- Density plots
+- Scatter plots
+- Box plots

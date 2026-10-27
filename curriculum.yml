@@ -54,6 +54,13 @@ pages:
   dungeons/world4_assumption_ruins.qmd: {title: "World 4 · Assumption Ruins"}
   dungeons/world5_odds_arena.qmd: {title: "World 5 · Odds Arena"}
   dungeons/world6_reporting_guild.qmd: {title: "World 6 · The Reporting Guild"}
+  gis/spatial_data_sf.qmd: {title: "Spatial Data with sf"}
+  gis/maps_choropleth.qmd: {title: "Maps and Choropleths"}
+  gis/spatial_weights.qmd: {title: "Neighbours and Spatial Weights"}
+  gis/morans_i.qmd: {title: "Global Moran's I"}
+  gis/local_moran_lisa.qmd: {title: "Local Moran's I (LISA)"}
+  gis/other_spatial_tests.qmd: {title: "Geary's C, Getis-Ord, Join Counts, Scan Statistic"}
+  gis/spatial_regression.qmd: {title: "Spatial Regression and Residual Tests"}
   regression-workshop/s1_foundations.qmd: {title: "Session 1 — Foundations"}
   regression-workshop/s2_simple_regression.qmd: {title: "Session 2 — Simple Linear Regression"}
   regression-workshop/s3_multiple_regression.qmd: {title: "Session 3 — Inference & Multiple Regression"}
@@ -266,6 +273,67 @@ profiles:
           - "---"
           - dungeons/roadmap.qmd
           - dungeons/site-design.qmd
+    right:
+      - text: "Reference"
+        icon: book
+        items:
+          - contact.qmd
+          - references.qmd
+          - downloads.qmd
+  gis:
+    title: "GIS and Spatial Statistics"
+    output-dir: docs/gis
+    logo-href: welcome.html
+    # Spatial track: the visualization pages (grammar, galleries, interactive, exporting) plus the spatial-statistics pages in gis/.
+    project-extra:
+      render:
+      - gis/*.qmd
+      resources:
+      - data/gis/*
+      - gis/make_gis_data.R
+    left:
+      - text: "R Foundations"
+        items:
+          - r-foundations/getting-started.qmd
+          - r-foundations/data-wrangling.qmd
+          - r-foundations/merging_dataset.qmd
+      - text: "Data Visualization"
+        items:
+          - data-visualization/ggplot_grammar.qmd
+          - data-visualization/best_practices.qmd
+          - data-visualization/plot_data.qmd
+          - "---"
+          - data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
+          - data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd
+          - data-visualization/gram_ggplot/module_3_colors_scales_themes.qmd
+          - data-visualization/gram_ggplot/module_4_advanced_best_practices.qmd
+      - text: "Plot Gallery"
+        items:
+          - {path: plot-gallery/basic.qmd, text: "Basic Plots"}
+          - {path: plot-gallery/moderate.qmd, text: "Intermediate Plots"}
+          - {path: plot-gallery/advanced.qmd, text: "Advanced Plots"}
+          - plot-gallery/practical_application.qmd
+      - text: "Specialized Plots"
+        items:
+          - specialized/merge_visuals.qmd
+          - specialized/plot_stats.qmd
+          - specialized/interactive.qmd
+      - text: "Exporting & Tools"
+        items:
+          - exporting_tools/exporting_plots.qmd
+          - exporting_tools/plotting_tools.qmd
+          - exporting_tools/debugging_plots.qmd
+          - exporting_tools/advanced_exporting.qmd
+      - text: "GIS & Spatial Statistics"
+        items:
+          - gis/spatial_data_sf.qmd
+          - gis/maps_choropleth.qmd
+          - "---"
+          - gis/spatial_weights.qmd
+          - gis/morans_i.qmd
+          - gis/local_moran_lisa.qmd
+          - gis/other_spatial_tests.qmd
+          - gis/spatial_regression.qmd
     right:
       - text: "Reference"
         icon: book

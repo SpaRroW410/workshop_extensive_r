@@ -1,0 +1,117 @@
+---
+title: "Maps and Choropleths"
+format:
+  html:
+    code-copy: true
+    theme: cosmo
+    toc: true
+    lightbox: auto
+execute:
+  warning: false
+  message: false
+  fig-width: 7
+  fig-height: 5
+---
+
+```{r}
+#| include: false
+source("_setup.R")
+```
+
+A **choropleth** colours each area by a value. It is the most common map in public health and also the easiest to get wrong. This page covers **rates versus counts**, **classification**, colour choice and an interactive version.
+
+## Counts mislead, rates do not
+
+```{r}
+#| fig-width: 10
+#| fig-height: 4.5
+p1 <- ggplot(blocks) + geom_sf(aes(fill = dengue_cases)) + scale_fill_viridis_c(name = "Cases") + labs(title = "Dengue cases (counts)")
+p2 <- ggplot(blocks) + geom_sf(aes(fill = dengue_per_100k)) + scale_fill_viridis_c(name = "per 100,000", option = "magma", direction = -1) + labs(title = "Dengue per 100,000 (rate)")
+patchwork::wrap_plots(p1, p2)
+```
+
+Counts follow **population size**; a populous block looks bad even when its risk is average. Map **rates** (or standardised ratios) for risk, counts for workload.
+
+```{r}
+blocks |> st_drop_geometry() |>
+  summarise(r_cases_pop = cor(dengue_cases, population), r_rate_pop = cor(dengue_per_100k, population)) |> round(2)
+```
+
+## Classification changes the story
+
+Continuous colour hides nothing but is hard to read; **classes** are easier but are a choice. Three common schemes (package `classInt`):
+
+```{r}
+#| fig-width: 10
+#| fig-height: 4
+library(classInt)
+cls <- function(x, style) cut(x, classIntervals(x, 5, style = style)$brks, include.lowest = TRUE)
+long <- bind_rows(
+  mutate(blocks, scheme = "Equal interval", cls = cls(dengue_per_100k, "equal")),
+  mutate(blocks, scheme = "Quantile (equal counts)", cls = cls(dengue_per_100k, "quantile")),
+  mutate(blocks, scheme = "Natural breaks (Jenks)", cls = cls(dengue_per_100k, "jenks")))
+ggplot(long) + geom_sf(aes(fill = cls), colour = "white", linewidth = 0.1) + facet_wrap(~ scheme) +
+  scale_fill_brewer(palette = "YlOrRd", name = "per 100,000") + theme(legend.position = "bottom", axis.text = element_blank())
+```
+
+-   **Equal interval:** honest about the scale, but a skewed variable puts most areas in one class.
+-   **Quantile:** every class has the same number of areas, so there is always a "worst 20%" even if all are similar.
+-   **Natural breaks:** groups similar values; breaks depend on the data, so maps are hard to compare.
+
+State the scheme and the breaks in the caption. For comparing maps, use **the same fixed breaks**.
+
+## Colour
+
+-   Use a **sequential** palette (light to dark) for rates; a **diverging** palette only when there is a meaningful midpoint (e.g. ratio to the district average = 1).
+-   Avoid rainbow palettes; check that the map reads in grey-scale and for colour-blind viewers (`viridis` is safe).
+
+```{r}
+blocks$rr <- blocks$dengue_per_100k / (sum(blocks$dengue_cases) / sum(blocks$population) * 1e5)
+ggplot(blocks) + geom_sf(aes(fill = rr)) +
+  scale_fill_gradient2(low = "#2166ac", mid = "white", high = "#b2182b", midpoint = 1, name = "Rate ratio\nvs district") +
+  labs(title = "Diverging scale centred on the district rate")
+```
+
+## Layers, labels and the finishing touches
+
+```{r}
+fac <- read_csv("../data/gis/facilities.csv", show_col_types = FALSE) |> st_as_sf(coords = c("easting_m", "northing_m"), crs = 32644) |> st_transform(4326)
+ggplot(blocks) + geom_sf(aes(fill = dengue_per_100k), colour = "white", linewidth = 0.15) +
+  geom_sf(data = fac, aes(shape = type), size = 2) +
+  scale_fill_distiller(palette = "Oranges", direction = 1, name = "Dengue per\n100,000") +
+  labs(title = "Dengue incidence and health facilities", subtitle = "Synthetic district, 79 blocks", shape = "Facility") +
+  theme(axis.text = element_blank(), panel.grid = element_blank())
+```
+
+Good maps carry a **title, a legend with units, the data source, and a north arrow / scale bar when the area matters** (`ggspatial::annotation_scale()` and `annotation_north_arrow()`).
+
+## Interactive map
+
+```{r}
+library(leaflet)
+pal <- colorNumeric("YlOrRd", blocks$dengue_per_100k)
+leaflet(blocks) |> addProviderTiles("CartoDB.Positron") |>
+  addPolygons(fillColor = ~pal(dengue_per_100k), fillOpacity = 0.8, weight = 1, color = "white",
+              label = ~paste0(block_name, ": ", dengue_per_100k, " per 100,000"),
+              highlightOptions = highlightOptions(weight = 3, color = "black", bringToFront = TRUE)) |>
+  addLegend(pal = pal, values = ~dengue_per_100k, title = "Dengue per 100,000")
+```
+
+::: callout-note
+The synthetic district has made-up positions, so the base map shows empty countryside. With real boundaries the tiles give context.
+:::
+
+## Saving
+
+```{r}
+#| eval: false
+ggsave("dengue_map.png", width = 7, height = 6, dpi = 300)             # for papers
+htmlwidgets::saveWidget(map, "dengue_map.html", selfcontained = TRUE)   # for the web
+```
+
+## Take-home
+
+-   **Map rates, not counts**, unless you mean workload.
+-   **Classification is a choice**: report it, and keep breaks fixed when comparing maps.
+-   Use sequential colour for rates and diverging colour only around a meaningful midpoint.
+-   A map can look clustered by eye; to test it, go to **[Neighbours and Spatial Weights](spatial_weights.qmd)** and **[Global Moran's I](morans_i.qmd)**.

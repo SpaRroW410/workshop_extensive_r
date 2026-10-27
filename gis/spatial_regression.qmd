@@ -1,0 +1,110 @@
+---
+title: "Spatial Regression and Residual Tests"
+format:
+  html:
+    code-copy: true
+    theme: cosmo
+    toc: true
+    lightbox: auto
+execute:
+  warning: false
+  message: false
+  fig-width: 7
+  fig-height: 5
+---
+
+```{r}
+#| include: false
+source("_setup.R")
+```
+
+Ordinary regression assumes the **residuals are independent**. With areas, they usually are not: unexplained risk is shared between neighbours. This breaks standard errors, and the usual diagnostic is **Moran's I on the residuals**. This page runs the whole workflow.
+
+## 1. Fit the ordinary model
+
+```{r}
+ols <- lm(dengue_per_100k ~ poverty_index + literacy_pct, data = blocks)
+summary(ols)$coefficients |> round(3)
+```
+
+## 2. Test the residuals for spatial autocorrelation
+
+```{r}
+lm.morantest(ols, lw, zero.policy = TRUE)
+```
+
+A significant, positive Moran's I of the residuals means the model **leaves spatial structure unexplained**: the independence assumption fails, and standard errors are probably too small.
+
+```{r}
+blocks$res_ols <- residuals(ols)
+ggplot(blocks) + geom_sf(aes(fill = res_ols)) +
+  scale_fill_gradient2(low = "#2166ac", mid = "white", high = "#b2182b", name = "Residual") + labs(title = "OLS residuals: neighbouring blocks share the same sign")
+```
+
+## 3. Which spatial model? Lagrange multiplier tests
+
+Two common spatial structures:
+
+| Model | Idea | Equation (sketch) |
+|---|---|---|
+| **Spatial lag (SAR)** | my outcome depends on my **neighbours' outcomes** (spillover, contagion) | $y = \rho W y + X\beta + \varepsilon$ |
+| **Spatial error (SEM)** | **unmeasured shared factors** make neighbouring errors alike | $y = X\beta + u,\; u = \lambda W u + \varepsilon$ |
+
+The **LM tests** and their **robust** versions help choose:
+
+```{r}
+lm.RStests(ols, lw, test = c("RSerr", "RSlag", "adjRSerr", "adjRSlag"), zero.policy = TRUE)
+```
+
+Rule of thumb: if both `RSerr` and `RSlag` are significant, prefer the model whose **robust** test (`adjRSerr` or `adjRSlag`) is larger and significant. If only one is, use that. Use theory as well: contagion points to lag, omitted shared exposures to error.
+
+## 4. Fit the spatial models
+
+```{r}
+library(spatialreg)
+sem <- errorsarlm(dengue_per_100k ~ poverty_index + literacy_pct, data = blocks, listw = lw, zero.policy = TRUE)
+sar <- lagsarlm(dengue_per_100k ~ poverty_index + literacy_pct, data = blocks, listw = lw, zero.policy = TRUE)
+summary(sem)$Coef |> round(3)
+c(lambda = sem$lambda, rho = sar$rho) |> round(3)
+```
+
+`lambda` (error model) and `rho` (lag model) measure the spatial dependence; their **likelihood-ratio** tests (in the model `summary()`) say whether it is needed.
+
+```{r}
+tibble(model = c("OLS", "Spatial error", "Spatial lag"), AIC = c(AIC(ols), AIC(sem), AIC(sar))) |> mutate(AIC = round(AIC, 1))
+```
+
+The lower the AIC the better; compare them on the **same data**.
+
+## 5. Check the residuals again
+
+```{r}
+moran.test(residuals(sem), lw, zero.policy = TRUE)$estimate[1] |> round(3)
+moran.test(residuals(ols), lw, zero.policy = TRUE)$estimate[1] |> round(3)
+```
+
+If the residual Moran's I has dropped close to its expectation (about 0), the model has absorbed the spatial structure.
+
+## 6. Interpreting coefficients: a warning
+
+-   In the **error model** the coefficients keep the OLS meaning (change in rate per unit of the covariate), but with **corrected standard errors**.
+-   In the **lag model** a change in a block's covariate also changes **neighbours' outcomes**, which feed back. The coefficient is **not** the total effect; use **impacts** (direct, indirect and total):
+
+```{r}
+set.seed(6)
+imp <- impacts(sar, listw = lw, R = 199)
+summary(imp, zstats = TRUE, short = TRUE)
+```
+
+## Other routes
+
+-   **Add covariates** that explain the clustering (poverty here may not be the only driver); if the residual autocorrelation vanishes you may not need a spatial model.
+-   **Mixed models with a spatial random effect** (CAR/BYM in `INLA` or `brms`) are the standard for small-area disease mapping with count data and different populations.
+-   **Geographically weighted regression** lets coefficients vary over space.
+
+## Take-home
+
+-   **Always test the residuals of a regression on areas**, with `lm.morantest()`.
+-   **LM tests** (and their robust versions) suggest lag or error; theory should agree.
+-   Report the spatial parameter (`rho` or `lambda`), compare AIC with OLS, re-check the residuals, and use **impacts** for the lag model.
+-   For counts and unequal populations, look at Poisson models with spatial random effects.

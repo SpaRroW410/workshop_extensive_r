@@ -1,0 +1,134 @@
+---
+title: "Geary's C, Getis-Ord, Join Counts and the Scan Statistic"
+format:
+  html:
+    code-copy: true
+    theme: cosmo
+    toc: true
+    lightbox: auto
+execute:
+  warning: false
+  message: false
+  fig-width: 7
+  fig-height: 5
+---
+
+```{r}
+#| include: false
+source("_setup.R")
+```
+
+Moran's I is the workhorse, but it is one of several tools. This page covers the others you will meet in papers, **when each is the right one**, and how to run them on the same synthetic district.
+
+| Test | Question | Variable | Scope |
+|---|---|---|---|
+| **Moran's I** | Are similar values neighbours? | continuous | global |
+| **Geary's C** | Are *differences* between neighbours small? | continuous | global |
+| **Getis-Ord General G** | Do **high** or **low** values cluster? | continuous, positive | global |
+| **Join counts** | Do same-category areas touch? | binary / categorical | global |
+| **Getis-Ord Gi\*** | Where are the hot and cold spots? | continuous, positive | local |
+| **Scan statistic** | Is there a circular cluster with more cases than expected? | counts + population | local, finds the cluster |
+
+## Geary's C
+
+Moran's I compares each area with the **mean**; **Geary's C** compares neighbouring **values directly** (squared differences), so it is more sensitive to **local** differences.
+
+-   **C ≈ 1:** no spatial autocorrelation.
+-   **C < 1:** positive autocorrelation (neighbours are similar).
+-   **C > 1:** negative autocorrelation.
+
+Note the direction is **opposite** to Moran's I. The two usually agree; when they disagree, look at local patterns.
+
+```{r}
+geary.test(blocks$dengue_per_100k, lw, zero.policy = TRUE)
+```
+
+## Getis-Ord General G: do high values or low values cluster?
+
+Moran's I cannot tell **hot-spot clustering from cold-spot clustering**: both give positive I. The **General G** can, because it sums the products of values in neighbouring pairs. Its values must be **positive**.
+
+```{r}
+lw_b <- nb2listw(nb, style = "B", zero.policy = TRUE)       # G uses binary weights
+globalG.test(blocks$dengue_per_100k, lw_b, zero.policy = TRUE)
+```
+
+If G is **above its expectation** with a small p-value, high values cluster together (hot spots dominate). **Below** its expectation: low values cluster (cold spots).
+
+## Join counts: binary data
+
+For a yes/no variable ("high-burden block"), count the **joins** (shared borders) by type: High-High, Not-Not, and High-Not. If High areas touch each other more than expected, the pattern is clustered.
+
+```{r}
+joincount.test(blocks$high_burden, lw_b, zero.policy = TRUE)
+```
+
+The output has one test per category. "High" **joins observed above expected** (positive z) means high-burden blocks are neighbours more often than chance. Use it when the variable is truly categorical, or after you have dichotomised a rate, but remember that cutting a continuous variable loses information.
+
+## Getis-Ord Gi\*: hot and cold spots
+
+The local version of G gives each area a **z-score** from the sum of **its own value and its neighbours'** (the `*` means the area itself is included).
+
+```{r}
+nb_self <- include.self(nb)                               # the * : include the area itself
+lw_self <- nb2listw(nb_self, style = "B", zero.policy = TRUE)
+blocks$gi <- as.numeric(localG(blocks$dengue_per_100k, lw_self, zero.policy = TRUE))
+blocks$gi_class <- cut(blocks$gi, c(-Inf, -2.58, -1.96, -1.65, 1.65, 1.96, 2.58, Inf),
+                       labels = c("Cold 99%", "Cold 95%", "Cold 90%", "Not significant", "Hot 90%", "Hot 95%", "Hot 99%"))
+table(blocks$gi_class)
+```
+
+```{r}
+ggplot(blocks) + geom_sf(aes(fill = gi_class), colour = "white", linewidth = 0.2) +
+  scale_fill_manual(values = c("Cold 99%" = "#2166ac", "Cold 95%" = "#67a9cf", "Cold 90%" = "#d1e5f0", "Not significant" = "grey92",
+                               "Hot 90%" = "#fddbc7", "Hot 95%" = "#ef8a62", "Hot 99%" = "#b2182b"), drop = FALSE, name = NULL) +
+  labs(title = "Getis-Ord Gi* hot and cold spots", subtitle = "z-score bands (|z| > 1.65, 1.96, 2.58)") + theme(legend.position = "bottom")
+```
+
+::: callout-note
+**Gi\* and LISA ask different questions.** LISA (local Moran) finds areas **similar** to their neighbours, hot *or* cold, plus outliers. Gi\* finds where **high** (or low) **sums** concentrate, so it separates hot from cold directly but does not flag outliers. Compare the two maps; as with LISA, you ran many tests, so treat bands with the same caution (consider an FDR adjustment).
+:::
+
+## The spatial scan statistic
+
+Kulldorff's **scan statistic** (the method behind SaTScan) moves **circles of many sizes** over the map and asks, for each, whether it contains **more cases than expected from the population**. It reports the **most likely cluster** and its p-value (by Monte Carlo), and any secondary clusters. It is the standard tool for **disease cluster detection** because it uses **counts and population** directly (Poisson model), so it handles different populations without first computing rates.
+
+```{r}
+library(smerc)
+cen_km <- st_coordinates(st_centroid(st_transform(blocks, 32644))) / 1000     # kilometres
+set.seed(5)
+sc <- scan.test(coords = cen_km, cases = blocks$dengue_cases, pop = blocks$population, nsim = 499, alpha = 0.05)
+summary(sc)
+```
+
+```{r}
+cl <- sc$clusters[[1]]
+blocks$scan <- ifelse(seq_len(nrow(blocks)) %in% cl$locids, "Most likely cluster", "Other")
+ggplot(blocks) + geom_sf(aes(fill = scan), colour = "white", linewidth = 0.2) +
+  scale_fill_manual(values = c("Most likely cluster" = "#d7191c", "Other" = "grey90"), name = NULL) +
+  labs(title = "Most likely cluster (Kulldorff scan, Poisson model)")
+```
+
+Read the output as: the **blocks in the cluster**, the **observed and expected cases**, the **relative risk** inside versus outside, and the **p-value**. Choose the **maximum circle size** (default 50% of the population) deliberately; a bigger window finds larger, more diffuse clusters.
+
+## Which test should I use?
+
+```{mermaid}
+flowchart TD
+  A[Spatial pattern question] --> B{Variable type}
+  B -->|Continuous rate or measurement| C{Question}
+  B -->|Yes/no or categories| J[Join counts]
+  B -->|Case counts and population| S[Scan statistic]
+  C -->|Is there clustering at all?| D[Moran's I, with Geary's C as check]
+  C -->|Do high or low values cluster?| G[General G]
+  C -->|Where are the clusters?| E{Interest}
+  E -->|Clusters and outliers| L[Local Moran, LISA]
+  E -->|Hot and cold spots| H[Getis-Ord Gi*]
+```
+
+## Take-home
+
+-   **Geary's C** (1 = none, below 1 = clustering) is a global check that reacts to local differences.
+-   **General G** separates **hot-spot** from **cold-spot** clustering; Moran's I cannot.
+-   **Join counts** serve binary variables; **Gi\*** gives hot and cold spots; the **scan statistic** finds the **most likely cluster** from counts and population.
+-   Whatever the test, state the **weights**, the **variable** and any **multiple-testing** handling.
+-   Next: **[Spatial Regression and Residual Tests](spatial_regression.qmd)**.

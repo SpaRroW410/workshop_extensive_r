@@ -1,0 +1,468 @@
+---
+title: "Category vs. Continuous - BASIC"
+subtitle: "Comparing Numeric Data Across Groups"
+format:
+  revealjs:
+    theme: serif
+    css: ../../assets/slide_deck.css
+    include-after-body: footer.html
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    code-fold: true
+    chalkboard: true
+    preview-links: true
+    center: true
+    zoom: true
+---
+
+# Category vs. Continuous {.center}
+
+## What is Category vs. Continuous Data?
+
+::: {.columns}
+::: {.column width="50%"}
+**Definition:**
+
+Combining **categorical variables** (groups) with **continuous variables** (numeric measurements)
+
+- Compare numeric values across categories
+- Show distributions within groups
+- Analyze differences between segments
+:::
+
+::: {.column width="50%"}
+**Examples in Our Dataset:**
+
+- BMI by Gender
+- Blood Pressure by Treatment Group
+- Cholesterol by Region
+- Age by Smoking Status
+- Blood Sugar by Exercise Frequency
+:::
+:::
+
+## Analytical Goals
+
+::: {style="font-size: 0.9em;"}
+**What questions can we answer?**
+
+::: {.incremental}
+- 🟡 **Distribution** - How do values spread within each category?
+- 🟢 **Ranking** - Which group has highest/lowest values?
+- 🔴 **Part of Whole** - How do groups contribute to total?
+- ⚫ **Correlation** - Do patterns differ across groups?
+:::
+
+**Charts we'll learn:**
+
+1. Box Plot
+2. Grouped Bar Chart
+3. Stacked Bar Chart
+:::
+
+## Setup: Load Data
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-3|5-6|8-11"
+
+# Load required libraries
+library(ggplot2)
+library(dplyr)
+
+# Load the dataset
+data <- readxl::read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+
+# Handle missing data for complete case analysis
+data_clean <- data %>%
+  filter(!is.na(ExerciseFreq), !is.na(ChronicDisease))  # Remove rows with missing values
+```
+
+## Data Preview {.smaller}
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(ggplot2)
+library(dplyr)
+library(readxl)
+
+data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+data_clean <- data %>% filter(!is.na(ExerciseFreq), !is.na(ChronicDisease))
+
+# Show summary by group
+data_clean %>%
+  group_by(TreatmentGroup) %>%
+  summarise(
+    Count = n(),
+    Mean_Age = round(mean(Age), 1),
+    Mean_BMI = round(mean(BMI), 2),
+    Mean_SysBP = round(mean(SysBP_0m), 1)
+  )
+```
+
+---
+
+# Box Plot
+
+## Box Plot - Code
+
+🟡 **Goal:** Compare distributions across groups
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-2|3|4-6|7-9"
+
+# Create box plot comparing BMI by Treatment Group
+ggplot(data_clean, aes(x = TreatmentGroup, y = BMI, fill = TreatmentGroup)) +
+  geom_boxplot(alpha = 0.7, outlier.color = "red", outlier.size = 3) +  # Add box plots
+  scale_fill_manual(values = c("Control" = "#E74C3C", 
+                                "Intervention" = "#3498DB"),
+                    name = "Treatment Group") +  # Custom colors
+  labs(title = "BMI Distribution by Treatment Group",
+       x = "Treatment Group", y = "Body Mass Index (BMI)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        legend.position = "none")  # Hide legend (redundant with x-axis)
+```
+
+::: {.notes}
+Box plot shows: minimum, Q1 (25%), median (50%), Q3 (75%), maximum, and outliers
+:::
+
+## Box Plot - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(data_clean, aes(x = TreatmentGroup, y = BMI, fill = TreatmentGroup)) +
+  geom_boxplot(alpha = 0.7, outlier.color = "red", outlier.size = 3) +
+  scale_fill_manual(values = c("Control" = "#E74C3C", 
+                                "Intervention" = "#3498DB"),
+                    name = "Treatment Group") +
+  labs(title = "BMI Distribution by Treatment Group",
+       x = "Treatment Group", y = "Body Mass Index (BMI)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        legend.position = "none")
+```
+
+---
+
+# Interpreting Box Plots
+
+## How to Read Box Plots
+
+**Using the previous plot:**
+
+::: {.incremental style="font-size: 0.8em;"}
+**Reading the 5-Number Summary:**
+- **Bottom whisker:** Minimum (~12-15)
+- **Bottom of box (Q1):** 25th percentile (~22)
+- **Line in box (Median):** 50th percentile (~25)
+- **Top of box (Q3):** 75th percentile (~28)
+- **Top whisker:** Maximum (~35)
+- **Red dots:** Outliers beyond 1.5 × IQR
+
+**OBSERVATION:**
+- Both groups have similar median BMI (~25)
+- Both groups show symmetric distributions
+- Control group: slightly wider box (more variation)
+- Few outliers in both groups
+- Boxes largely overlap
+
+**INTERPRETATION:**
+- No substantial difference in BMI between treatment groups at baseline
+- Random assignment appears successful (balanced groups)
+- Similar BMI variability in both groups
+- Treatment groups comparable on this key health metric
+
+**IMPLICATIONS:**
+- BMI unlikely to confound treatment effect
+- Groups well-balanced for analysis
+- Any post-treatment BMI differences likely due to treatment, not baseline
+
+**ACTIONS:**
+- Proceed with treatment comparison without BMI adjustment
+- May still include BMI as covariate for precision
+- Monitor for BMI changes during study
+:::
+:::
+
+---
+
+# Box Plot - Multiple Groups
+
+## Box Plot with Multiple Categories - Code
+
+🟡 **Goal:** Compare distributions across many groups
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-2|3-6|7-10|11-14"
+
+# Compare Cholesterol across all regions
+ggplot(data_clean, aes(x = reorder(Region, Cholesterol, FUN = median), 
+                       y = Cholesterol, fill = Region)) +
+  geom_boxplot(alpha = 0.7, outlier.shape = 16, outlier.size = 2) +  # Box plots
+  scale_fill_brewer(palette = "Set2", name = "Region") +  # Use color palette
+  labs(title = "Cholesterol Levels by Region (Ordered by Median)",
+       x = "Region", 
+       y = "Cholesterol (mg/dL)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        legend.position = "none")  # X-axis provides category names
+```
+
+::: {.notes}
+reorder() sorts regions by median cholesterol for easier comparison
+:::
+
+## Box Plot - Multiple Groups Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(data_clean, aes(x = reorder(Region, Cholesterol, FUN = median), 
+                       y = Cholesterol, fill = Region)) +
+  geom_boxplot(alpha = 0.7, outlier.shape = 16, outlier.size = 2) +
+  scale_fill_brewer(palette = "Set2", name = "Region") +
+  labs(title = "Cholesterol Levels by Region (Ordered by Median)",
+       x = "Region", 
+       y = "Cholesterol (mg/dL)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        legend.position = "none")
+```
+
+---
+
+# Grouped Bar Chart
+
+## Grouped Bar Chart - Code
+
+🟢 **Goal:** Compare means across categories and groups
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-5|7-9|10-13|14-16"
+
+# Calculate mean systolic BP by Region and Treatment Group
+bp_summary <- data_clean %>%
+  group_by(Region, TreatmentGroup) %>%
+  summarise(Mean_SysBP = mean(SysBP_0m, na.rm = TRUE),
+            .groups = "drop")  # Calculate group means
+
+# Create grouped bar chart
+ggplot(bp_summary, aes(x = Region, y = Mean_SysBP, fill = TreatmentGroup)) +
+  geom_col(position = "dodge", alpha = 0.8) +  # Bars side-by-side
+  scale_fill_manual(values = c("Control" = "#E74C3C", 
+                                "Intervention" = "#3498DB"),
+                    name = "Treatment Group") +
+  labs(title = "Mean Baseline Systolic BP by Region and Treatment Group",
+       x = "Region", 
+       y = "Mean Systolic BP (mmHg)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 15, face = "bold"),
+        axis.title = element_text(size = 12),
+        legend.position = "right")
+```
+
+## Grouped Bar Chart - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+#| message: false
+
+bp_summary <- data_clean %>%
+  group_by(Region, TreatmentGroup) %>%
+  summarise(Mean_SysBP = mean(SysBP_0m, na.rm = TRUE),
+            .groups = "drop")
+
+ggplot(bp_summary, aes(x = Region, y = Mean_SysBP, fill = TreatmentGroup)) +
+  geom_col(position = "dodge", alpha = 0.8) +
+  scale_fill_manual(values = c("Control" = "#E74C3C", 
+                                "Intervention" = "#3498DB"),
+                    name = "Treatment Group") +
+  labs(title = "Mean Baseline Systolic BP by Region and Treatment Group",
+       x = "Region", 
+       y = "Mean Systolic BP (mmHg)") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 15, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        legend.title = element_text(size = 11, face = "bold"),
+        legend.text = element_text(size = 10))
+```
+
+---
+
+# Stacked Bar Chart
+
+## Stacked Bar Chart - Code
+
+🔴 **Goal:** Part of Whole + Comparison
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-4|6-8|9-13|14-17"
+
+# Count patients by Region and Gender
+region_gender <- data_clean %>%
+  count(Region, Gender) %>%
+  filter(Gender != "Other")  # Remove small category for clarity
+
+# Create stacked bar chart
+ggplot(region_gender, aes(x = Region, y = n, fill = Gender)) +
+  geom_col(position = "stack", alpha = 0.8) +  # Stack bars
+  scale_fill_manual(values = c("Female" = "#E91E63", 
+                                "Male" = "#2196F3"),
+                    name = "Gender") +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5),
+            color = "white", family = "serif", fontface = "bold", size = 4) +  # Add counts
+  labs(title = "Patient Count by Region and Gender",
+       x = "Region", 
+       y = "Number of Patients") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        legend.position = "right")
+```
+
+## Stacked Bar Chart - Plot
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+region_gender <- data_clean %>%
+  count(Region, Gender) %>%
+  filter(Gender != "Other")
+
+ggplot(region_gender, aes(x = Region, y = n, fill = Gender)) +
+  geom_col(position = "stack", alpha = 0.8) +
+  scale_fill_manual(values = c("Female" = "#E91E63", 
+                                "Male" = "#2196F3"),
+                    name = "Gender") +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5),
+            color = "white", family = "serif", fontface = "bold", size = 4) +
+  labs(title = "Patient Count by Region and Gender",
+       x = "Region", 
+       y = "Number of Patients") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        legend.title = element_text(size = 11, face = "bold"),
+        legend.text = element_text(size = 10))
+```
+
+---
+
+# Quick Reference
+
+## Category vs. Continuous - Summary
+
+| Chart Type | Goal | When to Use | Code Complexity |
+|------------|------|-------------|-----------------|
+| **Box Plot** | 🟡 Distribution | Compare distributions across 2-6 groups | Simple (4-6 lines) |
+| **Box Plot (Multiple)** | 🟡 Distribution | Compare many groups, show ranking | Medium (6-8 lines) |
+| **Grouped Bar** | 🟢 Ranking/Comparison | Compare means across categories | Medium (8-12 lines) |
+| **Stacked Bar** | 🔴 Part of Whole | Show composition and totals | Medium (8-12 lines) |
+
+## Understanding Box Plots
+
+::: {.columns style="font-size: 0.85em;"}
+::: {.column width="50%"}
+**The Box:**
+- Bottom edge: Q1 (25th percentile)
+- Middle line: Median (50th percentile)
+- Top edge: Q3 (75th percentile)
+- Box height: IQR (Q3 - Q1)
+
+**The Whiskers:**
+- Extend to 1.5 × IQR
+- Show data range (excluding outliers)
+:::
+
+::: {.column width="50%"}
+**Outliers:**
+- Points beyond whiskers
+- May indicate:
+  - Data entry errors
+  - Natural extreme values
+  - Different population
+
+**Comparing Boxes:**
+- Non-overlapping: likely different
+- Overlapping: may not be different
+- Check median positions
+- Compare IQR widths
+:::
+:::
+
+## Key Takeaways
+
+::: {style="font-size: 0.9em;"}
+::: {.incremental}
+**Remember:**
+
+1. **Box plots show distribution** - not just means
+2. **Order categories** - by median or logically
+3. **Grouped vs. Stacked bars** - different purposes
+4. **Always show units** - in axis labels
+5. **Handle outliers thoughtfully** - investigate but don't automatically remove
+
+**Common Mistakes:**
+
+- Too many categories in one plot (>8)
+- Not ordering categories logically
+- Confusing grouped and stacked bars
+- Ignoring outliers without investigation
+- Comparing means without showing variation
+:::
+:::
+
+## Practice Exercise
+
+**Your Turn:**
+
+1. Create a box plot of `Age` by `SmokingStatus`
+2. Order the smoking statuses by median age
+3. Create a grouped bar chart showing mean `Cholesterol` by `Region` and `Gender`
+4. Add error bars (standard error) to the grouped bar chart
+
+**Bonus:** Create a stacked bar showing `ExerciseFreq` composition by `Region`
+
+## Next Steps {.center}
+
+**You've mastered Category vs. Continuous - Basic!**
+
+**Next:** Time Series - Basic
+
+Learn to visualize data over time with:
+- Line charts
+- Multiple time series
+- Trend analysis
