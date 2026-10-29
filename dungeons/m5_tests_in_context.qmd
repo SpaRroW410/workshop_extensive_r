@@ -1,0 +1,77 @@
+---
+title: "Region 2 · Tests in Context"
+subtitle: "Choosing between tests, checking assumptions, paired data, multiple testing and effect sizes"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-world data-world="m5" data-total="9" data-requires="m4:60"}
+:::
+
+## Briefing
+
+::: {.rq-lesson}
+Read first: [Test Selection Guide](../statistical-analysis/statistical_tests.qmd) and [Data Analysis](../statistical-analysis/data_analysis.qmd). Region 1 asked "which test?"; here the question is "which test, **given this data**, and what do I report?". The file **`bp_followup`** (120 people measured twice) has a download button on the questions that use it.
+:::
+
+```{r}
+fu <- read_csv(c("../data/bp_followup.csv", "data/bp_followup.csv")[file.exists(c("../data/bp_followup.csv", "data/bp_followup.csv"))][1], show_col_types = FALSE)
+t.test(fu$sbp_followup, fu$sbp_baseline, paired = TRUE)           # the same people twice: paired
+c(mean = mean(fu$tg_mg_dl), median = median(fu$tg_mg_dl))        # skewed: rank-based test, median
+p.adjust(c(0.004, 0.02, 0.03, 0.2, 0.6), "bonferroni")          # five tests, adjusted
+```
+
+::: {.rq-lesson}
+**Decisions.** Skewed outcome + small groups: **Wilcoxon / Kruskal-Wallis**. Same people twice: **paired**. Four groups: **one overall test first**, then adjusted pairwise tests. Small expected counts: **Fisher**. Many tests: **adjust** (Bonferroni = divide the level by the number of tests). Always give the **difference with its 95% CI**, not only p.
+:::
+
+## Level 1 · Choosing {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("m5-01", "m5-02", "m5-05"), ITEMS)
+```
+
+## Level 2 · Details {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("m5-03", "m5-04", "m5-06"), ITEMS)
+```
+
+## Level 3 · Run it {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("m5-07", "m5-08"), ITEMS)
+```
+
+## Boss · Review a results paragraph {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render("m5-09", ITEMS)
+```

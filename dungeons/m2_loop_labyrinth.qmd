@@ -1,0 +1,80 @@
+---
+title: "Region 2 · Loop Labyrinth"
+subtitle: "across(), for loops, collecting results and writing small functions"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-world data-world="m2" data-total="9" data-requires="m1:60"}
+:::
+
+## Briefing
+
+::: {.rq-lesson}
+Read first: [Iteration](../r-foundations/iteration.qmd). Copy-pasting the same code for 12 variables is how mistakes get in. Four safer tools: **`across()`** (one step on many columns), a **`for` loop**, **`sapply()` / `map()`** (collect one result per item) and your own **function**.
+:::
+
+```{r}
+ncd |> summarise(across(c(sbp, dbp, bmi), \(x) mean(x, na.rm = TRUE)))
+```
+
+```{r}
+for (v in c("sbp", "dbp")) print(mean(ncd[[v]], na.rm = TRUE))      # ncd[[v]]: the column whose NAME is stored in v
+pct_above <- function(x, cut) mean(x >= cut, na.rm = TRUE) * 100     # a function returns its last expression
+pct_above(ncd$sbp, 140)
+```
+
+::: {.rq-lesson}
+**Pitfalls.** `ncd$v` looks for a column called "v": use `ncd[[v]]`. Forgetting `na.rm = TRUE` makes every result `NA`. Do not grow a vector with `c()` in a loop; use `sapply()` / `map()`. Coding tasks are checked without running R: your own names and either pipe style are fine.
+:::
+
+## Level 1 · Reading loops {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("m2-01", "m2-02", "m2-03"), ITEMS)
+```
+
+## Level 2 · across() and functions {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("m2-04", "m2-05", "m2-06"), ITEMS)
+```
+
+## Level 3 · Write it {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("m2-07", "m2-08"), ITEMS)
+```
+
+## Boss · Iteration myths {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render("m2-09", ITEMS)
+```

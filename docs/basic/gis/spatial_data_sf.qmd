@@ -1,0 +1,132 @@
+---
+title: "Spatial Data with sf"
+format:
+  html:
+    code-copy: true
+    theme: cosmo
+    toc: true
+    lightbox: auto
+execute:
+  warning: false
+  message: false
+  fig-width: 7
+  fig-height: 5
+---
+
+```{r}
+#| include: false
+source("_setup.R")
+```
+
+This page introduces **vector spatial data** in R with the `sf` package, using a **synthetic district of 79 blocks** (`data/gis/district_blocks.geojson`) and 30 health facilities (`data/gis/facilities.csv`). The boundaries and numbers are invented; the district was built so that dengue incidence clusters in space, which the later pages exploit. `gis/make_gis_data.R` regenerates it.
+
+## What is spatial data?
+
+| Type | Example | In R |
+|---|---|---|
+| **Points** | health facility, a case's home | `sf` (POINT) |
+| **Lines** | road, river | `sf` (LINESTRING) |
+| **Polygons** | block, district, catchment area | `sf` (POLYGON) |
+| **Raster** | population grid, satellite image | `terra` / `stars` |
+
+An **`sf` object is a data frame with one extra column, `geometry`**. All the `dplyr` verbs you already know work on it.
+
+## Read and look
+
+```{r}
+blocks <- st_read("../data/gis/district_blocks.geojson", quiet = TRUE)
+class(blocks)
+blocks |> st_drop_geometry() |> head()
+```
+
+```{r}
+st_geometry_type(blocks)[1]
+st_bbox(blocks)
+nrow(blocks)
+```
+
+```{r}
+ggplot(blocks) + geom_sf(fill = "grey95", colour = "grey40") + labs(title = "79 blocks of a synthetic district")
+```
+
+## Coordinate reference systems (CRS)
+
+A CRS says **how numbers become places**. Two families matter:
+
+-   **Geographic** (longitude/latitude, e.g. EPSG:**4326**, WGS 84): units are degrees. Good for storing and web maps, **wrong for distances and areas**.
+-   **Projected** (metres, e.g. a UTM zone, EPSG:**32644** for 78°E to 84°E in the northern hemisphere): good for **area, length, distance and buffers**.
+
+```{r}
+st_crs(blocks)$input            # stored in longitude / latitude
+blocks_utm <- st_transform(blocks, 32644)
+st_crs(blocks_utm)$input
+```
+
+::: callout-warning
+**Always check the CRS before measuring.** `st_area()` on degrees gives meaningless numbers. Transform to a projected CRS first. Two layers can only be combined when they share a CRS.
+:::
+
+```{r}
+tibble(block = blocks_utm$block_id[1:3],
+       area_km2_recorded = blocks_utm$area_km2[1:3],
+       area_km2_computed = round(as.numeric(st_area(blocks_utm))[1:3] / 1e6, 1))
+```
+
+## Points from a table
+
+`facilities.csv` has UTM coordinates in metres. Say which CRS they are in when you convert:
+
+```{r}
+fac <- read_csv("../data/gis/facilities.csv", show_col_types = FALSE) |>
+  st_as_sf(coords = c("easting_m", "northing_m"), crs = 32644)
+fac
+```
+
+## Joining attributes to polygons
+
+A normal data join works, as long as you join **onto** the `sf` object (or `sf` keeps the geometry only on the left side):
+
+```{r}
+extra <- tibble(district = c("North-West", "North-East", "South-West", "South-East"),
+                officer = c("Dr Rao", "Dr Singh", "Dr Das", "Dr Khan"))
+blocks |> left_join(extra, by = "district") |> st_drop_geometry() |> select(block_id, district, officer) |> head(4)
+```
+
+## Spatial operations
+
+```{r}
+# 1. which block is each facility in? (spatial join)
+fac_blk <- st_join(fac, blocks_utm[, c("block_id", "district")])
+count(st_drop_geometry(fac_blk), district)
+
+# 2. facilities per block, including blocks with none
+blocks_utm$n_fac <- lengths(st_intersects(blocks_utm, fac))
+table(blocks_utm$n_fac)
+
+# 3. centroids and distance from every block to its nearest facility (km)
+cen <- st_centroid(blocks_utm)
+blocks_utm$km_to_facility <- apply(st_distance(cen, fac), 1, min) / 1000
+summary(round(blocks_utm$km_to_facility, 1))
+```
+
+```{r}
+ggplot(blocks_utm) + geom_sf(aes(fill = km_to_facility)) + geom_sf(data = fac, size = 1.8, colour = "red") +
+  scale_fill_viridis_c(name = "km to nearest\nfacility", direction = -1) +
+  labs(title = "Distance to the nearest facility (red points)")
+```
+
+## Writing spatial data
+
+```{r}
+#| eval: false
+st_write(blocks_utm, "blocks_utm.gpkg")      # GeoPackage: one file, any CRS, recommended
+st_write(blocks, "blocks.geojson")           # GeoJSON: text, web friendly, longitude/latitude
+st_write(blocks, "blocks.shp")               # Shapefile: still common; 10-character column names!
+```
+
+## Take-home
+
+-   An `sf` object is a data frame plus a `geometry` column; use `st_read()` and `st_write()`.
+-   **Check `st_crs()`** before every analysis; transform to a projected CRS (here EPSG:32644) to measure.
+-   Joins on attributes use `left_join()`; joins on *where things are* use `st_join()` and `st_intersects()`.
+-   Next: **[Maps and Choropleths](maps_choropleth.qmd)**.
