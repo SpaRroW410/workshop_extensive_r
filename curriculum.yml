@@ -82,6 +82,12 @@ pages:
   survival-workshop/s4_cox_regression.qmd: {title: "Session 4 — Cox Regression"}
   survival-workshop/s5_assumptions_reporting.qmd: {title: "Session 5 — Assumptions and Reporting"}
   survival-workshop/cheatsheet.qmd: {title: "Survival Analysis Cheat Sheet"}
+  counts-workshop/s1_counts_rates.qmd: {title: "Session 1 — Counts, Rates and the Poisson Idea"}
+  counts-workshop/s2_poisson_regression.qmd: {title: "Session 2 — Poisson Regression"}
+  counts-workshop/s3_overdispersion.qmd: {title: "Session 3 — Overdispersion"}
+  counts-workshop/s4_zeros_checking.qmd: {title: "Session 4 — Excess Zeros and Model Checking"}
+  counts-workshop/s5_reporting_extensions.qmd: {title: "Session 5 — Reporting and Extensions"}
+  counts-workshop/cheatsheet.qmd: {title: "Counts and Rates Cheat Sheet"}
   regression-workshop/s1_foundations.qmd: {title: "Session 1 — Foundations"}
   regression-workshop/s2_simple_regression.qmd: {title: "Session 2 — Simple Linear Regression"}
   regression-workshop/s3_multiple_regression.qmd: {title: "Session 3 — Inference & Multiple Regression"}
@@ -398,14 +404,18 @@ profiles:
     title: "Data Visualization Workshop — Advanced"
     output-dir: docs/advanced
     logo-href: welcome.html
-    # Advanced Analysis branch (SITE_PLAN 2.6): the survival workshop (A1) lives here.
+    # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1) and counts and rates (A2) live here.
     project-extra:
       render:
       - survival-workshop/*.qmd
+      - counts-workshop/*.qmd
       resources:
       - data/tb_cohort.csv
       - survival-workshop/make_data.R
       - survival-workshop/labs/*.R
+      - data/dengue_wards.csv
+      - counts-workshop/make_data.R
+      - counts-workshop/labs/*.R
     left:
       - text: "R Foundations"
         items:
@@ -455,6 +465,15 @@ profiles:
           - survival-workshop/s5_assumptions_reporting.qmd
           - "---"
           - survival-workshop/cheatsheet.qmd
+      - text: "Counts Workshop"
+        items:
+          - counts-workshop/s1_counts_rates.qmd
+          - counts-workshop/s2_poisson_regression.qmd
+          - counts-workshop/s3_overdispersion.qmd
+          - counts-workshop/s4_zeros_checking.qmd
+          - counts-workshop/s5_reporting_extensions.qmd
+          - "---"
+          - counts-workshop/cheatsheet.qmd
       - text: "Quarto"
         items:
           - quarto_repro_w/reproducible_writing.qmd

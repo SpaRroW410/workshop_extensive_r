@@ -1,0 +1,223 @@
+---
+title: "Session 4 — Excess Zeros and Model Checking"
+subtitle: "Expected zeros · structural zeros · zero-inflated and hurdle models · checking fit · autocorrelation · Lab 4"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 3: overdispersion and the negative binomial
+- Today: **too many zeros**, and **does the model fit?**
+- By the end you can:
+  - compare **observed and expected zeros**
+  - tell **structural** from **sampling** zeros
+  - fit and judge a **zero-inflated** model
+  - check the fit **over time** and for **leftover correlation**
+:::
+
+# Topic 1 — Zeros {background-color="#2C3E50"}
+
+## Are there too many?
+
+```{r}
+m_nb <- MASS::glm.nb(cases ~ fogging + slum + rain_lag1 + month_index + sin(2 * pi * month / 12) + cos(2 * pi * month / 12) + offset(log(population)), data = dg)
+c(observed = round(mean(dg$cases == 0), 3), nb_expected = round(mean(dnbinom(0, mu = fitted(m_nb), size = m_nb$theta)), 3))
+```
+
+::: {.incremental}
+- A good negative binomial **already allows many zeros**: here it expects about **19%** and **20%** are observed, a **small excess**
+- **More zeros than a count model expects** needs an explanation, not automatically a new model
+:::
+
+## Where do the zeros come from?
+
+```{r}
+dg |> group_by(ward) |> summarise(zero_months = sum(cases == 0), mean_cases = round(mean(cases), 1)) |> arrange(desc(zero_months)) |> head(6)
+```
+
+::: {.key}
+A few wards report **zero for half of the months**. That is not "no dengue": it is **weak surveillance**. These are **structural zeros** (the count process is switched off), as opposed to **sampling zeros** (low mean, no case by chance).
+:::
+
+# Topic 2 — Zero-inflated models {background-color="#2C3E50"}
+
+## Two processes
+
+::: {.eq}
+P(Y = 0) = pi + (1 - pi) x P~count~(0)     P(Y = k) = (1 - pi) x P~count~(k)
+:::
+
+::: {.incremental}
+- **Zero-inflated:** with probability **pi** the ward-month is a structural zero; otherwise counts follow Poisson or NB
+- **Hurdle:** a binary part (any case?) and a **zero-truncated** count part
+- Fit with `pscl::zeroinfl(y ~ x | z, dist = "negbin")`: the part after `|` models **pi**
+:::
+
+## Fitting it
+
+```{r}
+m_zinb <- zeroinfl(cases ~ fogging + slum + rain_lag1 + month_index + sin(2 * pi * month / 12) + cos(2 * pi * month / 12) + offset(log(population)) | 1, data = dg, dist = "negbin")
+c(structural_zero_probability = round(plogis(coef(m_zinb, "zero")), 3)); AIC(m_nb, m_zinb)
+```
+
+## Be cautious
+
+::: {.warn}
+- AIC improves, but only modestly here (about 27 points)
+- **First look for a covariate** that explains the zeros (a reporting-quality indicator): the zero part can then use it (`| reporting`)
+- Do not add a mixture just because there are zeros: ask **why**
+- Interpretation: the **count part** gives rate ratios **among at-risk ward-months**
+:::
+
+# Topic 3 — Checking the fit {background-color="#2C3E50"}
+
+## Observed against fitted, over time
+
+```{r}
+#| output-location: slide
+#| fig-height: 4
+dg |> mutate(pred = fitted(m_nb)) |> group_by(date) |> summarise(observed = sum(cases), predicted = sum(pred)) |>
+  pivot_longer(c(observed, predicted)) |> ggplot(aes(date, value, colour = name)) + geom_line(linewidth = 1) + labs(x = NULL, y = "Cases", colour = NULL)
+```
+
+## Leftover correlation
+
+```{r}
+w1 <- dg$ward == levels(dg$ward)[1]
+round(acf(residuals(m_nb, type = "pearson")[w1], plot = FALSE)$acf[1:4], 2)
+```
+
+::: {.incremental}
+- **Autocorrelation** of residuals within a ward: lag 1 is `r round(acf(residuals(m_nb, type = "pearson")[w1], plot = FALSE)$acf[2], 2)`, so consecutive months are **somewhat dependent**
+- Consequence: standard errors **slightly optimistic**; fix with **clustered robust SEs**, random effects, or time-series terms (lagged cases)
+- Also check **residuals by predictor** and **by ward**
+:::
+
+## Model-checking checklist
+
+::: {.good}
+1. **Dispersion** and **zeros**: observed vs expected
+2. **Observed vs predicted** over time
+3. **Autocorrelation** of residuals
+4. **Influential** wards: refit leaving one ward out
+5. **Sensitivity**: Poisson, NB, zero-inflated: do the **rate ratios** agree?
+:::
+
+## 🔧 Switch to R — Lab 4 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `counts-workshop/labs/lab4_zeros.R`
+
+- expected zeros from the NB model; zero months by ward
+- `pscl::zeroinfl()` and AIC
+- observed vs predicted over time; `acf()` of residuals
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s4q1", "A negative binomial model expects 19% zeros and 20% are observed. What should you conclude?",
+         c("Only a small excess, so a zero-inflated model is not clearly needed",
+           "The model has failed completely and its output is of no use",
+           "The data cannot be analysed with a count model of any type",
+           "Every ward has the same chance of recording a zero in a month"), answer = 3,
+         explain = "The negative binomial itself produces many zeros when the mean is small and variance large. A tiny excess does not by itself justify a mixture model.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s4q2", "What is a structural zero?",
+         c("A zero from a process that cannot produce counts, such as non-reporting",
+           "A zero that arises by chance because the mean count is small",
+           "A zero caused by a coding error in the file that should be fixed",
+           "Any month of the series with fewer than five cases in the ward"), answer = 2,
+         explain = "Structural zeros come from units that are not at risk or not observed (here, weak surveillance). Sampling zeros arise by chance in a count process with a small mean.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s4q3", "In a zero-inflated model, the part after the vertical bar models what?",
+         c("The probability of a structural zero (the zero-inflation part)",
+           "The mean of the count process for the ward-months at risk",
+           "The offset, which is the log of the population of the ward",
+           "The dispersion parameter theta of the negative binomial part"), answer = 3,
+         explain = "The right-hand side after | specifies the logistic model for the zero-inflation probability pi.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s4q4", "What is the best first step when a model shows more zeros than expected?",
+         c("Find out why, and look for a covariate that explains them",
+           "Add a zero-inflation term straight away without more thought",
+           "Delete every row that contains a zero count from the data",
+           "Switch to linear regression on the log of the monthly counts"), answer = 4,
+         explain = "Zeros need an explanation (reporting, an at-risk population) before choosing a model. A covariate may remove the excess without a mixture.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s4q5", "Residuals of a ward over successive months have lag-1 autocorrelation 0.13. What does that imply?",
+         c("Months are dependent; standard errors are optimistic",
+           "The model is perfect and no further checks are needed at all",
+           "The ward must be removed from the data before the next fit",
+           "The offset has the wrong sign in the model that was fitted"), answer = 1,
+         explain = "Positive autocorrelation means neighbouring months carry shared information, so the effective sample size is smaller and SEs too small. Robust SEs or time-series terms help.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- Compare **observed and expected zeros** from the fitted model
+- **Structural** zeros need a reason (reporting); not every excess needs a mixture
+- `zeroinfl(y ~ x | z, dist = negbin)`; compare **AIC** and **rate ratios**
+- Check fit **over time**, **autocorrelation** and **influential wards**
+:::
+
+**Next:** Session 5: reporting and extensions

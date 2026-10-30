@@ -263,6 +263,38 @@ ul.task-list li input[type="checkbox"] {
     </ul>
   </li>
   <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-counts-workshop" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Counts Workshop</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-counts-workshop">    
+        <li>
+    <a class="dropdown-item" href="./counts-workshop/s1_counts_rates.html">
+ <span class="dropdown-text">Session 1 — Counts, Rates and the Poisson Idea</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./counts-workshop/s2_poisson_regression.html">
+ <span class="dropdown-text">Session 2 — Poisson Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./counts-workshop/s3_overdispersion.html">
+ <span class="dropdown-text">Session 3 — Overdispersion</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./counts-workshop/s4_zeros_checking.html">
+ <span class="dropdown-text">Session 4 — Excess Zeros and Model Checking</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./counts-workshop/s5_reporting_extensions.html">
+ <span class="dropdown-text">Session 5 — Reporting and Extensions</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./counts-workshop/cheatsheet.html">
+ <span class="dropdown-text">Counts and Rates Cheat Sheet</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-quarto" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Quarto</span>
     </a>
@@ -397,6 +429,7 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <h2 class="anchored" data-anchor-id="what-this-track-covers">📚 What This Track Covers</h2>
 <ul>
 <li>⏳ Survival Analysis Workshop — 5 sessions, 5 labs, quizzes, cheat sheet</li>
+<li>🦟 Counts and Rates Workshop — 5 sessions, 5 labs, quizzes, cheat sheet</li>
 <li>📁 R Foundations &amp; Data Wrangling (+ Applied Examples)</li>
 <li>📊 Best Practices &amp; Plot Matching</li>
 <li>🎨 ggplot2 Modules 1–4 (Complete)</li>
@@ -414,6 +447,7 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <p>Use the navigation bar above to browse all modules. Key starting points:</p>
 <ul>
 <li>⏳ <strong><a href="./survival-workshop/s1_time_to_event.html">Survival Workshop</a></strong> — Slides, labs and quizzes on time-to-event data: Kaplan-Meier, log-rank, Cox (start at Session 1)</li>
+<li>🦟 <strong><a href="./counts-workshop/s1_counts_rates.html">Counts Workshop</a></strong> — Slides, labs and quizzes on counts and rates: Poisson, negative binomial, offsets (start at Session 1)</li>
 <li>📁 <strong><a href="./r-foundations/getting-started.html">R Foundations</a></strong> — R syntax, wrangling, and full NCTOH applied examples</li>
 <li>📊 <strong><a href="./data-visualization/ggplot_grammar.html">Data Visualization</a></strong> — All four ggplot2 modules, advanced and interactive plots</li>
 <li>🧪 <strong><a href="./statistical-analysis/statistical_tests.html">Statistical Analysis</a></strong> — Full ggstatsplot, gtsummary, and deep analysis</li>
@@ -435,6 +469,12 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <li><a href="survival-workshop/labs/lab3_logrank.R">Lab3 Logrank</a></li>
 <li><a href="survival-workshop/labs/lab4_cox.R">Lab4 Cox</a></li>
 <li><a href="survival-workshop/labs/lab5_assumptions.R">Lab5 Assumptions</a></li>
+<li><a href="counts-workshop/make_data.R">Make Data</a></li>
+<li><a href="counts-workshop/labs/lab1_counts.R">Lab1 Counts</a></li>
+<li><a href="counts-workshop/labs/lab2_poisson.R">Lab2 Poisson</a></li>
+<li><a href="counts-workshop/labs/lab3_overdisp.R">Lab3 Overdisp</a></li>
+<li><a href="counts-workshop/labs/lab4_zeros.R">Lab4 Zeros</a></li>
+<li><a href="counts-workshop/labs/lab5_report.R">Lab5 Report</a></li>
 <li><a href="downloads/basic_r_foundations.R">Basic r Foundations</a></li>
 <li><a href="downloads/basic_visualization.R">Basic Visualization</a></li>
 <li><a href="downloads/moderate_visualization.R">Moderate Visualization</a></li>
@@ -447,6 +487,7 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <h3 class="anchored" data-anchor-id="datasets">🗄️ Datasets</h3>
 <ul>
 <li>📊 <a href="data/tb_cohort.csv">Tb Cohort</a> <code>.csv</code></li>
+<li>📊 <a href="data/dengue_wards.csv">Dengue Wards</a> <code>.csv</code></li>
 <li>📊 <a href="downloads/workshop_data.csv">Workshop Data</a> <code>.csv</code></li>
 <li>📗 <a href="downloads/workshop_data.xlsx">Workshop Data</a> <code>.xlsx</code></li>
 <li>🔵 <a href="downloads/workshop_data.rds">Workshop Data</a> <code>.rds</code></li>
