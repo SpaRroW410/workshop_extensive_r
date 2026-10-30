@@ -1,0 +1,205 @@
+---
+title: "Session 3 — Checking Proportional Odds"
+subtitle: "Brant test · cut-point-specific logistic models · partial proportional odds · alternatives · Lab 3"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 2: one odds ratio per predictor
+- Today: **is that single OR legitimate?**
+- By the end you can:
+  - run and read the **Brant test**
+  - **see** a violation with separate binary models
+  - fit a **partial proportional-odds** model
+  - decide what to do
+:::
+
+# Topic 1 — Testing {background-color="#2C3E50"}
+
+## The Brant test
+
+```{r}
+m2 <- MASS::polr(anaemia ~ wealth + education + bmi + anc_visits + parity + age + tribal + residence, data = mat, Hess = TRUE)
+br <- brant(m2); round(br[, "probability"], 3)
+```
+
+## Reading the Brant test
+
+::: {.incremental}
+- **Omnibus** test: do **any** predictors violate the assumption?
+- A p-value **per predictor**: here **tribal group** (p about 0); **wealth** (0.57), education, BMI and the others look fine
+- With many predictors, expect the occasional small p by chance; **look at the effect**, not only at p
+- It **warns** about sparse cells from continuous predictors: ignore the warning if the results are stable
+:::
+
+## See it
+
+```{r}
+cuts <- c("Mild", "Moderate", "Severe")
+or_for <- function(v) sapply(cuts, \(k) exp(coef(glm(I(as.numeric(mat$anaemia) >= which(levels(mat$anaemia) == k)) ~ wealth + tribal, family = binomial, data = mat))[v]))
+rbind(tribal = or_for("tribalYes"), wealth = or_for("wealth")) |> round(2)
+```
+
+::: {.key}
+Each column is a **separate binary logistic model**: "mild or worse", "moderate or worse", "severe". **Wealth's OR is the same in all three** (about 0.6): proportional odds holds. **Tribal's OR jumps to about 3 for severe anaemia only**: it does **not**.
+:::
+
+# Topic 2 — What to do {background-color="#2C3E50"}
+
+## Partial proportional odds
+
+Free **only** the offending predictor (`ordinal::clm` with `nominal =`):
+
+```{r}
+m_po  <- ordinal::clm(anaemia ~ wealth + education + bmi + anc_visits + parity + age + tribal + residence, data = mat)
+m_ppo <- ordinal::clm(anaemia ~ wealth + education + bmi + anc_visits + parity + age + residence, nominal = ~ tribal, data = mat)
+anova(m_po, m_ppo)
+```
+
+## Reading the comparison
+
+::: {.incremental}
+- The likelihood-ratio test is **very small**: freeing tribal improves the fit a lot
+- All other predictors keep **one odds ratio each**
+- **Tribal gets a separate effect at each threshold** (for a worse category the OR is 1 / exp(coefficient): about 1.0, 0.9 and 2.8)
+:::
+
+## Options when the assumption fails
+
+| Option | Use when |
+|---|---|
+| **Partial proportional odds** | one or a few predictors violate it |
+| **Report cut-point-specific ORs** (separate binary models) | simple, transparent |
+| **Multinomial model** | many violations, or the order is doubtful |
+| **Keep the single OR** | mild violation, only a summary needed (say so) |
+| **Merge categories** | a sparse category drives it |
+
+## Do not report one OR blindly
+
+```{r}
+c(single_OR_tribal = round(exp(coef(m_po))[["tribalYes"]], 2))
+```
+
+::: {.warn}
+The single OR of about **1.1** averages "almost no effect on mild and moderate anaemia" with "a large effect on severe anaemia". Reporting it hides the finding that matters clinically.
+:::
+
+## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `ordinal-workshop/labs/lab3_po.R`
+
+- `brant()` omnibus and per predictor
+- binary models at each cut-point
+- `ordinal::clm()` with `nominal =` and a likelihood-ratio test
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q1", "The Brant test gives p < 0.001 for tribal group and p = 0.57 for wealth. What does this mean?",
+         c("Tribal group has no effect while wealth has a very strong effect",
+           "Both predictors violate proportional odds, in different patterns",
+           "Proportional odds fails for tribal group, not for wealth",
+           "The model must be discarded for every one of the predictors in it"), answer = 3,
+         explain = "The test is per predictor: a small p flags a predictor whose odds ratio differs across cut-points. A large p gives no evidence against the assumption for wealth.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q2", "Separate binary models give tribal ORs of 1.1 (mild or worse), 1.0 (moderate or worse) and 3.2 (severe). What does this show?",
+         c("The tribal effect is the same at each cut-point, so the model is right",
+           "The effect varies across cut-points, so the assumption fails",
+           "Severe anaemia was measured incorrectly in the tribal women studied",
+           "The sample of tribal women is too large for the test to be valid"), answer = 2,
+         explain = "Under proportional odds the three ORs would be equal apart from chance. A jump at the highest cut-point is a clear violation.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q3", "What does a partial proportional-odds model do?",
+         c("It drops the problem predictor from the model that is being fitted",
+           "It converts the outcome into a binary variable for every woman",
+           "It frees the problem predictor, keeping one OR for the rest",
+           "It estimates a separate model for each woman in the data"), answer = 3,
+         explain = "In clm, nominal = ~ x frees x only; the other predictors keep proportional effects. This keeps the efficiency of the ordinal model where it is valid.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q4", "A likelihood-ratio test comparing the proportional and the partial model has p < 0.001. What do you conclude?",
+         c("The proportional-odds model fits better than the partial model does",
+           "The two models are identical, so either one may be reported",
+           "The predictor must be removed from both of the models being compared",
+           "Freeing it improves the fit a lot: the assumption fails"), answer = 4,
+         explain = "The proportional model is nested in the partial one; a significant test means the extra flexibility is needed.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q5", "Which is the best way to report a predictor that violates proportional odds?",
+         c("Give its OR at each cut-point and explain the pattern seen",
+           "Report the single OR and stay silent about the violation found",
+           "Report only the p-value from the Brant test, with no estimate",
+           "Delete the predictor from the data so that the model fits again"), answer = 1,
+         explain = "The pattern across cut-points is the finding. A single OR would average over very different effects.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Brant test** per predictor + omnibus; **see** it with binary models at each cut
+- Partial proportional odds with `clm(nominal = ~ x)`
+- Alternatives: **cut-specific ORs**, **multinomial**, merge categories
+- Never report a **single OR** that hides a violation
+:::
+
+**Next:** Session 4: multinomial logistic regression

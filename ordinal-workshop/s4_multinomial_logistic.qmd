@@ -1,0 +1,215 @@
+---
+title: "Session 4 — Multinomial Logistic Regression"
+subtitle: "Reference category · relative risk ratios · tests · predicted probabilities · changing the reference · Lab 4"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Sessions 2-3: ordered outcomes and their assumption
+- Today: **nominal** outcomes, with no ordering: place of delivery
+- By the end you can:
+  - fit `nnet::multinom` and choose a **reference category**
+  - read **relative risk ratios** and test them
+  - get **predicted probabilities**
+:::
+
+# Topic 1 — The model {background-color="#2C3E50"}
+
+## A set of logistic models against a reference
+
+::: {.eq}
+log [ P(Y = j) / P(Y = Home) ] = β~0j~ + β~1j~ x~1~ + …    for j = PHC, Public, Private
+:::
+
+::: {.incremental}
+- **K − 1 equations** (3 for 4 places), each comparing a category with the **reference**
+- **Every predictor has a different coefficient in each equation**
+- exp(β~j~) is a **relative risk ratio** (an odds ratio versus the reference)
+- Fitted jointly by maximum likelihood: the probabilities add to 1
+:::
+
+## Fit it
+
+```{r}
+mat$delivery <- relevel(mat$delivery, ref = "Home")
+mn <- nnet::multinom(delivery ~ wealth + education + anc_visits + residence + tribal, data = mat, trace = FALSE)
+round(exp(coef(mn)[, "wealth"]), 2)
+```
+
+::: {.key}
+Each **wealth quintile** multiplies the odds of delivering in a **private hospital rather than at home** by **`r round(exp(coef(mn)[, "wealth"]), 2)[3]`**, in a **public hospital** by `r round(exp(coef(mn)[, "wealth"]), 2)[2]`, in a **PHC** by `r round(exp(coef(mn)[, "wealth"]), 2)[1]`. Wealth pulls women **away from home, and most strongly towards private care**.
+:::
+
+# Topic 2 — Tests and tables {background-color="#2C3E50"}
+
+## The output has no p-values
+
+```{r}
+s <- summary(mn); z <- s$coefficients / s$standard.errors
+round(2 * pnorm(-abs(z)), 4)[, c("wealth", "anc_visits", "residenceRural")]
+```
+
+Compute **z = coefficient / SE** and the two-sided p-value. For a variable with several coefficients (education has 3 per equation), use a **likelihood-ratio test** of the **whole** variable:
+
+```{r}
+mn0 <- nnet::multinom(delivery ~ wealth + anc_visits + residence + tribal, data = mat, trace = FALSE)
+anova(mn0, mn)
+```
+
+## A table
+
+```{r}
+tbl_regression(mn, exponentiate = TRUE, include = wealth)
+```
+
+# Topic 3 — Using it {background-color="#2C3E50"}
+
+## Predicted probabilities
+
+```{r}
+nd <- data.frame(wealth = c(1, 5), education = factor("Secondary", levels = levels(mat$education)), anc_visits = 4, residence = factor("Urban", levels = c("Urban", "Rural")), tribal = factor("No", levels = c("No", "Yes")))
+rownames(nd) <- c("poorest", "richest"); round(predict(mn, newdata = nd, type = "probs"), 2)
+```
+
+::: {.incremental}
+- The poorest woman delivers mostly in **public hospitals or PHCs** (37% each) and only **4% in private care**
+- The richest: **31% private**, 3% at home
+- The **probabilities** tell the story more clearly than 9 odds ratios
+:::
+
+## The choice of reference
+
+::: {.incremental}
+- It changes **which comparisons** are shown, **not the model**: the fitted probabilities and log-likelihood are **identical**
+- Choose a **large, meaningful** group (here Home) so the comparisons make sense
+- Any other comparison (Private vs Public) = the **difference** of two coefficients; refit with another reference to get its CI
+:::
+
+## Pitfalls
+
+::: {.bad}
+- Reading RRRs as **risk ratios** when the outcome is common (they are odds-type ratios)
+- **Sparse categories** (a few women in one place) make estimates unstable
+- **Many parameters**: 3 equations x every predictor needs a large sample
+- Ignoring the **independence of irrelevant alternatives** (adding or removing a category can change the others: be cautious with similar categories)
+:::
+
+## 🔧 Switch to R — Lab 4 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `ordinal-workshop/labs/lab4_multinom.R`
+
+- `relevel()`, `nnet::multinom()`, relative risk ratios
+- z-tests, a likelihood-ratio test for a whole variable
+- predicted probabilities and a different reference
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s4q1", "In a multinomial model with four outcome categories and Home as the reference, how many coefficients does each predictor have?",
+         c("One, which applies to every comparison",
+           "Four, one for each category of the outcome",
+           "Three, one for each comparison with the reference",
+           "Zero, because multinomial models have no coefficients"), answer = 3,
+         explain = "A K-category outcome yields K - 1 equations, so each predictor has K - 1 coefficients (here 3).")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s4q2", "The relative risk ratio for wealth is 2.76 for Private hospital versus Home. How should it be read?",
+         c("Women in the richest quintile are 2.76 times as likely to be in any hospital",
+           "Odds of private care rather than home rise 2.8-fold per quintile",
+           "The probability of private care is 2.76 for each of the women studied",
+           "Wealth raises the share of private deliveries by 2.76 percentage points"), answer = 2,
+         explain = "The ratio compares the odds of one category with the reference, per unit of the predictor. It is not an absolute risk and not about all hospitals.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s4q3", "Why use a likelihood-ratio test to test education in a multinomial model?",
+         c("The z-test cannot be calculated for any categorical variable at all",
+           "The likelihood-ratio test is what gives the odds ratios in it",
+           "The variable has several coefficients, tested all together",
+           "A single z statistic would be zero for education"), answer = 3,
+         explain = "A multi-level predictor has many coefficients (3 education dummies x 3 equations). A joint test compares the models with and without it.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s4q4", "What happens to the fitted probabilities if you change the reference category and refit?",
+         c("They change, because the model fitted is a different one",
+           "They are reversed in order, so that the last category comes first",
+           "They can no longer be computed once the reference has changed",
+           "They are the same: only how the comparisons are shown changes"), answer = 4,
+         explain = "The reference only defines the parametrisation. Models with different references are equivalent: same likelihood, same predictions.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s4q5", "Which is a good reason to choose the multinomial model for an outcome with ordered categories?",
+         c("Many predictors violate proportional odds and partial models fail",
+           "The categories are few in number and the sample is large enough",
+           "The researcher would prefer to avoid reporting odds ratios at all",
+           "The reference category is hard to name for the outcome in question"), answer = 1,
+         explain = "A multinomial model makes no ordering assumption, so it is a safe fallback when proportional odds clearly fails. The cost is many more parameters.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **K − 1 equations**, each against a **reference category**
+- exp(β) = **relative risk ratio** (odds versus the reference)
+- **z-tests** by hand; **likelihood-ratio** tests for multi-level variables
+- The reference changes the **presentation**, not the **fit**; show **predicted probabilities**
+:::
+
+**Next:** Session 5: choosing and reporting

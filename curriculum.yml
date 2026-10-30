@@ -88,6 +88,12 @@ pages:
   counts-workshop/s4_zeros_checking.qmd: {title: "Session 4 — Excess Zeros and Model Checking"}
   counts-workshop/s5_reporting_extensions.qmd: {title: "Session 5 — Reporting and Extensions"}
   counts-workshop/cheatsheet.qmd: {title: "Counts and Rates Cheat Sheet"}
+  ordinal-workshop/s1_categorical_outcomes.qmd: {title: "Session 1 — Categorical Outcomes: Nominal or Ordered?"}
+  ordinal-workshop/s2_ordinal_logistic.qmd: {title: "Session 2 — Ordinal Logistic Regression"}
+  ordinal-workshop/s3_proportional_odds_check.qmd: {title: "Session 3 — Checking Proportional Odds"}
+  ordinal-workshop/s4_multinomial_logistic.qmd: {title: "Session 4 — Multinomial Logistic Regression"}
+  ordinal-workshop/s5_choosing_reporting.qmd: {title: "Session 5 — Choosing, Comparing and Reporting"}
+  ordinal-workshop/cheatsheet.qmd: {title: "Ordinal and Multinomial Cheat Sheet"}
   regression-workshop/s1_foundations.qmd: {title: "Session 1 — Foundations"}
   regression-workshop/s2_simple_regression.qmd: {title: "Session 2 — Simple Linear Regression"}
   regression-workshop/s3_multiple_regression.qmd: {title: "Session 3 — Inference & Multiple Regression"}
@@ -404,11 +410,12 @@ profiles:
     title: "Data Visualization Workshop — Advanced"
     output-dir: docs/advanced
     logo-href: welcome.html
-    # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1) and counts and rates (A2) live here.
+    # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1), counts and rates (A2) and ordinal/multinomial outcomes (A3) live here.
     project-extra:
       render:
       - survival-workshop/*.qmd
       - counts-workshop/*.qmd
+      - ordinal-workshop/*.qmd
       resources:
       - data/tb_cohort.csv
       - survival-workshop/make_data.R
@@ -416,6 +423,9 @@ profiles:
       - data/dengue_wards.csv
       - counts-workshop/make_data.R
       - counts-workshop/labs/*.R
+      - data/maternal_survey.csv
+      - ordinal-workshop/make_data.R
+      - ordinal-workshop/labs/*.R
     left:
       - text: "R Foundations"
         items:
@@ -474,6 +484,15 @@ profiles:
           - counts-workshop/s5_reporting_extensions.qmd
           - "---"
           - counts-workshop/cheatsheet.qmd
+      - text: "Ordinal & Multinomial Workshop"
+        items:
+          - ordinal-workshop/s1_categorical_outcomes.qmd
+          - ordinal-workshop/s2_ordinal_logistic.qmd
+          - ordinal-workshop/s3_proportional_odds_check.qmd
+          - ordinal-workshop/s4_multinomial_logistic.qmd
+          - ordinal-workshop/s5_choosing_reporting.qmd
+          - "---"
+          - ordinal-workshop/cheatsheet.qmd
       - text: "Quarto"
         items:
           - quarto_repro_w/reproducible_writing.qmd

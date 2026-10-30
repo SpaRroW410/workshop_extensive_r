@@ -1,0 +1,86 @@
+---
+title: "Ordinal and Multinomial Outcomes Cheat Sheet"
+subtitle: "Proportional odds · multinomial logit · maternal survey examples · print on 2 pages (A4)"
+format:
+  html:
+    theme: cosmo
+    toc: false
+    page-layout: full
+    html-math-method: plain
+    css: assets/cheatsheet.css
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+source("assets/setup.R")
+f <- function(x, d = 2) formatC(x, format = "f", digits = d)
+mat$delivery <- relevel(mat$delivery, ref = "Home")
+m2 <- MASS::polr(anaemia ~ wealth + education + bmi + anc_visits + parity + age + tribal + residence, data = mat, Hess = TRUE)
+mn <- nnet::multinom(delivery ~ wealth + education + anc_visits + residence + tribal, data = mat, trace = FALSE)
+br <- suppressWarnings(brant(m2))
+```
+
+::: {.sheet}
+
+## 1 · Which model?
+
+| Outcome | Example | Model | R |
+|---|---|---|---|
+| **Ordered**, 3+ categories | anaemia grade, BP stage | **Ordinal logistic** (proportional odds) | `MASS::polr(y ~ x, Hess = TRUE)` |
+| ... if the assumption fails for few predictors | | **Partial proportional odds** | `ordinal::clm(y ~ x, nominal = ~ z)` |
+| **Nominal**, 3+ categories | place of delivery | **Multinomial logistic** | `nnet::multinom(y ~ x)` (set the **reference**) |
+| Binary | any anaemia | Logistic | `glm(family = binomial)` |
+
+Check first: **order meaningful?** **Smallest category** big enough (here `r min(table(mat$anaemia))` women)? Never code categories 1-4 for linear regression.
+
+## 2 · Ordinal logistic
+
+| Item | Meaning |
+|---|---|
+| `logit P(Y <= k) = zeta_k - x*beta` | one **threshold** per cut-point (**K - 1**), **one beta per predictor** |
+| exp(beta) | **odds ratio for a higher category**, the same at every cut-point |
+| polr beta > 0 | higher (worse) categories more likely |
+| Our result: wealth | OR **`r f(exp(coef(m2))[["wealth"]])`** per quintile: `r f(100 * (1 - exp(coef(m2))[["wealth"]]), 0)`% lower odds of a worse category |
+
+## 3 · Checking proportional odds
+
+| Tool | What it shows |
+|---|---|
+| **`brant(model)`** | omnibus p and one p per predictor; here omnibus p = `r f(br["Omnibus", "probability"], 3)`, tribal p = `r f(br["tribalYes", "probability"], 3)`, wealth p = `r f(br["wealth", "probability"], 2)` |
+| **Binary models at each cut** | `glm(I(y >= k) ~ x)` for each k: ORs should be similar |
+| **LR test** `anova(clm_po, clm_partial)` | does freeing a predictor improve the fit? |
+| If it fails | **partial PO** for the offending predictor, **cut-specific ORs**, or **multinomial** |
+
+## 4 · Multinomial logistic
+
+| Item | Meaning |
+|---|---|
+| **K - 1 equations** vs the **reference** | each predictor has K - 1 coefficients |
+| exp(coef) | **relative risk ratio** (odds vs the reference) |
+| Our result: wealth | RRR `r f(exp(coef(mn)["PHC", "wealth"]))` (PHC), `r f(exp(coef(mn)["Public hospital", "wealth"]))` (public), **`r f(exp(coef(mn)["Private hospital", "wealth"]))` (private)**, each vs Home |
+| No p-values printed | z = coef / SE: `s <- summary(mn); s$coefficients / s$standard.errors` |
+| A whole variable | likelihood-ratio test: `anova(model_without, model_with)` |
+| Reference | changes **presentation**, not the **fit** |
+
+## 5 · Showing results
+
+`predict(model, newdata, type = "probs")` gives the **probability of each category** (adds to 1). Plot against a key predictor. **Do not judge by accuracy** (`r f(mean(predict(mn) == mat$delivery), 2)` here vs `r f(max(prop.table(table(mat$delivery))), 2)` for guessing).
+
+## 6 · Pitfalls
+
+::: {.bad}
+- **Categories coded 1-4** in linear regression; **dichotomising** needlessly
+- **No assumption check**; a **single OR** that hides a violation (tribal group here: OR about `r f(exp(coef(m2))[["tribalYes"]], 1)`, but about 3 for severe anaemia)
+- **Sparse categories**; a multinomial model with too many parameters for the sample
+- RRR read as a **risk ratio**; **accuracy** as the measure of fit
+- **Association read as cause**
+:::
+
+## 7 · One-paragraph report
+
+*Among 1,500 women, anaemia (none, mild, moderate, severe) was modelled with a proportional-odds model adjusted for education, BMI, antenatal visits, parity, age, tribal group and residence. Each higher wealth quintile was associated with `r f(100 * (1 - exp(coef(m2))[["wealth"]]), 0)`% lower odds of a worse category (OR `r f(exp(coef(m2))[["wealth"]])`). The Brant test rejected proportional odds for tribal group only (p < 0.001), whose effect was concentrated on severe anaemia, so it is reported by cut-point. Place of delivery was modelled with a multinomial logit (reference: home): each wealth quintile multiplied the relative risk of private-hospital delivery `r f(exp(coef(mn)["Private hospital", "wealth"]), 1)`-fold.*
+
+:::
