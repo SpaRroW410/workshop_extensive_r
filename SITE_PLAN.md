@@ -270,3 +270,5 @@ Then its quest worlds.
 **GIS workshop** (`gis-workshop/`, 2026-10-27): 5 decks, 5 labs with facilitator solutions, quizzes (lint clean), cheat sheet, same pattern as the regression workshop; the Dungeons & Dataframes GIS region comes **after** the workshop has been run and corrected.
 
 Ideas to add later: raster data with `terra`, spatial interpolation (kriging), a GIS region in the game.
+
+**Survival workshop (A1)** (`survival-workshop/`, 2026-10-30): 5 decks, 5 labs with facilitator solutions, quizzes (lint clean), cheat sheet, synthetic TB cohort (`data/tb_cohort.csv`); lives in the `advanced` profile (Advanced Analysis). The Region 4 game world follows **after** the workshop has been run and corrected. Next modules in the plan: A2 counts and rates, A3 ordinal/multinomial, A4 clustered data.

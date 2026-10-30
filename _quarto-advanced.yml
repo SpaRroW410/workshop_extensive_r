@@ -6,6 +6,12 @@
 
 project:
   output-dir: docs/advanced
+  render:
+    - survival-workshop/*.qmd
+  resources:
+    - data/tb_cohort.csv
+    - survival-workshop/make_data.R
+    - survival-workshop/labs/*.R
 website:
   title: Data Visualization Workshop — Advanced
   site-url: '.'
@@ -71,6 +77,21 @@ website:
             href: gtsummary/gtsummary_tutorial.qmd
           - text: Data Analysis
             href: statistical-analysis/data_analysis.qmd
+      - text: Survival Workshop
+        menu:
+          - text: Session 1 — Time-to-Event Data
+            href: survival-workshop/s1_time_to_event.qmd
+          - text: Session 2 — Kaplan-Meier Curves
+            href: survival-workshop/s2_kaplan_meier.qmd
+          - text: Session 3 — Comparing Survival (Log-Rank)
+            href: survival-workshop/s3_logrank.qmd
+          - text: Session 4 — Cox Regression
+            href: survival-workshop/s4_cox_regression.qmd
+          - text: Session 5 — Assumptions and Reporting
+            href: survival-workshop/s5_assumptions_reporting.qmd
+          - text: '---'
+          - text: Survival Analysis Cheat Sheet
+            href: survival-workshop/cheatsheet.qmd
       - text: Quarto
         menu:
           - text: Quarto Basics
