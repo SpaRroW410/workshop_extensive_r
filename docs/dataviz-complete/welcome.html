@@ -265,48 +265,58 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div style="background:#f1f8f1;border-left:5px solid #2e7d32;border-radius:10px;
+<div style="background:#f1faf8;border-left:5px solid #00695c;border-radius:10px;
             padding:1.5rem 2rem;margin-bottom:2rem;">
-<span style="display:inline-block;background:#2e7d32;color:white;font-size:0.8rem;
+<span style="display:inline-block;background:#00695c;color:white;font-size:0.8rem;
                font-weight:600;padding:0.2rem 0.75rem;border-radius:999px;
-               margin-bottom:0.75rem;">🟢 Open Access</span>
-<h2 style="color:#2e7d32;margin-top:0.4rem;margin-bottom:0.6rem;" class="anchored">
-Basic Track
+               margin-bottom:0.75rem;">🟤 Workshop Key Unlocked</span>
+<h2 style="color:#00695c;margin-top:0.4rem;margin-bottom:0.6rem;" class="anchored">
+GIS and Spatial Statistics Track
 </h2>
 <p style="font-size:1.05rem;line-height:1.7;margin:0;">
-Welcome to the <strong>Basic Track</strong> of the R Data Visualization Workshop — an open-access, self-paced learning platform for data wrangling, visualization, and statistical analysis in R. This site contains hands-on examples, best practices, and plotting techniques all in one place.
+Welcome to the <strong>GIS and Spatial Statistics Track</strong>. It builds on the advanced visualization pages (ggplot2 modules, galleries, interactive plots, exporting) and adds a spatial toolkit: reading and mapping spatial data with <code>sf</code>, defining neighbours and spatial weights, testing for spatial autocorrelation with <strong>Moran’s I</strong>, finding clusters with <strong>local Moran’s I (LISA)</strong>, <strong>Getis-Ord Gi*</strong>, <strong>Geary’s C</strong>, join counts and the scan statistic, and checking regression residuals for spatial structure. All examples use a synthetic district of 80 blocks with a planted hot spot, so no real boundaries or personal data are involved.
 </p>
 </div>
 <section id="workshop-goals" class="level2">
 <h2 class="anchored" data-anchor-id="workshop-goals">🎯 Workshop Goals</h2>
 <ul>
-<li>Learn the basics of good data visualization</li>
-<li>Use R to wrangle and prepare data</li>
-<li>Explore basic visualization and statistical testing</li>
-<li>Create reproducible reports using Quarto</li>
+<li>Read, transform and join spatial data with sf, and keep track of coordinate reference systems</li>
+<li>Make clear static and interactive maps and choose a sensible classification</li>
+<li>Define neighbours and spatial weights, and know how the choice changes the answer</li>
+<li>Test for global spatial autocorrelation with Moran’s I and read the Moran scatterplot</li>
+<li>Locate clusters and outliers with local Moran’s I (LISA) and hot spots with Getis-Ord Gi*</li>
+<li>Use Geary’s C, join counts and the scan statistic, and check regression residuals for spatial structure</li>
 </ul>
 </section>
 <section id="what-this-track-covers" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-track-covers">📚 What This Track Covers</h2>
 <ul>
 <li>📁 R Foundations &amp; Data Wrangling</li>
-<li>📊 Basic Visualization with ggplot2</li>
-<li>🧪 Statistical Test Selection</li>
-<li>📈 ggstatsplot — Introduction</li>
-<li>📝 Quarto Basics</li>
+<li>📐 Data Visualization — grammar, best practices, ggplot2 modules 1–4</li>
+<li>🖼️ Plot Gallery (basic to advanced) and Specialized &amp; Interactive Plots</li>
+<li>⚙️ Exporting, Plotting Tools and Debugging</li>
+<li>🎓 GIS Workshop — 5 sessions, 5 labs, quizzes, cheat sheet</li>
+<li>🗺️ Spatial Data with sf, Maps and Choropleths</li>
+<li>🧭 Neighbours and Spatial Weights</li>
+<li>📍 Global Moran’s I and Local Moran’s I (LISA)</li>
+<li>🔥 Geary’s C, Getis-Ord, Join Counts and the Scan Statistic</li>
+<li>📉 Spatial Regression and Residual Tests</li>
 </ul>
 </section>
 <section id="find-your-way-around" class="level2">
 <h2 class="anchored" data-anchor-id="find-your-way-around">🧭 Find Your Way Around</h2>
 <p>Use the navigation bar above to browse all modules. Key starting points:</p>
 <ul>
-<li>📁 <strong><a href="./r-foundations/getting-started.html">R Foundations</a></strong> — R syntax, data cleaning, and tidy workflows</li>
-<li>📊 <strong><a href="./data-visualization/ggplot_grammar.html">Data Visualization</a></strong> — Grammar of graphics and basic ggplot2</li>
-<li>🧪 <strong><a href="./statistical-analysis/statistical_tests.html">Statistical Analysis</a></strong> — Choosing the right statistical test</li>
-<li>📝 <strong><a href="statistical-analysis/reproducible_writing.qmd">Reproducibility</a></strong> — Creating reports with Quarto</li>
+<li>🎓 <strong><a href="gis-workshop/s1_spatial_data.qmd">GIS Workshop</a></strong> — Slides, labs and quizzes: start at Session 1 (spatial data and maps)</li>
+<li>📋 <strong><a href="gis-workshop/cheatsheet.qmd">Cheat Sheet</a></strong> — Two-page guide to choosing and reading spatial tests</li>
+<li>🗺️ <strong><a href="gis/spatial_data_sf.qmd">Spatial Data with sf</a></strong> — Start here: spatial objects, coordinate systems, joining attributes</li>
+<li>🧭 <strong><a href="gis/spatial_weights.qmd">Neighbours and Weights</a></strong> — Queen, rook and k-nearest neighbours, and row-standardised weights</li>
+<li>📍 <strong><a href="gis/morans_i.qmd">Global Moran’s I</a></strong> — Is the pattern clustered? Test, permutation p-value and Moran scatterplot</li>
+<li>🔥 <strong><a href="gis/local_moran_lisa.qmd">Local Moran’s I (LISA)</a></strong> — Where are the clusters and spatial outliers?</li>
+<li>🎨 <strong><a href="./data-visualization/ggplot_grammar.html">Data Visualization</a></strong> — Grammar of graphics and all four ggplot2 modules</li>
 </ul>
 <blockquote class="blockquote">
-<p>Use the navbar above to explore topics in any order.</p>
+<p>The navbar has the full visualization library as well as the spatial pages.</p>
 </blockquote>
 </section>
 <section id="downloadable-resources" class="level2">
@@ -315,33 +325,29 @@ Welcome to the <strong>Basic Track</strong> of the R Data Visualization Workshop
 <section id="r-scripts" class="level3">
 <h3 class="anchored" data-anchor-id="r-scripts">📄 R Scripts</h3>
 <ul>
-<li><a href="downloads/basic_r_foundations.R">Basic r Foundations</a></li>
-<li><a href="downloads/basic_visualization.R">Basic Visualization</a></li>
+<li><a href="gis/make_gis_data.R">Make Gis Data</a></li>
+<li><a href="gis-workshop/labs/lab1_data.R">Lab1 Data</a></li>
+<li><a href="gis-workshop/labs/lab2_weights.R">Lab2 Weights</a></li>
+<li><a href="gis-workshop/labs/lab3_global.R">Lab3 Global</a></li>
+<li><a href="gis-workshop/labs/lab4_local.R">Lab4 Local</a></li>
+<li><a href="gis-workshop/labs/lab5_regression.R">Lab5 Regression</a></li>
 </ul>
 </section>
 <section id="datasets" class="level3">
 <h3 class="anchored" data-anchor-id="datasets">🗄️ Datasets</h3>
 <ul>
-<li>📊 <a href="downloads/workshop_data.csv">Workshop Data</a> <code>.csv</code></li>
-<li>📗 <a href="downloads/workshop_data.xlsx">Workshop Data</a> <code>.xlsx</code></li>
-<li>🔵 <a href="downloads/workshop_data.rds">Workshop Data</a> <code>.rds</code></li>
+<li>📦 <a href="data/gis/district_blocks.geojson">District Blocks</a> <code>.geojson</code></li>
+<li>📊 <a href="data/gis/facilities.csv">Facilities</a> <code>.csv</code></li>
 </ul>
 </section>
 <section id="cheatsheets" class="level3">
 <h3 class="anchored" data-anchor-id="cheatsheets">📋 Cheatsheets</h3>
 <ul>
-<li><a href="downloads/ggplot2_cheatsheet.pdf">ggplot2 Cheatsheet</a></li>
-<li><a href="downloads/dplyr_cheatsheet.pdf">Dplyr Cheatsheet</a></li>
-</ul>
-</section>
-<section id="quarto-template" class="level3">
-<h3 class="anchored" data-anchor-id="quarto-template">📝 Quarto Template</h3>
-<ul>
-<li><a href="downloads/quarto_basics.qmd">Quarto Basics</a> — starter <code>.qmd</code> file covering Quarto basics</li>
+<li><a href="gis-workshop/cheatsheet.qmd">Cheatsheet</a></li>
 </ul>
 <hr>
 <blockquote class="blockquote">
-<p>💡 <strong>Tip:</strong> New to R? Start with <strong>R Foundations → Getting Started</strong> before anything else.</p>
+<p>💡 <strong>Tip:</strong> Never mapped data in R? Read <strong>Spatial Data with sf</strong> and <strong>Maps and Choropleths</strong> first, then go straight to <strong>Global Moran’s I</strong>.</p>
 </blockquote>
 
 

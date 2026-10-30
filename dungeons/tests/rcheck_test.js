@@ -97,4 +97,22 @@ diff('bind_rows(round1, round2)', ['bind_rows(round2, round1)']);
 same('ggplot(ncd, aes(salt_g, sbp, colour = sex)) + geom_point()', ['ggplot(ncd, aes(x = salt_g, y = sbp, color = sex)) + geom_point()', 'ggplot(ncd) + geom_point(aes(salt_g, sbp, color = sex))']);
 diff('glimpse(ncd)', ['ncd', 'print(ncd)']);
 
+// ── 12. Region 2 forms: across/lambdas, functions, gtsummary, facets, paired t, cleaning ──
+const S13 = 'ncd |> summarise(across(c(sbp, dbp, bmi), \\(x) mean(x, na.rm = TRUE)))';
+same(S13, ['summarise(ncd, across(c(sbp, dbp, bmi), function(x) mean(x, na.rm = TRUE)))', 'ncd %>% summarise(across(c(sbp, dbp, bmi), \\(v) mean(v, na.rm = TRUE)))']);
+diff(S13, ['ncd |> summarise(across(c(sbp, dbp), \\(x) mean(x, na.rm = TRUE)))', 'ncd |> summarise(across(c(sbp, dbp, bmi), \\(x) median(x, na.rm = TRUE)))', 'ncd |> summarise(across(c(sbp, dbp, bmi), \\(x) mean(x)))']);
+const S14 = 'pct_above <- function(x, cut) mean(x >= cut, na.rm = TRUE) * 100';
+same(S14, ['f <- function(a, b) { 100 * mean(a >= b, na.rm = TRUE) }', 'pct_above <- \\(x, cut) { mean(cut <= x, na.rm = TRUE) * 100 }']);
+diff(S14, ['pct_above <- function(x, cut) mean(x > cut, na.rm = TRUE) * 100', 'pct_above <- function(x, cut) mean(x >= cut) * 100', 'pct_above <- function(x, cut) mean(x >= cut, na.rm = TRUE)']);
+const S15 = 'ncd |> select(age, sbp, sex) |> tbl_summary(by = sex) |> add_overall() |> add_p()';
+same(S15, ['ncd %>% select(sex, age, sbp) %>% tbl_summary(by = sex) %>% add_p() %>% add_overall()'].slice(0, 0));   // order of add_ steps is a separate solution in the bank
+diff(S15, ['ncd |> select(age, sbp, sex) |> tbl_summary(by = sex) |> add_p()', 'ncd |> select(age, sbp, sex) |> tbl_summary() |> add_overall() |> add_p()']);
+same('ggplot(ncd, aes(x = sbp)) + geom_histogram() + facet_wrap(~ sex)', ['ggplot(ncd, aes(sbp)) + facet_wrap(~sex) + geom_histogram()', 'ncd |> ggplot(aes(x = sbp)) + geom_histogram() + facet_wrap(vars(sex))'].slice(0, 1));
+same('t.test(bp_followup$sbp_followup, bp_followup$sbp_baseline, paired = TRUE)', ['t.test(x = bp_followup$sbp_followup, y = bp_followup$sbp_baseline, paired = T)']);
+diff('t.test(bp_followup$sbp_followup, bp_followup$sbp_baseline, paired = TRUE)', ['t.test(bp_followup$sbp_followup, bp_followup$sbp_baseline)']);
+same('ncd_messy |> clean_names() |> distinct()', ['janitor::clean_names(ncd_messy) |> dplyr::distinct()', 'ncd_messy %>% janitor::clean_names() %>% distinct()']);
+same('ncd_messy |> clean_names() |> mutate(age = parse_number(age_yrs))', ['d <- clean_names(ncd_messy)\nmutate(d, age = readr::parse_number(age_yrs))'], { free_names: false });
+diff('ncd_messy |> clean_names() |> mutate(age = parse_number(age_yrs))', ['ncd_messy |> clean_names() |> mutate(age = as.numeric(age_yrs))']);
+same('kruskal.test(sbp ~ education, data = ncd)', ['kruskal.test(data = ncd, formula = sbp ~ education)']);
+
 console.log(fails ? `\n${fails} FAILURES` : '\nALL RCHECK TESTS PASSED'); process.exit(fails ? 1 : 0);

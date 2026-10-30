@@ -14,6 +14,8 @@ project:
     - data/villages.csv
     - data/ncd_round1.csv
     - data/ncd_round2.csv
+    - data/ncd_messy.csv
+    - data/bp_followup.csv
     - regression-workshop/make_data.R
     - regression-workshop/labs/*.R
     - dungeons/assets/*
@@ -38,6 +40,11 @@ website:
           - text: Region 1 post-test
             href: dungeons/r1posttest.qmd
           - text: '---'
+          - text: Region 2 pre-test
+            href: dungeons/r2pretest.qmd
+          - text: Region 2 post-test
+            href: dungeons/r2posttest.qmd
+          - text: '---'
           - text: Region 3 pre-test
             href: dungeons/pretest.qmd
           - text: Region 3 post-test
@@ -54,6 +61,18 @@ website:
             href: dungeons/b4_first_plots.qmd
           - text: Which Test?
             href: dungeons/b5_which_test.qmd
+      - text: Region 2 · Moderate
+        menu:
+          - text: Messy Data Dungeon
+            href: dungeons/m1_messy_data_dungeon.qmd
+          - text: Loop Labyrinth
+            href: dungeons/m2_loop_labyrinth.qmd
+          - text: Explore by Picture
+            href: dungeons/m3_explore_by_picture.qmd
+          - text: Table 1 Forge
+            href: dungeons/m4_table1_forge.qmd
+          - text: Tests in Context
+            href: dungeons/m5_tests_in_context.qmd
       - text: Region 3 · Regression
         menu:
           - text: World 1 · The Outcome Detective
@@ -76,14 +95,24 @@ website:
             href: r-foundations/data-wrangling.qmd
           - text: Merging Datasets
             href: r-foundations/merging_dataset.qmd
+          - text: Cleaning Messy Data
+            href: r-foundations/cleaning_messy_data.qmd
+          - text: Iteration (across, loops, functions)
+            href: r-foundations/iteration.qmd
           - text: '---'
           - text: Grammar of Graphics
             href: data-visualization/ggplot_grammar.qmd
+          - text: Best Practices
+            href: data-visualization/best_practices.qmd
+          - text: Matching Data to Plots
+            href: data-visualization/plot_data.qmd
           - text: Basic Plot Gallery
             href: plot-gallery/basic.qmd
           - text: '---'
           - text: Test Selection Guide
             href: statistical-analysis/statistical_tests.qmd
+          - text: Data Analysis
+            href: statistical-analysis/data_analysis.qmd
           - text: gtsummary Tables
             href: gtsummary/gtsummary_tutorial.qmd
           - text: Quarto Basics

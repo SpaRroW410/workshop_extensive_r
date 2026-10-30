@@ -1,0 +1,87 @@
+---
+title: "Region 2 · Messy Data Dungeon"
+subtitle: "Looking before changing; labels, types, duplicates, placeholders and a cleaning log"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-world data-world="m1" data-total="9" data-requires="r2pre:1;r1post:70|ready:80"}
+:::
+
+## Briefing
+
+::: {.rq-lesson}
+**Welcome to Region 2.** Real data are messy, and every later result depends on how you clean them. Read first: [Cleaning Messy Data](../r-foundations/cleaning_messy_data.qmd). You need the file **`ncd_messy`**: every question that uses it has a download button.
+:::
+
+```{r}
+library(janitor)
+raw <- read_csv(c("../data/ncd_messy.csv", "data/ncd_messy.csv")[file.exists(c("../data/ncd_messy.csv", "data/ncd_messy.csv"))][1], show_col_types = FALSE)
+glimpse(raw)
+```
+
+::: {.rq-lesson}
+**The order of work.** (1) Keep the raw file; clean a copy with a script. (2) **Look**: `glimpse()`, `count()` of each category, `range()` of each number. (3) Fix **one problem at a time** and re-check. (4) Keep a **log** of what changed and how many rows.
+:::
+
+```{r}
+d <- raw |> clean_names()
+count(d, sex)                                  # eight spellings of two categories
+d |> mutate(sex = case_when(str_to_lower(sex) %in% c("m", "male") ~ "Male",
+                            str_to_lower(sex) %in% c("f", "female") ~ "Female")) |> count(sex)
+```
+
+::: {.rq-lesson}
+**Types, placeholders, duplicates.** `parse_number()` reads a number out of text such as "7.2 g" (check what still turns into `NA`). A code like **999** is a placeholder: set it to `NA` and report it, do not fill in a mean. `distinct()` removes **exact** copies; the **same ID with different values** needs a look at the source.
+:::
+
+## Level 1 · Look first {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("m1-01", "m1-02", "m1-03"), ITEMS)
+```
+
+## Level 2 · Duplicates and placeholders {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("m1-04", "m1-05", "m1-06"), ITEMS)
+```
+
+## Level 3 · Write the cleaning code {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("m1-07", "m1-08"), ITEMS)
+```
+
+## Boss · Audit a cleaning log {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render("m1-09", ITEMS)
+```

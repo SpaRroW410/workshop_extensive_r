@@ -1,0 +1,121 @@
+---
+title: "Neighbours and Spatial Weights"
+format:
+  html:
+    code-copy: true
+    theme: cosmo
+    toc: true
+    lightbox: auto
+execute:
+  warning: false
+  message: false
+  fig-width: 7
+  fig-height: 5
+---
+
+```{r}
+#| include: false
+source("_setup.R")
+```
+
+Every spatial test in this track asks "are **neighbouring** areas more alike than chance?". The word *neighbour* needs a definition first. That definition is the **spatial weights matrix**, and it is the most influential choice you make.
+
+## Contiguity neighbours
+
+Two polygons are neighbours if they **share a boundary**:
+
+-   **Rook:** share an edge.
+-   **Queen:** share an edge **or a corner** (usual default).
+
+```{r}
+nb_q <- poly2nb(blocks, queen = TRUE,  snap = 1e-4)
+nb_r <- poly2nb(blocks, queen = FALSE, snap = 1e-4)
+summary(nb_q)
+c(queen_links = sum(card(nb_q)), rook_links = sum(card(nb_r)))
+```
+
+```{r}
+#| fig-height: 5.5
+cen <- st_coordinates(st_centroid(blocks))
+plot(st_geometry(blocks), border = "grey70", main = "Queen contiguity: links between neighbouring blocks")
+plot(nb_q, cen, add = TRUE, col = "red", pch = 19, cex = 0.4)
+```
+
+Check three things in the summary: the **average number of neighbours** (here about 5), the **least and most connected** areas, and any **isolates** (areas with no neighbours, which break many tests unless you use `zero.policy = TRUE`).
+
+## Distance-based and k-nearest neighbours
+
+When areas are unequal in size, or are points, use distances between **centroids**:
+
+```{r}
+#| fig-width: 10
+#| fig-height: 4.5
+knn5 <- knn2nb(knearneigh(cen, k = 5))                  # always exactly 5 neighbours
+d <- unlist(nbdists(knn2nb(knearneigh(cen, k = 1)), cen))
+nb_d <- dnearneigh(cen, 0, max(d))                      # everyone within the smallest distance that links all areas
+par(mfrow = c(1, 2))
+plot(st_geometry(blocks), border = "grey80", main = "5 nearest neighbours"); plot(knn5, cen, add = TRUE, col = "blue", pch = 19, cex = 0.3)
+plot(st_geometry(blocks), border = "grey80", main = "Distance band"); plot(nb_d, cen, add = TRUE, col = "darkgreen", pch = 19, cex = 0.3)
+```
+
+| Definition | Neighbours per area | Good for | Watch out for |
+|---|---|---|---|
+| Queen / rook | varies | polygons of similar size | islands (isolates); big areas have many neighbours |
+| k nearest | exactly k | unequal areas, points | links across a gap or border that are not real |
+| Distance band | varies | points, catchment ideas | too short leaves isolates; too long links everything |
+
+## From neighbours to weights
+
+A neighbour list says *who*; **weights** say *how much*. Styles in `nb2listw()`:
+
+-   `"B"` binary: 1 for every neighbour.
+-   `"W"` **row-standardised**: each area's weights sum to 1, so a neighbour's influence is shared out. The usual choice.
+-   `"S"` variance-stabilising.
+
+```{r}
+lw <- nb2listw(nb_q, style = "W", zero.policy = TRUE)
+lw$weights[[1]]           # the first block's weights: 1/(number of neighbours) each
+sum(lw$weights[[1]])
+```
+
+## The spatial lag
+
+The **spatial lag** of a variable is the **weighted average of the neighbours' values**. With row-standardised weights it is simply "the average of my neighbours":
+
+```{r}
+blocks$lag_rate <- lag.listw(lw, blocks$dengue_per_100k, zero.policy = TRUE)
+blocks |> st_drop_geometry() |> select(block_id, dengue_per_100k, lag_rate) |> head(5) |>
+  mutate(across(where(is.numeric), \(x) round(x, 1)))
+# check block 1 by hand:
+mean(blocks$dengue_per_100k[nb_q[[1]]])
+```
+
+```{r}
+#| fig-width: 10
+#| fig-height: 4.5
+patchwork::wrap_plots(
+  ggplot(blocks) + geom_sf(aes(fill = dengue_per_100k)) + scale_fill_viridis_c(option = "magma", direction = -1, name = "Rate") + labs(title = "Rate"),
+  ggplot(blocks) + geom_sf(aes(fill = lag_rate)) + scale_fill_viridis_c(option = "magma", direction = -1, name = "Lag") + labs(title = "Spatial lag (neighbours' average)"))
+```
+
+The lag is **smoother** than the original. The Moran's I statistic on the next page is essentially the **slope of the lag against the value**.
+
+## The choice matters
+
+```{r}
+w_list <- list(queen = nb2listw(nb_q, style = "W", zero.policy = TRUE),
+               rook  = nb2listw(nb_r, style = "W", zero.policy = TRUE),
+               knn5  = nb2listw(knn5, style = "W"),
+               distance = nb2listw(nb_d, style = "W"))
+map_dfr(w_list, \(w) { m <- moran.test(blocks$dengue_per_100k, w, zero.policy = TRUE); tibble(I = unname(m$estimate[1]), p = m$p.value) }, .id = "weights") |>
+  mutate(I = round(I, 3), p = signif(p, 2))
+```
+
+The conclusion is similar here because the clustering is strong, but with a weak pattern the answer can change with the weights. **State your weights, justify them with the biology (how far does a mosquito or a person travel?) and check sensitivity.**
+
+## Take-home
+
+-   A weights matrix turns "near" into numbers; choose it deliberately (queen for polygons, k-nearest or distance for points).
+-   Row-standardised weights make the spatial lag the **average of neighbours**.
+-   Look for **isolates** and areas with very many neighbours; report your choice and test the sensitivity.
+-   Next: **[Global Moran's I](morans_i.qmd)**.

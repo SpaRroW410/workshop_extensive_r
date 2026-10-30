@@ -71,7 +71,7 @@ rq_tagmap <- function(bank) {
 }
 
 # Datasets an item needs: any of RQ_DATA_IDS named in the stem or in a code solution (whole word), plus it$data.
-RQ_DATA_IDS <- c("ncd", "villages", "round1", "round2")
+RQ_DATA_IDS <- c("ncd", "villages", "round1", "round2", "ncd_messy", "bp_followup")
 rq_datasets <- function(it) {
   txt <- paste(c(it$stem, it$solutions), collapse = "\n")
   hit <- RQ_DATA_IDS[vapply(RQ_DATA_IDS, function(d) grepl(paste0("(^|[^A-Za-z0-9_.])", d, "([^A-Za-z0-9_]|$)"), txt), TRUE)]
