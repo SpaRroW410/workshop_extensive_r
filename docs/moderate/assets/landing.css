@@ -90,6 +90,9 @@
 @media (max-width: 900px) {
   .ws-cards-row        { grid-template-columns: 1fr; }
 }
+.ws-cards-row--4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1200px) { .ws-cards-row--4 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 900px)  { .ws-cards-row--4 { grid-template-columns: 1fr; } }
 
 /* ── Cards ──────────────────────────────────────────────── */
 .ws-card {
@@ -351,3 +354,5 @@
   .ws-game { grid-template-columns: 1fr; text-align: left; }
   .ws-game-icon { display: none; }
 }
+
+.ws-card--gis { background: #f4fbf9; border-color: #00897b; }

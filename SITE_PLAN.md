@@ -271,4 +271,6 @@ Then its quest worlds.
 
 Ideas to add later: raster data with `terra`, spatial interpolation (kriging), a GIS region in the game.
 
+**Survival workshop (A1)** (`survival-workshop/`, 2026-10-30): 5 decks, 5 labs with facilitator solutions, quizzes (lint clean), cheat sheet, synthetic TB cohort (`data/tb_cohort.csv`); lives in the `advanced` profile (Advanced Analysis). The Region 4 game world follows **after** the workshop has been run and corrected. Next modules in the plan: A2 counts and rates, A3 ordinal/multinomial, A4 clustered data.
+
 **Counts and rates workshop (A2)** (`counts-workshop/`, 2026-10-30): 5 decks, 5 labs with facilitator solutions, quizzes (lint clean), cheat sheet, synthetic dengue ward-month data (`data/dengue_wards.csv`); lives in the `advanced` profile. Region 4 game world **after** the workshop has been run and corrected. Next: A3 ordinal and multinomial outcomes, A4 clustered data.

@@ -1,0 +1,41 @@
+---
+title: "Region 2 · Post-test"
+subtitle: "10 parallel questions. 70% or more completes Region 2."
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+rq_tagmap(ITEMS)
+```
+
+::: {.rq-lesson}
+Same skills as the Region 2 pre-test, new questions. **70% or more** completes Region 2 and earns the *Moderate Graduate* badge. You can retake it.
+:::
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(sprintf("r2post-%02d", 1:10), ITEMS, test = "r2post")
+```

@@ -113,6 +113,14 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="./r-foundations/merging_dataset.html">
  <span class="dropdown-text">Merging Datasets</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./r-foundations/cleaning_messy_data.html">
+ <span class="dropdown-text">Cleaning Messy Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./r-foundations/iteration.html">
+ <span class="dropdown-text">Iteration (across, loops, functions)</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -219,6 +227,38 @@ ul.task-list li input[type="checkbox"] {
         <li>
     <a class="dropdown-item" href="./statistical-analysis/data_analysis.html">
  <span class="dropdown-text">Data Analysis</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-survival-workshop" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Survival Workshop</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-survival-workshop">    
+        <li>
+    <a class="dropdown-item" href="./survival-workshop/s1_time_to_event.html">
+ <span class="dropdown-text">Session 1 — Time-to-Event Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./survival-workshop/s2_kaplan_meier.html">
+ <span class="dropdown-text">Session 2 — Kaplan-Meier Curves</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./survival-workshop/s3_logrank.html">
+ <span class="dropdown-text">Session 3 — Comparing Survival (Log-Rank)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./survival-workshop/s4_cox_regression.html">
+ <span class="dropdown-text">Session 4 — Cox Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./survival-workshop/s5_assumptions_reporting.html">
+ <span class="dropdown-text">Session 5 — Assumptions and Reporting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./survival-workshop/cheatsheet.html">
+ <span class="dropdown-text">Survival Analysis Cheat Sheet</span></a>
   </li>  
     </ul>
   </li>
@@ -388,6 +428,7 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <section id="what-this-track-covers" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-track-covers">📚 What This Track Covers</h2>
 <ul>
+<li>⏳ Survival Analysis Workshop — 5 sessions, 5 labs, quizzes, cheat sheet</li>
 <li>🦟 Counts and Rates Workshop — 5 sessions, 5 labs, quizzes, cheat sheet</li>
 <li>📁 R Foundations &amp; Data Wrangling (+ Applied Examples)</li>
 <li>📊 Best Practices &amp; Plot Matching</li>
@@ -405,6 +446,7 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <h2 class="anchored" data-anchor-id="find-your-way-around">🧭 Find Your Way Around</h2>
 <p>Use the navigation bar above to browse all modules. Key starting points:</p>
 <ul>
+<li>⏳ <strong><a href="./survival-workshop/s1_time_to_event.html">Survival Workshop</a></strong> — Slides, labs and quizzes on time-to-event data: Kaplan-Meier, log-rank, Cox (start at Session 1)</li>
 <li>🦟 <strong><a href="./counts-workshop/s1_counts_rates.html">Counts Workshop</a></strong> — Slides, labs and quizzes on counts and rates: Poisson, negative binomial, offsets (start at Session 1)</li>
 <li>📁 <strong><a href="./r-foundations/getting-started.html">R Foundations</a></strong> — R syntax, wrangling, and full NCTOH applied examples</li>
 <li>📊 <strong><a href="./data-visualization/ggplot_grammar.html">Data Visualization</a></strong> — All four ggplot2 modules, advanced and interactive plots</li>
@@ -421,6 +463,12 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <section id="r-scripts" class="level3">
 <h3 class="anchored" data-anchor-id="r-scripts">📄 R Scripts</h3>
 <ul>
+<li><a href="survival-workshop/make_data.R">Make Data</a></li>
+<li><a href="survival-workshop/labs/lab1_data.R">Lab1 Data</a></li>
+<li><a href="survival-workshop/labs/lab2_km.R">Lab2 Km</a></li>
+<li><a href="survival-workshop/labs/lab3_logrank.R">Lab3 Logrank</a></li>
+<li><a href="survival-workshop/labs/lab4_cox.R">Lab4 Cox</a></li>
+<li><a href="survival-workshop/labs/lab5_assumptions.R">Lab5 Assumptions</a></li>
 <li><a href="counts-workshop/make_data.R">Make Data</a></li>
 <li><a href="counts-workshop/labs/lab1_counts.R">Lab1 Counts</a></li>
 <li><a href="counts-workshop/labs/lab2_poisson.R">Lab2 Poisson</a></li>
@@ -438,6 +486,7 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <section id="datasets" class="level3">
 <h3 class="anchored" data-anchor-id="datasets">🗄️ Datasets</h3>
 <ul>
+<li>📊 <a href="data/tb_cohort.csv">Tb Cohort</a> <code>.csv</code></li>
 <li>📊 <a href="data/dengue_wards.csv">Dengue Wards</a> <code>.csv</code></li>
 <li>📊 <a href="downloads/workshop_data.csv">Workshop Data</a> <code>.csv</code></li>
 <li>📗 <a href="downloads/workshop_data.xlsx">Workshop Data</a> <code>.xlsx</code></li>

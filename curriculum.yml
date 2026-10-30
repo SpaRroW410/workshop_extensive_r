@@ -41,6 +41,15 @@ pages:
   dungeons/cohort.qmd: {title: "Cohort summary"}
   dungeons/roadmap.qmd: {title: "Roadmap"}
   dungeons/site-design.qmd: {title: "Site design"}
+  r-foundations/cleaning_messy_data.qmd: {title: "Cleaning Messy Data"}
+  r-foundations/iteration.qmd: {title: "Iteration (across, loops, functions)"}
+  dungeons/r2pretest.qmd: {title: "Region 2 pre-test"}
+  dungeons/r2posttest.qmd: {title: "Region 2 post-test"}
+  dungeons/m1_messy_data_dungeon.qmd: {title: "Messy Data Dungeon"}
+  dungeons/m2_loop_labyrinth.qmd: {title: "Loop Labyrinth"}
+  dungeons/m3_explore_by_picture.qmd: {title: "Explore by Picture"}
+  dungeons/m4_table1_forge.qmd: {title: "Table 1 Forge"}
+  dungeons/m5_tests_in_context.qmd: {title: "Tests in Context"}
   dungeons/r1pretest.qmd: {title: "Region 1 pre-test"}
   dungeons/r1posttest.qmd: {title: "Region 1 post-test"}
   dungeons/b1_first_script.qmd: {title: "Your First Script"}
@@ -67,6 +76,12 @@ pages:
   gis-workshop/s4_local_clusters.qmd: {title: "Session 4 — Local Clusters and Hot Spots"}
   gis-workshop/s5_spatial_regression.qmd: {title: "Session 5 — Spatial Regression and Reporting"}
   gis-workshop/cheatsheet.qmd: {title: "Spatial Statistics Cheat Sheet"}
+  survival-workshop/s1_time_to_event.qmd: {title: "Session 1 — Time-to-Event Data"}
+  survival-workshop/s2_kaplan_meier.qmd: {title: "Session 2 — Kaplan-Meier Curves"}
+  survival-workshop/s3_logrank.qmd: {title: "Session 3 — Comparing Survival (Log-Rank)"}
+  survival-workshop/s4_cox_regression.qmd: {title: "Session 4 — Cox Regression"}
+  survival-workshop/s5_assumptions_reporting.qmd: {title: "Session 5 — Assumptions and Reporting"}
+  survival-workshop/cheatsheet.qmd: {title: "Survival Analysis Cheat Sheet"}
   counts-workshop/s1_counts_rates.qmd: {title: "Session 1 — Counts, Rates and the Poisson Idea"}
   counts-workshop/s2_poisson_regression.qmd: {title: "Session 2 — Poisson Regression"}
   counts-workshop/s3_overdispersion.qmd: {title: "Session 3 — Overdispersion"}
@@ -132,6 +147,8 @@ profiles:
           - r-foundations/getting-started.qmd
           - r-foundations/data-wrangling.qmd
           - r-foundations/merging_dataset.qmd
+          - r-foundations/cleaning_messy_data.qmd
+          - r-foundations/iteration.qmd
           - "---"
       - text: "Data Visualization"
         items:
@@ -226,6 +243,8 @@ profiles:
       - data/villages.csv
       - data/ncd_round1.csv
       - data/ncd_round2.csv
+      - data/ncd_messy.csv
+      - data/bp_followup.csv
       - regression-workshop/make_data.R
       - regression-workshop/labs/*.R
       - dungeons/assets/*
@@ -240,6 +259,9 @@ profiles:
           - dungeons/r1pretest.qmd
           - dungeons/r1posttest.qmd
           - "---"
+          - dungeons/r2pretest.qmd
+          - dungeons/r2posttest.qmd
+          - "---"
           - {path: dungeons/pretest.qmd, text: "Region 3 pre-test"}
           - {path: dungeons/posttest.qmd, text: "Region 3 post-test"}
       - text: "Region 1 · Basics"
@@ -249,6 +271,13 @@ profiles:
           - dungeons/b3_join_junction.qmd
           - dungeons/b4_first_plots.qmd
           - dungeons/b5_which_test.qmd
+      - text: "Region 2 · Moderate"
+        items:
+          - dungeons/m1_messy_data_dungeon.qmd
+          - dungeons/m2_loop_labyrinth.qmd
+          - dungeons/m3_explore_by_picture.qmd
+          - dungeons/m4_table1_forge.qmd
+          - dungeons/m5_tests_in_context.qmd
       - text: "Region 3 · Regression"
         items:
           - dungeons/world1_outcome_detective.qmd
@@ -262,11 +291,16 @@ profiles:
           - r-foundations/getting-started.qmd
           - r-foundations/data-wrangling.qmd
           - r-foundations/merging_dataset.qmd
+          - r-foundations/cleaning_messy_data.qmd
+          - r-foundations/iteration.qmd
           - "---"
           - data-visualization/ggplot_grammar.qmd
+          - data-visualization/best_practices.qmd
+          - data-visualization/plot_data.qmd
           - plot-gallery/basic.qmd
           - "---"
           - statistical-analysis/statistical_tests.qmd
+          - statistical-analysis/data_analysis.qmd
           - gtsummary/gtsummary_tutorial.qmd
           - quarto_repro_w/reproducible_writing.qmd
           - "---"
@@ -311,6 +345,8 @@ profiles:
           - r-foundations/getting-started.qmd
           - r-foundations/data-wrangling.qmd
           - r-foundations/merging_dataset.qmd
+          - r-foundations/cleaning_messy_data.qmd
+          - r-foundations/iteration.qmd
       - text: "Data Visualization"
         items:
           - data-visualization/ggplot_grammar.qmd
@@ -368,11 +404,15 @@ profiles:
     title: "Data Visualization Workshop — Advanced"
     output-dir: docs/advanced
     logo-href: welcome.html
-    # Advanced Analysis branch (SITE_PLAN 2.6): counts and rates (A2) lives here.
+    # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1) and counts and rates (A2) live here.
     project-extra:
       render:
+      - survival-workshop/*.qmd
       - counts-workshop/*.qmd
       resources:
+      - data/tb_cohort.csv
+      - survival-workshop/make_data.R
+      - survival-workshop/labs/*.R
       - data/dengue_wards.csv
       - counts-workshop/make_data.R
       - counts-workshop/labs/*.R
@@ -382,6 +422,8 @@ profiles:
           - r-foundations/getting-started.qmd
           - r-foundations/data-wrangling.qmd
           - r-foundations/merging_dataset.qmd
+          - r-foundations/cleaning_messy_data.qmd
+          - r-foundations/iteration.qmd
           - "---"
       - text: "Data Visualization"
         items:
@@ -414,6 +456,15 @@ profiles:
           - gtsummary/gtsummary_tutorial.qmd
           - statistical-analysis/data_analysis.qmd
           - "---"
+      - text: "Survival Workshop"
+        items:
+          - survival-workshop/s1_time_to_event.qmd
+          - survival-workshop/s2_kaplan_meier.qmd
+          - survival-workshop/s3_logrank.qmd
+          - survival-workshop/s4_cox_regression.qmd
+          - survival-workshop/s5_assumptions_reporting.qmd
+          - "---"
+          - survival-workshop/cheatsheet.qmd
       - text: "Counts Workshop"
         items:
           - counts-workshop/s1_counts_rates.qmd

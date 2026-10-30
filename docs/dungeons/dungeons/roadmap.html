@@ -124,6 +124,15 @@ ul.task-list li input[type="checkbox"] {
   </li>  
         <li><hr class="dropdown-divider"></li>
         <li>
+    <a class="dropdown-item" href="../dungeons/r2pretest.html">
+ <span class="dropdown-text">Region 2 pre-test</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/r2posttest.html">
+ <span class="dropdown-text">Region 2 post-test</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
     <a class="dropdown-item" href="../dungeons/pretest.html">
  <span class="dropdown-text">Region 3 pre-test</span></a>
   </li>  
@@ -157,6 +166,33 @@ ul.task-list li input[type="checkbox"] {
         <li>
     <a class="dropdown-item" href="../dungeons/b5_which_test.html">
  <span class="dropdown-text">Which Test?</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-region-2-·-moderate" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Region 2 · Moderate</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-region-2-·-moderate">    
+        <li>
+    <a class="dropdown-item" href="../dungeons/m1_messy_data_dungeon.html">
+ <span class="dropdown-text">Messy Data Dungeon</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/m2_loop_labyrinth.html">
+ <span class="dropdown-text">Loop Labyrinth</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/m3_explore_by_picture.html">
+ <span class="dropdown-text">Explore by Picture</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/m4_table1_forge.html">
+ <span class="dropdown-text">Table 1 Forge</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../dungeons/m5_tests_in_context.html">
+ <span class="dropdown-text">Tests in Context</span></a>
   </li>  
     </ul>
   </li>
@@ -208,10 +244,26 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="../r-foundations/merging_dataset.html">
  <span class="dropdown-text">Merging Datasets</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../r-foundations/cleaning_messy_data.html">
+ <span class="dropdown-text">Cleaning Messy Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../r-foundations/iteration.html">
+ <span class="dropdown-text">Iteration (across, loops, functions)</span></a>
+  </li>  
         <li><hr class="dropdown-divider"></li>
         <li>
     <a class="dropdown-item" href="../data-visualization/ggplot_grammar.html">
  <span class="dropdown-text">Grammar of Graphics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../data-visualization/best_practices.html">
+ <span class="dropdown-text">Best Practices</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../data-visualization/plot_data.html">
+ <span class="dropdown-text">Matching Data to Plots</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../plot-gallery/basic.html">
@@ -221,6 +273,10 @@ ul.task-list li input[type="checkbox"] {
         <li>
     <a class="dropdown-item" href="../statistical-analysis/statistical_tests.html">
  <span class="dropdown-text">Test Selection Guide</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../statistical-analysis/data_analysis.html">
+ <span class="dropdown-text">Data Analysis</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../gtsummary/gtsummary_tutorial.html">
@@ -1635,12 +1691,13 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="next-four-weeks">16. Next four weeks</h2>
 <ol type="1">
 <li>Pilot Worlds 1–2 and the pre/post forms with 5 residents; capture think-aloud notes and item timings.</li>
-<li><del>Write the World 3 (<em>Confounding Caves</em>) bank</del> ✔ drafted (9 items + boss); still to do: run the linter and render, then the misconception log. World 4 (<em>Assumption Ruins</em>) bank also drafted. World 5 (<em>Odds Arena</em>) bank also drafted. World 6 (<em>The Reporting Guild</em>) bank also drafted, so Phase 2’s four core-world conversions (Worlds 3–6) are drafted. Readiness check (now the <strong>placement check</strong>) also built (<code>readiness.qmd</code>, items <code>rd-01</code>–<code>rd-10</code>, routing in <code>quest.js</code>). Campus shell built (<code>campus.qmd</code>, <code>assets/skills.js</code>: 62-skill tree, mastery, fading/review list, “what next?” recommender, profile, calm mode; unit tests in <code>tests/skills_test.js</code>). <strong>Deferred from Phase 2 shell:</strong> state v2 event log + storage adapter (mastery is derived from v1 item records, additive fields only), an answerable daily-review quiz (needs item replay, Phase 3 with spaced retrieval), level 4 “mastered”. Pre/post forms now 20 parallel items each covering Worlds 1–6 (<code>pre-13</code>–<code>20</code>, <code>post-13</code>–<code>20</code>). Per-skill “Practise next” added to pre/post results. Facilitator pack (<code>facilitator.qmd</code>: formats, 2-hour plan, per-world prompts, pilot protocol) and browser-only cohort summary tool (<code>cohort.qmd</code>, <code>assets/cohort.js</code>, unit-tested) built; the workshop cheat sheet is linked from the quest. <strong>Remaining for the Phase 2 exit: lint/render pass, then the 20+ resident pilot (real-world).</strong> <strong>2026-10-22:</strong> moved out of the Regression track into its own site (<code>dungeons/</code>, profile <code>dungeons</code>, landing-page card); map regrouped into Regions 1–4 with “Read first” library links; old URLs redirect. <strong>Next: Region 1 · Basics worlds</strong> (Your First Script, Tidy Tavern, Join Junction, First Plots, Which Test?). <strong>Code items added (2026-10-22):</strong> learners type or paste R; <code>assets/rcheck.js</code> checks it without running R by normalising equivalent forms (unit tests <code>tests/rcheck_test.js</code>, browser-tested). The placement check’s two tasks are now code items. webR stays a later-phase option. <strong>Region 1 · Basics built (2026-10-22):</strong> five worlds (<code>b1_first_script</code> … <code>b5_which_test</code>, 9 items each incl.&nbsp;a boss and 2–3 code tasks), Region 1 pre/post tests (<code>r1pretest</code>, <code>r1posttest</code>, 10 parallel items; post ≥ 70% = <em>Basics Graduate</em>), skill tree branch B extended (B1–B11). Item quality is now checked with <code>tests/lint_bank.js --strict</code> (mirror of <code>lint_bank.R</code> plus extra obvious-answer rules N1–N8, C1–C4); R and Quarto are installed in the cloud session, so <code>lint_bank.R</code> and renders run here too. <strong>Library gaps found while writing Region 1</strong> (the coverage rule says the workshop should teach these): paired t-test and non-parametric tests on the Test Selection page; <code>case_when()</code>/<code>if_else()</code> are taught, <code>between()</code> and <code>%in%</code> are taught; joins with duplicate keys need one worked example on the Merging page. <strong>Next:</strong> per-region gates (Region 3 after the Region 1 post-test, or the placement check), then Region 2.</li>
+<li><del>Write the World 3 (<em>Confounding Caves</em>) bank</del> ✔ drafted (9 items + boss); still to do: run the linter and render, then the misconception log. World 4 (<em>Assumption Ruins</em>) bank also drafted. World 5 (<em>Odds Arena</em>) bank also drafted. World 6 (<em>The Reporting Guild</em>) bank also drafted, so Phase 2’s four core-world conversions (Worlds 3–6) are drafted. Readiness check (now the <strong>placement check</strong>) also built (<code>readiness.qmd</code>, items <code>rd-01</code>–<code>rd-10</code>, routing in <code>quest.js</code>). Campus shell built (<code>campus.qmd</code>, <code>assets/skills.js</code>: 62-skill tree, mastery, fading/review list, “what next?” recommender, profile, calm mode; unit tests in <code>tests/skills_test.js</code>). <strong>Deferred from Phase 2 shell:</strong> state v2 event log + storage adapter (mastery is derived from v1 item records, additive fields only), an answerable daily-review quiz (needs item replay, Phase 3 with spaced retrieval), level 4 “mastered”. Pre/post forms now 20 parallel items each covering Worlds 1–6 (<code>pre-13</code>–<code>20</code>, <code>post-13</code>–<code>20</code>). Per-skill “Practise next” added to pre/post results. Facilitator pack (<code>facilitator.qmd</code>: formats, 2-hour plan, per-world prompts, pilot protocol) and browser-only cohort summary tool (<code>cohort.qmd</code>, <code>assets/cohort.js</code>, unit-tested) built; the workshop cheat sheet is linked from the quest. <strong>Remaining for the Phase 2 exit: lint/render pass, then the 20+ resident pilot (real-world).</strong> <strong>2026-10-22:</strong> moved out of the Regression track into its own site (<code>dungeons/</code>, profile <code>dungeons</code>, landing-page card); map regrouped into Regions 1–4 with “Read first” library links; old URLs redirect. <strong>(Region 1 now built, see below)</strong> (Your First Script, Tidy Tavern, Join Junction, First Plots, Which Test?). <strong>Code items added (2026-10-22):</strong> learners type or paste R; <code>assets/rcheck.js</code> checks it without running R by normalising equivalent forms (unit tests <code>tests/rcheck_test.js</code>, browser-tested). The placement check’s two tasks are now code items. webR stays a later-phase option. <strong>Region 1 · Basics built (2026-10-22):</strong> five worlds (<code>b1_first_script</code> … <code>b5_which_test</code>, 9 items each incl.&nbsp;a boss and 2–3 code tasks), Region 1 pre/post tests (<code>r1pretest</code>, <code>r1posttest</code>, 10 parallel items; post ≥ 70% = <em>Basics Graduate</em>), skill tree branch B extended (B1–B11). Item quality is now checked with <code>tests/lint_bank.js --strict</code> (mirror of <code>lint_bank.R</code> plus extra obvious-answer rules N1–N8, C1–C4); R and Quarto are installed in the cloud session, so <code>lint_bank.R</code> and renders run here too. <strong>Library gaps found while writing Region 1 are now filled</strong> (coverage rule: the game only tests what the workshop teaches): Getting Started gained project paths vs <code>setwd()</code>, factor levels and the reference level, and <code>NA</code> handling; Merging gained <code>bind_rows()</code>, why not <code>cbind()</code>, and duplicate keys multiplying rows; Test Selection gained a which-test table, reading t-test output (Welch, CI is first minus second), paired t-test, Wilcoxon, and what a p-value does and does not say. <strong>Datasets:</strong> every question that mentions <code>ncd</code>, <code>villages</code>, <code>round1</code> or <code>round2</code> shows a download button, the load line and the columns beside the question (<code>RQ_DATA</code> in <code>worlds.js</code>, <code>rq_datasets()</code> in <code>quest.R</code>); <code>data/villages.csv</code>, <code>ncd_round1.csv</code> and <code>ncd_round2.csv</code> come from <code>make_data_region1.R</code>. <strong>Region 3 gate:</strong> needs the Region 3 pre-test AND (Region 1 post-test ≥ 70% OR placement check ≥ 80%); <code>requires</code> syntax is <code>a;b</code> (all) and <code>a|b</code> (any). The dungeons pages no longer use <code>freeze</code> (they depend on <code>bank/items.R</code> and <code>quest.R</code>, which freeze does not track). <strong>Next:</strong> Region 2 (done, see below), then the GIS region (after the GIS workshop has been run) and Region 4.</li>
 <li>Prototype <code>rqlab</code> (<code>rq_start</code>, <code>rq_check</code>, <code>rq_submit</code>) for one lab and the code-verification box on the site.</li>
 <li>Add the Playwright suite and the R↔︎JS parity test to CI.</li>
 <li>Draft the <strong>readiness check</strong> (8 items + 2 R tasks) and the skill-tree node list; prototype the skill tree page on the existing 40 items.</li>
 <li>Decide the hosting/privacy stance for Phase 6 (local-first stays the default).</li>
 </ol>
+<p><strong>Region 2 · Moderate built (2026-10-29):</strong> five worlds (<code>m1_messy_data_dungeon</code>, <code>m2_loop_labyrinth</code>, <code>m3_explore_by_picture</code>, <code>m4_table1_forge</code>, <code>m5_tests_in_context</code>; 9 items each incl.&nbsp;a boss and 2 code tasks), Region 2 pre/post tests (<code>r2pretest</code>, <code>r2posttest</code>, post ≥ 70% = <em>Moderate Graduate</em>), skill branches D, E, T. Gates now run Region 1 (post ≥ 70% or placement ≥ 80%) → Region 2 → Region 3 (post-test 2 ≥ 70% or placement ≥ 80%). New library pages written first (coverage rule): <code>r-foundations/cleaning_messy_data.qmd</code>, <code>r-foundations/iteration.qmd</code>, plus additions to Test Selection (assumptions, ANOVA/Kruskal, Fisher, paired, multiple testing, effect sizes) and gtsummary (Table 1 how-to and critique). New data: <code>data/ncd_messy.csv</code>, <code>data/bp_followup.csv</code> (<code>make_data_region2.R</code>). <code>rcheck.js</code> gained formula-or-vector test signatures and a canonical direction for <code>&lt;</code>/<code>&lt;=</code>.</p>
 
 
 </section>

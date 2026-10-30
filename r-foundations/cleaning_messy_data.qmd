@@ -1,0 +1,126 @@
+---
+title: "Cleaning Messy Data"
+format:
+  html:
+    code-copy: true
+    theme: cosmo
+    toc: true
+    lightbox: auto
+execute:
+  warning: false
+  message: false
+---
+
+::: {when-level="moderate"}
+
+Real data arrive with inconsistent labels, text in number columns, duplicates and impossible values. Cleaning is not glamorous, but **every later result depends on it**. This page gives a **checklist you can reuse**, on a deliberately messy file: `data/ncd_messy.csv` (313 rows from a field survey).
+
+```{r}
+library(tidyverse); library(janitor)
+raw <- read_csv(c("../data/ncd_messy.csv", "data/ncd_messy.csv")[file.exists(c("../data/ncd_messy.csv", "data/ncd_messy.csv"))][1], show_col_types = FALSE)
+```
+
+## The rule: look first, change second, keep the raw file
+
+1. **Never edit the raw file.** Write a script that reads it and produces a clean copy; the script is your audit trail.
+2. **Inspect** before you change anything: `glimpse()`, `summary()`, `count()` of every categorical column, `range()` of every number.
+3. **Change one problem at a time** and re-check after each change.
+4. **Write down** what you changed and how many rows it affected.
+
+```{r}
+glimpse(raw)
+```
+
+What the glimpse already shows: awkward names (`Pt ID`, `Age (yrs)`), `Age (yrs)` and `Salt g/day` are **text** (some values are not plain numbers), and 313 rows although 300 people were surveyed.
+
+## 1. Tidy the names
+
+```{r}
+d <- raw |> clean_names()
+names(d)
+```
+
+`clean_names()` gives lower-case names with underscores and no spaces or brackets.
+
+## 2. Make the labels consistent
+
+```{r}
+count(d, sex)
+```
+
+Eight spellings for two categories. Standardise, then **check again**:
+
+```{r}
+d <- d |> mutate(sex = case_when(str_to_lower(sex) %in% c("m", "male") ~ "Male",
+                                 str_to_lower(sex) %in% c("f", "female") ~ "Female"))
+count(d, sex)
+d <- d |> mutate(residence = str_trim(residence))     # "Urban " and "Urban" are different to R
+count(d, residence)
+```
+
+`case_when()` returns `NA` for a label it does not recognise, so a surprise shows up as `NA` in the check. Do not hide it with a catch-all `TRUE ~ ...`.
+
+## 3. Fix the types
+
+```{r}
+d |> filter(is.na(parse_number(age_yrs))) |> count(age_yrs)         # which entries are not numbers?
+d <- d |> mutate(age = parse_number(age_yrs), salt_g = parse_number(salt_g_day))
+```
+
+-   `as.numeric("7.2 g")` gives `NA`; `parse_number("7.2 g")` reads the number and drops the unit.
+-   **Look at what turned into `NA`**, as above, before accepting the conversion.
+-   Dates: `visit_date` mixes `2025-03-14` and `14/03/2025`. Parse each format separately (`ymd()`, `dmy()`) and combine, never guess.
+
+```{r}
+d <- d |> mutate(visit = coalesce(ymd(visit_date, quiet = TRUE), dmy(visit_date, quiet = TRUE)))
+sum(is.na(d$visit))
+```
+
+## 4. Placeholders and impossible values
+
+```{r}
+summary(d$age)
+summary(d$sbp)
+d |> filter(age > 120 | sbp < 60 | sbp > 300) |> select(pt_id, age, sbp)
+```
+
+-   **999** is a placeholder for "unknown" (check the codebook); `0` and `1350` for SBP are impossible (the second is probably 135.0 typed with a slip).
+-   Set them to **`NA`**; do not delete the rows and do not fill in the mean:
+
+```{r}
+d <- d |> mutate(age = na_if(age, 999), sbp = if_else(sbp < 60 | sbp > 300, NA_real_, sbp))
+colSums(is.na(d[c("age", "sbp")]))
+```
+
+## 5. Duplicates
+
+```{r}
+nrow(d)
+nrow(distinct(d))         # exact copies of a whole row
+d |> get_dupes(pt_id) |> select(pt_id, age, sbp, visit_date) |> head(8)
+```
+
+-   **Exact duplicates** (every column the same) are safe to remove with `distinct()`.
+-   **The same ID with different values** is not an exact duplicate: it may be a repeat visit, a re-entry or a wrong ID. **Do not drop one blindly**: check the source forms.
+
+## 6. The cleaning log
+
+```{r}
+tibble(step = c("rows in raw file", "after removing exact duplicates", "age placeholders set to NA", "impossible SBP set to NA"),
+       n = c(nrow(raw), nrow(distinct(raw)), sum(raw$`Age (yrs)` == "999", na.rm = TRUE), sum(d$sbp < 60 | d$sbp > 300, na.rm = TRUE)))
+```
+
+Report this in the methods: it lets a reader see what was done, and lets you repeat it when a corrected file arrives.
+
+## Checklist
+
+| Step | Look at | Fix with |
+|---|---|---|
+| Names | `names()` | `clean_names()` |
+| Labels | `count(col)` | `case_when()`, `fct_recode()`, `str_trim()`, `str_to_lower()` |
+| Types | `glimpse()`, what becomes `NA` | `parse_number()`, `ymd()` / `dmy()` |
+| Placeholders, impossible values | `summary()`, `range()` | `na_if()`, `if_else()`, then report |
+| Duplicates | `distinct()`, `get_dupes()` | remove exact copies; **investigate** repeated IDs |
+| Record | counts before and after | a log in the script |
+
+:::

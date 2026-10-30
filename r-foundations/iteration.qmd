@@ -1,0 +1,104 @@
+---
+title: "Iteration: Doing the Same Thing Many Times"
+format:
+  html:
+    code-copy: true
+    theme: cosmo
+    toc: true
+    lightbox: auto
+execute:
+  warning: false
+  message: false
+---
+
+::: {when-level="moderate"}
+
+Medical analyses repeat: the same summary for 12 variables, the same test for 5 outcomes, the same plot for each district. **Copy-pasting code 12 times is how mistakes get in** (one copy keeps an old variable name). This page shows four safer ways, from simplest to most general. Data: the NCD survey (`data/ncd_survey.csv`).
+
+```{r}
+library(tidyverse)
+ncd <- read_csv(c("../data/ncd_survey.csv", "data/ncd_survey.csv")[file.exists(c("../data/ncd_survey.csv", "data/ncd_survey.csv"))][1], show_col_types = FALSE)
+```
+
+## 1. `across()`: the same step on many columns
+
+```{r}
+ncd |> summarise(across(c(sbp, dbp, bmi), \(x) mean(x, na.rm = TRUE)))
+```
+
+-   `across(columns, function)` applies the function to each column **inside** `summarise()` or `mutate()`.
+-   `\(x) mean(x, na.rm = TRUE)` is a small unnamed function; `x` stands for "the column".
+-   Pick columns by name, `c(a, b)`, or by type, `where(is.numeric)`.
+-   Several functions at once, with names:
+
+```{r}
+ncd |> summarise(across(c(sbp, bmi), list(mean = \(x) mean(x, na.rm = TRUE), sd = \(x) sd(x, na.rm = TRUE))))
+```
+
+```{r}
+ncd |> mutate(across(c(sbp, dbp), \(x) x / 10)) |> select(sbp, dbp) |> head(3)    # the same change to two columns
+```
+
+## 2. A `for` loop: do something once for each item
+
+```{r}
+for (v in c("sbp", "dbp", "bmi")) {
+  cat(v, ": mean", round(mean(ncd[[v]], na.rm = TRUE), 1), "\n")
+}
+```
+
+-   `for (v in <items>) { <what to do> }` runs the block once for **each item**, and `v` holds the current item.
+-   `ncd[[v]]` picks the column **whose name is stored in `v`** (`ncd$v` would look for a column called "v").
+-   A loop **prints or stores** results; it only shows output if you ask (`print()`, `cat()`).
+-   A loop that adds up:
+
+```{r}
+total <- 0
+for (i in 1:4) total <- total + i
+total
+```
+
+## 3. Collecting results: `sapply()` and `purrr::map()`
+
+```{r}
+sapply(ncd[c("sbp", "dbp", "bmi")], mean, na.rm = TRUE)       # a named vector of means
+```
+
+```{r}
+# one t-test per outcome, results kept in a tidy table
+outcomes <- c("sbp", "dbp", "bmi")
+map_dfr(outcomes, \(y) {
+  t <- t.test(reformulate("sex", y), data = ncd)
+  tibble(outcome = y, difference = unname(diff(rev(t$estimate))), p = t$p.value)
+})
+```
+
+-   `map()` / `sapply()` return **one result per item**, collected for you: no empty vector to grow by hand.
+-   `reformulate("sex", y)` builds the formula `y ~ sex` from text, so the loop can change the outcome.
+-   `map_dfr()` stacks tibbles into one table; `map_dbl()` returns numbers.
+
+## 4. Write your own function
+
+```{r}
+pct_above <- function(x, cut) {
+  mean(x >= cut, na.rm = TRUE) * 100      # the last value is returned
+}
+pct_above(ncd$sbp, 140)
+pct_above(ncd$bmi, 30)
+```
+
+-   A function has **arguments** (`x`, `cut`), a **body** in `{ }`, and **returns its last expression**.
+-   Write one when you copy the same 3 or more lines twice. Name it for what it does.
+-   Test it on a case where you know the answer: `pct_above(c(1, 5, 10, 20), 10)` should be 50.
+
+## Pitfalls
+
+::: callout-warning
+-   **Growing a vector** inside a loop (`res <- c(res, new)`) is slow and error-prone; use `sapply()` / `map()`.
+-   **Forgetting `na.rm = TRUE`** inside the function you repeat: one `NA` turns every result into `NA`.
+-   **`ncd$v` vs `ncd[[v]]`:** with the variable name in `v`, use `[[ ]]`.
+-   **Overwriting the original data** in a loop; save results to a new object.
+-   Many tests at once means **many p-values**: see multiple testing on the [Statistical Tests](../statistical-analysis/statistical_tests.qmd) page.
+:::
+
+:::

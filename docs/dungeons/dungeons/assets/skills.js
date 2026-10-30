@@ -14,7 +14,7 @@
 (function (root) {
   'use strict';
   var BRANCHES = [
-    ['B', 'Basics (Region 1)'], ['F', 'Foundations'], ['L', 'Linear'], ['I', 'Inference'], ['C', 'Confounding & adjustment'],
+    ['B', 'Basics (Region 1)'], ['D', 'Data cleaning and iteration (Region 2)'], ['E', 'Exploring and describing (Region 2)'], ['T', 'Tests in context (Region 2)'], ['F', 'Foundations'], ['L', 'Linear'], ['I', 'Inference'], ['C', 'Confounding & adjustment'],
     ['M', 'Model building'], ['A', 'Assumptions'], ['G', 'Logistic'], ['K', 'Likelihood & fit'], ['R', 'Reporting']
   ];
   var PLANNED = ['N · Counts', 'O · Ordinal / nominal', 'S · Survival', 'V · Clusters', 'W · Survey', 'X · Curves & interaction', 'U · Missing data', 'P · Prediction', 'Z · Causal', 'Ω · Capstone'];
@@ -26,6 +26,12 @@
     S('B8', 'Choosing a plot', [], ['plot-choice']), S('B9', 'Building a ggplot', ['B8'], ['ggplot', 'plots']),
     S('B10', 'Choosing a test', [], ['test-choice']), S('B11', 'Running and reading a t-test or chi-square test', ['B10'], ['t-test', 'chi-square']),
     S('B3', 'Reading a summary() table', ['B1'], ['summary-table']),
+    S('D1', 'Cleaning labels and types', ['B1'], ['cleaning', 'recode', 'types']), S('D2', 'Duplicates and repeated IDs', ['D1'], ['duplicates']), S('D3', 'Placeholders and impossible values', ['D1'], ['impossible-values']),
+    S('D4', 'Iteration: across, loops, map', ['B1'], ['iteration', 'loops', 'across']), S('D5', 'Writing small functions', ['D4'], ['functions']),
+    S('E1', 'Distributions and outliers', ['B9'], ['eda', 'distributions', 'outliers']), S('E2', 'Missingness patterns', ['E1'], ['missingness']),
+    S('E3', 'Table 1 and descriptive tables', ['B1'], ['table1', 'descriptive', 'gtsummary']),
+    S('T1', 'Assumptions and test choice', ['B11'], ['assumptions', 'fisher']), S('T2', 'Paired data', ['T1'], ['paired']),
+    S('T3', 'Multiple testing', ['T1'], ['multiplicity']), S('T4', 'Effect sizes with confidence intervals', ['T1'], ['effect-size']),
     S('F1', 'What regression models', [], ['workflow']), S('F2', 'Outcome types', ['F1'], ['outcome-type']), S('F3', 'Model-choice flowchart', ['F2'], ['flowchart']),
     S('F4', 'Correlation vs regression', ['F1'], ['regression-vs-correlation']), S('F5', 'Variable roles', ['F1'], ['variable-roles']),
     S('F6', 'Missing data and complete cases', ['F1'], ['missing-data']), S('F7', 'Reading Table 1', ['F5'], ['table1']),

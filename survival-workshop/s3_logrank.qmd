@@ -1,0 +1,212 @@
+---
+title: "Session 3 — Comparing Survival: the Log-Rank Test"
+subtitle: "Null hypothesis · observed vs expected · stratified log-rank · wrong tests · Lab 3"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 2: Kaplan-Meier curves by group
+- Today: **are the curves different** beyond chance?
+- By the end you can:
+  - run and read a **log-rank test**
+  - use **observed vs expected** deaths to give the direction
+  - **stratify** a log-rank test
+  - explain why a **t-test of follow-up time** is wrong
+:::
+
+# Topic 1 — The log-rank test {background-color="#2C3E50"}
+
+## What it compares
+
+At every event time, given how many are at risk in each group, how many deaths would we **expect** in each group **if the curves were the same**? The test adds up (observed − expected) over all event times.
+
+::: {.key}
+**H₀:** the survival curves (hazards) are the **same** in all groups. Small p: evidence of a **difference somewhere along follow-up**. It uses the **whole curve**, and is most powerful when the hazards are **proportional**.
+:::
+
+## HIV status
+
+```{r}
+lr_hiv <- survdiff(Surv(time_months, status) ~ hiv, data = tb)
+lr_hiv
+```
+
+::: {.incremental}
+- **Observed** vs **expected** deaths: HIV-positive patients had more deaths than expected (`r lr_hiv$obs[2]` vs `r round(lr_hiv$exp[2], 1)`)
+- `Chisq` on **1 df** and its p-value: here p = `r signif(1 - pchisq(lr_hiv$chisq, 1), 2)`
+- The test gives **no size of effect**: use the hazard ratio (Session 4)
+:::
+
+## A null result
+
+```{r}
+lr_sex <- survdiff(Surv(time_months, status) ~ sex, data = tb)
+c(chisq = round(lr_sex$chisq, 2), p = round(1 - pchisq(lr_sex$chisq, 1), 2))
+```
+
+::: {.warn}
+p = `r round(1 - pchisq(lr_sex$chisq, 1), 2)` means **no evidence** of a difference by sex, **not proof** of none: look at the **CI of the hazard ratio** to see which differences remain plausible.
+:::
+
+# Topic 2 — Getting it right {background-color="#2C3E50"}
+
+## Stratified log-rank
+
+Compare HIV groups **within** treatment arms, then combine:
+
+```{r}
+survdiff(Surv(time_months, status) ~ hiv + strata(treatment), data = tb)
+```
+
+::: {.incremental}
+- Use when another variable also affects survival and is **unbalanced** between the groups
+- It cannot compare the stratifying variable itself, and **adjusts for one factor at a time**: for several, use Cox
+:::
+
+## More than two groups
+
+```{r}
+tb |> mutate(group = case_when(mdr_tb == "Yes" ~ "MDR-TB", hiv == "Positive" ~ "HIV, drug-sensitive", TRUE ~ "Drug-sensitive, HIV-negative")) |>
+  survdiff(Surv(time_months, status) ~ group, data = _)
+```
+
+An **overall** test on k groups has **k − 1 df**; it says *some* group differs. Follow with pairwise comparisons, **adjusted** for multiple testing.
+
+## The wrong tests
+
+::: {.bad}
+- **t-test or Wilcoxon on follow-up time:** mixes deaths and censored times, and answers a different question
+- **Chi-square on "died yes/no"** ignores follow-up time, which differs between patients
+:::
+
+```{r}
+c(t_test = signif(t.test(time_months ~ hiv, data = tb)$p.value, 2), log_rank = signif(1 - pchisq(lr_hiv$chisq, 1), 2))
+```
+
+## The log-rank test does not
+
+::: {.incremental}
+- **Adjust** for several covariates: use **Cox regression**
+- Give an **effect size**: report the **hazard ratio with a CI**
+- Work well when the **curves cross**: then the "average" difference can be near zero while the curves differ early and late
+:::
+
+## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `survival-workshop/labs/lab3_logrank.R`
+
+- `survdiff()` by HIV, sex and MDR-TB
+- observed vs expected, the p-value from the chi-square
+- `strata()` and the wrong t-test
+:::
+
+**Time:** 30 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q1", "What is the null hypothesis of the log-rank test comparing two groups?",
+         c("The median survival time is the same in both groups",
+           "The numbers of patients at the start are equal in both groups",
+           "The survival curves are the same in both groups",
+           "The hazard ratio is exactly 1 at one particular time"), answer = 3,
+         explain = "The log-rank test asks whether the two survival (hazard) curves coincide over the whole follow-up. It does not compare only a median or one time point.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q2", "HIV-positive patients had 19 observed deaths and 11.4 expected. How should this be read?",
+         c("Fewer deaths than expected if survival were the same in both groups",
+           "More deaths than expected if survival were the same in both groups",
+           "The test has failed, because the two numbers are different",
+           "A difference of 7.6 deaths per 100 person-years"), answer = 2,
+         explain = "Expected deaths are what the group would have if the curves were identical. A group with more deaths than expected fared worse than the pooled experience.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q3", "Why is a t-test on the follow-up time of two groups inappropriate for survival data?",
+         c("The t-test needs both of the groups to have the same number of patients",
+           "Follow-up times follow a normal distribution in a typical sample of patients",
+           "Follow-up times mix deaths and censored times, so it asks the wrong question",
+           "A t-test can be used for yes/no outcomes and not for times to an event"), answer = 3,
+         explain = "Censored times are not death times, so comparing average follow-up times does not compare survival. The log-rank test uses the censoring information correctly.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q4", "The log-rank test by sex gives p = 0.63. Which conclusion is best?",
+         c("Men and women have been shown to have identical survival in the cohort",
+           "Sex has no effect on survival in any population of TB patients",
+           "The test was underpowered, so it should be repeated on more patients",
+           "No evidence of a difference in survival by sex in this cohort"), answer = 4,
+         explain = "A large p-value is weak evidence against 'no difference', not proof of equality. The hazard ratio and its CI show which differences are still plausible.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q5", "When is a stratified log-rank test most useful?",
+         c("When another factor affects survival and is unbalanced between groups",
+           "When the survival curves of the two groups cross over each other once",
+           "When there are no deaths recorded in one of the two groups compared",
+           "When the follow-up times of the patients are normally distributed"), answer = 1,
+         explain = "Stratification compares groups within levels of another variable and combines the results, so imbalance in that variable does not distort the comparison.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Log-rank**: compares the whole curves; H₀ = same survival
+- **Observed vs expected** deaths give the direction
+- Stratify for **one** other factor; use **Cox** for several
+- Never t-test follow-up times; a non-significant p is not proof of no difference
+:::
+
+**Next:** Session 4: Cox regression

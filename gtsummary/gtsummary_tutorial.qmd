@@ -53,4 +53,37 @@ data %>%
   bold_labels()
 ```
 
+### Table 1 for a study (NCD survey)
+
+```{r}
+library(tidyverse)
+ncd <- read_csv(c("../data/ncd_survey.csv", "data/ncd_survey.csv")[file.exists(c("../data/ncd_survey.csv", "data/ncd_survey.csv"))][1], show_col_types = FALSE) |>
+  mutate(sex = factor(sex), htn = factor(htn, 0:1, c("No", "Yes")))
+
+ncd |>
+  select(age, sex, residence, bmi, sbp, tobacco, htn) |>
+  tbl_summary(by = htn,
+              label = list(age ~ "Age (years)", bmi ~ "BMI (kg/m²)", sbp ~ "Systolic BP (mmHg)"),
+              statistic = list(all_continuous() ~ "{median} ({p25}, {p75})", all_categorical() ~ "{n} ({p}%)"),
+              digits = all_continuous() ~ 1,
+              missing_text = "Missing") |>
+  add_overall() |>
+  add_p() |>
+  bold_labels()
+```
+
+-   **`by =`** splits the columns by group; **`add_overall()`** adds a total column.
+-   **`statistic =`** chooses the summary: `"{mean} ({sd})"` for roughly symmetric variables, `"{median} ({p25}, {p75})"` for skewed ones.
+-   **`missing_text`** shows how many values are missing for each variable; **do not hide them**.
+-   **`add_p()`** picks a test for each variable (Wilcoxon, t-test, chi-square, Fisher) and **footnotes which one**.
+
+### Reading Table 1
+
+-   **Table 1 describes the sample**; it is not where the findings go (models and effects belong in later tables).
+-   Give **n (%)** for categories and **mean (SD)** or **median (IQR)** for numbers; say which in the footnote.
+-   In a **randomised trial**, do **not** report p-values for baseline differences: any difference is by chance. Use standardised differences if you need a check.
+-   In an **observational** study, p-values for exposure groups are descriptive; the size of the difference matters more than the p.
+-   Report **missing** counts, and the **number analysed**.
+-   Export for a paper with `as_flex_table()` (Word) or `as_gt()` (HTML/PDF).
+
 :::

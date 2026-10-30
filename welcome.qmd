@@ -109,6 +109,7 @@ meta <- list(
       "Produce publication-ready documents using Quarto"
     ),
     modules = c(
+      "⏳ Survival Analysis Workshop — 5 sessions, 5 labs, quizzes, cheat sheet",
       "🦟 Counts and Rates Workshop — 5 sessions, 5 labs, quizzes, cheat sheet",
       "📁 R Foundations & Data Wrangling (+ Applied Examples)",
       "📊 Best Practices & Plot Matching",
@@ -122,6 +123,7 @@ meta <- list(
       "🏥 Applied NCTOH Healthcare Examples"
     ),
     nav = list(
+      list(icon="⏳", label="Survival Workshop", href="survival-workshop/s1_time_to_event.qmd", desc="Slides, labs and quizzes on time-to-event data: Kaplan-Meier, log-rank, Cox (start at Session 1)"),
       list(icon="🦟", label="Counts Workshop", href="counts-workshop/s1_counts_rates.qmd", desc="Slides, labs and quizzes on counts and rates: Poisson, negative binomial, offsets (start at Session 1)"),
       list(icon="📁", label="R Foundations",     href="r-foundations/getting-started.qmd",             desc="R syntax, wrangling, and full NCTOH applied examples"),
       list(icon="📊", label="Data Visualization", href="data-visualization/ggplot_grammar.qmd",          desc="All four ggplot2 modules, advanced and interactive plots"),
@@ -131,10 +133,10 @@ meta <- list(
     show_stats   = TRUE,
     show_quarto  = TRUE,
     downloads = list(
-      scripts    = c("counts-workshop/make_data.R", "counts-workshop/labs/lab1_counts.R", "counts-workshop/labs/lab2_poisson.R", "counts-workshop/labs/lab3_overdisp.R", "counts-workshop/labs/lab4_zeros.R", "counts-workshop/labs/lab5_report.R", "downloads/basic_r_foundations.R", "downloads/basic_visualization.R",
+      scripts    = c("survival-workshop/make_data.R", "survival-workshop/labs/lab1_data.R", "survival-workshop/labs/lab2_km.R", "survival-workshop/labs/lab3_logrank.R", "survival-workshop/labs/lab4_cox.R", "survival-workshop/labs/lab5_assumptions.R", "counts-workshop/make_data.R", "counts-workshop/labs/lab1_counts.R", "counts-workshop/labs/lab2_poisson.R", "counts-workshop/labs/lab3_overdisp.R", "counts-workshop/labs/lab4_zeros.R", "counts-workshop/labs/lab5_report.R", "downloads/basic_r_foundations.R", "downloads/basic_visualization.R",
                      "downloads/moderate_visualization.R", "downloads/advanced_visualization.R",
                      "downloads/gtsummary_examples.R", "downloads/interactive_plots.R"),
-      datasets   = c("data/dengue_wards.csv", "downloads/workshop_data.csv", "downloads/workshop_data.xlsx",
+      datasets   = c("data/tb_cohort.csv", "data/dengue_wards.csv", "downloads/workshop_data.csv", "downloads/workshop_data.xlsx",
                      "downloads/workshop_data.rds", "downloads/nctoh_data.rds",
                      "downloads/nctoh_complete.rds"),
       cheatsheets= c("downloads/ggplot2_cheatsheet.pdf", "downloads/dplyr_cheatsheet.pdf",
