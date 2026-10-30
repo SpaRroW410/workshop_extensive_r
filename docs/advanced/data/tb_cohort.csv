@@ -1,0 +1,601 @@
+id,age,sex,hiv,diabetes,smoker,bmi,mdr_tb,smear,treatment,time_months,status,censor_reason
+TB001,43,Male,Negative,No,No,18.5,No,Positive,Self-administered,7.8,0,Lost to follow-up
+TB002,46,Male,Negative,No,Yes,14.5,No,Negative,DOT,15.2,0,Alive at end of follow-up
+TB003,15,Female,Negative,No,Yes,19.3,No,Negative,DOT,23.8,0,Alive at end of follow-up
+TB004,69,Female,Negative,No,No,20.2,No,Positive,Self-administered,2.6,0,Lost to follow-up
+TB005,73,Female,Negative,Yes,No,23.2,No,Negative,DOT,20.7,0,Alive at end of follow-up
+TB006,42,Male,Negative,No,Yes,20.2,No,Positive,DOT,19.9,0,Alive at end of follow-up
+TB007,30,Male,Negative,No,No,22.9,No,Positive,DOT,3.8,0,Lost to follow-up
+TB008,18,Male,Negative,No,No,23.4,No,Negative,DOT,19.4,0,Alive at end of follow-up
+TB009,45,Male,Negative,No,No,19.7,No,Negative,DOT,14.9,0,Alive at end of follow-up
+TB010,40,Female,Negative,No,No,21.5,No,Positive,DOT,17.7,0,Alive at end of follow-up
+TB011,20,Female,Negative,No,No,19.2,No,Negative,DOT,17.6,0,Alive at end of follow-up
+TB012,58,Male,Negative,No,No,20,Yes,Negative,Self-administered,22.6,0,Alive at end of follow-up
+TB013,22,Male,Negative,No,Yes,22.1,No,Negative,DOT,16,0,Alive at end of follow-up
+TB014,25,Female,Negative,No,No,21.1,No,Negative,DOT,21.3,0,Alive at end of follow-up
+TB015,31,Male,Negative,No,No,22.9,No,Negative,DOT,17,0,Alive at end of follow-up
+TB016,39,Male,Negative,No,Yes,21.5,No,Positive,DOT,14.1,0,Lost to follow-up
+TB017,39,Male,Negative,No,No,19.2,No,Positive,DOT,14.7,0,Alive at end of follow-up
+TB018,25,Male,Negative,No,No,26.3,No,Negative,DOT,14.2,0,Lost to follow-up
+TB019,23,Female,Negative,No,Yes,21.3,No,Positive,Self-administered,3.4,0,Lost to follow-up
+TB020,60,Female,Negative,No,No,14.7,No,Negative,DOT,22.1,0,Alive at end of follow-up
+TB021,47,Female,Negative,No,No,20,No,Positive,DOT,21.4,0,Alive at end of follow-up
+TB022,34,Female,Negative,No,No,20.3,No,Negative,DOT,8.4,0,Lost to follow-up
+TB023,62,Female,Negative,No,No,20.4,No,Negative,DOT,17.3,0,Alive at end of follow-up
+TB024,39,Male,Negative,No,No,20.5,No,Positive,DOT,3.1,0,Lost to follow-up
+TB025,55,Male,Negative,No,No,22.7,No,Negative,Self-administered,19,0,Alive at end of follow-up
+TB026,51,Male,Negative,No,No,14.1,No,Positive,Self-administered,5.7,1,NA
+TB027,44,Male,Positive,No,Yes,20.3,No,Positive,DOT,20.2,0,Alive at end of follow-up
+TB028,43,Male,Negative,No,Yes,22.1,No,Negative,DOT,18,0,Alive at end of follow-up
+TB029,44,Male,Negative,No,No,20.6,No,Positive,DOT,23,0,Alive at end of follow-up
+TB030,22,Male,Negative,No,Yes,21,No,Negative,DOT,9.2,0,Lost to follow-up
+TB031,46,Female,Negative,Yes,Yes,20.1,No,Positive,DOT,0.2,1,NA
+TB032,48,Male,Negative,No,Yes,15.2,No,Negative,DOT,1.7,1,NA
+TB033,23,Female,Negative,No,No,17.4,Yes,Negative,Self-administered,16.7,1,NA
+TB034,53,Male,Negative,No,Yes,25.7,No,Positive,DOT,20.7,0,Alive at end of follow-up
+TB035,25,Male,Positive,No,No,18,No,Positive,Self-administered,17,0,Alive at end of follow-up
+TB036,46,Female,Negative,No,No,18,No,Negative,DOT,18.6,0,Alive at end of follow-up
+TB037,73,Male,Negative,Yes,No,19.9,No,Positive,Self-administered,2.8,1,NA
+TB038,29,Female,Negative,No,No,16.9,No,Negative,Self-administered,5,0,Lost to follow-up
+TB039,60,Female,Negative,No,No,15.3,No,Positive,DOT,19.6,0,Alive at end of follow-up
+TB040,33,Male,Negative,No,Yes,15,No,Negative,Self-administered,4.5,1,NA
+TB041,34,Male,Negative,No,Yes,15.4,No,Positive,DOT,17.8,0,Alive at end of follow-up
+TB042,36,Male,Negative,No,Yes,19.3,No,Positive,Self-administered,0.1,0,Lost to follow-up
+TB043,78,Male,Negative,No,Yes,21.5,No,Negative,DOT,1.1,0,Lost to follow-up
+TB044,50,Male,Negative,No,Yes,21.6,No,Negative,DOT,8.8,1,NA
+TB045,44,Female,Negative,No,No,24,No,Positive,DOT,16.4,0,Alive at end of follow-up
+TB046,48,Male,Negative,No,No,23.7,No,Positive,Self-administered,11.9,0,Lost to follow-up
+TB047,39,Female,Negative,No,No,20.2,No,Positive,Self-administered,18.7,0,Alive at end of follow-up
+TB048,75,Male,Negative,No,No,18.2,Yes,Negative,Self-administered,4.4,1,NA
+TB049,24,Female,Negative,No,No,16.8,No,Positive,DOT,15.7,0,Alive at end of follow-up
+TB050,38,Male,Negative,No,No,16.6,No,Negative,DOT,18.8,0,Alive at end of follow-up
+TB051,32,Female,Positive,No,Yes,19.1,No,Negative,DOT,15,0,Alive at end of follow-up
+TB052,29,Male,Negative,No,No,16.4,No,Negative,DOT,23.5,0,Alive at end of follow-up
+TB053,42,Female,Negative,No,No,18.8,No,Positive,DOT,15.2,0,Alive at end of follow-up
+TB054,41,Male,Negative,No,Yes,14.2,No,Positive,DOT,15.7,0,Alive at end of follow-up
+TB055,33,Male,Negative,No,Yes,19.2,No,Negative,DOT,18.4,0,Alive at end of follow-up
+TB056,49,Male,Negative,No,No,17.3,No,Negative,Self-administered,10.8,1,NA
+TB057,48,Female,Negative,No,No,20.2,No,Positive,DOT,22.7,0,Alive at end of follow-up
+TB058,37,Male,Negative,No,No,16.4,No,Positive,DOT,7.8,1,NA
+TB059,50,Male,Negative,No,Yes,18.7,Yes,Positive,Self-administered,2.6,1,NA
+TB060,31,Male,Negative,No,Yes,23.3,No,Positive,DOT,18.2,0,Alive at end of follow-up
+TB061,26,Female,Positive,No,No,13.7,No,Negative,Self-administered,10.4,1,NA
+TB062,68,Male,Negative,No,No,20.4,No,Negative,Self-administered,14.2,1,NA
+TB063,70,Male,Negative,Yes,No,20.6,No,Positive,DOT,2.1,1,NA
+TB064,39,Male,Negative,No,No,18,No,Positive,DOT,16.7,0,Alive at end of follow-up
+TB065,27,Female,Negative,No,No,22.2,No,Positive,DOT,23.6,0,Alive at end of follow-up
+TB066,52,Male,Negative,No,No,13.4,No,Positive,Self-administered,18.2,0,Alive at end of follow-up
+TB067,40,Male,Negative,No,Yes,17.7,No,Positive,Self-administered,21.3,0,Alive at end of follow-up
+TB068,43,Male,Negative,No,No,25.8,No,Positive,Self-administered,20.5,0,Alive at end of follow-up
+TB069,72,Female,Negative,No,Yes,24.3,No,Positive,DOT,2.3,0,Lost to follow-up
+TB070,44,Female,Negative,No,No,15.7,No,Positive,DOT,22.3,0,Alive at end of follow-up
+TB071,58,Male,Negative,No,No,22.3,No,Negative,DOT,2,1,NA
+TB072,27,Male,Negative,No,No,20.1,No,Positive,DOT,19.4,0,Alive at end of follow-up
+TB073,26,Male,Negative,No,No,26,No,Positive,Self-administered,15.7,0,Alive at end of follow-up
+TB074,41,Female,Positive,No,No,16.8,No,Positive,Self-administered,18.8,0,Alive at end of follow-up
+TB075,39,Male,Negative,No,Yes,17.7,No,Negative,DOT,0.1,0,Lost to follow-up
+TB076,45,Female,Negative,No,No,18.9,Yes,Positive,DOT,4,1,NA
+TB077,67,Female,Negative,No,No,19.4,No,Positive,Self-administered,9.8,0,Lost to follow-up
+TB078,34,Male,Negative,No,Yes,22.9,Yes,Positive,Self-administered,20.6,0,Alive at end of follow-up
+TB079,25,Female,Negative,No,No,19.5,No,Negative,DOT,16.1,0,Alive at end of follow-up
+TB080,71,Female,Negative,Yes,No,21,No,Positive,DOT,18.1,0,Alive at end of follow-up
+TB081,44,Male,Negative,Yes,No,22.9,No,Negative,Self-administered,16.3,0,Alive at end of follow-up
+TB082,52,Male,Negative,Yes,Yes,15.4,No,Positive,Self-administered,16.9,0,Alive at end of follow-up
+TB083,22,Male,Negative,No,Yes,24.3,No,Negative,Self-administered,19.5,0,Alive at end of follow-up
+TB084,67,Male,Negative,No,No,22.5,No,Negative,DOT,4.7,0,Lost to follow-up
+TB085,43,Male,Positive,No,No,20.6,No,Negative,Self-administered,6,1,NA
+TB086,23,Male,Negative,No,Yes,23.8,No,Positive,Self-administered,5.4,0,Lost to follow-up
+TB087,42,Female,Negative,No,No,22.6,No,Positive,DOT,21.4,0,Alive at end of follow-up
+TB088,53,Female,Negative,No,No,23.4,No,Negative,Self-administered,14.8,0,Alive at end of follow-up
+TB089,58,Female,Negative,No,No,18.5,No,Negative,DOT,23.9,0,Alive at end of follow-up
+TB090,60,Male,Negative,No,Yes,24.4,No,Negative,Self-administered,19.4,0,Alive at end of follow-up
+TB091,33,Male,Negative,No,No,20.3,No,Positive,Self-administered,23.1,0,Alive at end of follow-up
+TB092,47,Male,Negative,No,No,20.9,No,Negative,Self-administered,3.8,1,NA
+TB093,70,Female,Negative,No,No,21.9,No,Negative,Self-administered,1.9,1,NA
+TB094,34,Female,Negative,No,No,20.3,No,Positive,DOT,14.4,0,Alive at end of follow-up
+TB095,57,Male,Negative,No,No,20.2,No,Positive,Self-administered,8.3,0,Lost to follow-up
+TB096,45,Male,Negative,No,Yes,16,No,Negative,DOT,16.1,1,NA
+TB097,55,Male,Negative,No,Yes,17,No,Positive,DOT,16.2,0,Lost to follow-up
+TB098,26,Male,Negative,No,No,16.7,No,Negative,Self-administered,13.2,0,Lost to follow-up
+TB099,41,Male,Negative,No,Yes,20.1,No,Positive,DOT,17.2,0,Alive at end of follow-up
+TB100,61,Male,Negative,No,Yes,21.4,No,Negative,DOT,23.5,0,Alive at end of follow-up
+TB101,41,Male,Positive,No,Yes,19,No,Positive,DOT,2.2,1,NA
+TB102,66,Male,Negative,No,No,20.6,No,Negative,Self-administered,20.9,0,Alive at end of follow-up
+TB103,50,Female,Positive,No,Yes,19.1,No,Negative,Self-administered,14.8,1,NA
+TB104,58,Male,Negative,No,No,16.6,No,Positive,DOT,3.7,1,NA
+TB105,60,Male,Negative,Yes,No,17.2,No,Positive,DOT,20.4,0,Lost to follow-up
+TB106,19,Male,Negative,No,No,20.6,No,Positive,DOT,20.2,0,Alive at end of follow-up
+TB107,36,Female,Negative,No,No,15.9,No,Positive,Self-administered,16.8,0,Alive at end of follow-up
+TB108,39,Male,Negative,No,No,19.2,No,Negative,DOT,17,0,Alive at end of follow-up
+TB109,60,Male,Negative,No,Yes,26.5,No,Negative,Self-administered,23.1,0,Alive at end of follow-up
+TB110,62,Male,Negative,No,Yes,19.4,No,Positive,DOT,17.5,0,Alive at end of follow-up
+TB111,51,Female,Negative,No,No,16.5,No,Negative,DOT,17.9,0,Alive at end of follow-up
+TB112,26,Male,Negative,No,Yes,18,No,Negative,Self-administered,18.8,0,Alive at end of follow-up
+TB113,15,Male,Negative,No,No,27,No,Negative,DOT,16.4,0,Alive at end of follow-up
+TB114,49,Male,Negative,No,Yes,20.1,No,Positive,Self-administered,17.6,0,Alive at end of follow-up
+TB115,65,Male,Negative,No,Yes,22.4,No,Negative,DOT,22.3,0,Alive at end of follow-up
+TB116,49,Female,Negative,No,No,19.1,No,Negative,DOT,15.9,0,Alive at end of follow-up
+TB117,36,Male,Negative,No,No,17,No,Positive,DOT,14.5,0,Alive at end of follow-up
+TB118,20,Female,Negative,No,Yes,23.9,No,Positive,DOT,4.8,0,Lost to follow-up
+TB119,37,Male,Negative,No,Yes,14.4,No,Negative,DOT,15.4,0,Alive at end of follow-up
+TB120,42,Female,Negative,No,No,13.5,No,Positive,DOT,23.7,0,Alive at end of follow-up
+TB121,31,Female,Negative,No,Yes,20.6,No,Negative,DOT,14.1,0,Lost to follow-up
+TB122,50,Female,Positive,No,No,16.4,No,Positive,DOT,18,0,Lost to follow-up
+TB123,61,Male,Negative,Yes,Yes,14.2,No,Negative,DOT,6.4,1,NA
+TB124,51,Male,Negative,No,No,20.6,Yes,Negative,DOT,18.6,0,Alive at end of follow-up
+TB125,43,Male,Positive,No,No,23.7,No,Negative,DOT,15.6,0,Alive at end of follow-up
+TB126,33,Male,Negative,No,No,22.3,No,Positive,Self-administered,11.4,0,Lost to follow-up
+TB127,74,Female,Negative,No,No,22.3,No,Positive,Self-administered,15.4,0,Alive at end of follow-up
+TB128,49,Male,Negative,No,No,20.7,No,Positive,DOT,22.4,0,Alive at end of follow-up
+TB129,48,Female,Negative,No,No,19.6,No,Positive,DOT,21.4,0,Alive at end of follow-up
+TB130,36,Female,Negative,No,No,18.7,No,Positive,DOT,18.4,0,Alive at end of follow-up
+TB131,69,Female,Negative,No,No,20.9,No,Positive,Self-administered,20.8,0,Alive at end of follow-up
+TB132,56,Male,Negative,No,No,21.1,No,Positive,DOT,23.3,0,Alive at end of follow-up
+TB133,45,Female,Negative,No,No,16.7,No,Negative,DOT,1.4,0,Lost to follow-up
+TB134,20,Male,Negative,No,No,15.7,No,Negative,DOT,19.5,0,Alive at end of follow-up
+TB135,40,Male,Negative,No,Yes,21.1,No,Positive,Self-administered,17.6,0,Alive at end of follow-up
+TB136,55,Female,Negative,No,Yes,15.7,No,Negative,DOT,7.1,1,NA
+TB137,18,Female,Negative,No,No,18.6,No,Positive,Self-administered,2.4,1,NA
+TB138,43,Female,Negative,No,No,18.6,No,Positive,DOT,3,1,NA
+TB139,60,Female,Negative,Yes,No,16,No,Negative,DOT,19.3,0,Alive at end of follow-up
+TB140,45,Female,Negative,No,No,20,No,Positive,DOT,4.8,0,Lost to follow-up
+TB141,35,Male,Negative,No,Yes,21.8,No,Negative,DOT,1.8,1,NA
+TB142,41,Male,Negative,No,No,18.7,No,Negative,Self-administered,16.2,0,Alive at end of follow-up
+TB143,51,Female,Negative,No,No,19.8,No,Positive,Self-administered,23.1,0,Alive at end of follow-up
+TB144,50,Male,Negative,No,Yes,24.1,No,Positive,Self-administered,0.8,1,NA
+TB145,31,Male,Negative,No,No,16.1,No,Negative,Self-administered,14.9,0,Alive at end of follow-up
+TB146,43,Female,Positive,No,No,15.9,No,Positive,DOT,2.1,1,NA
+TB147,29,Female,Negative,No,Yes,20,No,Positive,DOT,22.7,0,Alive at end of follow-up
+TB148,38,Male,Negative,No,No,16.8,Yes,Negative,DOT,23.3,0,Alive at end of follow-up
+TB149,45,Male,Negative,Yes,Yes,25.7,No,Positive,DOT,21.5,0,Alive at end of follow-up
+TB150,38,Female,Negative,No,No,23.6,No,Negative,DOT,15.4,0,Alive at end of follow-up
+TB151,52,Male,Negative,No,No,21.7,No,Negative,DOT,23.6,0,Alive at end of follow-up
+TB152,34,Male,Negative,No,Yes,19.7,No,Negative,DOT,16.8,0,Alive at end of follow-up
+TB153,49,Female,Negative,No,Yes,18.3,No,Negative,Self-administered,20.1,0,Alive at end of follow-up
+TB154,52,Female,Negative,No,No,21.9,No,Negative,DOT,23.6,0,Alive at end of follow-up
+TB155,75,Female,Negative,No,No,21.9,No,Positive,Self-administered,13.4,0,Lost to follow-up
+TB156,41,Male,Negative,No,Yes,19.3,No,Positive,Self-administered,4.9,1,NA
+TB157,27,Male,Negative,No,No,20,No,Positive,DOT,22,0,Alive at end of follow-up
+TB158,54,Female,Negative,No,Yes,20.3,No,Negative,DOT,20.7,0,Alive at end of follow-up
+TB159,29,Male,Negative,No,Yes,21.1,No,Negative,Self-administered,22.9,0,Alive at end of follow-up
+TB160,50,Male,Positive,No,Yes,18.3,No,Negative,DOT,15.7,0,Alive at end of follow-up
+TB161,48,Female,Negative,No,No,16.5,No,Negative,Self-administered,18.3,0,Alive at end of follow-up
+TB162,46,Male,Negative,No,No,19,No,Positive,DOT,4.8,0,Lost to follow-up
+TB163,35,Female,Positive,No,No,17.6,No,Positive,Self-administered,4.1,1,NA
+TB164,65,Male,Negative,No,Yes,25.2,No,Positive,DOT,6.1,1,NA
+TB165,70,Male,Negative,No,No,13,No,Negative,DOT,22.3,0,Alive at end of follow-up
+TB166,22,Female,Negative,No,No,19.7,No,Negative,DOT,21.8,0,Alive at end of follow-up
+TB167,40,Male,Negative,No,No,20.7,Yes,Negative,DOT,20,0,Alive at end of follow-up
+TB168,52,Female,Negative,Yes,No,16.5,No,Negative,DOT,9.5,1,NA
+TB169,19,Female,Negative,No,No,17.4,No,Negative,DOT,13.3,0,Lost to follow-up
+TB170,47,Female,Negative,No,No,20.4,No,Negative,DOT,14.8,0,Alive at end of follow-up
+TB171,30,Male,Negative,No,Yes,22.9,No,Positive,DOT,18.7,0,Alive at end of follow-up
+TB172,46,Female,Negative,No,No,13,No,Negative,DOT,19.9,0,Alive at end of follow-up
+TB173,44,Male,Negative,No,Yes,20.7,No,Negative,DOT,17.7,0,Alive at end of follow-up
+TB174,20,Female,Negative,No,No,14.9,No,Negative,DOT,22.3,0,Alive at end of follow-up
+TB175,32,Female,Negative,No,No,19.5,No,Positive,DOT,20.2,0,Alive at end of follow-up
+TB176,32,Male,Negative,No,No,19.8,No,Positive,DOT,19.7,0,Alive at end of follow-up
+TB177,20,Female,Negative,No,No,20.3,No,Positive,DOT,19.3,0,Alive at end of follow-up
+TB178,46,Male,Positive,No,Yes,22.6,No,Positive,Self-administered,18.8,0,Alive at end of follow-up
+TB179,45,Female,Negative,Yes,No,15.2,No,Positive,DOT,23.4,0,Alive at end of follow-up
+TB180,46,Male,Negative,No,No,19.4,No,Negative,Self-administered,5.2,1,NA
+TB181,28,Female,Negative,No,No,18.1,No,Negative,DOT,21.6,0,Alive at end of follow-up
+TB182,45,Female,Negative,No,No,21.5,No,Positive,Self-administered,19.3,0,Alive at end of follow-up
+TB183,36,Female,Negative,No,No,20.3,No,Positive,DOT,0.5,1,NA
+TB184,19,Male,Negative,No,Yes,17.7,No,Positive,DOT,18.4,0,Alive at end of follow-up
+TB185,53,Male,Negative,No,No,16.5,No,Positive,DOT,16.6,0,Alive at end of follow-up
+TB186,48,Male,Negative,No,Yes,17.5,No,Positive,Self-administered,14.1,0,Alive at end of follow-up
+TB187,51,Female,Negative,No,No,17.9,No,Positive,DOT,15.9,0,Alive at end of follow-up
+TB188,39,Male,Negative,Yes,No,21.7,No,Positive,Self-administered,16.3,0,Alive at end of follow-up
+TB189,32,Male,Positive,No,No,21.2,No,Negative,Self-administered,7.6,1,NA
+TB190,28,Male,Negative,No,No,21.6,No,Negative,DOT,15.3,0,Alive at end of follow-up
+TB191,49,Male,Negative,No,Yes,19.3,No,Positive,Self-administered,3.2,1,NA
+TB192,46,Male,Negative,No,Yes,22.8,No,Negative,DOT,9.9,0,Lost to follow-up
+TB193,78,Female,Negative,No,Yes,17.1,No,Negative,Self-administered,20,0,Alive at end of follow-up
+TB194,61,Female,Negative,No,No,18.6,No,Positive,Self-administered,20.5,0,Lost to follow-up
+TB195,30,Male,Negative,No,No,18.8,Yes,Negative,DOT,0.6,1,NA
+TB196,40,Male,Negative,No,No,20.4,No,Negative,DOT,23.7,0,Alive at end of follow-up
+TB197,28,Female,Positive,Yes,No,22.6,No,Negative,DOT,23.6,0,Alive at end of follow-up
+TB198,48,Male,Negative,No,No,21.6,No,Positive,DOT,4.9,0,Lost to follow-up
+TB199,56,Female,Negative,No,No,23.7,No,Negative,Self-administered,14.1,0,Lost to follow-up
+TB200,44,Male,Negative,No,Yes,25.6,Yes,Positive,DOT,14.8,0,Alive at end of follow-up
+TB201,20,Male,Negative,No,Yes,17.7,No,Positive,Self-administered,5.2,1,NA
+TB202,52,Male,Negative,No,Yes,13.6,Yes,Negative,DOT,6.2,1,NA
+TB203,57,Female,Negative,No,No,13.6,No,Negative,DOT,18.7,0,Alive at end of follow-up
+TB204,60,Female,Negative,No,Yes,16.4,No,Negative,DOT,17.6,0,Alive at end of follow-up
+TB205,38,Female,Negative,No,No,14.8,No,Positive,Self-administered,18.4,0,Alive at end of follow-up
+TB206,15,Female,Negative,No,No,20.1,Yes,Positive,Self-administered,18.1,0,Alive at end of follow-up
+TB207,46,Female,Negative,Yes,No,22,No,Positive,DOT,19.2,0,Alive at end of follow-up
+TB208,50,Male,Negative,No,Yes,15,No,Positive,Self-administered,2.8,1,NA
+TB209,21,Female,Negative,No,No,21,No,Positive,DOT,14.1,0,Alive at end of follow-up
+TB210,37,Male,Negative,No,Yes,20.4,No,Negative,Self-administered,2.6,0,Lost to follow-up
+TB211,27,Male,Negative,No,No,22.6,Yes,Positive,DOT,15.8,0,Lost to follow-up
+TB212,39,Female,Negative,No,Yes,17.5,No,Negative,DOT,17.1,0,Lost to follow-up
+TB213,41,Male,Negative,No,Yes,20.5,No,Negative,DOT,17.5,0,Alive at end of follow-up
+TB214,37,Male,Negative,No,No,19.8,No,Negative,Self-administered,21.2,0,Alive at end of follow-up
+TB215,40,Male,Negative,No,No,23,Yes,Positive,Self-administered,23,0,Alive at end of follow-up
+TB216,54,Female,Negative,No,No,15.2,No,Positive,Self-administered,1.5,1,NA
+TB217,54,Male,Negative,No,No,22.2,No,Positive,Self-administered,14.7,0,Alive at end of follow-up
+TB218,58,Female,Negative,No,No,20.5,No,Positive,DOT,16.7,0,Alive at end of follow-up
+TB219,58,Female,Negative,No,No,21.2,No,Positive,DOT,1.4,1,NA
+TB220,30,Male,Negative,No,No,18.8,No,Negative,DOT,21.2,0,Alive at end of follow-up
+TB221,19,Male,Negative,No,No,19.1,No,Positive,DOT,13.7,0,Lost to follow-up
+TB222,56,Male,Negative,No,Yes,13,No,Positive,Self-administered,1.8,1,NA
+TB223,32,Female,Negative,No,No,20.4,No,Positive,Self-administered,17.4,0,Alive at end of follow-up
+TB224,53,Male,Negative,No,No,15.8,No,Positive,Self-administered,17.3,0,Alive at end of follow-up
+TB225,54,Male,Negative,No,Yes,21.3,Yes,Positive,Self-administered,20,0,Alive at end of follow-up
+TB226,40,Male,Negative,No,Yes,21,Yes,Positive,Self-administered,21.1,0,Alive at end of follow-up
+TB227,44,Male,Negative,No,Yes,19.1,Yes,Positive,DOT,5.6,1,NA
+TB228,36,Female,Positive,No,No,19.1,No,Positive,DOT,23.9,0,Alive at end of follow-up
+TB229,15,Male,Negative,No,No,18,No,Positive,Self-administered,20,0,Alive at end of follow-up
+TB230,29,Female,Positive,No,No,18,No,Positive,Self-administered,1.3,1,NA
+TB231,35,Male,Negative,No,No,18.8,No,Positive,DOT,5.1,1,NA
+TB232,70,Male,Negative,No,Yes,22.8,No,Positive,DOT,3.6,1,NA
+TB233,36,Male,Negative,No,Yes,21.3,No,Positive,DOT,17.5,0,Alive at end of follow-up
+TB234,53,Male,Negative,No,Yes,24.3,No,Negative,DOT,14.1,0,Alive at end of follow-up
+TB235,54,Female,Negative,No,No,24.9,No,Positive,DOT,5.5,0,Lost to follow-up
+TB236,72,Male,Negative,No,No,17,Yes,Positive,DOT,18.3,0,Alive at end of follow-up
+TB237,33,Female,Negative,No,No,17.4,No,Negative,Self-administered,21.2,0,Lost to follow-up
+TB238,18,Male,Negative,No,Yes,19.7,No,Positive,DOT,15.6,0,Lost to follow-up
+TB239,28,Female,Negative,No,No,22,No,Negative,DOT,14.5,0,Lost to follow-up
+TB240,41,Male,Negative,No,Yes,13.3,No,Positive,Self-administered,23.8,0,Alive at end of follow-up
+TB241,40,Male,Negative,No,No,22.4,No,Negative,Self-administered,19.6,0,Alive at end of follow-up
+TB242,31,Female,Negative,No,No,20,No,Positive,DOT,12.6,1,NA
+TB243,33,Male,Negative,No,No,24.7,Yes,Negative,DOT,15.6,0,Lost to follow-up
+TB244,45,Female,Negative,No,Yes,18.9,Yes,Positive,DOT,20.5,0,Lost to follow-up
+TB245,26,Male,Negative,No,No,21,No,Positive,Self-administered,20.4,0,Alive at end of follow-up
+TB246,16,Male,Negative,No,No,24.4,No,Negative,DOT,21.3,0,Alive at end of follow-up
+TB247,15,Male,Positive,Yes,Yes,16.7,No,Positive,DOT,18.8,0,Alive at end of follow-up
+TB248,36,Male,Negative,No,Yes,21.7,No,Negative,Self-administered,23.8,0,Alive at end of follow-up
+TB249,53,Male,Negative,No,Yes,14,No,Positive,Self-administered,14.4,0,Alive at end of follow-up
+TB250,44,Female,Positive,No,No,16.3,No,Positive,Self-administered,12.4,1,NA
+TB251,75,Female,Negative,Yes,No,25.2,No,Negative,DOT,17.8,0,Alive at end of follow-up
+TB252,63,Female,Negative,No,No,20.7,No,Negative,DOT,22.1,0,Alive at end of follow-up
+TB253,34,Female,Negative,No,No,25.6,No,Negative,DOT,20.7,0,Alive at end of follow-up
+TB254,52,Female,Negative,No,Yes,19.2,No,Positive,Self-administered,20.6,0,Alive at end of follow-up
+TB255,62,Female,Negative,Yes,No,23.1,No,Positive,DOT,3.6,1,NA
+TB256,53,Female,Negative,No,No,16.8,No,Positive,Self-administered,11.7,0,Lost to follow-up
+TB257,15,Female,Positive,No,No,13,No,Positive,DOT,21.7,0,Alive at end of follow-up
+TB258,24,Female,Negative,No,No,21,No,Positive,DOT,18.3,0,Alive at end of follow-up
+TB259,36,Male,Negative,No,Yes,14.2,No,Positive,Self-administered,17.7,0,Alive at end of follow-up
+TB260,30,Male,Negative,No,No,17.2,No,Positive,DOT,19,0,Alive at end of follow-up
+TB261,34,Female,Negative,No,No,17.7,No,Negative,Self-administered,10.8,0,Lost to follow-up
+TB262,48,Female,Negative,No,No,22.2,No,Positive,DOT,15.1,0,Alive at end of follow-up
+TB263,38,Female,Negative,No,No,17.6,No,Negative,DOT,19.2,0,Alive at end of follow-up
+TB264,40,Male,Negative,No,No,18.1,No,Negative,DOT,23.4,0,Alive at end of follow-up
+TB265,43,Female,Negative,No,No,23.5,No,Positive,DOT,15.1,0,Lost to follow-up
+TB266,37,Male,Negative,No,Yes,22.3,No,Positive,DOT,9,1,NA
+TB267,49,Female,Negative,No,No,17.9,No,Negative,DOT,14.5,0,Alive at end of follow-up
+TB268,53,Male,Negative,No,Yes,15.9,No,Positive,DOT,20.9,0,Alive at end of follow-up
+TB269,50,Male,Negative,No,No,18.5,No,Positive,DOT,22.3,0,Alive at end of follow-up
+TB270,39,Female,Negative,No,No,19.9,Yes,Negative,DOT,2.8,0,Lost to follow-up
+TB271,30,Male,Negative,No,No,17.5,No,Positive,DOT,14.5,0,Alive at end of follow-up
+TB272,51,Male,Negative,No,Yes,17,No,Negative,Self-administered,19.5,0,Alive at end of follow-up
+TB273,41,Male,Negative,No,No,21.3,No,Positive,DOT,22.5,0,Alive at end of follow-up
+TB274,25,Male,Negative,No,No,21.8,Yes,Positive,Self-administered,2.3,1,NA
+TB275,35,Male,Positive,No,No,14.9,No,Negative,Self-administered,20.3,0,Alive at end of follow-up
+TB276,42,Male,Negative,No,Yes,22.6,No,Positive,DOT,21.7,0,Alive at end of follow-up
+TB277,50,Female,Negative,No,No,16.8,No,Negative,DOT,15,0,Lost to follow-up
+TB278,45,Male,Negative,Yes,No,24.8,No,Positive,DOT,20.6,0,Alive at end of follow-up
+TB279,15,Male,Negative,No,Yes,20.9,No,Positive,DOT,4.7,1,NA
+TB280,33,Male,Negative,No,No,27.6,No,Negative,Self-administered,14.4,0,Alive at end of follow-up
+TB281,65,Female,Negative,Yes,No,21.6,No,Positive,Self-administered,3.1,1,NA
+TB282,53,Male,Negative,No,Yes,23,Yes,Positive,DOT,4.2,1,NA
+TB283,52,Female,Negative,No,No,26.4,No,Positive,DOT,1.6,0,Lost to follow-up
+TB284,60,Female,Negative,No,No,22,No,Positive,DOT,15.4,0,Alive at end of follow-up
+TB285,35,Female,Negative,No,No,15.7,No,Negative,DOT,6,0,Lost to follow-up
+TB286,24,Female,Negative,No,Yes,21.7,No,Positive,DOT,17.6,0,Alive at end of follow-up
+TB287,47,Male,Negative,No,No,26.7,No,Positive,DOT,18.6,0,Lost to follow-up
+TB288,39,Male,Negative,No,Yes,15.1,No,Positive,DOT,8.6,0,Lost to follow-up
+TB289,31,Female,Negative,No,No,24.4,Yes,Positive,DOT,17.7,0,Alive at end of follow-up
+TB290,44,Male,Negative,No,No,20.6,No,Negative,Self-administered,1.9,0,Lost to follow-up
+TB291,50,Female,Negative,No,No,21.8,No,Positive,DOT,14.7,0,Alive at end of follow-up
+TB292,28,Male,Negative,No,Yes,13,No,Negative,Self-administered,14.3,1,NA
+TB293,45,Female,Negative,No,No,16.4,No,Positive,Self-administered,5.7,1,NA
+TB294,54,Female,Negative,No,No,21.9,No,Positive,DOT,17.8,0,Alive at end of follow-up
+TB295,26,Male,Negative,No,No,21.9,No,Negative,DOT,21,0,Alive at end of follow-up
+TB296,32,Male,Positive,No,No,15.7,No,Negative,DOT,10.9,1,NA
+TB297,62,Male,Negative,No,No,20,No,Positive,Self-administered,2.1,1,NA
+TB298,55,Male,Negative,No,No,21.1,No,Negative,DOT,19.7,0,Alive at end of follow-up
+TB299,64,Male,Negative,No,No,21.8,No,Negative,DOT,21.1,0,Alive at end of follow-up
+TB300,34,Male,Positive,No,No,20.9,No,Positive,DOT,17.9,0,Lost to follow-up
+TB301,51,Male,Negative,No,Yes,22,No,Negative,DOT,21.1,0,Alive at end of follow-up
+TB302,47,Male,Negative,No,No,20.6,Yes,Negative,DOT,4.4,0,Lost to follow-up
+TB303,19,Male,Negative,No,No,23.3,Yes,Negative,Self-administered,14.6,0,Lost to follow-up
+TB304,28,Male,Negative,No,No,16.1,No,Positive,Self-administered,19.4,0,Alive at end of follow-up
+TB305,30,Male,Positive,No,No,16.5,No,Positive,DOT,3.5,1,NA
+TB306,31,Male,Negative,No,No,21.4,No,Negative,Self-administered,8.9,0,Lost to follow-up
+TB307,54,Male,Negative,No,Yes,20.7,No,Negative,Self-administered,20.2,0,Alive at end of follow-up
+TB308,41,Male,Negative,No,No,28,No,Negative,DOT,14.1,0,Alive at end of follow-up
+TB309,48,Female,Positive,No,No,16.3,No,Positive,Self-administered,22.1,0,Alive at end of follow-up
+TB310,44,Male,Negative,No,Yes,20.2,No,Negative,Self-administered,15.4,0,Alive at end of follow-up
+TB311,35,Male,Negative,No,No,16.9,No,Positive,DOT,13.3,0,Lost to follow-up
+TB312,35,Male,Negative,No,No,15,Yes,Negative,DOT,21.4,0,Lost to follow-up
+TB313,29,Female,Positive,No,No,19.5,No,Positive,DOT,14.2,0,Alive at end of follow-up
+TB314,80,Male,Negative,No,Yes,21.8,No,Positive,DOT,3,1,NA
+TB315,36,Male,Positive,No,No,18.1,No,Negative,DOT,17.4,0,Alive at end of follow-up
+TB316,30,Male,Negative,No,Yes,17.9,No,Positive,Self-administered,2.4,0,Lost to follow-up
+TB317,40,Male,Negative,No,Yes,19.5,No,Negative,DOT,15.7,0,Alive at end of follow-up
+TB318,23,Female,Negative,No,No,19.7,No,Positive,DOT,17.5,0,Alive at end of follow-up
+TB319,47,Male,Negative,No,No,23.8,No,Positive,DOT,18.9,0,Alive at end of follow-up
+TB320,52,Female,Negative,No,No,18.4,No,Negative,DOT,23.3,0,Alive at end of follow-up
+TB321,45,Male,Negative,No,Yes,19,No,Negative,DOT,20.3,0,Alive at end of follow-up
+TB322,47,Female,Negative,No,No,18.7,No,Negative,Self-administered,10.1,0,Lost to follow-up
+TB323,39,Male,Positive,No,No,17.2,No,Positive,DOT,14.1,0,Alive at end of follow-up
+TB324,34,Male,Negative,No,No,18.9,No,Positive,DOT,16.7,0,Alive at end of follow-up
+TB325,30,Female,Positive,No,No,16.3,No,Negative,DOT,19.2,0,Alive at end of follow-up
+TB326,29,Male,Positive,No,Yes,20.3,No,Positive,DOT,16.1,0,Lost to follow-up
+TB327,69,Male,Positive,No,Yes,20,No,Negative,Self-administered,22.1,0,Alive at end of follow-up
+TB328,27,Male,Positive,No,Yes,21.5,No,Positive,DOT,23.5,0,Alive at end of follow-up
+TB329,56,Male,Negative,No,Yes,20.9,No,Positive,DOT,8.9,0,Lost to follow-up
+TB330,35,Female,Negative,No,No,24,Yes,Positive,DOT,1.1,1,NA
+TB331,52,Male,Negative,No,Yes,18.4,Yes,Negative,Self-administered,17,0,Alive at end of follow-up
+TB332,46,Female,Negative,No,No,18.9,No,Negative,DOT,16.4,0,Alive at end of follow-up
+TB333,47,Male,Negative,No,Yes,22.6,No,Negative,DOT,16.4,0,Alive at end of follow-up
+TB334,45,Male,Negative,No,No,20.1,No,Negative,Self-administered,14.4,0,Alive at end of follow-up
+TB335,35,Male,Negative,No,Yes,21.7,No,Positive,DOT,22.8,0,Alive at end of follow-up
+TB336,15,Male,Negative,No,Yes,21.8,No,Negative,Self-administered,15,0,Alive at end of follow-up
+TB337,40,Female,Negative,No,No,14.4,No,Positive,DOT,1.3,1,NA
+TB338,49,Female,Negative,No,No,19.9,No,Positive,DOT,12.9,1,NA
+TB339,37,Male,Negative,No,No,20,No,Positive,DOT,19.6,0,Lost to follow-up
+TB340,33,Female,Negative,No,No,17.3,No,Negative,Self-administered,5.7,1,NA
+TB341,29,Male,Negative,No,Yes,22.4,Yes,Positive,DOT,20.2,0,Alive at end of follow-up
+TB342,49,Female,Negative,No,No,20.5,Yes,Positive,DOT,21,0,Alive at end of follow-up
+TB343,48,Male,Negative,No,Yes,21.6,No,Positive,DOT,18,0,Alive at end of follow-up
+TB344,49,Male,Negative,No,Yes,18.7,No,Negative,DOT,18.5,0,Alive at end of follow-up
+TB345,57,Male,Positive,No,No,15.9,No,Positive,DOT,0.6,1,NA
+TB346,59,Female,Negative,No,No,21.5,No,Negative,DOT,15.2,0,Alive at end of follow-up
+TB347,50,Male,Negative,No,No,18.8,No,Positive,DOT,23.8,0,Alive at end of follow-up
+TB348,56,Male,Negative,No,No,16.8,No,Positive,DOT,0.7,1,NA
+TB349,27,Male,Negative,No,Yes,16.7,No,Positive,DOT,14.9,0,Alive at end of follow-up
+TB350,34,Male,Positive,No,No,19.3,No,Positive,Self-administered,1.3,1,NA
+TB351,35,Male,Negative,No,Yes,22.9,Yes,Positive,DOT,21.8,0,Alive at end of follow-up
+TB352,33,Female,Negative,No,Yes,17.9,Yes,Negative,Self-administered,19.3,0,Alive at end of follow-up
+TB353,54,Male,Negative,No,No,22.1,No,Positive,Self-administered,15,0,Alive at end of follow-up
+TB354,36,Male,Negative,No,No,22,No,Negative,Self-administered,4.8,1,NA
+TB355,45,Male,Negative,No,No,15.6,No,Positive,Self-administered,22.8,0,Alive at end of follow-up
+TB356,28,Male,Positive,Yes,Yes,25.8,No,Negative,DOT,22,0,Alive at end of follow-up
+TB357,36,Male,Positive,Yes,No,16.9,No,Positive,DOT,17,0,Alive at end of follow-up
+TB358,46,Male,Negative,No,Yes,14.9,Yes,Negative,DOT,21.1,0,Alive at end of follow-up
+TB359,34,Female,Positive,No,Yes,21.6,No,Positive,DOT,7.8,1,NA
+TB360,41,Male,Negative,No,No,20.2,No,Positive,DOT,20.1,0,Alive at end of follow-up
+TB361,51,Male,Positive,No,Yes,18.6,No,Positive,DOT,21.8,0,Alive at end of follow-up
+TB362,43,Female,Negative,No,No,22.9,No,Positive,DOT,19.8,0,Alive at end of follow-up
+TB363,26,Female,Negative,No,No,20,No,Positive,Self-administered,19.4,0,Alive at end of follow-up
+TB364,56,Male,Positive,No,No,17.9,Yes,Negative,Self-administered,7.7,1,NA
+TB365,55,Male,Negative,No,Yes,18.4,No,Negative,DOT,16.2,0,Alive at end of follow-up
+TB366,56,Male,Negative,No,No,17,No,Negative,DOT,5.4,0,Lost to follow-up
+TB367,28,Female,Negative,No,No,19.6,No,Positive,Self-administered,8.1,0,Lost to follow-up
+TB368,39,Male,Negative,No,No,18.5,No,Negative,DOT,19.1,0,Alive at end of follow-up
+TB369,33,Male,Positive,No,Yes,18.6,No,Positive,DOT,7.4,0,Lost to follow-up
+TB370,42,Male,Negative,No,No,17,No,Negative,DOT,9.5,1,NA
+TB371,40,Female,Negative,No,No,23,No,Negative,Self-administered,19.5,0,Alive at end of follow-up
+TB372,54,Male,Negative,No,No,20.2,No,Negative,DOT,17.2,0,Alive at end of follow-up
+TB373,40,Male,Negative,No,Yes,18,Yes,Positive,DOT,11.4,0,Lost to follow-up
+TB374,33,Female,Negative,No,No,18.6,No,Negative,Self-administered,23,0,Alive at end of follow-up
+TB375,44,Male,Negative,No,No,17.7,No,Negative,Self-administered,16.8,0,Alive at end of follow-up
+TB376,45,Male,Negative,No,Yes,28.2,Yes,Negative,DOT,19.5,0,Alive at end of follow-up
+TB377,31,Male,Negative,No,Yes,19.1,No,Negative,DOT,19.4,0,Alive at end of follow-up
+TB378,49,Female,Negative,No,No,14.4,No,Negative,Self-administered,23,0,Alive at end of follow-up
+TB379,26,Male,Negative,No,Yes,15.5,No,Positive,DOT,17.4,0,Alive at end of follow-up
+TB380,53,Female,Negative,No,No,17.6,Yes,Negative,Self-administered,22.5,0,Alive at end of follow-up
+TB381,48,Female,Negative,No,No,20.5,Yes,Positive,Self-administered,2.1,1,NA
+TB382,38,Male,Negative,No,No,15.8,No,Positive,DOT,9.7,1,NA
+TB383,41,Female,Positive,No,No,14.6,No,Positive,DOT,5.1,1,NA
+TB384,52,Male,Positive,No,No,19,No,Negative,DOT,20.5,0,Alive at end of follow-up
+TB385,54,Male,Negative,No,Yes,22.3,No,Negative,Self-administered,7.3,1,NA
+TB386,46,Male,Negative,No,No,16.8,No,Positive,DOT,18,0,Alive at end of follow-up
+TB387,55,Female,Negative,No,Yes,21,No,Positive,DOT,15.8,0,Alive at end of follow-up
+TB388,48,Female,Negative,No,No,15.1,No,Positive,DOT,14.8,0,Alive at end of follow-up
+TB389,27,Male,Negative,No,No,13.2,No,Positive,Self-administered,15.6,0,Alive at end of follow-up
+TB390,56,Male,Negative,Yes,No,22.1,No,Positive,Self-administered,1.8,1,NA
+TB391,32,Male,Negative,No,No,22.1,No,Positive,DOT,17.9,0,Alive at end of follow-up
+TB392,25,Female,Negative,No,No,20.3,No,Positive,DOT,2.2,1,NA
+TB393,36,Male,Negative,No,Yes,16.5,No,Negative,DOT,15.5,0,Alive at end of follow-up
+TB394,28,Male,Negative,No,No,23.1,No,Positive,DOT,2.2,1,NA
+TB395,36,Female,Negative,No,No,17.8,No,Positive,DOT,1.7,1,NA
+TB396,52,Male,Negative,No,No,18.3,No,Negative,DOT,14.3,0,Alive at end of follow-up
+TB397,51,Male,Negative,No,No,13.5,Yes,Negative,DOT,5.7,1,NA
+TB398,66,Male,Negative,No,Yes,23,No,Negative,Self-administered,0.2,1,NA
+TB399,25,Female,Negative,No,No,20.5,No,Positive,DOT,15.1,0,Alive at end of follow-up
+TB400,18,Male,Negative,No,Yes,19.2,No,Positive,DOT,12.9,1,NA
+TB401,54,Female,Negative,No,No,19.4,No,Negative,Self-administered,20.1,0,Alive at end of follow-up
+TB402,43,Male,Negative,No,Yes,22,No,Positive,DOT,15.9,0,Alive at end of follow-up
+TB403,36,Male,Negative,No,Yes,15.1,No,Positive,Self-administered,11.1,0,Lost to follow-up
+TB404,45,Female,Positive,No,No,20.1,No,Positive,DOT,19.1,0,Alive at end of follow-up
+TB405,65,Male,Negative,No,No,22,No,Positive,DOT,15.8,0,Alive at end of follow-up
+TB406,31,Male,Negative,No,Yes,23.3,Yes,Positive,Self-administered,16.5,1,NA
+TB407,77,Male,Negative,No,No,21.4,No,Negative,DOT,19.5,0,Alive at end of follow-up
+TB408,61,Male,Negative,No,No,22.8,No,Positive,DOT,18.2,0,Alive at end of follow-up
+TB409,58,Female,Negative,No,No,19,No,Positive,DOT,18.8,0,Alive at end of follow-up
+TB410,47,Male,Negative,No,Yes,17.5,Yes,Negative,Self-administered,3.5,1,NA
+TB411,33,Male,Negative,No,No,17.4,No,Negative,Self-administered,14.7,0,Alive at end of follow-up
+TB412,25,Male,Negative,No,Yes,17.4,No,Negative,Self-administered,13.7,1,NA
+TB413,42,Female,Positive,No,No,19.4,No,Negative,DOT,17.7,0,Alive at end of follow-up
+TB414,55,Female,Negative,No,No,15.2,No,Negative,DOT,22.4,0,Lost to follow-up
+TB415,42,Male,Negative,No,Yes,24.6,No,Positive,DOT,15.9,0,Alive at end of follow-up
+TB416,43,Male,Positive,No,No,18.7,No,Negative,DOT,22,0,Alive at end of follow-up
+TB417,40,Female,Negative,No,No,15.9,No,Negative,Self-administered,14.8,1,NA
+TB418,64,Male,Negative,No,Yes,19.9,No,Positive,DOT,20.4,0,Alive at end of follow-up
+TB419,50,Male,Negative,No,Yes,17.5,No,Positive,Self-administered,18.6,0,Alive at end of follow-up
+TB420,33,Male,Negative,No,No,18.6,No,Positive,DOT,23,0,Alive at end of follow-up
+TB421,49,Male,Negative,No,No,18.4,No,Positive,Self-administered,21.1,0,Alive at end of follow-up
+TB422,28,Female,Negative,No,No,22,Yes,Negative,Self-administered,19.9,0,Alive at end of follow-up
+TB423,63,Male,Negative,Yes,No,15.8,No,Positive,DOT,16.3,0,Alive at end of follow-up
+TB424,38,Male,Negative,No,Yes,19.7,No,Negative,DOT,18.1,0,Alive at end of follow-up
+TB425,36,Female,Negative,No,No,19.7,No,Negative,Self-administered,23.7,0,Alive at end of follow-up
+TB426,30,Male,Positive,No,No,18.8,No,Negative,DOT,15.2,0,Alive at end of follow-up
+TB427,34,Male,Negative,No,No,19.2,No,Negative,DOT,16.6,0,Alive at end of follow-up
+TB428,56,Male,Negative,No,Yes,21.5,No,Negative,Self-administered,3.8,0,Lost to follow-up
+TB429,49,Female,Negative,No,No,17.7,No,Positive,Self-administered,22.2,0,Alive at end of follow-up
+TB430,15,Female,Negative,No,No,17.1,No,Negative,DOT,22,0,Alive at end of follow-up
+TB431,39,Female,Negative,No,No,23.4,No,Positive,Self-administered,3.5,1,NA
+TB432,50,Male,Negative,No,Yes,23.2,No,Positive,DOT,17.8,0,Alive at end of follow-up
+TB433,40,Male,Negative,No,Yes,17.5,No,Positive,DOT,18.3,0,Alive at end of follow-up
+TB434,61,Male,Negative,No,No,21.5,No,Negative,DOT,15.2,0,Alive at end of follow-up
+TB435,26,Female,Negative,No,No,17.5,No,Positive,DOT,7.4,0,Lost to follow-up
+TB436,24,Male,Negative,No,No,22.9,No,Positive,DOT,4.9,0,Lost to follow-up
+TB437,43,Male,Negative,No,No,21.5,No,Negative,DOT,19.5,0,Alive at end of follow-up
+TB438,59,Male,Negative,Yes,No,24.5,No,Positive,DOT,23.2,0,Alive at end of follow-up
+TB439,39,Male,Negative,No,Yes,23,No,Negative,DOT,19,0,Alive at end of follow-up
+TB440,15,Female,Negative,No,No,14.2,No,Negative,Self-administered,13.6,1,NA
+TB441,53,Male,Negative,No,No,20.1,No,Positive,Self-administered,15.4,0,Alive at end of follow-up
+TB442,29,Male,Negative,No,Yes,20.5,No,Negative,Self-administered,21.4,0,Alive at end of follow-up
+TB443,71,Male,Negative,Yes,No,16.1,No,Negative,DOT,19.6,0,Alive at end of follow-up
+TB444,60,Male,Negative,No,No,20.6,No,Positive,Self-administered,2.6,0,Lost to follow-up
+TB445,37,Male,Negative,No,No,17.4,No,Negative,DOT,15.2,0,Alive at end of follow-up
+TB446,58,Female,Negative,No,Yes,18,No,Positive,DOT,17.1,1,NA
+TB447,38,Male,Negative,No,Yes,18.7,No,Positive,Self-administered,10.6,1,NA
+TB448,61,Female,Negative,No,No,16.6,No,Positive,DOT,1.3,0,Lost to follow-up
+TB449,33,Female,Negative,No,No,20.2,No,Negative,DOT,12.1,0,Lost to follow-up
+TB450,42,Female,Negative,No,No,23.3,No,Positive,DOT,12.7,0,Lost to follow-up
+TB451,15,Male,Negative,No,Yes,21,No,Positive,DOT,18.1,0,Alive at end of follow-up
+TB452,52,Female,Negative,No,No,14.9,No,Negative,DOT,16.4,0,Alive at end of follow-up
+TB453,65,Male,Negative,No,Yes,19.1,No,Negative,Self-administered,16.4,0,Alive at end of follow-up
+TB454,59,Male,Negative,No,Yes,18.2,No,Negative,Self-administered,21.1,0,Alive at end of follow-up
+TB455,29,Female,Negative,No,No,19,No,Negative,DOT,21.2,0,Alive at end of follow-up
+TB456,53,Male,Negative,No,Yes,21.8,No,Positive,DOT,19.1,0,Alive at end of follow-up
+TB457,31,Female,Negative,No,No,20.7,No,Positive,DOT,15.2,0,Alive at end of follow-up
+TB458,67,Female,Negative,No,No,22.8,No,Positive,DOT,1.6,1,NA
+TB459,38,Female,Negative,No,No,20.4,No,Positive,DOT,16.6,0,Alive at end of follow-up
+TB460,54,Male,Negative,No,Yes,15.5,No,Positive,DOT,22.1,0,Alive at end of follow-up
+TB461,34,Male,Negative,No,Yes,24.3,No,Negative,DOT,15.2,0,Alive at end of follow-up
+TB462,34,Male,Negative,No,Yes,19.6,No,Negative,Self-administered,4.9,1,NA
+TB463,45,Female,Negative,No,No,21.2,No,Positive,Self-administered,0.8,0,Lost to follow-up
+TB464,43,Male,Positive,Yes,Yes,20.6,No,Positive,DOT,21.7,0,Lost to follow-up
+TB465,32,Male,Negative,No,No,24,No,Negative,Self-administered,3,0,Lost to follow-up
+TB466,44,Male,Negative,No,Yes,16.2,No,Negative,DOT,17.7,0,Alive at end of follow-up
+TB467,28,Male,Negative,No,No,22.1,Yes,Negative,Self-administered,16,1,NA
+TB468,24,Female,Negative,No,No,23.1,No,Negative,DOT,20.4,0,Alive at end of follow-up
+TB469,44,Male,Negative,No,No,21.4,No,Positive,Self-administered,2.3,1,NA
+TB470,34,Female,Negative,No,No,16.6,Yes,Positive,Self-administered,14.8,0,Alive at end of follow-up
+TB471,28,Male,Negative,No,Yes,26.1,No,Positive,DOT,8.4,0,Lost to follow-up
+TB472,28,Male,Positive,No,Yes,18.1,No,Positive,DOT,23.9,0,Alive at end of follow-up
+TB473,40,Male,Negative,No,Yes,22.8,No,Positive,Self-administered,17.3,0,Alive at end of follow-up
+TB474,36,Female,Negative,No,No,16.8,No,Positive,Self-administered,23.7,0,Alive at end of follow-up
+TB475,25,Female,Negative,No,No,18.9,No,Positive,DOT,20.8,0,Alive at end of follow-up
+TB476,40,Male,Negative,No,No,13,No,Positive,Self-administered,23.2,0,Alive at end of follow-up
+TB477,15,Male,Negative,No,Yes,18.3,No,Negative,DOT,21.1,0,Alive at end of follow-up
+TB478,74,Male,Negative,Yes,Yes,17.3,No,Positive,DOT,14.3,0,Alive at end of follow-up
+TB479,62,Female,Positive,No,No,17.9,No,Negative,Self-administered,16.5,0,Alive at end of follow-up
+TB480,52,Male,Negative,No,Yes,20.5,No,Positive,Self-administered,5.6,1,NA
+TB481,35,Male,Negative,No,Yes,17.4,No,Negative,Self-administered,14.9,0,Alive at end of follow-up
+TB482,52,Male,Positive,No,No,17.5,No,Positive,Self-administered,19.9,0,Alive at end of follow-up
+TB483,61,Female,Negative,No,No,18.6,No,Negative,DOT,15.2,1,NA
+TB484,45,Male,Negative,No,No,13,Yes,Positive,DOT,1.6,1,NA
+TB485,42,Male,Negative,No,Yes,21.6,No,Negative,DOT,19.2,0,Alive at end of follow-up
+TB486,55,Female,Negative,No,No,17.7,No,Negative,Self-administered,22.4,0,Alive at end of follow-up
+TB487,47,Female,Negative,No,No,16,No,Negative,Self-administered,15,0,Alive at end of follow-up
+TB488,41,Male,Negative,No,Yes,20.9,No,Negative,DOT,21.2,0,Alive at end of follow-up
+TB489,23,Female,Positive,Yes,No,17,Yes,Positive,DOT,0.9,0,Lost to follow-up
+TB490,66,Female,Negative,No,No,19.8,No,Negative,Self-administered,21.3,0,Alive at end of follow-up
+TB491,29,Male,Negative,No,Yes,23.3,Yes,Negative,DOT,23.4,0,Alive at end of follow-up
+TB492,57,Female,Negative,No,Yes,20.1,No,Negative,Self-administered,23.1,0,Alive at end of follow-up
+TB493,55,Male,Negative,No,Yes,21.2,No,Negative,Self-administered,17.4,0,Alive at end of follow-up
+TB494,49,Male,Negative,No,Yes,22.9,No,Positive,DOT,20.4,0,Alive at end of follow-up
+TB495,60,Male,Negative,Yes,No,22.7,No,Negative,Self-administered,8.1,0,Lost to follow-up
+TB496,77,Male,Negative,No,Yes,25.4,No,Positive,Self-administered,23,0,Alive at end of follow-up
+TB497,41,Male,Negative,No,Yes,18.3,No,Negative,DOT,5.9,0,Lost to follow-up
+TB498,65,Male,Negative,No,Yes,23.4,No,Negative,Self-administered,19.2,0,Alive at end of follow-up
+TB499,43,Male,Negative,No,Yes,15.7,No,Positive,DOT,19.1,0,Alive at end of follow-up
+TB500,15,Male,Negative,No,No,16.5,Yes,Positive,DOT,15.3,0,Alive at end of follow-up
+TB501,30,Female,Positive,No,Yes,18.3,No,Negative,DOT,17.8,0,Lost to follow-up
+TB502,42,Male,Negative,Yes,Yes,19.5,Yes,Negative,Self-administered,10.6,0,Lost to follow-up
+TB503,41,Male,Negative,No,Yes,18.6,No,Positive,DOT,19.6,0,Alive at end of follow-up
+TB504,37,Female,Negative,No,No,23,No,Negative,Self-administered,20.3,0,Alive at end of follow-up
+TB505,26,Male,Positive,No,No,19.8,No,Positive,Self-administered,5.6,1,NA
+TB506,38,Male,Negative,No,No,18.8,No,Negative,DOT,16.8,0,Alive at end of follow-up
+TB507,62,Female,Negative,No,No,21.9,No,Positive,DOT,16.2,0,Lost to follow-up
+TB508,33,Female,Negative,No,No,20.8,No,Positive,Self-administered,5.6,1,NA
+TB509,33,Male,Negative,No,Yes,20.7,No,Negative,DOT,19.1,0,Alive at end of follow-up
+TB510,35,Female,Negative,No,No,19.9,No,Negative,DOT,18.4,0,Alive at end of follow-up
+TB511,61,Female,Negative,No,No,16,No,Negative,DOT,16.9,0,Alive at end of follow-up
+TB512,50,Male,Negative,No,No,17.3,No,Positive,Self-administered,20.7,0,Alive at end of follow-up
+TB513,33,Male,Negative,No,Yes,18.7,No,Positive,Self-administered,14.1,0,Lost to follow-up
+TB514,35,Male,Positive,No,Yes,18.4,No,Positive,DOT,10,0,Lost to follow-up
+TB515,24,Female,Negative,No,No,22.6,No,Negative,Self-administered,21,0,Alive at end of follow-up
+TB516,15,Female,Negative,No,No,15.5,No,Positive,DOT,16.9,0,Alive at end of follow-up
+TB517,39,Female,Negative,Yes,No,22.4,No,Positive,Self-administered,18.7,0,Alive at end of follow-up
+TB518,42,Female,Negative,No,No,17,No,Positive,DOT,4.7,1,NA
+TB519,35,Female,Negative,No,No,19.2,No,Negative,DOT,19.8,0,Alive at end of follow-up
+TB520,43,Male,Negative,No,No,18.5,No,Positive,DOT,16.6,0,Alive at end of follow-up
+TB521,41,Male,Positive,No,No,18.8,No,Positive,DOT,18.1,0,Alive at end of follow-up
+TB522,54,Female,Negative,No,No,20.3,No,Positive,DOT,15.9,0,Alive at end of follow-up
+TB523,61,Male,Positive,No,Yes,16.8,No,Positive,DOT,2.1,1,NA
+TB524,45,Male,Negative,No,No,20.5,No,Positive,Self-administered,22.1,0,Alive at end of follow-up
+TB525,41,Male,Negative,No,Yes,13,No,Negative,Self-administered,21.9,0,Alive at end of follow-up
+TB526,28,Male,Negative,No,No,19.5,No,Positive,DOT,19.1,0,Alive at end of follow-up
+TB527,24,Female,Negative,No,Yes,23.8,No,Negative,DOT,17.5,0,Alive at end of follow-up
+TB528,43,Female,Negative,Yes,No,18.8,No,Positive,DOT,13.7,0,Lost to follow-up
+TB529,35,Male,Negative,No,Yes,14.5,No,Positive,DOT,16,0,Alive at end of follow-up
+TB530,46,Female,Negative,No,No,17.4,No,Negative,Self-administered,15,0,Alive at end of follow-up
+TB531,25,Female,Negative,No,Yes,26.2,No,Positive,DOT,16.8,0,Alive at end of follow-up
+TB532,37,Female,Positive,Yes,No,17,No,Negative,DOT,14.2,0,Alive at end of follow-up
+TB533,53,Male,Negative,No,Yes,20.1,No,Negative,DOT,14.2,0,Alive at end of follow-up
+TB534,37,Male,Negative,No,Yes,19.4,No,Positive,Self-administered,21.5,0,Alive at end of follow-up
+TB535,58,Male,Negative,No,Yes,22.8,No,Negative,DOT,21.5,0,Alive at end of follow-up
+TB536,41,Male,Negative,No,No,15.3,No,Positive,Self-administered,15.7,0,Alive at end of follow-up
+TB537,63,Female,Negative,No,No,17.5,No,Positive,Self-administered,19.9,0,Alive at end of follow-up
+TB538,61,Male,Negative,No,Yes,18,No,Positive,Self-administered,17.8,0,Alive at end of follow-up
+TB539,15,Male,Positive,No,Yes,19.2,No,Positive,DOT,17.1,0,Alive at end of follow-up
+TB540,50,Female,Negative,No,No,19.7,No,Positive,Self-administered,16.7,0,Alive at end of follow-up
+TB541,36,Female,Negative,No,No,22.8,No,Positive,Self-administered,16.2,0,Alive at end of follow-up
+TB542,22,Female,Negative,No,No,18.5,No,Positive,Self-administered,19.1,0,Alive at end of follow-up
+TB543,74,Female,Negative,No,No,16.6,No,Positive,Self-administered,4.2,0,Lost to follow-up
+TB544,49,Female,Negative,No,No,22.7,Yes,Negative,Self-administered,19,0,Alive at end of follow-up
+TB545,42,Male,Negative,No,Yes,30.1,No,Negative,DOT,23.7,0,Alive at end of follow-up
+TB546,44,Female,Negative,No,No,14.5,No,Negative,DOT,17.5,0,Lost to follow-up
+TB547,39,Female,Negative,No,Yes,20.1,No,Positive,DOT,15.2,0,Alive at end of follow-up
+TB548,45,Female,Positive,No,No,13.7,No,Negative,DOT,5.8,0,Lost to follow-up
+TB549,57,Male,Negative,No,Yes,20.9,No,Negative,Self-administered,8.2,0,Lost to follow-up
+TB550,53,Male,Negative,No,Yes,22.5,No,Positive,DOT,16.1,0,Alive at end of follow-up
+TB551,48,Female,Negative,No,Yes,17.6,No,Negative,DOT,19.8,0,Alive at end of follow-up
+TB552,42,Male,Negative,No,No,22.3,No,Negative,DOT,8.1,0,Lost to follow-up
+TB553,39,Female,Negative,No,No,21.8,No,Positive,DOT,17.9,0,Alive at end of follow-up
+TB554,65,Male,Negative,No,No,19.1,No,Positive,DOT,21.7,0,Alive at end of follow-up
+TB555,82,Male,Negative,No,Yes,21.4,No,Negative,DOT,14.5,0,Alive at end of follow-up
+TB556,42,Male,Negative,No,Yes,21.8,No,Positive,DOT,1.9,1,NA
+TB557,70,Female,Negative,No,No,20.9,No,Positive,DOT,5.6,0,Lost to follow-up
+TB558,39,Female,Negative,No,No,22.8,Yes,Positive,DOT,20,0,Alive at end of follow-up
+TB559,38,Male,Negative,Yes,Yes,22.7,No,Positive,Self-administered,5.1,1,NA
+TB560,39,Female,Negative,No,No,20.2,Yes,Negative,DOT,20.1,0,Alive at end of follow-up
+TB561,26,Male,Negative,No,Yes,15.4,No,Positive,DOT,20.2,0,Alive at end of follow-up
+TB562,27,Male,Negative,No,No,27.2,No,Positive,Self-administered,22.1,0,Alive at end of follow-up
+TB563,27,Female,Negative,No,No,15.1,No,Negative,Self-administered,18.3,0,Alive at end of follow-up
+TB564,15,Male,Negative,No,No,21.7,No,Positive,DOT,15.7,0,Alive at end of follow-up
+TB565,34,Male,Negative,No,No,24.2,No,Negative,Self-administered,21.5,0,Alive at end of follow-up
+TB566,61,Female,Negative,No,No,13.9,No,Negative,DOT,4.6,1,NA
+TB567,27,Male,Negative,No,No,25,No,Negative,DOT,15.3,0,Alive at end of follow-up
+TB568,50,Male,Negative,No,Yes,22.7,No,Positive,Self-administered,18,0,Alive at end of follow-up
+TB569,24,Male,Negative,No,Yes,21.8,Yes,Negative,DOT,20.7,0,Alive at end of follow-up
+TB570,33,Male,Negative,No,No,20,No,Positive,DOT,9.3,0,Lost to follow-up
+TB571,41,Female,Negative,No,Yes,20.4,No,Negative,Self-administered,20.6,0,Alive at end of follow-up
+TB572,39,Male,Negative,No,No,25.6,No,Positive,Self-administered,23.6,0,Alive at end of follow-up
+TB573,46,Female,Negative,No,No,20.9,No,Positive,DOT,1.9,1,NA
+TB574,51,Male,Negative,No,Yes,18.9,No,Positive,Self-administered,14.9,0,Alive at end of follow-up
+TB575,31,Male,Negative,No,Yes,25.2,No,Negative,DOT,14,0,Alive at end of follow-up
+TB576,36,Male,Positive,No,Yes,15.8,No,Negative,DOT,6.2,0,Lost to follow-up
+TB577,54,Male,Negative,No,Yes,19.6,No,Positive,DOT,4.9,1,NA
+TB578,43,Female,Negative,No,No,19.9,No,Positive,DOT,18.2,0,Lost to follow-up
+TB579,48,Male,Positive,No,No,19.2,No,Positive,DOT,7.2,1,NA
+TB580,49,Female,Negative,No,No,20.5,No,Positive,DOT,23.2,0,Alive at end of follow-up
+TB581,38,Male,Negative,No,Yes,19.7,No,Positive,DOT,20.9,0,Alive at end of follow-up
+TB582,50,Female,Negative,No,No,18.7,No,Negative,DOT,19.4,0,Alive at end of follow-up
+TB583,24,Female,Positive,No,No,16.5,No,Negative,DOT,20.3,0,Alive at end of follow-up
+TB584,61,Female,Negative,Yes,No,13,No,Positive,DOT,23.6,0,Alive at end of follow-up
+TB585,38,Male,Negative,No,Yes,15.2,No,Positive,DOT,6,1,NA
+TB586,37,Female,Negative,No,No,23,No,Negative,Self-administered,21.3,0,Alive at end of follow-up
+TB587,70,Female,Negative,No,Yes,24.5,No,Positive,DOT,22.4,0,Alive at end of follow-up
+TB588,45,Male,Negative,No,No,16.8,No,Positive,DOT,16.8,0,Alive at end of follow-up
+TB589,39,Male,Negative,No,No,22.7,No,Negative,DOT,22.3,0,Alive at end of follow-up
+TB590,24,Female,Negative,No,Yes,21.4,No,Positive,Self-administered,12.5,1,NA
+TB591,28,Female,Negative,No,No,16.4,No,Negative,Self-administered,7.9,1,NA
+TB592,55,Female,Negative,No,Yes,21.6,No,Positive,DOT,3.7,0,Lost to follow-up
+TB593,30,Female,Negative,No,Yes,18.6,No,Negative,DOT,21.9,0,Alive at end of follow-up
+TB594,56,Female,Negative,No,No,20.5,No,Positive,DOT,18.4,0,Alive at end of follow-up
+TB595,33,Male,Negative,No,Yes,15.4,No,Positive,DOT,15.1,0,Alive at end of follow-up
+TB596,28,Male,Negative,No,No,17.9,No,Negative,DOT,9.4,0,Lost to follow-up
+TB597,63,Male,Negative,No,No,16.4,No,Positive,Self-administered,20.2,0,Alive at end of follow-up
+TB598,25,Female,Negative,No,No,23.6,No,Negative,DOT,14.6,0,Alive at end of follow-up
+TB599,37,Male,Negative,No,Yes,16.8,No,Negative,Self-administered,21.8,0,Alive at end of follow-up
+TB600,28,Female,Negative,No,No,13.1,No,Negative,Self-administered,16.1,0,Alive at end of follow-up

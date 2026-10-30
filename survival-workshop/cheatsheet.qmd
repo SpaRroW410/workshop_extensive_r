@@ -1,0 +1,87 @@
+---
+title: "Survival Analysis Cheat Sheet"
+subtitle: "Time-to-event methods · synthetic TB cohort examples · print on 2 pages (A4)"
+format:
+  html:
+    theme: cosmo
+    toc: false
+    page-layout: full
+    html-math-method: plain
+    css: assets/cheatsheet.css
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+source("assets/setup.R")
+km <- survfit(Surv(time_months, status) ~ 1, data = tb)
+cox1 <- coxph(Surv(time_months, status) ~ hiv, data = tb)
+cf <- coxph(Surv(time_months, status) ~ age + sex + hiv + diabetes + smoker + bmi + mdr_tb + treatment, data = tb)
+f <- function(x, d = 2) formatC(x, format = "f", digits = d)
+```
+
+::: {.sheet}
+
+## 1 · The data
+
+| Item | Meaning |
+|---|---|
+| **time** | follow-up from **time zero** to the event or censoring (one unit) |
+| **status** | 1 = event, 0 = censored |
+| **censored** | observed event-free up to a time, then unknown (alive at the end, **lost to follow-up**) |
+| `Surv(time, status)` | the survival object; **`17.2+`** = censored at 17.2 |
+
+Our cohort: `r nrow(tb)` patients, **`r sum(tb$status)` deaths** (`r f(100 * mean(tb$status), 0)`%), `r sum(tb$status == 0)` censored.
+
+## 2 · Which method?
+
+| Question | Method | R |
+|---|---|---|
+| How is survival over time? | **Kaplan-Meier** | `survfit(Surv(t, s) ~ 1)` |
+| Survival at 12 months? | KM at a time | `summary(km, times = 12)` |
+| Do two or more curves differ? | **Log-rank** | `survdiff(Surv(t, s) ~ g)` |
+| Effect size, adjusted for covariates | **Cox regression** | `coxph(Surv(t, s) ~ x1 + x2)` |
+| Event rate per person-time | rate | `events / sum(time) * 100` |
+| Typical follow-up | **reverse KM** | `survfit(Surv(t, 1 - s) ~ 1)` |
+| Is the HR constant over time? | PH test | `cox.zph(fit)` |
+
+## 3 · Reading the output
+
+| Result | How to say it |
+|---|---|
+| KM at 12 months: `r f(summary(km, times = 12)$surv)` | "`r f(100 * summary(km, times = 12)$surv, 0)`% were alive 12 months after starting treatment (95% CI `r f(100 * summary(km, times = 12)$lower, 0)`–`r f(100 * summary(km, times = 12)$upper, 0)`%)" |
+| Median = `NA` | "median not reached": fewer than half died; report survival at fixed times |
+| Log-rank p | "survival differed (p = ...)": direction from **observed vs expected** |
+| **HR** = exp(coef) | "at any time, the hazard is **HR times** that of the reference group" |
+| HR for HIV: **`r f(exp(coef(cox1)))`** (`r f(exp(confint(cox1))[1])`–`r f(exp(confint(cox1))[2])`) | "about `r f(100 * (exp(coef(cox1)) - 1), 0)`% higher hazard of death in HIV-positive patients" |
+| CI includes **1** | no clear association |
+
+**HR is a rate ratio, not a risk ratio.** Rescale continuous variables (per 10 years, per 5 kg/m²).
+
+## 4 · Cox model checklist
+
+1. **Events per coefficient** about 10 or more: here `r f(sum(tb$status) / length(coef(cf)), 1)`
+2. Choose covariates **from theory** (not p-values); report **crude and adjusted** HRs and **reference groups**
+3. **Check PH**: `cox.zph()` and a plot; one borderline term among many may be chance
+4. If violated: **`strata()`** (nuisance factor), **time-split** (`survSplit`) to report the effect by period, or time-varying effects
+5. Report with `tbl_regression(fit, exponentiate = TRUE)`
+
+## 5 · Pitfalls
+
+::: {.bad}
+- **Mean** of follow-up times or a **t-test** on them; **proportion died** when follow-up differs
+- Median **replaced** by the median of observed times when it is "not reached"
+- Reading the **thin right tail** of a KM curve; no **number at risk**
+- **Informative censoring** (the sickest are lost); **competing risks** ignored
+- **Immortal time bias**; different **time zero** in the groups
+- HR read as **risk ratio**; one HR reported when the effect **changes over time**
+- Too few events for the covariates; **association read as cause**
+:::
+
+## 6 · One-paragraph report
+
+*Of 600 patients (median follow-up 18 months by reverse Kaplan-Meier), `r sum(tb$status)` died and `r sum(tb$status == 0)` were censored. Twelve-month survival was `r f(100 * summary(km, times = 12)$surv, 0)`% (95% CI `r f(100 * summary(km, times = 12)$lower, 0)`–`r f(100 * summary(km, times = 12)$upper, 0)`%). In a multivariable Cox model, HIV (HR `r f(exp(coef(cf))[["hivPositive"]], 1)`) and MDR-TB (HR `r f(exp(coef(cf))[["mdr_tbYes"]], 1)`) were associated with a higher hazard of death and DOT with a lower hazard (HR `r f(exp(coef(cf))[["treatmentDOT"]], 1)`); smear status violated proportional hazards and was stratified.*
+
+:::

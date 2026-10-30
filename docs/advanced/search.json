@@ -1,5 +1,355 @@
 [
   {
+    "objectID": "survival-workshop/s5_assumptions_reporting.html#where-we-are",
+    "href": "survival-workshop/s5_assumptions_reporting.html#where-we-are",
+    "title": "Session 5 — Assumptions and Reporting",
+    "section": "Where we are",
+    "text": "Where we are\n\nSession 4: the Cox model and hazard ratios\nToday: can we trust a single hazard ratio?\nBy the end you can:\n\ntest and plot the proportional-hazards assumption\nfix a violation by stratifying or splitting time\njudge whether censoring is acceptable\nreport a survival analysis"
+  },
+  {
+    "objectID": "survival-workshop/s5_assumptions_reporting.html#the-assumption",
+    "href": "survival-workshop/s5_assumptions_reporting.html#the-assumption",
+    "title": "Session 5 — Assumptions and Reporting",
+    "section": "The assumption",
+    "text": "The assumption\n\nThe Cox model assumes the hazard ratio is constant over time. If one group is worse early and the same later, a single HR averages two different stories.\n\n\nfit &lt;- coxph(Surv(time_months, status) ~ age + sex + hiv + diabetes + smoker + bmi + mdr_tb + smear + treatment, data = tb)\nzph &lt;- cox.zph(fit)\nround(zph$table, 3)\n\n           chisq df     p\nage        5.785  1 0.016\nsex        0.008  1 0.928\nhiv        0.276  1 0.600\ndiabetes   1.293  1 0.256\nsmoker     1.677  1 0.195\nbmi        3.970  1 0.046\nmdr_tb     0.022  1 0.881\nsmear     15.317  1 0.000\ntreatment  2.734  1 0.098\nGLOBAL    30.465  9 0.000"
+  },
+  {
+    "objectID": "survival-workshop/s5_assumptions_reporting.html#reading-the-test",
+    "href": "survival-workshop/s5_assumptions_reporting.html#reading-the-test",
+    "title": "Session 5 — Assumptions and Reporting",
+    "section": "Reading the test",
+    "text": "Reading the test\n\ncox.zph() tests whether Schoenfeld residuals trend with time, one p-value per term plus a global one\nsmear has a very small p-value: its effect changes over time\nWith nine terms tested, borderline p-values (age, BMI) can be chance: look at the plot before acting"
+  },
+  {
+    "objectID": "survival-workshop/s5_assumptions_reporting.html#look-at-it",
+    "href": "survival-workshop/s5_assumptions_reporting.html#look-at-it",
+    "title": "Session 5 — Assumptions and Reporting",
+    "section": "Look at it",
+    "text": "Look at it\n\nplot(zph[8]); abline(h = 0, col = \"red\")\n\n\n\nA flat line means a constant log hazard ratio\nHere the curve slopes down: strong effect early, little later\nA second look: log-log plot of the curves; parallel lines support proportional hazards"
+  },
+  {
+    "objectID": "survival-workshop/s5_assumptions_reporting.html#look-at-it-output",
+    "href": "survival-workshop/s5_assumptions_reporting.html#look-at-it-output",
+    "title": "Session 5 — Assumptions and Reporting",
+    "section": "Look at it",
+    "text": "Look at it"
+  },
+  {
+    "objectID": "survival-workshop/s5_assumptions_reporting.html#fix-1-stratify",
+    "href": "survival-workshop/s5_assumptions_reporting.html#fix-1-stratify",
+    "title": "Session 5 — Assumptions and Reporting",
+    "section": "Fix 1: stratify",
+    "text": "Fix 1: stratify\n\ncox_strat &lt;- coxph(Surv(time_months, status) ~ age + sex + hiv + diabetes + smoker + bmi + mdr_tb + treatment + strata(smear), data = tb)\nround(exp(coef(cox_strat)), 2)\n\n         age      sexMale  hivPositive  diabetesYes    smokerYes          bmi \n        1.02         1.07         2.01         1.33         1.10         0.91 \n   mdr_tbYes treatmentDOT \n        2.36         0.57 \n\n\n\nstrata(smear): a separate baseline hazard for each group, so the other HRs are not distorted\nYou lose an HR for smear itself, which is a reasonable price if smear is only a nuisance variable\nUse for a categorical variable"
+  },
+  {
+    "objectID": "survival-workshop/s5_assumptions_reporting.html#fix-2-split-time-and-estimate-the-effect-in-each-period",
+    "href": "survival-workshop/s5_assumptions_reporting.html#fix-2-split-time-and-estimate-the-effect-in-each-period",
+    "title": "Session 5 — Assumptions and Reporting",
+    "section": "Fix 2: split time and estimate the effect in each period",
+    "text": "Fix 2: split time and estimate the effect in each period\n\ntb_split &lt;- survSplit(Surv(time_months, status) ~ ., data = tb, cut = 6, episode = \"period\")\ntb_split$smear_pos &lt;- as.numeric(tb_split$smear == \"Positive\")\ncox_split &lt;- coxph(Surv(tstart, time_months, status) ~ age + sex + hiv + diabetes + smoker + bmi + mdr_tb + treatment + smear_pos:factor(period), data = tb_split)\nround(exp(coef(cox_split))[c(\"smear_pos:factor(period)1\", \"smear_pos:factor(period)2\")], 2)\n\nsmear_pos:factor(period)1 smear_pos:factor(period)2 \n                     3.28                      0.58 \n\n\n\n“Smear-positive disease tripled the hazard in the first 6 months (HR about 3) and was not harmful afterwards (HR about 0.6).” The effect of time is itself a finding. Other options: time-varying covariates, landmark analysis, parametric models."
+  },
+  {
+    "objectID": "survival-workshop/s5_assumptions_reporting.html#is-censoring-non-informative",
+    "href": "survival-workshop/s5_assumptions_reporting.html#is-censoring-non-informative",
+    "title": "Session 5 — Assumptions and Reporting",
+    "section": "Is censoring “non-informative”?",
+    "text": "Is censoring “non-informative”?\n\nKaplan-Meier and Cox assume patients censored at time t have the same future risk as those who remain\nIf the sickest are lost to follow-up, the curve is too optimistic\nCheck: how many were lost, who (compare groups), and when\nSensitivity analysis: treat everyone lost as dead (worst case) and as alive (best case)\n\n\ntb |&gt; group_by(hiv) |&gt; summarise(n = n(), pct_lost = round(100 * mean(censor_reason %in% \"Lost to follow-up\"), 1))\n\n# A tibble: 2 × 3\n  hiv          n pct_lost\n  &lt;fct&gt;    &lt;int&gt;    &lt;dbl&gt;\n1 Negative   537     17.3\n2 Positive    63     15.9"
+  },
+  {
+    "objectID": "survival-workshop/s5_assumptions_reporting.html#other-threats",
+    "href": "survival-workshop/s5_assumptions_reporting.html#other-threats",
+    "title": "Session 5 — Assumptions and Reporting",
+    "section": "Other threats",
+    "text": "Other threats\n\n\n\n\n\n\n\nProblem\nWhat to do\n\n\n\n\nCompeting risks (death from another cause stops the event of interest)\ncumulative incidence (tidycmprsk), Fine-Gray model; beyond this workshop\n\n\nImmortal time bias (time before exposure counted as exposed)\ndefine time zero carefully; time-varying exposure\n\n\nDifferent time zero for groups\nuse the same starting point (e.g. start of treatment)\n\n\nToo many covariates for the events\nfewer predictors; shrinkage"
+  },
+  {
+    "objectID": "survival-workshop/s5_assumptions_reporting.html#reporting-checklist",
+    "href": "survival-workshop/s5_assumptions_reporting.html#reporting-checklist",
+    "title": "Session 5 — Assumptions and Reporting",
+    "section": "Reporting checklist",
+    "text": "Reporting checklist\n\n\nPopulation, time zero, event, end of follow-up; number of patients, events, censored\nMedian follow-up (reverse KM) and reasons for censoring\nKaplan-Meier curves with number at risk; survival at fixed times with CI\nCox model: crude and adjusted HRs with CI, reference groups, units\nProportional-hazards check and what you did about violations\nLimitations: informative censoring, competing risks, confounding, association, not cause"
+  },
+  {
+    "objectID": "survival-workshop/s5_assumptions_reporting.html#switch-to-r-lab-5",
+    "href": "survival-workshop/s5_assumptions_reporting.html#switch-to-r-lab-5",
+    "title": "Session 5 — Assumptions and Reporting",
+    "section": "🔧 Switch to R — Lab 5",
+    "text": "🔧 Switch to R — Lab 5\n\nFile: survival-workshop/labs/lab5_assumptions.R\n\ncox.zph() · plot the Schoenfeld residuals · log-log plot\nstrata() and survSplit() fixes\nlost to follow-up by group · final hazard-ratio table\n\n\nTime: 40 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "survival-workshop/s5_assumptions_reporting.html#self-check-quiz-15",
+    "href": "survival-workshop/s5_assumptions_reporting.html#self-check-quiz-15",
+    "title": "Session 5 — Assumptions and Reporting",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\ncox.zph() gives p = 0.0001 for the smear-status term. What does this mean?\n\nSmear status has no effect on survival at any time during follow-up\nThe Cox model cannot be fitted to these data until smear is removed\nThe hazard ratio for smear is not constant over follow-up time\nSmear status should be removed from the data set before analysis"
+  },
+  {
+    "objectID": "survival-workshop/s5_assumptions_reporting.html#self-check-quiz-25",
+    "href": "survival-workshop/s5_assumptions_reporting.html#self-check-quiz-25",
+    "title": "Session 5 — Assumptions and Reporting",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nWhich is an appropriate response to a proportional-hazards violation for a nuisance categorical variable?\n\nDelete the variable and report nothing about it\nStratify the model by that variable\nTreat the variable as a continuous variable\nUse a t-test for each time period"
+  },
+  {
+    "objectID": "survival-workshop/s5_assumptions_reporting.html#self-check-quiz-35",
+    "href": "survival-workshop/s5_assumptions_reporting.html#self-check-quiz-35",
+    "title": "Session 5 — Assumptions and Reporting",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nIn the time-split analysis the smear HR is about 3 for the first 6 months and about 0.6 afterwards. What is the best summary?\n\nSmear status has an average hazard ratio of about 1.8 over follow-up\nThe result is a computing error, as hazard ratios cannot be below 1\nThe smear effect reverses over time, so one HR would mislead\nSmear status is unrelated to survival, as the two values cancel out"
+  },
+  {
+    "objectID": "survival-workshop/s5_assumptions_reporting.html#self-check-quiz-45",
+    "href": "survival-workshop/s5_assumptions_reporting.html#self-check-quiz-45",
+    "title": "Session 5 — Assumptions and Reporting",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nWhy can a large number lost to follow-up threaten a Kaplan-Meier analysis?\n\nPatients lost to follow-up are removed from the numerator and denominator\nKaplan-Meier cannot handle any censored patients\nLoss to follow-up lowers the p-value of the log-rank test\nIf those lost were sicker, the curve is too optimistic"
+  },
+  {
+    "objectID": "survival-workshop/s5_assumptions_reporting.html#self-check-quiz-55",
+    "href": "survival-workshop/s5_assumptions_reporting.html#self-check-quiz-55",
+    "title": "Session 5 — Assumptions and Reporting",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nWhich item belongs in the report of a survival analysis?\n\nMedian follow-up, events and the proportional-hazards check\nOnly the p-value of the log-rank test, since it summarises the result\nThe mean follow-up time of the group of patients who died\nThe number of patients enrolled, but not the number of events"
+  },
+  {
+    "objectID": "survival-workshop/s5_assumptions_reporting.html#score-and-take-home",
+    "href": "survival-workshop/s5_assumptions_reporting.html#score-and-take-home",
+    "title": "Session 5 — Assumptions and Reporting",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nTest PH with cox.zph() and plots; one flagged term among many may be chance\nFix with strata(), time-split or time-varying effects\nCheck censoring: how many, who, when; consider sensitivity analyses\nReport events, follow-up, KM with risk table, HRs with CI, PH check, limitations\n\nNext: The cheat sheet and the Dungeons & Dataframes survival world (coming)"
+  },
+  {
+    "objectID": "survival-workshop/s3_logrank.html#where-we-are",
+    "href": "survival-workshop/s3_logrank.html#where-we-are",
+    "title": "Session 3 — Comparing Survival: the Log-Rank Test",
+    "section": "Where we are",
+    "text": "Where we are\n\nSession 2: Kaplan-Meier curves by group\nToday: are the curves different beyond chance?\nBy the end you can:\n\nrun and read a log-rank test\nuse observed vs expected deaths to give the direction\nstratify a log-rank test\nexplain why a t-test of follow-up time is wrong"
+  },
+  {
+    "objectID": "survival-workshop/s3_logrank.html#what-it-compares",
+    "href": "survival-workshop/s3_logrank.html#what-it-compares",
+    "title": "Session 3 — Comparing Survival: the Log-Rank Test",
+    "section": "What it compares",
+    "text": "What it compares\nAt every event time, given how many are at risk in each group, how many deaths would we expect in each group if the curves were the same? The test adds up (observed − expected) over all event times.\n\nH₀: the survival curves (hazards) are the same in all groups. Small p: evidence of a difference somewhere along follow-up. It uses the whole curve, and is most powerful when the hazards are proportional."
+  },
+  {
+    "objectID": "survival-workshop/s3_logrank.html#hiv-status",
+    "href": "survival-workshop/s3_logrank.html#hiv-status",
+    "title": "Session 3 — Comparing Survival: the Log-Rank Test",
+    "section": "HIV status",
+    "text": "HIV status\n\nlr_hiv &lt;- survdiff(Surv(time_months, status) ~ hiv, data = tb)\nlr_hiv\n\nCall:\nsurvdiff(formula = Surv(time_months, status) ~ hiv, data = tb)\n\n               N Observed Expected (O-E)^2/E (O-E)^2/V\nhiv=Negative 537       94    101.6     0.565       5.6\nhiv=Positive  63       19     11.4     5.022       5.6\n\n Chisq= 5.6  on 1 degrees of freedom, p= 0.02 \n\n\n\nObserved vs expected deaths: HIV-positive patients had more deaths than expected (19 vs 11.4)\nChisq on 1 df and its p-value: here p = 0.018\nThe test gives no size of effect: use the hazard ratio (Session 4)"
+  },
+  {
+    "objectID": "survival-workshop/s3_logrank.html#a-null-result",
+    "href": "survival-workshop/s3_logrank.html#a-null-result",
+    "title": "Session 3 — Comparing Survival: the Log-Rank Test",
+    "section": "A null result",
+    "text": "A null result\n\nlr_sex &lt;- survdiff(Surv(time_months, status) ~ sex, data = tb)\nc(chisq = round(lr_sex$chisq, 2), p = round(1 - pchisq(lr_sex$chisq, 1), 2))\n\nchisq     p \n 0.23  0.63 \n\n\n\np = 0.63 means no evidence of a difference by sex, not proof of none: look at the CI of the hazard ratio to see which differences remain plausible."
+  },
+  {
+    "objectID": "survival-workshop/s3_logrank.html#stratified-log-rank",
+    "href": "survival-workshop/s3_logrank.html#stratified-log-rank",
+    "title": "Session 3 — Comparing Survival: the Log-Rank Test",
+    "section": "Stratified log-rank",
+    "text": "Stratified log-rank\nCompare HIV groups within treatment arms, then combine:\n\nsurvdiff(Surv(time_months, status) ~ hiv + strata(treatment), data = tb)\n\nCall:\nsurvdiff(formula = Surv(time_months, status) ~ hiv + strata(treatment), \n    data = tb)\n\n               N Observed Expected (O-E)^2/E (O-E)^2/V\nhiv=Negative 537       94    102.1     0.639      6.64\nhiv=Positive  63       19     10.9     5.966      6.64\n\n Chisq= 6.6  on 1 degrees of freedom, p= 0.01 \n\n\n\nUse when another variable also affects survival and is unbalanced between the groups\nIt cannot compare the stratifying variable itself, and adjusts for one factor at a time: for several, use Cox"
+  },
+  {
+    "objectID": "survival-workshop/s3_logrank.html#more-than-two-groups",
+    "href": "survival-workshop/s3_logrank.html#more-than-two-groups",
+    "title": "Session 3 — Comparing Survival: the Log-Rank Test",
+    "section": "More than two groups",
+    "text": "More than two groups\n\ntb |&gt; mutate(group = case_when(mdr_tb == \"Yes\" ~ \"MDR-TB\", hiv == \"Positive\" ~ \"HIV, drug-sensitive\", TRUE ~ \"Drug-sensitive, HIV-negative\")) |&gt;\n  survdiff(Surv(time_months, status) ~ group, data = _)\n\nCall:\nsurvdiff(formula = Surv(time_months, status) ~ group, data = mutate(tb, \n    group = case_when(mdr_tb == \"Yes\" ~ \"MDR-TB\", hiv == \"Positive\" ~ \n        \"HIV, drug-sensitive\", TRUE ~ \"Drug-sensitive, HIV-negative\")))\n\n                                     N Observed Expected (O-E)^2/E (O-E)^2/V\ngroup=Drug-sensitive, HIV-negative 484       78    92.03      2.14     11.56\ngroup=HIV, drug-sensitive           61       18    11.26      4.04      4.49\ngroup=MDR-TB                        55       17     9.71      5.48      6.01\n\n Chisq= 11.7  on 2 degrees of freedom, p= 0.003 \n\n\nAn overall test on k groups has k − 1 df; it says some group differs. Follow with pairwise comparisons, adjusted for multiple testing."
+  },
+  {
+    "objectID": "survival-workshop/s3_logrank.html#the-wrong-tests",
+    "href": "survival-workshop/s3_logrank.html#the-wrong-tests",
+    "title": "Session 3 — Comparing Survival: the Log-Rank Test",
+    "section": "The wrong tests",
+    "text": "The wrong tests\n\n\nt-test or Wilcoxon on follow-up time: mixes deaths and censored times, and answers a different question\nChi-square on “died yes/no” ignores follow-up time, which differs between patients\n\n\n\nc(t_test = signif(t.test(time_months ~ hiv, data = tb)$p.value, 2), log_rank = signif(1 - pchisq(lr_hiv$chisq, 1), 2))\n\n  t_test log_rank \n   0.300    0.018"
+  },
+  {
+    "objectID": "survival-workshop/s3_logrank.html#the-log-rank-test-does-not",
+    "href": "survival-workshop/s3_logrank.html#the-log-rank-test-does-not",
+    "title": "Session 3 — Comparing Survival: the Log-Rank Test",
+    "section": "The log-rank test does not",
+    "text": "The log-rank test does not\n\nAdjust for several covariates: use Cox regression\nGive an effect size: report the hazard ratio with a CI\nWork well when the curves cross: then the “average” difference can be near zero while the curves differ early and late"
+  },
+  {
+    "objectID": "survival-workshop/s3_logrank.html#switch-to-r-lab-3",
+    "href": "survival-workshop/s3_logrank.html#switch-to-r-lab-3",
+    "title": "Session 3 — Comparing Survival: the Log-Rank Test",
+    "section": "🔧 Switch to R — Lab 3",
+    "text": "🔧 Switch to R — Lab 3\n\nFile: survival-workshop/labs/lab3_logrank.R\n\nsurvdiff() by HIV, sex and MDR-TB\nobserved vs expected, the p-value from the chi-square\nstrata() and the wrong t-test\n\n\nTime: 30 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "survival-workshop/s3_logrank.html#self-check-quiz-15",
+    "href": "survival-workshop/s3_logrank.html#self-check-quiz-15",
+    "title": "Session 3 — Comparing Survival: the Log-Rank Test",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nWhat is the null hypothesis of the log-rank test comparing two groups?\n\nThe median survival time is the same in both groups\nThe numbers of patients at the start are equal in both groups\nThe survival curves are the same in both groups\nThe hazard ratio is exactly 1 at one particular time"
+  },
+  {
+    "objectID": "survival-workshop/s3_logrank.html#self-check-quiz-25",
+    "href": "survival-workshop/s3_logrank.html#self-check-quiz-25",
+    "title": "Session 3 — Comparing Survival: the Log-Rank Test",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nHIV-positive patients had 19 observed deaths and 11.4 expected. How should this be read?\n\nFewer deaths than expected if survival were the same in both groups\nMore deaths than expected if survival were the same in both groups\nThe test has failed, because the two numbers are different\nA difference of 7.6 deaths per 100 person-years"
+  },
+  {
+    "objectID": "survival-workshop/s3_logrank.html#self-check-quiz-35",
+    "href": "survival-workshop/s3_logrank.html#self-check-quiz-35",
+    "title": "Session 3 — Comparing Survival: the Log-Rank Test",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nWhy is a t-test on the follow-up time of two groups inappropriate for survival data?\n\nThe t-test needs both of the groups to have the same number of patients\nFollow-up times follow a normal distribution in a typical sample of patients\nFollow-up times mix deaths and censored times, so it asks the wrong question\nA t-test can be used for yes/no outcomes and not for times to an event"
+  },
+  {
+    "objectID": "survival-workshop/s3_logrank.html#self-check-quiz-45",
+    "href": "survival-workshop/s3_logrank.html#self-check-quiz-45",
+    "title": "Session 3 — Comparing Survival: the Log-Rank Test",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nThe log-rank test by sex gives p = 0.63. Which conclusion is best?\n\nMen and women have been shown to have identical survival in the cohort\nSex has no effect on survival in any population of TB patients\nThe test was underpowered, so it should be repeated on more patients\nNo evidence of a difference in survival by sex in this cohort"
+  },
+  {
+    "objectID": "survival-workshop/s3_logrank.html#self-check-quiz-55",
+    "href": "survival-workshop/s3_logrank.html#self-check-quiz-55",
+    "title": "Session 3 — Comparing Survival: the Log-Rank Test",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nWhen is a stratified log-rank test most useful?\n\nWhen another factor affects survival and is unbalanced between groups\nWhen the survival curves of the two groups cross over each other once\nWhen there are no deaths recorded in one of the two groups compared\nWhen the follow-up times of the patients are normally distributed"
+  },
+  {
+    "objectID": "survival-workshop/s3_logrank.html#score-and-take-home",
+    "href": "survival-workshop/s3_logrank.html#score-and-take-home",
+    "title": "Session 3 — Comparing Survival: the Log-Rank Test",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nLog-rank: compares the whole curves; H₀ = same survival\nObserved vs expected deaths give the direction\nStratify for one other factor; use Cox for several\nNever t-test follow-up times; a non-significant p is not proof of no difference\n\nNext: Session 4: Cox regression"
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#where-we-are",
+    "href": "survival-workshop/s1_time_to_event.html#where-we-are",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "Where we are",
+    "text": "Where we are\n\nRegression workshop: outcomes that are a measurement or a yes/no\nToday: the outcome is how long until something happens: death, relapse, recovery, default from treatment\nBy the end you can:\n\nsay what censoring is, and why you cannot drop or average censored patients\ndefine survival, hazard and cumulative incidence\nbuild a Surv object and compute person-time and an incidence rate\ndescribe follow-up correctly"
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#our-data-a-synthetic-tb-cohort",
+    "href": "survival-workshop/s1_time_to_event.html#our-data-a-synthetic-tb-cohort",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "Our data: a synthetic TB cohort",
+    "text": "Our data: a synthetic TB cohort\n\n\n\n600 adults starting TB treatment, followed for up to 24 months\nOutcome: death; time_months and status (1 = died, 0 = censored)\nPredictors: age, sex, HIV, diabetes, smoking, BMI, MDR-TB, smear status, DOT (supervised treatment)\nInvented, but built to behave like a real cohort\n\n\n\ntb |&gt; select(id, age, hiv, mdr_tb, treatment, time_months, status) |&gt; head(6)\n\n# A tibble: 6 × 7\n  id      age hiv      mdr_tb treatment         time_months status\n  &lt;chr&gt; &lt;dbl&gt; &lt;fct&gt;    &lt;fct&gt;  &lt;fct&gt;                   &lt;dbl&gt;  &lt;dbl&gt;\n1 TB001    43 Negative No     Self-administered         7.8      0\n2 TB002    46 Negative No     DOT                      15.2      0\n3 TB003    15 Negative No     DOT                      23.8      0\n4 TB004    69 Negative No     Self-administered         2.6      0\n5 TB005    73 Negative No     DOT                      20.7      0\n6 TB006    42 Negative No     DOT                      19.9      0\n\ntable(tb$status)\n\n\n  0   1 \n487 113"
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#two-problems-with-ordinary-methods",
+    "href": "survival-workshop/s1_time_to_event.html#two-problems-with-ordinary-methods",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "Two problems with ordinary methods",
+    "text": "Two problems with ordinary methods\n\nDifferent follow-up: a patient enrolled last month has had little time to die; one enrolled two years ago has had a lot. Comparing proportions who died ignores this\nCensoring: for many patients we do not observe the event\n\n\nCensored = we know the patient was alive at least until their last contact, but not what happened afterwards.\n\n\n\n\n\n\n\n\nWhy censored\nExample\n\n\n\n\nAdministrative\nstill alive when the study ended\n\n\nLost to follow-up\nmoved away, stopped attending\n\n\nCompeting event\ndied of something else (a different question; see Session 5)"
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#censored-patients-still-carry-information",
+    "href": "survival-workshop/s1_time_to_event.html#censored-patients-still-carry-information",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "Censored patients still carry information",
+    "text": "Censored patients still carry information\n\ntb |&gt; slice(1:15) |&gt; mutate(row = row_number(), outcome = ifelse(status == 1, \"Died\", \"Censored\")) |&gt;\n  ggplot(aes(y = reorder(id, -row))) + geom_segment(aes(x = 0, xend = time_months, yend = reorder(id, -row)), colour = \"grey60\") +\n  geom_point(aes(x = time_months, colour = outcome, shape = outcome), size = 3) + scale_colour_manual(values = c(Died = col_red, Censored = col_blue)) +\n  labs(x = \"Months of follow-up\", y = NULL, colour = NULL, shape = NULL)\n\n\n\nEach line is one patient; a dot at the end marks death or censoring\nA censored patient contributes their time at risk up to the last contact\nDropping them wastes information and biases towards early deaths; treating them as survivors forever biases the other way"
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#censored-patients-still-carry-information-output",
+    "href": "survival-workshop/s1_time_to_event.html#censored-patients-still-carry-information-output",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "Censored patients still carry information",
+    "text": "Censored patients still carry information"
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#the-three-quantities",
+    "href": "survival-workshop/s1_time_to_event.html#the-three-quantities",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "The three quantities",
+    "text": "The three quantities\n\n\n\n\n\n\n\nQuantity\nMeaning\n\n\n\n\nSurvival S(t)\nprobability of being alive beyond time t\n\n\nHazard h(t)\nthe instantaneous rate of dying at t, among those still alive\n\n\nCumulative incidence\n1 − S(t): the probability of having died by t\n\n\n\n\nThe hazard is a rate (events per person-time), not a probability. Cox regression (Session 4) models the hazard."
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#time-and-event-together",
+    "href": "survival-workshop/s1_time_to_event.html#time-and-event-together",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "Time and event together",
+    "text": "Time and event together\n\ny &lt;- Surv(tb$time_months, tb$status)\nhead(y, 10)\n\n [1]  7.8+ 15.2+ 23.8+  2.6+ 20.7+ 19.9+  3.8+ 19.4+ 14.9+ 17.7+\n\n\n\nSurv(time, event) pairs each follow-up time with its event indicator\nA + after a time marks a censored observation (still alive at least that long)\nCheck the coding: 1 = event, 0 = censored (factor and TRUE/FALSE also work, but check!)\nThis object goes on the left of every survival model: survfit(Surv(...) ~ group), coxph(Surv(...) ~ x)"
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#do-not-summarise-survival-times-with-a-mean",
+    "href": "survival-workshop/s1_time_to_event.html#do-not-summarise-survival-times-with-a-mean",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "Do not summarise survival times with a mean",
+    "text": "Do not summarise survival times with a mean\n\nc(mean_all = mean(tb$time_months), mean_among_deaths = mean(tb$time_months[tb$status == 1]))\n\n         mean_all mean_among_deaths \n        14.873500          5.780531 \n\n\n\nNeither number is a survival time. The first mixes deaths and censored times; the second looks only at those who died and ignores everyone who survived, so it is biased downwards."
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#incidence-rate",
+    "href": "survival-workshop/s1_time_to_event.html#incidence-rate",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "Incidence rate",
+    "text": "Incidence rate\n\npy &lt;- sum(tb$time_months) / 12\nc(deaths = sum(tb$status), person_years = round(py, 1), rate_per_100_py = round(sum(tb$status) / py * 100, 1))\n\n         deaths    person_years rate_per_100_py \n          113.0           743.7            15.2 \n\n\n\nRate = events / person-time at risk (here per 100 person-years)\nIt uses everyone’s time, censored or not\nValid if the hazard is roughly constant; Kaplan-Meier (Session 2) removes that assumption"
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#describing-follow-up-honestly",
+    "href": "survival-workshop/s1_time_to_event.html#describing-follow-up-honestly",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "Describing follow-up honestly",
+    "text": "Describing follow-up honestly\n\nrkm &lt;- survfit(Surv(time_months, 1 - status) ~ 1, data = tb)\nc(median_raw_time = median(tb$time_months), median_followup_reverse_KM = unname(summary(rkm)$table[\"median\"]))\n\n           median_raw_time median_followup_reverse_KM \n                      16.7                       18.1 \n\n\n\nThe reverse Kaplan-Meier swaps the roles of event and censoring, so it asks “how long would a typical patient be followed if they did not die?”. The median of the raw times is pulled down by deaths and understates follow-up."
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#checklist-before-any-analysis",
+    "href": "survival-workshop/s1_time_to_event.html#checklist-before-any-analysis",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "Checklist before any analysis",
+    "text": "Checklist before any analysis\n\n\nDefine time zero (start of treatment, diagnosis) and the event precisely\nCheck time is positive and in one unit; status is coded 0/1\nCount events and censored; tabulate why censored\nReport median follow-up (reverse KM), person-time and events"
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#switch-to-r-lab-1",
+    "href": "survival-workshop/s1_time_to_event.html#switch-to-r-lab-1",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "🔧 Switch to R — Lab 1",
+    "text": "🔧 Switch to R — Lab 1\n\nFile: survival-workshop/labs/lab1_data.R\n\ntable() of status and censoring reasons\nSurv(): the + marks censored times\nperson-years, a rate per 100 person-years, reverse Kaplan-Meier\n\n\nTime: 30 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#self-check-quiz-15",
+    "href": "survival-workshop/s1_time_to_event.html#self-check-quiz-15",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nWhat does a patient who was alive at the last clinic visit (month 17) and then moved away contribute to the analysis?\n\nNothing, since the outcome for this patient is unknown\nA death at month 17, since no later contact exists\nTheir 17 months at risk, as a censored observation\nAn observation that must be treated as survival forever"
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#self-check-quiz-25",
+    "href": "survival-workshop/s1_time_to_event.html#self-check-quiz-25",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nA TB cohort has 113 deaths among 600 patients. Why is ‘mortality = 113/600 = 19%’ a weak summary?\n\nThe number of deaths is too small to be divided by 600 patients, so it is unstable\nPatients differ in follow-up, so a proportion mixes unequal time at risk\nMortality is reported as a count and should not be given as a percentage\nThe 19% ignores the fact that some of the patients in the cohort were female"
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#self-check-quiz-35",
+    "href": "survival-workshop/s1_time_to_event.html#self-check-quiz-35",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nIn the output of a Surv object, 17.2+ means what?\n\nThe patient died at 17.2 months\nThe patient survived exactly 17.2 months in total\nThe patient was censored at 17.2 months\nThe patient had a second event after 17.2 months"
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#self-check-quiz-45",
+    "href": "survival-workshop/s1_time_to_event.html#self-check-quiz-45",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nWhat is the hazard in survival analysis?\n\nThe probability of surviving beyond a given time point in the cohort\nThe total number of deaths divided by the total number of patients\nThe median time until the event occurs for half of the patients\nThe instantaneous event rate among those still event-free"
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#self-check-quiz-55",
+    "href": "survival-workshop/s1_time_to_event.html#self-check-quiz-55",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nWhy is the reverse Kaplan-Meier median a better description of follow-up than the median of the raw follow-up times?\n\nDeaths shorten raw times, so their median understates follow-up\nThe reverse method removes all of the patients who were censored\nRaw follow-up times cannot be calculated when some patients died\nThe reverse method gives the median survival time of the patients"
+  },
+  {
+    "objectID": "survival-workshop/s1_time_to_event.html#score-and-take-home",
+    "href": "survival-workshop/s1_time_to_event.html#score-and-take-home",
+    "title": "Session 1 — Time-to-Event Data",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nCensoring: observed up to a time, then unknown; keep these patients\nSurvival S(t), hazard h(t), cumulative incidence 1 − S(t)\nSurv(time, event): a + means censored\nUse person-time rates, not a mean of follow-up times; report median follow-up by reverse KM\n\nNext: Session 2: Kaplan-Meier curves"
+  },
+  {
     "objectID": "quarto_repro_w/quarto_advanced.html",
     "href": "quarto_repro_w/quarto_advanced.html",
     "title": "Quarto — Publication",
@@ -2720,35 +3070,35 @@
     "href": "welcome.html",
     "title": "Welcome",
     "section": "",
-    "text": "🟤 Workshop Key Unlocked\n\n\nWelcome to the GIS and Spatial Statistics Track. It builds on the advanced visualization pages (ggplot2 modules, galleries, interactive plots, exporting) and adds a spatial toolkit: reading and mapping spatial data with sf, defining neighbours and spatial weights, testing for spatial autocorrelation with Moran’s I, finding clusters with local Moran’s I (LISA), Getis-Ord Gi*, Geary’s C, join counts and the scan statistic, and checking regression residuals for spatial structure. All examples use a synthetic district of 80 blocks with a planted hot spot, so no real boundaries or personal data are involved."
+    "text": "🔴 Workshop Key Unlocked\n\n\nWelcome to the Advanced Track — the full workshop experience. This track covers all four ggplot2 modules, advanced and interactive plots, ggstatsplot advanced, Quarto for publication, deep statistical analysis, and real-world applied NCTOH healthcare examples."
   },
   {
     "objectID": "welcome.html#workshop-goals",
     "href": "welcome.html#workshop-goals",
     "title": "Welcome",
     "section": "🎯 Workshop Goals",
-    "text": "🎯 Workshop Goals\n\nRead, transform and join spatial data with sf, and keep track of coordinate reference systems\nMake clear static and interactive maps and choose a sensible classification\nDefine neighbours and spatial weights, and know how the choice changes the answer\nTest for global spatial autocorrelation with Moran’s I and read the Moran scatterplot\nLocate clusters and outliers with local Moran’s I (LISA) and hot spots with Getis-Ord Gi*\nUse Geary’s C, join counts and the scan statistic, and check regression residuals for spatial structure"
+    "text": "🎯 Workshop Goals\n\nMaster all four ggplot2 modules\nBuild interactive and advanced visualizations\nPerform deep statistical analysis with ggstatsplot\nProduce publication-ready documents using Quarto"
   },
   {
     "objectID": "welcome.html#what-this-track-covers",
     "href": "welcome.html#what-this-track-covers",
     "title": "Welcome",
     "section": "📚 What This Track Covers",
-    "text": "📚 What This Track Covers\n\n📁 R Foundations & Data Wrangling\n📐 Data Visualization — grammar, best practices, ggplot2 modules 1–4\n🖼️ Plot Gallery (basic to advanced) and Specialized & Interactive Plots\n⚙️ Exporting, Plotting Tools and Debugging\n🎓 GIS Workshop — 5 sessions, 5 labs, quizzes, cheat sheet\n🗺️ Spatial Data with sf, Maps and Choropleths\n🧭 Neighbours and Spatial Weights\n📍 Global Moran’s I and Local Moran’s I (LISA)\n🔥 Geary’s C, Getis-Ord, Join Counts and the Scan Statistic\n📉 Spatial Regression and Residual Tests"
+    "text": "📚 What This Track Covers\n\n⏳ Survival Analysis Workshop — 5 sessions, 5 labs, quizzes, cheat sheet\n📁 R Foundations & Data Wrangling (+ Applied Examples)\n📊 Best Practices & Plot Matching\n🎨 ggplot2 Modules 1–4 (Complete)\n🖼️ Basic, Intermediate & Advanced Plot Gallery\n🔗 Specialized Plots — Merged, Statistical & Interactive\n🧪 ggstatsplot — Intro, Intermediate & Advanced\n📋 gtsummary Tables & Deep Statistical Analysis\n📝 Quarto — Basics, Dynamic Documents & Publication\n⚙️ Full Exporting, Debugging & Advanced Tools\n🏥 Applied NCTOH Healthcare Examples"
   },
   {
     "objectID": "welcome.html#find-your-way-around",
     "href": "welcome.html#find-your-way-around",
     "title": "Welcome",
     "section": "🧭 Find Your Way Around",
-    "text": "🧭 Find Your Way Around\nUse the navigation bar above to browse all modules. Key starting points:\n\n🎓 GIS Workshop — Slides, labs and quizzes: start at Session 1 (spatial data and maps)\n📋 Cheat Sheet — Two-page guide to choosing and reading spatial tests\n🗺️ Spatial Data with sf — Start here: spatial objects, coordinate systems, joining attributes\n🧭 Neighbours and Weights — Queen, rook and k-nearest neighbours, and row-standardised weights\n📍 Global Moran’s I — Is the pattern clustered? Test, permutation p-value and Moran scatterplot\n🔥 Local Moran’s I (LISA) — Where are the clusters and spatial outliers?\n🎨 Data Visualization — Grammar of graphics and all four ggplot2 modules\n\n\nThe navbar has the full visualization library as well as the spatial pages."
+    "text": "🧭 Find Your Way Around\nUse the navigation bar above to browse all modules. Key starting points:\n\n⏳ Survival Workshop — Slides, labs and quizzes on time-to-event data: Kaplan-Meier, log-rank, Cox (start at Session 1)\n📁 R Foundations — R syntax, wrangling, and full NCTOH applied examples\n📊 Data Visualization — All four ggplot2 modules, advanced and interactive plots\n🧪 Statistical Analysis — Full ggstatsplot, gtsummary, and deep analysis\n📝 Reproducibility — Quarto basics through publication-ready documents\n\n\nThe complete navbar gives full access to all workshop content."
   },
   {
     "objectID": "welcome.html#downloadable-resources",
     "href": "welcome.html#downloadable-resources",
     "title": "Welcome",
     "section": "📥 Downloadable Resources",
-    "text": "📥 Downloadable Resources\nAll files for this track are available below, grouped by type.\n\n📄 R Scripts\n\nMake Gis Data\nLab1 Data\nLab2 Weights\nLab3 Global\nLab4 Local\nLab5 Regression\n\n\n\n🗄️ Datasets\n\n📦 District Blocks .geojson\n📊 Facilities .csv\n\n\n\n📋 Cheatsheets\n\nCheatsheet\n\n\n\n💡 Tip: Never mapped data in R? Read Spatial Data with sf and Maps and Choropleths first, then go straight to Global Moran’s I."
+    "text": "📥 Downloadable Resources\nAll files for this track are available below, grouped by type.\n\n📄 R Scripts\n\nMake Data\nLab1 Data\nLab2 Km\nLab3 Logrank\nLab4 Cox\nLab5 Assumptions\nBasic r Foundations\nBasic Visualization\nModerate Visualization\nAdvanced Visualization\nGtsummary Examples\nInteractive Plots\n\n\n\n🗄️ Datasets\n\n📊 Tb Cohort .csv\n📊 Workshop Data .csv\n📗 Workshop Data .xlsx\n🔵 Workshop Data .rds\n🔵 Nctoh Data .rds\n🔵 Nctoh Complete .rds\n\n\n\n📋 Cheatsheets\n\nggplot2 Cheatsheet\nDplyr Cheatsheet\nGtsummary Cheatsheet\nQuarto Cheatsheet\nGgstatsplot Cheatsheet\n\n\n\n📝 Quarto Template\n\nQuarto Basics — starter .qmd file covering Quarto basics\n\n\n\n💡 Tip: Explore Applied Examples under each section for real-world healthcare data workflows."
   },
   {
     "objectID": "downloads.html",
@@ -4331,5 +4681,306 @@
     "title": "Quarto — Dynamic Documents",
     "section": "Code Chunk Options Reference",
     "text": "Code Chunk Options Reference\n\n\n\nOption\nEffect\n\n\n\n\necho: false\nHide code, show output\n\n\ninclude: false\nRun code silently (no output shown)\n\n\neval: false\nShow code but don’t run it\n\n\nwarning: false\nSuppress warnings\n\n\nmessage: false\nSuppress package messages\n\n\nfig-width: 8\nFigure width in inches\n\n\nfig-height: 5\nFigure height in inches\n\n\nfig-dpi: 300\nResolution for saved figures\n\n\n\nSet globally in YAML to apply to all chunks:\nexecute:\n  echo: false\n  warning: false\n  message: false"
+  },
+  {
+    "objectID": "survival-workshop/cheatsheet.html",
+    "href": "survival-workshop/cheatsheet.html",
+    "title": "Survival Analysis Cheat Sheet",
+    "section": "",
+    "text": "Item\nMeaning\n\n\n\n\ntime\nfollow-up from time zero to the event or censoring (one unit)\n\n\nstatus\n1 = event, 0 = censored\n\n\ncensored\nobserved event-free up to a time, then unknown (alive at the end, lost to follow-up)\n\n\nSurv(time, status)\nthe survival object; 17.2+ = censored at 17.2\n\n\n\nOur cohort: 600 patients, 113 deaths (19%), 487 censored.\n\n\n\n\n\n\n\n\n\n\n\nQuestion\nMethod\nR\n\n\n\n\nHow is survival over time?\nKaplan-Meier\nsurvfit(Surv(t, s) ~ 1)\n\n\nSurvival at 12 months?\nKM at a time\nsummary(km, times = 12)\n\n\nDo two or more curves differ?\nLog-rank\nsurvdiff(Surv(t, s) ~ g)\n\n\nEffect size, adjusted for covariates\nCox regression\ncoxph(Surv(t, s) ~ x1 + x2)\n\n\nEvent rate per person-time\nrate\nevents / sum(time) * 100\n\n\nTypical follow-up\nreverse KM\nsurvfit(Surv(t, 1 - s) ~ 1)\n\n\nIs the HR constant over time?\nPH test\ncox.zph(fit)\n\n\n\n\n\n\n\n\n\n\n\n\n\nResult\nHow to say it\n\n\n\n\nKM at 12 months: 0.83\n“83% were alive 12 months after starting treatment (95% CI 80–86%)”\n\n\nMedian = NA\n“median not reached”: fewer than half died; report survival at fixed times\n\n\nLog-rank p\n“survival differed (p = …)”: direction from observed vs expected\n\n\nHR = exp(coef)\n“at any time, the hazard is HR times that of the reference group”\n\n\nHR for HIV: 1.80 (1.10–2.95)\n“about 80% higher hazard of death in HIV-positive patients”\n\n\nCI includes 1\nno clear association\n\n\n\nHR is a rate ratio, not a risk ratio. Rescale continuous variables (per 10 years, per 5 kg/m²).\n\n\n\n\nEvents per coefficient about 10 or more: here 14.1\nChoose covariates from theory (not p-values); report crude and adjusted HRs and reference groups\nCheck PH: cox.zph() and a plot; one borderline term among many may be chance\nIf violated: strata() (nuisance factor), time-split (survSplit) to report the effect by period, or time-varying effects\nReport with tbl_regression(fit, exponentiate = TRUE)\n\n\n\n\n\n\nMean of follow-up times or a t-test on them; proportion died when follow-up differs\nMedian replaced by the median of observed times when it is “not reached”\nReading the thin right tail of a KM curve; no number at risk\nInformative censoring (the sickest are lost); competing risks ignored\nImmortal time bias; different time zero in the groups\nHR read as risk ratio; one HR reported when the effect changes over time\nToo few events for the covariates; association read as cause\n\n\n\n\n\nOf 600 patients (median follow-up 18 months by reverse Kaplan-Meier), 113 died and 487 were censored. Twelve-month survival was 83% (95% CI 80–86%). In a multivariable Cox model, HIV (HR 2.0) and MDR-TB (HR 2.1) were associated with a higher hazard of death and DOT with a lower hazard (HR 0.6); smear status violated proportional hazards and was stratified."
+  },
+  {
+    "objectID": "survival-workshop/cheatsheet.html#the-data",
+    "href": "survival-workshop/cheatsheet.html#the-data",
+    "title": "Survival Analysis Cheat Sheet",
+    "section": "",
+    "text": "Item\nMeaning\n\n\n\n\ntime\nfollow-up from time zero to the event or censoring (one unit)\n\n\nstatus\n1 = event, 0 = censored\n\n\ncensored\nobserved event-free up to a time, then unknown (alive at the end, lost to follow-up)\n\n\nSurv(time, status)\nthe survival object; 17.2+ = censored at 17.2\n\n\n\nOur cohort: 600 patients, 113 deaths (19%), 487 censored."
+  },
+  {
+    "objectID": "survival-workshop/cheatsheet.html#which-method",
+    "href": "survival-workshop/cheatsheet.html#which-method",
+    "title": "Survival Analysis Cheat Sheet",
+    "section": "",
+    "text": "Question\nMethod\nR\n\n\n\n\nHow is survival over time?\nKaplan-Meier\nsurvfit(Surv(t, s) ~ 1)\n\n\nSurvival at 12 months?\nKM at a time\nsummary(km, times = 12)\n\n\nDo two or more curves differ?\nLog-rank\nsurvdiff(Surv(t, s) ~ g)\n\n\nEffect size, adjusted for covariates\nCox regression\ncoxph(Surv(t, s) ~ x1 + x2)\n\n\nEvent rate per person-time\nrate\nevents / sum(time) * 100\n\n\nTypical follow-up\nreverse KM\nsurvfit(Surv(t, 1 - s) ~ 1)\n\n\nIs the HR constant over time?\nPH test\ncox.zph(fit)"
+  },
+  {
+    "objectID": "survival-workshop/cheatsheet.html#reading-the-output",
+    "href": "survival-workshop/cheatsheet.html#reading-the-output",
+    "title": "Survival Analysis Cheat Sheet",
+    "section": "",
+    "text": "Result\nHow to say it\n\n\n\n\nKM at 12 months: 0.83\n“83% were alive 12 months after starting treatment (95% CI 80–86%)”\n\n\nMedian = NA\n“median not reached”: fewer than half died; report survival at fixed times\n\n\nLog-rank p\n“survival differed (p = …)”: direction from observed vs expected\n\n\nHR = exp(coef)\n“at any time, the hazard is HR times that of the reference group”\n\n\nHR for HIV: 1.80 (1.10–2.95)\n“about 80% higher hazard of death in HIV-positive patients”\n\n\nCI includes 1\nno clear association\n\n\n\nHR is a rate ratio, not a risk ratio. Rescale continuous variables (per 10 years, per 5 kg/m²)."
+  },
+  {
+    "objectID": "survival-workshop/cheatsheet.html#cox-model-checklist",
+    "href": "survival-workshop/cheatsheet.html#cox-model-checklist",
+    "title": "Survival Analysis Cheat Sheet",
+    "section": "",
+    "text": "Events per coefficient about 10 or more: here 14.1\nChoose covariates from theory (not p-values); report crude and adjusted HRs and reference groups\nCheck PH: cox.zph() and a plot; one borderline term among many may be chance\nIf violated: strata() (nuisance factor), time-split (survSplit) to report the effect by period, or time-varying effects\nReport with tbl_regression(fit, exponentiate = TRUE)"
+  },
+  {
+    "objectID": "survival-workshop/cheatsheet.html#pitfalls",
+    "href": "survival-workshop/cheatsheet.html#pitfalls",
+    "title": "Survival Analysis Cheat Sheet",
+    "section": "",
+    "text": "Mean of follow-up times or a t-test on them; proportion died when follow-up differs\nMedian replaced by the median of observed times when it is “not reached”\nReading the thin right tail of a KM curve; no number at risk\nInformative censoring (the sickest are lost); competing risks ignored\nImmortal time bias; different time zero in the groups\nHR read as risk ratio; one HR reported when the effect changes over time\nToo few events for the covariates; association read as cause"
+  },
+  {
+    "objectID": "survival-workshop/cheatsheet.html#one-paragraph-report",
+    "href": "survival-workshop/cheatsheet.html#one-paragraph-report",
+    "title": "Survival Analysis Cheat Sheet",
+    "section": "",
+    "text": "Of 600 patients (median follow-up 18 months by reverse Kaplan-Meier), 113 died and 487 were censored. Twelve-month survival was 83% (95% CI 80–86%). In a multivariable Cox model, HIV (HR 2.0) and MDR-TB (HR 2.1) were associated with a higher hazard of death and DOT with a lower hazard (HR 0.6); smear status violated proportional hazards and was stratified."
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#where-we-are",
+    "href": "survival-workshop/s2_kaplan_meier.html#where-we-are",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "Where we are",
+    "text": "Where we are\n\nSession 1: censoring, the Surv object, rates\nToday: estimate and draw the survival curve without assuming a constant rate\nBy the end you can:\n\nfit and read a Kaplan-Meier curve\nreport survival at a time point and the median (or “not reached”)\ndraw curves by group with a number-at-risk table"
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#a-step-function",
+    "href": "survival-workshop/s2_kaplan_meier.html#a-step-function",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "A step function",
+    "text": "A step function\nAt each event time, survival drops by the fraction who die among those still at risk; censored patients leave the risk set without causing a drop.\n\nS(t) = Π (1 − di / ni) over event times ≤ t\n\n\ntoy &lt;- tibble(time = c(2, 3, 3, 5, 7, 8), status = c(1, 1, 0, 1, 0, 1))\nsummary(survfit(Surv(time, status) ~ 1, toy))\n\nCall: survfit(formula = Surv(time, status) ~ 1, data = toy)\n\n time n.risk n.event survival std.err lower 95% CI upper 95% CI\n    2      6       1    0.833   0.152        0.583            1\n    3      5       1    0.667   0.192        0.379            1\n    5      3       1    0.444   0.222        0.167            1\n    8      1       1    0.000     NaN           NA           NA"
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#reading-the-toy-example",
+    "href": "survival-workshop/s2_kaplan_meier.html#reading-the-toy-example",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "Reading the toy example",
+    "text": "Reading the toy example\n\nAt time 2: 6 at risk, 1 dies: 1 × 5/6 = 0.83\nAt time 3: 5 at risk, 1 dies and 1 is censored: 0.83 × 4/5 = 0.67\nThe censored patient counts in the denominator until censored, then leaves"
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#the-overall-curve",
+    "href": "survival-workshop/s2_kaplan_meier.html#the-overall-curve",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "The overall curve",
+    "text": "The overall curve\n\nkm &lt;- survfit(Surv(time_months, status) ~ 1, data = tb)\nkm\n\nCall: survfit(formula = Surv(time_months, status) ~ 1, data = tb)\n\n       n events median 0.95LCL 0.95UCL\n[1,] 600    113     NA      NA      NA\n\n\n\nggsurvfit(km) + add_confidence_interval() + labs(x = \"Months since starting treatment\", y = \"Survival probability\") + scale_y_continuous(limits = c(0.5, 1))"
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#the-overall-curve-output",
+    "href": "survival-workshop/s2_kaplan_meier.html#the-overall-curve-output",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "The overall curve",
+    "text": "The overall curve"
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#survival-at-a-time",
+    "href": "survival-workshop/s2_kaplan_meier.html#survival-at-a-time",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "Survival at a time",
+    "text": "Survival at a time\n\nsummary(km, times = c(6, 12, 18))\n\nCall: survfit(formula = Surv(time_months, status) ~ 1, data = tb)\n\n time n.risk n.event survival std.err lower 95% CI upper 95% CI\n    6    490      76    0.870  0.0140        0.843        0.897\n   12    439      20    0.833  0.0156        0.803        0.864\n   18    244      17    0.796  0.0173        0.763        0.831\n\n\n\n“Survival at 12 months was 83% (95% CI 80–86%).” Time points beyond the longest follow-up (here about 24 months) cannot be estimated."
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#the-median-survival-time",
+    "href": "survival-workshop/s2_kaplan_meier.html#the-median-survival-time",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "The median survival time",
+    "text": "The median survival time\n\nThe median is the time at which the curve crosses 0.5\nHere fewer than half the patients died, so the curve never reaches 0.5: the median is not reached (NA)\nReport survival at fixed times (12, 24 months) or the restricted mean instead\nNever replace “not reached” with the median of the observed times\n\n\nsummary(km)$table[c(\"records\", \"events\", \"median\")]\n\nrecords  events  median \n    600     113      NA"
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#confidence-and-the-tail",
+    "href": "survival-workshop/s2_kaplan_meier.html#confidence-and-the-tail",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "Confidence and the tail",
+    "text": "Confidence and the tail\n\nThe curve is least reliable at the right end, where few patients remain at risk: confidence bands widen and a single death moves the curve a lot. Always show the number at risk and avoid over-reading the tail."
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#hiv-positive-and-negative",
+    "href": "survival-workshop/s2_kaplan_meier.html#hiv-positive-and-negative",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "HIV-positive and negative",
+    "text": "HIV-positive and negative\n\nkm_grp &lt;- survfit(Surv(time_months, status) ~ hiv, data = tb)\nsummary(km_grp, times = 12)$surv |&gt; round(2)\n\n[1] 0.85 0.72\n\n\n\nggsurvfit(km_grp) + add_confidence_interval() + add_risktable() + scale_ggsurvfit(x_scales = list(breaks = seq(0, 24, 6))) +\n  labs(x = \"Months since starting treatment\", y = \"Survival probability\")\n\n\n\nPositive patients have lower survival throughout\nOverlapping bands early on; separation grows\nThe risk table shows how many remain: only 63 HIV-positive patients started, so the right end is thin"
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#hiv-positive-and-negative-output",
+    "href": "survival-workshop/s2_kaplan_meier.html#hiv-positive-and-negative-output",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "HIV-positive and negative",
+    "text": "HIV-positive and negative"
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#reporting-a-kaplan-meier-analysis",
+    "href": "survival-workshop/s2_kaplan_meier.html#reporting-a-kaplan-meier-analysis",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "Reporting a Kaplan-Meier analysis",
+    "text": "Reporting a Kaplan-Meier analysis\n\n\nNumber of patients and events per group\nMedian follow-up (reverse KM)\nSurvival at fixed times with 95% CI, or the median with CI if reached\nThe figure with number at risk, a clear axis and the log-rank p-value (Session 3)"
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#switch-to-r-lab-2",
+    "href": "survival-workshop/s2_kaplan_meier.html#switch-to-r-lab-2",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "🔧 Switch to R — Lab 2",
+    "text": "🔧 Switch to R — Lab 2\n\nFile: survival-workshop/labs/lab2_km.R\n\nsurvfit() · summary(times = ) · the median\nggsurvfit() with confidence band and risk table\ncurves by HIV status\n\n\nTime: 35 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#self-check-quiz-15",
+    "href": "survival-workshop/s2_kaplan_meier.html#self-check-quiz-15",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nIn a Kaplan-Meier analysis the median survival time is reported as ‘not reached’. What does this mean?\n\nThe patients were followed for too short a time to be analysed\nThe median could not be calculated because of missing data in the file\nFewer than half of the patients had died by the end of follow-up\nMore than half of the patients in the whole cohort were censored"
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#self-check-quiz-25",
+    "href": "survival-workshop/s2_kaplan_meier.html#self-check-quiz-25",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nWhat happens to a censored patient in the Kaplan-Meier calculation?\n\nThey are counted as a death at the time of censoring in the data\nThey stay at risk until censored, then leave with no drop\nThey are removed from the whole analysis from the very start of it\nThey are counted as surviving until the end of the study period"
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#self-check-quiz-35",
+    "href": "survival-workshop/s2_kaplan_meier.html#self-check-quiz-35",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nWhy should a Kaplan-Meier plot show the number at risk beneath the curve?\n\nIt gives the p-value for the comparison made between the two groups\nIt shows the hazard ratio for each one of the groups in the plot\nThe right end of the curve rests on few patients and is unreliable\nIt is included only to make the plot look more complete and tidy"
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#self-check-quiz-45",
+    "href": "survival-workshop/s2_kaplan_meier.html#self-check-quiz-45",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nAt 12 months the Kaplan-Meier survival for HIV-positive patients is 0.72. How should this be stated?\n\n72% of HIV-positive patients died within 12 months of starting treatment\nThe hazard of dying in the HIV-positive group is 0.72 per month of time\nThe median survival of HIV-positive patients is about 0.72 of a year\nAbout 72% of HIV-positive patients are estimated alive at 12 months"
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#self-check-quiz-55",
+    "href": "survival-workshop/s2_kaplan_meier.html#self-check-quiz-55",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nWhat is the survival estimate at 30 months if the longest follow-up in the data is 24 months?\n\nIt cannot be estimated from these data\nIt is the same as the survival at 24 months\nIt is zero, since nobody was followed that long\nIt equals the median survival of the cohort"
+  },
+  {
+    "objectID": "survival-workshop/s2_kaplan_meier.html#score-and-take-home",
+    "href": "survival-workshop/s2_kaplan_meier.html#score-and-take-home",
+    "title": "Session 2 — Kaplan-Meier Curves",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nKM estimates survival with a step function; censored patients leave the risk set\nReport survival at fixed times with CI; the median may be ‘not reached’\nAlways show the number at risk; beware the thin right tail\nKM is descriptive: the log-rank test and Cox model compare groups\n\nNext: Session 3: comparing curves"
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#where-we-are",
+    "href": "survival-workshop/s4_cox_regression.html#where-we-are",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "Where we are",
+    "text": "Where we are\n\nSessions 2–3: describe and compare curves\nToday: regression for survival: effect sizes, adjustment for several variables\nBy the end you can:\n\nfit a Cox model and interpret a hazard ratio and its CI\nfit and report a multivariable model\nscale continuous variables and check events per variable\ndraw a predicted survival curve for a patient profile"
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#the-model",
+    "href": "survival-workshop/s4_cox_regression.html#the-model",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "The model",
+    "text": "The model\n\nh(t | x) = h0(t) × exp(β1x1 + β2x2 + …)\n\n\nh0(t) is an unspecified baseline hazard: the shape over time is left free\nexp(β) is the hazard ratio: the multiplicative change in the hazard for a one-unit increase in x, at any time\nProportional hazards: that ratio is constant over time (checked in Session 5)\nLike logistic regression it uses exp(coefficient), but it models rates over time"
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#one-predictor",
+    "href": "survival-workshop/s4_cox_regression.html#one-predictor",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "One predictor",
+    "text": "One predictor\n\ncox1 &lt;- coxph(Surv(time_months, status) ~ hiv, data = tb)\nexp(cbind(HR = coef(cox1), confint(cox1))) |&gt; round(2)\n\n             HR 2.5 % 97.5 %\nhivPositive 1.8   1.1   2.95\n\n\n\nHR = 1.8 (95% CI 1.1–2.9): at any time, the hazard of death is about 80% higher in HIV-positive patients. It is a rate ratio, not a risk ratio; and unlike the log-rank test it has a size and a CI."
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#several-predictors-at-once",
+    "href": "survival-workshop/s4_cox_regression.html#several-predictors-at-once",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "Several predictors at once",
+    "text": "Several predictors at once\n\ncox_full &lt;- coxph(Surv(time_months, status) ~ age + sex + hiv + diabetes + smoker + bmi + mdr_tb + treatment, data = tb)\nround(exp(cbind(HR = coef(cox_full), confint(cox_full))), 2)    # tbl_regression(cox_full, exponentiate = TRUE) formats this for a paper\n\n               HR 2.5 % 97.5 %\nage          1.01  1.00   1.03\nsexMale      1.08  0.72   1.64\nhivPositive  1.96  1.18   3.25\ndiabetesYes  1.37  0.69   2.75\nsmokerYes    1.10  0.73   1.66\nbmi          0.92  0.86   0.98\nmdr_tbYes    2.11  1.25   3.58\ntreatmentDOT 0.57  0.39   0.83"
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#reading-the-adjusted-hazard-ratios",
+    "href": "survival-workshop/s4_cox_regression.html#reading-the-adjusted-hazard-ratios",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "Reading the adjusted hazard ratios",
+    "text": "Reading the adjusted hazard ratios\n\nEach HR is adjusted for the others: “holding age, sex, … fixed”\nMDR-TB about doubles the hazard; DOT about halves it (reference: self-administered); sex shows no effect\nThe CI shows the precision: a CI that includes 1 means no clear association"
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#reading-continuous-predictors",
+    "href": "survival-workshop/s4_cox_regression.html#reading-continuous-predictors",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "Reading continuous predictors",
+    "text": "Reading continuous predictors\n\ncox_age10 &lt;- coxph(Surv(time_months, status) ~ I(age / 10) + hiv + mdr_tb + treatment, data = tb)\nround(exp(cbind(HR = coef(cox_age10), confint(cox_age10))), 2)[1, ]\n\n    HR  2.5 % 97.5 % \n  1.16   1.01   1.33 \n\n\nThe HR for age is for one year unless you rescale: per 10 years is a more readable unit (HR^10). For BMI, use a clinically sensible step (per 5 kg/m²)."
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#events-per-variable",
+    "href": "survival-workshop/s4_cox_regression.html#events-per-variable",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "Events per variable",
+    "text": "Events per variable\n\nc(events = sum(tb$status), coefficients = length(coef(cox_full)), events_per_coefficient = round(sum(tb$status) / length(coef(cox_full)), 1))\n\n                events           coefficients events_per_coefficient \n                 113.0                    8.0                   14.1 \n\n\n\nThe information in a Cox model is the number of events, not the number of patients. As a rule of thumb, aim for about 10 or more events per coefficient; with fewer, estimates are unstable and the model overfits. Choose predictors from theory first (Session 6 of the regression workshop)."
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#predicted-survival-for-a-patient-profile",
+    "href": "survival-workshop/s4_cox_regression.html#predicted-survival-for-a-patient-profile",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "Predicted survival for a patient profile",
+    "text": "Predicted survival for a patient profile\n\nnd &lt;- tibble(age = 40, sex = \"Male\", hiv = c(\"Negative\", \"Positive\"), diabetes = \"No\", smoker = \"No\", bmi = 20, mdr_tb = \"No\", treatment = \"DOT\") |&gt;\n  mutate(across(c(sex, hiv, diabetes, smoker, mdr_tb, treatment), \\(v) factor(v, levels = levels(tb[[cur_column()]]))))\nps &lt;- survfit(cox_full, newdata = nd)\ntibble(month = ps$time, hiv_neg = ps$surv[, 1], hiv_pos = ps$surv[, 2]) |&gt; pivot_longer(-month, names_to = \"profile\", values_to = \"survival\") |&gt;\n  ggplot(aes(month, survival, colour = profile)) + geom_step(linewidth = 1) + labs(x = \"Months\", y = \"Predicted survival\", colour = NULL)\n\n\nA 40-year-old man on DOT without MDR-TB or diabetes, HIV-negative vs positive: the model gives the expected curve for any covariate pattern."
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#predicted-survival-for-a-patient-profile-output",
+    "href": "survival-workshop/s4_cox_regression.html#predicted-survival-for-a-patient-profile-output",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "Predicted survival for a patient profile",
+    "text": "Predicted survival for a patient profile"
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#hr-is-not-a-risk-ratio",
+    "href": "survival-workshop/s4_cox_regression.html#hr-is-not-a-risk-ratio",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "HR is not a risk ratio",
+    "text": "HR is not a risk ratio\n\nAn HR of 2 means the rate of dying is twice as high at each moment, not that the cumulative risk is doubled\nWith rare events they are close; with common events they differ\nReport the HR and survival (or risk) at fixed times when possible"
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#reporting-a-cox-model",
+    "href": "survival-workshop/s4_cox_regression.html#reporting-a-cox-model",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "Reporting a Cox model",
+    "text": "Reporting a Cox model\n\n\nEvents and patients in each group; median follow-up\nCrude and adjusted HRs with 95% CI (state the covariates and why)\nThe reference category and the unit of each continuous variable\nThe result of the proportional-hazards check (Session 5)"
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#switch-to-r-lab-4",
+    "href": "survival-workshop/s4_cox_regression.html#switch-to-r-lab-4",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "🔧 Switch to R — Lab 4",
+    "text": "🔧 Switch to R — Lab 4\n\nFile: survival-workshop/labs/lab4_cox.R\n\ncoxph() · exp(coef()) · confint()\nmultivariable model, tbl_regression(exponentiate = TRUE)\nrescale age · events per coefficient · predicted survival\n\n\nTime: 40 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#self-check-quiz-15",
+    "href": "survival-workshop/s4_cox_regression.html#self-check-quiz-15",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nA Cox model gives HR = 2.0 (95% CI 1.2 to 3.3) for HIV-positive vs negative patients. Which interpretation is correct?\n\nHIV-positive patients are twice as likely to die during the study\nHIV-positive patients survive twice as long as negative patients\nAt any time, the hazard of death is about twice as high with HIV\nTwo per cent more HIV-positive patients die in every single month"
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#self-check-quiz-25",
+    "href": "survival-workshop/s4_cox_regression.html#self-check-quiz-25",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nAge has HR = 1.02 per year. What is the approximate HR per 10 years?\n\nAbout 1.20, because 0.02 is added 10 times\nAbout 1.22, because 1.02 multiplied by itself 10 times\nAbout 2.0, because 10 years doubles the hazard\nAbout 1.02, since the hazard ratio does not depend on the unit"
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#self-check-quiz-35",
+    "href": "survival-workshop/s4_cox_regression.html#self-check-quiz-35",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nWhy is the number of events, not the number of patients, the key constraint on a Cox model?\n\nEach patient appears just one time in the data set used to fit it\nCox models can only use the patients who died during follow-up\nInformation comes from events; censored patients add at-risk time\nCensored patients are removed before the model is fitted to the rest"
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#self-check-quiz-45",
+    "href": "survival-workshop/s4_cox_regression.html#self-check-quiz-45",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nIn a Cox model the HR for treatment (DOT vs self-administered) is 0.57. What does this say?\n\nDOT patients have a 57% probability of dying during follow-up\nDOT patients live 43% longer than self-administered patients do\nThe hazard is 0.57 times lower with self-administered treatment\nWith other variables fixed, hazard of death is about 43% lower"
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#self-check-quiz-55",
+    "href": "survival-workshop/s4_cox_regression.html#self-check-quiz-55",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nWhat is the baseline hazard h0(t) in the Cox model?\n\nThe hazard for a patient with all covariates at reference values\nThe proportion of patients who died during the follow-up period\nThe hazard ratio of the first predictor entered into the model\nA constant rate that must be estimated before the model is fitted"
+  },
+  {
+    "objectID": "survival-workshop/s4_cox_regression.html#score-and-take-home",
+    "href": "survival-workshop/s4_cox_regression.html#score-and-take-home",
+    "title": "Session 4 — Cox Proportional Hazards Regression",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nHR = exp(β): the multiplicative change in the hazard, at any time\nAdjusted HRs from a multivariable model; report CI and reference groups\nRescale continuous variables; check events per coefficient\nHR is a rate ratio, not a risk ratio; the model can predict survival curves\n\nNext: Session 5: assumptions and reporting"
   }
 ]

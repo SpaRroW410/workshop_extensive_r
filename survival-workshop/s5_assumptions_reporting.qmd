@@ -1,0 +1,234 @@
+---
+title: "Session 5 — Assumptions and Reporting"
+subtitle: "Proportional hazards · Schoenfeld residuals · strata and time-split fixes · censoring · reporting · Lab 5"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 4: the Cox model and hazard ratios
+- Today: **can we trust a single hazard ratio?**
+- By the end you can:
+  - **test and plot** the proportional-hazards assumption
+  - **fix** a violation by **stratifying** or **splitting time**
+  - judge whether **censoring** is acceptable
+  - **report** a survival analysis
+:::
+
+# Topic 1 — Proportional hazards {background-color="#2C3E50"}
+
+## The assumption
+
+::: {.key}
+The Cox model assumes the **hazard ratio is constant over time**. If one group is worse **early** and the same **later**, a single HR averages two different stories.
+:::
+
+```{r}
+fit <- coxph(Surv(time_months, status) ~ age + sex + hiv + diabetes + smoker + bmi + mdr_tb + smear + treatment, data = tb)
+zph <- cox.zph(fit)
+round(zph$table, 3)
+```
+
+## Reading the test
+
+::: {.incremental}
+- `cox.zph()` tests whether **Schoenfeld residuals** trend with time, **one p-value per term** plus a global one
+- **smear** has a very small p-value: its effect **changes over time**
+- With nine terms tested, **borderline** p-values (age, BMI) can be **chance**: **look at the plot** before acting
+:::
+
+## Look at it
+
+```{r}
+#| output-location: slide
+#| fig-height: 4.5
+plot(zph[8]); abline(h = 0, col = "red")
+```
+
+::: {.incremental}
+- A **flat line** means a constant log hazard ratio
+- Here the curve **slopes down**: strong effect early, little later
+- A second look: **log-log plot** of the curves; **parallel** lines support proportional hazards
+:::
+
+# Topic 2 — Fixing a violation {background-color="#2C3E50"}
+
+## Fix 1: stratify
+
+```{r}
+cox_strat <- coxph(Surv(time_months, status) ~ age + sex + hiv + diabetes + smoker + bmi + mdr_tb + treatment + strata(smear), data = tb)
+round(exp(coef(cox_strat)), 2)
+```
+
+::: {.incremental}
+- `strata(smear)`: a **separate baseline hazard** for each group, so the other HRs are not distorted
+- **You lose** an HR for smear itself, which is a reasonable price if smear is only a **nuisance** variable
+- Use for a **categorical** variable
+:::
+
+## Fix 2: split time and estimate the effect in each period
+
+```{r}
+tb_split <- survSplit(Surv(time_months, status) ~ ., data = tb, cut = 6, episode = "period")
+tb_split$smear_pos <- as.numeric(tb_split$smear == "Positive")
+cox_split <- coxph(Surv(tstart, time_months, status) ~ age + sex + hiv + diabetes + smoker + bmi + mdr_tb + treatment + smear_pos:factor(period), data = tb_split)
+round(exp(coef(cox_split))[c("smear_pos:factor(period)1", "smear_pos:factor(period)2")], 2)
+```
+
+::: {.key}
+"Smear-positive disease **tripled the hazard in the first 6 months** (HR about 3) and was **not harmful afterwards** (HR about 0.6)." The **effect of time** is itself a finding. Other options: **time-varying covariates**, **landmark analysis**, **parametric models**.
+:::
+
+# Topic 3 — Censoring and reporting {background-color="#2C3E50"}
+
+## Is censoring "non-informative"?
+
+::: {.incremental}
+- Kaplan-Meier and Cox assume patients **censored at time t** have the **same future risk** as those who remain
+- If the **sickest** are **lost to follow-up**, the curve is **too optimistic**
+- Check: **how many** were lost, **who** (compare groups), and **when**
+- **Sensitivity analysis:** treat everyone lost as dead (worst case) and as alive (best case)
+:::
+
+```{r}
+tb |> group_by(hiv) |> summarise(n = n(), pct_lost = round(100 * mean(censor_reason %in% "Lost to follow-up"), 1))
+```
+
+## Other threats
+
+| Problem | What to do |
+|---|---|
+| **Competing risks** (death from another cause stops the event of interest) | cumulative incidence (`tidycmprsk`), Fine-Gray model; beyond this workshop |
+| **Immortal time bias** (time before exposure counted as exposed) | define **time zero** carefully; time-varying exposure |
+| **Different time zero** for groups | use the **same** starting point (e.g. start of treatment) |
+| **Too many covariates** for the events | fewer predictors; shrinkage |
+
+## Reporting checklist
+
+::: {.good}
+1. **Population, time zero, event, end of follow-up**; number of patients, events, censored
+2. **Median follow-up** (reverse KM) and **reasons for censoring**
+3. **Kaplan-Meier** curves with number at risk; survival at fixed times with CI
+4. **Cox model:** crude and adjusted HRs with CI, reference groups, units
+5. **Proportional-hazards check** and what you did about violations
+6. **Limitations:** informative censoring, competing risks, confounding, **association, not cause**
+:::
+
+## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `survival-workshop/labs/lab5_assumptions.R`
+
+- `cox.zph()` · plot the Schoenfeld residuals · log-log plot
+- `strata()` and `survSplit()` fixes
+- lost to follow-up by group · final hazard-ratio table
+:::
+
+**Time:** 40 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q1", "cox.zph() gives p = 0.0001 for the smear-status term. What does this mean?",
+         c("Smear status has no effect on survival at any time during follow-up",
+           "The Cox model cannot be fitted to these data until smear is removed",
+           "The hazard ratio for smear is not constant over follow-up time",
+           "Smear status should be removed from the data set before analysis"), answer = 3,
+         explain = "A small p-value means Schoenfeld residuals trend with time, so the HR changes over follow-up. It says the proportional-hazards assumption fails for that term, not that the effect is null.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q2", "Which is an appropriate response to a proportional-hazards violation for a nuisance categorical variable?",
+         c("Delete the variable and report nothing about it",
+           "Stratify the model by that variable",
+           "Treat the variable as a continuous variable",
+           "Use a t-test for each time period"), answer = 2,
+         explain = "Stratifying gives each level its own baseline hazard, so the other hazard ratios are not distorted. The price is that no HR is estimated for the stratifying variable itself.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q3", "In the time-split analysis the smear HR is about 3 for the first 6 months and about 0.6 afterwards. What is the best summary?",
+         c("Smear status has an average hazard ratio of about 1.8 over follow-up",
+           "The result is a computing error, as hazard ratios cannot be below 1",
+           "The smear effect reverses over time, so one HR would mislead",
+           "Smear status is unrelated to survival, as the two values cancel out"), answer = 3,
+         explain = "Splitting time shows the hazard differs by period. A single average HR hides that the early excess risk disappears later.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q4", "Why can a large number lost to follow-up threaten a Kaplan-Meier analysis?",
+         c("Patients lost to follow-up are removed from the numerator and denominator",
+           "Kaplan-Meier cannot handle any censored patients",
+           "Loss to follow-up lowers the p-value of the log-rank test",
+           "If those lost were sicker, the curve is too optimistic"), answer = 4,
+         explain = "The method assumes censored patients have the same future risk as those who remain. If the patients lost were at higher risk, survival is overestimated.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q5", "Which item belongs in the report of a survival analysis?",
+         c("Median follow-up, events and the proportional-hazards check",
+           "Only the p-value of the log-rank test, since it summarises the result",
+           "The mean follow-up time of the group of patients who died",
+           "The number of patients enrolled, but not the number of events"), answer = 1,
+         explain = "A reader needs patients, events, censoring, median follow-up, effect sizes with CI, and evidence about the model assumption.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- Test PH with **`cox.zph()`** and **plots**; one flagged term among many may be chance
+- Fix with **`strata()`**, **time-split** or **time-varying** effects
+- Check **censoring**: how many, who, when; consider sensitivity analyses
+- Report **events, follow-up, KM with risk table, HRs with CI, PH check, limitations**
+:::
+
+**Next:** The cheat sheet and the **Dungeons & Dataframes** survival world (coming)
