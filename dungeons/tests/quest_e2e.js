@@ -96,21 +96,21 @@ const hudXP = p => p.evaluate(() => +document.querySelector('.rq-hud .rq-xp').te
 
   // ── 3b. Region 3 gate: pre-test AND (Region 1 post-test ≥ 70% OR placement check ≥ 80%) ──
   p = await open(ctx, 'world1_outcome_detective.html');
-  ok(await p.evaluate(() => document.body.classList.contains('rq-locked')) && /Region 1 post-test|placement check/.test(await p.locator('.rq-lock').innerText()), 'World 1 still locked after the pre-test alone; the lock names the Region 1 route');
+  ok(await p.evaluate(() => document.body.classList.contains('rq-locked')) && /Region 2 post-test|placement check/.test(await p.locator('.rq-lock').innerText()), 'World 1 still locked after the pre-test alone; the lock names the Region 2 route');
   await p.evaluate(() => { const s = Quest.state(); s.tests.ready = { pct: 70, score: 7, total: 10, byTag: {}, ts: '2026-01-01' }; localStorage.setItem('rq:v1', JSON.stringify(s)); });
   await p.reload(); await p.waitForFunction(() => window.Quest);
   ok(await p.evaluate(() => document.body.classList.contains('rq-locked')), 'a placement score of 70% (below 80%) does not open Region 3');
   await p.evaluate(() => { const s = Quest.state(); s.tests.ready.pct = 85; localStorage.setItem('rq:v1', JSON.stringify(s)); });
   await p.reload(); await p.waitForFunction(() => window.Quest);
   ok(!(await p.evaluate(() => document.body.classList.contains('rq-locked'))), 'placement check ≥ 80% opens Region 3');
-  await p.evaluate(() => { const s = Quest.state(); delete s.tests.ready; s.tests.r1post = { pct: 75, score: 7, total: 10, byTag: {}, ts: '2026-01-01' }; localStorage.setItem('rq:v1', JSON.stringify(s)); });
+  await p.evaluate(() => { const s = Quest.state(); delete s.tests.ready; s.tests.r2post = { pct: 75, score: 7, total: 10, byTag: {}, ts: '2026-01-01' }; localStorage.setItem('rq:v1', JSON.stringify(s)); });
   await p.reload(); await p.waitForFunction(() => window.Quest);
-  ok(!(await p.evaluate(() => document.body.classList.contains('rq-locked'))), 'Region 1 post-test ≥ 70% also opens Region 3');
-  await p.evaluate(() => { const s = Quest.state(); delete s.tests.r1post; localStorage.setItem('rq:v1', JSON.stringify(s)); });
+  ok(!(await p.evaluate(() => document.body.classList.contains('rq-locked'))), 'Region 2 post-test ≥ 70% also opens Region 3');
+  await p.evaluate(() => { const s = Quest.state(); delete s.tests.r2post; localStorage.setItem('rq:v1', JSON.stringify(s)); });
   await p.close();
 
   // ── 4. world 1: unlocked, XP rules ───────────────────────────────────────
-  await ctx.addInitScript(() => { try { const s = JSON.parse(localStorage.getItem('rq:v1') || 'null'); if (s && s.v === 1 && !s.tests.ready && !s.tests.r1post) { s.tests.ready = { pct: 90, score: 9, total: 10, byTag: {} }; localStorage.setItem('rq:v1', JSON.stringify(s)); } } catch (e) {} });
+  await ctx.addInitScript(() => { try { const s = JSON.parse(localStorage.getItem('rq:v1') || 'null'); if (s && s.v === 1 && !s.tests.ready && !s.tests.r2post) { s.tests.ready = { pct: 90, score: 9, total: 10, byTag: {} }; localStorage.setItem('rq:v1', JSON.stringify(s)); } } catch (e) {} });
   p = await open(ctx, 'world1_outcome_detective.html');
   ok(!(await p.evaluate(() => document.body.classList.contains('rq-locked'))), 'World 1 unlocked once pre-test + placement are done');
   await p.evaluate(() => { window.__solve(__item('w1-08'), false); window.__solve(__item('w1-08'), true); });   // wrong then right, diff1 → 5 XP
@@ -201,6 +201,33 @@ const hudXP = p => p.evaluate(() => +document.querySelector('.rq-hud .rq-xp').te
   const g1 = await p.locator('.rq-gain').first().innerText(); ok(/40%.*100%/.test(g1) && /\+60/.test(g1), 'Region 1 post-test shows gain: ' + g1);
   st = await state(p); ok(!!st.badges.r1grad, 'Basics Graduate badge awarded at ≥ 70%');
   ok(p._errs.length === 0, 'Region 1 pages: no JS errors ' + p._errs.join(','));
+  await ctx.close();
+
+  // ── 8. Region 2: gate from Region 1, own pre/post, datasets, code items ──
+  ctx = await newCtx(); p = await open(ctx, 'm1_messy_data_dungeon.html');
+  ok(await p.evaluate(() => document.body.classList.contains('rq-locked')) && /Region 2 pre-test/.test(await p.locator('.rq-lock').innerText()), 'Region 2 world m1 is locked until the Region 2 pre-test (and Region 1)');
+  await p.evaluate(() => { const s = Quest.state(); s.tests.r2pre = { pct: 30, score: 3, total: 10, byTag: {} }; s.tests.ready = { pct: 85, score: 8, total: 10, byTag: {} }; localStorage.setItem('rq:v1', JSON.stringify(s)); });
+  await p.reload(); await p.waitForFunction(() => window.Quest); await p.evaluate(HELPERS);
+  ok(!(await p.evaluate(() => document.body.classList.contains('rq-locked'))), 'm1 unlocks with the Region 2 pre-test plus placement ≥ 80%');
+  ok(await p.locator('.rq-item .rq-data a').count() >= 2, 'questions that use ncd_messy show a download button');
+  const mh = await p.locator('.rq-item[data-id="m1-07"] .rq-data a').first().getAttribute('href'); const mr = await p.request.get(new URL(mh, p.url()).href);
+  ok(mr.ok() && /Pt ID/.test(await mr.text()), 'the messy CSV is published: ' + mh);
+  await p.evaluate(() => document.querySelectorAll('.rq-item').forEach(q => window.__solve(q, true)));
+  st = await state(p); ok(Object.keys(st.items).filter(k => k.startsWith('m1-') && st.items[k].solved).length === 9 && !!st.badges['clear-m1'], 'all 9 m1 items solvable (incl. code) → m1 cleared');
+  await p.close();
+  for (const pg of ['m2_loop_labyrinth.html', 'm3_explore_by_picture.html', 'm4_table1_forge.html', 'm5_tests_in_context.html']) {
+    p = await open(ctx, pg); await p.evaluate(() => document.body.classList.remove('rq-locked'));
+    const id = pg.slice(0, 2); await p.evaluate(() => document.querySelectorAll('.rq-item').forEach(q => window.__solve(q, true)));
+    st = await state(p); ok(Object.keys(st.items).filter(k => k.startsWith(id + '-') && st.items[k].solved).length === 9 && !!st.badges['clear-' + id], `${id}: all 9 items solvable and world cleared`);
+    ok(p._errs.length === 0, `${pg}: no JS errors ` + p._errs.join(',')); await p.close();
+  }
+  p = await open(ctx, 'r2pretest.html');
+  await p.evaluate(() => { document.querySelectorAll('.rq-item').forEach((q, i) => window.__solve(q, i < 3)); [...document.querySelectorAll('.rq-big')].find(b => /[Ss]ubmit/.test(b.textContent)).click(); });
+  st = await state(p); ok(st.tests.r2pre && st.tests.r2pre.pct === 30, 'Region 2 pre-test scored 3/10 (code item graded in test mode)');
+  await p.close(); p = await open(ctx, 'r2posttest.html');
+  await p.evaluate(() => { document.querySelectorAll('.rq-item').forEach(q => window.__solve(q, true)); [...document.querySelectorAll('.rq-big')].find(b => /[Ss]ubmit/.test(b.textContent)).click(); });
+  const g2 = await p.locator('.rq-gain').first().innerText(); ok(/30%.*100%/.test(g2) && /\+70/.test(g2), 'Region 2 post-test shows gain: ' + g2);
+  st = await state(p); ok(!!st.badges.r2grad, 'Moderate Graduate badge awarded at ≥ 70%');
   await ctx.close();
 
   await browser.close(); console.log(fails ? `\n${fails} FAILURES` : '\nALL QUEST E2E TESTS PASSED'); process.exit(fails ? 1 : 0);

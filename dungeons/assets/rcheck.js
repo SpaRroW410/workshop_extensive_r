@@ -137,7 +137,9 @@
   /* ── normaliser ────────────────────────────────────────────────────── */
   var ALIAS = { summarize: 'summarise', '%>%': '|>', 'read.csv': 'read_csv', 'subset': 'filter', 'n_distinct': 'n_distinct', 'tally': 'count', 'as.factor': 'factor', 'as_factor': 'factor', ifelse: 'if_else', rbind: 'bind_rows', cbind: 'bind_cols', color: 'colour' };
   var SIG = { lm: ['formula', 'data'], glm: ['formula', 'family', 'data'], ggplot: ['data', 'mapping'], aes: ['x', 'y'], mean: ['x'], median: ['x'], sd: ['x'], sum: [], read_csv: ['file'],
-    summary: ['object'], tidy: ['x'], head: ['x', 'n'], factor: ['x', 'levels', 'labels'], 't.test': ['formula', 'data'], 'chisq.test': ['x', 'y'], table: [] };
+    summary: ['object'], tidy: ['x'], head: ['x', 'n'], factor: ['x', 'levels', 'labels'], 'chisq.test': ['x', 'y'], table: [] };
+  // tests that take either a formula + data or two vectors: the signature depends on the first positional argument
+  var FORMULA_FNS = { 't.test': 1, 'wilcox.test': 1, 'kruskal.test': 1, 'oneway.test': 1, aov: 1, 'var.test': 1 };
   var VERBS = { filter: 1, select: 1, mutate: 1, summarise: 1, group_by: 1, arrange: 1, count: 1, ungroup: 1, rename: 1, distinct: 1, slice: 1, transmute: 1, relocate: 1, left_join: 1, inner_join: 1, right_join: 1, full_join: 1, pull: 1, drop_na: 1 };
   var IGNORE_FNS = { library: 1, require: 1, suppressMessages: 1, suppressPackageStartupMessages: 1, 'install.packages': 1, setwd: 1, rm: 1, options: 1, theme_set: 1 };
   var FAMILIES = { binomial: 1, gaussian: 1, poisson: 1, quasipoisson: 1, quasibinomial: 1, Gamma: 1 };
@@ -212,7 +214,7 @@
       if (op === '~') return normFormula(n, ctx);
       var l = norm(n.l, ctx), r = norm(n.r, ctx);
       if (op === '&&') op = '&'; if (op === '||') op = '|';
-      if (FLIP[op] && isLit(l) && !isLit(r)) { var t = l; l = r; r = t; op = FLIP[op]; }
+      if (op === '<' || op === '<=') { var t = l; l = r; r = t; op = FLIP[op]; }          // a <= b is b >= a: one canonical direction
       if (op === '&' || op === '|' || op === '+' || op === '*') {
         var parts = flat(l, op).concat(flat(r, op));
         return C(op, sortBy(parts, ser).map(function (v) { return A(v); }));
@@ -288,6 +290,7 @@
       }
       // positional → named, from the signature
       var sig = VERBS[name] ? ['.data'] : SIG[name];
+      if (FORMULA_FNS[name]) { var fp = args.filter(function (a) { return !a.name; })[0]; sig = (fp && fp.v.k === 'bin' && fp.v.op === '~') ? ['formula', 'data'] : ['x', 'y']; }
       if (sig) {
         var used = {}; args.forEach(function (a) { if (a.name) used[a.name] = 1; });
         var free = sig.filter(function (s) { return !used[s]; }), fi = 0;

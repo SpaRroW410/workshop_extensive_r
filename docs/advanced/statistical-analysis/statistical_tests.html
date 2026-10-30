@@ -148,6 +148,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../r-foundations/merging_dataset.html">
  <span class="dropdown-text">Merging Datasets</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../r-foundations/cleaning_messy_data.html">
+ <span class="dropdown-text">Cleaning Messy Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../r-foundations/iteration.html">
+ <span class="dropdown-text">Iteration (across, loops, functions)</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -376,6 +384,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#hypothesis-testing" id="toc-hypothesis-testing" class="nav-link" data-scroll-target="#hypothesis-testing">Hypothesis Testing</a></li>
   <li><a href="#regression-analysis" id="toc-regression-analysis" class="nav-link" data-scroll-target="#regression-analysis">Regression Analysis</a></li>
   </ul></li>
+  <li><a href="#choosing-and-checking-a-test-moderate" id="toc-choosing-and-checking-a-test-moderate" class="nav-link" data-scroll-target="#choosing-and-checking-a-test-moderate">Choosing and checking a test (Moderate)</a></li>
   </ul>
 </nav>
     </div>
@@ -434,23 +443,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="rsnuxhbshq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#rsnuxhbshq table {
+<div id="fihnlzkyls" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#fihnlzkyls table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#rsnuxhbshq thead, #rsnuxhbshq tbody, #rsnuxhbshq tfoot, #rsnuxhbshq tr, #rsnuxhbshq td, #rsnuxhbshq th {
+#fihnlzkyls thead, #fihnlzkyls tbody, #fihnlzkyls tfoot, #fihnlzkyls tr, #fihnlzkyls td, #fihnlzkyls th {
   border-style: none;
 }
 
-#rsnuxhbshq p {
+#fihnlzkyls p {
   margin: 0;
   padding: 0;
 }
 
-#rsnuxhbshq .gt_table {
+#fihnlzkyls .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -476,12 +485,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#rsnuxhbshq .gt_caption {
+#fihnlzkyls .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#rsnuxhbshq .gt_title {
+#fihnlzkyls .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -493,7 +502,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#rsnuxhbshq .gt_subtitle {
+#fihnlzkyls .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -505,7 +514,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#rsnuxhbshq .gt_heading {
+#fihnlzkyls .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -517,13 +526,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#rsnuxhbshq .gt_bottom_border {
+#fihnlzkyls .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#rsnuxhbshq .gt_col_headings {
+#fihnlzkyls .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -538,7 +547,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#rsnuxhbshq .gt_col_heading {
+#fihnlzkyls .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -558,7 +567,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#rsnuxhbshq .gt_column_spanner_outer {
+#fihnlzkyls .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -570,15 +579,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#rsnuxhbshq .gt_column_spanner_outer:first-child {
+#fihnlzkyls .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#rsnuxhbshq .gt_column_spanner_outer:last-child {
+#fihnlzkyls .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#rsnuxhbshq .gt_column_spanner {
+#fihnlzkyls .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -590,11 +599,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#rsnuxhbshq .gt_spanner_row {
+#fihnlzkyls .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#rsnuxhbshq .gt_group_heading {
+#fihnlzkyls .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -620,7 +629,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#rsnuxhbshq .gt_empty_group_heading {
+#fihnlzkyls .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -635,15 +644,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#rsnuxhbshq .gt_from_md > :first-child {
+#fihnlzkyls .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#rsnuxhbshq .gt_from_md > :last-child {
+#fihnlzkyls .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#rsnuxhbshq .gt_row {
+#fihnlzkyls .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -662,7 +671,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#rsnuxhbshq .gt_stub {
+#fihnlzkyls .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -675,7 +684,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#rsnuxhbshq .gt_stub_row_group {
+#fihnlzkyls .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -689,15 +698,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#rsnuxhbshq .gt_row_group_first td {
+#fihnlzkyls .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#rsnuxhbshq .gt_row_group_first th {
+#fihnlzkyls .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#rsnuxhbshq .gt_summary_row {
+#fihnlzkyls .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -707,16 +716,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#rsnuxhbshq .gt_first_summary_row {
+#fihnlzkyls .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#rsnuxhbshq .gt_first_summary_row.thick {
+#fihnlzkyls .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#rsnuxhbshq .gt_last_summary_row {
+#fihnlzkyls .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -726,7 +735,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#rsnuxhbshq .gt_grand_summary_row {
+#fihnlzkyls .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -736,7 +745,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#rsnuxhbshq .gt_first_grand_summary_row {
+#fihnlzkyls .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -746,7 +755,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#rsnuxhbshq .gt_last_grand_summary_row_top {
+#fihnlzkyls .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -756,11 +765,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#rsnuxhbshq .gt_striped {
+#fihnlzkyls .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#rsnuxhbshq .gt_table_body {
+#fihnlzkyls .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -769,7 +778,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#rsnuxhbshq .gt_footnotes {
+#fihnlzkyls .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -783,7 +792,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#rsnuxhbshq .gt_footnote {
+#fihnlzkyls .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -792,7 +801,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#rsnuxhbshq .gt_sourcenotes {
+#fihnlzkyls .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -806,7 +815,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#rsnuxhbshq .gt_sourcenote {
+#fihnlzkyls .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -814,72 +823,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#rsnuxhbshq .gt_left {
+#fihnlzkyls .gt_left {
   text-align: left;
 }
 
-#rsnuxhbshq .gt_center {
+#fihnlzkyls .gt_center {
   text-align: center;
 }
 
-#rsnuxhbshq .gt_right {
+#fihnlzkyls .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#rsnuxhbshq .gt_font_normal {
+#fihnlzkyls .gt_font_normal {
   font-weight: normal;
 }
 
-#rsnuxhbshq .gt_font_bold {
+#fihnlzkyls .gt_font_bold {
   font-weight: bold;
 }
 
-#rsnuxhbshq .gt_font_italic {
+#fihnlzkyls .gt_font_italic {
   font-style: italic;
 }
 
-#rsnuxhbshq .gt_super {
+#fihnlzkyls .gt_super {
   font-size: 65%;
 }
 
-#rsnuxhbshq .gt_footnote_marks {
+#fihnlzkyls .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#rsnuxhbshq .gt_asterisk {
+#fihnlzkyls .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#rsnuxhbshq .gt_indent_1 {
+#fihnlzkyls .gt_indent_1 {
   text-indent: 5px;
 }
 
-#rsnuxhbshq .gt_indent_2 {
+#fihnlzkyls .gt_indent_2 {
   text-indent: 10px;
 }
 
-#rsnuxhbshq .gt_indent_3 {
+#fihnlzkyls .gt_indent_3 {
   text-indent: 15px;
 }
 
-#rsnuxhbshq .gt_indent_4 {
+#fihnlzkyls .gt_indent_4 {
   text-indent: 20px;
 }
 
-#rsnuxhbshq .gt_indent_5 {
+#fihnlzkyls .gt_indent_5 {
   text-indent: 25px;
 }
 
-#rsnuxhbshq .katex-display {
+#fihnlzkyls .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#rsnuxhbshq div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#fihnlzkyls div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -902,7 +911,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">blood_pressure</td>
-<td class="gt_row gt_center" headers="stat_0">122 (114, 132)</td>
+<td class="gt_row gt_center" headers="stat_0">121 (111, 132)</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">treatment</td>
@@ -911,11 +920,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;A</td>
-<td class="gt_row gt_center" headers="stat_0">58 (58%)</td>
+<td class="gt_row gt_center" headers="stat_0">44 (44%)</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;B</td>
-<td class="gt_row gt_center" headers="stat_0">42 (42%)</td>
+<td class="gt_row gt_center" headers="stat_0">56 (56%)</td>
 </tr>
 </tbody><tfoot>
 <tr class="gt_footnotes odd">
@@ -941,13 +950,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     Welch Two Sample t-test
 
 data:  blood_pressure by treatment
-t = -0.79303, df = 77.882, p-value = 0.4302
+t = -1.3721, df = 94.534, p-value = 0.1733
 alternative hypothesis: true difference in means between group A and group B is not equal to 0
 95 percent confidence interval:
- -9.099004  3.915096
+ -10.781784   1.969399
 sample estimates:
 mean in group A mean in group B 
-       121.0755        123.6674 </code></pre>
+       117.6492        122.0554 </code></pre>
 </div>
 </div>
 </section>
@@ -964,7 +973,7 @@ mean in group A mean in group B
     Pearson's Chi-squared test with Yates' continuity correction
 
 data:  table(data$treatment, data$outcome)
-X-squared = 0.1916, df = 1, p-value = 0.6616</code></pre>
+X-squared = 0.014758, df = 1, p-value = 0.9033</code></pre>
 </div>
 </div>
 </section>
@@ -1021,13 +1030,13 @@ X-squared = 0.1916, df = 1, p-value = 0.6616</code></pre>
     Welch Two Sample t-test
 
 data:  blood_pressure by treatment
-t = -0.79303, df = 77.882, p-value = 0.4302
+t = -1.3721, df = 94.534, p-value = 0.1733
 alternative hypothesis: true difference in means between group A and group B is not equal to 0
 95 percent confidence interval:
- -9.099004  3.915096
+ -10.781784   1.969399
 sample estimates:
 mean in group A mean in group B 
-       121.0755        123.6674 </code></pre>
+       117.6492        122.0554 </code></pre>
 </div>
 </div>
 <ul>
@@ -1048,13 +1057,13 @@ mean in group A mean in group B
     Paired t-test
 
 data:  before and after
-t = 4.5517, df = 29, p-value = 8.8e-05
+t = 1.4842, df = 29, p-value = 0.1485
 alternative hypothesis: true mean difference is not equal to 0
 95 percent confidence interval:
- 2.745638 7.226368
+ -0.8405802  5.2883927
 sample estimates:
 mean difference 
-       4.986003 </code></pre>
+       2.223906 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># non-parametric alternative for two independent groups</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(blood_pressure <span class="sc">~</span> treatment, <span class="at">data =</span> data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1063,7 +1072,7 @@ mean difference
     Wilcoxon rank sum test with continuity correction
 
 data:  blood_pressure by treatment
-W = 1069, p-value = 0.2997
+W = 1027, p-value = 0.1556
 alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
 </div>
@@ -1081,6 +1090,65 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 <section id="regression-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="regression-analysis">Regression Analysis</h3>
 <p>Regression modeling now has its own dedicated module — see <strong><a href="../statistical-analysis/regression.html">Regression Analysis</a></strong> for simple/multiple regression, diagnostics, and logistic regression.</p>
+</section>
+</section>
+<section id="choosing-and-checking-a-test-moderate" class="level3">
+<h3 class="anchored" data-anchor-id="choosing-and-checking-a-test-moderate">Choosing and checking a test (Moderate)</h3>
+<section id="check-the-assumptions-before-you-trust-a-t-test" class="level4">
+<h4 class="anchored" data-anchor-id="check-the-assumptions-before-you-trust-a-t-test">Check the assumptions before you trust a t-test</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(data<span class="sc">$</span>blood_pressure)                 <span class="co"># roughly bell-shaped?</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(data<span class="sc">$</span>blood_pressure); <span class="fu">qqline</span>(data<span class="sc">$</span>blood_pressure)   <span class="co"># points near the line?</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(data<span class="sc">$</span>blood_pressure)         <span class="co"># a very large sample flags trivial departures; look at the plots too</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>With <strong>moderate or large groups</strong> (about 30 or more each), the t-test of means is robust to mild skew.</li>
+<li>With <strong>small groups and a clearly skewed outcome</strong> (triglycerides, length of stay), use the <strong>Wilcoxon rank-sum</strong> test (<code>wilcox.test(y ~ group)</code>), which compares ranks, not means.</li>
+</ul>
+</section>
+<section id="more-than-two-groups-anova-or-kruskal-wallis" class="level4">
+<h4 class="anchored" data-anchor-id="more-than-two-groups-anova-or-kruskal-wallis">More than two groups: ANOVA or Kruskal-Wallis</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oneway.test</span>(blood_pressure <span class="sc">~</span> group, <span class="at">data =</span> data)       <span class="co"># one test for 3+ groups (means)</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kruskal.test</span>(blood_pressure <span class="sc">~</span> group, <span class="at">data =</span> data)      <span class="co"># rank-based alternative for skewed outcomes</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.t.test</span>(data<span class="sc">$</span>blood_pressure, data<span class="sc">$</span>group, <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span>)   <span class="co"># which groups differ, adjusted</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Do <strong>one overall test first</strong> rather than many pairwise t-tests: with 4 groups there are 6 pairs, and each extra test is another chance of a false positive.</p>
+</section>
+<section id="categorical-outcomes-chi-square-or-fisher" class="level4">
+<h4 class="anchored" data-anchor-id="categorical-outcomes-chi-square-or-fisher">Categorical outcomes: chi-square or Fisher</h4>
+<ul>
+<li><strong>Chi-square</strong> needs the <strong>expected counts</strong> in every cell to be about 5 or more (<code>chisq.test(tab)$expected</code>).</li>
+<li>With <strong>small expected counts</strong>, use <strong>Fisher’s exact test</strong>: <code>fisher.test(tab)</code>.</li>
+</ul>
+</section>
+<section id="paired-data" class="level4">
+<h4 class="anchored" data-anchor-id="paired-data">Paired data</h4>
+<p>The <strong>same people measured twice</strong> (before and after) must use a <strong>paired</strong> test: <code>t.test(after, before, paired = TRUE)</code>, or <code>wilcox.test(after, before, paired = TRUE)</code> if the differences are skewed. Treating them as two independent groups throws away the pairing and loses power.</p>
+</section>
+<section id="many-tests-many-p-values" class="level4">
+<h4 class="anchored" data-anchor-id="many-tests-many-p-values">Many tests, many p-values</h4>
+<p>Run 20 tests at the 5% level and one is expected to be “significant” by chance. For a planned family of tests, adjust:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.004</span>, <span class="fl">0.020</span>, <span class="fl">0.030</span>, <span class="fl">0.200</span>, <span class="fl">0.600</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(p, <span class="at">method =</span> <span class="st">"bonferroni"</span>)     <span class="co"># multiplies p by the number of tests (strictest)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.02 0.10 0.15 1.00 1.00</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(p, <span class="at">method =</span> <span class="st">"holm"</span>)           <span class="co"># a little less strict, same guarantee</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.02 0.08 0.09 0.40 0.60</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(p, <span class="at">method =</span> <span class="st">"fdr"</span>)            <span class="co"># controls the proportion of false discoveries</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.02 0.05 0.05 0.25 0.60</code></pre>
+</div>
+</div>
+<p><strong>Bonferroni</strong> by hand: divide the significance level by the number of tests (5 tests: 0.05 / 5 = 0.01).</p>
+</section>
+<section id="report-an-effect-size-with-a-confidence-interval" class="level4">
+<h4 class="anchored" data-anchor-id="report-an-effect-size-with-a-confidence-interval">Report an effect size with a confidence interval</h4>
+<p>A p-value says whether the data are compatible with no difference; it does not say <strong>how big</strong>. Report the <strong>difference (or ratio) with its 95% CI</strong>, for example “mean SBP was 4.4 mmHg higher in users (95% CI 1.6 to 7.1)”.</p>
 </section>
 </section>
 

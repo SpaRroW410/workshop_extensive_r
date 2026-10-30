@@ -1,0 +1,128 @@
+---
+title: "Global Moran's I"
+format:
+  html:
+    code-copy: true
+    theme: cosmo
+    toc: true
+    lightbox: auto
+execute:
+  warning: false
+  message: false
+  fig-width: 7
+  fig-height: 5
+---
+
+```{r}
+#| include: false
+source("_setup.R")
+```
+
+**Moran's I** is the standard test for **spatial autocorrelation**: are areas with high values next to other high areas, and low next to low, more often than chance would give? ("Everything is related to everything else, but near things are more related than distant things.") It answers one **global** question for the whole map. Where the clusters are is the job of **[local Moran's I](local_moran_lisa.qmd)**.
+
+## The idea in four areas
+
+Four areas in a row, neighbours = the adjacent ones. Values: 1, 2, 9, 10.
+
+```{r}
+v <- c(1, 2, 9, 10)
+nb4 <- list(2L, c(1L, 3L), c(2L, 4L), 3L); class(nb4) <- "nb"; attr(nb4, "region.id") <- as.character(1:4)
+lw4 <- nb2listw(nb4, style = "W")
+z <- v - mean(v)
+I_hand <- (length(v) / sum(unlist(lw4$weights))) * sum(z * lag.listw(lw4, z)) / sum(z^2)
+c(by_hand = I_hand, moran_test = unname(moran.test(v, lw4)$estimate[1]))
+```
+
+$$ I \;=\; \frac{n}{\sum_i\sum_j w_{ij}}\;\frac{\sum_i\sum_j w_{ij}\,(x_i-\bar x)(x_j-\bar x)}{\sum_i (x_i-\bar x)^2} $$
+
+In words: multiply each area's deviation from the mean by the average deviation of its neighbours (the lag), add up, and scale by the variance. If high areas have high neighbours the products are positive, so $I>0$. The two big values sit together, so $I$ is large and positive.
+
+| $I$ | Meaning |
+|---|---|
+| near $E[I] = -1/(n-1)$ (≈ 0) | no spatial pattern (random) |
+| clearly **> 0** | **positive autocorrelation**: similar values cluster |
+| clearly **< 0** | **negative**: neighbours differ, like a checkerboard (rare in health data) |
+
+$I$ is not a correlation coefficient, but with row-standardised weights it is usually between about −1 and +1. It is the **slope of the spatial lag on the value** (see the scatterplot below).
+
+## Run it on the district
+
+```{r}
+mi <- moran.test(blocks$dengue_per_100k, lw, zero.policy = TRUE)
+mi
+```
+
+Read the output from the bottom: **`Moran I statistic`** (observed I), **`Expectation`** (what I would be with no pattern), **`Variance`**, and the **z-score and p-value** from the normal approximation. Here I is about 0.5 against an expectation near 0, with a tiny p-value: strong positive spatial autocorrelation.
+
+### A permutation (Monte Carlo) p-value
+
+The normal approximation assumes things about the data. The **permutation test** shuffles the values over the areas many times and asks how often a shuffled map has an I as large as the real one. It is assumption-light and usually the better report.
+
+```{r}
+set.seed(1)
+mc <- moran.mc(blocks$dengue_per_100k, lw, nsim = 999, zero.policy = TRUE)
+mc
+```
+
+```{r}
+ggplot(tibble(I = mc$res[-length(mc$res)]), aes(I)) + geom_histogram(bins = 30, fill = "grey75", colour = "white") +
+  geom_vline(xintercept = mc$statistic, colour = "red", linewidth = 1) +
+  labs(x = "Moran's I of shuffled maps", y = "Count", title = "The observed I (red) against 999 random maps")
+```
+
+The smallest possible one-sided p-value with 999 shuffles is 1/1000 = 0.001.
+
+## The Moran scatterplot
+
+Plot each area's **value** (standardised) against its **spatial lag** (the average of its neighbours, standardised). The slope of the line **is Moran's I**.
+
+```{r}
+blocks$z <- as.numeric(scale(blocks$dengue_per_100k))
+blocks$lag_z <- lag.listw(lw, blocks$z, zero.policy = TRUE)
+ggplot(blocks, aes(z, lag_z)) +
+  geom_hline(yintercept = 0, colour = "grey60") + geom_vline(xintercept = 0, colour = "grey60") +
+  geom_point(aes(colour = high_burden), size = 2.2) + geom_smooth(method = "lm", se = FALSE, colour = "black", linewidth = 0.8) +
+  annotate("text", x = c(2.2, -2.2, 2.2, -2.2), y = c(2.2, -2.2, -2.2, 2.2), label = c("High-High", "Low-Low", "High-Low", "Low-High"), colour = "grey40") +
+  labs(x = "Dengue rate (standardised)", y = "Average of neighbours (standardised)", colour = "Block burden",
+       title = "Moran scatterplot") 
+coef(lm(lag_z ~ z, data = blocks))[["z"]] |> round(3)
+```
+
+-   **High-High** (top right) and **Low-Low** (bottom left) points create positive autocorrelation.
+-   **High-Low** and **Low-High** points are **spatial outliers**: they differ from their surroundings. They are what LISA will flag.
+
+## Does it depend on how you count?
+
+```{r}
+set.seed(2)
+tibble(variable = c("Dengue per 100,000", "Dengue cases (counts)", "Poverty index", "Literacy (%)", "Population"),
+       x = list(blocks$dengue_per_100k, blocks$dengue_cases, blocks$poverty_index, blocks$literacy_pct, blocks$population)) |>
+  mutate(res = map(x, \(v) moran.mc(v, lw, nsim = 999, zero.policy = TRUE)),
+         I = map_dbl(res, "statistic"), p = map_dbl(res, "p.value")) |>
+  select(variable, I, p) |> mutate(I = round(I, 2))
+```
+
+Poverty is spatially smooth; population is a random draw per block and shows nothing. Always say **which variable** and **which weights** you tested.
+
+## Pitfalls
+
+1.  **Weights choice:** repeat with another neighbour definition ([page](spatial_weights.qmd)).
+2.  **Rates with small populations are noisy.** Unstable rates in small areas weaken or mimic clustering. For small-area rates, smooth them first (empirical Bayes: `EBImoran.mc()`).
+3.  **Edge effects:** areas on the border have fewer neighbours, because the study region is cut off.
+4.  **The modifiable areal unit problem (MAUP):** the same people grouped into different areas can give different values of I.
+5.  **One number for the whole map.** A significant I does not say *where* the clusters are, and a non-significant I can hide a strong local cluster.
+6.  **Association, not cause.** Clustering suggests shared exposures (or contagion), it does not identify them.
+7.  **Trend is not clustering.** A smooth north-south gradient also gives positive I; if you suspect a trend, model it and test the residuals ([regression page](spatial_regression.qmd)).
+
+## How to report it
+
+> *Dengue incidence was strongly clustered across the 79 blocks (global Moran's I = 0.50, queen-contiguity weights, row-standardised; permutation p = 0.001 with 999 simulations).*
+
+Give the statistic, the weights, the number of simulations and the p-value; follow with local analysis to say where.
+
+## Take-home
+
+-   Moran's I tests whether **similar values are neighbours**; compare it with its expectation of about 0.
+-   Prefer the **permutation p-value** and always state the **weights**.
+-   The **Moran scatterplot** shows the slope and the High-High, Low-Low, High-Low and Low-High groups.
+-   A global test cannot locate clusters: next, **[Local Moran's I (LISA)](local_moran_lisa.qmd)**.

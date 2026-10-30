@@ -96,3 +96,58 @@ wilcox.test(blood_pressure ~ treatment, data = data)
 Regression modeling now has its own dedicated module — see **[Regression Analysis](regression.qmd)** for simple/multiple regression, diagnostics, and logistic regression.
 
 :::
+
+::: {when-level="moderate"}
+
+### Choosing and checking a test (Moderate)
+
+#### Check the assumptions before you trust a t-test
+
+```{r}
+#| eval: false
+hist(data$blood_pressure)                 # roughly bell-shaped?
+qqnorm(data$blood_pressure); qqline(data$blood_pressure)   # points near the line?
+shapiro.test(data$blood_pressure)         # a very large sample flags trivial departures; look at the plots too
+```
+
+-   With **moderate or large groups** (about 30 or more each), the t-test of means is robust to mild skew.
+-   With **small groups and a clearly skewed outcome** (triglycerides, length of stay), use the **Wilcoxon rank-sum** test (`wilcox.test(y ~ group)`), which compares ranks, not means.
+
+#### More than two groups: ANOVA or Kruskal-Wallis
+
+```{r}
+#| eval: false
+oneway.test(blood_pressure ~ group, data = data)       # one test for 3+ groups (means)
+kruskal.test(blood_pressure ~ group, data = data)      # rank-based alternative for skewed outcomes
+pairwise.t.test(data$blood_pressure, data$group, p.adjust.method = "bonferroni")   # which groups differ, adjusted
+```
+
+Do **one overall test first** rather than many pairwise t-tests: with 4 groups there are 6 pairs, and each extra test is another chance of a false positive.
+
+#### Categorical outcomes: chi-square or Fisher
+
+-   **Chi-square** needs the **expected counts** in every cell to be about 5 or more (`chisq.test(tab)$expected`).
+-   With **small expected counts**, use **Fisher's exact test**: `fisher.test(tab)`.
+
+#### Paired data
+
+The **same people measured twice** (before and after) must use a **paired** test: `t.test(after, before, paired = TRUE)`, or `wilcox.test(after, before, paired = TRUE)` if the differences are skewed. Treating them as two independent groups throws away the pairing and loses power.
+
+#### Many tests, many p-values
+
+Run 20 tests at the 5% level and one is expected to be "significant" by chance. For a planned family of tests, adjust:
+
+```{r}
+p <- c(0.004, 0.020, 0.030, 0.200, 0.600)
+p.adjust(p, method = "bonferroni")     # multiplies p by the number of tests (strictest)
+p.adjust(p, method = "holm")           # a little less strict, same guarantee
+p.adjust(p, method = "fdr")            # controls the proportion of false discoveries
+```
+
+**Bonferroni** by hand: divide the significance level by the number of tests (5 tests: 0.05 / 5 = 0.01).
+
+#### Report an effect size with a confidence interval
+
+A p-value says whether the data are compatible with no difference; it does not say **how big**. Report the **difference (or ratio) with its 95% CI**, for example "mean SBP was 4.4 mmHg higher in users (95% CI 1.6 to 7.1)".
+
+:::

@@ -1,0 +1,78 @@
+---
+title: "Region 2 · Table 1 Forge"
+subtitle: "Describing the sample with gtsummary, and reading and critiquing Table 1"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-world data-world="m4" data-total="9" data-requires="m3:60"}
+:::
+
+## Briefing
+
+::: {.rq-lesson}
+Read first: [gtsummary Tables](../gtsummary/gtsummary_tutorial.qmd). **Table 1 describes who was studied**, overall and usually by group. Effect estimates and models belong in later tables.
+:::
+
+```{r}
+ncd |>
+  mutate(htn = factor(htn, 0:1, c("No", "Yes"))) |>
+  select(age, sex, residence, bmi, sbp, tobacco, htn) |>
+  tbl_summary(by = htn, statistic = list(all_continuous() ~ "{median} ({p25}, {p75})"), missing_text = "Missing") |>
+  add_overall() |> add_p() |> bold_labels()
+```
+
+::: {.rq-lesson}
+**Good Table 1 practice.** n (%) for categories; mean (SD) or **median (IQR)** for numbers, and **say which in a footnote**; skewed variables get the median. **Show missing counts.** In a **randomised trial** do not test baseline differences (they are chance). Coding tasks use `tbl_summary(by = ...)`, `add_overall()` and `add_p()`.
+:::
+
+## Level 1 · Purpose and summaries {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("m4-01", "m4-02", "m4-04"), ITEMS)
+```
+
+## Level 2 · Reading and pitfalls {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("m4-03", "m4-05", "m4-06"), ITEMS)
+```
+
+## Level 3 · Build the table {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("m4-07", "m4-08"), ITEMS)
+```
+
+## Boss · Critique a Table 1 {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render("m4-09", ITEMS)
+```

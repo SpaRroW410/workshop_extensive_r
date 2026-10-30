@@ -1,0 +1,82 @@
+---
+title: "Region 2 · Explore by Picture"
+subtitle: "Distributions, outliers, overplotting, facets and the pattern of missing data"
+format:
+  html:
+    theme: cosmo
+    css: assets/quest.css
+    include-after-body: assets/quest-include.html
+    toc: false
+    page-layout: article
+    html-math-method: plain
+execute:
+  warning: false
+  message: false
+  fig-width: 8
+  fig-height: 3.8
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("../regression-workshop/assets/setup.R")
+source("assets/quest.R")
+source("bank/items.R")
+```
+
+::: {.rq-world data-world="m3" data-total="9" data-requires="m2:60"}
+:::
+
+## Briefing
+
+::: {.rq-lesson}
+Read first: [Best Practices](../data-visualization/best_practices.qmd) and [Matching Data to Plots](../data-visualization/plot_data.qmd). Plot **before** you model: pictures find skew, outliers, errors and missingness that a table of means hides.
+:::
+
+```{r}
+#| fig-width: 9
+#| fig-height: 3.6
+ggplot(ncd, aes(sbp)) + geom_histogram(bins = 30, fill = "grey70", colour = "white") + facet_wrap(~ sex) + labs(x = "Systolic BP (mmHg)")
+```
+
+```{r}
+#| fig-height: 3.6
+ggplot(ncd, aes(age, sbp)) + geom_point(alpha = 0.35) + geom_smooth(colour = "red") + labs(x = "Age (years)", y = "SBP (mmHg)")
+ncd |> group_by(residence) |> summarise(pct_bmi_missing = round(100 * mean(is.na(bmi)), 1))
+```
+
+::: {.rq-lesson}
+**Reading the pictures.** A long right tail: mean above median, so report median and IQR. Dots beyond the box-plot whiskers are **unusual, not wrong**: check them. Dense scatter plots need **transparency** (`alpha`) and a **smooth trend**. **Facets** put groups on the same axes. Tabulate **missingness by group** before a complete-case analysis.
+:::
+
+## Level 1 · Distributions {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("m3-01", "m3-02", "m3-05"), ITEMS)
+```
+
+## Level 2 · Choosing the picture {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("m3-03", "m3-04", "m3-06"), ITEMS)
+```
+
+## Level 3 · Draw it {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render(c("m3-07", "m3-08"), ITEMS)
+```
+
+## Boss · Review an exploratory report {.rq-level}
+
+```{r}
+#| echo: false
+#| output: asis
+rq_render("m3-09", ITEMS)
+```

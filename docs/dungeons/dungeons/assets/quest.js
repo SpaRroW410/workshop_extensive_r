@@ -92,6 +92,7 @@
     { id: 'pre', icon: '📋', name: 'Baseline Set', desc: 'Complete the pre-test', test: function () { return !!state.tests.pre; } },
     { id: 'post', icon: '📈', name: 'Growth Mindset', desc: 'Complete the post-test', test: function () { return !!state.tests.post; } },
     { id: 'r1grad', icon: '🎒', name: 'Basics Graduate', desc: 'Score 70% or more in the Region 1 post-test', test: function () { return !!state.tests.r1post && state.tests.r1post.pct >= 70; } },
+    { id: 'r2grad', icon: '🧰', name: 'Moderate Graduate', desc: 'Score 70% or more in the Region 2 post-test', test: function () { return !!state.tests.r2post && state.tests.r2post.pct >= 70; } },
     { id: 'gain', icon: '🚀', name: 'Big Gain', desc: 'Post-test beats pre-test by 20+ points', test: function () { return state.tests.pre && state.tests.post && (state.tests.post.pct - state.tests.pre.pct) >= 20; } }
   ];
   function nSolved() { var n = 0; for (var k in state.items) if (state.items[k].solved) n++; return n; }
@@ -344,9 +345,9 @@
     var p = req.split(':'), id = p[0], need = parseInt(p[1] || '70', 10), w = worldCfg(id), have = worldPct(id, w ? w.total : 0);
     if (id === 'pre') return { ok: !!state.tests.pre, msg: 'Complete the <b>pre-test</b> first.' };
     if (id === 'ready') return { ok: !!state.tests.ready && state.tests.ready.pct >= need, msg: 'Score <b>' + need + '%</b> in the <a href="readiness.html"><b>placement check</b></a>' + (state.tests.ready ? ' (you have ' + state.tests.ready.pct + '%)' : '') + '.' };
-    var TESTS = { r1pre: ['Region 1 pre-test', 'r1pretest.html'], r1post: ['Region 1 post-test', 'r1posttest.html'] };
-    if (TESTS[id]) { var tr = state.tests[id], pre = /pre$/.test(id);       // a pre-test gate needs completion; a post-test gate needs the pass mark
-      return { ok: pre ? !!tr : !!tr && tr.pct >= need, msg: pre ? 'Take the <a href="' + TESTS[id][1] + '"><b>' + TESTS[id][0] + '</b></a> first (a baseline, not graded).' : 'Reach <b>' + need + '%</b> in the <a href="' + TESTS[id][1] + '"><b>' + TESTS[id][0] + '</b></a>' + (tr ? ' (you have ' + tr.pct + '%)' : '') + '.' }; }
+    var rt = /^r(\d)(pre|post)$/.exec(id);                                  // a region test: r1pre, r1post, r2pre, r2post …
+    if (rt) { var tr = state.tests[id], pre = rt[2] === 'pre', nm = 'Region ' + rt[1] + (pre ? ' pre-test' : ' post-test'), hr = id.replace(/pre$/, 'pretest').replace(/post$/, 'posttest') + '.html';
+      return { ok: pre ? !!tr : !!tr && tr.pct >= need, msg: pre ? 'Take the <a href="' + hr + '"><b>' + nm + '</b></a> first (a baseline, not graded).' : 'Reach <b>' + need + '%</b> in the <a href="' + hr + '"><b>' + nm + '</b></a>' + (tr ? ' (you have ' + tr.pct + '%)' : '') + '.' }; }
     return { ok: have >= need, msg: 'Reach <b>' + need + '%</b> in <b>' + esc(w ? w.title : id) + '</b> (you have ' + have + '%).' };
   }
   function initWorld(el) {
