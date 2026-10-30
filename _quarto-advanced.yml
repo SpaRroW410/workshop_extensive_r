@@ -6,6 +6,12 @@
 
 project:
   output-dir: docs/advanced
+  render:
+    - counts-workshop/*.qmd
+  resources:
+    - data/dengue_wards.csv
+    - counts-workshop/make_data.R
+    - counts-workshop/labs/*.R
 website:
   title: Data Visualization Workshop — Advanced
   site-url: '.'
@@ -71,6 +77,21 @@ website:
             href: gtsummary/gtsummary_tutorial.qmd
           - text: Data Analysis
             href: statistical-analysis/data_analysis.qmd
+      - text: Counts Workshop
+        menu:
+          - text: Session 1 — Counts, Rates and the Poisson Idea
+            href: counts-workshop/s1_counts_rates.qmd
+          - text: Session 2 — Poisson Regression
+            href: counts-workshop/s2_poisson_regression.qmd
+          - text: Session 3 — Overdispersion
+            href: counts-workshop/s3_overdispersion.qmd
+          - text: Session 4 — Excess Zeros and Model Checking
+            href: counts-workshop/s4_zeros_checking.qmd
+          - text: Session 5 — Reporting and Extensions
+            href: counts-workshop/s5_reporting_extensions.qmd
+          - text: '---'
+          - text: Counts and Rates Cheat Sheet
+            href: counts-workshop/cheatsheet.qmd
       - text: Quarto
         menu:
           - text: Quarto Basics

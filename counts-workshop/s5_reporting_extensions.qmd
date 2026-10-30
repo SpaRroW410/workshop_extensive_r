@@ -1,0 +1,212 @@
+---
+title: "Session 5 — Reporting and Extensions"
+subtitle: "Rate ratios in words · cases averted · Poisson for prevalence ratios · reporting checklist · Lab 5"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Sessions 1-4: rates, Poisson, overdispersion, zeros, checking
+- Today: **communicate the result**, and two useful extensions
+- By the end you can:
+  - **report** rate ratios with the right words
+  - estimate **cases averted** with a counterfactual
+  - use **Poisson regression with robust SEs** for **prevalence ratios**
+:::
+
+# Topic 1 — Say it properly {background-color="#2C3E50"}
+
+## The final model
+
+```{r}
+m_nb <- MASS::glm.nb(cases ~ fogging + slum + rain_lag1 + month_index + sin(2 * pi * month / 12) + cos(2 * pi * month / 12) + offset(log(population)), data = dg)
+tbl_regression(m_nb, exponentiate = TRUE, include = c(fogging, slum, rain_lag1, month_index))
+```
+
+## The sentence for the paper
+
+::: {.key}
+"In a negative binomial model with a ward-population offset, adjusted for ward type, previous-month rainfall, time trend and seasonality, the dengue **rate** in fogged ward-months was **`r round(exp(coef(m_nb))[["foggingYes"]], 2)` times** that in unfogged ward-months (95% CI `r round(exp(confint.default(m_nb))["foggingYes", 1], 2)`-`r round(exp(confint.default(m_nb))["foggingYes", 2], 2)`), a **`r round(100 * (1 - exp(coef(m_nb))[["foggingYes"]]))`% lower rate**."
+:::
+
+## Words that are right and wrong
+
+| Say | Do not say |
+|---|---|
+| "**rate** was 34% lower" | "**risk** was 34% lower" |
+| "associated with" (observational) | "fogging **caused**" |
+| "adjusted for ..." and **list them** | "controlling for everything" |
+| the **unit** (per 100 mm, per 100,000) | a bare coefficient |
+
+# Topic 2 — Cases averted {background-color="#2C3E50"}
+
+## A counterfactual
+
+```{r}
+fogged <- dg |> filter(fogging == "Yes"); cf <- fogged |> mutate(fogging = factor("No", levels = levels(dg$fogging)))
+c(with_fogging = round(sum(predict(m_nb, newdata = fogged, type = "response"))), without_fogging = round(sum(predict(m_nb, newdata = cf, type = "response"))))
+```
+
+::: {.incremental}
+- Predict the expected cases **as if fogging had not been done**, and compare with what the model expects with it
+- About **700 cases averted** (roughly a third), **under the model's assumptions**
+- Give an **interval** (bootstrap or simulation) in a paper
+- It is only as good as the **adjustment**: unmeasured confounding remains
+:::
+
+# Topic 3 — Extensions {background-color="#2C3E50"}
+
+## Poisson for prevalence ratios
+
+In **cross-sectional** data with a **common yes/no outcome**, the odds ratio overstates the prevalence ratio (regression workshop, Session 5). **Poisson regression with robust SEs** estimates the **prevalence ratio** directly:
+
+```{r}
+pr <- glm(I(cases > 0) ~ fogging + slum, family = poisson, data = dg)
+round(exp(cbind(PR = coef(pr), confint.default(pr, vcov. = vcovCL(pr, cluster = dg$ward)))), 2)
+```
+
+::: {.incremental}
+- `family = poisson` on a **0/1 outcome** (no offset), with **robust (sandwich) SEs**
+- The alternatives are a **log-binomial** model (can fail to converge) or converting an OR with the baseline risk
+:::
+
+## Beyond this workshop
+
+::: {.incremental}
+- **Mixed models** with a random effect for ward (`glmmTMB`, `lme4`)
+- **Spatial and temporal** dependence (neighbouring wards, lagged cases)
+- **Distributed-lag** models for rainfall and temperature
+- **Interrupted time series** for an intervention at a known date
+- **Outbreak detection** (Farrington, EARS) for surveillance
+:::
+
+## Reporting checklist
+
+::: {.good}
+1. **Event, unit, period, denominator**; number of events and units
+2. **Distribution:** dispersion, zeros, and the model chosen **and why**
+3. **Rate ratios with 95% CI**, the **offset**, the **unit** of each predictor
+4. **Adjustment set** and how **season/trend** were handled
+5. **Clustering:** robust or random-effect handling
+6. **Checks:** fit over time, autocorrelation, sensitivity to Poisson/NB/zero-inflated
+7. **Limitations:** reporting changes, ecological design, association not cause
+:::
+
+## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `counts-workshop/labs/lab5_report.R`
+
+- rate ratios with CI and the percentage reduction
+- counterfactual predictions: cases averted
+- Poisson with robust SE for a prevalence ratio
+:::
+
+**Time:** 30 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q1", "A negative binomial model gives a rate ratio of 0.66 for fogging. Which wording is best?",
+         c("After adjustment, the dengue rate was about 34% lower in fogged months",
+           "Fogging reduced each person's risk of dengue by 34% for certain",
+           "Fogging caused 34% fewer cases in every ward in the city",
+           "The odds of dengue were 0.66 times as high with fogging"), answer = 3,
+         explain = "A rate ratio of 0.66 is a 34% lower rate. In observational data say 'associated with', state the adjustment, and do not call it an odds or a risk ratio.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q2", "How are cases averted estimated from a count model?",
+         c("Predict expected cases with and without the exposure; take the difference",
+           "Subtract observed cases in unfogged wards from fogged wards",
+           "Multiply the rate ratio by the number of wards in the study",
+           "Divide the total number of cases by the fogged months"), answer = 2,
+         explain = "The counterfactual approach predicts the same observations under the two exposure settings; the difference estimates the effect on counts, under the model's assumptions.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q3", "When is Poisson regression with robust standard errors useful for a yes/no outcome?",
+         c("To estimate a prevalence ratio when the outcome is common",
+           "To estimate an odds ratio for an outcome that is rare",
+           "To avoid having to code the outcome as a 0/1 variable",
+           "To model the time that passes until the event occurs"), answer = 3,
+         explain = "With a common outcome the odds ratio exaggerates the ratio of risks. Poisson with robust SEs estimates the prevalence (risk) ratio directly.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q4", "Which statement belongs in the limitations of the dengue analysis?",
+         c("Reporting changed over time, and ward-level data cannot show individual effects",
+           "The model has too many wards for its results to be interpreted",
+           "Rate ratios cannot be calculated when the outcome is a count",
+           "The negative binomial distribution applies only to people, not wards"), answer = 4,
+         explain = "Surveillance changes, ecological (ward-level) design and unmeasured confounding all limit what the model can say.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q5", "Why must the unit of a predictor be reported with its rate ratio?",
+         c("A ratio per 1 mm of rain differs greatly from one per 100 mm",
+           "A rate ratio has no meaning at all without any unit given",
+           "The unit is required by the offset for the model to be fitted",
+           "The unit of the predictor changes the dispersion statistic"), answer = 1,
+         explain = "The rate ratio is multiplicative for each unit of the predictor: 1.003 per mm is 1.31 per 100 mm. Without the unit the number cannot be interpreted.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- Say **rate**, not risk or odds; **associated with**, not caused
+- **Counterfactual predictions** give cases averted, under assumptions
+- **Poisson + robust SE** estimates prevalence ratios
+- Report the **offset, dispersion handling, clustering, checks and limits**
+:::
+
+**Next:** The cheat sheet and the Dungeons & Dataframes counts world (coming)

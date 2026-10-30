@@ -1,0 +1,84 @@
+---
+title: "Counts and Rates Cheat Sheet"
+subtitle: "Poisson, negative binomial and zero-inflated models · dengue ward-month examples · print on 2 pages (A4)"
+format:
+  html:
+    theme: cosmo
+    toc: false
+    page-layout: full
+    html-math-method: plain
+    css: assets/cheatsheet.css
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+source("assets/setup.R")
+f <- function(x, d = 2) formatC(x, format = "f", digits = d)
+m2 <- glm(cases ~ fogging + slum + rain_lag1 + month_index + sin(2 * pi * month / 12) + cos(2 * pi * month / 12) + offset(log(population)), family = poisson, data = dg)
+m_nb <- MASS::glm.nb(cases ~ fogging + slum + rain_lag1 + month_index + sin(2 * pi * month / 12) + cos(2 * pi * month / 12) + offset(log(population)), data = dg)
+disp <- sum(residuals(m2, type = "pearson")^2) / df.residual(m2)
+```
+
+::: {.sheet}
+
+## 1 · Count or rate?
+
+| | Meaning | Use |
+|---|---|---|
+| **Count** | events (cases) | workload |
+| **Rate** | events / **person-time** | risk, comparisons |
+| **Rate ratio** | rate in group A / rate in group B | effect measure |
+
+City rate: **`r f(sum(dg$cases) / sum(dg$population) * 1e5, 1)` per 100,000 person-months**. Always name the **denominator** (person-months, person-years).
+
+## 2 · Which model?
+
+| Situation | Model | R |
+|---|---|---|
+| Counts, variance about = mean | **Poisson** | `glm(y ~ x + offset(log(pt)), family = poisson)` |
+| Overdispersed, SEs only | **Quasi-Poisson** | `family = quasipoisson` |
+| Overdispersed (usual) | **Negative binomial** | `MASS::glm.nb(y ~ x + offset(log(pt)))` |
+| Structural zeros | **Zero-inflated / hurdle** | `pscl::zeroinfl(y ~ x | z, dist = "negbin")` |
+| Repeated units | **Robust SE** | `lmtest::coeftest(m, vcov = sandwich::vcovCL(m, cluster = id))` |
+| Common yes/no outcome, want PR | **Poisson + robust SE** | `glm(y01 ~ x, family = poisson)` + `vcovCL` |
+
+## 3 · The offset
+
+`offset(log(person-time))` makes exp(b) a **rate ratio**. Forget it and you compare **counts**, mixing risk with population size.
+
+## 4 · Reading the output
+
+| Result | How to say it |
+|---|---|
+| exp(b) = **`r f(exp(coef(m_nb))[["foggingYes"]])`** (`r f(exp(confint.default(m_nb))["foggingYes", 1])`-`r f(exp(confint.default(m_nb))["foggingYes", 2])`) for fogging | "the **rate** was about `r f(100 * (1 - exp(coef(m_nb))[["foggingYes"]]), 0)`% lower (adjusted)" |
+| exp(100 b) = **`r f(exp(100 * coef(m_nb)[["rain_lag1"]]))`** per 100 mm of rain | "`r f(100 * (exp(100 * coef(m_nb)[["rain_lag1"]]) - 1), 0)`% higher rate per extra 100 mm" |
+| CI includes 1 | no clear association |
+| `predict(type = "response")` | **expected counts** (log scale by default) |
+
+## 5 · Checking
+
+| Check | Poisson here | Good if |
+|---|---|---|
+| **Dispersion** (Pearson chi-square / df) | **`r f(disp, 1)`** | about 1 |
+| **AIC**: Poisson vs NB | `r f(AIC(m2), 0)` vs `r f(AIC(m_nb), 0)` | lower is better |
+| **Zeros**: observed vs expected | `r f(100 * mean(dg$cases == 0), 0)`% vs `r f(100 * mean(dnbinom(0, mu = fitted(m_nb), size = m_nb$theta)), 0)`% (NB) | close |
+| **Fit over time**, **autocorrelation** | `acf(residuals(m, "pearson"))` | no pattern |
+
+## 6 · Pitfalls
+
+::: {.bad}
+- **No offset** when populations or follow-up differ; a rate ratio read as a **risk or odds ratio**
+- **Poisson CIs** reported for **overdispersed** data
+- **Ignoring season and trend**, **clustering** or **autocorrelation**
+- Zero-inflation added **without asking why**; **zero-truncated** data analysed as ordinary counts
+- **Ecological** results read as individual effects; **association read as cause**
+:::
+
+## 7 · One-paragraph report
+
+*Across 30 wards and 36 months (1,080 ward-months; `r format(sum(dg$cases), big.mark = ",")` dengue cases) the data were overdispersed (Poisson dispersion `r f(disp, 1)`), so negative binomial regression with a ward-population offset was used, with clustered robust standard errors. After adjustment for ward type, previous-month rainfall, time trend and seasonality, the dengue rate in fogged ward-months was `r f(exp(coef(m_nb))[["foggingYes"]])` times that in unfogged ward-months (95% CI `r f(exp(confint.default(m_nb))["foggingYes", 1])`-`r f(exp(confint.default(m_nb))["foggingYes", 2])`).*
+
+:::

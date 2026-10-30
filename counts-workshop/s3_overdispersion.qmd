@@ -1,0 +1,229 @@
+---
+title: "Session 3 — Overdispersion"
+subtitle: "Dispersion statistic · quasi-Poisson · negative binomial · robust standard errors · Lab 3"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 2: Poisson regression and rate ratios
+- Today: when the data are **more variable than a Poisson allows**, which is **usual**
+- By the end you can:
+  - **measure** overdispersion
+  - choose between **quasi-Poisson**, **negative binomial** and **robust SEs**
+  - see why **standard errors**, not estimates, are the problem
+:::
+
+# Topic 1 — Detecting it {background-color="#2C3E50"}
+
+## The dispersion statistic
+
+::: {.eq}
+dispersion = sum of squared Pearson residuals / residual df   (about **1** if Poisson fits)
+:::
+
+```{r}
+m2 <- glm(cases ~ fogging + slum + rain_lag1 + month_index + sin(2 * pi * month / 12) + cos(2 * pi * month / 12) + offset(log(population)), family = poisson, data = dg)
+sum(residuals(m2, type = "pearson")^2) / df.residual(m2)
+```
+
+```{r}
+check_overdispersion(m2)
+```
+
+## What dispersion means
+
+::: {.warn}
+A dispersion of **`r round(sum(residuals(m2, type = "pearson")^2) / df.residual(m2), 1)`** means the Poisson **standard errors are too small by about its square root (`r round(sqrt(sum(residuals(m2, type = "pearson")^2) / df.residual(m2)), 1)` times)**. The coefficients are still reasonable; the **p-values and CIs are not**.
+:::
+
+## Why is count data overdispersed?
+
+::: {.incremental}
+- **Unmeasured heterogeneity:** wards differ in ways we did not record
+- **Clustering:** events cluster in space and time (outbreaks)
+- **Contagion:** one case causes others (not independent)
+- **Zero inflation** (Session 4)
+:::
+
+# Topic 2 — Three remedies {background-color="#2C3E50"}
+
+## Quasi-Poisson
+
+```{r}
+m_q <- glm(formula(m2), family = quasipoisson, data = dg)
+round(cbind(Poisson_SE = summary(m2)$coefficients[, 2], Quasi_SE = summary(m_q)$coefficients[, 2])[2:3, ], 3)
+```
+
+Same **coefficients**, standard errors **multiplied by sqrt(dispersion)**. Simple; no AIC (not a full likelihood).
+
+## Negative binomial
+
+```{r}
+m_nb <- MASS::glm.nb(formula(m2), data = dg)
+c(theta = round(m_nb$theta, 2)); AIC(m2, m_nb)
+```
+
+::: {.eq}
+Var(Y) = mu + mu^2^ / theta
+:::
+
+::: {.incremental}
+- An extra parameter **theta** lets the variance grow **faster than the mean**; **smaller theta = more overdispersion**
+- A real likelihood: compare models by **AIC**
+- The usual first choice for overdispersed counts
+:::
+
+## Rate ratios compared
+
+```{r}
+bind_rows(Poisson = tidy(m2, conf.int = TRUE, exponentiate = TRUE), NB = tidy(m_nb, conf.int = TRUE, exponentiate = TRUE), .id = "model") |>
+  filter(term == "foggingYes") |> select(model, RR = estimate, low = conf.low, high = conf.high) |> mutate(across(where(is.numeric), \(x) round(x, 2)))
+```
+
+::: {.key}
+The **point estimate** barely moves; the **CI is about three times wider** with the negative binomial. Do not report the Poisson CI when the data are overdispersed.
+:::
+
+## Robust (clustered) standard errors
+
+```{r}
+coeftest(m2, vcov = vcovCL(m2, cluster = dg$ward))[2:3, ]
+```
+
+::: {.incremental}
+- The same ward appears **36 times**: observations are **correlated**
+- `vcovCL(model, cluster = ward)` gives **cluster-robust** standard errors, valid for **correlated** data
+- Use with Poisson (rates stay the same, SEs honest) or with NB
+:::
+
+# Topic 3 — Choosing {background-color="#2C3E50"}
+
+## Which one?
+
+| Option | Use when | Gives |
+|---|---|---|
+| **Poisson** | dispersion near 1 | rate ratios, AIC |
+| **Quasi-Poisson** | overdispersed, only SEs matter | rate ratios, corrected SE, no AIC |
+| **Negative binomial** | overdispersed (usual) | rate ratios, AIC, theta |
+| **Robust SE** | clustering (repeated wards) | honest SE for any of these |
+| Mixed model (random ward effect) | clustering and ward-level heterogeneity | beyond this workshop |
+
+## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `counts-workshop/labs/lab3_overdisp.R`
+
+- dispersion by hand and with `check_overdispersion()`
+- `quasipoisson` and `MASS::glm.nb()`
+- `vcovCL()` clustered by ward
+:::
+
+**Time:** 40 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q1", "A Poisson model has a dispersion statistic of 8. What is the main consequence?",
+         c("Standard errors are too small, so p-values are over-optimistic",
+           "The coefficients are wrong by a factor of 8 in every model",
+           "The model has too few predictors to describe the counts",
+           "The offset has been specified incorrectly in the model formula"), answer = 3,
+         explain = "Overdispersion leaves the coefficient estimates roughly sensible but understates their uncertainty: the SEs should be inflated by about the square root of the dispersion.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q2", "Which parameter of the negative binomial measures overdispersion?",
+         c("theta: the smaller it is, the more overdispersion there is",
+           "The intercept of the model, which sets the baseline rate",
+           "The offset, because it holds the variance of the counts",
+           "The p-value of the dispersion test, which grows with variance"), answer = 2,
+         explain = "Variance = mu + mu^2/theta, so a small theta means variance far above the mean and a large theta approaches a Poisson.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q3", "Compared with the Poisson model, what does quasi-Poisson change?",
+         c("The coefficients, with the same standard errors",
+           "The link function from log to identity",
+           "The standard errors, with the same coefficients",
+           "The number of observations used"), answer = 3,
+         explain = "Quasi-Poisson estimates the dispersion and multiplies the variances by it: coefficients are identical, standard errors are inflated.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q4", "Why use cluster-robust standard errors by ward here?",
+         c("The same ward is measured 36 times, so observations are correlated",
+           "Wards are too small to be analysed with any count model",
+           "Robust standard errors remove overdispersion from the estimates",
+           "Poisson models need one single row for each ward in the file"), answer = 4,
+         explain = "Repeated months within a ward are not independent, so there is less information than 1,080 independent observations. Clustered SEs account for this.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s3q5", "AIC is 10,745 for the Poisson model and 5,898 for the negative binomial on the same data. What do you conclude?",
+         c("The negative binomial fits far better",
+           "The two models fit equally well",
+           "The Poisson model is better because it has fewer parameters",
+           "AIC cannot be compared between these models"), answer = 1,
+         explain = "Lower AIC means a better trade-off of fit and complexity. A difference of thousands is overwhelming evidence for the negative binomial.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- Check **dispersion** (about 1 if Poisson); overdispersion is **usual**
+- **Negative binomial** (or quasi-Poisson) fixes the SEs; the estimates barely move
+- **Clustered robust SEs** for repeated units
+- Do not report **Poisson CIs** for overdispersed counts
+:::
+
+**Next:** Session 4: zeros and model checking

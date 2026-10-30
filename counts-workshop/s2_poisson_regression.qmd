@@ -1,0 +1,215 @@
+---
+title: "Session 2 — Poisson Regression"
+subtitle: "Log link · rate ratios · the offset · adjusted models · predictions · Lab 2"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 1: counts, rates, person-time, the Poisson idea
+- Today: **regression for counts and rates**
+- By the end you can:
+  - fit a **Poisson regression** and read **rate ratios**
+  - use an **offset** so the model describes **rates**
+  - **adjust** for rain, ward type, trend and season
+  - **predict** expected counts
+:::
+
+# Topic 1 — The model {background-color="#2C3E50"}
+
+## A log-linear model
+
+::: {.eq}
+log(mu) = b~0~ + b~1~ x~1~ + b~2~ x~2~ + ...   so   mu = exp(b~0~) x exp(b~1~)^x1^ x ...
+:::
+
+::: {.incremental}
+- The **log link** keeps the expected count **positive**
+- **exp(b)** is a **multiplicative** effect on the mean: a **rate ratio** (or count ratio)
+- `glm(y ~ x, family = poisson)`
+- Like logistic regression, but the outcome is a **count** and exp(b) is a **ratio of means/rates**
+:::
+
+## Why the offset?
+
+Wards differ in population, so the **expected count** is proportional to population:
+
+::: {.eq}
+log(mu) = **log(population)** + b~0~ + b~1~ x~1~   (the **offset**: coefficient fixed at 1)
+:::
+
+```{r}
+m0 <- glm(cases ~ fogging, family = poisson, data = dg)                                   # no offset: compares MEAN COUNTS
+m1 <- glm(cases ~ fogging + offset(log(population)), family = poisson, data = dg)         # with offset: compares RATES
+round(exp(cbind(no_offset = coef(m0), with_offset = coef(m1)))["foggingYes", ], 2)
+```
+
+::: {.warn}
+Without the offset the model compares **mean counts per ward-month**, mixing risk with population size. **Use `offset(log(person-time))` whenever groups differ in size or follow-up.**
+:::
+
+# Topic 2 — Adjusted analysis {background-color="#2C3E50"}
+
+## Adjusting for season, trend, rain and ward type
+
+```{r}
+m2 <- glm(cases ~ fogging + slum + rain_lag1 + month_index + sin(2 * pi * month / 12) + cos(2 * pi * month / 12) + offset(log(population)), family = poisson, data = dg)
+tbl_regression(m2, exponentiate = TRUE, include = c(fogging, slum, rain_lag1, month_index))
+```
+
+## Reading the adjusted rate ratios
+
+::: {.incremental}
+- **Crude** rate ratio for fogging: `r round(exp(coef(m1))[["foggingYes"]], 2)`; **adjusted**: `r round(exp(coef(m2))[["foggingYes"]], 2)`. Fogging began in a **high-season, rising** period, so the crude comparison hid its effect
+- **Slum** wards have about `r round(100 * (exp(coef(m2))[["slumSlum"]] - 1))`% higher rates
+- Rain: `r round(exp(100 * coef(m2)[["rain_lag1"]]), 2)` per **100 mm** in the previous month
+:::
+
+## Reading a rate ratio
+
+::: {.key}
+"After adjustment for ward type, last month's rain, trend and season, the dengue **rate** in fogged ward-months was **`r round(exp(coef(m2))[["foggingYes"]], 2)` times** that in unfogged ward-months, i.e. about **`r round(100 * (1 - exp(coef(m2))[["foggingYes"]]))`% lower**." The **95% CI** matters (and Session 3 will show that this Poisson CI is **too narrow**).
+:::
+
+# Topic 3 — Predictions {background-color="#2C3E50"}
+
+## Expected counts
+
+```{r}
+nd <- tibble(fogging = factor("No", levels = levels(dg$fogging)), slum = factor("Slum", levels = levels(dg$slum)), rain_lag1 = 150, month_index = 20, month = 7, population = 30000)
+predict(m2, newdata = nd, type = "response")
+```
+
+::: {.incremental}
+- `type = response` returns the **expected count** (including the offset); the default gives the **log**
+- A ward of 30,000 in a monsoon July with 150 mm of rain: about **`r round(predict(m2, newdata = nd, type = "response"))`** cases expected
+- Predictions are **means**: the actual count varies around them (and more than a Poisson says)
+:::
+
+## Pitfalls so far
+
+::: {.bad}
+- **Forgetting the offset** when populations differ
+- Reading exp(b) as a **risk** or **odds** ratio: it is a **rate (or mean) ratio**
+- **Ignoring season and trend**
+- Trusting the **p-values** before checking **overdispersion** (next session)
+:::
+
+## 🔧 Switch to R — Lab 2 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `counts-workshop/labs/lab2_poisson.R`
+
+- `glm(family = poisson)` with and without `offset(log(population))`
+- rate ratios and CIs; rain per 100 mm
+- predictions with `type = "response"`
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s2q1", "A Poisson model with an offset gives exp(coefficient) = 0.64 for fogging. How is it best described?",
+         c("The rate is 36% lower in fogged ward-months, others fixed",
+           "The number of cases is 64% of the population of each ward",
+           "The odds of dengue are 0.64 times as high in fogged months",
+           "Fogging reduces the cases of every ward by 0.64 each month"), answer = 3,
+         explain = "exp(b) is a rate ratio: 0.64 means a 36% lower rate, holding the other variables fixed. It is not an odds ratio or an absolute change.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s2q2", "Why use offset(log(population)) in this model?",
+         c("Expected counts rise with population; the offset models rates",
+           "It makes the Poisson assumption true for the data at hand",
+           "It removes the need to adjust for rainfall in the model",
+           "It gives each ward the same weight in the whole analysis"), answer = 2,
+         explain = "The offset puts log(person-time) in the linear predictor with a coefficient fixed at 1, so exp(coefficients) are ratios of rates instead of ratios of counts.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s2q3", "Why is the crude rate ratio for fogging (0.86) different from the adjusted one (0.64)?",
+         c("Fogging began late, in a period of higher incidence, which confounded the crude result",
+           "The adjusted model happens to count more cases than the crude model does",
+           "The crude model used the wrong distribution for the counts in the wards",
+           "Adjustment makes any effect stronger, so the larger change is expected"), answer = 3,
+         explain = "Fogging was introduced late, when dengue was rising and in season. Not adjusting for time hid its benefit. Adjustment can move an estimate in either direction.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s2q4", "In glm(..., family = poisson), what does the default predict() return?",
+         c("The linear predictor, on the log scale of the expected count",
+           "The expected number of cases for each ward and month",
+           "The probability of at least one case in the ward and month",
+           "The standardised residual for each ward in each month"), answer = 4,
+         explain = "By default predict() works on the link scale (log of the expected count). Use type = response for expected counts.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s2q5", "Each extra 100 mm of last month's rain has a rate ratio of 1.31. What does this mean?",
+         c("The rate is about 31% higher for each extra 100 mm of rain",
+           "Cases increase by 31 for each extra 100 mm of rain that falls",
+           "The rate is 131% higher with each extra 100 mm of rain",
+           "Rainfall explains 31% of the variation in cases between wards"), answer = 1,
+         explain = "A rate ratio of 1.31 per 100 mm is a 31% higher rate (multiplicatively, for each additional 100 mm).")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- Poisson regression: **log link**, **exp(b) = rate ratio**
+- The **offset** log(person-time) turns counts into rates
+- **Adjust** for season, trend and ward type; fogging started late
+- `predict(type = response)` for expected counts
+:::
+
+**Next:** Session 3: overdispersion

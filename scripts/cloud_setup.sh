@@ -12,7 +12,7 @@ cat > /etc/R/Rprofile.site <<'RP'
 options(repos = c(CRAN = "https://packagemanager.posit.co/cran/__linux__/noble/latest"), Ncpus = 4,
         HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])))
 RP
-Rscript -e 'pk <- c("tidyverse","gtsummary","broom","performance","see","car","lmtest","pROC","jsonlite","yaml","sandwich","knitr","rmarkdown","janitor","readxl","haven","flextable","gt","patchwork","plotly","DT","kableExtra","survival","broom.helpers","cardx","parameters","effectsize","here","glue","scales","naniar","skimr","sf","spdep","spatialreg","tmap","leaflet","classInt","units","terra","smerc","ggspatial","leafsync","stars","lwgeom"); install.packages(setdiff(pk, rownames(installed.packages())))'
+Rscript -e 'pk <- c("tidyverse","gtsummary","broom","performance","see","car","lmtest","pROC","jsonlite","yaml","sandwich","knitr","rmarkdown","janitor","readxl","haven","flextable","gt","patchwork","plotly","DT","kableExtra","survival","broom.helpers","cardx","parameters","effectsize","here","glue","scales","naniar","skimr","sf","spdep","spatialreg","tmap","leaflet","classInt","units","terra","smerc","pscl","AER","ggspatial","leafsync","stars","lwgeom"); install.packages(setdiff(pk, rownames(installed.packages())))'
 pip install -q quarto-cli
 grep -q "LANG=C.UTF-8" /etc/environment || echo "LANG=C.UTF-8" >> /etc/environment
 echo "R $(Rscript -e 'cat(as.character(getRversion()))') · Quarto $(quarto --version)"

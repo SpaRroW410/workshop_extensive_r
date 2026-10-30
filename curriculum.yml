@@ -67,6 +67,12 @@ pages:
   gis-workshop/s4_local_clusters.qmd: {title: "Session 4 — Local Clusters and Hot Spots"}
   gis-workshop/s5_spatial_regression.qmd: {title: "Session 5 — Spatial Regression and Reporting"}
   gis-workshop/cheatsheet.qmd: {title: "Spatial Statistics Cheat Sheet"}
+  counts-workshop/s1_counts_rates.qmd: {title: "Session 1 — Counts, Rates and the Poisson Idea"}
+  counts-workshop/s2_poisson_regression.qmd: {title: "Session 2 — Poisson Regression"}
+  counts-workshop/s3_overdispersion.qmd: {title: "Session 3 — Overdispersion"}
+  counts-workshop/s4_zeros_checking.qmd: {title: "Session 4 — Excess Zeros and Model Checking"}
+  counts-workshop/s5_reporting_extensions.qmd: {title: "Session 5 — Reporting and Extensions"}
+  counts-workshop/cheatsheet.qmd: {title: "Counts and Rates Cheat Sheet"}
   regression-workshop/s1_foundations.qmd: {title: "Session 1 — Foundations"}
   regression-workshop/s2_simple_regression.qmd: {title: "Session 2 — Simple Linear Regression"}
   regression-workshop/s3_multiple_regression.qmd: {title: "Session 3 — Inference & Multiple Regression"}
@@ -362,6 +368,14 @@ profiles:
     title: "Data Visualization Workshop — Advanced"
     output-dir: docs/advanced
     logo-href: welcome.html
+    # Advanced Analysis branch (SITE_PLAN 2.6): counts and rates (A2) lives here.
+    project-extra:
+      render:
+      - counts-workshop/*.qmd
+      resources:
+      - data/dengue_wards.csv
+      - counts-workshop/make_data.R
+      - counts-workshop/labs/*.R
     left:
       - text: "R Foundations"
         items:
@@ -400,6 +414,15 @@ profiles:
           - gtsummary/gtsummary_tutorial.qmd
           - statistical-analysis/data_analysis.qmd
           - "---"
+      - text: "Counts Workshop"
+        items:
+          - counts-workshop/s1_counts_rates.qmd
+          - counts-workshop/s2_poisson_regression.qmd
+          - counts-workshop/s3_overdispersion.qmd
+          - counts-workshop/s4_zeros_checking.qmd
+          - counts-workshop/s5_reporting_extensions.qmd
+          - "---"
+          - counts-workshop/cheatsheet.qmd
       - text: "Quarto"
         items:
           - quarto_repro_w/reproducible_writing.qmd
