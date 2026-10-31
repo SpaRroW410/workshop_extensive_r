@@ -67,28 +67,28 @@
     "href": "counts-workshop/s5_reporting_extensions.html#self-check-quiz-15",
     "title": "Session 5 — Reporting and Extensions",
     "section": "Self-check quiz (1/5)",
-    "text": "Self-check quiz (1/5)\n\nA negative binomial model gives a rate ratio of 0.66 for fogging. Which wording is best?\n\nAfter adjustment, the dengue rate was about 34% lower in fogged months\nFogging reduced each person’s risk of dengue by 34% for certain\nFogging caused 34% fewer cases in every ward in the city\nThe odds of dengue were 0.66 times as high with fogging"
+    "text": "Self-check quiz (1/5)\n\nA negative binomial model gives a rate ratio of 0.66 for fogging. Which wording is best?\n\nFogging reduced each person’s risk of dengue by 34% for certain\nFogging caused 34% fewer cases in every ward in the whole city\nAfter adjustment, the dengue rate was about 34% lower\nThe odds of dengue were 0.66 times as high with fogging in use"
   },
   {
     "objectID": "counts-workshop/s5_reporting_extensions.html#self-check-quiz-25",
     "href": "counts-workshop/s5_reporting_extensions.html#self-check-quiz-25",
     "title": "Session 5 — Reporting and Extensions",
     "section": "Self-check quiz (2/5)",
-    "text": "Self-check quiz (2/5)\n\nHow are cases averted estimated from a count model?\n\nPredict expected cases with and without the exposure; take the difference\nSubtract observed cases in unfogged wards from fogged wards\nMultiply the rate ratio by the number of wards in the study\nDivide the total number of cases by the fogged months"
+    "text": "Self-check quiz (2/5)\n\nHow are cases averted estimated from a count model?\n\nSubtract observed cases in unfogged wards from observed cases in fogged wards\nPredict expected cases with and without exposure, then subtract\nMultiply the rate ratio by the number of wards in the whole study\nDivide the total number of cases by the number of fogged months"
   },
   {
     "objectID": "counts-workshop/s5_reporting_extensions.html#self-check-quiz-35",
     "href": "counts-workshop/s5_reporting_extensions.html#self-check-quiz-35",
     "title": "Session 5 — Reporting and Extensions",
     "section": "Self-check quiz (3/5)",
-    "text": "Self-check quiz (3/5)\n\nWhen is Poisson regression with robust standard errors useful for a yes/no outcome?\n\nTo estimate a prevalence ratio when the outcome is common\nTo estimate an odds ratio for an outcome that is rare\nTo avoid having to code the outcome as a 0/1 variable\nTo model the time that passes until the event occurs"
+    "text": "Self-check quiz (3/5)\n\nWhen is Poisson regression with robust standard errors useful for a yes/no outcome?\n\nTo estimate an odds ratio for an outcome that is rare in the data\nTo avoid having to code the outcome as a 0/1 variable at all\nTo estimate a prevalence ratio when the outcome is a common one\nTo model the time that passes until the event of interest occurs"
   },
   {
     "objectID": "counts-workshop/s5_reporting_extensions.html#self-check-quiz-45",
     "href": "counts-workshop/s5_reporting_extensions.html#self-check-quiz-45",
     "title": "Session 5 — Reporting and Extensions",
     "section": "Self-check quiz (4/5)",
-    "text": "Self-check quiz (4/5)\n\nWhich statement belongs in the limitations of the dengue analysis?\n\nReporting changed over time, and ward-level data cannot show individual effects\nThe model has too many wards for its results to be interpreted\nRate ratios cannot be calculated when the outcome is a count\nThe negative binomial distribution applies only to people, not wards"
+    "text": "Self-check quiz (4/5)\n\nWhich statement belongs in the limitations of the dengue analysis?\n\nThe model has too many wards for its results to be interpreted\nRate ratios cannot be calculated when the outcome is a count\nThe negative binomial distribution applies only to people, not to wards\nReporting changed over time; ward data cannot show individual effects"
   },
   {
     "objectID": "counts-workshop/s5_reporting_extensions.html#self-check-quiz-55",
@@ -179,14 +179,14 @@
     "href": "counts-workshop/s3_overdispersion.html#self-check-quiz-15",
     "title": "Session 3 — Overdispersion",
     "section": "Self-check quiz (1/5)",
-    "text": "Self-check quiz (1/5)\n\nA Poisson model has a dispersion statistic of 8. What is the main consequence?\n\nStandard errors are too small, so p-values are over-optimistic\nThe coefficients are wrong by a factor of 8 in every model\nThe model has too few predictors to describe the counts\nThe offset has been specified incorrectly in the model formula"
+    "text": "Self-check quiz (1/5)\n\nA Poisson model has a dispersion statistic of 8. What is the main consequence?\n\nThe coefficients are wrong by a factor of 8 in every model\nThe model has too few predictors to describe the counts\nStandard errors are too small, so p-values are over-optimistic\nThe offset has been specified incorrectly in the model formula"
   },
   {
     "objectID": "counts-workshop/s3_overdispersion.html#self-check-quiz-25",
     "href": "counts-workshop/s3_overdispersion.html#self-check-quiz-25",
     "title": "Session 3 — Overdispersion",
     "section": "Self-check quiz (2/5)",
-    "text": "Self-check quiz (2/5)\n\nWhich parameter of the negative binomial measures overdispersion?\n\ntheta: the smaller it is, the more overdispersion there is\nThe intercept of the model, which sets the baseline rate\nThe offset, because it holds the variance of the counts\nThe p-value of the dispersion test, which grows with variance"
+    "text": "Self-check quiz (2/5)\n\nWhich parameter of the negative binomial measures overdispersion?\n\nThe intercept of the model, which sets the baseline rate\ntheta: the smaller it is, the more overdispersion there is\nThe offset, because it holds the variance of the counts\nThe p-value of the dispersion test, which grows with variance"
   },
   {
     "objectID": "counts-workshop/s3_overdispersion.html#self-check-quiz-35",
@@ -200,7 +200,7 @@
     "href": "counts-workshop/s3_overdispersion.html#self-check-quiz-45",
     "title": "Session 3 — Overdispersion",
     "section": "Self-check quiz (4/5)",
-    "text": "Self-check quiz (4/5)\n\nWhy use cluster-robust standard errors by ward here?\n\nThe same ward is measured 36 times, so observations are correlated\nWards are too small to be analysed with any count model\nRobust standard errors remove overdispersion from the estimates\nPoisson models need one single row for each ward in the file"
+    "text": "Self-check quiz (4/5)\n\nWhy use cluster-robust standard errors by ward here?\n\nWards are too small to be analysed with any count model at all\nRobust standard errors remove overdispersion from the estimates\nPoisson models need one single row for each ward in the data file\nThe same ward is measured 36 times, so observations correlate"
   },
   {
     "objectID": "counts-workshop/s3_overdispersion.html#self-check-quiz-55",
@@ -319,7 +319,7 @@
     "href": "counts-workshop/s1_counts_rates.html#self-check-quiz-45",
     "title": "Session 1 — Counts, Rates and the Poisson Idea",
     "section": "Self-check quiz (4/5)",
-    "text": "Self-check quiz (4/5)\n\nMonthly case counts have mean 9.6 and variance 394. What does this suggest?\n\nOverdispersion: more variation than a Poisson process would allow\nA perfect Poisson process, in which variance and mean coincide\nA fault in the dates in the file, which should be corrected first\nThat the counts are too small for any model to be fitted to them"
+    "text": "Self-check quiz (4/5)\n\nMonthly case counts have mean 9.6 and variance 394. What does this suggest?\n\nA perfect Poisson process, in which variance and mean coincide\nA fault in the dates in the file, which should be corrected first\nThat the counts are too small for any model to be fitted to them\nOverdispersion: more variation than a Poisson process would allow"
   },
   {
     "objectID": "counts-workshop/s1_counts_rates.html#self-check-quiz-55",
@@ -5443,28 +5443,28 @@
     "href": "counts-workshop/s2_poisson_regression.html#self-check-quiz-15",
     "title": "Session 2 — Poisson Regression",
     "section": "Self-check quiz (1/5)",
-    "text": "Self-check quiz (1/5)\n\nA Poisson model with an offset gives exp(coefficient) = 0.64 for fogging. How is it best described?\n\nThe rate is 36% lower in fogged ward-months, others fixed\nThe number of cases is 64% of the population of each ward\nThe odds of dengue are 0.64 times as high in fogged months\nFogging reduces the cases of every ward by 0.64 each month"
+    "text": "Self-check quiz (1/5)\n\nA Poisson model with an offset gives exp(coefficient) = 0.64 for fogging. How is it best described?\n\nThe number of cases is 64% of the population of each ward\nThe odds of dengue are 0.64 times as high in fogged months\nThe rate is 36% lower in fogged ward-months, others fixed\nFogging reduces the cases of every ward by 0.64 each month"
   },
   {
     "objectID": "counts-workshop/s2_poisson_regression.html#self-check-quiz-25",
     "href": "counts-workshop/s2_poisson_regression.html#self-check-quiz-25",
     "title": "Session 2 — Poisson Regression",
     "section": "Self-check quiz (2/5)",
-    "text": "Self-check quiz (2/5)\n\nWhy use offset(log(population)) in this model?\n\nExpected counts rise with population; the offset models rates\nIt makes the Poisson assumption true for the data at hand\nIt removes the need to adjust for rainfall in the model\nIt gives each ward the same weight in the whole analysis"
+    "text": "Self-check quiz (2/5)\n\nWhy use offset(log(population)) in this model?\n\nIt makes the Poisson assumption true for the data we have used\nExpected counts rise with size; the offset models rates\nIt removes the need to adjust for rainfall in the whole model\nIt gives each ward the same weight in the whole of the analysis"
   },
   {
     "objectID": "counts-workshop/s2_poisson_regression.html#self-check-quiz-35",
     "href": "counts-workshop/s2_poisson_regression.html#self-check-quiz-35",
     "title": "Session 2 — Poisson Regression",
     "section": "Self-check quiz (3/5)",
-    "text": "Self-check quiz (3/5)\n\nWhy is the crude rate ratio for fogging (0.86) different from the adjusted one (0.64)?\n\nFogging began late, in a period of higher incidence, which confounded the crude result\nThe adjusted model happens to count more cases than the crude model does\nThe crude model used the wrong distribution for the counts in the wards\nAdjustment makes any effect stronger, so the larger change is expected"
+    "text": "Self-check quiz (3/5)\n\nWhy is the crude rate ratio for fogging (0.86) different from the adjusted one (0.64)?\n\nThe adjusted model happens to count more cases than the crude model does\nThe crude model used the wrong distribution for the counts in the wards\nFogging began late, in a high period, so the crude result was confounded\nAdjustment makes any effect stronger, so the larger change is expected here"
   },
   {
     "objectID": "counts-workshop/s2_poisson_regression.html#self-check-quiz-45",
     "href": "counts-workshop/s2_poisson_regression.html#self-check-quiz-45",
     "title": "Session 2 — Poisson Regression",
     "section": "Self-check quiz (4/5)",
-    "text": "Self-check quiz (4/5)\n\nIn glm(…, family = poisson), what does the default predict() return?\n\nThe linear predictor, on the log scale of the expected count\nThe expected number of cases for each ward and month\nThe probability of at least one case in the ward and month\nThe standardised residual for each ward in each month"
+    "text": "Self-check quiz (4/5)\n\nIn glm(…, family = poisson), what does the default predict() return?\n\nThe expected number of cases for each ward and each month of the data\nThe probability of at least one case in that ward and month\nThe standardised residual for each ward in each month of the data\nThe linear predictor, on the log scale of the expected count"
   },
   {
     "objectID": "counts-workshop/s2_poisson_regression.html#self-check-quiz-55",
@@ -5562,28 +5562,28 @@
     "href": "counts-workshop/s4_zeros_checking.html#self-check-quiz-15",
     "title": "Session 4 — Excess Zeros and Model Checking",
     "section": "Self-check quiz (1/5)",
-    "text": "Self-check quiz (1/5)\n\nA negative binomial model expects 19% zeros and 20% are observed. What should you conclude?\n\nOnly a small excess, so a zero-inflated model is not clearly needed\nThe model has failed completely and its output is of no use\nThe data cannot be analysed with a count model of any type\nEvery ward has the same chance of recording a zero in a month"
+    "text": "Self-check quiz (1/5)\n\nA negative binomial model expects 19% zeros and 20% are observed. What should you conclude?\n\nThe model has failed completely and its output is of no use at all\nThe data cannot be analysed with a count model of any type here\nOnly a small excess, so zero-inflation is not clearly needed\nEvery ward has the same chance of recording a zero in a month"
   },
   {
     "objectID": "counts-workshop/s4_zeros_checking.html#self-check-quiz-25",
     "href": "counts-workshop/s4_zeros_checking.html#self-check-quiz-25",
     "title": "Session 4 — Excess Zeros and Model Checking",
     "section": "Self-check quiz (2/5)",
-    "text": "Self-check quiz (2/5)\n\nWhat is a structural zero?\n\nA zero from a process that cannot produce counts, such as non-reporting\nA zero that arises by chance because the mean count is small\nA zero caused by a coding error in the file that should be fixed\nAny month of the series with fewer than five cases in the ward"
+    "text": "Self-check quiz (2/5)\n\nWhat is a structural zero?\n\nA zero that arises by chance because the mean count is small here\nA zero from a process that gives no counts, such as non-reporting\nA zero caused by a coding error in the file that should be fixed first\nAny month of the series with fewer than five cases in the ward"
   },
   {
     "objectID": "counts-workshop/s4_zeros_checking.html#self-check-quiz-35",
     "href": "counts-workshop/s4_zeros_checking.html#self-check-quiz-35",
     "title": "Session 4 — Excess Zeros and Model Checking",
     "section": "Self-check quiz (3/5)",
-    "text": "Self-check quiz (3/5)\n\nIn a zero-inflated model, the part after the vertical bar models what?\n\nThe probability of a structural zero (the zero-inflation part)\nThe mean of the count process for the ward-months at risk\nThe offset, which is the log of the population of the ward\nThe dispersion parameter theta of the negative binomial part"
+    "text": "Self-check quiz (3/5)\n\nIn a zero-inflated model, the part after the vertical bar models what?\n\nThe mean of the count process for the ward-months that are at risk\nThe offset, which is the log of the population of the ward\nThe probability of a structural zero (the zero-inflation part)\nThe dispersion parameter theta of the negative binomial count part"
   },
   {
     "objectID": "counts-workshop/s4_zeros_checking.html#self-check-quiz-45",
     "href": "counts-workshop/s4_zeros_checking.html#self-check-quiz-45",
     "title": "Session 4 — Excess Zeros and Model Checking",
     "section": "Self-check quiz (4/5)",
-    "text": "Self-check quiz (4/5)\n\nWhat is the best first step when a model shows more zeros than expected?\n\nFind out why, and look for a covariate that explains them\nAdd a zero-inflation term straight away without more thought\nDelete every row that contains a zero count from the data\nSwitch to linear regression on the log of the monthly counts"
+    "text": "Self-check quiz (4/5)\n\nWhat is the best first step when a model shows more zeros than expected?\n\nAdd a zero-inflation term straight away without more thought\nDelete every row that contains a zero count from the data\nSwitch to linear regression on the log of the monthly counts\nFind out why, and look for a covariate that explains them"
   },
   {
     "objectID": "counts-workshop/s4_zeros_checking.html#self-check-quiz-55",

@@ -139,10 +139,10 @@ round(exp(cbind(PR = coef(pr), confint.default(pr, vcov. = vcovCL(pr, cluster = 
 #| echo: false
 #| output: asis
 quiz_mcq("s5q1", "A negative binomial model gives a rate ratio of 0.66 for fogging. Which wording is best?",
-         c("After adjustment, the dengue rate was about 34% lower in fogged months",
-           "Fogging reduced each person's risk of dengue by 34% for certain",
-           "Fogging caused 34% fewer cases in every ward in the city",
-           "The odds of dengue were 0.66 times as high with fogging"), answer = 3,
+         c("Fogging reduced each person's risk of dengue by 34% for certain",
+           "Fogging caused 34% fewer cases in every ward in the whole city",
+           "After adjustment, the dengue rate was about 34% lower",
+           "The odds of dengue were 0.66 times as high with fogging in use"), answer = 3,
          explain = "A rate ratio of 0.66 is a 34% lower rate. In observational data say 'associated with', state the adjustment, and do not call it an odds or a risk ratio.")
 ```
 
@@ -152,10 +152,10 @@ quiz_mcq("s5q1", "A negative binomial model gives a rate ratio of 0.66 for foggi
 #| echo: false
 #| output: asis
 quiz_mcq("s5q2", "How are cases averted estimated from a count model?",
-         c("Predict expected cases with and without the exposure; take the difference",
-           "Subtract observed cases in unfogged wards from fogged wards",
-           "Multiply the rate ratio by the number of wards in the study",
-           "Divide the total number of cases by the fogged months"), answer = 2,
+         c("Subtract observed cases in unfogged wards from observed cases in fogged wards",
+           "Predict expected cases with and without exposure, then subtract",
+           "Multiply the rate ratio by the number of wards in the whole study",
+           "Divide the total number of cases by the number of fogged months"), answer = 2,
          explain = "The counterfactual approach predicts the same observations under the two exposure settings; the difference estimates the effect on counts, under the model's assumptions.")
 ```
 
@@ -165,10 +165,10 @@ quiz_mcq("s5q2", "How are cases averted estimated from a count model?",
 #| echo: false
 #| output: asis
 quiz_mcq("s5q3", "When is Poisson regression with robust standard errors useful for a yes/no outcome?",
-         c("To estimate a prevalence ratio when the outcome is common",
-           "To estimate an odds ratio for an outcome that is rare",
-           "To avoid having to code the outcome as a 0/1 variable",
-           "To model the time that passes until the event occurs"), answer = 3,
+         c("To estimate an odds ratio for an outcome that is rare in the data",
+           "To avoid having to code the outcome as a 0/1 variable at all",
+           "To estimate a prevalence ratio when the outcome is a common one",
+           "To model the time that passes until the event of interest occurs"), answer = 3,
          explain = "With a common outcome the odds ratio exaggerates the ratio of risks. Poisson with robust SEs estimates the prevalence (risk) ratio directly.")
 ```
 
@@ -178,10 +178,10 @@ quiz_mcq("s5q3", "When is Poisson regression with robust standard errors useful 
 #| echo: false
 #| output: asis
 quiz_mcq("s5q4", "Which statement belongs in the limitations of the dengue analysis?",
-         c("Reporting changed over time, and ward-level data cannot show individual effects",
-           "The model has too many wards for its results to be interpreted",
+         c("The model has too many wards for its results to be interpreted",
            "Rate ratios cannot be calculated when the outcome is a count",
-           "The negative binomial distribution applies only to people, not wards"), answer = 4,
+           "The negative binomial distribution applies only to people, not to wards",
+           "Reporting changed over time; ward data cannot show individual effects"), answer = 4,
          explain = "Surveillance changes, ecological (ward-level) design and unmeasured confounding all limit what the model can say.")
 ```
 

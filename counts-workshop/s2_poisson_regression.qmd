@@ -142,9 +142,9 @@ predict(m2, newdata = nd, type = "response")
 #| echo: false
 #| output: asis
 quiz_mcq("s2q1", "A Poisson model with an offset gives exp(coefficient) = 0.64 for fogging. How is it best described?",
-         c("The rate is 36% lower in fogged ward-months, others fixed",
-           "The number of cases is 64% of the population of each ward",
+         c("The number of cases is 64% of the population of each ward",
            "The odds of dengue are 0.64 times as high in fogged months",
+           "The rate is 36% lower in fogged ward-months, others fixed",
            "Fogging reduces the cases of every ward by 0.64 each month"), answer = 3,
          explain = "exp(b) is a rate ratio: 0.64 means a 36% lower rate, holding the other variables fixed. It is not an odds ratio or an absolute change.")
 ```
@@ -155,10 +155,10 @@ quiz_mcq("s2q1", "A Poisson model with an offset gives exp(coefficient) = 0.64 f
 #| echo: false
 #| output: asis
 quiz_mcq("s2q2", "Why use offset(log(population)) in this model?",
-         c("Expected counts rise with population; the offset models rates",
-           "It makes the Poisson assumption true for the data at hand",
-           "It removes the need to adjust for rainfall in the model",
-           "It gives each ward the same weight in the whole analysis"), answer = 2,
+         c("It makes the Poisson assumption true for the data we have used",
+           "Expected counts rise with size; the offset models rates",
+           "It removes the need to adjust for rainfall in the whole model",
+           "It gives each ward the same weight in the whole of the analysis"), answer = 2,
          explain = "The offset puts log(person-time) in the linear predictor with a coefficient fixed at 1, so exp(coefficients) are ratios of rates instead of ratios of counts.")
 ```
 
@@ -168,10 +168,10 @@ quiz_mcq("s2q2", "Why use offset(log(population)) in this model?",
 #| echo: false
 #| output: asis
 quiz_mcq("s2q3", "Why is the crude rate ratio for fogging (0.86) different from the adjusted one (0.64)?",
-         c("Fogging began late, in a period of higher incidence, which confounded the crude result",
-           "The adjusted model happens to count more cases than the crude model does",
+         c("The adjusted model happens to count more cases than the crude model does",
            "The crude model used the wrong distribution for the counts in the wards",
-           "Adjustment makes any effect stronger, so the larger change is expected"), answer = 3,
+           "Fogging began late, in a high period, so the crude result was confounded",
+           "Adjustment makes any effect stronger, so the larger change is expected here"), answer = 3,
          explain = "Fogging was introduced late, when dengue was rising and in season. Not adjusting for time hid its benefit. Adjustment can move an estimate in either direction.")
 ```
 
@@ -181,10 +181,10 @@ quiz_mcq("s2q3", "Why is the crude rate ratio for fogging (0.86) different from 
 #| echo: false
 #| output: asis
 quiz_mcq("s2q4", "In glm(..., family = poisson), what does the default predict() return?",
-         c("The linear predictor, on the log scale of the expected count",
-           "The expected number of cases for each ward and month",
-           "The probability of at least one case in the ward and month",
-           "The standardised residual for each ward in each month"), answer = 4,
+         c("The expected number of cases for each ward and each month of the data",
+           "The probability of at least one case in that ward and month",
+           "The standardised residual for each ward in each month of the data",
+           "The linear predictor, on the log scale of the expected count"), answer = 4,
          explain = "By default predict() works on the link scale (log of the expected count). Use type = response for expected counts.")
 ```
 

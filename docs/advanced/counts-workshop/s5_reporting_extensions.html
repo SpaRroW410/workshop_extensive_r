@@ -1375,20 +1375,20 @@ Community Medicine Workshop
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a>m_nb <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">glm.nb</span>(cases <span class="sc">~</span> fogging <span class="sc">+</span> slum <span class="sc">+</span> rain_lag1 <span class="sc">+</span> month_index <span class="sc">+</span> <span class="fu">sin</span>(<span class="dv">2</span> <span class="sc">*</span> pi <span class="sc">*</span> month <span class="sc">/</span> <span class="dv">12</span>) <span class="sc">+</span> <span class="fu">cos</span>(<span class="dv">2</span> <span class="sc">*</span> pi <span class="sc">*</span> month <span class="sc">/</span> <span class="dv">12</span>) <span class="sc">+</span> <span class="fu">offset</span>(<span class="fu">log</span>(population)), <span class="at">data =</span> dg)</span>
 <span id="cb1-2"><a aria-label="2"></a><span class="fu">tbl_regression</span>(m_nb, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">include =</span> <span class="fu">c</span>(fogging, slum, rain_lag1, month_index))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="janvdgbfka" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#janvdgbfka table {
+<div id="apnfoodxuk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#apnfoodxuk table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#janvdgbfka thead, #janvdgbfka tbody, #janvdgbfka tfoot, #janvdgbfka tr, #janvdgbfka td, #janvdgbfka th {
+#apnfoodxuk thead, #apnfoodxuk tbody, #apnfoodxuk tfoot, #apnfoodxuk tr, #apnfoodxuk td, #apnfoodxuk th {
 border-style: none;
 }
-#janvdgbfka p {
+#apnfoodxuk p {
 margin: 0;
 padding: 0;
 }
-#janvdgbfka .gt_table {
+#apnfoodxuk .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -1413,11 +1413,11 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#janvdgbfka .gt_caption {
+#apnfoodxuk .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#janvdgbfka .gt_title {
+#apnfoodxuk .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -1428,7 +1428,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#janvdgbfka .gt_subtitle {
+#apnfoodxuk .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -1439,7 +1439,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#janvdgbfka .gt_heading {
+#apnfoodxuk .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -1450,12 +1450,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#janvdgbfka .gt_bottom_border {
+#apnfoodxuk .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#janvdgbfka .gt_col_headings {
+#apnfoodxuk .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -1469,7 +1469,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#janvdgbfka .gt_col_heading {
+#apnfoodxuk .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1488,7 +1488,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#janvdgbfka .gt_column_spanner_outer {
+#apnfoodxuk .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1499,13 +1499,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#janvdgbfka .gt_column_spanner_outer:first-child {
+#apnfoodxuk .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#janvdgbfka .gt_column_spanner_outer:last-child {
+#apnfoodxuk .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#janvdgbfka .gt_column_spanner {
+#apnfoodxuk .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -1516,10 +1516,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#janvdgbfka .gt_spanner_row {
+#apnfoodxuk .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#janvdgbfka .gt_group_heading {
+#apnfoodxuk .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1544,7 +1544,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#janvdgbfka .gt_empty_group_heading {
+#apnfoodxuk .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -1558,13 +1558,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#janvdgbfka .gt_from_md > :first-child {
+#apnfoodxuk .gt_from_md > :first-child {
 margin-top: 0;
 }
-#janvdgbfka .gt_from_md > :last-child {
+#apnfoodxuk .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#janvdgbfka .gt_row {
+#apnfoodxuk .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1582,7 +1582,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#janvdgbfka .gt_stub {
+#apnfoodxuk .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1594,7 +1594,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#janvdgbfka .gt_stub_row_group {
+#apnfoodxuk .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1607,13 +1607,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#janvdgbfka .gt_row_group_first td {
+#apnfoodxuk .gt_row_group_first td {
 border-top-width: 2px;
 }
-#janvdgbfka .gt_row_group_first th {
+#apnfoodxuk .gt_row_group_first th {
 border-top-width: 2px;
 }
-#janvdgbfka .gt_summary_row {
+#apnfoodxuk .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -1622,14 +1622,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#janvdgbfka .gt_first_summary_row {
+#apnfoodxuk .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#janvdgbfka .gt_first_summary_row.thick {
+#apnfoodxuk .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#janvdgbfka .gt_last_summary_row {
+#apnfoodxuk .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1638,7 +1638,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#janvdgbfka .gt_grand_summary_row {
+#apnfoodxuk .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -1647,7 +1647,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#janvdgbfka .gt_first_grand_summary_row {
+#apnfoodxuk .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1656,7 +1656,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#janvdgbfka .gt_last_grand_summary_row_top {
+#apnfoodxuk .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1665,10 +1665,10 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#janvdgbfka .gt_striped {
+#apnfoodxuk .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#janvdgbfka .gt_table_body {
+#apnfoodxuk .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -1676,7 +1676,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#janvdgbfka .gt_footnotes {
+#apnfoodxuk .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -1689,7 +1689,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#janvdgbfka .gt_footnote {
+#apnfoodxuk .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -1697,7 +1697,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#janvdgbfka .gt_sourcenotes {
+#apnfoodxuk .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -1710,64 +1710,64 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#janvdgbfka .gt_sourcenote {
+#apnfoodxuk .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#janvdgbfka .gt_left {
+#apnfoodxuk .gt_left {
 text-align: left;
 }
-#janvdgbfka .gt_center {
+#apnfoodxuk .gt_center {
 text-align: center;
 }
-#janvdgbfka .gt_right {
+#apnfoodxuk .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#janvdgbfka .gt_font_normal {
+#apnfoodxuk .gt_font_normal {
 font-weight: normal;
 }
-#janvdgbfka .gt_font_bold {
+#apnfoodxuk .gt_font_bold {
 font-weight: bold;
 }
-#janvdgbfka .gt_font_italic {
+#apnfoodxuk .gt_font_italic {
 font-style: italic;
 }
-#janvdgbfka .gt_super {
+#apnfoodxuk .gt_super {
 font-size: 65%;
 }
-#janvdgbfka .gt_footnote_marks {
+#apnfoodxuk .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#janvdgbfka .gt_asterisk {
+#apnfoodxuk .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#janvdgbfka .gt_indent_1 {
+#apnfoodxuk .gt_indent_1 {
 text-indent: 5px;
 }
-#janvdgbfka .gt_indent_2 {
+#apnfoodxuk .gt_indent_2 {
 text-indent: 10px;
 }
-#janvdgbfka .gt_indent_3 {
+#apnfoodxuk .gt_indent_3 {
 text-indent: 15px;
 }
-#janvdgbfka .gt_indent_4 {
+#apnfoodxuk .gt_indent_4 {
 text-indent: 20px;
 }
-#janvdgbfka .gt_indent_5 {
+#apnfoodxuk .gt_indent_5 {
 text-indent: 25px;
 }
-#janvdgbfka .katex-display {
+#apnfoodxuk .katex-display {
 display: inline-flex !important;
 margin-bottom: 0.75em !important;
 }
-#janvdgbfka div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#apnfoodxuk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
 height: 0px !important;
 }
 </style>
@@ -1974,49 +1974,49 @@ slumSlum    1.08  0.94   1.23</code></pre>
 </section>
 <section id="self-check-quiz-15" class="slide level2 smaller">
 <h2>Self-check quiz (1/5)</h2>
-<div class="quiz-q" data-qid="s5q1" data-type="mcq" data-hash="tkkmp0.4t433a" data-show="Rm9nZ2luZyBjYXVzZWQgMzQlIGZld2VyIGNhc2VzIGluIGV2ZXJ5IHdhcmQgaW4gdGhlIGNp dHk=" data-explain="QSByYXRlIHJhdGlvIG9mIDAuNjYgaXMgYSAzNCUgbG93ZXIgcmF0ZS4gSW4gb2JzZXJ2YXRp b25hbCBkYXRhIHNheSAnYXNzb2NpYXRlZCB3aXRoJywgc3RhdGUgdGhlIGFkanVzdG1lbnQs IGFuZCBkbyBub3QgY2FsbCBpdCBhbiBvZGRzIG9yIGEgcmlzayByYXRpby4=">
+<div class="quiz-q" data-qid="s5q1" data-type="mcq" data-hash="tkkmp0.4t433a" data-show="QWZ0ZXIgYWRqdXN0bWVudCwgdGhlIGRlbmd1ZSByYXRlIHdhcyBhYm91dCAzNCUgbG93ZXI=" data-explain="QSByYXRlIHJhdGlvIG9mIDAuNjYgaXMgYSAzNCUgbG93ZXIgcmF0ZS4gSW4gb2JzZXJ2YXRp b25hbCBkYXRhIHNheSAnYXNzb2NpYXRlZCB3aXRoJywgc3RhdGUgdGhlIGFkanVzdG1lbnQs IGFuZCBkbyBub3QgY2FsbCBpdCBhbiBvZGRzIG9yIGEgcmlzayByYXRpby4=">
 <p>A negative binomial model gives a rate ratio of 0.66 for fogging. Which wording is best?</p>
 <ul>
-<li>After adjustment, the dengue rate was about 34% lower in fogged months</li>
 <li>Fogging reduced each person’s risk of dengue by 34% for certain</li>
-<li>Fogging caused 34% fewer cases in every ward in the city</li>
-<li>The odds of dengue were 0.66 times as high with fogging</li>
+<li>Fogging caused 34% fewer cases in every ward in the whole city</li>
+<li>After adjustment, the dengue rate was about 34% lower</li>
+<li>The odds of dengue were 0.66 times as high with fogging in use</li>
 </ul>
 </div>
 </section>
 <section id="self-check-quiz-25" class="slide level2 smaller">
 <h2>Self-check quiz (2/5)</h2>
-<div class="quiz-q" data-qid="s5q2" data-type="mcq" data-hash="tkkzxo.4t4hkm" data-show="U3VidHJhY3Qgb2JzZXJ2ZWQgY2FzZXMgaW4gdW5mb2dnZWQgd2FyZHMgZnJvbSBmb2dnZWQg d2FyZHM=" data-explain="VGhlIGNvdW50ZXJmYWN0dWFsIGFwcHJvYWNoIHByZWRpY3RzIHRoZSBzYW1lIG9ic2VydmF0 aW9ucyB1bmRlciB0aGUgdHdvIGV4cG9zdXJlIHNldHRpbmdzOyB0aGUgZGlmZmVyZW5jZSBl c3RpbWF0ZXMgdGhlIGVmZmVjdCBvbiBjb3VudHMsIHVuZGVyIHRoZSBtb2RlbCdzIGFzc3Vt cHRpb25zLg==">
+<div class="quiz-q" data-qid="s5q2" data-type="mcq" data-hash="tkkzxo.4t4hkm" data-show="UHJlZGljdCBleHBlY3RlZCBjYXNlcyB3aXRoIGFuZCB3aXRob3V0IGV4cG9zdXJlLCB0aGVu IHN1YnRyYWN0" data-explain="VGhlIGNvdW50ZXJmYWN0dWFsIGFwcHJvYWNoIHByZWRpY3RzIHRoZSBzYW1lIG9ic2VydmF0 aW9ucyB1bmRlciB0aGUgdHdvIGV4cG9zdXJlIHNldHRpbmdzOyB0aGUgZGlmZmVyZW5jZSBl c3RpbWF0ZXMgdGhlIGVmZmVjdCBvbiBjb3VudHMsIHVuZGVyIHRoZSBtb2RlbCdzIGFzc3Vt cHRpb25zLg==">
 <p>How are cases averted estimated from a count model?</p>
 <ul>
-<li>Predict expected cases with and without the exposure; take the difference</li>
-<li>Subtract observed cases in unfogged wards from fogged wards</li>
-<li>Multiply the rate ratio by the number of wards in the study</li>
-<li>Divide the total number of cases by the fogged months</li>
+<li>Subtract observed cases in unfogged wards from observed cases in fogged wards</li>
+<li>Predict expected cases with and without exposure, then subtract</li>
+<li>Multiply the rate ratio by the number of wards in the whole study</li>
+<li>Divide the total number of cases by the number of fogged months</li>
 </ul>
 </div>
 </section>
 <section id="self-check-quiz-35" class="slide level2 smaller">
 <h2>Self-check quiz (3/5)</h2>
-<div class="quiz-q" data-qid="s5q3" data-type="mcq" data-hash="tkld6e.4t4w20" data-show="VG8gYXZvaWQgaGF2aW5nIHRvIGNvZGUgdGhlIG91dGNvbWUgYXMgYSAwLzEgdmFyaWFibGU=" data-explain="V2l0aCBhIGNvbW1vbiBvdXRjb21lIHRoZSBvZGRzIHJhdGlvIGV4YWdnZXJhdGVzIHRoZSBy YXRpbyBvZiByaXNrcy4gUG9pc3NvbiB3aXRoIHJvYnVzdCBTRXMgZXN0aW1hdGVzIHRoZSBw cmV2YWxlbmNlIChyaXNrKSByYXRpbyBkaXJlY3RseS4=">
+<div class="quiz-q" data-qid="s5q3" data-type="mcq" data-hash="tkld6e.4t4w20" data-show="VG8gZXN0aW1hdGUgYSBwcmV2YWxlbmNlIHJhdGlvIHdoZW4gdGhlIG91dGNvbWUgaXMgYSBj b21tb24gb25l" data-explain="V2l0aCBhIGNvbW1vbiBvdXRjb21lIHRoZSBvZGRzIHJhdGlvIGV4YWdnZXJhdGVzIHRoZSBy YXRpbyBvZiByaXNrcy4gUG9pc3NvbiB3aXRoIHJvYnVzdCBTRXMgZXN0aW1hdGVzIHRoZSBw cmV2YWxlbmNlIChyaXNrKSByYXRpbyBkaXJlY3RseS4=">
 <p>When is Poisson regression with robust standard errors useful for a yes/no outcome?</p>
 <ul>
-<li>To estimate a prevalence ratio when the outcome is common</li>
-<li>To estimate an odds ratio for an outcome that is rare</li>
-<li>To avoid having to code the outcome as a 0/1 variable</li>
-<li>To model the time that passes until the event occurs</li>
+<li>To estimate an odds ratio for an outcome that is rare in the data</li>
+<li>To avoid having to code the outcome as a 0/1 variable at all</li>
+<li>To estimate a prevalence ratio when the outcome is a common one</li>
+<li>To model the time that passes until the event of interest occurs</li>
 </ul>
 </div>
 </section>
 <section id="self-check-quiz-45" class="slide level2 smaller">
 <h2>Self-check quiz (4/5)</h2>
-<div class="quiz-q" data-qid="s5q4" data-type="mcq" data-hash="tklqf4.4t5aje" data-show="VGhlIG5lZ2F0aXZlIGJpbm9taWFsIGRpc3RyaWJ1dGlvbiBhcHBsaWVzIG9ubHkgdG8gcGVv cGxlLCBub3Qgd2FyZHM=" data-explain="U3VydmVpbGxhbmNlIGNoYW5nZXMsIGVjb2xvZ2ljYWwgKHdhcmQtbGV2ZWwpIGRlc2lnbiBh bmQgdW5tZWFzdXJlZCBjb25mb3VuZGluZyBhbGwgbGltaXQgd2hhdCB0aGUgbW9kZWwgY2Fu IHNheS4=">
+<div class="quiz-q" data-qid="s5q4" data-type="mcq" data-hash="tklqf4.4t5aje" data-show="UmVwb3J0aW5nIGNoYW5nZWQgb3ZlciB0aW1lOyB3YXJkIGRhdGEgY2Fubm90IHNob3cgaW5k aXZpZHVhbCBlZmZlY3Rz" data-explain="U3VydmVpbGxhbmNlIGNoYW5nZXMsIGVjb2xvZ2ljYWwgKHdhcmQtbGV2ZWwpIGRlc2lnbiBh bmQgdW5tZWFzdXJlZCBjb25mb3VuZGluZyBhbGwgbGltaXQgd2hhdCB0aGUgbW9kZWwgY2Fu IHNheS4=">
 <p>Which statement belongs in the limitations of the dengue analysis?</p>
 <ul>
-<li>Reporting changed over time, and ward-level data cannot show individual effects</li>
 <li>The model has too many wards for its results to be interpreted</li>
 <li>Rate ratios cannot be calculated when the outcome is a count</li>
-<li>The negative binomial distribution applies only to people, not wards</li>
+<li>The negative binomial distribution applies only to people, not to wards</li>
+<li>Reporting changed over time; ward data cannot show individual effects</li>
 </ul>
 </div>
 </section>

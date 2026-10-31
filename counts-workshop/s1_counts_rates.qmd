@@ -197,10 +197,10 @@ quiz_mcq("s1q3", "A Poisson distribution has mean 4. What is its variance?",
 #| echo: false
 #| output: asis
 quiz_mcq("s1q4", "Monthly case counts have mean 9.6 and variance 394. What does this suggest?",
-         c("Overdispersion: more variation than a Poisson process would allow",
-           "A perfect Poisson process, in which variance and mean coincide",
+         c("A perfect Poisson process, in which variance and mean coincide",
            "A fault in the dates in the file, which should be corrected first",
-           "That the counts are too small for any model to be fitted to them"), answer = 4,
+           "That the counts are too small for any model to be fitted to them",
+           "Overdispersion: more variation than a Poisson process would allow"), answer = 4,
          explain = "A variance far above the mean means the data are overdispersed, often because rates differ between wards and times, or events cluster.")
 ```
 
