@@ -9,6 +9,7 @@ project:
   render:
     - survival-workshop/*.qmd
     - counts-workshop/*.qmd
+    - ordinal-workshop/*.qmd
   resources:
     - data/tb_cohort.csv
     - survival-workshop/make_data.R
@@ -16,6 +17,9 @@ project:
     - data/dengue_wards.csv
     - counts-workshop/make_data.R
     - counts-workshop/labs/*.R
+    - data/maternal_survey.csv
+    - ordinal-workshop/make_data.R
+    - ordinal-workshop/labs/*.R
 website:
   title: Data Visualization Workshop — Advanced
   site-url: '.'
@@ -115,6 +119,21 @@ website:
           - text: '---'
           - text: Counts and Rates Cheat Sheet
             href: counts-workshop/cheatsheet.qmd
+      - text: Ordinal & Multinomial Workshop
+        menu:
+          - text: 'Session 1 — Categorical Outcomes: Nominal or Ordered?'
+            href: ordinal-workshop/s1_categorical_outcomes.qmd
+          - text: Session 2 — Ordinal Logistic Regression
+            href: ordinal-workshop/s2_ordinal_logistic.qmd
+          - text: Session 3 — Checking Proportional Odds
+            href: ordinal-workshop/s3_proportional_odds_check.qmd
+          - text: Session 4 — Multinomial Logistic Regression
+            href: ordinal-workshop/s4_multinomial_logistic.qmd
+          - text: Session 5 — Choosing, Comparing and Reporting
+            href: ordinal-workshop/s5_choosing_reporting.qmd
+          - text: '---'
+          - text: Ordinal and Multinomial Cheat Sheet
+            href: ordinal-workshop/cheatsheet.qmd
       - text: Quarto
         menu:
           - text: Quarto Basics

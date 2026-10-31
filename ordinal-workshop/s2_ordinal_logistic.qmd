@@ -1,0 +1,221 @@
+---
+title: "Session 2 — Ordinal Logistic Regression"
+subtitle: "Proportional odds · cumulative logits · odds ratios · thresholds · predicted probabilities · Lab 2"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 1: ordered vs nominal outcomes; cumulative proportions
+- Today: the **proportional-odds model** for an ordered outcome
+- By the end you can:
+  - fit it with `MASS::polr` and read **odds ratios**
+  - explain the **thresholds**
+  - give **predicted probabilities** for each category
+:::
+
+# Topic 1 — The model {background-color="#2C3E50"}
+
+## Cumulative logits
+
+::: {.eq}
+logit P(Y ≤ k) = ζ~k~ − (β~1~x~1~ + β~2~x~2~ + …)     k = 1, 2, 3
+:::
+
+::: {.incremental}
+- One **threshold** ζ~k~ for each cut-point between categories (3 for 4 categories)
+- **One set of coefficients** β shared by all cut-points: the **proportional-odds** (parallel lines) assumption
+- exp(β) is the **odds ratio for being in a higher category**: the same whichever cut-point you look at
+- In `polr`, β > 0 means **higher categories** (worse anaemia) are more likely
+:::
+
+## One predictor
+
+```{r}
+m1 <- MASS::polr(anaemia ~ wealth, data = mat, Hess = TRUE)
+round(exp(cbind(OR = coef(m1), confint(m1))), 2)
+m1$zeta |> round(2)
+```
+
+::: {.key}
+**OR = `r round(exp(coef(m1)), 2)` per wealth quintile**: each quintile higher multiplies the **odds of being in a worse anaemia category** by about `r round(exp(coef(m1)), 2)` (a **`r round(100 * (1 - exp(coef(m1))))`% reduction**), **at every cut-point** (None vs worse, up to Moderate vs Severe).
+:::
+
+# Topic 2 — An adjusted model {background-color="#2C3E50"}
+
+## Several predictors
+
+```{r}
+m2 <- MASS::polr(anaemia ~ wealth + education + bmi + anc_visits + parity + age + tribal + residence, data = mat, Hess = TRUE)
+round(exp(cbind(OR = coef(m2), confint(m2))), 2)     # tbl_regression(m2, exponentiate = TRUE) formats this for a paper
+```
+
+## Reading the adjusted odds ratios
+
+::: {.incremental}
+- **Wealth, higher education, BMI and antenatal visits** are protective (OR below 1)
+- **Parity** goes slightly the other way
+- The OR for **tribal group** is only about `r round(exp(coef(m2))[["tribalYes"]], 1)`: **do not trust it yet**. Session 3 shows the model is wrong for that variable
+- `confint()` gives profile-likelihood CIs; p-values come from the t value (|t| above about 2)
+:::
+
+## Thresholds
+
+::: {.eq}
+None|Mild: ζ~1~    Mild|Moderate: ζ~2~    Moderate|Severe: ζ~3~
+:::
+
+They are the **baseline log-odds** of each cumulative probability (when all predictors are 0) and are **not** of substantive interest. **K categories need K − 1 thresholds.**
+
+# Topic 3 — Predicted probabilities {background-color="#2C3E50"}
+
+## What it means for a woman
+
+```{r}
+nd <- data.frame(wealth = c(1, 5), education = factor("Primary", levels = levels(mat$education)), bmi = 20.5, anc_visits = 3, parity = 2, age = 27,
+                 tribal = factor("No", levels = c("No", "Yes")), residence = factor("Rural", levels = c("Urban", "Rural")))
+rownames(nd) <- c("poorest", "richest")
+round(predict(m2, newdata = nd, type = "probs"), 2)
+```
+
+::: {.incremental}
+- Probability of **each** category for a given profile: the four numbers add to 1
+- The **poorest** woman has about a **10% chance of severe anaemia**; the **richest** about **3%**
+- Clearer for readers than odds ratios: report **both**
+:::
+
+## Compared with a binary model
+
+```{r}
+c(ordinal = unname(exp(coef(m1))), binary_any_vs_none = unname(exp(coef(glm(I(anaemia != "None") ~ wealth, family = binomial, data = mat)))["wealth"])) |> round(2)
+```
+
+When proportional odds holds, the ordinal and the binary ORs agree, but the **ordinal model uses the severity too**, so it is **more precise**.
+
+## Reporting an ordinal model
+
+::: {.good}
+- State the **outcome order** and the **model** (cumulative-logit, proportional odds)
+- **Odds ratios** with CIs, and say they are for **a higher category**
+- A few **predicted probabilities**
+- The **assumption check** (next session)
+:::
+
+## 🔧 Switch to R — Lab 2 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `ordinal-workshop/labs/lab2_ordinal.R`
+
+- `MASS::polr()` unadjusted and adjusted
+- odds ratios, thresholds, `tbl_regression`
+- predicted probabilities and a binary comparison
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s2q1", "A proportional-odds model gives OR = 0.57 per wealth quintile. Which is the best reading?",
+         c("Each quintile higher lowers the anaemia grade by 0.57 categories on average",
+           "Women in the top quintile have 57% of the anaemia of the poorest women",
+           "Each quintile higher multiplies the odds of a worse category by 0.57",
+           "The probability of anaemia is 0.57 for each one of the quintiles"), answer = 3,
+         explain = "The OR compares odds of being in a higher category versus lower ones, and under proportional odds it is the same at every cut-point.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s2q2", "Why does a model for a four-category outcome have three thresholds?",
+         c("Three of the four categories are used up as references",
+           "There are three cut-points between four ordered categories",
+           "The model needs one separate threshold for each predictor",
+           "Four categories need four thresholds minus one for the intercept"), answer = 2,
+         explain = "A K-category outcome has K - 1 cumulative probabilities, so K - 1 thresholds (intercepts).")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s2q3", "What is the proportional-odds assumption?",
+         c("The categories of the outcome are equally spaced in terms of severity",
+           "The predictors are proportional to the outcome on the log-odds scale",
+           "Each predictor's effect is the same at every cut-point of the outcome",
+           "The odds of each single category are equal in all of the groups"), answer = 3,
+         explain = "One set of coefficients applies to all cumulative logits, so each odds ratio is constant across cut-points. Equal spacing is not assumed.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s2q4", "Why are predicted probabilities useful alongside odds ratios?",
+         c("They are always more accurate than the odds ratios from the same model",
+           "They remove the need to check the model assumptions of the analysis",
+           "They show whether each of the thresholds is significant or not",
+           "They give the chance of each category on a scale readers understand"), answer = 4,
+         explain = "Odds ratios are on a log-odds scale that is hard to grasp; predicted probabilities show what the model implies for a woman with a given profile.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s2q5", "In polr, a positive coefficient for a predictor means what?",
+         c("Higher values make the higher (worse) categories more likely",
+           "Higher values make the lower categories more likely to be seen",
+           "The predictor is significant at the 5% level in the sample",
+           "The predictor reduces all of the thresholds to exactly zero"), answer = 1,
+         explain = "In the usual polr parametrisation, positive coefficients move the probability up the ordered scale, towards the last category.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Proportional-odds**: one OR per predictor, the same at every cut-point
+- exp(β) = odds of a **higher category**; K categories → **K − 1 thresholds**
+- Report **ORs with CI** and **predicted probabilities**
+- The single OR is only trustworthy if the **assumption holds**
+:::
+
+**Next:** Session 3: checking proportional odds

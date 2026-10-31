@@ -1,0 +1,210 @@
+---
+title: "Session 5 — Choosing, Comparing and Reporting"
+subtitle: "Ordinal vs multinomial · probability plots · classification accuracy · tables · checklist · Lab 5"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Sessions 1-4: ordered and nominal outcomes, the assumption, the models
+- Today: **choose** between them, **show** the results, **report**
+- By the end you can:
+  - justify **ordinal vs multinomial**
+  - plot **predicted probabilities**
+  - judge a model without relying on **accuracy**
+  - write the **methods and results**
+:::
+
+# Topic 1 — Ordinal or multinomial? {background-color="#2C3E50"}
+
+## A decision
+
+| Question | Answer | Model |
+|---|---|---|
+| Is there a **meaningful order**? | No | **Multinomial** logistic |
+| | Yes | **Ordinal** logistic (proportional odds) |
+| Does **proportional odds** hold (Brant, cut-point ORs)? | Yes | one OR per predictor |
+| | One or a few predictors fail | **Partial** proportional odds |
+| | Many fail | **Multinomial** |
+
+## The same data, two models
+
+```{r}
+a_ord <- MASS::polr(anaemia ~ wealth + tribal, data = mat, Hess = TRUE)
+a_mn <- nnet::multinom(factor(anaemia, ordered = FALSE) ~ wealth + tribal, data = mat, trace = FALSE)
+c(ordinal = AIC(a_ord), multinomial = AIC(a_mn)) |> round(0)
+```
+
+::: {.key}
+The multinomial model has the **lower AIC** because it frees the tribal effect at each cut-point; it also needs **many more parameters** (`r length(coef(a_mn))` vs `r length(coef(a_ord)) + length(a_ord$zeta)`). When proportional odds **holds**, the ordinal model is simpler and **more powerful**. When it fails and cannot be relaxed, **multinomial is the safe fallback**.
+:::
+
+# Topic 2 — Showing results {background-color="#2C3E50"}
+
+## Probabilities against a predictor
+
+```{r}
+#| output-location: slide
+#| fig-height: 4
+m_ord <- MASS::polr(anaemia ~ wealth + education + bmi + anc_visits + parity + age + tribal + residence, data = mat, Hess = TRUE)
+nd <- data.frame(wealth = 1:5, education = factor("Primary", levels = levels(mat$education)), bmi = 20.5, anc_visits = 3, parity = 2, age = 27, tribal = factor("No", levels = c("No", "Yes")), residence = factor("Rural", levels = c("Urban", "Rural")))
+cbind(wealth = 1:5, as.data.frame(predict(m_ord, newdata = nd, type = "probs"))) |> pivot_longer(-wealth, names_to = "anaemia", values_to = "probability") |>
+  mutate(anaemia = factor(anaemia, levels = levels(mat$anaemia))) |>
+  ggplot(aes(wealth, probability, colour = anaemia)) + geom_line(linewidth = 1.2) + labs(x = "Wealth quintile", y = "Predicted probability", colour = NULL)
+```
+
+The same idea for the nominal outcome: predicted probabilities of each **delivery place** across wealth show **home falling and private rising**.
+
+## Accuracy is a weak summary
+
+```{r}
+mat$delivery <- relevel(mat$delivery, ref = "Home")
+mn <- nnet::multinom(delivery ~ wealth + education + anc_visits + residence + tribal, data = mat, trace = FALSE)
+c(model = mean(predict(mn) == mat$delivery), always_most_common = max(prop.table(table(mat$delivery)))) |> round(2)
+```
+
+::: {.warn}
+The model is right about **48%** of the time vs **32%** for always guessing the most common place. Covariates **shift probabilities** but **cannot predict an individual's choice**; accuracy ignores the probabilities. Use **predicted probabilities**, **AIC** or **log-likelihood**, and, if prediction is the aim, **calibration** and **proper scoring rules**.
+:::
+
+# Topic 3 — Reporting {background-color="#2C3E50"}
+
+## Wording
+
+::: {.good}
+**Ordinal:** "In a proportional-odds model adjusted for education, BMI, antenatal visits, parity, age, tribal group and residence, each higher wealth quintile was associated with **24% lower odds** of being in a worse anaemia category (OR 0.76, 95% CI ...). The assumption held for all predictors except tribal group, so its effect is reported separately at each cut-point."
+:::
+
+::: {.good}
+**Multinomial:** "Compared with home delivery, each wealth quintile increased the **relative risk** of delivering in a private hospital 2.8-fold (RRR 2.76, 95% CI ...)."
+:::
+
+## Reporting checklist
+
+::: {.incremental}
+1. **Outcome** categories, order, **counts**; **reference** category (nominal)
+2. **Model** and **why** (ordered or not); **software** (`MASS`, `nnet`, `ordinal`)
+3. **Odds ratios** (ordinal) or **relative risk ratios** (multinomial) with **95% CI**; adjustment set
+4. **Assumption check** (Brant, cut-specific ORs) and what you did
+5. **Predicted probabilities** for key profiles
+6. **Limitations**: sparse categories, many parameters, association not cause, self-reported outcomes
+:::
+
+## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `ordinal-workshop/labs/lab5_report.R`
+
+- ordinal vs multinomial fitted to the same ordered outcome
+- probability tables and a plot
+- accuracy against guessing; a publication table
+:::
+
+**Time:** 30 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q1", "When is the multinomial model a good choice for an ordered outcome?",
+         c("The sample of women is very small for a model with many parameters",
+           "All the predictors in the model are binary variables only",
+           "Proportional odds fails for many predictors and cannot be relaxed",
+           "The outcome has three ordered categories in the data set"), answer = 3,
+         explain = "Multinomial makes no ordering assumption, so it is the fallback when proportional odds clearly fails. It uses more parameters and so needs a larger sample.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q2", "The multinomial model classifies 48% of women correctly and always guessing the most common place gives 32%. What is the best conclusion?",
+         c("The model is excellent, since it beats guessing the most common place",
+           "Covariates shift probabilities, but accuracy is a weak summary",
+           "The model has failed and should be rejected for this use",
+           "The two numbers cannot be compared with each other in any way"), answer = 2,
+         explain = "Even a useful model may predict an individual's category poorly. Accuracy ignores the predicted probabilities, so judge the model by probabilities, likelihood and calibration.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q3", "Why plot predicted probabilities against a predictor such as wealth?",
+         c("They give the p-value of the Brant test for the predictor shown",
+           "They replace the need for odds ratios in any paper that is written",
+           "They show how each category's probability changes with it",
+           "They prove that the effect of the predictor is a causal one"), answer = 3,
+         explain = "The plot shows what the model implies for readers on the probability scale: for example home deliveries falling and private rising.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q4", "Which sentence is the best way to report an ordinal result when the assumption holds?",
+         c("Each higher quintile lowers the anaemia grade by 0.76 of one whole category",
+           "Wealthy women have 76% of the anaemia that is found in poor women",
+           "Wealth had a significant effect on anaemia because the p-value was small",
+           "Each higher quintile went with 24% lower odds of a worse category (OR 0.76)"), answer = 4,
+         explain = "State the OR for a higher category with its CI and the adjustment. Avoid treating categories as numbers or giving only a p-value.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("s5q5", "What belongs in the limitations of a categorical-outcome analysis?",
+         c("Sparse categories, many parameters, and association not being cause",
+           "The fact that the outcome has more than two categories to model",
+           "That odds ratios cannot be reported when there are many categories",
+           "That the software used for the analysis was written in the R language"), answer = 1,
+         explain = "Small categories and many parameters destabilise estimates, and an observational design supports association only.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- Ordered and the assumption holds: **ordinal**; fails for one or two: **partial**; many or no order: **multinomial**
+- Show **predicted probabilities** and plots, not only odds ratios
+- Do not judge by **classification accuracy**
+- Report **categories, reference, model, ORs/RRRs with CI, assumption check, limitations**
+:::
+
+**Next:** The cheat sheet and the Dungeons & Dataframes ordinal and nominal world (coming)

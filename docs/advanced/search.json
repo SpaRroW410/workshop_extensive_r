@@ -1,5 +1,327 @@
 [
   {
+    "objectID": "ordinal-workshop/s5_choosing_reporting.html#where-we-are",
+    "href": "ordinal-workshop/s5_choosing_reporting.html#where-we-are",
+    "title": "Session 5 — Choosing, Comparing and Reporting",
+    "section": "Where we are",
+    "text": "Where we are\n\nSessions 1-4: ordered and nominal outcomes, the assumption, the models\nToday: choose between them, show the results, report\nBy the end you can:\n\njustify ordinal vs multinomial\nplot predicted probabilities\njudge a model without relying on accuracy\nwrite the methods and results"
+  },
+  {
+    "objectID": "ordinal-workshop/s5_choosing_reporting.html#a-decision",
+    "href": "ordinal-workshop/s5_choosing_reporting.html#a-decision",
+    "title": "Session 5 — Choosing, Comparing and Reporting",
+    "section": "A decision",
+    "text": "A decision\n\n\n\n\n\n\n\n\nQuestion\nAnswer\nModel\n\n\n\n\nIs there a meaningful order?\nNo\nMultinomial logistic\n\n\n\nYes\nOrdinal logistic (proportional odds)\n\n\nDoes proportional odds hold (Brant, cut-point ORs)?\nYes\none OR per predictor\n\n\n\nOne or a few predictors fail\nPartial proportional odds\n\n\n\nMany fail\nMultinomial"
+  },
+  {
+    "objectID": "ordinal-workshop/s5_choosing_reporting.html#the-same-data-two-models",
+    "href": "ordinal-workshop/s5_choosing_reporting.html#the-same-data-two-models",
+    "title": "Session 5 — Choosing, Comparing and Reporting",
+    "section": "The same data, two models",
+    "text": "The same data, two models\n\na_ord &lt;- MASS::polr(anaemia ~ wealth + tribal, data = mat, Hess = TRUE)\na_mn &lt;- nnet::multinom(factor(anaemia, ordered = FALSE) ~ wealth + tribal, data = mat, trace = FALSE)\nc(ordinal = AIC(a_ord), multinomial = AIC(a_mn)) |&gt; round(0)\n\n    ordinal multinomial \n       3200        3170 \n\n\n\nThe multinomial model has the lower AIC because it frees the tribal effect at each cut-point; it also needs many more parameters (9 vs 5). When proportional odds holds, the ordinal model is simpler and more powerful. When it fails and cannot be relaxed, multinomial is the safe fallback."
+  },
+  {
+    "objectID": "ordinal-workshop/s5_choosing_reporting.html#probabilities-against-a-predictor",
+    "href": "ordinal-workshop/s5_choosing_reporting.html#probabilities-against-a-predictor",
+    "title": "Session 5 — Choosing, Comparing and Reporting",
+    "section": "Probabilities against a predictor",
+    "text": "Probabilities against a predictor\n\nm_ord &lt;- MASS::polr(anaemia ~ wealth + education + bmi + anc_visits + parity + age + tribal + residence, data = mat, Hess = TRUE)\nnd &lt;- data.frame(wealth = 1:5, education = factor(\"Primary\", levels = levels(mat$education)), bmi = 20.5, anc_visits = 3, parity = 2, age = 27, tribal = factor(\"No\", levels = c(\"No\", \"Yes\")), residence = factor(\"Rural\", levels = c(\"Urban\", \"Rural\")))\ncbind(wealth = 1:5, as.data.frame(predict(m_ord, newdata = nd, type = \"probs\"))) |&gt; pivot_longer(-wealth, names_to = \"anaemia\", values_to = \"probability\") |&gt;\n  mutate(anaemia = factor(anaemia, levels = levels(mat$anaemia))) |&gt;\n  ggplot(aes(wealth, probability, colour = anaemia)) + geom_line(linewidth = 1.2) + labs(x = \"Wealth quintile\", y = \"Predicted probability\", colour = NULL)\n\n\nThe same idea for the nominal outcome: predicted probabilities of each delivery place across wealth show home falling and private rising."
+  },
+  {
+    "objectID": "ordinal-workshop/s5_choosing_reporting.html#probabilities-against-a-predictor-output",
+    "href": "ordinal-workshop/s5_choosing_reporting.html#probabilities-against-a-predictor-output",
+    "title": "Session 5 — Choosing, Comparing and Reporting",
+    "section": "Probabilities against a predictor",
+    "text": "Probabilities against a predictor"
+  },
+  {
+    "objectID": "ordinal-workshop/s5_choosing_reporting.html#accuracy-is-a-weak-summary",
+    "href": "ordinal-workshop/s5_choosing_reporting.html#accuracy-is-a-weak-summary",
+    "title": "Session 5 — Choosing, Comparing and Reporting",
+    "section": "Accuracy is a weak summary",
+    "text": "Accuracy is a weak summary\n\nmat$delivery &lt;- relevel(mat$delivery, ref = \"Home\")\nmn &lt;- nnet::multinom(delivery ~ wealth + education + anc_visits + residence + tribal, data = mat, trace = FALSE)\nc(model = mean(predict(mn) == mat$delivery), always_most_common = max(prop.table(table(mat$delivery)))) |&gt; round(2)\n\n             model always_most_common \n              0.48               0.32 \n\n\n\nThe model is right about 48% of the time vs 32% for always guessing the most common place. Covariates shift probabilities but cannot predict an individual’s choice; accuracy ignores the probabilities. Use predicted probabilities, AIC or log-likelihood, and, if prediction is the aim, calibration and proper scoring rules."
+  },
+  {
+    "objectID": "ordinal-workshop/s5_choosing_reporting.html#wording",
+    "href": "ordinal-workshop/s5_choosing_reporting.html#wording",
+    "title": "Session 5 — Choosing, Comparing and Reporting",
+    "section": "Wording",
+    "text": "Wording\n\nOrdinal: “In a proportional-odds model adjusted for education, BMI, antenatal visits, parity, age, tribal group and residence, each higher wealth quintile was associated with 24% lower odds of being in a worse anaemia category (OR 0.76, 95% CI …). The assumption held for all predictors except tribal group, so its effect is reported separately at each cut-point.”\n\n\nMultinomial: “Compared with home delivery, each wealth quintile increased the relative risk of delivering in a private hospital 2.8-fold (RRR 2.76, 95% CI …).”"
+  },
+  {
+    "objectID": "ordinal-workshop/s5_choosing_reporting.html#reporting-checklist",
+    "href": "ordinal-workshop/s5_choosing_reporting.html#reporting-checklist",
+    "title": "Session 5 — Choosing, Comparing and Reporting",
+    "section": "Reporting checklist",
+    "text": "Reporting checklist\n\nOutcome categories, order, counts; reference category (nominal)\nModel and why (ordered or not); software (MASS, nnet, ordinal)\nOdds ratios (ordinal) or relative risk ratios (multinomial) with 95% CI; adjustment set\nAssumption check (Brant, cut-specific ORs) and what you did\nPredicted probabilities for key profiles\nLimitations: sparse categories, many parameters, association not cause, self-reported outcomes"
+  },
+  {
+    "objectID": "ordinal-workshop/s5_choosing_reporting.html#switch-to-r-lab-5",
+    "href": "ordinal-workshop/s5_choosing_reporting.html#switch-to-r-lab-5",
+    "title": "Session 5 — Choosing, Comparing and Reporting",
+    "section": "🔧 Switch to R — Lab 5",
+    "text": "🔧 Switch to R — Lab 5\n\nFile: ordinal-workshop/labs/lab5_report.R\n\nordinal vs multinomial fitted to the same ordered outcome\nprobability tables and a plot\naccuracy against guessing; a publication table\n\n\nTime: 30 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "ordinal-workshop/s5_choosing_reporting.html#self-check-quiz-15",
+    "href": "ordinal-workshop/s5_choosing_reporting.html#self-check-quiz-15",
+    "title": "Session 5 — Choosing, Comparing and Reporting",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nWhen is the multinomial model a good choice for an ordered outcome?\n\nThe sample of women is very small for a model with many parameters\nAll the predictors in the model are binary variables only\nProportional odds fails for many predictors and cannot be relaxed\nThe outcome has three ordered categories in the data set"
+  },
+  {
+    "objectID": "ordinal-workshop/s5_choosing_reporting.html#self-check-quiz-25",
+    "href": "ordinal-workshop/s5_choosing_reporting.html#self-check-quiz-25",
+    "title": "Session 5 — Choosing, Comparing and Reporting",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nThe multinomial model classifies 48% of women correctly and always guessing the most common place gives 32%. What is the best conclusion?\n\nThe model is excellent, since it beats guessing the most common place\nCovariates shift probabilities, but accuracy is a weak summary\nThe model has failed and should be rejected for this use\nThe two numbers cannot be compared with each other in any way"
+  },
+  {
+    "objectID": "ordinal-workshop/s5_choosing_reporting.html#self-check-quiz-35",
+    "href": "ordinal-workshop/s5_choosing_reporting.html#self-check-quiz-35",
+    "title": "Session 5 — Choosing, Comparing and Reporting",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nWhy plot predicted probabilities against a predictor such as wealth?\n\nThey give the p-value of the Brant test for the predictor shown\nThey replace the need for odds ratios in any paper that is written\nThey show how each category’s probability changes with it\nThey prove that the effect of the predictor is a causal one"
+  },
+  {
+    "objectID": "ordinal-workshop/s5_choosing_reporting.html#self-check-quiz-45",
+    "href": "ordinal-workshop/s5_choosing_reporting.html#self-check-quiz-45",
+    "title": "Session 5 — Choosing, Comparing and Reporting",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nWhich sentence is the best way to report an ordinal result when the assumption holds?\n\nEach higher quintile lowers the anaemia grade by 0.76 of one whole category\nWealthy women have 76% of the anaemia that is found in poor women\nWealth had a significant effect on anaemia because the p-value was small\nEach higher quintile went with 24% lower odds of a worse category (OR 0.76)"
+  },
+  {
+    "objectID": "ordinal-workshop/s5_choosing_reporting.html#self-check-quiz-55",
+    "href": "ordinal-workshop/s5_choosing_reporting.html#self-check-quiz-55",
+    "title": "Session 5 — Choosing, Comparing and Reporting",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nWhat belongs in the limitations of a categorical-outcome analysis?\n\nSparse categories, many parameters, and association not being cause\nThe fact that the outcome has more than two categories to model\nThat odds ratios cannot be reported when there are many categories\nThat the software used for the analysis was written in the R language"
+  },
+  {
+    "objectID": "ordinal-workshop/s5_choosing_reporting.html#score-and-take-home",
+    "href": "ordinal-workshop/s5_choosing_reporting.html#score-and-take-home",
+    "title": "Session 5 — Choosing, Comparing and Reporting",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nOrdered and the assumption holds: ordinal; fails for one or two: partial; many or no order: multinomial\nShow predicted probabilities and plots, not only odds ratios\nDo not judge by classification accuracy\nReport categories, reference, model, ORs/RRRs with CI, assumption check, limitations\n\nNext: The cheat sheet and the Dungeons & Dataframes ordinal and nominal world (coming)"
+  },
+  {
+    "objectID": "ordinal-workshop/s3_proportional_odds_check.html#where-we-are",
+    "href": "ordinal-workshop/s3_proportional_odds_check.html#where-we-are",
+    "title": "Session 3 — Checking Proportional Odds",
+    "section": "Where we are",
+    "text": "Where we are\n\nSession 2: one odds ratio per predictor\nToday: is that single OR legitimate?\nBy the end you can:\n\nrun and read the Brant test\nsee a violation with separate binary models\nfit a partial proportional-odds model\ndecide what to do"
+  },
+  {
+    "objectID": "ordinal-workshop/s3_proportional_odds_check.html#the-brant-test",
+    "href": "ordinal-workshop/s3_proportional_odds_check.html#the-brant-test",
+    "title": "Session 3 — Checking Proportional Odds",
+    "section": "The Brant test",
+    "text": "The Brant test\n\nm2 &lt;- MASS::polr(anaemia ~ wealth + education + bmi + anc_visits + parity + age + tribal + residence, data = mat, Hess = TRUE)\nbr &lt;- brant(m2); round(br[, \"probability\"], 3)\n\n---------------------------------------------------- \nTest for        X2  df  probability \n---------------------------------------------------- \nOmnibus         58.74   20  0\nwealth          1.11    2   0.57\neducationPrimary    1.44    2   0.49\neducationSecondary  1.68    2   0.43\neducationHigher 2.74    2   0.25\nbmi         0.64    2   0.72\nanc_visits      1.33    2   0.52\nparity          2.55    2   0.28\nage         0.86    2   0.65\ntribalYes       39.03   2   0\nresidenceRural      1.85    2   0.4\n---------------------------------------------------- \n\nH0: Parallel Regression Assumption holds\n\n\n           Omnibus             wealth   educationPrimary educationSecondary \n             0.000              0.574              0.486              0.433 \n   educationHigher                bmi         anc_visits             parity \n             0.254              0.725              0.515              0.279 \n               age          tribalYes     residenceRural \n             0.650              0.000              0.396"
+  },
+  {
+    "objectID": "ordinal-workshop/s3_proportional_odds_check.html#reading-the-brant-test",
+    "href": "ordinal-workshop/s3_proportional_odds_check.html#reading-the-brant-test",
+    "title": "Session 3 — Checking Proportional Odds",
+    "section": "Reading the Brant test",
+    "text": "Reading the Brant test\n\nOmnibus test: do any predictors violate the assumption?\nA p-value per predictor: here tribal group (p about 0); wealth (0.57), education, BMI and the others look fine\nWith many predictors, expect the occasional small p by chance; look at the effect, not only at p\nIt warns about sparse cells from continuous predictors: ignore the warning if the results are stable"
+  },
+  {
+    "objectID": "ordinal-workshop/s3_proportional_odds_check.html#see-it",
+    "href": "ordinal-workshop/s3_proportional_odds_check.html#see-it",
+    "title": "Session 3 — Checking Proportional Odds",
+    "section": "See it",
+    "text": "See it\n\ncuts &lt;- c(\"Mild\", \"Moderate\", \"Severe\")\nor_for &lt;- function(v) sapply(cuts, \\(k) exp(coef(glm(I(as.numeric(mat$anaemia) &gt;= which(levels(mat$anaemia) == k)) ~ wealth + tribal, family = binomial, data = mat))[v]))\nrbind(tribal = or_for(\"tribalYes\"), wealth = or_for(\"wealth\")) |&gt; round(2)\n\n       Mild.tribalYes Moderate.tribalYes Severe.tribalYes\ntribal           1.13               1.05             3.23\nwealth           0.58               0.60             0.61\n\n\n\nEach column is a separate binary logistic model: “mild or worse”, “moderate or worse”, “severe”. Wealth’s OR is the same in all three (about 0.6): proportional odds holds. Tribal’s OR jumps to about 3 for severe anaemia only: it does not."
+  },
+  {
+    "objectID": "ordinal-workshop/s3_proportional_odds_check.html#partial-proportional-odds",
+    "href": "ordinal-workshop/s3_proportional_odds_check.html#partial-proportional-odds",
+    "title": "Session 3 — Checking Proportional Odds",
+    "section": "Partial proportional odds",
+    "text": "Partial proportional odds\nFree only the offending predictor (ordinal::clm with nominal =):\n\nm_po  &lt;- ordinal::clm(anaemia ~ wealth + education + bmi + anc_visits + parity + age + tribal + residence, data = mat)\nm_ppo &lt;- ordinal::clm(anaemia ~ wealth + education + bmi + anc_visits + parity + age + residence, nominal = ~ tribal, data = mat)\nanova(m_po, m_ppo)\n\nLikelihood ratio tests of cumulative link models:\n \n      formula:                                                                           \nm_po  anaemia ~ wealth + education + bmi + anc_visits + parity + age + tribal + residence\nm_ppo anaemia ~ wealth + education + bmi + anc_visits + parity + age + residence         \n      nominal: link: threshold:\nm_po  ~1       logit flexible  \nm_ppo ~tribal  logit flexible  \n\n      no.par    AIC  logLik LR.stat df Pr(&gt;Chisq)    \nm_po      13 3134.6 -1554.3                          \nm_ppo     15 3101.0 -1535.5  37.575  2  6.927e-09 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1"
+  },
+  {
+    "objectID": "ordinal-workshop/s3_proportional_odds_check.html#reading-the-comparison",
+    "href": "ordinal-workshop/s3_proportional_odds_check.html#reading-the-comparison",
+    "title": "Session 3 — Checking Proportional Odds",
+    "section": "Reading the comparison",
+    "text": "Reading the comparison\n\nThe likelihood-ratio test is very small: freeing tribal improves the fit a lot\nAll other predictors keep one odds ratio each\nTribal gets a separate effect at each threshold (for a worse category the OR is 1 / exp(coefficient): about 1.0, 0.9 and 2.8)"
+  },
+  {
+    "objectID": "ordinal-workshop/s3_proportional_odds_check.html#options-when-the-assumption-fails",
+    "href": "ordinal-workshop/s3_proportional_odds_check.html#options-when-the-assumption-fails",
+    "title": "Session 3 — Checking Proportional Odds",
+    "section": "Options when the assumption fails",
+    "text": "Options when the assumption fails\n\n\n\n\n\n\n\nOption\nUse when\n\n\n\n\nPartial proportional odds\none or a few predictors violate it\n\n\nReport cut-point-specific ORs (separate binary models)\nsimple, transparent\n\n\nMultinomial model\nmany violations, or the order is doubtful\n\n\nKeep the single OR\nmild violation, only a summary needed (say so)\n\n\nMerge categories\na sparse category drives it"
+  },
+  {
+    "objectID": "ordinal-workshop/s3_proportional_odds_check.html#do-not-report-one-or-blindly",
+    "href": "ordinal-workshop/s3_proportional_odds_check.html#do-not-report-one-or-blindly",
+    "title": "Session 3 — Checking Proportional Odds",
+    "section": "Do not report one OR blindly",
+    "text": "Do not report one OR blindly\n\nc(single_OR_tribal = round(exp(coef(m_po))[[\"tribalYes\"]], 2))\n\nsingle_OR_tribal \n            1.11 \n\n\n\nThe single OR of about 1.1 averages “almost no effect on mild and moderate anaemia” with “a large effect on severe anaemia”. Reporting it hides the finding that matters clinically."
+  },
+  {
+    "objectID": "ordinal-workshop/s3_proportional_odds_check.html#switch-to-r-lab-3",
+    "href": "ordinal-workshop/s3_proportional_odds_check.html#switch-to-r-lab-3",
+    "title": "Session 3 — Checking Proportional Odds",
+    "section": "🔧 Switch to R — Lab 3",
+    "text": "🔧 Switch to R — Lab 3\n\nFile: ordinal-workshop/labs/lab3_po.R\n\nbrant() omnibus and per predictor\nbinary models at each cut-point\nordinal::clm() with nominal = and a likelihood-ratio test\n\n\nTime: 35 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "ordinal-workshop/s3_proportional_odds_check.html#self-check-quiz-15",
+    "href": "ordinal-workshop/s3_proportional_odds_check.html#self-check-quiz-15",
+    "title": "Session 3 — Checking Proportional Odds",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nThe Brant test gives p &lt; 0.001 for tribal group and p = 0.57 for wealth. What does this mean?\n\nTribal group has no effect while wealth has a very strong effect\nBoth predictors violate proportional odds, in different patterns\nProportional odds fails for tribal group, not for wealth\nThe model must be discarded for every one of the predictors in it"
+  },
+  {
+    "objectID": "ordinal-workshop/s3_proportional_odds_check.html#self-check-quiz-25",
+    "href": "ordinal-workshop/s3_proportional_odds_check.html#self-check-quiz-25",
+    "title": "Session 3 — Checking Proportional Odds",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nSeparate binary models give tribal ORs of 1.1 (mild or worse), 1.0 (moderate or worse) and 3.2 (severe). What does this show?\n\nThe tribal effect is the same at each cut-point, so the model is right\nThe effect varies across cut-points, so the assumption fails\nSevere anaemia was measured incorrectly in the tribal women studied\nThe sample of tribal women is too large for the test to be valid"
+  },
+  {
+    "objectID": "ordinal-workshop/s3_proportional_odds_check.html#self-check-quiz-35",
+    "href": "ordinal-workshop/s3_proportional_odds_check.html#self-check-quiz-35",
+    "title": "Session 3 — Checking Proportional Odds",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nWhat does a partial proportional-odds model do?\n\nIt drops the problem predictor from the model that is being fitted\nIt converts the outcome into a binary variable for every woman\nIt frees the problem predictor, keeping one OR for the rest\nIt estimates a separate model for each woman in the data"
+  },
+  {
+    "objectID": "ordinal-workshop/s3_proportional_odds_check.html#self-check-quiz-45",
+    "href": "ordinal-workshop/s3_proportional_odds_check.html#self-check-quiz-45",
+    "title": "Session 3 — Checking Proportional Odds",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nA likelihood-ratio test comparing the proportional and the partial model has p &lt; 0.001. What do you conclude?\n\nThe proportional-odds model fits better than the partial model does\nThe two models are identical, so either one may be reported\nThe predictor must be removed from both of the models being compared\nFreeing it improves the fit a lot: the assumption fails"
+  },
+  {
+    "objectID": "ordinal-workshop/s3_proportional_odds_check.html#self-check-quiz-55",
+    "href": "ordinal-workshop/s3_proportional_odds_check.html#self-check-quiz-55",
+    "title": "Session 3 — Checking Proportional Odds",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nWhich is the best way to report a predictor that violates proportional odds?\n\nGive its OR at each cut-point and explain the pattern seen\nReport the single OR and stay silent about the violation found\nReport only the p-value from the Brant test, with no estimate\nDelete the predictor from the data so that the model fits again"
+  },
+  {
+    "objectID": "ordinal-workshop/s3_proportional_odds_check.html#score-and-take-home",
+    "href": "ordinal-workshop/s3_proportional_odds_check.html#score-and-take-home",
+    "title": "Session 3 — Checking Proportional Odds",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nBrant test per predictor + omnibus; see it with binary models at each cut\nPartial proportional odds with clm(nominal = ~ x)\nAlternatives: cut-specific ORs, multinomial, merge categories\nNever report a single OR that hides a violation\n\nNext: Session 4: multinomial logistic regression"
+  },
+  {
+    "objectID": "ordinal-workshop/s1_categorical_outcomes.html#where-we-are",
+    "href": "ordinal-workshop/s1_categorical_outcomes.html#where-we-are",
+    "title": "Session 1 — Categorical Outcomes: Nominal or Ordered?",
+    "section": "Where we are",
+    "text": "Where we are\n\nRegression workshop: continuous (linear) and binary (logistic) outcomes\nToday: outcomes with three or more categories: anaemia severity, place of delivery, BP stage, disease stage\nBy the end you can:\n\nsay whether an outcome is nominal or ordered, and why it matters\nread cumulative proportions\nexplain why linear regression and dichotomising are poor choices\nspot sparse categories"
+  },
+  {
+    "objectID": "ordinal-workshop/s1_categorical_outcomes.html#our-data-a-maternal-health-survey",
+    "href": "ordinal-workshop/s1_categorical_outcomes.html#our-data-a-maternal-health-survey",
+    "title": "Session 1 — Categorical Outcomes: Nominal or Ordered?",
+    "section": "Our data: a maternal health survey",
+    "text": "Our data: a maternal health survey\n\n\n\n1,500 women with a birth in the last 3 years (synthetic, built like an NFHS-type survey)\nAnaemia in four ordered levels: None &lt; Mild &lt; Moderate &lt; Severe\nPlace of delivery in four unordered levels: Home, PHC, Public hospital, Private hospital\nPredictors: wealth quintile, education, residence, tribal group, antenatal visits, BMI, parity, age\n\n\n\nmat |&gt; select(id, age, education, wealth, tribal, anc_visits, anaemia, delivery) |&gt; head(6)\n\n# A tibble: 6 × 8\n  id      age education wealth tribal anc_visits anaemia  delivery        \n  &lt;chr&gt; &lt;dbl&gt; &lt;fct&gt;      &lt;dbl&gt; &lt;fct&gt;       &lt;dbl&gt; &lt;ord&gt;    &lt;fct&gt;           \n1 W0001    23 None           2 No              2 Moderate Public hospital \n2 W0002    28 Secondary      4 No              4 None     Private hospital\n3 W0003    27 Secondary      2 No              3 Mild     Public hospital \n4 W0004    25 Secondary      3 Yes             7 None     Public hospital \n5 W0005    30 Primary        2 Yes             3 Severe   Home            \n6 W0006    17 None           3 No              5 None     Public hospital"
+  },
+  {
+    "objectID": "ordinal-workshop/s1_categorical_outcomes.html#nominal-or-ordered",
+    "href": "ordinal-workshop/s1_categorical_outcomes.html#nominal-or-ordered",
+    "title": "Session 1 — Categorical Outcomes: Nominal or Ordered?",
+    "section": "Nominal or ordered?",
+    "text": "Nominal or ordered?\n\n\n\n\n\n\n\n\nOutcome\nType\nModel family\n\n\n\n\nHypertension yes/no\nbinary\nlogistic\n\n\nAnaemia: none, mild, moderate, severe\nordered\nordinal logistic (proportional odds)\n\n\nPlace of delivery\nnominal\nmultinomial logistic\n\n\nCases per month\ncount\nPoisson / negative binomial\n\n\nTime to death\ntime-to-event\nCox\n\n\n\n\nAsk: does the order of the categories mean something? Mild anaemia is between none and moderate, so anaemia is ordered. “PHC” is not between “Home” and “Public hospital” in any statistical sense, so delivery place is nominal."
+  },
+  {
+    "objectID": "ordinal-workshop/s1_categorical_outcomes.html#cumulative-proportions",
+    "href": "ordinal-workshop/s1_categorical_outcomes.html#cumulative-proportions",
+    "title": "Session 1 — Categorical Outcomes: Nominal or Ordered?",
+    "section": "Cumulative proportions",
+    "text": "Cumulative proportions\n\nround(100 * prop.table(table(mat$anaemia)), 1)\n\n\n    None     Mild Moderate   Severe \n    54.4     26.5     12.2      6.9 \n\nround(100 * cumsum(prop.table(table(mat$anaemia))), 1)\n\n    None     Mild Moderate   Severe \n    54.4     80.9     93.1    100.0 \n\n\n\nThe second line is P(Y ≤ k): 81% of women have mild anaemia or better\nThe proportional-odds model (Session 2) models the log odds of these cumulative probabilities\nNominal outcomes have no cumulative scale: each category is compared with a reference"
+  },
+  {
+    "objectID": "ordinal-workshop/s1_categorical_outcomes.html#anaemia-by-wealth",
+    "href": "ordinal-workshop/s1_categorical_outcomes.html#anaemia-by-wealth",
+    "title": "Session 1 — Categorical Outcomes: Nominal or Ordered?",
+    "section": "Anaemia by wealth",
+    "text": "Anaemia by wealth\n\nround(100 * prop.table(table(mat$wealth, mat$anaemia), 1), 1)\n\n   \n    None Mild Moderate Severe\n  1 29.6 32.7     20.8   16.9\n  2 41.3 36.9     14.2    7.7\n  3 59.3 23.7     11.4    5.7\n  4 69.1 20.8      7.3    2.8\n  5 78.2 14.5      6.7    0.6\n\n\n\nggplot(mat, aes(factor(wealth), fill = anaemia)) + geom_bar(position = \"fill\") + scale_fill_brewer(palette = \"OrRd\", direction = -1) +\n  labs(x = \"Wealth quintile (1 = poorest)\", y = \"Proportion\", fill = NULL)\n\n\n\nThe share with no anaemia rises from about 30% to 78%, and severe anaemia almost vanishes in the richest quintile. A 100% stacked bar is the standard picture for an ordered outcome."
+  },
+  {
+    "objectID": "ordinal-workshop/s1_categorical_outcomes.html#anaemia-by-wealth-output",
+    "href": "ordinal-workshop/s1_categorical_outcomes.html#anaemia-by-wealth-output",
+    "title": "Session 1 — Categorical Outcomes: Nominal or Ordered?",
+    "section": "Anaemia by wealth",
+    "text": "Anaemia by wealth"
+  },
+  {
+    "objectID": "ordinal-workshop/s1_categorical_outcomes.html#treating-categories-as-numbers",
+    "href": "ordinal-workshop/s1_categorical_outcomes.html#treating-categories-as-numbers",
+    "title": "Session 1 — Categorical Outcomes: Nominal or Ordered?",
+    "section": "Treating categories as numbers",
+    "text": "Treating categories as numbers\n\ncoef(lm(as.numeric(anaemia) ~ wealth, data = mat))[\"wealth\"]\n\n    wealth \n-0.2395462 \n\n\n\n\nEqual spacing assumed: None to Mild is treated like Moderate to Severe\n“-0.24 categories per quintile” is not interpretable and can be misleading at the extremes"
+  },
+  {
+    "objectID": "ordinal-workshop/s1_categorical_outcomes.html#dichotomising",
+    "href": "ordinal-workshop/s1_categorical_outcomes.html#dichotomising",
+    "title": "Session 1 — Categorical Outcomes: Nominal or Ordered?",
+    "section": "Dichotomising",
+    "text": "Dichotomising\n\nCollapsing to “any anaemia vs none” throws away the difference between mild and severe, loses power, and depends on where you cut. Use it for a simple summary, not as the analysis when the ordering is available."
+  },
+  {
+    "objectID": "ordinal-workshop/s1_categorical_outcomes.html#checklist-before-modelling",
+    "href": "ordinal-workshop/s1_categorical_outcomes.html#checklist-before-modelling",
+    "title": "Session 1 — Categorical Outcomes: Nominal or Ordered?",
+    "section": "Checklist before modelling",
+    "text": "Checklist before modelling\n\n\nNominal or ordered? (order meaningful?)\nCounts per category: the smallest has about 103 women here; very small categories (a few per cent or fewer than about 10 per predictor) make estimates unstable: merge neighbouring categories if it makes clinical sense\nReference category (nominal): choose one that is large and meaningful (Home)\nPlan the assumption check (proportional odds)"
+  },
+  {
+    "objectID": "ordinal-workshop/s1_categorical_outcomes.html#switch-to-r-lab-1",
+    "href": "ordinal-workshop/s1_categorical_outcomes.html#switch-to-r-lab-1",
+    "title": "Session 1 — Categorical Outcomes: Nominal or Ordered?",
+    "section": "🔧 Switch to R — Lab 1",
+    "text": "🔧 Switch to R — Lab 1\n\nFile: ordinal-workshop/labs/lab1_outcomes.R\n\nlevels, percentages and cumulative percentages\n100% stacked bars by wealth\nthe wrong model (linear on 1-4) and sparse-category check\n\n\nTime: 30 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "ordinal-workshop/s1_categorical_outcomes.html#self-check-quiz-15",
+    "href": "ordinal-workshop/s1_categorical_outcomes.html#self-check-quiz-15",
+    "title": "Session 1 — Categorical Outcomes: Nominal or Ordered?",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nWhich outcome is ordered, and so suited to an ordinal model?\n\nPlace of delivery: home, PHC, or a hospital\nBlood group: A, B, AB or O in the patient\nAnaemia graded none, mild, moderate or severe\nReligion recorded in the survey of households"
+  },
+  {
+    "objectID": "ordinal-workshop/s1_categorical_outcomes.html#self-check-quiz-25",
+    "href": "ordinal-workshop/s1_categorical_outcomes.html#self-check-quiz-25",
+    "title": "Session 1 — Categorical Outcomes: Nominal or Ordered?",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nThe cumulative percentages for anaemia are 54, 81, 93 and 100. What does 81 mean?\n\n81% of women have mild anaemia\n81% of women have no or mild anaemia\n81% of women have at least mild anaemia\nThe odds of mild anaemia are 81"
+  },
+  {
+    "objectID": "ordinal-workshop/s1_categorical_outcomes.html#self-check-quiz-35",
+    "href": "ordinal-workshop/s1_categorical_outcomes.html#self-check-quiz-35",
+    "title": "Session 1 — Categorical Outcomes: Nominal or Ordered?",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nA linear regression of anaemia coded 1 to 4 on wealth is a poor choice because it…\n\nIt cannot produce a coefficient for wealth from the data supplied\nIt needs a much smaller number of women than the other models do\nIt assumes equal gaps between the categories in severity\nIt always gives a larger p-value for wealth than ordinal models do"
+  },
+  {
+    "objectID": "ordinal-workshop/s1_categorical_outcomes.html#self-check-quiz-45",
+    "href": "ordinal-workshop/s1_categorical_outcomes.html#self-check-quiz-45",
+    "title": "Session 1 — Categorical Outcomes: Nominal or Ordered?",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nWhat is the main cost of dichotomising an ordered outcome into ‘any anaemia’ vs ‘none’?\n\nIt makes the outcome nominal and so impossible to model at all\nIt requires the outcome data to be normally distributed in each group\nIt changes the direction of the effect in the very large majority of data sets\nIt discards the mild-severe difference and loses power"
+  },
+  {
+    "objectID": "ordinal-workshop/s1_categorical_outcomes.html#self-check-quiz-55",
+    "href": "ordinal-workshop/s1_categorical_outcomes.html#self-check-quiz-55",
+    "title": "Session 1 — Categorical Outcomes: Nominal or Ordered?",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nWhat should you check about the categories of an outcome before fitting a model?\n\nThat no category is so small that estimates become unstable\nThat the categories are listed in alphabetical order by name\nThat every category has exactly the same number of women in it\nThat the outcome is stored in the data file as a number"
+  },
+  {
+    "objectID": "ordinal-workshop/s1_categorical_outcomes.html#score-and-take-home",
+    "href": "ordinal-workshop/s1_categorical_outcomes.html#score-and-take-home",
+    "title": "Session 1 — Categorical Outcomes: Nominal or Ordered?",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nOrdered or nominal? decides the model family\nOrdered: cumulative proportions, 100% stacked bars\nDo not code categories as 1-4 in linear regression; avoid needless dichotomising\nCheck sparse categories and choose a sensible reference (nominal)\n\nNext: Session 2: ordinal logistic regression"
+  },
+  {
     "objectID": "counts-workshop/s5_reporting_extensions.html#where-we-are",
     "href": "counts-workshop/s5_reporting_extensions.html#where-we-are",
     "title": "Session 5 — Reporting and Extensions",
@@ -3420,21 +3742,21 @@
     "href": "welcome.html#what-this-track-covers",
     "title": "Welcome",
     "section": "📚 What This Track Covers",
-    "text": "📚 What This Track Covers\n\n⏳ Survival Analysis Workshop — 5 sessions, 5 labs, quizzes, cheat sheet\n🦟 Counts and Rates Workshop — 5 sessions, 5 labs, quizzes, cheat sheet\n📁 R Foundations & Data Wrangling (+ Applied Examples)\n📊 Best Practices & Plot Matching\n🎨 ggplot2 Modules 1–4 (Complete)\n🖼️ Basic, Intermediate & Advanced Plot Gallery\n🔗 Specialized Plots — Merged, Statistical & Interactive\n🧪 ggstatsplot — Intro, Intermediate & Advanced\n📋 gtsummary Tables & Deep Statistical Analysis\n📝 Quarto — Basics, Dynamic Documents & Publication\n⚙️ Full Exporting, Debugging & Advanced Tools\n🏥 Applied NCTOH Healthcare Examples"
+    "text": "📚 What This Track Covers\n\n🪜 Ordinal and Multinomial Outcomes Workshop — 5 sessions, 5 labs, quizzes, cheat sheet\n⏳ Survival Analysis Workshop — 5 sessions, 5 labs, quizzes, cheat sheet\n🦟 Counts and Rates Workshop — 5 sessions, 5 labs, quizzes, cheat sheet\n📁 R Foundations & Data Wrangling (+ Applied Examples)\n📊 Best Practices & Plot Matching\n🎨 ggplot2 Modules 1–4 (Complete)\n🖼️ Basic, Intermediate & Advanced Plot Gallery\n🔗 Specialized Plots — Merged, Statistical & Interactive\n🧪 ggstatsplot — Intro, Intermediate & Advanced\n📋 gtsummary Tables & Deep Statistical Analysis\n📝 Quarto — Basics, Dynamic Documents & Publication\n⚙️ Full Exporting, Debugging & Advanced Tools\n🏥 Applied NCTOH Healthcare Examples"
   },
   {
     "objectID": "welcome.html#find-your-way-around",
     "href": "welcome.html#find-your-way-around",
     "title": "Welcome",
     "section": "🧭 Find Your Way Around",
-    "text": "🧭 Find Your Way Around\nUse the navigation bar above to browse all modules. Key starting points:\n\n⏳ Survival Workshop — Slides, labs and quizzes on time-to-event data: Kaplan-Meier, log-rank, Cox (start at Session 1)\n🦟 Counts Workshop — Slides, labs and quizzes on counts and rates: Poisson, negative binomial, offsets (start at Session 1)\n📁 R Foundations — R syntax, wrangling, and full NCTOH applied examples\n📊 Data Visualization — All four ggplot2 modules, advanced and interactive plots\n🧪 Statistical Analysis — Full ggstatsplot, gtsummary, and deep analysis\n📝 Reproducibility — Quarto basics through publication-ready documents\n\n\nThe complete navbar gives full access to all workshop content."
+    "text": "🧭 Find Your Way Around\nUse the navigation bar above to browse all modules. Key starting points:\n\n🪜 Ordinal & Multinomial Workshop — Slides, labs and quizzes: ordinal and multinomial logistic regression (start at Session 1)\n⏳ Survival Workshop — Slides, labs and quizzes on time-to-event data: Kaplan-Meier, log-rank, Cox (start at Session 1)\n🦟 Counts Workshop — Slides, labs and quizzes on counts and rates: Poisson, negative binomial, offsets (start at Session 1)\n📁 R Foundations — R syntax, wrangling, and full NCTOH applied examples\n📊 Data Visualization — All four ggplot2 modules, advanced and interactive plots\n🧪 Statistical Analysis — Full ggstatsplot, gtsummary, and deep analysis\n📝 Reproducibility — Quarto basics through publication-ready documents\n\n\nThe complete navbar gives full access to all workshop content."
   },
   {
     "objectID": "welcome.html#downloadable-resources",
     "href": "welcome.html#downloadable-resources",
     "title": "Welcome",
     "section": "📥 Downloadable Resources",
-    "text": "📥 Downloadable Resources\nAll files for this track are available below, grouped by type.\n\n📄 R Scripts\n\nMake Data\nLab1 Data\nLab2 Km\nLab3 Logrank\nLab4 Cox\nLab5 Assumptions\nMake Data\nLab1 Counts\nLab2 Poisson\nLab3 Overdisp\nLab4 Zeros\nLab5 Report\nBasic r Foundations\nBasic Visualization\nModerate Visualization\nAdvanced Visualization\nGtsummary Examples\nInteractive Plots\n\n\n\n🗄️ Datasets\n\n📊 Tb Cohort .csv\n📊 Dengue Wards .csv\n📊 Workshop Data .csv\n📗 Workshop Data .xlsx\n🔵 Workshop Data .rds\n🔵 Nctoh Data .rds\n🔵 Nctoh Complete .rds\n\n\n\n📋 Cheatsheets\n\nggplot2 Cheatsheet\nDplyr Cheatsheet\nGtsummary Cheatsheet\nQuarto Cheatsheet\nGgstatsplot Cheatsheet\n\n\n\n📝 Quarto Template\n\nQuarto Basics — starter .qmd file covering Quarto basics\n\n\n\n💡 Tip: Explore Applied Examples under each section for real-world healthcare data workflows."
+    "text": "📥 Downloadable Resources\nAll files for this track are available below, grouped by type.\n\n📄 R Scripts\n\nMake Data\nLab1 Outcomes\nLab2 Ordinal\nLab3 Po\nLab4 Multinom\nLab5 Report\nMake Data\nLab1 Data\nLab2 Km\nLab3 Logrank\nLab4 Cox\nLab5 Assumptions\nMake Data\nLab1 Counts\nLab2 Poisson\nLab3 Overdisp\nLab4 Zeros\nLab5 Report\nBasic r Foundations\nBasic Visualization\nModerate Visualization\nAdvanced Visualization\nGtsummary Examples\nInteractive Plots\n\n\n\n🗄️ Datasets\n\n📊 Maternal Survey .csv\n📊 Tb Cohort .csv\n📊 Dengue Wards .csv\n📊 Workshop Data .csv\n📗 Workshop Data .xlsx\n🔵 Workshop Data .rds\n🔵 Nctoh Data .rds\n🔵 Nctoh Complete .rds\n\n\n\n📋 Cheatsheets\n\nggplot2 Cheatsheet\nDplyr Cheatsheet\nGtsummary Cheatsheet\nQuarto Cheatsheet\nGgstatsplot Cheatsheet\n\n\n\n📝 Quarto Template\n\nQuarto Basics — starter .qmd file covering Quarto basics\n\n\n\n💡 Tip: Explore Applied Examples under each section for real-world healthcare data workflows."
   },
   {
     "objectID": "downloads.html",
@@ -5598,5 +5920,278 @@
     "title": "Session 4 — Excess Zeros and Model Checking",
     "section": "Score and take-home",
     "text": "Score and take-home\nYour score: \n\nCompare observed and expected zeros from the fitted model\nStructural zeros need a reason (reporting); not every excess needs a mixture\nzeroinfl(y ~ x | z, dist = negbin); compare AIC and rate ratios\nCheck fit over time, autocorrelation and influential wards\n\nNext: Session 5: reporting and extensions"
+  },
+  {
+    "objectID": "ordinal-workshop/cheatsheet.html",
+    "href": "ordinal-workshop/cheatsheet.html",
+    "title": "Ordinal and Multinomial Outcomes Cheat Sheet",
+    "section": "",
+    "text": "---------------------------------------------------- \nTest for        X2  df  probability \n---------------------------------------------------- \nOmnibus         58.74   20  0\nwealth          1.11    2   0.57\neducationPrimary    1.44    2   0.49\neducationSecondary  1.68    2   0.43\neducationHigher 2.74    2   0.25\nbmi         0.64    2   0.72\nanc_visits      1.33    2   0.52\nparity          2.55    2   0.28\nage         0.86    2   0.65\ntribalYes       39.03   2   0\nresidenceRural      1.85    2   0.4\n---------------------------------------------------- \n\nH0: Parallel Regression Assumption holds"
+  },
+  {
+    "objectID": "ordinal-workshop/cheatsheet.html#which-model",
+    "href": "ordinal-workshop/cheatsheet.html#which-model",
+    "title": "Ordinal and Multinomial Outcomes Cheat Sheet",
+    "section": "1 · Which model?",
+    "text": "1 · Which model?\n\n\n\n\n\n\n\n\n\nOutcome\nExample\nModel\nR\n\n\n\n\nOrdered, 3+ categories\nanaemia grade, BP stage\nOrdinal logistic (proportional odds)\nMASS::polr(y ~ x, Hess = TRUE)\n\n\n… if the assumption fails for few predictors\n\nPartial proportional odds\nordinal::clm(y ~ x, nominal = ~ z)\n\n\nNominal, 3+ categories\nplace of delivery\nMultinomial logistic\nnnet::multinom(y ~ x) (set the reference)\n\n\nBinary\nany anaemia\nLogistic\nglm(family = binomial)\n\n\n\nCheck first: order meaningful? Smallest category big enough (here 103 women)? Never code categories 1-4 for linear regression."
+  },
+  {
+    "objectID": "ordinal-workshop/cheatsheet.html#ordinal-logistic",
+    "href": "ordinal-workshop/cheatsheet.html#ordinal-logistic",
+    "title": "Ordinal and Multinomial Outcomes Cheat Sheet",
+    "section": "2 · Ordinal logistic",
+    "text": "2 · Ordinal logistic\n\n\n\n\n\n\n\nItem\nMeaning\n\n\n\n\nlogit P(Y &lt;= k) = zeta_k - x*beta\none threshold per cut-point (K - 1), one beta per predictor\n\n\nexp(beta)\nodds ratio for a higher category, the same at every cut-point\n\n\npolr beta &gt; 0\nhigher (worse) categories more likely\n\n\nOur result: wealth\nOR 0.76 per quintile: 24% lower odds of a worse category"
+  },
+  {
+    "objectID": "ordinal-workshop/cheatsheet.html#checking-proportional-odds",
+    "href": "ordinal-workshop/cheatsheet.html#checking-proportional-odds",
+    "title": "Ordinal and Multinomial Outcomes Cheat Sheet",
+    "section": "3 · Checking proportional odds",
+    "text": "3 · Checking proportional odds\n\n\n\n\n\n\n\nTool\nWhat it shows\n\n\n\n\nbrant(model)\nomnibus p and one p per predictor; here omnibus p = 0.000, tribal p = 0.000, wealth p = 0.57\n\n\nBinary models at each cut\nglm(I(y &gt;= k) ~ x) for each k: ORs should be similar\n\n\nLR test anova(clm_po, clm_partial)\ndoes freeing a predictor improve the fit?\n\n\nIf it fails\npartial PO for the offending predictor, cut-specific ORs, or multinomial"
+  },
+  {
+    "objectID": "ordinal-workshop/cheatsheet.html#multinomial-logistic",
+    "href": "ordinal-workshop/cheatsheet.html#multinomial-logistic",
+    "title": "Ordinal and Multinomial Outcomes Cheat Sheet",
+    "section": "4 · Multinomial logistic",
+    "text": "4 · Multinomial logistic\n\n\n\n\n\n\n\nItem\nMeaning\n\n\n\n\nK - 1 equations vs the reference\neach predictor has K - 1 coefficients\n\n\nexp(coef)\nrelative risk ratio (odds vs the reference)\n\n\nOur result: wealth\nRRR 1.50 (PHC), 1.78 (public), 2.76 (private), each vs Home\n\n\nNo p-values printed\nz = coef / SE: s &lt;- summary(mn); s$coefficients / s$standard.errors\n\n\nA whole variable\nlikelihood-ratio test: anova(model_without, model_with)\n\n\nReference\nchanges presentation, not the fit"
+  },
+  {
+    "objectID": "ordinal-workshop/cheatsheet.html#showing-results",
+    "href": "ordinal-workshop/cheatsheet.html#showing-results",
+    "title": "Ordinal and Multinomial Outcomes Cheat Sheet",
+    "section": "5 · Showing results",
+    "text": "5 · Showing results\npredict(model, newdata, type = \"probs\") gives the probability of each category (adds to 1). Plot against a key predictor. Do not judge by accuracy (0.48 here vs 0.32 for guessing)."
+  },
+  {
+    "objectID": "ordinal-workshop/cheatsheet.html#pitfalls",
+    "href": "ordinal-workshop/cheatsheet.html#pitfalls",
+    "title": "Ordinal and Multinomial Outcomes Cheat Sheet",
+    "section": "6 · Pitfalls",
+    "text": "6 · Pitfalls\n\n\nCategories coded 1-4 in linear regression; dichotomising needlessly\nNo assumption check; a single OR that hides a violation (tribal group here: OR about 1.1, but about 3 for severe anaemia)\nSparse categories; a multinomial model with too many parameters for the sample\nRRR read as a risk ratio; accuracy as the measure of fit\nAssociation read as cause"
+  },
+  {
+    "objectID": "ordinal-workshop/cheatsheet.html#one-paragraph-report",
+    "href": "ordinal-workshop/cheatsheet.html#one-paragraph-report",
+    "title": "Ordinal and Multinomial Outcomes Cheat Sheet",
+    "section": "7 · One-paragraph report",
+    "text": "7 · One-paragraph report\nAmong 1,500 women, anaemia (none, mild, moderate, severe) was modelled with a proportional-odds model adjusted for education, BMI, antenatal visits, parity, age, tribal group and residence. Each higher wealth quintile was associated with 24% lower odds of a worse category (OR 0.76). The Brant test rejected proportional odds for tribal group only (p &lt; 0.001), whose effect was concentrated on severe anaemia, so it is reported by cut-point. Place of delivery was modelled with a multinomial logit (reference: home): each wealth quintile multiplied the relative risk of private-hospital delivery 2.8-fold."
+  },
+  {
+    "objectID": "ordinal-workshop/s2_ordinal_logistic.html#where-we-are",
+    "href": "ordinal-workshop/s2_ordinal_logistic.html#where-we-are",
+    "title": "Session 2 — Ordinal Logistic Regression",
+    "section": "Where we are",
+    "text": "Where we are\n\nSession 1: ordered vs nominal outcomes; cumulative proportions\nToday: the proportional-odds model for an ordered outcome\nBy the end you can:\n\nfit it with MASS::polr and read odds ratios\nexplain the thresholds\ngive predicted probabilities for each category"
+  },
+  {
+    "objectID": "ordinal-workshop/s2_ordinal_logistic.html#cumulative-logits",
+    "href": "ordinal-workshop/s2_ordinal_logistic.html#cumulative-logits",
+    "title": "Session 2 — Ordinal Logistic Regression",
+    "section": "Cumulative logits",
+    "text": "Cumulative logits\n\nlogit P(Y ≤ k) = ζk − (β1x1 + β2x2 + …) k = 1, 2, 3\n\n\nOne threshold ζk for each cut-point between categories (3 for 4 categories)\nOne set of coefficients β shared by all cut-points: the proportional-odds (parallel lines) assumption\nexp(β) is the odds ratio for being in a higher category: the same whichever cut-point you look at\nIn polr, β &gt; 0 means higher categories (worse anaemia) are more likely"
+  },
+  {
+    "objectID": "ordinal-workshop/s2_ordinal_logistic.html#one-predictor",
+    "href": "ordinal-workshop/s2_ordinal_logistic.html#one-predictor",
+    "title": "Session 2 — Ordinal Logistic Regression",
+    "section": "One predictor",
+    "text": "One predictor\n\nm1 &lt;- MASS::polr(anaemia ~ wealth, data = mat, Hess = TRUE)\nround(exp(cbind(OR = coef(m1), confint(m1))), 2)\n\n         OR     \n2.5 %  0.57 0.53\n97.5 % 0.57 0.63\n\nm1$zeta |&gt; round(2)\n\n      None|Mild   Mild|Moderate Moderate|Severe \n          -1.39            0.00            1.21 \n\n\n\nOR = 0.57 per wealth quintile: each quintile higher multiplies the odds of being in a worse anaemia category by about 0.57 (a 43% reduction), at every cut-point (None vs worse, up to Moderate vs Severe)."
+  },
+  {
+    "objectID": "ordinal-workshop/s2_ordinal_logistic.html#several-predictors",
+    "href": "ordinal-workshop/s2_ordinal_logistic.html#several-predictors",
+    "title": "Session 2 — Ordinal Logistic Regression",
+    "section": "Several predictors",
+    "text": "Several predictors\n\nm2 &lt;- MASS::polr(anaemia ~ wealth + education + bmi + anc_visits + parity + age + tribal + residence, data = mat, Hess = TRUE)\nround(exp(cbind(OR = coef(m2), confint(m2))), 2)     # tbl_regression(m2, exponentiate = TRUE) formats this for a paper\n\n                     OR 2.5 % 97.5 %\nwealth             0.76  0.68   0.85\neducationPrimary   0.75  0.57   0.99\neducationSecondary 0.62  0.45   0.86\neducationHigher    0.46  0.31   0.66\nbmi                0.93  0.90   0.96\nanc_visits         0.90  0.84   0.95\nparity             1.11  1.01   1.21\nage                1.01  1.00   1.03\ntribalYes          1.11  0.83   1.48\nresidenceRural     1.21  0.94   1.56"
+  },
+  {
+    "objectID": "ordinal-workshop/s2_ordinal_logistic.html#reading-the-adjusted-odds-ratios",
+    "href": "ordinal-workshop/s2_ordinal_logistic.html#reading-the-adjusted-odds-ratios",
+    "title": "Session 2 — Ordinal Logistic Regression",
+    "section": "Reading the adjusted odds ratios",
+    "text": "Reading the adjusted odds ratios\n\nWealth, higher education, BMI and antenatal visits are protective (OR below 1)\nParity goes slightly the other way\nThe OR for tribal group is only about 1.1: do not trust it yet. Session 3 shows the model is wrong for that variable\nconfint() gives profile-likelihood CIs; p-values come from the t value (|t| above about 2)"
+  },
+  {
+    "objectID": "ordinal-workshop/s2_ordinal_logistic.html#thresholds",
+    "href": "ordinal-workshop/s2_ordinal_logistic.html#thresholds",
+    "title": "Session 2 — Ordinal Logistic Regression",
+    "section": "Thresholds",
+    "text": "Thresholds\n\nNone|Mild: ζ1 Mild|Moderate: ζ2 Moderate|Severe: ζ3\n\nThey are the baseline log-odds of each cumulative probability (when all predictors are 0) and are not of substantive interest. K categories need K − 1 thresholds."
+  },
+  {
+    "objectID": "ordinal-workshop/s2_ordinal_logistic.html#what-it-means-for-a-woman",
+    "href": "ordinal-workshop/s2_ordinal_logistic.html#what-it-means-for-a-woman",
+    "title": "Session 2 — Ordinal Logistic Regression",
+    "section": "What it means for a woman",
+    "text": "What it means for a woman\n\nnd &lt;- data.frame(wealth = c(1, 5), education = factor(\"Primary\", levels = levels(mat$education)), bmi = 20.5, anc_visits = 3, parity = 2, age = 27,\n                 tribal = factor(\"No\", levels = c(\"No\", \"Yes\")), residence = factor(\"Rural\", levels = c(\"Urban\", \"Rural\")))\nrownames(nd) &lt;- c(\"poorest\", \"richest\")\nround(predict(m2, newdata = nd, type = \"probs\"), 2)\n\n        None Mild Moderate Severe\npoorest 0.38 0.34     0.18   0.10\nrichest 0.65 0.24     0.08   0.03\n\n\n\nProbability of each category for a given profile: the four numbers add to 1\nThe poorest woman has about a 10% chance of severe anaemia; the richest about 3%\nClearer for readers than odds ratios: report both"
+  },
+  {
+    "objectID": "ordinal-workshop/s2_ordinal_logistic.html#compared-with-a-binary-model",
+    "href": "ordinal-workshop/s2_ordinal_logistic.html#compared-with-a-binary-model",
+    "title": "Session 2 — Ordinal Logistic Regression",
+    "section": "Compared with a binary model",
+    "text": "Compared with a binary model\n\nc(ordinal = unname(exp(coef(m1))), binary_any_vs_none = unname(exp(coef(glm(I(anaemia != \"None\") ~ wealth, family = binomial, data = mat)))[\"wealth\"])) |&gt; round(2)\n\n           ordinal binary_any_vs_none \n              0.57               0.57 \n\n\nWhen proportional odds holds, the ordinal and the binary ORs agree, but the ordinal model uses the severity too, so it is more precise."
+  },
+  {
+    "objectID": "ordinal-workshop/s2_ordinal_logistic.html#reporting-an-ordinal-model",
+    "href": "ordinal-workshop/s2_ordinal_logistic.html#reporting-an-ordinal-model",
+    "title": "Session 2 — Ordinal Logistic Regression",
+    "section": "Reporting an ordinal model",
+    "text": "Reporting an ordinal model\n\n\nState the outcome order and the model (cumulative-logit, proportional odds)\nOdds ratios with CIs, and say they are for a higher category\nA few predicted probabilities\nThe assumption check (next session)"
+  },
+  {
+    "objectID": "ordinal-workshop/s2_ordinal_logistic.html#switch-to-r-lab-2",
+    "href": "ordinal-workshop/s2_ordinal_logistic.html#switch-to-r-lab-2",
+    "title": "Session 2 — Ordinal Logistic Regression",
+    "section": "🔧 Switch to R — Lab 2",
+    "text": "🔧 Switch to R — Lab 2\n\nFile: ordinal-workshop/labs/lab2_ordinal.R\n\nMASS::polr() unadjusted and adjusted\nodds ratios, thresholds, tbl_regression\npredicted probabilities and a binary comparison\n\n\nTime: 35 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "ordinal-workshop/s2_ordinal_logistic.html#self-check-quiz-15",
+    "href": "ordinal-workshop/s2_ordinal_logistic.html#self-check-quiz-15",
+    "title": "Session 2 — Ordinal Logistic Regression",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nA proportional-odds model gives OR = 0.57 per wealth quintile. Which is the best reading?\n\nEach quintile higher lowers the anaemia grade by 0.57 categories on average\nWomen in the top quintile have 57% of the anaemia of the poorest women\nEach quintile higher multiplies the odds of a worse category by 0.57\nThe probability of anaemia is 0.57 for each one of the quintiles"
+  },
+  {
+    "objectID": "ordinal-workshop/s2_ordinal_logistic.html#self-check-quiz-25",
+    "href": "ordinal-workshop/s2_ordinal_logistic.html#self-check-quiz-25",
+    "title": "Session 2 — Ordinal Logistic Regression",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nWhy does a model for a four-category outcome have three thresholds?\n\nThree of the four categories are used up as references\nThere are three cut-points between four ordered categories\nThe model needs one separate threshold for each predictor\nFour categories need four thresholds minus one for the intercept"
+  },
+  {
+    "objectID": "ordinal-workshop/s2_ordinal_logistic.html#self-check-quiz-35",
+    "href": "ordinal-workshop/s2_ordinal_logistic.html#self-check-quiz-35",
+    "title": "Session 2 — Ordinal Logistic Regression",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nWhat is the proportional-odds assumption?\n\nThe categories of the outcome are equally spaced in terms of severity\nThe predictors are proportional to the outcome on the log-odds scale\nEach predictor’s effect is the same at every cut-point of the outcome\nThe odds of each single category are equal in all of the groups"
+  },
+  {
+    "objectID": "ordinal-workshop/s2_ordinal_logistic.html#self-check-quiz-45",
+    "href": "ordinal-workshop/s2_ordinal_logistic.html#self-check-quiz-45",
+    "title": "Session 2 — Ordinal Logistic Regression",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nWhy are predicted probabilities useful alongside odds ratios?\n\nThey are always more accurate than the odds ratios from the same model\nThey remove the need to check the model assumptions of the analysis\nThey show whether each of the thresholds is significant or not\nThey give the chance of each category on a scale readers understand"
+  },
+  {
+    "objectID": "ordinal-workshop/s2_ordinal_logistic.html#self-check-quiz-55",
+    "href": "ordinal-workshop/s2_ordinal_logistic.html#self-check-quiz-55",
+    "title": "Session 2 — Ordinal Logistic Regression",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nIn polr, a positive coefficient for a predictor means what?\n\nHigher values make the higher (worse) categories more likely\nHigher values make the lower categories more likely to be seen\nThe predictor is significant at the 5% level in the sample\nThe predictor reduces all of the thresholds to exactly zero"
+  },
+  {
+    "objectID": "ordinal-workshop/s2_ordinal_logistic.html#score-and-take-home",
+    "href": "ordinal-workshop/s2_ordinal_logistic.html#score-and-take-home",
+    "title": "Session 2 — Ordinal Logistic Regression",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nProportional-odds: one OR per predictor, the same at every cut-point\nexp(β) = odds of a higher category; K categories → K − 1 thresholds\nReport ORs with CI and predicted probabilities\nThe single OR is only trustworthy if the assumption holds\n\nNext: Session 3: checking proportional odds"
+  },
+  {
+    "objectID": "ordinal-workshop/s4_multinomial_logistic.html#where-we-are",
+    "href": "ordinal-workshop/s4_multinomial_logistic.html#where-we-are",
+    "title": "Session 4 — Multinomial Logistic Regression",
+    "section": "Where we are",
+    "text": "Where we are\n\nSessions 2-3: ordered outcomes and their assumption\nToday: nominal outcomes, with no ordering: place of delivery\nBy the end you can:\n\nfit nnet::multinom and choose a reference category\nread relative risk ratios and test them\nget predicted probabilities"
+  },
+  {
+    "objectID": "ordinal-workshop/s4_multinomial_logistic.html#a-set-of-logistic-models-against-a-reference",
+    "href": "ordinal-workshop/s4_multinomial_logistic.html#a-set-of-logistic-models-against-a-reference",
+    "title": "Session 4 — Multinomial Logistic Regression",
+    "section": "A set of logistic models against a reference",
+    "text": "A set of logistic models against a reference\n\nlog [ P(Y = j) / P(Y = Home) ] = β0j + β1j x1 + … for j = PHC, Public, Private\n\n\nK − 1 equations (3 for 4 places), each comparing a category with the reference\nEvery predictor has a different coefficient in each equation\nexp(βj) is a relative risk ratio (an odds ratio versus the reference)\nFitted jointly by maximum likelihood: the probabilities add to 1"
+  },
+  {
+    "objectID": "ordinal-workshop/s4_multinomial_logistic.html#fit-it",
+    "href": "ordinal-workshop/s4_multinomial_logistic.html#fit-it",
+    "title": "Session 4 — Multinomial Logistic Regression",
+    "section": "Fit it",
+    "text": "Fit it\n\nmat$delivery &lt;- relevel(mat$delivery, ref = \"Home\")\nmn &lt;- nnet::multinom(delivery ~ wealth + education + anc_visits + residence + tribal, data = mat, trace = FALSE)\nround(exp(coef(mn)[, \"wealth\"]), 2)\n\n             PHC  Public hospital Private hospital \n            1.50             1.78             2.76 \n\n\n\nEach wealth quintile multiplies the odds of delivering in a private hospital rather than at home by 2.76, in a public hospital by 1.78, in a PHC by 1.5. Wealth pulls women away from home, and most strongly towards private care."
+  },
+  {
+    "objectID": "ordinal-workshop/s4_multinomial_logistic.html#the-output-has-no-p-values",
+    "href": "ordinal-workshop/s4_multinomial_logistic.html#the-output-has-no-p-values",
+    "title": "Session 4 — Multinomial Logistic Regression",
+    "section": "The output has no p-values",
+    "text": "The output has no p-values\n\ns &lt;- summary(mn); z &lt;- s$coefficients / s$standard.errors\nround(2 * pnorm(-abs(z)), 4)[, c(\"wealth\", \"anc_visits\", \"residenceRural\")]\n\n                 wealth anc_visits residenceRural\nPHC                   0          0         0.3621\nPublic hospital       0          0         0.0710\nPrivate hospital      0          0         0.0007\n\n\nCompute z = coefficient / SE and the two-sided p-value. For a variable with several coefficients (education has 3 per equation), use a likelihood-ratio test of the whole variable:\n\nmn0 &lt;- nnet::multinom(delivery ~ wealth + anc_visits + residence + tribal, data = mat, trace = FALSE)\nanova(mn0, mn)\n\nLikelihood ratio tests of Multinomial Models\n\nResponse: delivery\n                                                 Model Resid. df Resid. Dev\n1             wealth + anc_visits + residence + tribal      4485   3312.041\n2 wealth + education + anc_visits + residence + tribal      4476   3275.179\n    Test    Df LR stat.      Pr(Chi)\n1                                   \n2 1 vs 2     9 36.86209 2.785207e-05"
+  },
+  {
+    "objectID": "ordinal-workshop/s4_multinomial_logistic.html#a-table",
+    "href": "ordinal-workshop/s4_multinomial_logistic.html#a-table",
+    "title": "Session 4 — Multinomial Logistic Regression",
+    "section": "A table",
+    "text": "A table\n\ntbl_regression(mn, exponentiate = TRUE, include = wealth)\n\n\n\n\n\n\n\nCharacteristic\nOR\n95% CI\np-value\n\n\n\n\nPHC\n\n\nwealth\n1.50\n1.28, 1.76\n&lt;0.001\n\n\nPublic hospital\n\n\nwealth\n1.78\n1.50, 2.10\n&lt;0.001\n\n\nPrivate hospital\n\n\nwealth\n2.76\n2.13, 3.56\n&lt;0.001\n\n\n\nAbbreviations: CI = Confidence Interval, OR = Odds Ratio"
+  },
+  {
+    "objectID": "ordinal-workshop/s4_multinomial_logistic.html#predicted-probabilities",
+    "href": "ordinal-workshop/s4_multinomial_logistic.html#predicted-probabilities",
+    "title": "Session 4 — Multinomial Logistic Regression",
+    "section": "Predicted probabilities",
+    "text": "Predicted probabilities\n\nnd &lt;- data.frame(wealth = c(1, 5), education = factor(\"Secondary\", levels = levels(mat$education)), anc_visits = 4, residence = factor(\"Urban\", levels = c(\"Urban\", \"Rural\")), tribal = factor(\"No\", levels = c(\"No\", \"Yes\")))\nrownames(nd) &lt;- c(\"poorest\", \"richest\"); round(predict(mn, newdata = nd, type = \"probs\"), 2)\n\n        Home  PHC Public hospital Private hospital\npoorest 0.22 0.37            0.37             0.04\nrichest 0.03 0.22            0.45             0.31\n\n\n\nThe poorest woman delivers mostly in public hospitals or PHCs (37% each) and only 4% in private care\nThe richest: 31% private, 3% at home\nThe probabilities tell the story more clearly than 9 odds ratios"
+  },
+  {
+    "objectID": "ordinal-workshop/s4_multinomial_logistic.html#the-choice-of-reference",
+    "href": "ordinal-workshop/s4_multinomial_logistic.html#the-choice-of-reference",
+    "title": "Session 4 — Multinomial Logistic Regression",
+    "section": "The choice of reference",
+    "text": "The choice of reference\n\nIt changes which comparisons are shown, not the model: the fitted probabilities and log-likelihood are identical\nChoose a large, meaningful group (here Home) so the comparisons make sense\nAny other comparison (Private vs Public) = the difference of two coefficients; refit with another reference to get its CI"
+  },
+  {
+    "objectID": "ordinal-workshop/s4_multinomial_logistic.html#pitfalls",
+    "href": "ordinal-workshop/s4_multinomial_logistic.html#pitfalls",
+    "title": "Session 4 — Multinomial Logistic Regression",
+    "section": "Pitfalls",
+    "text": "Pitfalls\n\n\nReading RRRs as risk ratios when the outcome is common (they are odds-type ratios)\nSparse categories (a few women in one place) make estimates unstable\nMany parameters: 3 equations x every predictor needs a large sample\nIgnoring the independence of irrelevant alternatives (adding or removing a category can change the others: be cautious with similar categories)"
+  },
+  {
+    "objectID": "ordinal-workshop/s4_multinomial_logistic.html#switch-to-r-lab-4",
+    "href": "ordinal-workshop/s4_multinomial_logistic.html#switch-to-r-lab-4",
+    "title": "Session 4 — Multinomial Logistic Regression",
+    "section": "🔧 Switch to R — Lab 4",
+    "text": "🔧 Switch to R — Lab 4\n\nFile: ordinal-workshop/labs/lab4_multinom.R\n\nrelevel(), nnet::multinom(), relative risk ratios\nz-tests, a likelihood-ratio test for a whole variable\npredicted probabilities and a different reference\n\n\nTime: 35 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "ordinal-workshop/s4_multinomial_logistic.html#self-check-quiz-15",
+    "href": "ordinal-workshop/s4_multinomial_logistic.html#self-check-quiz-15",
+    "title": "Session 4 — Multinomial Logistic Regression",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nIn a multinomial model with four outcome categories and Home as the reference, how many coefficients does each predictor have?\n\nOne, which applies to every comparison\nFour, one for each category of the outcome\nThree, one for each comparison with the reference\nZero, because multinomial models have no coefficients"
+  },
+  {
+    "objectID": "ordinal-workshop/s4_multinomial_logistic.html#self-check-quiz-25",
+    "href": "ordinal-workshop/s4_multinomial_logistic.html#self-check-quiz-25",
+    "title": "Session 4 — Multinomial Logistic Regression",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nThe relative risk ratio for wealth is 2.76 for Private hospital versus Home. How should it be read?\n\nWomen in the richest quintile are 2.76 times as likely to be in any hospital\nOdds of private care rather than home rise 2.8-fold per quintile\nThe probability of private care is 2.76 for each of the women studied\nWealth raises the share of private deliveries by 2.76 percentage points"
+  },
+  {
+    "objectID": "ordinal-workshop/s4_multinomial_logistic.html#self-check-quiz-35",
+    "href": "ordinal-workshop/s4_multinomial_logistic.html#self-check-quiz-35",
+    "title": "Session 4 — Multinomial Logistic Regression",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nWhy use a likelihood-ratio test to test education in a multinomial model?\n\nThe z-test cannot be calculated for any categorical variable at all\nThe likelihood-ratio test is what gives the odds ratios in it\nThe variable has several coefficients, tested all together\nA single z statistic would be zero for education"
+  },
+  {
+    "objectID": "ordinal-workshop/s4_multinomial_logistic.html#self-check-quiz-45",
+    "href": "ordinal-workshop/s4_multinomial_logistic.html#self-check-quiz-45",
+    "title": "Session 4 — Multinomial Logistic Regression",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nWhat happens to the fitted probabilities if you change the reference category and refit?\n\nThey change, because the model fitted is a different one\nThey are reversed in order, so that the last category comes first\nThey can no longer be computed once the reference has changed\nThey are the same: only how the comparisons are shown changes"
+  },
+  {
+    "objectID": "ordinal-workshop/s4_multinomial_logistic.html#self-check-quiz-55",
+    "href": "ordinal-workshop/s4_multinomial_logistic.html#self-check-quiz-55",
+    "title": "Session 4 — Multinomial Logistic Regression",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nWhich is a good reason to choose the multinomial model for an outcome with ordered categories?\n\nMany predictors violate proportional odds and partial models fail\nThe categories are few in number and the sample is large enough\nThe researcher would prefer to avoid reporting odds ratios at all\nThe reference category is hard to name for the outcome in question"
+  },
+  {
+    "objectID": "ordinal-workshop/s4_multinomial_logistic.html#score-and-take-home",
+    "href": "ordinal-workshop/s4_multinomial_logistic.html#score-and-take-home",
+    "title": "Session 4 — Multinomial Logistic Regression",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nK − 1 equations, each against a reference category\nexp(β) = relative risk ratio (odds versus the reference)\nz-tests by hand; likelihood-ratio tests for multi-level variables\nThe reference changes the presentation, not the fit; show predicted probabilities\n\nNext: Session 5: choosing and reporting"
   }
 ]
