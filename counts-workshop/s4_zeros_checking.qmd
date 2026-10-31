@@ -150,9 +150,9 @@ round(acf(residuals(m_nb, type = "pearson")[w1], plot = FALSE)$acf[1:4], 2)
 #| echo: false
 #| output: asis
 quiz_mcq("s4q1", "A negative binomial model expects 19% zeros and 20% are observed. What should you conclude?",
-         c("Only a small excess, so a zero-inflated model is not clearly needed",
-           "The model has failed completely and its output is of no use",
-           "The data cannot be analysed with a count model of any type",
+         c("The model has failed completely and its output is of no use at all",
+           "The data cannot be analysed with a count model of any type here",
+           "Only a small excess, so zero-inflation is not clearly needed",
            "Every ward has the same chance of recording a zero in a month"), answer = 3,
          explain = "The negative binomial itself produces many zeros when the mean is small and variance large. A tiny excess does not by itself justify a mixture model.")
 ```
@@ -163,9 +163,9 @@ quiz_mcq("s4q1", "A negative binomial model expects 19% zeros and 20% are observ
 #| echo: false
 #| output: asis
 quiz_mcq("s4q2", "What is a structural zero?",
-         c("A zero from a process that cannot produce counts, such as non-reporting",
-           "A zero that arises by chance because the mean count is small",
-           "A zero caused by a coding error in the file that should be fixed",
+         c("A zero that arises by chance because the mean count is small here",
+           "A zero from a process that gives no counts, such as non-reporting",
+           "A zero caused by a coding error in the file that should be fixed first",
            "Any month of the series with fewer than five cases in the ward"), answer = 2,
          explain = "Structural zeros come from units that are not at risk or not observed (here, weak surveillance). Sampling zeros arise by chance in a count process with a small mean.")
 ```
@@ -176,10 +176,10 @@ quiz_mcq("s4q2", "What is a structural zero?",
 #| echo: false
 #| output: asis
 quiz_mcq("s4q3", "In a zero-inflated model, the part after the vertical bar models what?",
-         c("The probability of a structural zero (the zero-inflation part)",
-           "The mean of the count process for the ward-months at risk",
+         c("The mean of the count process for the ward-months that are at risk",
            "The offset, which is the log of the population of the ward",
-           "The dispersion parameter theta of the negative binomial part"), answer = 3,
+           "The probability of a structural zero (the zero-inflation part)",
+           "The dispersion parameter theta of the negative binomial count part"), answer = 3,
          explain = "The right-hand side after | specifies the logistic model for the zero-inflation probability pi.")
 ```
 
@@ -189,10 +189,10 @@ quiz_mcq("s4q3", "In a zero-inflated model, the part after the vertical bar mode
 #| echo: false
 #| output: asis
 quiz_mcq("s4q4", "What is the best first step when a model shows more zeros than expected?",
-         c("Find out why, and look for a covariate that explains them",
-           "Add a zero-inflation term straight away without more thought",
+         c("Add a zero-inflation term straight away without more thought",
            "Delete every row that contains a zero count from the data",
-           "Switch to linear regression on the log of the monthly counts"), answer = 4,
+           "Switch to linear regression on the log of the monthly counts",
+           "Find out why, and look for a covariate that explains them"), answer = 4,
          explain = "Zeros need an explanation (reporting, an at-risk population) before choosing a model. A covariate may remove the excess without a mixture.")
 ```
 

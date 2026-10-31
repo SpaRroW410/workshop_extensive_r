@@ -1412,20 +1412,20 @@ Community Medicine Workshop
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(cases <span class="sc">~</span> fogging <span class="sc">+</span> slum <span class="sc">+</span> rain_lag1 <span class="sc">+</span> month_index <span class="sc">+</span> <span class="fu">sin</span>(<span class="dv">2</span> <span class="sc">*</span> pi <span class="sc">*</span> month <span class="sc">/</span> <span class="dv">12</span>) <span class="sc">+</span> <span class="fu">cos</span>(<span class="dv">2</span> <span class="sc">*</span> pi <span class="sc">*</span> month <span class="sc">/</span> <span class="dv">12</span>) <span class="sc">+</span> <span class="fu">offset</span>(<span class="fu">log</span>(population)), <span class="at">family =</span> poisson, <span class="at">data =</span> dg)</span>
 <span id="cb3-2"><a aria-label="2"></a><span class="fu">tbl_regression</span>(m2, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">include =</span> <span class="fu">c</span>(fogging, slum, rain_lag1, month_index))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="xwgfjzxpml" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#xwgfjzxpml table {
+<div id="rbgmvbsydb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#rbgmvbsydb table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#xwgfjzxpml thead, #xwgfjzxpml tbody, #xwgfjzxpml tfoot, #xwgfjzxpml tr, #xwgfjzxpml td, #xwgfjzxpml th {
+#rbgmvbsydb thead, #rbgmvbsydb tbody, #rbgmvbsydb tfoot, #rbgmvbsydb tr, #rbgmvbsydb td, #rbgmvbsydb th {
 border-style: none;
 }
-#xwgfjzxpml p {
+#rbgmvbsydb p {
 margin: 0;
 padding: 0;
 }
-#xwgfjzxpml .gt_table {
+#rbgmvbsydb .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -1450,11 +1450,11 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#xwgfjzxpml .gt_caption {
+#rbgmvbsydb .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#xwgfjzxpml .gt_title {
+#rbgmvbsydb .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -1465,7 +1465,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#xwgfjzxpml .gt_subtitle {
+#rbgmvbsydb .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -1476,7 +1476,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#xwgfjzxpml .gt_heading {
+#rbgmvbsydb .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -1487,12 +1487,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#xwgfjzxpml .gt_bottom_border {
+#rbgmvbsydb .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#xwgfjzxpml .gt_col_headings {
+#rbgmvbsydb .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -1506,7 +1506,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#xwgfjzxpml .gt_col_heading {
+#rbgmvbsydb .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1525,7 +1525,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#xwgfjzxpml .gt_column_spanner_outer {
+#rbgmvbsydb .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1536,13 +1536,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#xwgfjzxpml .gt_column_spanner_outer:first-child {
+#rbgmvbsydb .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#xwgfjzxpml .gt_column_spanner_outer:last-child {
+#rbgmvbsydb .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#xwgfjzxpml .gt_column_spanner {
+#rbgmvbsydb .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -1553,10 +1553,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#xwgfjzxpml .gt_spanner_row {
+#rbgmvbsydb .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#xwgfjzxpml .gt_group_heading {
+#rbgmvbsydb .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1581,7 +1581,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#xwgfjzxpml .gt_empty_group_heading {
+#rbgmvbsydb .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -1595,13 +1595,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#xwgfjzxpml .gt_from_md > :first-child {
+#rbgmvbsydb .gt_from_md > :first-child {
 margin-top: 0;
 }
-#xwgfjzxpml .gt_from_md > :last-child {
+#rbgmvbsydb .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#xwgfjzxpml .gt_row {
+#rbgmvbsydb .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1619,7 +1619,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#xwgfjzxpml .gt_stub {
+#rbgmvbsydb .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1631,7 +1631,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#xwgfjzxpml .gt_stub_row_group {
+#rbgmvbsydb .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1644,13 +1644,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#xwgfjzxpml .gt_row_group_first td {
+#rbgmvbsydb .gt_row_group_first td {
 border-top-width: 2px;
 }
-#xwgfjzxpml .gt_row_group_first th {
+#rbgmvbsydb .gt_row_group_first th {
 border-top-width: 2px;
 }
-#xwgfjzxpml .gt_summary_row {
+#rbgmvbsydb .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -1659,14 +1659,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#xwgfjzxpml .gt_first_summary_row {
+#rbgmvbsydb .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#xwgfjzxpml .gt_first_summary_row.thick {
+#rbgmvbsydb .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#xwgfjzxpml .gt_last_summary_row {
+#rbgmvbsydb .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1675,7 +1675,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#xwgfjzxpml .gt_grand_summary_row {
+#rbgmvbsydb .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -1684,7 +1684,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#xwgfjzxpml .gt_first_grand_summary_row {
+#rbgmvbsydb .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1693,7 +1693,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#xwgfjzxpml .gt_last_grand_summary_row_top {
+#rbgmvbsydb .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1702,10 +1702,10 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#xwgfjzxpml .gt_striped {
+#rbgmvbsydb .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#xwgfjzxpml .gt_table_body {
+#rbgmvbsydb .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -1713,7 +1713,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#xwgfjzxpml .gt_footnotes {
+#rbgmvbsydb .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -1726,7 +1726,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#xwgfjzxpml .gt_footnote {
+#rbgmvbsydb .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -1734,7 +1734,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#xwgfjzxpml .gt_sourcenotes {
+#rbgmvbsydb .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -1747,64 +1747,64 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#xwgfjzxpml .gt_sourcenote {
+#rbgmvbsydb .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#xwgfjzxpml .gt_left {
+#rbgmvbsydb .gt_left {
 text-align: left;
 }
-#xwgfjzxpml .gt_center {
+#rbgmvbsydb .gt_center {
 text-align: center;
 }
-#xwgfjzxpml .gt_right {
+#rbgmvbsydb .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#xwgfjzxpml .gt_font_normal {
+#rbgmvbsydb .gt_font_normal {
 font-weight: normal;
 }
-#xwgfjzxpml .gt_font_bold {
+#rbgmvbsydb .gt_font_bold {
 font-weight: bold;
 }
-#xwgfjzxpml .gt_font_italic {
+#rbgmvbsydb .gt_font_italic {
 font-style: italic;
 }
-#xwgfjzxpml .gt_super {
+#rbgmvbsydb .gt_super {
 font-size: 65%;
 }
-#xwgfjzxpml .gt_footnote_marks {
+#rbgmvbsydb .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#xwgfjzxpml .gt_asterisk {
+#rbgmvbsydb .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#xwgfjzxpml .gt_indent_1 {
+#rbgmvbsydb .gt_indent_1 {
 text-indent: 5px;
 }
-#xwgfjzxpml .gt_indent_2 {
+#rbgmvbsydb .gt_indent_2 {
 text-indent: 10px;
 }
-#xwgfjzxpml .gt_indent_3 {
+#rbgmvbsydb .gt_indent_3 {
 text-indent: 15px;
 }
-#xwgfjzxpml .gt_indent_4 {
+#rbgmvbsydb .gt_indent_4 {
 text-indent: 20px;
 }
-#xwgfjzxpml .gt_indent_5 {
+#rbgmvbsydb .gt_indent_5 {
 text-indent: 25px;
 }
-#xwgfjzxpml .katex-display {
+#rbgmvbsydb .katex-display {
 display: inline-flex !important;
 margin-bottom: 0.75em !important;
 }
-#xwgfjzxpml div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#rbgmvbsydb div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
 height: 0px !important;
 }
 </style>
@@ -1953,49 +1953,49 @@ height: 0px !important;
 </section>
 <section id="self-check-quiz-15" class="slide level2 smaller">
 <h2>Self-check quiz (1/5)</h2>
-<div class="quiz-q" data-qid="s2q1" data-type="mcq" data-hash="eyk5wx.mugnt2" data-show="VGhlIG9kZHMgb2YgZGVuZ3VlIGFyZSAwLjY0IHRpbWVzIGFzIGhpZ2ggaW4gZm9nZ2VkIG1v bnRocw==" data-explain="ZXhwKGIpIGlzIGEgcmF0ZSByYXRpbzogMC42NCBtZWFucyBhIDM2JSBsb3dlciByYXRlLCBo b2xkaW5nIHRoZSBvdGhlciB2YXJpYWJsZXMgZml4ZWQuIEl0IGlzIG5vdCBhbiBvZGRzIHJh dGlvIG9yIGFuIGFic29sdXRlIGNoYW5nZS4=">
+<div class="quiz-q" data-qid="s2q1" data-type="mcq" data-hash="eyk5wx.mugnt2" data-show="VGhlIHJhdGUgaXMgMzYlIGxvd2VyIGluIGZvZ2dlZCB3YXJkLW1vbnRocywgb3RoZXJzIGZp eGVk" data-explain="ZXhwKGIpIGlzIGEgcmF0ZSByYXRpbzogMC42NCBtZWFucyBhIDM2JSBsb3dlciByYXRlLCBo b2xkaW5nIHRoZSBvdGhlciB2YXJpYWJsZXMgZml4ZWQuIEl0IGlzIG5vdCBhbiBvZGRzIHJh dGlvIG9yIGFuIGFic29sdXRlIGNoYW5nZS4=">
 <p>A Poisson model with an offset gives exp(coefficient) = 0.64 for fogging. How is it best described?</p>
 <ul>
-<li>The rate is 36% lower in fogged ward-months, others fixed</li>
 <li>The number of cases is 64% of the population of each ward</li>
 <li>The odds of dengue are 0.64 times as high in fogged months</li>
+<li>The rate is 36% lower in fogged ward-months, others fixed</li>
 <li>Fogging reduces the cases of every ward by 0.64 each month</li>
 </ul>
 </div>
 </section>
 <section id="self-check-quiz-25" class="slide level2 smaller">
 <h2>Self-check quiz (2/5)</h2>
-<div class="quiz-q" data-qid="s2q2" data-type="mcq" data-hash="eykj5l.muh2ae" data-show="SXQgbWFrZXMgdGhlIFBvaXNzb24gYXNzdW1wdGlvbiB0cnVlIGZvciB0aGUgZGF0YSBhdCBo YW5k" data-explain="VGhlIG9mZnNldCBwdXRzIGxvZyhwZXJzb24tdGltZSkgaW4gdGhlIGxpbmVhciBwcmVkaWN0 b3Igd2l0aCBhIGNvZWZmaWNpZW50IGZpeGVkIGF0IDEsIHNvIGV4cChjb2VmZmljaWVudHMp IGFyZSByYXRpb3Mgb2YgcmF0ZXMgaW5zdGVhZCBvZiByYXRpb3Mgb2YgY291bnRzLg==">
+<div class="quiz-q" data-qid="s2q2" data-type="mcq" data-hash="eykj5l.muh2ae" data-show="RXhwZWN0ZWQgY291bnRzIHJpc2Ugd2l0aCBzaXplOyB0aGUgb2Zmc2V0IG1vZGVscyByYXRl cw==" data-explain="VGhlIG9mZnNldCBwdXRzIGxvZyhwZXJzb24tdGltZSkgaW4gdGhlIGxpbmVhciBwcmVkaWN0 b3Igd2l0aCBhIGNvZWZmaWNpZW50IGZpeGVkIGF0IDEsIHNvIGV4cChjb2VmZmljaWVudHMp IGFyZSByYXRpb3Mgb2YgcmF0ZXMgaW5zdGVhZCBvZiByYXRpb3Mgb2YgY291bnRzLg==">
 <p>Why use offset(log(population)) in this model?</p>
 <ul>
-<li>Expected counts rise with population; the offset models rates</li>
-<li>It makes the Poisson assumption true for the data at hand</li>
-<li>It removes the need to adjust for rainfall in the model</li>
-<li>It gives each ward the same weight in the whole analysis</li>
+<li>It makes the Poisson assumption true for the data we have used</li>
+<li>Expected counts rise with size; the offset models rates</li>
+<li>It removes the need to adjust for rainfall in the whole model</li>
+<li>It gives each ward the same weight in the whole of the analysis</li>
 </ul>
 </div>
 </section>
 <section id="self-check-quiz-35" class="slide level2 smaller">
 <h2>Self-check quiz (3/5)</h2>
-<div class="quiz-q" data-qid="s2q3" data-type="mcq" data-hash="eykweb.muhgrs" data-show="VGhlIGNydWRlIG1vZGVsIHVzZWQgdGhlIHdyb25nIGRpc3RyaWJ1dGlvbiBmb3IgdGhlIGNv dW50cyBpbiB0aGUgd2FyZHM=" data-explain="Rm9nZ2luZyB3YXMgaW50cm9kdWNlZCBsYXRlLCB3aGVuIGRlbmd1ZSB3YXMgcmlzaW5nIGFu ZCBpbiBzZWFzb24uIE5vdCBhZGp1c3RpbmcgZm9yIHRpbWUgaGlkIGl0cyBiZW5lZml0LiBB ZGp1c3RtZW50IGNhbiBtb3ZlIGFuIGVzdGltYXRlIGluIGVpdGhlciBkaXJlY3Rpb24u">
+<div class="quiz-q" data-qid="s2q3" data-type="mcq" data-hash="eykweb.muhgrs" data-show="Rm9nZ2luZyBiZWdhbiBsYXRlLCBpbiBhIGhpZ2ggcGVyaW9kLCBzbyB0aGUgY3J1ZGUgcmVz dWx0IHdhcyBjb25mb3VuZGVk" data-explain="Rm9nZ2luZyB3YXMgaW50cm9kdWNlZCBsYXRlLCB3aGVuIGRlbmd1ZSB3YXMgcmlzaW5nIGFu ZCBpbiBzZWFzb24uIE5vdCBhZGp1c3RpbmcgZm9yIHRpbWUgaGlkIGl0cyBiZW5lZml0LiBB ZGp1c3RtZW50IGNhbiBtb3ZlIGFuIGVzdGltYXRlIGluIGVpdGhlciBkaXJlY3Rpb24u">
 <p>Why is the crude rate ratio for fogging (0.86) different from the adjusted one (0.64)?</p>
 <ul>
-<li>Fogging began late, in a period of higher incidence, which confounded the crude result</li>
 <li>The adjusted model happens to count more cases than the crude model does</li>
 <li>The crude model used the wrong distribution for the counts in the wards</li>
-<li>Adjustment makes any effect stronger, so the larger change is expected</li>
+<li>Fogging began late, in a high period, so the crude result was confounded</li>
+<li>Adjustment makes any effect stronger, so the larger change is expected here</li>
 </ul>
 </div>
 </section>
 <section id="self-check-quiz-45" class="slide level2 smaller">
 <h2>Self-check quiz (4/5)</h2>
-<div class="quiz-q" data-qid="s2q4" data-type="mcq" data-hash="eyl9n1.muhv96" data-show="VGhlIHN0YW5kYXJkaXNlZCByZXNpZHVhbCBmb3IgZWFjaCB3YXJkIGluIGVhY2ggbW9udGg=" data-explain="QnkgZGVmYXVsdCBwcmVkaWN0KCkgd29ya3Mgb24gdGhlIGxpbmsgc2NhbGUgKGxvZyBvZiB0 aGUgZXhwZWN0ZWQgY291bnQpLiBVc2UgdHlwZSA9IHJlc3BvbnNlIGZvciBleHBlY3RlZCBj b3VudHMu">
+<div class="quiz-q" data-qid="s2q4" data-type="mcq" data-hash="eyl9n1.muhv96" data-show="VGhlIGxpbmVhciBwcmVkaWN0b3IsIG9uIHRoZSBsb2cgc2NhbGUgb2YgdGhlIGV4cGVjdGVk IGNvdW50" data-explain="QnkgZGVmYXVsdCBwcmVkaWN0KCkgd29ya3Mgb24gdGhlIGxpbmsgc2NhbGUgKGxvZyBvZiB0 aGUgZXhwZWN0ZWQgY291bnQpLiBVc2UgdHlwZSA9IHJlc3BvbnNlIGZvciBleHBlY3RlZCBj b3VudHMu">
 <p>In glm(…, family = poisson), what does the default predict() return?</p>
 <ul>
+<li>The expected number of cases for each ward and each month of the data</li>
+<li>The probability of at least one case in that ward and month</li>
+<li>The standardised residual for each ward in each month of the data</li>
 <li>The linear predictor, on the log scale of the expected count</li>
-<li>The expected number of cases for each ward and month</li>
-<li>The probability of at least one case in the ward and month</li>
-<li>The standardised residual for each ward in each month</li>
 </ul>
 </div>
 </section>

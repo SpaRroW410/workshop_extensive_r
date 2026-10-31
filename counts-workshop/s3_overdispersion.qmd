@@ -156,9 +156,9 @@ coeftest(m2, vcov = vcovCL(m2, cluster = dg$ward))[2:3, ]
 #| echo: false
 #| output: asis
 quiz_mcq("s3q1", "A Poisson model has a dispersion statistic of 8. What is the main consequence?",
-         c("Standard errors are too small, so p-values are over-optimistic",
-           "The coefficients are wrong by a factor of 8 in every model",
+         c("The coefficients are wrong by a factor of 8 in every model",
            "The model has too few predictors to describe the counts",
+           "Standard errors are too small, so p-values are over-optimistic",
            "The offset has been specified incorrectly in the model formula"), answer = 3,
          explain = "Overdispersion leaves the coefficient estimates roughly sensible but understates their uncertainty: the SEs should be inflated by about the square root of the dispersion.")
 ```
@@ -169,8 +169,8 @@ quiz_mcq("s3q1", "A Poisson model has a dispersion statistic of 8. What is the m
 #| echo: false
 #| output: asis
 quiz_mcq("s3q2", "Which parameter of the negative binomial measures overdispersion?",
-         c("theta: the smaller it is, the more overdispersion there is",
-           "The intercept of the model, which sets the baseline rate",
+         c("The intercept of the model, which sets the baseline rate",
+           "theta: the smaller it is, the more overdispersion there is",
            "The offset, because it holds the variance of the counts",
            "The p-value of the dispersion test, which grows with variance"), answer = 2,
          explain = "Variance = mu + mu^2/theta, so a small theta means variance far above the mean and a large theta approaches a Poisson.")
@@ -195,10 +195,10 @@ quiz_mcq("s3q3", "Compared with the Poisson model, what does quasi-Poisson chang
 #| echo: false
 #| output: asis
 quiz_mcq("s3q4", "Why use cluster-robust standard errors by ward here?",
-         c("The same ward is measured 36 times, so observations are correlated",
-           "Wards are too small to be analysed with any count model",
+         c("Wards are too small to be analysed with any count model at all",
            "Robust standard errors remove overdispersion from the estimates",
-           "Poisson models need one single row for each ward in the file"), answer = 4,
+           "Poisson models need one single row for each ward in the data file",
+           "The same ward is measured 36 times, so observations correlate"), answer = 4,
          explain = "Repeated months within a ward are not independent, so there is less information than 1,080 independent observations. Clustered SEs account for this.")
 ```
 
