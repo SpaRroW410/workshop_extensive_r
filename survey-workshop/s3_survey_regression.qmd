@@ -1,0 +1,223 @@
+---
+title: "Session 3 — Regression with Survey Data"
+subtitle: "svyglm · quasibinomial · odds ratios · glm vs svyglm · Wald tests · predictions · Lab 3"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Sessions 1 and 2: design, weights, descriptive estimates
+- Today: **regression** that respects the design
+- By the end you can:
+  - fit **logistic and linear** models with `svyglm()`
+  - explain why `glm()` gives **similar estimates but wrong SEs**
+  - **test** a multi-level variable with the design
+  - give **predicted probabilities**
+:::
+
+# Topic 1 — svyglm {background-color="#2C3E50"}
+
+## A logistic model for hypertension
+
+```{r}
+m_svy <- svyglm(hypertension ~ age + sex + residence + bmi + wealth, design = des, family = quasibinomial())
+round(summary(m_svy)$coefficients, 3)
+```
+
+::: {.incremental}
+- Same formula as `glm()`; the **design** replaces `data`
+- `quasibinomial`: weighted data give **non-integer** "successes", so the plain binomial warns; the **SEs come from the design** anyway
+- Age, BMI and **urban residence** are associated with hypertension; sex and wealth are not, once adjusted
+:::
+
+## Odds ratios
+
+```{r}
+round(exp(cbind(OR = coef(m_svy), confint(m_svy)))[-1, ], 2)
+```
+
+::: {.key}
+Per year of age **OR 1.06**; per BMI unit **OR 1.10**; **urban vs rural OR 2.1** (95% CI 1.4 to 3.1), adjusted for the other variables. As always, an **odds** ratio is **not** a risk ratio: hypertension is common here (20%), so it exaggerates the risk ratio.
+:::
+
+# Topic 2 — Why not just glm()? {background-color="#2C3E50"}
+
+## Three analyses of the same model
+
+```{r}
+m_glm <- glm(hypertension ~ age + sex + residence + bmi + wealth, data = resp, family = binomial)
+m_w <- glm(hypertension ~ age + sex + residence + bmi + wealth, data = resp, family = quasibinomial, weights = weight / mean(weight))
+rbind(`glm (ignores design)` = summary(m_glm)$coefficients["residenceUrban", 1:2],
+      `glm with weights only` = summary(m_w)$coefficients["residenceUrban", 1:2],
+      svyglm = summary(m_svy)$coefficients["residenceUrban", 1:2]) |> round(3)
+```
+
+::: {.incremental}
+- The **estimates** are close (0.67 to 0.73)
+- The **SE** of the urban coefficient: **0.13** (ignoring the design), **0.14** (weights only), **0.19** (full design)
+- Weights alone **fix the bias but not the variance**; **clusters** are what make SEs larger
+- Rule: **use `svyglm`** for design-based inference; compare with `glm` as a sensitivity check
+:::
+
+## Should regression be weighted?
+
+::: {.warn}
+Some statisticians prefer an **unweighted model** when the model is well specified and includes the variables used for the sampling (e.g. residence): it is more efficient. For **population-level reporting** (prevalence, ORs for a national report), the **design-based** `svyglm` is the safe default. If the two give **very different** coefficients, the model is probably **missing something**.
+:::
+
+# Topic 3 — Other outcomes and tests {background-color="#2C3E50"}
+
+## A continuous outcome
+
+```{r}
+m_lin <- svyglm(sbp ~ age + sex + residence + bmi + wealth, design = des)
+round(summary(m_lin)$coefficients, 2)
+```
+
+::: {.key}
+SBP rises **0.45 mmHg per year** of age, **0.8 mmHg per BMI unit**, and is **5.8 mmHg higher** in urban adults. Default family: gaussian, with design-based SEs.
+:::
+
+## Testing a multi-level variable
+
+```{r}
+m_edu <- svyglm(hypertension ~ age + sex + residence + bmi + wealth + education, design = des, family = quasibinomial())
+regTermTest(m_edu, ~education)
+```
+
+::: {.incremental}
+- A **Wald test** of all education coefficients together, using the design
+- p ≈ 0.09: **no clear evidence** of an education effect after adjustment
+- Likelihood-ratio tests and AIC are **not available** in the usual way for survey models (no true likelihood); use Wald tests
+:::
+
+## Predicted probabilities
+
+```{r}
+nd <- data.frame(age = 50, sex = factor("Male", levels = levels(resp$sex)), residence = factor(c("Rural", "Urban"), levels = levels(resp$residence)), bmi = 26, wealth = 3)
+round(predict(m_svy, newdata = nd, type = "response"), 2)
+```
+
+::: {.key}
+A 50-year-old man with BMI 26: probability of hypertension about **26% in a rural** and **42% in an urban** area. **Predicted probabilities** are easier for readers than odds ratios: report **both**.
+:::
+
+## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `survey-workshop/labs/lab3_regression.R`
+
+- `svyglm` logistic model and odds ratios
+- glm, weights-only glm and svyglm side by side
+- linear model, `regTermTest`, predictions
+:::
+
+**Time:** 40 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v3q1", "Why is family = quasibinomial() used for a binary outcome in svyglm?",
+         c("Weights give non-integer counts, and the design supplies the SEs",
+           "It forces the odds ratio of each predictor in the model to lie between zero and one",
+           "It is the family that svyglm requires for an outcome coded 0 or 1",
+           "It estimates a dispersion parameter that replaces the design effect"), answer = 1,
+         explain = "A binomial model warns about non-integer successes created by weights. The quasi family avoids that, and svyglm takes the variance from the design.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v3q2", "The glm and svyglm coefficients for urban residence are close, but their SEs differ. Why?",
+         c("svyglm has a bigger sample, and this raises the standard errors",
+           "glm cannot use weights, so its coefficients are biased here",
+           "Clustering makes respondents alike, so the glm SE is too small",
+           "The glm SE is right, and svyglm makes it conservative to be safe"), answer = 3,
+         explain = "Weights mainly change the estimate. The correlation of respondents within PSUs mainly changes the variance, which glm ignores.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v3q3", "A glm that uses weights = weight but has no clusters gives a coefficient similar to svyglm. What about its SE?",
+         c("It is correct, because the weights already cover the clustering",
+           "It is still too small, because the PSUs are not taken into account",
+           "It is too large, because weights inflate the variance of respondents",
+           "It cannot be computed, since weights and SEs cannot be combined"), answer = 2,
+         explain = "Weights alone correct the point estimate. Clustering and stratification enter the variance, so the SE needs the design.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v3q4", "What does regTermTest(model, ~education) test?",
+         c("Whether education has a different mean in each stratum of the design",
+           "Whether the odds ratio of the first education level equals one in the model",
+           "Whether all the education coefficients are zero, allowing for the design",
+           "Whether education is correlated with the weights of the respondents in the survey"), answer = 3,
+         explain = "It is a Wald test of the whole term, which has two coefficients for three education levels, with a design-based variance.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v3q5", "In the model, the odds ratio for urban residence is 2.1. Which reading is best?",
+         c("Urban adults are twice as likely to have hypertension as rural adults",
+           "Urban adults have an SBP that is twice as high as that of rural adults",
+           "Twice as many urban adults as rural adults have hypertension in the population",
+           "Urban adults have about twice the odds of hypertension, after adjustment"), answer = 4,
+         explain = "The OR compares odds. With a common outcome (20%) the risk ratio is much smaller than the odds ratio, so 'twice as likely' overstates the effect.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **`svyglm(formula, design = des, family = quasibinomial())`**
+- `glm` gives similar **estimates**, but **SEs too small**
+- Weights alone fix the bias; **clusters** fix the variance
+- **`regTermTest`** for multi-level terms; no LR test or AIC
+- Report **ORs and predicted probabilities**
+:::
+
+**Next:** Session 4: nonresponse, raking and replicate weights

@@ -11,6 +11,7 @@ project:
     - counts-workshop/*.qmd
     - ordinal-workshop/*.qmd
     - clustered-workshop/*.qmd
+    - survey-workshop/*.qmd
   resources:
     - data/tb_cohort.csv
     - survival-workshop/make_data.R
@@ -24,6 +25,10 @@ project:
     - data/bp_trial.csv
     - clustered-workshop/make_data.R
     - clustered-workshop/labs/*.R
+    - data/survey_adults.csv
+    - data/survey_population.csv
+    - survey-workshop/make_data.R
+    - survey-workshop/labs/*.R
 website:
   title: Data Visualization Workshop — Advanced
   site-url: '.'
@@ -153,6 +158,21 @@ website:
           - text: '---'
           - text: Clustered and Repeated Data Cheat Sheet
             href: clustered-workshop/cheatsheet.qmd
+      - text: Survey Data Workshop
+        menu:
+          - text: Session 1 — Survey Design and Weights
+            href: survey-workshop/s1_survey_design.qmd
+          - text: Session 2 — Descriptive Estimates
+            href: survey-workshop/s2_descriptive.qmd
+          - text: Session 3 — Regression with Survey Data
+            href: survey-workshop/s3_survey_regression.qmd
+          - text: Session 4 — Nonresponse, Raking and Replicate Weights
+            href: survey-workshop/s4_nonresponse_raking.qmd
+          - text: Session 5 — Choosing, Checking and Reporting
+            href: survey-workshop/s5_choose_check_report.qmd
+          - text: '---'
+          - text: Survey Data Cheat Sheet
+            href: survey-workshop/cheatsheet.qmd
       - text: Quarto
         menu:
           - text: Quarto Basics

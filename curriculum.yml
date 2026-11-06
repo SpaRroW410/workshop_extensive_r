@@ -100,6 +100,12 @@ pages:
   clustered-workshop/s4_repeated_measures.qmd: {title: "Session 4 — Repeated Measures and Trajectories"}
   clustered-workshop/s5_choose_check_report.qmd: {title: "Session 5 — Choosing, Checking and Reporting"}
   clustered-workshop/cheatsheet.qmd: {title: "Clustered and Repeated Data Cheat Sheet"}
+  survey-workshop/s1_survey_design.qmd: {title: "Session 1 — Survey Design and Weights"}
+  survey-workshop/s2_descriptive.qmd: {title: "Session 2 — Descriptive Estimates"}
+  survey-workshop/s3_survey_regression.qmd: {title: "Session 3 — Regression with Survey Data"}
+  survey-workshop/s4_nonresponse_raking.qmd: {title: "Session 4 — Nonresponse, Raking and Replicate Weights"}
+  survey-workshop/s5_choose_check_report.qmd: {title: "Session 5 — Choosing, Checking and Reporting"}
+  survey-workshop/cheatsheet.qmd: {title: "Survey Data Cheat Sheet"}
   regression-workshop/s1_foundations.qmd: {title: "Session 1 — Foundations"}
   regression-workshop/s2_simple_regression.qmd: {title: "Session 2 — Simple Linear Regression"}
   regression-workshop/s3_multiple_regression.qmd: {title: "Session 3 — Inference & Multiple Regression"}
@@ -416,13 +422,14 @@ profiles:
     title: "Data Visualization Workshop — Advanced"
     output-dir: docs/advanced
     logo-href: welcome.html
-    # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1), counts and rates (A2), ordinal/multinomial outcomes (A3) and clustered/repeated data (A4) live here.
+    # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1), counts and rates (A2), ordinal/multinomial outcomes (A3) and clustered/repeated data (A4) and survey data (A5) live here.
     project-extra:
       render:
       - survival-workshop/*.qmd
       - counts-workshop/*.qmd
       - ordinal-workshop/*.qmd
       - clustered-workshop/*.qmd
+      - survey-workshop/*.qmd
       resources:
       - data/tb_cohort.csv
       - survival-workshop/make_data.R
@@ -436,6 +443,10 @@ profiles:
       - data/bp_trial.csv
       - clustered-workshop/make_data.R
       - clustered-workshop/labs/*.R
+      - data/survey_adults.csv
+      - data/survey_population.csv
+      - survey-workshop/make_data.R
+      - survey-workshop/labs/*.R
     left:
       - text: "R Foundations"
         items:
@@ -512,6 +523,15 @@ profiles:
           - clustered-workshop/s5_choose_check_report.qmd
           - "---"
           - clustered-workshop/cheatsheet.qmd
+      - text: "Survey Data Workshop"
+        items:
+          - survey-workshop/s1_survey_design.qmd
+          - survey-workshop/s2_descriptive.qmd
+          - survey-workshop/s3_survey_regression.qmd
+          - survey-workshop/s4_nonresponse_raking.qmd
+          - survey-workshop/s5_choose_check_report.qmd
+          - "---"
+          - survey-workshop/cheatsheet.qmd
       - text: "Quarto"
         items:
           - quarto_repro_w/reproducible_writing.qmd
