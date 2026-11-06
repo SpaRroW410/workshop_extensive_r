@@ -327,6 +327,38 @@ ul.task-list li input[type="checkbox"] {
     </ul>
   </li>
   <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-clustered--repeated-data-workshop" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Clustered &amp; Repeated Data Workshop</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-clustered--repeated-data-workshop">    
+        <li>
+    <a class="dropdown-item" href="./clustered-workshop/s1_clustered_data.html">
+ <span class="dropdown-text">Session 1 — Clustered Data: ICC and the Design Effect</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./clustered-workshop/s2_robust_gee.html">
+ <span class="dropdown-text">Session 2 — Cluster-Robust Standard Errors and GEE</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./clustered-workshop/s3_mixed_models.html">
+ <span class="dropdown-text">Session 3 — Random-Intercept (Mixed) Models</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./clustered-workshop/s4_repeated_measures.html">
+ <span class="dropdown-text">Session 4 — Repeated Measures and Trajectories</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./clustered-workshop/s5_choose_check_report.html">
+ <span class="dropdown-text">Session 5 — Choosing, Checking and Reporting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./clustered-workshop/cheatsheet.html">
+ <span class="dropdown-text">Clustered and Repeated Data Cheat Sheet</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-quarto" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Quarto</span>
     </a>
@@ -479,6 +511,7 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <h2 class="anchored" data-anchor-id="find-your-way-around">🧭 Find Your Way Around</h2>
 <p>Use the navigation bar above to browse all modules. Key starting points:</p>
 <ul>
+<li>🏘️ <strong><a href="./clustered-workshop/s1_clustered_data.html">Clustered &amp; Repeated Data Workshop</a></strong> — Slides, labs and quizzes: ICC, cluster-robust SEs, GEE, mixed models, repeated measures (start at Session 1)</li>
 <li>🪜 <strong><a href="./ordinal-workshop/s1_categorical_outcomes.html">Ordinal &amp; Multinomial Workshop</a></strong> — Slides, labs and quizzes: ordinal and multinomial logistic regression (start at Session 1)</li>
 <li>⏳ <strong><a href="./survival-workshop/s1_time_to_event.html">Survival Workshop</a></strong> — Slides, labs and quizzes on time-to-event data: Kaplan-Meier, log-rank, Cox (start at Session 1)</li>
 <li>🦟 <strong><a href="./counts-workshop/s1_counts_rates.html">Counts Workshop</a></strong> — Slides, labs and quizzes on counts and rates: Poisson, negative binomial, offsets (start at Session 1)</li>
@@ -497,6 +530,12 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <section id="r-scripts" class="level3">
 <h3 class="anchored" data-anchor-id="r-scripts">📄 R Scripts</h3>
 <ul>
+<li><a href="clustered-workshop/make_data.R">Make Data</a></li>
+<li><a href="clustered-workshop/labs/lab1_clusters.R">Lab1 Clusters</a></li>
+<li><a href="clustered-workshop/labs/lab2_gee.R">Lab2 Gee</a></li>
+<li><a href="clustered-workshop/labs/lab3_mixed.R">Lab3 Mixed</a></li>
+<li><a href="clustered-workshop/labs/lab4_long.R">Lab4 Long</a></li>
+<li><a href="clustered-workshop/labs/lab5_report.R">Lab5 Report</a></li>
 <li><a href="ordinal-workshop/make_data.R">Make Data</a></li>
 <li><a href="ordinal-workshop/labs/lab1_outcomes.R">Lab1 Outcomes</a></li>
 <li><a href="ordinal-workshop/labs/lab2_ordinal.R">Lab2 Ordinal</a></li>
@@ -526,6 +565,7 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <section id="datasets" class="level3">
 <h3 class="anchored" data-anchor-id="datasets">🗄️ Datasets</h3>
 <ul>
+<li>📊 <a href="data/bp_trial.csv">Bp Trial</a> <code>.csv</code></li>
 <li>📊 <a href="data/maternal_survey.csv">Maternal Survey</a> <code>.csv</code></li>
 <li>📊 <a href="data/tb_cohort.csv">Tb Cohort</a> <code>.csv</code></li>
 <li>📊 <a href="data/dengue_wards.csv">Dengue Wards</a> <code>.csv</code></li>

@@ -10,6 +10,7 @@ project:
     - survival-workshop/*.qmd
     - counts-workshop/*.qmd
     - ordinal-workshop/*.qmd
+    - clustered-workshop/*.qmd
   resources:
     - data/tb_cohort.csv
     - survival-workshop/make_data.R
@@ -20,6 +21,9 @@ project:
     - data/maternal_survey.csv
     - ordinal-workshop/make_data.R
     - ordinal-workshop/labs/*.R
+    - data/bp_trial.csv
+    - clustered-workshop/make_data.R
+    - clustered-workshop/labs/*.R
 website:
   title: Data Visualization Workshop — Advanced
   site-url: '.'
@@ -134,6 +138,21 @@ website:
           - text: '---'
           - text: Ordinal and Multinomial Cheat Sheet
             href: ordinal-workshop/cheatsheet.qmd
+      - text: Clustered & Repeated Data Workshop
+        menu:
+          - text: 'Session 1 — Clustered Data: ICC and the Design Effect'
+            href: clustered-workshop/s1_clustered_data.qmd
+          - text: Session 2 — Cluster-Robust Standard Errors and GEE
+            href: clustered-workshop/s2_robust_gee.qmd
+          - text: Session 3 — Random-Intercept (Mixed) Models
+            href: clustered-workshop/s3_mixed_models.qmd
+          - text: Session 4 — Repeated Measures and Trajectories
+            href: clustered-workshop/s4_repeated_measures.qmd
+          - text: Session 5 — Choosing, Checking and Reporting
+            href: clustered-workshop/s5_choose_check_report.qmd
+          - text: '---'
+          - text: Clustered and Repeated Data Cheat Sheet
+            href: clustered-workshop/cheatsheet.qmd
       - text: Quarto
         menu:
           - text: Quarto Basics

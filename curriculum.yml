@@ -94,6 +94,12 @@ pages:
   ordinal-workshop/s4_multinomial_logistic.qmd: {title: "Session 4 — Multinomial Logistic Regression"}
   ordinal-workshop/s5_choosing_reporting.qmd: {title: "Session 5 — Choosing, Comparing and Reporting"}
   ordinal-workshop/cheatsheet.qmd: {title: "Ordinal and Multinomial Cheat Sheet"}
+  clustered-workshop/s1_clustered_data.qmd: {title: "Session 1 — Clustered Data: ICC and the Design Effect"}
+  clustered-workshop/s2_robust_gee.qmd: {title: "Session 2 — Cluster-Robust Standard Errors and GEE"}
+  clustered-workshop/s3_mixed_models.qmd: {title: "Session 3 — Random-Intercept (Mixed) Models"}
+  clustered-workshop/s4_repeated_measures.qmd: {title: "Session 4 — Repeated Measures and Trajectories"}
+  clustered-workshop/s5_choose_check_report.qmd: {title: "Session 5 — Choosing, Checking and Reporting"}
+  clustered-workshop/cheatsheet.qmd: {title: "Clustered and Repeated Data Cheat Sheet"}
   regression-workshop/s1_foundations.qmd: {title: "Session 1 — Foundations"}
   regression-workshop/s2_simple_regression.qmd: {title: "Session 2 — Simple Linear Regression"}
   regression-workshop/s3_multiple_regression.qmd: {title: "Session 3 — Inference & Multiple Regression"}
@@ -410,12 +416,13 @@ profiles:
     title: "Data Visualization Workshop — Advanced"
     output-dir: docs/advanced
     logo-href: welcome.html
-    # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1), counts and rates (A2) and ordinal/multinomial outcomes (A3) live here.
+    # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1), counts and rates (A2), ordinal/multinomial outcomes (A3) and clustered/repeated data (A4) live here.
     project-extra:
       render:
       - survival-workshop/*.qmd
       - counts-workshop/*.qmd
       - ordinal-workshop/*.qmd
+      - clustered-workshop/*.qmd
       resources:
       - data/tb_cohort.csv
       - survival-workshop/make_data.R
@@ -426,6 +433,9 @@ profiles:
       - data/maternal_survey.csv
       - ordinal-workshop/make_data.R
       - ordinal-workshop/labs/*.R
+      - data/bp_trial.csv
+      - clustered-workshop/make_data.R
+      - clustered-workshop/labs/*.R
     left:
       - text: "R Foundations"
         items:
@@ -493,6 +503,15 @@ profiles:
           - ordinal-workshop/s5_choosing_reporting.qmd
           - "---"
           - ordinal-workshop/cheatsheet.qmd
+      - text: "Clustered & Repeated Data Workshop"
+        items:
+          - clustered-workshop/s1_clustered_data.qmd
+          - clustered-workshop/s2_robust_gee.qmd
+          - clustered-workshop/s3_mixed_models.qmd
+          - clustered-workshop/s4_repeated_measures.qmd
+          - clustered-workshop/s5_choose_check_report.qmd
+          - "---"
+          - clustered-workshop/cheatsheet.qmd
       - text: "Quarto"
         items:
           - quarto_repro_w/reproducible_writing.qmd

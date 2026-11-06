@@ -3749,14 +3749,14 @@
     "href": "welcome.html#find-your-way-around",
     "title": "Welcome",
     "section": "🧭 Find Your Way Around",
-    "text": "🧭 Find Your Way Around\nUse the navigation bar above to browse all modules. Key starting points:\n\n🪜 Ordinal & Multinomial Workshop — Slides, labs and quizzes: ordinal and multinomial logistic regression (start at Session 1)\n⏳ Survival Workshop — Slides, labs and quizzes on time-to-event data: Kaplan-Meier, log-rank, Cox (start at Session 1)\n🦟 Counts Workshop — Slides, labs and quizzes on counts and rates: Poisson, negative binomial, offsets (start at Session 1)\n📁 R Foundations — R syntax, wrangling, and full NCTOH applied examples\n📊 Data Visualization — All four ggplot2 modules, advanced and interactive plots\n🧪 Statistical Analysis — Full ggstatsplot, gtsummary, and deep analysis\n📝 Reproducibility — Quarto basics through publication-ready documents\n\n\nThe complete navbar gives full access to all workshop content."
+    "text": "🧭 Find Your Way Around\nUse the navigation bar above to browse all modules. Key starting points:\n\n🏘️ Clustered & Repeated Data Workshop — Slides, labs and quizzes: ICC, cluster-robust SEs, GEE, mixed models, repeated measures (start at Session 1)\n🪜 Ordinal & Multinomial Workshop — Slides, labs and quizzes: ordinal and multinomial logistic regression (start at Session 1)\n⏳ Survival Workshop — Slides, labs and quizzes on time-to-event data: Kaplan-Meier, log-rank, Cox (start at Session 1)\n🦟 Counts Workshop — Slides, labs and quizzes on counts and rates: Poisson, negative binomial, offsets (start at Session 1)\n📁 R Foundations — R syntax, wrangling, and full NCTOH applied examples\n📊 Data Visualization — All four ggplot2 modules, advanced and interactive plots\n🧪 Statistical Analysis — Full ggstatsplot, gtsummary, and deep analysis\n📝 Reproducibility — Quarto basics through publication-ready documents\n\n\nThe complete navbar gives full access to all workshop content."
   },
   {
     "objectID": "welcome.html#downloadable-resources",
     "href": "welcome.html#downloadable-resources",
     "title": "Welcome",
     "section": "📥 Downloadable Resources",
-    "text": "📥 Downloadable Resources\nAll files for this track are available below, grouped by type.\n\n📄 R Scripts\n\nMake Data\nLab1 Outcomes\nLab2 Ordinal\nLab3 Po\nLab4 Multinom\nLab5 Report\nMake Data\nLab1 Data\nLab2 Km\nLab3 Logrank\nLab4 Cox\nLab5 Assumptions\nMake Data\nLab1 Counts\nLab2 Poisson\nLab3 Overdisp\nLab4 Zeros\nLab5 Report\nBasic r Foundations\nBasic Visualization\nModerate Visualization\nAdvanced Visualization\nGtsummary Examples\nInteractive Plots\n\n\n\n🗄️ Datasets\n\n📊 Maternal Survey .csv\n📊 Tb Cohort .csv\n📊 Dengue Wards .csv\n📊 Workshop Data .csv\n📗 Workshop Data .xlsx\n🔵 Workshop Data .rds\n🔵 Nctoh Data .rds\n🔵 Nctoh Complete .rds\n\n\n\n📋 Cheatsheets\n\nggplot2 Cheatsheet\nDplyr Cheatsheet\nGtsummary Cheatsheet\nQuarto Cheatsheet\nGgstatsplot Cheatsheet\n\n\n\n📝 Quarto Template\n\nQuarto Basics — starter .qmd file covering Quarto basics\n\n\n\n💡 Tip: Explore Applied Examples under each section for real-world healthcare data workflows."
+    "text": "📥 Downloadable Resources\nAll files for this track are available below, grouped by type.\n\n📄 R Scripts\n\nMake Data\nLab1 Clusters\nLab2 Gee\nLab3 Mixed\nLab4 Long\nLab5 Report\nMake Data\nLab1 Outcomes\nLab2 Ordinal\nLab3 Po\nLab4 Multinom\nLab5 Report\nMake Data\nLab1 Data\nLab2 Km\nLab3 Logrank\nLab4 Cox\nLab5 Assumptions\nMake Data\nLab1 Counts\nLab2 Poisson\nLab3 Overdisp\nLab4 Zeros\nLab5 Report\nBasic r Foundations\nBasic Visualization\nModerate Visualization\nAdvanced Visualization\nGtsummary Examples\nInteractive Plots\n\n\n\n🗄️ Datasets\n\n📊 Bp Trial .csv\n📊 Maternal Survey .csv\n📊 Tb Cohort .csv\n📊 Dengue Wards .csv\n📊 Workshop Data .csv\n📗 Workshop Data .xlsx\n🔵 Workshop Data .rds\n🔵 Nctoh Data .rds\n🔵 Nctoh Complete .rds\n\n\n\n📋 Cheatsheets\n\nggplot2 Cheatsheet\nDplyr Cheatsheet\nGtsummary Cheatsheet\nQuarto Cheatsheet\nGgstatsplot Cheatsheet\n\n\n\n📝 Quarto Template\n\nQuarto Basics — starter .qmd file covering Quarto basics\n\n\n\n💡 Tip: Explore Applied Examples under each section for real-world healthcare data workflows."
   },
   {
     "objectID": "downloads.html",
@@ -6193,5 +6193,649 @@
     "title": "Session 4 — Multinomial Logistic Regression",
     "section": "Score and take-home",
     "text": "Score and take-home\nYour score: \n\nK − 1 equations, each against a reference category\nexp(β) = relative risk ratio (odds versus the reference)\nz-tests by hand; likelihood-ratio tests for multi-level variables\nThe reference changes the presentation, not the fit; show predicted probabilities\n\nNext: Session 5: choosing and reporting"
+  },
+  {
+    "objectID": "clustered-workshop/s5_choose_check_report.html#where-we-are",
+    "href": "clustered-workshop/s5_choose_check_report.html#where-we-are",
+    "title": "Session 5 — Choosing, Checking and Reporting",
+    "section": "Where we are",
+    "text": "Where we are\n\nSessions 1 to 4: ICC, design effect, robust SEs, GEE, mixed models, repeated measures\nToday: which one to use, how to check it, how to plan a cluster trial and how to report it"
+  },
+  {
+    "objectID": "clustered-workshop/s5_choose_check_report.html#decision-guide",
+    "href": "clustered-workshop/s5_choose_check_report.html#decision-guide",
+    "title": "Session 5 — Choosing, Checking and Reporting",
+    "section": "Decision guide",
+    "text": "Decision guide\n\n\n\n\n\n\n\nSituation\nSuggested approach\n\n\n\n\nFew clusters (below about 10)\nCluster-level analysis (means, permutation); avoid model-based\n\n\n10 to 40 clusters\nMixed model with Satterthwaite/Kenward-Roger df, or CR2\n\n\nMany clusters, marginal effect wanted\nGEE or cluster-robust glm\n\n\nCluster effects of interest, predictions\nMixed model\n\n\nRepeated measures, missing visits\nMixed model (MAR)\n\n\nBinary outcome, population-averaged OR\nGEE\n\n\nBinary outcome, within-cluster OR\nMixed logistic (glmer)"
+  },
+  {
+    "objectID": "clustered-workshop/s5_choose_check_report.html#one-table-of-the-approaches",
+    "href": "clustered-workshop/s5_choose_check_report.html#one-table-of-the-approaches",
+    "title": "Session 5 — Choosing, Checking and Reporting",
+    "section": "One table of the approaches",
+    "text": "One table of the approaches\n\nm_lm &lt;- lm(sbp ~ arm + age + sex + bmi, data = bp12)\nm_mx &lt;- lmer(sbp ~ arm + age + sex + bmi + (1 | village), data = bp12)\ntibble(method = c(\"naive lm\", \"cluster-robust lm\", \"mixed model\"),\n       estimate = c(coef(m_lm)[[\"armProgramme\"]], coef(m_lm)[[\"armProgramme\"]], fixef(m_mx)[[\"armProgramme\"]]),\n       se = c(summary(m_lm)$coefficients[\"armProgramme\", 2], coeftest(m_lm, vcov = vcovCL(m_lm, cluster = bp12$village))[\"armProgramme\", 2], summary(m_mx)$coefficients[\"armProgramme\", 2])) |&gt;\n  mutate(across(where(is.numeric), \\(x) round(x, 2)))\n\n# A tibble: 3 × 3\n  method            estimate    se\n  &lt;chr&gt;                &lt;dbl&gt; &lt;dbl&gt;\n1 naive lm             -3.42  1.15\n2 cluster-robust lm    -3.42  1.59\n3 mixed model          -3.57  1.6 \n\n\n\nReport the honest SE (cluster-robust or mixed). If someone shows you a clustered analysis with the naive SE of 1.15, the result looks more significant than it is."
+  },
+  {
+    "objectID": "clustered-workshop/s5_choose_check_report.html#residuals-and-random-effects",
+    "href": "clustered-workshop/s5_choose_check_report.html#residuals-and-random-effects",
+    "title": "Session 5 — Choosing, Checking and Reporting",
+    "section": "Residuals and random effects",
+    "text": "Residuals and random effects\n\npar(mfrow = c(1, 2))\nqqnorm(ranef(m_mx)$village[, 1], main = \"Village effects\"); qqline(ranef(m_mx)$village[, 1])\nplot(fitted(m_mx), resid(m_mx), xlab = \"Fitted\", ylab = \"Residual\", main = \"Residuals\"); abline(h = 0, col = \"red\")\n\n\n\nVillage effects roughly on the line: normality is plausible. With 40 villages the check is rough\nResiduals: even band, no funnel\nMixed models are fairly robust to the shape of random effects; they are not robust to wrong mean or correlation structures"
+  },
+  {
+    "objectID": "clustered-workshop/s5_choose_check_report.html#common-problems",
+    "href": "clustered-workshop/s5_choose_check_report.html#common-problems",
+    "title": "Session 5 — Choosing, Checking and Reporting",
+    "section": "Common problems",
+    "text": "Common problems\n\n\nSingular fit or non-convergence: too complex (random slopes with few visits): simplify\nFew clusters: SEs and df unreliable\nCluster-level covariates with few clusters: low power whatever the number of people\nTreating repeated measures as independent: the commonest mistake"
+  },
+  {
+    "objectID": "clustered-workshop/s5_choose_check_report.html#sample-size-for-a-cluster-trial",
+    "href": "clustered-workshop/s5_choose_check_report.html#sample-size-for-a-cluster-trial",
+    "title": "Session 5 — Choosing, Checking and Reporting",
+    "section": "Sample size for a cluster trial",
+    "text": "Sample size for a cluster trial\n\nncluster = nindividual × [ 1 + (m − 1) × ICC ]\n\n\n300 * (1 + (25 - 1) * 0.07)\n\n[1] 804\n\nceiling(804 / 25)\n\n[1] 33\n\n\n\n300 per arm if individually randomised, 25 per village, ICC 0.07: about 804 people (33 villages) per arm\nMore people per village gives diminishing returns; more villages helps more\nTake the ICC from earlier studies and test a range"
+  },
+  {
+    "objectID": "clustered-workshop/s5_choose_check_report.html#reporting-a-clustered-analysis",
+    "href": "clustered-workshop/s5_choose_check_report.html#reporting-a-clustered-analysis",
+    "title": "Session 5 — Choosing, Checking and Reporting",
+    "section": "Reporting a clustered analysis",
+    "text": "Reporting a clustered analysis\n\n\nFollow the CONSORT extension for cluster trials: number of clusters per arm, mean cluster size, ICC\nState how clustering was handled (mixed model, GEE, cluster-robust, cluster means)\nGive effect, 95% CI, and the df method if few clusters\nSay whether the effect is conditional or marginal for binary outcomes\nDescribe how missing visits were handled\n\n\n\nExample: “At 12 months, the programme lowered SBP by 3.6 mmHg (95% CI −6.7 to −0.4), estimated with a linear mixed model with a random intercept for village (40 villages; ICC 0.06).”"
+  },
+  {
+    "objectID": "clustered-workshop/s5_choose_check_report.html#switch-to-r-lab-5",
+    "href": "clustered-workshop/s5_choose_check_report.html#switch-to-r-lab-5",
+    "title": "Session 5 — Choosing, Checking and Reporting",
+    "section": "🔧 Switch to R — Lab 5",
+    "text": "🔧 Switch to R — Lab 5\n\nFile: clustered-workshop/labs/lab5_report.R\n\ncompare the approaches in one table\nsample size for a cluster trial\nmodel checks and a one-sentence result\n\n\nTime: 35 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "clustered-workshop/s5_choose_check_report.html#self-check-quiz-15",
+    "href": "clustered-workshop/s5_choose_check_report.html#self-check-quiz-15",
+    "title": "Session 5 — Choosing, Checking and Reporting",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nYou have 8 villages in a cluster-randomised trial. What is the safest approach?\n\nFit a cluster-robust lm and report its standard errors without a correction\nTreat the 160 adults as independent observations after adjusting for age\nUse a GEE with an unstructured working correlation matrix and robust SEs\nAnalyse the village means, for example with a permutation test between arms"
+  },
+  {
+    "objectID": "clustered-workshop/s5_choose_check_report.html#self-check-quiz-25",
+    "href": "clustered-workshop/s5_choose_check_report.html#self-check-quiz-25",
+    "title": "Session 5 — Choosing, Checking and Reporting",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nWhy does adding more people per village help less than adding more villages?\n\nExtra people in a village add little, since they share its information\nVillages contain more information than the individual people who live in them\nIncreasing the number of people per village raises the ICC in a linear way\nExtra people can be used in a GEE, but a mixed model cannot use them"
+  },
+  {
+    "objectID": "clustered-workshop/s5_choose_check_report.html#self-check-quiz-35",
+    "href": "clustered-workshop/s5_choose_check_report.html#self-check-quiz-35",
+    "title": "Session 5 — Choosing, Checking and Reporting",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nA trial needs 400 per arm if individually randomised. With 20 per cluster and ICC 0.05, about how many per arm are needed?\n\nAbout 400\nAbout 420\nAbout 780\nAbout 8,000"
+  },
+  {
+    "objectID": "clustered-workshop/s5_choose_check_report.html#self-check-quiz-45",
+    "href": "clustered-workshop/s5_choose_check_report.html#self-check-quiz-45",
+    "title": "Session 5 — Choosing, Checking and Reporting",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nWhich information should a cluster-randomised trial report according to CONSORT for cluster trials?\n\nThe total number of people who took part in the whole trial\nThe number of clusters per arm, the cluster sizes and the ICC\nThe p-value of the random intercept test, reported on its own\nThe names of the villages that were put in each of the arms"
+  },
+  {
+    "objectID": "clustered-workshop/s5_choose_check_report.html#self-check-quiz-55",
+    "href": "clustered-workshop/s5_choose_check_report.html#self-check-quiz-55",
+    "title": "Session 5 — Choosing, Checking and Reporting",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nWhich mistake is the most common with repeated measures data?\n\nUsing a model with a random intercept for each person followed in the study\nPlotting the mean trajectory of each group against time since baseline\nTreating visits as independent observations in a regression model\nKeeping the data in long format, with one row for each visit made"
+  },
+  {
+    "objectID": "clustered-workshop/s5_choose_check_report.html#score-and-take-home",
+    "href": "clustered-workshop/s5_choose_check_report.html#score-and-take-home",
+    "title": "Session 5 — Choosing, Checking and Reporting",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nFew clusters → cluster-level analysis or small-sample corrections\nCheck residuals and random effects; simplify if singular\nSample size = individual n × DEFF; more clusters beat bigger clusters\nReport clusters, cluster size, ICC, the method and the CI\nNever treat repeated measures as independent\n\nNext: Cheat sheet and the next module"
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#where-we-are",
+    "href": "clustered-workshop/s3_mixed_models.html#where-we-are",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "Where we are",
+    "text": "Where we are\n\nSession 2: keep an ordinary model and repair the SE\nToday: model the clustering with a random intercept for village\nBy the end you can:\n\nfit and read a linear mixed model with lmer\nread variance components and the adjusted ICC\nexplain shrinkage of village estimates\ncontrast conditional and marginal effects"
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#a-random-intercept-for-each-village",
+    "href": "clustered-workshop/s3_mixed_models.html#a-random-intercept-for-each-village",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "A random intercept for each village",
+    "text": "A random intercept for each village\n\nSBPij = β0 + β1 Programmej + β2 Ageij + … + uj + εij uj ~ N(0, τ²), εij ~ N(0, σ²)\n\n\nFixed effects β: the average relationship (the programme effect)\nRandom intercept uj: each village has its own shift, drawn from a normal distribution\nτ² = between-village variance, σ² = within-village variance\nICC = τ² / (τ² + σ²)"
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#fit-it",
+    "href": "clustered-workshop/s3_mixed_models.html#fit-it",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "Fit it",
+    "text": "Fit it\n\nm1 &lt;- lmer(sbp ~ arm + age + sex + bmi + (1 | village), data = bp12)\nsummary(m1)$coefficients |&gt; round(3)\n\n             Estimate Std. Error      df t value Pr(&gt;|t|)\n(Intercept)   105.469      4.503 638.117  23.423    0.000\narmProgramme   -3.565      1.602  39.036  -2.226    0.032\nage             0.257      0.054 645.709   4.756    0.000\nsexMale         3.014      1.131 639.770   2.665    0.008\nbmi             0.363      0.145 641.818   2.506    0.012\n\n\n\nThe programme effect is −3.6 mmHg (SE 1.6), with Satterthwaite degrees of freedom of about 39 from lmerTest. (1 | village) means a separate intercept for each village."
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#variance-components-and-icc",
+    "href": "clustered-workshop/s3_mixed_models.html#variance-components-and-icc",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "Variance components and ICC",
+    "text": "Variance components and ICC\n\nVarCorr(m1)\n\n Groups   Name        Std.Dev.\n village  (Intercept)  3.6172 \n Residual             14.2415 \n\nicc(m1)\n\n# Intraclass Correlation Coefficient\n\n    Adjusted ICC: 0.061\n  Unadjusted ICC: 0.056\n\n\n\nVillage SD 3.6 mmHg, residual SD 14.2 mmHg\nAdjusted ICC ≈ 0.06: after accounting for age, sex, BMI and arm\nAdjusted and unadjusted ICC differ because covariates explain part of the variance"
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#is-the-village-effect-needed",
+    "href": "clustered-workshop/s3_mixed_models.html#is-the-village-effect-needed",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "Is the village effect needed?",
+    "text": "Is the village effect needed?\n\nranova(m1)\n\nANOVA-like table for random-effects: Single term deletions\n\nModel:\nsbp ~ arm + age + sex + bmi + (1 | village)\n              npar  logLik    AIC   LRT Df Pr(&gt;Chisq)    \n&lt;none&gt;           7 -2689.2 5392.3                        \n(1 | village)    6 -2695.2 5402.4 12.08  1  0.0005097 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n\n\nA likelihood-ratio test of the random intercept: p ≈ 0.0005\nThe test is on the boundary (τ² cannot be negative), so the p-value is conservative\nDo not drop the cluster effect because the ICC is small or the test is not significant: the design says the data are clustered"
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#predicted-village-effects-blups",
+    "href": "clustered-workshop/s3_mixed_models.html#predicted-village-effects-blups",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "Predicted village effects (BLUPs)",
+    "text": "Predicted village effects (BLUPs)\n\ntibble(village = rownames(ranef(m1)$village), re = ranef(m1)$village[, 1]) |&gt; arrange(re) |&gt; mutate(village = fct_inorder(village)) |&gt;\n  ggplot(aes(re, village)) + geom_point(colour = col_blue, size = 2.5) + geom_vline(xintercept = 0, linetype = 2) +\n  labs(x = \"Predicted village shift (mmHg)\", y = \"Village\") + theme(axis.text.y = element_blank())\n\n\n\nShifts range from about −5 to +6 mmHg. They are predictions (BLUPs), not parameters."
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#predicted-village-effects-blups-output",
+    "href": "clustered-workshop/s3_mixed_models.html#predicted-village-effects-blups-output",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "Predicted village effects (BLUPs)",
+    "text": "Predicted village effects (BLUPs)"
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#shrinkage",
+    "href": "clustered-workshop/s3_mixed_models.html#shrinkage",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "Shrinkage",
+    "text": "Shrinkage\n\nûj = [ τ² / (τ² + σ²/nj) ] × (village mean − overall mean)\n\n\nThe factor is between 0 and 1: village estimates are pulled towards the overall mean\nSmall villages and noisy data are pulled more; large, precise villages less\nGood for ranking or flagging villages: extremes by chance are moderated"
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#same-effect-three-standard-errors",
+    "href": "clustered-workshop/s3_mixed_models.html#same-effect-three-standard-errors",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "Same effect, three standard errors",
+    "text": "Same effect, three standard errors\n\nrbind(naive = summary(m_lm &lt;- lm(sbp ~ arm + age + sex + bmi, data = bp12))$coefficients[\"armProgramme\", 1:2],\n      cluster_robust = coeftest(m_lm, vcov = vcovCL(m_lm, cluster = bp12$village))[\"armProgramme\", 1:2],\n      mixed = summary(m1)$coefficients[\"armProgramme\", 1:2]) |&gt; round(2)\n\n               Estimate Std. Error\nnaive             -3.42       1.15\ncluster_robust    -3.42       1.59\nmixed             -3.57       1.60\n\n\n\nThe naive SE is too small. The cluster-robust and mixed-model SEs agree. For a linear model with an identity link, the conditional and marginal effects are the same."
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#conditional-or-marginal",
+    "href": "clustered-workshop/s3_mixed_models.html#conditional-or-marginal",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "Conditional or marginal?",
+    "text": "Conditional or marginal?\n\n\n\n\n\n\n\n\n\nMixed model\nGEE / robust\n\n\n\n\nEffect\nConditional: same village\nMarginal: average over villages\n\n\nLinear outcome\nsame number\nsame number\n\n\nLogistic outcome\nlarger odds ratio (further from 1)\nsmaller OR\n\n\nAlso gives\nvillage predictions, variance components\nno cluster-level estimates\n\n\nMissing data\nvalid under MAR\nneeds more care"
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#reporting-a-mixed-model",
+    "href": "clustered-workshop/s3_mixed_models.html#reporting-a-mixed-model",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "Reporting a mixed model",
+    "text": "Reporting a mixed model\n\n\nState the model: fixed effects, the random effect and the estimation (REML)\nReport the effect with CI, and say how the df were obtained\nReport the ICC (adjusted) or the variance components\nSay whether the effect is conditional"
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#switch-to-r-lab-3",
+    "href": "clustered-workshop/s3_mixed_models.html#switch-to-r-lab-3",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "🔧 Switch to R — Lab 3",
+    "text": "🔧 Switch to R — Lab 3\n\nFile: clustered-workshop/labs/lab3_mixed.R\n\nlmer with (1 | village)\nvariance components, ICC, ranova\nBLUPs, a caterpillar plot and a comparison of SEs\n\n\nTime: 40 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#self-check-quiz-15",
+    "href": "clustered-workshop/s3_mixed_models.html#self-check-quiz-15",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nIn a model with (1 | village), what is the random intercept?\n\nA shift in mean SBP for each village, assumed to follow a normal distribution\nA separate fixed effect estimated for each of the forty villages in the study\nThe average SBP of the villages that were given the programme\nThe residual error of each adult measured within the study sample"
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#self-check-quiz-25",
+    "href": "clustered-workshop/s3_mixed_models.html#self-check-quiz-25",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nThe village SD is 3.6 and the residual SD is 14.2. Which expression gives the ICC?\n\n(3.6 + 14.2)^2 / 3.6^2\n3.6^2 / (3.6^2 + 14.2^2)\n3.6 / (3.6 + 14.2)^2\n14.2^2 / (3.6^2 + 14.2^2)"
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#self-check-quiz-35",
+    "href": "clustered-workshop/s3_mixed_models.html#self-check-quiz-35",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nWhat does shrinkage do to a village’s predicted effect?\n\nIt moves the estimate further from the mean, which is stronger for small villages\nIt sets the village estimate to zero when the village has few adults in it\nIt drops from the model villages that have fewer than ten adults in them\nIt pulls the estimate towards the overall mean, more so for small villages"
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#self-check-quiz-45",
+    "href": "clustered-workshop/s3_mixed_models.html#self-check-quiz-45",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nAn ICC of 0.02 is found in a cluster-randomised trial with 50 per cluster. What is the best action?\n\nKeep the cluster in the analysis, since the design makes data clustered\nDrop the cluster effect from the model, because an ICC this small is negligible\nDrop the cluster effect once the ICC is shown to fall under a cut-off of 0.05\nReplace the cluster by a fixed effect for each person in the whole trial"
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#self-check-quiz-55",
+    "href": "clustered-workshop/s3_mixed_models.html#self-check-quiz-55",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nFor a continuous outcome, how do the mixed model and cluster-robust lm effects compare?\n\nThe mixed model effect is about twice as large as the robust one\nThe cluster-robust SE is clearly smaller than the mixed model SE\nThe estimates are close and the standard errors are similar\nThey estimate different quantities and cannot be put side by side"
+  },
+  {
+    "objectID": "clustered-workshop/s3_mixed_models.html#score-and-take-home",
+    "href": "clustered-workshop/s3_mixed_models.html#score-and-take-home",
+    "title": "Session 3 — Random-Intercept (Mixed) Models",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nRandom intercept (1 | village): a normal shift per cluster\nICC = τ² / (τ² + σ²); the adjusted ICC uses the model’s variances\nBLUPs are shrunk towards the mean\nKeep the cluster effect because of the design\nLinear model: conditional = marginal; not for logistic\n\nNext: Session 4: repeated measures"
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#where-we-are",
+    "href": "clustered-workshop/s1_clustered_data.html#where-we-are",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "Where we are",
+    "text": "Where we are\n\nRegression workshop: every row was an independent person\nToday: people live in villages, wards, clinics or schools, and are measured repeatedly\nBy the end you can:\n\nspot clustered and repeated data\ncompute and explain the ICC\ncompute the design effect and the effective sample size\nsay why a naive analysis gives standard errors that are too small"
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#our-data-a-village-blood-pressure-trial",
+    "href": "clustered-workshop/s1_clustered_data.html#our-data-a-village-blood-pressure-trial",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "Our data: a village blood-pressure trial",
+    "text": "Our data: a village blood-pressure trial\n\n\n\n40 villages, randomised 20 + 20 to a hypertension programme or usual care (synthetic data)\n20 adults per village, so 800 people\nSBP measured at 0, 3, 6 and 12 months (some visits missing)\nThe programme is given to a whole village: the unit of randomisation is the village\n\n\n\nbp |&gt; select(village, arm, person, age, months, sbp) |&gt; head(6)\n\n# A tibble: 6 × 6\n  village arm       person    age months   sbp\n  &lt;fct&gt;   &lt;fct&gt;     &lt;fct&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;\n1 V01     Programme V01-P01    64      0   135\n2 V01     Programme V01-P01    64      3   149\n3 V01     Programme V01-P01    64      6   134\n4 V01     Programme V01-P01    64     12   131\n5 V01     Programme V01-P02    38      0   121\n6 V01     Programme V01-P02    38      3   136"
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#levels-in-the-data",
+    "href": "clustered-workshop/s1_clustered_data.html#levels-in-the-data",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "Levels in the data",
+    "text": "Levels in the data\n\nbp |&gt; summarise(villages = n_distinct(village), people = n_distinct(person), rows = n())\n\n# A tibble: 1 × 3\n  villages people  rows\n     &lt;int&gt;  &lt;int&gt; &lt;int&gt;\n1       40    800  2782\n\n\n\nVisit (level 1) inside person (level 2) inside village (level 3). Rows that share a person or a village are more alike than rows that do not: they are correlated.\n\n\nClustered data: people grouped in villages (one measurement each)\nRepeated (longitudinal) data: the same person measured several times\nHere we have both"
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#why-this-matters",
+    "href": "clustered-workshop/s1_clustered_data.html#why-this-matters",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "Why this matters",
+    "text": "Why this matters\n\nMost methods you know (linear and logistic regression, t-test, chi-square) assume independent observations. With correlated observations the estimates are often fine, but the standard errors, CIs and p-values are wrong, usually too small.\n\n\nTen people from one village are not ten independent pieces of information\nThe effective sample size is smaller than the number of rows\nThe problem is largest for a cluster-level exposure, such as our programme"
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#villages-differ",
+    "href": "clustered-workshop/s1_clustered_data.html#villages-differ",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "Villages differ",
+    "text": "Villages differ\n\nb0 &lt;- bp |&gt; filter(months == 0)\nb0 |&gt; group_by(village, arm) |&gt; summarise(mean_sbp = mean(sbp), .groups = \"drop\") |&gt; arrange(mean_sbp) |&gt; mutate(village = fct_inorder(village)) |&gt;\n  ggplot(aes(mean_sbp, village, colour = arm)) + geom_point(size = 2.5) + geom_vline(xintercept = mean(b0$sbp), linetype = 2) +\n  scale_colour_manual(values = c(col_blue, col_red)) + labs(x = \"Mean baseline SBP (mmHg)\", y = \"Village\", colour = NULL) + theme(axis.text.y = element_blank())\n\n\n\nAt baseline, before any programme, village means range from about 120 to 141 mmHg. With 20 random people per village we would expect much less spread."
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#villages-differ-output",
+    "href": "clustered-workshop/s1_clustered_data.html#villages-differ-output",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "Villages differ",
+    "text": "Villages differ"
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#the-intra-class-correlation",
+    "href": "clustered-workshop/s1_clustered_data.html#the-intra-class-correlation",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "The intra-class correlation",
+    "text": "The intra-class correlation\n\nICC = σ²~between villages~ / (σ²~between villages~ + σ²~within villages~)\n\n\nThe share of the total variance that lies between clusters\nAlso the correlation between two people from the same village\n0: clusters do not matter. 1: everyone in a cluster is identical\nIn community health ICCs are often small (0.01 to 0.1), but they still matter when clusters are large"
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#estimating-the-icc",
+    "href": "clustered-workshop/s1_clustered_data.html#estimating-the-icc",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "Estimating the ICC",
+    "text": "Estimating the ICC\n\nm0 &lt;- lmer(sbp ~ 1 + (1 | village), data = b0)\nVarCorr(m0)\n\n Groups   Name        Std.Dev.\n village  (Intercept)  4.317  \n Residual             15.299  \n\nicc(m0)\n\n# Intraclass Correlation Coefficient\n\n    Adjusted ICC: 0.074\n  Unadjusted ICC: 0.074\n\n\n\nICC = 0.074: about 7% of the variation in baseline SBP is between villages. It looks small. The next slide shows why it is not."
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#design-effect-and-effective-sample-size",
+    "href": "clustered-workshop/s1_clustered_data.html#design-effect-and-effective-sample-size",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "Design effect and effective sample size",
+    "text": "Design effect and effective sample size\n\nDEFF = 1 + (m − 1) × ICC neff = n / DEFF\n\n\ndeff &lt;- 1 + (20 - 1) * 0.074\nc(design_effect = deff, effective_n = 800 / deff)\n\ndesign_effect   effective_n \n       2.4060      332.5021 \n\n\n\nm = cluster size (20 per village)\nDEFF 2.4: the variance is 2.4 times what a simple random sample would give\nThe 800 people carry the information of only about 330 independent people\nA small ICC with large clusters still gives a large design effect"
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#the-naive-analysis-at-12-months",
+    "href": "clustered-workshop/s1_clustered_data.html#the-naive-analysis-at-12-months",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "The naive analysis at 12 months",
+    "text": "The naive analysis at 12 months\n\nfit_naive &lt;- lm(sbp ~ arm, data = bp12)\nsummary(fit_naive)$coefficients[\"armProgramme\", ]\n\n     Estimate    Std. Error       t value      Pr(&gt;|t|) \n-4.0147535818  1.1750745643 -3.4165947455  0.0006733127 \n\n\n\nThe estimate (about −4.0 mmHg) is fine, but its SE (1.2) treats 657 people as independent. The honest SE is about 1.4 times larger."
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#one-valid-simple-analysis",
+    "href": "clustered-workshop/s1_clustered_data.html#one-valid-simple-analysis",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "One valid simple analysis",
+    "text": "One valid simple analysis\n\nvm12 &lt;- bp12 |&gt; group_by(village, arm) |&gt; summarise(mean_sbp = mean(sbp), .groups = \"drop\")\nt.test(mean_sbp ~ arm, data = vm12)\n\n\n    Welch Two Sample t-test\n\ndata:  mean_sbp by arm\nt = 2.6681, df = 37.93, p-value = 0.01116\nalternative hypothesis: true difference in means between group Control and group Programme is not equal to 0\n95 percent confidence interval:\n 1.032151 7.525524\nsample estimates:\n  mean in group Control mean in group Programme \n               128.5770                124.2981 \n\n\n\nReduce each village to one mean: 40 independent numbers\nThe difference is about 4.3 mmHg with a CI of 1.0 to 7.5: the programme works, with an honest p-value\nLimits: covariate adjustment is harder, and villages of unequal size are weighted equally\nThe next sessions give model-based alternatives"
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#switch-to-r-lab-1",
+    "href": "clustered-workshop/s1_clustered_data.html#switch-to-r-lab-1",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "🔧 Switch to R — Lab 1",
+    "text": "🔧 Switch to R — Lab 1\n\nFile: clustered-workshop/labs/lab1_clusters.R\n\ncount villages, people and rows\nvillage means, the ICC and the design effect\nthe naive analysis vs the village-level t-test\n\n\nTime: 35 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#self-check-quiz-15",
+    "href": "clustered-workshop/s1_clustered_data.html#self-check-quiz-15",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nIn this trial the programme is given to whole villages. Which statement about the 800 adults is correct?\n\nAdults in the same village are independent, because each was measured on their own\nThe village is just a label for location and has no bearing on how the adults are analysed\nAdults in a village tend to resemble each other more than adults elsewhere\nVillages with many adults should be dropped so that all villages carry equal weight"
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#self-check-quiz-25",
+    "href": "clustered-workshop/s1_clustered_data.html#self-check-quiz-25",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nA mixed model of baseline SBP gives an ICC of 0.07. What does it say?\n\nSeven percent of the adults in the villages have a raised blood pressure\nTwo villages differ in their mean SBP by about 7 mmHg on average\nThe programme is expected to lower SBP by 7% in each treated village\nAbout 7% of the variation in SBP lies between villages"
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#self-check-quiz-35",
+    "href": "clustered-workshop/s1_clustered_data.html#self-check-quiz-35",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nWhy can an ICC of only 0.07 still matter a great deal?\n\nThe design effect grows with cluster size: with 20 per village it is more than 2\nA small ICC means the villages are nearly identical, so the programme effect gets hidden\nStatistical software rounds a small ICC up to 1 when it computes the standard errors\nThe ICC becomes relevant just when the study has fewer than about ten villages"
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#self-check-quiz-45",
+    "href": "clustered-workshop/s1_clustered_data.html#self-check-quiz-45",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nA design effect of 2.4 with 800 people gives an effective sample size of about…\n\n1,900 people\n330 people\n800 people\n40 people"
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#self-check-quiz-55",
+    "href": "clustered-workshop/s1_clustered_data.html#self-check-quiz-55",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nWhich analysis of the cluster-randomised programme effect is valid and simple?\n\nA t-test comparing the 800 individual values between the arms\nA chi-square test of the arm against the village number\nA linear model that ignores the village but adds age and sex\nA t-test comparing the 40 village means between the two arms"
+  },
+  {
+    "objectID": "clustered-workshop/s1_clustered_data.html#score-and-take-home",
+    "href": "clustered-workshop/s1_clustered_data.html#score-and-take-home",
+    "title": "Session 1 — Clustered Data: ICC and the Design Effect",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nData are clustered (people in villages) and/or repeated (visits in a person)\nICC = share of variance between clusters\nDEFF = 1 + (m − 1) × ICC; effective n = n / DEFF\nA naive analysis keeps the estimate but gives SEs that are too small\nSimple valid fix: analyse cluster means\n\nNext: Session 2: cluster-robust standard errors and GEE"
+  },
+  {
+    "objectID": "clustered-workshop/cheatsheet.html",
+    "href": "clustered-workshop/cheatsheet.html",
+    "title": "Clustered and Repeated Data Cheat Sheet",
+    "section": "",
+    "text": "Structure\nExample\nProblem if ignored\n\n\n\n\nPeople in villages, clinics, schools\nadults in 40 villages\nSE too small for cluster-level exposures\n\n\nRepeated visits on a person\nSBP at 0, 3, 6, 12 months\nSEs wrong; time effects mis-stated\n\n\nBoth\nvisits in people in villages\nuse nested random effects\n\n\n\nIf the exposure is given to whole clusters, the cluster is the unit of analysis.\n\n\n\n\nICC = τ² / (τ² + σ²) DEFF = 1 + (m − 1) × ICC neff = n / DEFF\n\nOur trial: ICC = 0.074, m = 20, so DEFF = 2.40 and the 800 adults carry the information of about 333. performance::icc(model); lmer(y ~ 1 + (1 | cluster)).\n\n\n\n\n\n\n\n\n\n\n\nSituation\nMethod\nR\n\n\n\n\nQuick and valid\nCluster means, t-test\nsummarise() by cluster\n\n\nKeep lm/glm, fix the SE\nCluster-robust SE\ncoeftest(m, vcov = vcovCL(m, cluster = d$village))\n\n\nFewer than about 40 clusters\nCR2 + Satterthwaite df\nclubSandwich::coef_test(m, \"CR2\", cluster)\n\n\nMarginal (population-averaged) effect\nGEE\ngeepack::geeglm(id = village, corstr = ...)\n\n\nCluster effects, predictions, repeated measures\nMixed model\nlme4::lmer / glmer, lmerTest for df\n\n\n\n\n\n\n\n\n\n\nEstimate\nSE\n\n\n\n\nNaive lm\n-3.42\n1.15 (too small)\n\n\nCluster-robust lm\nsame\n1.59\n\n\nMixed model\n-3.57\n1.60\n\n\n\n\n\n\n\n(1 | village): random intercept per village\n(1 | village / person): persons nested in villages\n(months | person): random intercept and slope for time\nmonths * arm: difference in slopes between arms\n\nUse REML to compare variance structures and ML to compare fixed effects. A singular fit means the random-effects structure is too rich: simplify.\n\n\n\ncorstr: exchangeable (clusters), ar1 (equally spaced visits), independence (robust SEs still valid), unstructured (many visits, small clusters risky). Sort by id first, no missing values in the model; waves = for the visit order. The OR is population-averaged; a mixed logistic OR is conditional (further from 1).\n\n\n\n\n\nTreating visits (or people in a village) as independent\nDropping the cluster term because the ICC is small\nRobust SEs with few clusters (below about 40): use CR2 / cluster-level analysis\nComplete-case analysis when dropout depends on earlier values (MAR)\nReading a mixed-model OR as a population-averaged OR\nA random slope with few visits: non-convergence\n\n\n\n\n\nn (cluster trial) = n (individual) × DEFF; more clusters beat bigger clusters. Report (CONSORT cluster extension): clusters per arm, mean cluster size, ICC, method, effect with 95% CI.\nAt 12 months the programme lowered SBP by 3.6 mmHg (95% CI -6.7 to -0.4), from a linear mixed model with a random intercept for village (40 villages; adjusted ICC 0.06)."
+  },
+  {
+    "objectID": "clustered-workshop/cheatsheet.html#is-my-data-clustered",
+    "href": "clustered-workshop/cheatsheet.html#is-my-data-clustered",
+    "title": "Clustered and Repeated Data Cheat Sheet",
+    "section": "",
+    "text": "Structure\nExample\nProblem if ignored\n\n\n\n\nPeople in villages, clinics, schools\nadults in 40 villages\nSE too small for cluster-level exposures\n\n\nRepeated visits on a person\nSBP at 0, 3, 6, 12 months\nSEs wrong; time effects mis-stated\n\n\nBoth\nvisits in people in villages\nuse nested random effects\n\n\n\nIf the exposure is given to whole clusters, the cluster is the unit of analysis."
+  },
+  {
+    "objectID": "clustered-workshop/cheatsheet.html#icc-and-design-effect",
+    "href": "clustered-workshop/cheatsheet.html#icc-and-design-effect",
+    "title": "Clustered and Repeated Data Cheat Sheet",
+    "section": "",
+    "text": "ICC = τ² / (τ² + σ²) DEFF = 1 + (m − 1) × ICC neff = n / DEFF\n\nOur trial: ICC = 0.074, m = 20, so DEFF = 2.40 and the 800 adults carry the information of about 333. performance::icc(model); lmer(y ~ 1 + (1 | cluster))."
+  },
+  {
+    "objectID": "clustered-workshop/cheatsheet.html#which-method",
+    "href": "clustered-workshop/cheatsheet.html#which-method",
+    "title": "Clustered and Repeated Data Cheat Sheet",
+    "section": "",
+    "text": "Situation\nMethod\nR\n\n\n\n\nQuick and valid\nCluster means, t-test\nsummarise() by cluster\n\n\nKeep lm/glm, fix the SE\nCluster-robust SE\ncoeftest(m, vcov = vcovCL(m, cluster = d$village))\n\n\nFewer than about 40 clusters\nCR2 + Satterthwaite df\nclubSandwich::coef_test(m, \"CR2\", cluster)\n\n\nMarginal (population-averaged) effect\nGEE\ngeepack::geeglm(id = village, corstr = ...)\n\n\nCluster effects, predictions, repeated measures\nMixed model\nlme4::lmer / glmer, lmerTest for df"
+  },
+  {
+    "objectID": "clustered-workshop/cheatsheet.html#what-the-ses-look-like",
+    "href": "clustered-workshop/cheatsheet.html#what-the-ses-look-like",
+    "title": "Clustered and Repeated Data Cheat Sheet",
+    "section": "",
+    "text": "Estimate\nSE\n\n\n\n\nNaive lm\n-3.42\n1.15 (too small)\n\n\nCluster-robust lm\nsame\n1.59\n\n\nMixed model\n-3.57\n1.60"
+  },
+  {
+    "objectID": "clustered-workshop/cheatsheet.html#mixed-model-syntax",
+    "href": "clustered-workshop/cheatsheet.html#mixed-model-syntax",
+    "title": "Clustered and Repeated Data Cheat Sheet",
+    "section": "",
+    "text": "(1 | village): random intercept per village\n(1 | village / person): persons nested in villages\n(months | person): random intercept and slope for time\nmonths * arm: difference in slopes between arms\n\nUse REML to compare variance structures and ML to compare fixed effects. A singular fit means the random-effects structure is too rich: simplify."
+  },
+  {
+    "objectID": "clustered-workshop/cheatsheet.html#gee-choices",
+    "href": "clustered-workshop/cheatsheet.html#gee-choices",
+    "title": "Clustered and Repeated Data Cheat Sheet",
+    "section": "",
+    "text": "corstr: exchangeable (clusters), ar1 (equally spaced visits), independence (robust SEs still valid), unstructured (many visits, small clusters risky). Sort by id first, no missing values in the model; waves = for the visit order. The OR is population-averaged; a mixed logistic OR is conditional (further from 1)."
+  },
+  {
+    "objectID": "clustered-workshop/cheatsheet.html#missing-visits-and-pitfalls",
+    "href": "clustered-workshop/cheatsheet.html#missing-visits-and-pitfalls",
+    "title": "Clustered and Repeated Data Cheat Sheet",
+    "section": "",
+    "text": "Treating visits (or people in a village) as independent\nDropping the cluster term because the ICC is small\nRobust SEs with few clusters (below about 40): use CR2 / cluster-level analysis\nComplete-case analysis when dropout depends on earlier values (MAR)\nReading a mixed-model OR as a population-averaged OR\nA random slope with few visits: non-convergence"
+  },
+  {
+    "objectID": "clustered-workshop/cheatsheet.html#planning-and-reporting",
+    "href": "clustered-workshop/cheatsheet.html#planning-and-reporting",
+    "title": "Clustered and Repeated Data Cheat Sheet",
+    "section": "",
+    "text": "n (cluster trial) = n (individual) × DEFF; more clusters beat bigger clusters. Report (CONSORT cluster extension): clusters per arm, mean cluster size, ICC, method, effect with 95% CI.\nAt 12 months the programme lowered SBP by 3.6 mmHg (95% CI -6.7 to -0.4), from a linear mixed model with a random intercept for village (40 villages; adjusted ICC 0.06)."
+  },
+  {
+    "objectID": "clustered-workshop/s2_robust_gee.html#where-we-are",
+    "href": "clustered-workshop/s2_robust_gee.html#where-we-are",
+    "title": "Session 2 — Cluster-Robust Standard Errors and GEE",
+    "section": "Where we are",
+    "text": "Where we are\n\nSession 1: clusters make the naive SE too small (design effect 2.4)\nToday: two ways to keep the model and fix the SE\nBy the end you can:\n\ncompute cluster-robust standard errors\nfit a GEE and choose a working correlation\nread a GEE odds ratio as a population-averaged effect\nknow when robust methods are unreliable (few clusters)"
+  },
+  {
+    "objectID": "clustered-workshop/s2_robust_gee.html#same-model-honest-se",
+    "href": "clustered-workshop/s2_robust_gee.html#same-model-honest-se",
+    "title": "Session 2 — Cluster-Robust Standard Errors and GEE",
+    "section": "Same model, honest SE",
+    "text": "Same model, honest SE\n\nm_lm &lt;- lm(sbp ~ arm + age + sex + bmi, data = bp12)\nrbind(naive = summary(m_lm)$coefficients[\"armProgramme\", 1:2],\n      cluster_robust = coeftest(m_lm, vcov = vcovCL(m_lm, cluster = bp12$village))[\"armProgramme\", 1:2]) |&gt; round(3)\n\n               Estimate Std. Error\nnaive            -3.424      1.151\ncluster_robust   -3.424      1.593\n\n\n\nThe estimate does not change. The standard error grows from 1.15 to 1.59 (about 40% larger), because the sandwich estimator uses the actual variability between villages instead of assuming independence."
+  },
+  {
+    "objectID": "clustered-workshop/s2_robust_gee.html#how-it-works-idea-only",
+    "href": "clustered-workshop/s2_robust_gee.html#how-it-works-idea-only",
+    "title": "Session 2 — Cluster-Robust Standard Errors and GEE",
+    "section": "How it works (idea only)",
+    "text": "How it works (idea only)\n\nFit the usual model; keep the coefficients\nFor the variance, add up the residuals within each cluster before squaring: correlation inside a cluster is then captured, whatever its form\nNo assumption about why or how observations are correlated\nWorks for lm, glm and many other models: vcovCL(model, cluster = ...)\n\n\nIt needs enough clusters. With about fewer than 40, the robust SE tends to be too small, and with fewer than about 10 it is unreliable."
+  },
+  {
+    "objectID": "clustered-workshop/s2_robust_gee.html#few-clusters-the-cr2-correction",
+    "href": "clustered-workshop/s2_robust_gee.html#few-clusters-the-cr2-correction",
+    "title": "Session 2 — Cluster-Robust Standard Errors and GEE",
+    "section": "Few clusters: the CR2 correction",
+    "text": "Few clusters: the CR2 correction\n\ncoef_test(m_lm, vcov = \"CR2\", cluster = bp12$village)[\"armProgramme\", ]\n\nAlternative hypothesis: two-sided \n        Coef. Estimate   SE Null value t-stat d.f. (Satt) p-val (Satt) Sig.\n armProgramme    -3.42 1.62          0  -2.12        37.4       0.0407    *\n\n\n\nclubSandwich gives a small-sample correction (CR2) and Satterthwaite degrees of freedom (about 37 here)\nSE 1.62 vs 1.59 and a t-test instead of a z-test: a more honest p-value\nWith 40 villages the difference is small; with 15 it can be large"
+  },
+  {
+    "objectID": "clustered-workshop/s2_robust_gee.html#generalised-estimating-equations",
+    "href": "clustered-workshop/s2_robust_gee.html#generalised-estimating-equations",
+    "title": "Session 2 — Cluster-Robust Standard Errors and GEE",
+    "section": "Generalised estimating equations",
+    "text": "Generalised estimating equations\n\nFit a population-averaged (marginal) model: what is the average difference between arms?\nChoose a working correlation for observations in a cluster: independence, exchangeable, ar1, unstructured\nUse robust (sandwich) SEs so inference stays valid even if the working correlation is wrong\ngeepack::geeglm(): data sorted by cluster id, and no missing values in the model variables"
+  },
+  {
+    "objectID": "clustered-workshop/s2_robust_gee.html#a-gee-for-sbp",
+    "href": "clustered-workshop/s2_robust_gee.html#a-gee-for-sbp",
+    "title": "Session 2 — Cluster-Robust Standard Errors and GEE",
+    "section": "A GEE for SBP",
+    "text": "A GEE for SBP\n\nd12 &lt;- bp12 |&gt; arrange(village)\ng1 &lt;- geeglm(sbp ~ arm + age + sex + bmi, id = village, data = d12, family = gaussian, corstr = \"exchangeable\")\nround(summary(g1)$coefficients[\"armProgramme\", ], 3)\n\n             Estimate Std.err  Wald Pr(&gt;|W|)\narmProgramme   -3.562   1.544 5.324    0.021\n\nsummary(g1)$corr\n\n        Estimate    Std.err\nalpha 0.05789055 0.02183997\n\n\n\nThe estimate is about −3.6 mmHg with a robust SE of about 1.5. The alpha (≈ 0.06) is the estimated within-village correlation, in line with the ICC."
+  },
+  {
+    "objectID": "clustered-workshop/s2_robust_gee.html#working-correlation-does-the-choice-matter",
+    "href": "clustered-workshop/s2_robust_gee.html#working-correlation-does-the-choice-matter",
+    "title": "Session 2 — Cluster-Robust Standard Errors and GEE",
+    "section": "Working correlation: does the choice matter?",
+    "text": "Working correlation: does the choice matter?\n\ng_ind &lt;- geeglm(sbp ~ arm + age + sex + bmi, id = village, data = d12, family = gaussian, corstr = \"independence\")\nc(independence = coef(g_ind)[[\"armProgramme\"]], exchangeable = coef(g1)[[\"armProgramme\"]]) |&gt; round(2)\n\nindependence exchangeable \n       -3.42        -3.56 \n\n\n\nBoth are valid with robust SEs\nA good working correlation gives narrower CIs (more efficient)\nFor a cluster-level exposure the choice matters little\nUse exchangeable for clusters, ar1 for equally spaced repeated measures"
+  },
+  {
+    "objectID": "clustered-workshop/s2_robust_gee.html#a-binary-outcome-controlled-bp",
+    "href": "clustered-workshop/s2_robust_gee.html#a-binary-outcome-controlled-bp",
+    "title": "Session 2 — Cluster-Robust Standard Errors and GEE",
+    "section": "A binary outcome: controlled BP",
+    "text": "A binary outcome: controlled BP\n\ng2 &lt;- geeglm(controlled ~ arm + age + sex + bmi, id = village, data = d12, family = binomial, corstr = \"exchangeable\")\nround(exp(cbind(OR = coef(g2), confint.default(g2)))[\"armProgramme\", ], 2)\n\n    OR  2.5 % 97.5 % \n  1.21   0.73   2.00 \n\n\n\nOR 1.2 (95% CI 0.7 to 2.0): the interval includes 1, so there is no clear evidence of an effect on controlled BP (SBP below 140) at 12 months. It is the population-averaged odds ratio: the odds in the average person of one arm compared with the other."
+  },
+  {
+    "objectID": "clustered-workshop/s2_robust_gee.html#cluster-robust-lm-or-gee",
+    "href": "clustered-workshop/s2_robust_gee.html#cluster-robust-lm-or-gee",
+    "title": "Session 2 — Cluster-Robust Standard Errors and GEE",
+    "section": "Cluster-robust lm or GEE?",
+    "text": "Cluster-robust lm or GEE?\n\n\n\n\n\n\n\n\n\nCluster-robust lm/glm\nGEE\n\n\n\n\nCorrelation\nignored in the estimate, fixed in the SE\nmodelled (working correlation)\n\n\nEstimate\nthe independence one\ncan be more efficient\n\n\nRepeated measures\nnot designed for it\nyes (waves, ar1)\n\n\nInterpretation\nmarginal\nmarginal\n\n\nFew clusters\nuse CR2\nuse small-sample corrections"
+  },
+  {
+    "objectID": "clustered-workshop/s2_robust_gee.html#switch-to-r-lab-2",
+    "href": "clustered-workshop/s2_robust_gee.html#switch-to-r-lab-2",
+    "title": "Session 2 — Cluster-Robust Standard Errors and GEE",
+    "section": "🔧 Switch to R — Lab 2",
+    "text": "🔧 Switch to R — Lab 2\n\nFile: clustered-workshop/labs/lab2_gee.R\n\ncluster-robust SEs with vcovCL\ngeeglm with exchangeable and independence\na binary GEE and the CR2 correction\n\n\nTime: 40 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "clustered-workshop/s2_robust_gee.html#self-check-quiz-15",
+    "href": "clustered-workshop/s2_robust_gee.html#self-check-quiz-15",
+    "title": "Session 2 — Cluster-Robust Standard Errors and GEE",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nWhat changes when you replace the naive SE by a cluster-robust SE in the same linear model?\n\nThe coefficient and the standard error are both recomputed from the data\nThe p-value changes, while the confidence interval keeps the same width\nThe model is refitted with a random intercept for each cluster\nThe standard error changes; the coefficient stays the same"
+  },
+  {
+    "objectID": "clustered-workshop/s2_robust_gee.html#self-check-quiz-25",
+    "href": "clustered-workshop/s2_robust_gee.html#self-check-quiz-25",
+    "title": "Session 2 — Cluster-Robust Standard Errors and GEE",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nA trial has 12 villages. Why is a standard cluster-robust SE not reliable here?\n\nThe sandwich variance relies on many clusters, and 12 is too few\nCluster-robust SEs are defined for binary outcomes and cannot be used for SBP\nVillages need to have the same number of people for the method to work\nThe method requires measurements from at least four visits per person"
+  },
+  {
+    "objectID": "clustered-workshop/s2_robust_gee.html#self-check-quiz-35",
+    "href": "clustered-workshop/s2_robust_gee.html#self-check-quiz-35",
+    "title": "Session 2 — Cluster-Robust Standard Errors and GEE",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nIn a GEE with an exchangeable working correlation, the odds ratio for the arm is best described as…\n\nthe effect for one particular village in the trial\na population-averaged effect between the two arms\nthe effect holding the village random effect constant\nan effect that holds only when the correlation is exchangeable"
+  },
+  {
+    "objectID": "clustered-workshop/s2_robust_gee.html#self-check-quiz-45",
+    "href": "clustered-workshop/s2_robust_gee.html#self-check-quiz-45",
+    "title": "Session 2 — Cluster-Robust Standard Errors and GEE",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nWhat is the role of the working correlation in a GEE?\n\nIt decides whether the coefficients are biased, so it needs to be right\nIt is the true correlation, which has to be known before the model is fitted\nIt switches off the robust variance and uses the model-based one instead\nIt can improve efficiency, and inference stays valid if it is wrong"
+  },
+  {
+    "objectID": "clustered-workshop/s2_robust_gee.html#self-check-quiz-55",
+    "href": "clustered-workshop/s2_robust_gee.html#self-check-quiz-55",
+    "title": "Session 2 — Cluster-Robust Standard Errors and GEE",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nWhich data preparation does geeglm need?\n\nRows sorted by the cluster id, with no missing values in the model variables\nRows sorted by the outcome value, keeping a single summary row for each village\nOne column for each visit, with the data reshaped into wide format beforehand\nComplete villages, with the same number of adults in each of the villages"
+  },
+  {
+    "objectID": "clustered-workshop/s2_robust_gee.html#score-and-take-home",
+    "href": "clustered-workshop/s2_robust_gee.html#score-and-take-home",
+    "title": "Session 2 — Cluster-Robust Standard Errors and GEE",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nCluster-robust SE: same estimate, honest SE (vcovCL)\nCR2 for fewer than about 40 clusters\nGEE: population-averaged effect, working correlation, robust SE\nExchangeable for clusters, ar1 for ordered repeated measures\nData sorted by cluster, no missing values in the model\n\nNext: Session 3: random-intercept (mixed) models"
+  },
+  {
+    "objectID": "clustered-workshop/s4_repeated_measures.html#where-we-are",
+    "href": "clustered-workshop/s4_repeated_measures.html#where-we-are",
+    "title": "Session 4 — Repeated Measures and Trajectories",
+    "section": "Where we are",
+    "text": "Where we are\n\nSession 3: a random intercept for village\nToday: the same person is measured four times\nBy the end you can:\n\nlook at trajectories by group\nfit time × arm with a nested random effect\ndecide on a random slope\nfit a GEE with AR(1)\nexplain why mixed models cope with missing visits (MAR)"
+  },
+  {
+    "objectID": "clustered-workshop/s4_repeated_measures.html#long-format",
+    "href": "clustered-workshop/s4_repeated_measures.html#long-format",
+    "title": "Session 4 — Repeated Measures and Trajectories",
+    "section": "Long format",
+    "text": "Long format\n\nbp |&gt; filter(person %in% c(\"V01-P01\", \"V01-P02\")) |&gt; select(person, arm, months, sbp)\n\n# A tibble: 7 × 4\n  person  arm       months   sbp\n  &lt;fct&gt;   &lt;fct&gt;      &lt;dbl&gt; &lt;dbl&gt;\n1 V01-P01 Programme      0   135\n2 V01-P01 Programme      3   149\n3 V01-P01 Programme      6   134\n4 V01-P01 Programme     12   131\n5 V01-P02 Programme      0   121\n6 V01-P02 Programme      3   136\n7 V01-P02 Programme      6   137\n\nbp |&gt; count(person) |&gt; count(n, name = \"people\")\n\n# A tibble: 4 × 2\n      n people\n  &lt;int&gt;  &lt;int&gt;\n1     1      7\n2     2     78\n3     3    241\n4     4    474\n\n\n\nOne row per visit (long format) is what the models need. Only 59% of people have all four visits."
+  },
+  {
+    "objectID": "clustered-workshop/s4_repeated_measures.html#mean-sbp-by-arm-and-visit",
+    "href": "clustered-workshop/s4_repeated_measures.html#mean-sbp-by-arm-and-visit",
+    "title": "Session 4 — Repeated Measures and Trajectories",
+    "section": "Mean SBP by arm and visit",
+    "text": "Mean SBP by arm and visit\n\nbp |&gt; group_by(arm, months) |&gt; summarise(mean_sbp = mean(sbp), .groups = \"drop\") |&gt;\n  ggplot(aes(months, mean_sbp, colour = arm)) + geom_line(linewidth = 1.2) + geom_point(size = 3) +\n  scale_colour_manual(values = c(col_blue, col_red)) + scale_x_continuous(breaks = c(0, 3, 6, 12)) + labs(x = \"Months\", y = \"Mean SBP (mmHg)\", colour = NULL)\n\n\n\nSimilar at baseline (randomised). The programme arm declines and the control arm stays about flat."
+  },
+  {
+    "objectID": "clustered-workshop/s4_repeated_measures.html#mean-sbp-by-arm-and-visit-output",
+    "href": "clustered-workshop/s4_repeated_measures.html#mean-sbp-by-arm-and-visit-output",
+    "title": "Session 4 — Repeated Measures and Trajectories",
+    "section": "Mean SBP by arm and visit",
+    "text": "Mean SBP by arm and visit"
+  },
+  {
+    "objectID": "clustered-workshop/s4_repeated_measures.html#time-arm-with-nested-random-effects",
+    "href": "clustered-workshop/s4_repeated_measures.html#time-arm-with-nested-random-effects",
+    "title": "Session 4 — Repeated Measures and Trajectories",
+    "section": "Time × arm with nested random effects",
+    "text": "Time × arm with nested random effects\n\nm_t &lt;- lmer(sbp ~ months * arm + age + sex + bmi + (1 | village / person), data = bp)\nsummary(m_t)$coefficients[\"months:armProgramme\", ] |&gt; round(3)\n\n  Estimate Std. Error         df    t value   Pr(&gt;|t|) \n    -0.385      0.074   2006.760     -5.197      0.000 \n\n\n\nThe interaction is the difference in slopes: the programme arm declines about 0.4 mmHg per month faster. (1 | village / person) gives a random intercept for each village and for each person within it."
+  },
+  {
+    "objectID": "clustered-workshop/s4_repeated_measures.html#the-effect-at-12-months",
+    "href": "clustered-workshop/s4_repeated_measures.html#the-effect-at-12-months",
+    "title": "Session 4 — Repeated Measures and Trajectories",
+    "section": "The effect at 12 months",
+    "text": "The effect at 12 months\n\nfe &lt;- fixef(m_t)\nfe[[\"armProgramme\"]] + 12 * fe[[\"months:armProgramme\"]]\n\n[1] -4.352272\n\n\n\narm alone is the difference at month 0 (near 0 after randomisation)\nAt 12 months: arm + 12 × interaction ≈ −4.4 mmHg\nTo get a CI for this contrast, use emmeans or a linear-combination function\nIf the trend is not a straight line, use months as a factor or a spline"
+  },
+  {
+    "objectID": "clustered-workshop/s4_repeated_measures.html#is-the-interaction-within-person-or-between-village",
+    "href": "clustered-workshop/s4_repeated_measures.html#is-the-interaction-within-person-or-between-village",
+    "title": "Session 4 — Repeated Measures and Trajectories",
+    "section": "Is the interaction within-person or between-village?",
+    "text": "Is the interaction within-person or between-village?\n\nThe interaction compares changes within people, so the naive SE is not too small, it is too large (0.12 instead of 0.07). Clustering inflates SEs of between-cluster effects and can reduce them for within-cluster effects. That is why the model must follow the design."
+  },
+  {
+    "objectID": "clustered-workshop/s4_repeated_measures.html#a-random-slope-for-time",
+    "href": "clustered-workshop/s4_repeated_measures.html#a-random-slope-for-time",
+    "title": "Session 4 — Repeated Measures and Trajectories",
+    "section": "A random slope for time",
+    "text": "A random slope for time\n\nm_s &lt;- lmer(sbp ~ months * arm + age + sex + bmi + (1 | village) + (months | person), data = bp, control = lmerControl(optimizer = \"bobyqa\"))\nanova(m_t, m_s)\n\nData: bp\nModels:\nm_t: sbp ~ months * arm + age + sex + bmi + (1 | village/person)\nm_s: sbp ~ months * arm + age + sex + bmi + (1 | village) + (months | person)\n    npar   AIC   BIC logLik -2*log(L)  Chisq Df Pr(&gt;Chisq)\nm_t   10 21456 21516 -10718     21436                     \nm_s   12 21460 21531 -10718     21436 0.6957  2     0.7062\n\n\n\nAllows each person to have their own trend\nThe likelihood-ratio test has p ≈ 0.7: no evidence that trends differ: keep the simpler model\nRandom slopes need many visits per person; with 4 visits the model can fail to converge"
+  },
+  {
+    "objectID": "clustered-workshop/s4_repeated_measures.html#gee-with-ar1",
+    "href": "clustered-workshop/s4_repeated_measures.html#gee-with-ar1",
+    "title": "Session 4 — Repeated Measures and Trajectories",
+    "section": "GEE with AR(1)",
+    "text": "GEE with AR(1)\n\nd &lt;- bp |&gt; arrange(person, months)\ng_ar &lt;- geeglm(sbp ~ months * arm + age + sex + bmi, id = person, waves = months, data = d, family = gaussian, corstr = \"ar1\")\nround(summary(g_ar)$coefficients[\"months:armProgramme\", ], 3)\n\n                    Estimate Std.err   Wald Pr(&gt;|W|)\nmonths:armProgramme   -0.341   0.083 16.715        0\n\n\n\nPopulation-averaged slope difference: about −0.34, close to the mixed model (−0.39)\nAR(1): correlation falls as visits are further apart\nThis GEE has id = person and so ignores the village level"
+  },
+  {
+    "objectID": "clustered-workshop/s4_repeated_measures.html#missing-visits",
+    "href": "clustered-workshop/s4_repeated_measures.html#missing-visits",
+    "title": "Session 4 — Repeated Measures and Trajectories",
+    "section": "Missing visits",
+    "text": "Missing visits\n\nAbout 13% of visits are missing, and dropout is more likely for older people and after a high SBP. That is missing at random (MAR): the reason depends on observed values.\n\n\ncomplete &lt;- bp |&gt; group_by(person) |&gt; filter(n() == 4) |&gt; ungroup()\nc(complete_cases = n_distinct(complete$person), all_people = n_distinct(bp$person))\n\ncomplete_cases     all_people \n           474            800 \n\n\n\nThe mixed model uses all available visits and is valid under MAR if the model includes the predictors of missingness\nA complete-case analysis drops 41% of people and can be biased\nIf missingness depends on the unobserved value itself (MNAR), neither is safe: run a sensitivity analysis (later module)"
+  },
+  {
+    "objectID": "clustered-workshop/s4_repeated_measures.html#switch-to-r-lab-4",
+    "href": "clustered-workshop/s4_repeated_measures.html#switch-to-r-lab-4",
+    "title": "Session 4 — Repeated Measures and Trajectories",
+    "section": "🔧 Switch to R — Lab 4",
+    "text": "🔧 Switch to R — Lab 4\n\nFile: clustered-workshop/labs/lab4_long.R\n\nvisits per person and a mean-by-arm plot\nmonths * arm with (1 | village / person)\nrandom slope, AR(1) GEE and complete cases\n\n\nTime: 45 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "clustered-workshop/s4_repeated_measures.html#self-check-quiz-15",
+    "href": "clustered-workshop/s4_repeated_measures.html#self-check-quiz-15",
+    "title": "Session 4 — Repeated Measures and Trajectories",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nWhat does the months:armProgramme coefficient in the model estimate?\n\nThe difference in mean SBP between arms at month zero\nThe difference between arms in the change in SBP per month\nThe change in SBP per month in the control arm only\nThe fraction of visits that are missing in the programme arm"
+  },
+  {
+    "objectID": "clustered-workshop/s4_repeated_measures.html#self-check-quiz-25",
+    "href": "clustered-workshop/s4_repeated_measures.html#self-check-quiz-25",
+    "title": "Session 4 — Repeated Measures and Trajectories",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nWhat does (1 | village / person) specify?\n\nRandom slopes for time, estimated separately for each village and each person\nA single random intercept shared by all visits of the people in a village\nA fixed effect for each village and a fixed effect for each person\nA random intercept for village and one for person within village"
+  },
+  {
+    "objectID": "clustered-workshop/s4_repeated_measures.html#self-check-quiz-35",
+    "href": "clustered-workshop/s4_repeated_measures.html#self-check-quiz-35",
+    "title": "Session 4 — Repeated Measures and Trajectories",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nIn this model the interaction naive SE (0.12) was larger than the mixed one (0.07). What is the reason?\n\nIt compares change within people, where the clustering can shrink the variance\nA mixed model gives a smaller SE than a naive model for the coefficients it estimates\nClustering increases the variance of each estimate, and this one is no different\nThe naive model had fewer observations available than the mixed model did"
+  },
+  {
+    "objectID": "clustered-workshop/s4_repeated_measures.html#self-check-quiz-45",
+    "href": "clustered-workshop/s4_repeated_measures.html#self-check-quiz-45",
+    "title": "Session 4 — Repeated Measures and Trajectories",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nUnder missing at random, why can the mixed model be used with incomplete follow-up?\n\nIt fills the missing visits in with the last value observed for that person\nIt drops everyone with a missing visit before the model is fitted to the data\nIt uses all observed visits, and dropout depends on values in the model\nIt assumes the missing visits would have had the same SBP as the observed ones"
+  },
+  {
+    "objectID": "clustered-workshop/s4_repeated_measures.html#self-check-quiz-55",
+    "href": "clustered-workshop/s4_repeated_measures.html#self-check-quiz-55",
+    "title": "Session 4 — Repeated Measures and Trajectories",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nA random slope for months is tried and the likelihood-ratio p-value is 0.7. What do you conclude?\n\nThe random slope shows that the people in the trial share one identical trend\nThere is no evidence that trends differ, so the simpler model is kept\nThe model needs to be rerun with months entered as a categorical variable\nThe random intercept for village should now be removed from the model"
+  },
+  {
+    "objectID": "clustered-workshop/s4_repeated_measures.html#score-and-take-home",
+    "href": "clustered-workshop/s4_repeated_measures.html#score-and-take-home",
+    "title": "Session 4 — Repeated Measures and Trajectories",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nLong format, one row per visit\nmonths × arm = difference in slopes; (1 | village / person)\nWithin-person comparisons: SE can be smaller than a naive one\nRandom slope only if the data support it\nMAR: mixed models use all visits; avoid complete cases\n\nNext: Session 5: choosing, checking and reporting"
   }
 ]
