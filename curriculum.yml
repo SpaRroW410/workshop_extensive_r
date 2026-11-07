@@ -106,6 +106,12 @@ pages:
   survey-workshop/s4_nonresponse_raking.qmd: {title: "Session 4 — Nonresponse, Raking and Replicate Weights"}
   survey-workshop/s5_choose_check_report.qmd: {title: "Session 5 — Choosing, Checking and Reporting"}
   survey-workshop/cheatsheet.qmd: {title: "Survey Data Cheat Sheet"}
+  curves-workshop/s1_beyond_linear.qmd: {title: "Session 1 — Is It Really a Straight Line?"}
+  curves-workshop/s2_splines.qmd: {title: "Session 2 — Splines"}
+  curves-workshop/s3_gam.qmd: {title: "Session 3 — Generalised Additive Models (GAM)"}
+  curves-workshop/s4_interaction.qmd: {title: "Session 4 — Interaction and Effect Modification"}
+  curves-workshop/s5_choose_check_report.qmd: {title: "Session 5 — Choosing, Checking and Reporting"}
+  curves-workshop/cheatsheet.qmd: {title: "Curves and Interactions Cheat Sheet"}
   regression-workshop/s1_foundations.qmd: {title: "Session 1 — Foundations"}
   regression-workshop/s2_simple_regression.qmd: {title: "Session 2 — Simple Linear Regression"}
   regression-workshop/s3_multiple_regression.qmd: {title: "Session 3 — Inference & Multiple Regression"}
@@ -422,7 +428,7 @@ profiles:
     title: "Data Visualization Workshop — Advanced"
     output-dir: docs/advanced
     logo-href: welcome.html
-    # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1), counts and rates (A2), ordinal/multinomial outcomes (A3) and clustered/repeated data (A4) and survey data (A5) live here.
+    # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1), counts and rates (A2), ordinal/multinomial outcomes (A3) and clustered/repeated data (A4) survey data (A5) and curves/interactions (A6) live here.
     project-extra:
       render:
       - survival-workshop/*.qmd
@@ -430,6 +436,7 @@ profiles:
       - ordinal-workshop/*.qmd
       - clustered-workshop/*.qmd
       - survey-workshop/*.qmd
+      - curves-workshop/*.qmd
       resources:
       - data/tb_cohort.csv
       - survival-workshop/make_data.R
@@ -447,6 +454,9 @@ profiles:
       - data/survey_population.csv
       - survey-workshop/make_data.R
       - survey-workshop/labs/*.R
+      - data/ncd_curves.csv
+      - curves-workshop/make_data.R
+      - curves-workshop/labs/*.R
     left:
       - text: "R Foundations"
         items:
@@ -532,6 +542,15 @@ profiles:
           - survey-workshop/s5_choose_check_report.qmd
           - "---"
           - survey-workshop/cheatsheet.qmd
+      - text: "Curves & Interactions Workshop"
+        items:
+          - curves-workshop/s1_beyond_linear.qmd
+          - curves-workshop/s2_splines.qmd
+          - curves-workshop/s3_gam.qmd
+          - curves-workshop/s4_interaction.qmd
+          - curves-workshop/s5_choose_check_report.qmd
+          - "---"
+          - curves-workshop/cheatsheet.qmd
       - text: "Quarto"
         items:
           - quarto_repro_w/reproducible_writing.qmd

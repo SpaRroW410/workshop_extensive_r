@@ -1,0 +1,255 @@
+---
+title: "Session 1 — Is It Really a Straight Line?"
+subtitle: "Checking linearity · polynomials · categorising · transformations · U-shapes hidden by a linear term · Lab 1"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Regression workshop: every continuous predictor entered as a **straight line**
+- Today: **how to see** that the line is wrong, and the **simple** fixes
+- By the end you can:
+  - use **residual plots and smoothers** to detect curvature
+  - fit **polynomial** and **log** terms
+  - explain what **categorising** costs
+  - see how a **linear term can hide a U-shape**
+:::
+
+## Our data: an NCD risk-factor survey
+
+::: {.columns}
+::: {.column width="55%"}
+- **4,000 adults** aged 18 to 80 (synthetic)
+- **SBP** (mmHg) and **10-year CVD event** (`cvd10`, 10% had one)
+- Age, BMI, salt (g/day), activity (hours/week), sex, smoking
+- Questions: does SBP rise **evenly** with age? Does CVD risk rise **steadily** with BMI?
+:::
+::: {.column width="45%"}
+```{r}
+ncd |> select(age, sex, bmi, salt, activity, smoker, sbp, cvd10) |> head(6)
+```
+:::
+:::
+
+# Topic 1 — Seeing curvature {background-color="#2C3E50"}
+
+## Straight line vs smoother
+
+```{r}
+#| output-location: slide
+#| fig-height: 4.4
+ggplot(ncd, aes(age, sbp)) + geom_point(alpha = 0.12) + geom_smooth(method = "lm", colour = col_red, se = FALSE) + geom_smooth(method = "loess", colour = col_blue, se = FALSE, formula = y ~ x) + labs(x = "Age (years)", y = "SBP (mmHg)")
+```
+
+::: {.key}
+The **red** line says "the same rise per year at every age". The **blue** loess smoother shows SBP rising **slowly until about 45 and faster after**.
+:::
+
+## Residuals against the predictor
+
+```{r}
+#| output-location: slide
+#| fig-height: 4.2
+m_lin <- lm(sbp ~ age + bmi + salt + activity + sex + smoker, data = ncd)
+ggplot(data.frame(age = ncd$age, res = resid(m_lin)), aes(age, res)) + geom_point(alpha = 0.12) + geom_smooth(se = FALSE, formula = y ~ x, method = "loess") + geom_hline(yintercept = 0, linetype = 2) + labs(y = "Residual")
+```
+
+::: {.incremental}
+- If the straight line were right, the smoother would be **flat at 0**
+- It curves: **negative at both ends and positive in the middle**
+- Do this for **every continuous predictor** in a model
+:::
+
+# Topic 2 — Simple fixes {background-color="#2C3E50"}
+
+## Polynomial terms
+
+```{r}
+m_quad <- lm(sbp ~ poly(age, 2) + bmi + salt + activity + sex + smoker, data = ncd)
+anova(m_lin, m_quad)
+c(linear = AIC(m_lin), quadratic = AIC(m_quad)) |> round(0)
+```
+
+::: {.incremental}
+- Adding **age²** improves the fit (F test p ≈ 2×10⁻⁹; AIC down by about **34**)
+- `poly(age, 2)`: **orthogonal** terms; `age + I(age^2)`: raw terms
+- Polynomial coefficients are **hard to read**: look at the **curve**; they misbehave at the **ends**
+:::
+
+## Categorising the predictor
+
+```{r}
+ncd <- ncd |> mutate(age_grp = cut(age, c(0, 29, 44, 59, 100), labels = c("<30", "30-44", "45-59", "60+")))
+m_cat <- lm(sbp ~ age_grp + bmi + salt + activity + sex + smoker, data = ncd)
+c(linear = AIC(m_lin), quadratic = AIC(m_quad), four_groups = AIC(m_cat)) |> round(0)
+```
+
+::: {.warn}
+The four age groups fit **worse than a straight line** (AIC 30,810). Categorising **throws away** the variation within a group, forces **steps** at arbitrary cut-points, loses **power**, and hides the shape. Use groups to **describe** (a table), not to **model**.
+:::
+
+## Transformations
+
+```{r}
+m_log <- lm(sbp ~ age + bmi + salt + log1p(activity) + sex + smoker, data = ncd)
+c(linear = AIC(m_lin), log_activity = AIC(m_log)) |> round(0)
+```
+
+::: {.key}
+Activity shows **diminishing returns**: the first hours of activity lower SBP most. **`log(1 + activity)`** captures it (AIC down by 21) with **no extra parameter**, and keeps a **single coefficient**.
+:::
+
+# Topic 3 — A U-shape that a line cannot see {background-color="#2C3E50"}
+
+## BMI and CVD risk: linear term
+
+```{r}
+g_lin <- glm(cvd10 ~ age + bmi + sex + smoker, data = ncd, family = binomial)
+round(exp(cbind(OR = coef(g_lin), confint.default(g_lin)))["bmi", ], 3)
+```
+
+::: {.warn}
+**OR 1.007** (95% CI 0.98 to 1.03): "BMI has **no effect**". That is **wrong**.
+:::
+
+## Add a quadratic term
+
+```{r}
+g_quad <- glm(cvd10 ~ age + bmi + I(bmi^2) + sex + smoker, data = ncd, family = binomial)
+anova(g_lin, g_quad, test = "Chisq")
+b <- coef(g_quad); -b[["bmi"]] / (2 * b[["I(bmi^2)"]])
+```
+
+::: {.key}
+The quadratic term is overwhelming (deviance drop **231**). Risk is **lowest near BMI 24.5** and rises **both** for low and high BMI. The straight line averaged the **two arms of the U** and found **nothing**. A model without a check for shape would have **missed a real effect**.
+:::
+
+## What to do
+
+::: {.good}
+1. **Plot** the outcome (or residuals) against each continuous predictor with a **smoother**
+2. Try **transformations** (log) when returns **diminish**
+3. Try **polynomial or spline** terms when the shape is **curved or bending** (Session 2)
+4. **Do not categorise** unless the question is about groups
+5. Compare with **AIC or a test**, and **plot** the result
+:::
+
+## 🔧 Switch to R — Lab 1 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `curves-workshop/labs/lab1_linear.R`
+
+- curve vs straight line, residual smoother
+- quadratic, categorised and log versions
+- a U-shape in a logistic model and its turning point
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("k1q1", "A smoother through the residuals against age is a clear U-shape. What does this suggest?",
+         c("The errors are not normal, so the outcome should be transformed in the model",
+           "Age has no effect on the outcome after the other variables are included",
+           "The straight-line term for age is the wrong shape for the relationship",
+           "The model needs more adults before the pattern can be interpreted"), answer = 3,
+         explain = "Residuals should be flat around zero if the functional form is right. A systematic curve means the model is mis-specified for that variable.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("k1q2", "Why is cutting a continuous variable into a few groups usually a poor idea?",
+         c("It forces the relationship to be exactly linear within each of the groups",
+           "It makes the standard errors smaller than the true ones in the model",
+           "It cannot be used when the outcome is a yes or no variable",
+           "It discards information and creates artificial jumps at the cut-points"), answer = 4,
+         explain = "Everyone in a group is treated alike, so variation within the group is lost, power falls, and the cut-points are arbitrary. Here four age groups fitted worse than a line.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("k1q3", "In a logistic model the BMI odds ratio is 1.007 (CI 0.98 to 1.03), yet a squared BMI term is highly significant. What is the best interpretation?",
+         c("The risk is U-shaped, and the line averages the two arms to nothing",
+           "BMI is unrelated to the outcome, and the squared term is a chance finding",
+           "The linear term is right, and the squared term just improves the p-value",
+           "The odds ratio must be wrong, because an effect so close to one is not credible"), answer = 1,
+         explain = "When risk falls then rises, the best straight line is nearly flat. A flexible term reveals the true shape, which a linear term can hide completely.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("k1q4", "Activity lowers SBP with diminishing returns. Which simple change in the model captures this?",
+         c("Replace activity by the square of activity",
+           "Replace activity by log(1 + activity)",
+           "Round activity to whole hours before the model is fitted",
+           "Divide activity by the age of each adult in the study"), answer = 2,
+         explain = "A log transformation flattens the curve as activity grows, with a single coefficient. The square would give accelerating, not diminishing, returns.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("k1q5", "A quadratic model for BMI has the turning point -b / (2c) at 24.5. What is this value?",
+         c("The average BMI of the adults in the sample",
+           "The BMI at which the odds ratio equals one exactly",
+           "The BMI at which the squared term becomes significant",
+           "The BMI at which the predicted risk is lowest"), answer = 4,
+         explain = "The vertex of the parabola is where its slope is zero. For this U-shaped risk curve it is the BMI with the lowest predicted risk.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Plot** the outcome or residuals against each predictor with a **smoother**
+- A **linear term can hide** a U-shape (OR 1.007!)
+- **log** for diminishing returns; **polynomial** or **splines** for bends
+- **Do not categorise** to model; groups are for describing
+- Compare by **AIC or tests**, then **plot**
+:::
+
+**Next:** Session 2: splines

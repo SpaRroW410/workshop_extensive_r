@@ -12,6 +12,7 @@ project:
     - ordinal-workshop/*.qmd
     - clustered-workshop/*.qmd
     - survey-workshop/*.qmd
+    - curves-workshop/*.qmd
   resources:
     - data/tb_cohort.csv
     - survival-workshop/make_data.R
@@ -29,6 +30,9 @@ project:
     - data/survey_population.csv
     - survey-workshop/make_data.R
     - survey-workshop/labs/*.R
+    - data/ncd_curves.csv
+    - curves-workshop/make_data.R
+    - curves-workshop/labs/*.R
 website:
   title: Data Visualization Workshop — Advanced
   site-url: '.'
@@ -173,6 +177,21 @@ website:
           - text: '---'
           - text: Survey Data Cheat Sheet
             href: survey-workshop/cheatsheet.qmd
+      - text: Curves & Interactions Workshop
+        menu:
+          - text: Session 1 — Is It Really a Straight Line?
+            href: curves-workshop/s1_beyond_linear.qmd
+          - text: Session 2 — Splines
+            href: curves-workshop/s2_splines.qmd
+          - text: Session 3 — Generalised Additive Models (GAM)
+            href: curves-workshop/s3_gam.qmd
+          - text: Session 4 — Interaction and Effect Modification
+            href: curves-workshop/s4_interaction.qmd
+          - text: Session 5 — Choosing, Checking and Reporting
+            href: curves-workshop/s5_choose_check_report.qmd
+          - text: '---'
+          - text: Curves and Interactions Cheat Sheet
+            href: curves-workshop/cheatsheet.qmd
       - text: Quarto
         menu:
           - text: Quarto Basics

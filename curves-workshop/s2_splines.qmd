@@ -1,0 +1,234 @@
+---
+title: "Session 2 — Splines"
+subtitle: "Piecewise-linear terms · natural cubic splines · degrees of freedom · prediction plots · splines in logistic models · Lab 2"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 1: found curvature; simple fixes
+- Today: **splines**, the flexible, general tool
+- By the end you can:
+  - fit a **hinge** (piecewise-linear) term
+  - fit a **natural spline** with `ns()` and choose its **df**
+  - draw a **prediction plot** with a CI band
+  - test **non-linearity** in a logistic model
+:::
+
+# Topic 1 — Piecewise linear {background-color="#2C3E50"}
+
+## A hinge at age 45
+
+```{r}
+m_h <- lm(sbp ~ age + pmax(age - 45, 0) + bmi + salt + activity + sex + smoker, data = ncd)
+round(coef(m_h)[2:3], 3)
+c(before = coef(m_h)[["age"]], after = coef(m_h)[["age"]] + coef(m_h)[[3]]) |> round(2)
+```
+
+::: {.key}
+`pmax(age - 45, 0)` is **0 below 45** and **age − 45 above it**: its coefficient is the **change in slope**. SBP rises **0.27 mmHg per year before 45** and **0.56 after**: twice as fast. Easy to **explain**, and the slopes are **directly reportable**.
+:::
+
+## Where is the knot?
+
+```{r}
+aic_k <- sapply(30:60, function(k) AIC(lm(sbp ~ age + pmax(age - k, 0) + bmi + salt + activity + sex + smoker, data = ncd)))
+(30:60)[which.min(aic_k)]
+```
+
+::: {.warn}
+The data choose **45**. But a knot **picked from the data** is not free: the search is **not counted**, so CIs are **too narrow**. Prefer a knot from **subject knowledge** (e.g. a clinical cut-off), or use a **smooth** spline.
+:::
+
+# Topic 2 — Natural splines {background-color="#2C3E50"}
+
+## ns(): a smooth curve
+
+```{r}
+m_l <- lm(sbp ~ age + bmi + salt + activity + sex + smoker, data = ncd)
+m_ns <- lm(sbp ~ ns(age, df = 4) + bmi + salt + activity + sex + smoker, data = ncd)
+anova(m_l, m_ns)
+```
+
+::: {.incremental}
+- `ns(age, df = 4)` builds **4 columns** (a **basis**); knots go at **quantiles** of age
+- **Natural** = **linear beyond the outer knots**, so the tails behave
+- The 4 coefficients are **not interpretable one by one**: interpret the **curve** and **tests**
+- The F test against the straight line: p ≈ 8×10⁻⁹
+:::
+
+## How many degrees of freedom?
+
+```{r}
+aic_df <- sapply(1:8, function(k) AIC(lm(sbp ~ ns(age, df = k) + bmi + salt + activity + sex + smoker, data = ncd)))
+round(setNames(aic_df, paste0("df", 1:8)), 0)
+```
+
+::: {.key}
+**df = 1 is a straight line.** AIC drops by **36** at df = 2, then stays **flat**: **3 to 5 df** are plenty for age. More df just adds **wiggles** (Session 5 shows it **hurts prediction**). Rule of thumb: **3 to 5 df** for a main predictor, fewer for small data.
+:::
+
+## A prediction plot
+
+```{r}
+#| output-location: slide
+#| fig-height: 4.2
+grid <- data.frame(age = 18:80, bmi = mean(ncd$bmi), salt = mean(ncd$salt), activity = mean(ncd$activity), sex = factor("Male", levels = levels(ncd$sex)), smoker = 0)
+pr <- predict(m_ns, newdata = grid, se.fit = TRUE)
+grid |> mutate(fit = pr$fit, lo = fit - 1.96 * pr$se.fit, hi = fit + 1.96 * pr$se.fit) |>
+  ggplot(aes(age, fit)) + geom_ribbon(aes(ymin = lo, ymax = hi), alpha = 0.25, fill = col_blue) + geom_line(linewidth = 1.2, colour = col_blue) + labs(x = "Age (years)", y = "Predicted SBP (mmHg)")
+```
+
+::: {.key}
+**Predicted SBP with a 95% band**, other variables held at **typical values** (mean BMI, salt, activity; man; non-smoker). The **plot is the result**: report it instead of the coefficients.
+:::
+
+# Topic 3 — Splines for binary outcomes {background-color="#2C3E50"}
+
+## BMI and CVD risk
+
+```{r}
+g_ns <- glm(cvd10 ~ age + ns(bmi, 4) + sex + smoker, data = ncd, family = binomial)
+g_l <- glm(cvd10 ~ age + bmi + sex + smoker, data = ncd, family = binomial)
+anova(g_l, g_ns, test = "Chisq")
+```
+
+```{r}
+#| output-location: slide
+#| fig-height: 4
+gb <- data.frame(bmi = seq(15, 40, 0.5), age = 50, sex = factor("Male", levels = levels(ncd$sex)), smoker = 0)
+gb$p <- predict(g_ns, newdata = gb, type = "response")
+ggplot(gb, aes(bmi, p)) + geom_line(linewidth = 1.2, colour = col_red) + scale_y_continuous(labels = scales::percent) + labs(x = "BMI", y = "10-year CVD risk")
+```
+
+::: {.key}
+Likelihood-ratio test: deviance drop **235 on 3 df**, so a straight line is **not enough**. The curve is **U-shaped**: lowest near **BMI 24 to 25**, high for low BMI, much higher for **obesity**.
+:::
+
+## Cautions
+
+::: {.warn}
+- Predictions **outside the data range** are **extrapolation** (the natural spline continues in a straight line)
+- A spline with **too many df** fits **noise** (Session 5)
+- Put the spline **inside the model** with the other predictors, then predict **holding them fixed**
+:::
+
+## 🔧 Switch to R — Lab 2 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `curves-workshop/labs/lab2_splines.R`
+
+- hinge term, slopes and knot search
+- natural spline, df choice, prediction plot
+- spline for BMI in a logistic model
+:::
+
+**Time:** 40 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("k2q1", "In a model with age + pmax(age - 45, 0), the coefficient of the hinge term is 0.29. What does it estimate?",
+         c("The mean SBP of the adults who are older than 45 years in the survey",
+           "The slope of SBP in the adults who are older than 45 years of age",
+           "The age at which SBP starts to rise among the adults in the survey",
+           "The change in slope after age 45 compared with the slope before"), answer = 4,
+         explain = "The hinge is zero until age 45, so its coefficient is the extra slope after the knot. The slope after is the sum of the two coefficients (0.27 + 0.29).")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("k2q2", "Why is picking the knot from the data (the best AIC over many knots) a problem?",
+         c("The search is not counted, so the CIs come out too narrow",
+           "The model can no longer be fitted by least squares once the search is done",
+           "Knots chosen from the data bias the estimates of every other coefficient",
+           "The AIC cannot be computed for a model whose knot was found by searching"), answer = 1,
+         explain = "Trying many knots is a form of multiple testing that the standard errors ignore. A knot from subject-matter knowledge, or a smooth term, avoids this.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("k2q3", "What is the best description of ns(age, df = 4)?",
+         c("Four straight segments joined at the quartiles of age in the survey data",
+           "A smooth curve whose four basis coefficients are not read one by one",
+           "A polynomial of degree four in age, in which each coefficient has a clear meaning",
+           "Four separate age effects, one for each of four fixed age groups in the data"), answer = 2,
+         explain = "A natural spline is a flexible smooth curve, linear beyond the outer knots. Its basis coefficients depend on the construction, so interpret the fitted curve.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("k2q4", "The AIC for natural splines with 1 to 8 df is 30,771 then about 30,735 from 2 df onwards. Which choice is sensible?",
+         c("8, since more flexibility gives a more correct curve for the data",
+           "1, since a straight line is preferred to a curve whatever the AIC",
+           "No value can be justified, because AIC cannot help to choose the df",
+           "A small number such as 3 or 4, since more flexibility adds nothing"), answer = 4,
+         explain = "The fit improves greatly from 1 to 2 df and then stays flat. Extra df add wiggle and variance without improving the fit.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("k2q5", "How is a prediction plot with a 95% band for a spline model built?",
+         c("Predict over a grid of ages with se.fit, with the other variables fixed",
+           "Plot the fitted values of the sample against age and join the points together",
+           "Plot each spline coefficient against the age at which its knot is placed",
+           "Fit a separate model for each age in the data and plot the intercepts"), answer = 1,
+         explain = "Predictions come from a new data grid, with the other covariates at chosen values, and the band from the standard errors of the predictions.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Hinge** `pmax(x - k, 0)`: change in slope at a chosen knot
+- **`ns(x, df)`**: smooth natural spline, 3 to 5 df
+- Test non-linearity with **anova** (F or LR test)
+- **Prediction plot with a CI band** is the result
+- Beware **extrapolation** and too many df
+:::
+
+**Next:** Session 3: generalised additive models
