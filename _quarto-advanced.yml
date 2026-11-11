@@ -13,6 +13,7 @@ project:
     - clustered-workshop/*.qmd
     - survey-workshop/*.qmd
     - curves-workshop/*.qmd
+    - missing-workshop/*.qmd
   resources:
     - data/tb_cohort.csv
     - survival-workshop/make_data.R
@@ -33,6 +34,9 @@ project:
     - data/ncd_curves.csv
     - curves-workshop/make_data.R
     - curves-workshop/labs/*.R
+    - data/ncd_missing.csv
+    - missing-workshop/make_data.R
+    - missing-workshop/labs/*.R
 website:
   title: Data Visualization Workshop — Advanced
   site-url: '.'
@@ -192,6 +196,21 @@ website:
           - text: '---'
           - text: Curves and Interactions Cheat Sheet
             href: curves-workshop/cheatsheet.qmd
+      - text: Missing Data Workshop
+        menu:
+          - text: 'Session 1 — Missing Data: Patterns and Mechanisms'
+            href: missing-workshop/s1_patterns_mechanisms.qmd
+          - text: Session 2 — Simple Methods and Why They Fail
+            href: missing-workshop/s2_simple_methods.qmd
+          - text: Session 3 — Multiple Imputation with mice
+            href: missing-workshop/s3_multiple_imputation.qmd
+          - text: Session 4 — Diagnostics, Derived Variables and the Number of Imputations
+            href: missing-workshop/s4_mi_diagnostics.qmd
+          - text: Session 5 — MNAR Sensitivity Analysis and Reporting
+            href: missing-workshop/s5_mnar_reporting.qmd
+          - text: '---'
+          - text: Missing Data Cheat Sheet
+            href: missing-workshop/cheatsheet.qmd
       - text: Quarto
         menu:
           - text: Quarto Basics

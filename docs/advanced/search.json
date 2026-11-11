@@ -3749,14 +3749,14 @@
     "href": "welcome.html#find-your-way-around",
     "title": "Welcome",
     "section": "🧭 Find Your Way Around",
-    "text": "🧭 Find Your Way Around\nUse the navigation bar above to browse all modules. Key starting points:\n\n📈 Curves & Interactions Workshop — Slides, labs and quizzes: splines, GAMs, effect modification, prediction plots (start at Session 1)\n📋 Survey Data Workshop — Slides, labs and quizzes: complex survey design, weights, svyglm, raking (start at Session 1)\n🏘️ Clustered & Repeated Data Workshop — Slides, labs and quizzes: ICC, cluster-robust SEs, GEE, mixed models, repeated measures (start at Session 1)\n🪜 Ordinal & Multinomial Workshop — Slides, labs and quizzes: ordinal and multinomial logistic regression (start at Session 1)\n⏳ Survival Workshop — Slides, labs and quizzes on time-to-event data: Kaplan-Meier, log-rank, Cox (start at Session 1)\n🦟 Counts Workshop — Slides, labs and quizzes on counts and rates: Poisson, negative binomial, offsets (start at Session 1)\n📁 R Foundations — R syntax, wrangling, and full NCTOH applied examples\n📊 Data Visualization — All four ggplot2 modules, advanced and interactive plots\n🧪 Statistical Analysis — Full ggstatsplot, gtsummary, and deep analysis\n📝 Reproducibility — Quarto basics through publication-ready documents\n\n\nThe complete navbar gives full access to all workshop content."
+    "text": "🧭 Find Your Way Around\nUse the navigation bar above to browse all modules. Key starting points:\n\n🕳️ Missing Data Workshop — Slides, labs and quizzes: MCAR/MAR/MNAR, multiple imputation with mice, sensitivity analysis (start at Session 1)\n📈 Curves & Interactions Workshop — Slides, labs and quizzes: splines, GAMs, effect modification, prediction plots (start at Session 1)\n📋 Survey Data Workshop — Slides, labs and quizzes: complex survey design, weights, svyglm, raking (start at Session 1)\n🏘️ Clustered & Repeated Data Workshop — Slides, labs and quizzes: ICC, cluster-robust SEs, GEE, mixed models, repeated measures (start at Session 1)\n🪜 Ordinal & Multinomial Workshop — Slides, labs and quizzes: ordinal and multinomial logistic regression (start at Session 1)\n⏳ Survival Workshop — Slides, labs and quizzes on time-to-event data: Kaplan-Meier, log-rank, Cox (start at Session 1)\n🦟 Counts Workshop — Slides, labs and quizzes on counts and rates: Poisson, negative binomial, offsets (start at Session 1)\n📁 R Foundations — R syntax, wrangling, and full NCTOH applied examples\n📊 Data Visualization — All four ggplot2 modules, advanced and interactive plots\n🧪 Statistical Analysis — Full ggstatsplot, gtsummary, and deep analysis\n📝 Reproducibility — Quarto basics through publication-ready documents\n\n\nThe complete navbar gives full access to all workshop content."
   },
   {
     "objectID": "welcome.html#downloadable-resources",
     "href": "welcome.html#downloadable-resources",
     "title": "Welcome",
     "section": "📥 Downloadable Resources",
-    "text": "📥 Downloadable Resources\nAll files for this track are available below, grouped by type.\n\n📄 R Scripts\n\nMake Data\nLab1 Linear\nLab2 Splines\nLab3 Gam\nLab4 Interaction\nLab5 Report\nMake Data\nLab1 Design\nLab2 Describe\nLab3 Regression\nLab4 Weights\nLab5 Report\nMake Data\nLab1 Clusters\nLab2 Gee\nLab3 Mixed\nLab4 Long\nLab5 Report\nMake Data\nLab1 Outcomes\nLab2 Ordinal\nLab3 Po\nLab4 Multinom\nLab5 Report\nMake Data\nLab1 Data\nLab2 Km\nLab3 Logrank\nLab4 Cox\nLab5 Assumptions\nMake Data\nLab1 Counts\nLab2 Poisson\nLab3 Overdisp\nLab4 Zeros\nLab5 Report\nBasic r Foundations\nBasic Visualization\nModerate Visualization\nAdvanced Visualization\nGtsummary Examples\nInteractive Plots\n\n\n\n🗄️ Datasets\n\n📊 Ncd Curves .csv\n📊 Survey Adults .csv\n📊 Survey Population .csv\n📊 Bp Trial .csv\n📊 Maternal Survey .csv\n📊 Tb Cohort .csv\n📊 Dengue Wards .csv\n📊 Workshop Data .csv\n📗 Workshop Data .xlsx\n🔵 Workshop Data .rds\n🔵 Nctoh Data .rds\n🔵 Nctoh Complete .rds\n\n\n\n📋 Cheatsheets\n\nggplot2 Cheatsheet\nDplyr Cheatsheet\nGtsummary Cheatsheet\nQuarto Cheatsheet\nGgstatsplot Cheatsheet\n\n\n\n📝 Quarto Template\n\nQuarto Basics — starter .qmd file covering Quarto basics\n\n\n\n💡 Tip: Explore Applied Examples under each section for real-world healthcare data workflows."
+    "text": "📥 Downloadable Resources\nAll files for this track are available below, grouped by type.\n\n📄 R Scripts\n\nMake Data\nLab1 Pattern\nLab2 Simple\nLab3 Mice\nLab4 Diagnostics\nLab5 Mnar\nMake Data\nLab1 Linear\nLab2 Splines\nLab3 Gam\nLab4 Interaction\nLab5 Report\nMake Data\nLab1 Design\nLab2 Describe\nLab3 Regression\nLab4 Weights\nLab5 Report\nMake Data\nLab1 Clusters\nLab2 Gee\nLab3 Mixed\nLab4 Long\nLab5 Report\nMake Data\nLab1 Outcomes\nLab2 Ordinal\nLab3 Po\nLab4 Multinom\nLab5 Report\nMake Data\nLab1 Data\nLab2 Km\nLab3 Logrank\nLab4 Cox\nLab5 Assumptions\nMake Data\nLab1 Counts\nLab2 Poisson\nLab3 Overdisp\nLab4 Zeros\nLab5 Report\nBasic r Foundations\nBasic Visualization\nModerate Visualization\nAdvanced Visualization\nGtsummary Examples\nInteractive Plots\n\n\n\n🗄️ Datasets\n\n📊 Ncd Missing .csv\n📊 Ncd Curves .csv\n📊 Survey Adults .csv\n📊 Survey Population .csv\n📊 Bp Trial .csv\n📊 Maternal Survey .csv\n📊 Tb Cohort .csv\n📊 Dengue Wards .csv\n📊 Workshop Data .csv\n📗 Workshop Data .xlsx\n🔵 Workshop Data .rds\n🔵 Nctoh Data .rds\n🔵 Nctoh Complete .rds\n\n\n\n📋 Cheatsheets\n\nggplot2 Cheatsheet\nDplyr Cheatsheet\nGtsummary Cheatsheet\nQuarto Cheatsheet\nGgstatsplot Cheatsheet\n\n\n\n📝 Quarto Template\n\nQuarto Basics — starter .qmd file covering Quarto basics\n\n\n\n💡 Tip: Explore Applied Examples under each section for real-world healthcare data workflows."
   },
   {
     "objectID": "downloads.html",
@@ -8090,5 +8090,600 @@
     "title": "Session 3 — Generalised Additive Models (GAM)",
     "section": "A GAM for SBP",
     "text": "A GAM for SBP\n\n\nFamily: gaussian \nLink function: identity \n\nFormula:\nsbp ~ s(age) + s(bmi) + s(activity) + salt + sex + smoker\n\nParametric coefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) 104.0292     0.6972 149.212  &lt; 2e-16 ***\nsalt          0.6506     0.0722   9.012  &lt; 2e-16 ***\nsexMale       2.7612     0.3719   7.425 1.38e-13 ***\nsmoker        1.3587     0.4181   3.249  0.00117 ** \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nApproximate significance of smooth terms:\n              edf Ref.df      F p-value    \ns(age)      3.899  4.835 202.74  &lt;2e-16 ***\ns(bmi)      4.076  5.056  64.45  &lt;2e-16 ***\ns(activity) 3.089  3.900  27.07  &lt;2e-16 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nR-sq.(adj) =  0.311   Deviance explained = 31.4%\n-REML =  15346  Scale est. = 125.21    n = 4000"
+  },
+  {
+    "objectID": "missing-workshop/s5_mnar_reporting.html#where-we-are",
+    "href": "missing-workshop/s5_mnar_reporting.html#where-we-are",
+    "title": "Session 5 — MNAR Sensitivity Analysis and Reporting",
+    "section": "Where we are",
+    "text": "Where we are\n\nSessions 3 and 4: MI under MAR\nToday: HbA1c is missing for 21% of the adults, and the high values are the ones that go missing (MNAR)\nBy the end you can:\n\nshow why MAR imputation cannot fix MNAR\nrun a delta-adjustment sensitivity analysis and a tipping point\nreport missing data properly"
+  },
+  {
+    "objectID": "missing-workshop/s5_mnar_reporting.html#observed-vs-mar-imputation",
+    "href": "missing-workshop/s5_mnar_reporting.html#observed-vs-mar-imputation",
+    "title": "Session 5 — MNAR Sensitivity Analysis and Reporting",
+    "section": "Observed vs MAR imputation",
+    "text": "Observed vs MAR imputation\n\nobs &lt;- mean(dat$hba1c, na.rm = TRUE)\nmar &lt;- summary(pool(with(imp, lm(hba1c ~ 1))))$estimate\nround(c(observed = obs, MAR_imputation = mar), 2)\n\n      observed MAR_imputation \n          5.35           5.38 \n\n\n\n5.35% observed and 5.38% after MAR imputation. The truth is 5.50% (known only because the data are synthetic). Adults with a high HbA1c did not come to the lab, and nothing in the data says so: MAR imputation learns from the observed (lower) values."
+  },
+  {
+    "objectID": "missing-workshop/s5_mnar_reporting.html#assume-the-missing-values-are-higher",
+    "href": "missing-workshop/s5_mnar_reporting.html#assume-the-missing-values-are-higher",
+    "title": "Session 5 — MNAR Sensitivity Analysis and Reporting",
+    "section": "Assume the missing values are higher",
+    "text": "Assume the missing values are higher\n\npost &lt;- make.post(dat2)\npost[\"hba1c\"] &lt;- \"imp[[j]][, i] &lt;- imp[[j]][, i] + 0.2\"\nimp_d &lt;- mice(dat2, m = 30, maxit = 10, seed = 2038, post = post, printFlag = FALSE)\nround(summary(pool(with(imp_d, lm(hba1c ~ 1))))$estimate, 2)\n\n[1] 5.42\n\n\n\nDelta = the amount (here 0.2 percentage points) added to every imputed HbA1c to say: “the missing values are on average higher by delta than a MAR model predicts”\nA pattern-mixture idea, done with post in mice: after each imputation step, shift the values\ndelta = 0 is MAR; delta &gt; 0 is MNAR"
+  },
+  {
+    "objectID": "missing-workshop/s5_mnar_reporting.html#a-tipping-point-table",
+    "href": "missing-workshop/s5_mnar_reporting.html#a-tipping-point-table",
+    "title": "Session 5 — MNAR Sensitivity Analysis and Reporting",
+    "section": "A tipping-point table",
+    "text": "A tipping-point table\n\nrun_delta &lt;- function(delta) { po &lt;- make.post(dat2); po[\"hba1c\"] &lt;- paste0(\"imp[[j]][, i] &lt;- imp[[j]][, i] + \", delta)\n  i &lt;- mice(dat2, m = 20, maxit = 5, seed = 2038, post = po, printFlag = FALSE); s &lt;- summary(pool(with(i, lm(hba1c ~ 1)))); c(delta = delta, mean = s$estimate, se = s$std.error) }\ndo.call(rbind, lapply(c(0, 0.2, 0.4, 0.6, 0.8), run_delta)) |&gt; round(3)\n\n     delta  mean    se\n[1,]   0.0 5.377 0.009\n[2,]   0.2 5.422 0.010\n[3,]   0.4 5.466 0.011\n[4,]   0.6 5.508 0.012\n[5,]   0.8 5.550 0.013\n\n\n\nThe mean rises by about 0.045 for each 0.2 (a fifth of the values are missing). With delta of about 0.55 we reach the true value 5.50. In practice you do not know the truth: show a range of plausible deltas (from clinical knowledge) and ask at which delta does my conclusion change? (the tipping point)."
+  },
+  {
+    "objectID": "missing-workshop/s5_mnar_reporting.html#which-conclusions-are-fragile",
+    "href": "missing-workshop/s5_mnar_reporting.html#which-conclusions-are-fragile",
+    "title": "Session 5 — MNAR Sensitivity Analysis and Reporting",
+    "section": "Which conclusions are fragile?",
+    "text": "Which conclusions are fragile?\n\nprev &lt;- function(i) mean(sapply(1:i$m, function(k) mean(complete(i, k)$hba1c &gt;= 6.5)))\npo5 &lt;- make.post(dat2); po5[\"hba1c\"] &lt;- \"imp[[j]][, i] &lt;- imp[[j]][, i] + 0.5\"\nimp_5 &lt;- mice(dat2, m = 20, maxit = 5, seed = 2038, post = po5, printFlag = FALSE)\nround(100 * c(MAR = prev(imp), delta_0.5 = prev(imp_5)), 1)\n\n      MAR delta_0.5 \n      0.4       3.1 \n\n\n\nThe share with HbA1c of 6.5% or more is 0.4% under MAR (the same as the observed 0.4%) and 3.1% with delta = 0.5 (the facilitator truth: 4.4%). The mean moved a little; the prevalence of the high range moved eightfold. Conclusions about tails are the most sensitive to MNAR."
+  },
+  {
+    "objectID": "missing-workshop/s5_mnar_reporting.html#rubins-rules-by-hand",
+    "href": "missing-workshop/s5_mnar_reporting.html#rubins-rules-by-hand",
+    "title": "Session 5 — MNAR Sensitivity Analysis and Reporting",
+    "section": "Rubin’s rules by hand",
+    "text": "Rubin’s rules by hand\n\nfits &lt;- with(imp, lm(hba1c ~ 1))\nest &lt;- sapply(fits$analyses, coef); vr &lt;- sapply(fits$analyses, \\(f) vcov(f)[1, 1])\nm &lt;- length(est); W &lt;- mean(vr); B &lt;- var(est)\nc(estimate = mean(est), W = W, B = B, total_se = sqrt(W + (1 + 1 / m) * B)) |&gt; signif(4)\n\n estimate         W         B  total_se \n5.379e+00 7.784e-05 1.314e-05 9.561e-03 \n\n\n\nT = W + (1 + 1/m) B W = mean within-imputation variance B = variance of the m estimates"
+  },
+  {
+    "objectID": "missing-workshop/s5_mnar_reporting.html#reporting-missing-data",
+    "href": "missing-workshop/s5_mnar_reporting.html#reporting-missing-data",
+    "title": "Session 5 — MNAR Sensitivity Analysis and Reporting",
+    "section": "Reporting missing data",
+    "text": "Reporting missing data\n\n\nThe amount of missing data per variable, and the number of complete cases\nThe assumed mechanism and the reasons (what you know)\nThe method (MICE, pmm), m, iterations, variables in the imputation model (outcome, auxiliary), software\nPooled estimates (Rubin’s rules) and a comparison with complete-case\nA sensitivity analysis for MNAR (delta, tipping point)\nFollow STROBE/TRIPOD/CONSORT items on missing data\n\n\n\nExample: “Missing values (BMI 26%, HbA1c 21%, activity 12%, smoking 9%, SBP 6%) were handled by multiple imputation by chained equations (20 imputations, predictive mean matching, outcome and auxiliary variables in the imputation model, estimates pooled by Rubin’s rules); a delta-adjustment sensitivity analysis explored departures from missing at random for HbA1c.”"
+  },
+  {
+    "objectID": "missing-workshop/s5_mnar_reporting.html#switch-to-r-lab-5",
+    "href": "missing-workshop/s5_mnar_reporting.html#switch-to-r-lab-5",
+    "title": "Session 5 — MNAR Sensitivity Analysis and Reporting",
+    "section": "🔧 Switch to R — Lab 5",
+    "text": "🔧 Switch to R — Lab 5\n\nFile: missing-workshop/labs/lab5_mnar.R\n\nobserved vs MAR-imputed mean HbA1c\ndelta adjustment, tipping-point table\nRubin’s rules by hand, prevalence under MNAR, methods sentence\n\n\nTime: 40 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "missing-workshop/s5_mnar_reporting.html#self-check-quiz-15",
+    "href": "missing-workshop/s5_mnar_reporting.html#self-check-quiz-15",
+    "title": "Session 5 — MNAR Sensitivity Analysis and Reporting",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nWhy does MAR imputation barely change the mean HbA1c (5.35 to 5.38) when it is the high values that are missing?\n\nThe imputation used too few iterations to reach the high values in the data\npmm cannot impute values larger than the observed mean of the variable in the data\nIt learns from observed values, so it cannot know the missing ones are high\nMNAR data need to be removed from the dataset before the imputation starts"
+  },
+  {
+    "objectID": "missing-workshop/s5_mnar_reporting.html#self-check-quiz-25",
+    "href": "missing-workshop/s5_mnar_reporting.html#self-check-quiz-25",
+    "title": "Session 5 — MNAR Sensitivity Analysis and Reporting",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nWhat is a delta adjustment?\n\nDividing the pooled estimate by the fraction of missing information in it\nShifting imputed values by a chosen amount to express MNAR\nReplacing the imputed values by the difference between two imputations\nAdding the between-imputation variance to the standard errors of the estimates"
+  },
+  {
+    "objectID": "missing-workshop/s5_mnar_reporting.html#self-check-quiz-35",
+    "href": "missing-workshop/s5_mnar_reporting.html#self-check-quiz-35",
+    "title": "Session 5 — MNAR Sensitivity Analysis and Reporting",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nThe pooled mean HbA1c is 5.38 for delta = 0 and 5.55 for delta = 0.8. What does a tipping-point analysis ask?\n\nWhat is the smallest delta that gives a significant result?\nWhich imputation method gives the highest estimate of the mean?\nHow large must delta be before the conclusion changes?\nHow many imputations does each delta need to converge?"
+  },
+  {
+    "objectID": "missing-workshop/s5_mnar_reporting.html#self-check-quiz-45",
+    "href": "missing-workshop/s5_mnar_reporting.html#self-check-quiz-45",
+    "title": "Session 5 — MNAR Sensitivity Analysis and Reporting",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nThe share with HbA1c of 6.5% or more is 0.4% under MAR and 3.1% with delta = 0.5. What is the lesson?\n\nMAR imputation is correct, and delta = 0.5 is the wrong assumption\nDelta adjustment should replace MAR imputation in all of the analyses\nThe prevalence cannot be estimated from data that have missing values\nSome results are sensitive to the MNAR assumption, so show a range"
+  },
+  {
+    "objectID": "missing-workshop/s5_mnar_reporting.html#self-check-quiz-55",
+    "href": "missing-workshop/s5_mnar_reporting.html#self-check-quiz-55",
+    "title": "Session 5 — MNAR Sensitivity Analysis and Reporting",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nWhat should a report say about missing data?\n\nAmount per variable, mechanism, method, m and a sensitivity analysis\nThe p-value of Little’s test together with the number of complete cases\nThe number of adults who were excluded from the study for missing data\nThe imputed values for each of the adults in the study, in a table"
+  },
+  {
+    "objectID": "missing-workshop/s5_mnar_reporting.html#score-and-take-home",
+    "href": "missing-workshop/s5_mnar_reporting.html#score-and-take-home",
+    "title": "Session 5 — MNAR Sensitivity Analysis and Reporting",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nMAR imputation cannot repair MNAR\nDelta adjustment: shift imputed values; delta = 0 is MAR\nTipping point: the delta at which the conclusion changes\nTails and prevalences are the most sensitive\nReport amount, mechanism, method, m, variables, pooling and sensitivity\n\nNext: Cheat sheet and the next module"
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#where-we-are",
+    "href": "missing-workshop/s3_multiple_imputation.html#where-we-are",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "Where we are",
+    "text": "Where we are\n\nSession 2: simple methods are biased or have wrong SEs\nToday: multiple imputation (MI) with the mice package\nBy the end you can:\n\nrun mice() and read its methods and predictor matrix\ncheck convergence and imputed values\nanalyse each data set and pool with Rubin’s rules"
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#three-steps",
+    "href": "missing-workshop/s3_multiple_imputation.html#three-steps",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "Three steps",
+    "text": "Three steps\n\nImpute (m times) → Analyse (each data set) → Pool (Rubin’s rules)\n\n\nCreate m complete data sets; the imputed values differ between them, reflecting uncertainty\nRun the same analysis in each (with())\nPool: the estimate is the average; the variance combines within-imputation and between-imputation variance (pool())\n\n\nmice uses chained equations: each incomplete variable is imputed from a model with all the other variables, cycling through them (iterations)"
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#setup-before-imputing",
+    "href": "missing-workshop/s3_multiple_imputation.html#setup-before-imputing",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "Setup before imputing",
+    "text": "Setup before imputing\n\nini &lt;- mice(dat, maxit = 0, printFlag = FALSE)\nini$method\n\n      age       sex education       bmi    smoker  activity       sbp     hba1c \n       \"\"        \"\"        \"\"     \"pmm\"     \"pmm\"     \"pmm\"     \"pmm\"     \"pmm\" \n\n\n\npmm (predictive mean matching): the missing value is replaced by an observed value from an adult with a similar prediction; keeps the distribution and works for skewed variables\nBinary variables: make them factors and mice uses logistic regression (logreg)\nThe predictor matrix (1 = use as predictor): by default everything predicts everything; remove the id, include the outcome (SBP)"
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#run-it",
+    "href": "missing-workshop/s3_multiple_imputation.html#run-it",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "Run it",
+    "text": "Run it\n\ndat2 &lt;- dat |&gt; mutate(smoker = factor(smoker, labels = c(\"No\", \"Yes\")))\nimp &lt;- mice(dat2, m = 20, maxit = 10, seed = 2038, printFlag = FALSE)\nimp$method\n\n      age       sex education       bmi    smoker  activity       sbp     hba1c \n       \"\"        \"\"        \"\"     \"pmm\"  \"logreg\"     \"pmm\"     \"pmm\"     \"pmm\" \n\n\n\n20 imputations, 10 iterations, a fixed seed (reproducible). Smoking is now imputed by logreg, the continuous variables by pmm."
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#convergence",
+    "href": "missing-workshop/s3_multiple_imputation.html#convergence",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "Convergence",
+    "text": "Convergence\n\nplot(imp, c(\"bmi\", \"hba1c\", \"activity\"))\n\n\n\nMean and SD of the imputed values by iteration, one line per imputation\nLines should mix (cross freely) with no trend\nA trend or lines that stay apart = not converged: more iterations or fix the model"
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#convergence-output",
+    "href": "missing-workshop/s3_multiple_imputation.html#convergence-output",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "Convergence",
+    "text": "Convergence"
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#imputed-vs-observed-values",
+    "href": "missing-workshop/s3_multiple_imputation.html#imputed-vs-observed-values",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "Imputed vs observed values",
+    "text": "Imputed vs observed values\n\ndensityplot(imp, ~ bmi)\n\n\n\nBlue = observed, red = imputed (each imputation). Imputed BMI is shifted to the right (mean 25.1 vs 24.1 observed): adults with a high SBP, who are more often missing, tend to have a higher BMI. Differences are allowed when the missingness is not random; implausible values are not."
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#imputed-vs-observed-values-output",
+    "href": "missing-workshop/s3_multiple_imputation.html#imputed-vs-observed-values-output",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "Imputed vs observed values",
+    "text": "Imputed vs observed values"
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#with-and-pool",
+    "href": "missing-workshop/s3_multiple_imputation.html#with-and-pool",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "with() and pool()",
+    "text": "with() and pool()\n\nfit &lt;- with(imp, lm(sbp ~ age + sex + bmi + smoker + activity))\npooled &lt;- pool(fit)\nsummary(pooled, conf.int = TRUE)[, c(\"term\", \"estimate\", \"std.error\", \"df\", \"conf.low\", \"conf.high\")] |&gt; mutate(across(where(is.numeric), \\(x) round(x, 3)))\n\n         term estimate std.error       df conf.low conf.high\n1 (Intercept)   85.437     1.955  258.151   81.586    89.287\n2         age    0.413     0.020 1234.023    0.374     0.452\n3     sexMale    2.998     0.537  801.835    1.944     4.053\n4         bmi    0.790     0.066  243.317    0.661     0.920\n5   smokerYes    1.965     0.668  281.399    0.649     3.281\n6    activity   -0.490     0.096  592.055   -0.679    -0.301"
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#comparison-with-complete-case",
+    "href": "missing-workshop/s3_multiple_imputation.html#comparison-with-complete-case",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "Comparison with complete case",
+    "text": "Comparison with complete case\n\nm_cc &lt;- lm(sbp ~ age + sex + bmi + smoker + activity, data = dat)\ns &lt;- summary(pooled, conf.int = TRUE)\nround(rbind(complete_case = summary(m_cc)$coefficients[\"bmi\", 1:2], multiple_imputation = unlist(s[s$term == \"bmi\", c(\"estimate\", \"std.error\")])), 3)\n\n                    Estimate Std. Error\ncomplete_case          0.685      0.071\nmultiple_imputation    0.790      0.066\n\n\n\nMI 0.79 (SE 0.066) against complete case 0.69 (SE 0.071); the truth is about 0.80 to 0.86. MI removes most of the bias and is more precise because it uses all 2,000 adults. The SE is honest: it includes the between-imputation variance."
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#rules-for-good-imputation-models",
+    "href": "missing-workshop/s3_multiple_imputation.html#rules-for-good-imputation-models",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "Rules for good imputation models",
+    "text": "Rules for good imputation models\n\n\nInclude all variables in the analysis model, including the outcome\nInclude auxiliary variables that predict the missing values or the missingness\nInclude interactions and non-linear terms you will analyse (Session 4)\nUse enough imputations (Session 4); set a seed\nCheck convergence and imputed values"
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#switch-to-r-lab-3",
+    "href": "missing-workshop/s3_multiple_imputation.html#switch-to-r-lab-3",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "🔧 Switch to R — Lab 3",
+    "text": "🔧 Switch to R — Lab 3\n\nFile: missing-workshop/labs/lab3_mice.R\n\ndefault methods and predictor matrix\nmice() with 20 imputations, convergence, densities\nwith() and pool(), comparison with complete case\n\n\nTime: 40 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#self-check-quiz-15",
+    "href": "missing-workshop/s3_multiple_imputation.html#self-check-quiz-15",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nWhat does predictive mean matching (pmm) do?\n\nIt imputes the mean of the observed values in each imputed data set\nIt predicts the missing value from a regression and uses the prediction as it is\nIt matches adults with missing values to adults with the same pattern of missingness\nIt imputes by borrowing an observed value from an adult with a similar prediction"
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#self-check-quiz-25",
+    "href": "missing-workshop/s3_multiple_imputation.html#self-check-quiz-25",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nWhy are m imputed data sets created and analysed separately?\n\nTo reflect the uncertainty about the missing values in the pooled SEs\nTo obtain m independent estimates that are averaged without further steps\nBecause each variable needs its own completed data set to be analysed\nTo check that the results are identical across the m data sets of adults"
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#self-check-quiz-35",
+    "href": "missing-workshop/s3_multiple_imputation.html#self-check-quiz-35",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nWhat do Rubin’s rules do?\n\nThey select the best imputed data set by the model fit statistics\nThey average the imputed data sets before the model is fitted to them\nThey average the estimates and add up two sources of variance\nThey correct the p-values for the number of variables with missing data"
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#self-check-quiz-45",
+    "href": "missing-workshop/s3_multiple_imputation.html#self-check-quiz-45",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nIn the convergence plot the lines of different imputations cross freely, with no trend. What does this suggest?\n\nThe imputed values are the same in all of the data sets generated\nThe iterations have mixed well, so it has probably converged\nThe imputation model is correct and no other check is needed at all\nThe number of iterations is too small and has to be increased"
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#self-check-quiz-55",
+    "href": "missing-workshop/s3_multiple_imputation.html#self-check-quiz-55",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nWhy is the id column left out of the imputation model?\n\nmice cannot read character variables when they are stored in the data frame\nThe id is nearly always strongly correlated with the outcome variable in the data\nA unique code carries no information, and as a predictor it adds noise\nVariables without missing values are not allowed in the imputation model"
+  },
+  {
+    "objectID": "missing-workshop/s3_multiple_imputation.html#score-and-take-home",
+    "href": "missing-workshop/s3_multiple_imputation.html#score-and-take-home",
+    "title": "Session 3 — Multiple Imputation with mice",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nImpute → analyse → pool (mice, with, pool)\npmm for continuous, factors for binary (logreg)\nInclude the outcome and auxiliary variables; drop the id\nCheck: convergence plot, density of imputed vs observed\nMI 0.79 vs complete-case 0.69 (truth about 0.80)\n\nNext: Session 4: diagnostics, derived variables and the number of imputations"
+  },
+  {
+    "objectID": "missing-workshop/s1_patterns_mechanisms.html#where-we-are",
+    "href": "missing-workshop/s1_patterns_mechanisms.html#where-we-are",
+    "title": "Session 1 — Missing Data: Patterns and Mechanisms",
+    "section": "Where we are",
+    "text": "Where we are\n\nAll earlier workshops quietly dropped rows with missing values\nToday: why that can mislead, and how to describe missing data\nBy the end you can:\n\ndescribe the amount and pattern of missingness\nname the three mechanisms (MCAR, MAR, MNAR)\nexplore whether missingness depends on observed data\nsay what the data cannot tell you"
+  },
+  {
+    "objectID": "missing-workshop/s1_patterns_mechanisms.html#our-data-an-ncd-cohort-with-gaps",
+    "href": "missing-workshop/s1_patterns_mechanisms.html#our-data-an-ncd-cohort-with-gaps",
+    "title": "Session 1 — Missing Data: Patterns and Mechanisms",
+    "section": "Our data: an NCD cohort with gaps",
+    "text": "Our data: an NCD cohort with gaps\n\n\n\n2,000 adults (synthetic): age, sex, education, BMI, smoking, activity, SBP, HbA1c\nMissing: BMI 26%, HbA1c 21%, activity 12%, smoking 9%, SBP 6%\nAge, sex and education are complete\nOnly 45% of adults have every variable\n\n\n\nncd |&gt; head(8)\n\n# A tibble: 8 × 9\n  id      age sex    education    bmi smoker activity   sbp hba1c\n  &lt;chr&gt; &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;      &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1 C0001    50 Female Secondary+  26.4      0      3.2   117   5.2\n2 C0002    63 Male   Secondary+  NA        1      0.8   164  NA  \n3 C0003    64 Female Primary     23.7      0      3.8   118  NA  \n4 C0004    62 Female Secondary+  NA        0      4.7   128   5.8\n5 C0005    73 Male   Secondary+  22.2      1      4.3   130   5.2\n6 C0006    26 Male   None        21.7      0      7.7   118   5.4\n7 C0007    62 Female None        34.8      0      1.4   143  NA  \n8 C0008    45 Female Secondary+  26.3      0      7.8   132   5.1"
+  },
+  {
+    "objectID": "missing-workshop/s1_patterns_mechanisms.html#three-mechanisms",
+    "href": "missing-workshop/s1_patterns_mechanisms.html#three-mechanisms",
+    "title": "Session 1 — Missing Data: Patterns and Mechanisms",
+    "section": "Three mechanisms",
+    "text": "Three mechanisms\n\n\n\n\n\n\n\n\nMechanism\nMissingness depends on…\nExample here\n\n\n\n\nMCAR (completely at random)\nnothing\na form lost at random (smoking, 9%)\n\n\nMAR (at random)\nobserved data\nBMI missing more in older men with a high SBP\n\n\nMNAR (not at random)\nthe missing value itself\nhigh HbA1c more often missing\n\n\n\n\nThe names are confusing: in MAR the missingness is not random at all; it is explained by other observed variables. That is what allows us to correct for it."
+  },
+  {
+    "objectID": "missing-workshop/s1_patterns_mechanisms.html#why-it-matters",
+    "href": "missing-workshop/s1_patterns_mechanisms.html#why-it-matters",
+    "title": "Session 1 — Missing Data: Patterns and Mechanisms",
+    "section": "Why it matters",
+    "text": "Why it matters\n\nMCAR: complete-case analysis is unbiased but loses precision\nMAR: complete-case can be biased; multiple imputation (and likelihood methods) are valid\nMNAR: no method is valid without an assumption about the missing values: do a sensitivity analysis\nYou cannot tell MAR from MNAR from the observed data alone"
+  },
+  {
+    "objectID": "missing-workshop/s1_patterns_mechanisms.html#how-much-and-which-pattern",
+    "href": "missing-workshop/s1_patterns_mechanisms.html#how-much-and-which-pattern",
+    "title": "Session 1 — Missing Data: Patterns and Mechanisms",
+    "section": "How much and which pattern?",
+    "text": "How much and which pattern?\n\nround(100 * colMeans(is.na(ncd)), 1)\n\n       id       age       sex education       bmi    smoker  activity       sbp \n      0.0       0.0       0.0       0.0      26.4       9.2      12.2       5.9 \n    hba1c \n     20.5 \n\nsum(complete.cases(ncd))\n\n[1] 905\n\n\n\nmd.pattern(dat, plot = FALSE) |&gt; head(3)\n\n    age sex education sbp smoker activity hba1c bmi  \n905   1   1         1   1      1        1     1   1 0\n296   1   1         1   1      1        1     1   0 1\n196   1   1         1   1      1        1     0   1 1\n\n\n\n905 adults (45%) are complete; then BMI alone missing (296) and HbA1c alone (196): 26 patterns in all."
+  },
+  {
+    "objectID": "missing-workshop/s1_patterns_mechanisms.html#a-picture",
+    "href": "missing-workshop/s1_patterns_mechanisms.html#a-picture",
+    "title": "Session 1 — Missing Data: Patterns and Mechanisms",
+    "section": "A picture",
+    "text": "A picture\n\ngg_miss_upset(dat, nsets = 5)\n\n\n\nAn UpSet plot shows the commonest combinations of missing variables. Also useful: vis_miss(dat) and miss_var_summary(dat)."
+  },
+  {
+    "objectID": "missing-workshop/s1_patterns_mechanisms.html#a-picture-output",
+    "href": "missing-workshop/s1_patterns_mechanisms.html#a-picture-output",
+    "title": "Session 1 — Missing Data: Patterns and Mechanisms",
+    "section": "A picture",
+    "text": "A picture"
+  },
+  {
+    "objectID": "missing-workshop/s1_patterns_mechanisms.html#compare-with-and-without-bmi",
+    "href": "missing-workshop/s1_patterns_mechanisms.html#compare-with-and-without-bmi",
+    "title": "Session 1 — Missing Data: Patterns and Mechanisms",
+    "section": "Compare with and without BMI",
+    "text": "Compare with and without BMI\n\ndat |&gt; group_by(bmi_missing = is.na(bmi)) |&gt; summarise(n = n(), age = round(mean(age), 1), sbp = round(mean(sbp, na.rm = TRUE)), men = round(mean(sex == \"Male\"), 2))\n\n# A tibble: 2 × 5\n  bmi_missing     n   age   sbp   men\n  &lt;lgl&gt;       &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1 FALSE        1472  45.3   121  0.44\n2 TRUE          528  53.9   135  0.63\n\n\n\nAdults with a missing BMI are older (54 vs 45), more often men (63% vs 44%) and have a higher SBP (135 vs 121). The data are not MCAR. Because the differences are in observed variables, MAR is plausible."
+  },
+  {
+    "objectID": "missing-workshop/s1_patterns_mechanisms.html#model-the-missingness",
+    "href": "missing-workshop/s1_patterns_mechanisms.html#model-the-missingness",
+    "title": "Session 1 — Missing Data: Patterns and Mechanisms",
+    "section": "Model the missingness",
+    "text": "Model the missingness\n\nm_miss &lt;- glm(is.na(bmi) ~ age + sex + education + sbp, data = dat, family = binomial)\nround(summary(m_miss)$coefficients, 3)\n\n                    Estimate Std. Error z value Pr(&gt;|z|)\n(Intercept)          -16.339      0.855 -19.107    0.000\nage                    0.025      0.005   4.637    0.000\nsexMale                0.729      0.126   5.765    0.000\neducationPrimary       0.165      0.157   1.053    0.292\neducationSecondary+    0.082      0.155   0.530    0.596\nsbp                    0.106      0.007  16.131    0.000\n\n\n\nAge, male sex and especially SBP (z = 16) predict a missing BMI; education does not\nThis is evidence for MAR: and a warning that SBP, the outcome, must be in the imputation model"
+  },
+  {
+    "objectID": "missing-workshop/s1_patterns_mechanisms.html#littles-mcar-test",
+    "href": "missing-workshop/s1_patterns_mechanisms.html#littles-mcar-test",
+    "title": "Session 1 — Missing Data: Patterns and Mechanisms",
+    "section": "Little’s MCAR test",
+    "text": "Little’s MCAR test\n\ndat |&gt; mutate(male = as.integer(sex == \"Male\")) |&gt; select(age, male, bmi, smoker, activity, sbp, hba1c) |&gt; mcar_test()\n\n# A tibble: 1 × 4\n  statistic    df p.value missing.patterns\n      &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;            &lt;int&gt;\n1      772.   118       0               26\n\n\n\np &lt; 0.001: MCAR is rejected. That does not prove MAR: MNAR cannot be tested from the data, because the values that decide it are the ones you do not have. Argue it from subject knowledge (why would a value be missing?), then do a sensitivity analysis (Session 5)."
+  },
+  {
+    "objectID": "missing-workshop/s1_patterns_mechanisms.html#switch-to-r-lab-1",
+    "href": "missing-workshop/s1_patterns_mechanisms.html#switch-to-r-lab-1",
+    "title": "Session 1 — Missing Data: Patterns and Mechanisms",
+    "section": "🔧 Switch to R — Lab 1",
+    "text": "🔧 Switch to R — Lab 1\n\nFile: missing-workshop/labs/lab1_pattern.R\n\npercent missing, complete cases, patterns\nUpSet plot and a table of missingness\nwho is missing: comparison, logistic model, Little’s test\n\n\nTime: 35 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "missing-workshop/s1_patterns_mechanisms.html#self-check-quiz-15",
+    "href": "missing-workshop/s1_patterns_mechanisms.html#self-check-quiz-15",
+    "title": "Session 1 — Missing Data: Patterns and Mechanisms",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nOlder men are more often missing BMI, and they also have a higher observed SBP. Which mechanism is the most plausible?\n\nMissing at random: missingness depends on observed variables\nMissing completely at random: missingness is unrelated to the data\nMissing not at random: missingness depends on the unobserved BMI itself\nNo mechanism applies, since a part of the BMI values is observed"
+  },
+  {
+    "objectID": "missing-workshop/s1_patterns_mechanisms.html#self-check-quiz-25",
+    "href": "missing-workshop/s1_patterns_mechanisms.html#self-check-quiz-25",
+    "title": "Session 1 — Missing Data: Patterns and Mechanisms",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nLittle’s test rejects MCAR (p &lt; 0.001). What can you conclude?\n\nThe data are MNAR, so multiple imputation cannot be used on them\nThe data are not MCAR, but this does not tell MAR from MNAR\nThe data are MAR, since MCAR is the other simple mechanism left\nNothing can be concluded, because the test applies to categorical variables"
+  },
+  {
+    "objectID": "missing-workshop/s1_patterns_mechanisms.html#self-check-quiz-35",
+    "href": "missing-workshop/s1_patterns_mechanisms.html#self-check-quiz-35",
+    "title": "Session 1 — Missing Data: Patterns and Mechanisms",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nWhy can MNAR not be tested using the observed data?\n\nThe sample is too small for a test to be able to detect the effect\nTests exist for it, but they need survey weights in order to work\nMNAR occurs when a large share of the values (above half) is missing\nThe values that determine the missingness are not observed"
+  },
+  {
+    "objectID": "missing-workshop/s1_patterns_mechanisms.html#self-check-quiz-45",
+    "href": "missing-workshop/s1_patterns_mechanisms.html#self-check-quiz-45",
+    "title": "Session 1 — Missing Data: Patterns and Mechanisms",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nOnly 45% of adults are complete. What is the main problem with complete-case analysis here?\n\nIt loses precision, and may be biased if complete cases are selected\nIt makes the standard errors too small, because fewer adults are analysed in the model\nIt turns the variables into categories, which loses information on each variable\nIt cannot be run in R unless the missing values are first recoded as zero"
+  },
+  {
+    "objectID": "missing-workshop/s1_patterns_mechanisms.html#self-check-quiz-55",
+    "href": "missing-workshop/s1_patterns_mechanisms.html#self-check-quiz-55",
+    "title": "Session 1 — Missing Data: Patterns and Mechanisms",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nA pattern table shows 905 complete rows and 296 rows with only BMI missing. What does it help you decide?\n\nWhether the missing values in this dataset are random or not random in nature\nWhich adults should be deleted from the dataset before the analysis starts\nWhich variables are missing together, and where imputation matters most\nHow many imputations are needed to get unbiased estimates from the data"
+  },
+  {
+    "objectID": "missing-workshop/s1_patterns_mechanisms.html#score-and-take-home",
+    "href": "missing-workshop/s1_patterns_mechanisms.html#score-and-take-home",
+    "title": "Session 1 — Missing Data: Patterns and Mechanisms",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nMCAR / MAR / MNAR: what the missingness depends on\nDescribe: % missing, complete cases, patterns, plots\nCompare observed variables between complete and incomplete; model the missingness\nMNAR cannot be tested: argue it, then do a sensitivity analysis\nInclude the outcome among the variables that explain missingness\n\nNext: Session 2: simple methods and why they fail"
+  },
+  {
+    "objectID": "missing-workshop/cheatsheet.html",
+    "href": "missing-workshop/cheatsheet.html",
+    "title": "Missing Data Cheat Sheet",
+    "section": "",
+    "text": "Missingness depends on\nComplete-case\nMultiple imputation\n\n\n\n\nMCAR\nnothing\nunbiased, loses precision\nvalid\n\n\nMAR\nobserved data\ncan be biased\nvalid\n\n\nMNAR\nthe missing value itself\nbiased\nbiased unless an MNAR assumption is modelled\n\n\n\nMAR = “explained by observed variables”, not “random”. MNAR cannot be tested from the observed data.\n\n\n\ncolMeans(is.na(d)) · sum(complete.cases(d)) · md.pattern(d) · naniar::miss_var_summary(), gg_miss_upset(), vis_miss(). Compare observed variables between complete and incomplete adults; model is.na(x) ~ observed variables (include the outcome). naniar::mcar_test(): rejecting MCAR does not prove MAR.\nOur cohort: BMI 26%, HbA1c 21%, activity 12%, smoking 9%, SBP 6%; only 45% of adults complete.\n\n\n\n\n\n\n\n\n\n\nMethod\nProblem\n\n\n\n\nComplete case\nloses data; biased if missingness depends on the outcome\n\n\nMean imputation\nshrinks variance, biases, wrong SE\n\n\nMissing indicator\nbiased even under MAR\n\n\nSingle imputation\nSE too small (imputed values treated as real)\n\n\n\nBMI slope in the SBP model (truth about 0.80): complete case 0.69, multiple imputation 0.79.\n\n\n\ndat$smoker &lt;- factor(dat$smoker)                      # binary -&gt; logreg\nimp &lt;- mice(dat, m = 20, maxit = 10, seed = 1)        # drop the id first\nplot(imp); densityplot(imp, ~ bmi)                    # converged? plausible?\nfit &lt;- with(imp, lm(sbp ~ age + sex + bmi))\nsummary(pool(fit), conf.int = TRUE)                   # Rubin's rules\nMethods: pmm (continuous, default), logreg (binary factor), polyreg (unordered factor), polr (ordered). Inspect imp$method, imp$predictorMatrix, imp$loggedEvents.\n\n\n\n\nestimate = mean of the m estimates T = W + (1 + 1/m) B W = mean within-imputation variance, B = variance of the estimates\n\nfmi (pool(fit)$pooled): share of the variance due to the missing data (not the % missing).\n\n\n\n\n\nPut the outcome, all analysis variables, interactions/curves you will fit, and auxiliary variables in the imputation model\nm at least the % of incomplete cases (at least 20); fixed seed\nDerive variables (e.g. hypertension) after imputing: complete(imp, \"long\", include = TRUE) then as.mids()\nTest several coefficients with D1(); do not average p-values\nCheck convergence and imputed distributions\n\n\n\n\n\npost &lt;- make.post(dat); post[\"hba1c\"] &lt;- \"imp[[j]][, i] &lt;- imp[[j]][, i] + 0.5\"\nimp_d &lt;- mice(dat, m = 20, post = post)\nRun delta = 0 (MAR), 0.2, 0.4 … and ask at which delta does the conclusion change (tipping point). Tails and prevalences are most sensitive: HbA1c mean 5.35 observed.\n\n\n\nAmount of missing data per variable and complete cases · assumed mechanism and reasons · method (MICE, pmm), m, iterations, variables used · pooled estimates and complete-case comparison · MNAR sensitivity analysis.\nMissing values were handled by multiple imputation by chained equations (20 imputations, predictive mean matching, outcome and auxiliary variables included, Rubin’s rules); a delta-adjustment analysis explored departures from MAR."
+  },
+  {
+    "objectID": "missing-workshop/cheatsheet.html#three-mechanisms",
+    "href": "missing-workshop/cheatsheet.html#three-mechanisms",
+    "title": "Missing Data Cheat Sheet",
+    "section": "",
+    "text": "Missingness depends on\nComplete-case\nMultiple imputation\n\n\n\n\nMCAR\nnothing\nunbiased, loses precision\nvalid\n\n\nMAR\nobserved data\ncan be biased\nvalid\n\n\nMNAR\nthe missing value itself\nbiased\nbiased unless an MNAR assumption is modelled\n\n\n\nMAR = “explained by observed variables”, not “random”. MNAR cannot be tested from the observed data."
+  },
+  {
+    "objectID": "missing-workshop/cheatsheet.html#describe-it-first",
+    "href": "missing-workshop/cheatsheet.html#describe-it-first",
+    "title": "Missing Data Cheat Sheet",
+    "section": "",
+    "text": "colMeans(is.na(d)) · sum(complete.cases(d)) · md.pattern(d) · naniar::miss_var_summary(), gg_miss_upset(), vis_miss(). Compare observed variables between complete and incomplete adults; model is.na(x) ~ observed variables (include the outcome). naniar::mcar_test(): rejecting MCAR does not prove MAR.\nOur cohort: BMI 26%, HbA1c 21%, activity 12%, smoking 9%, SBP 6%; only 45% of adults complete."
+  },
+  {
+    "objectID": "missing-workshop/cheatsheet.html#simple-methods-do-not-use",
+    "href": "missing-workshop/cheatsheet.html#simple-methods-do-not-use",
+    "title": "Missing Data Cheat Sheet",
+    "section": "",
+    "text": "Method\nProblem\n\n\n\n\nComplete case\nloses data; biased if missingness depends on the outcome\n\n\nMean imputation\nshrinks variance, biases, wrong SE\n\n\nMissing indicator\nbiased even under MAR\n\n\nSingle imputation\nSE too small (imputed values treated as real)\n\n\n\nBMI slope in the SBP model (truth about 0.80): complete case 0.69, multiple imputation 0.79."
+  },
+  {
+    "objectID": "missing-workshop/cheatsheet.html#mice-in-six-lines",
+    "href": "missing-workshop/cheatsheet.html#mice-in-six-lines",
+    "title": "Missing Data Cheat Sheet",
+    "section": "",
+    "text": "dat$smoker &lt;- factor(dat$smoker)                      # binary -&gt; logreg\nimp &lt;- mice(dat, m = 20, maxit = 10, seed = 1)        # drop the id first\nplot(imp); densityplot(imp, ~ bmi)                    # converged? plausible?\nfit &lt;- with(imp, lm(sbp ~ age + sex + bmi))\nsummary(pool(fit), conf.int = TRUE)                   # Rubin's rules\nMethods: pmm (continuous, default), logreg (binary factor), polyreg (unordered factor), polr (ordered). Inspect imp$method, imp$predictorMatrix, imp$loggedEvents."
+  },
+  {
+    "objectID": "missing-workshop/cheatsheet.html#rubins-rules",
+    "href": "missing-workshop/cheatsheet.html#rubins-rules",
+    "title": "Missing Data Cheat Sheet",
+    "section": "",
+    "text": "estimate = mean of the m estimates T = W + (1 + 1/m) B W = mean within-imputation variance, B = variance of the estimates\n\nfmi (pool(fit)$pooled): share of the variance due to the missing data (not the % missing)."
+  },
+  {
+    "objectID": "missing-workshop/cheatsheet.html#doing-it-well",
+    "href": "missing-workshop/cheatsheet.html#doing-it-well",
+    "title": "Missing Data Cheat Sheet",
+    "section": "",
+    "text": "Put the outcome, all analysis variables, interactions/curves you will fit, and auxiliary variables in the imputation model\nm at least the % of incomplete cases (at least 20); fixed seed\nDerive variables (e.g. hypertension) after imputing: complete(imp, \"long\", include = TRUE) then as.mids()\nTest several coefficients with D1(); do not average p-values\nCheck convergence and imputed distributions"
+  },
+  {
+    "objectID": "missing-workshop/cheatsheet.html#mnar-sensitivity-delta-adjustment",
+    "href": "missing-workshop/cheatsheet.html#mnar-sensitivity-delta-adjustment",
+    "title": "Missing Data Cheat Sheet",
+    "section": "",
+    "text": "post &lt;- make.post(dat); post[\"hba1c\"] &lt;- \"imp[[j]][, i] &lt;- imp[[j]][, i] + 0.5\"\nimp_d &lt;- mice(dat, m = 20, post = post)\nRun delta = 0 (MAR), 0.2, 0.4 … and ask at which delta does the conclusion change (tipping point). Tails and prevalences are most sensitive: HbA1c mean 5.35 observed."
+  },
+  {
+    "objectID": "missing-workshop/cheatsheet.html#report",
+    "href": "missing-workshop/cheatsheet.html#report",
+    "title": "Missing Data Cheat Sheet",
+    "section": "",
+    "text": "Amount of missing data per variable and complete cases · assumed mechanism and reasons · method (MICE, pmm), m, iterations, variables used · pooled estimates and complete-case comparison · MNAR sensitivity analysis.\nMissing values were handled by multiple imputation by chained equations (20 imputations, predictive mean matching, outcome and auxiliary variables included, Rubin’s rules); a delta-adjustment analysis explored departures from MAR."
+  },
+  {
+    "objectID": "missing-workshop/s2_simple_methods.html#where-we-are",
+    "href": "missing-workshop/s2_simple_methods.html#where-we-are",
+    "title": "Session 2 — Simple Methods and Why They Fail",
+    "section": "Where we are",
+    "text": "Where we are\n\nSession 1: the amount, pattern and mechanism of missingness\nToday: the simple fixes that people still use, and what goes wrong\nThe question: how does BMI relate to SBP? (true coefficient about 0.80 mmHg per BMI unit)\nBy the end you can:\n\nexplain the bias and variance problems of each simple method\nsee why a single imputation gives SEs that are too small"
+  },
+  {
+    "objectID": "missing-workshop/s2_simple_methods.html#listwise-deletion",
+    "href": "missing-workshop/s2_simple_methods.html#listwise-deletion",
+    "title": "Session 2 — Simple Methods and Why They Fail",
+    "section": "Listwise deletion",
+    "text": "Listwise deletion\n\nm_cc &lt;- lm(sbp ~ age + sex + bmi + smoker + activity, data = dat)\nc(adults_used = nobs(m_cc), of = nrow(dat))\n\nadults_used          of \n       1101        2000 \n\nround(summary(m_cc)$coefficients[\"bmi\", ], 3)\n\n  Estimate Std. Error    t value   Pr(&gt;|t|) \n     0.685      0.071      9.609      0.000 \n\n\n\nlm() silently drops incomplete rows: 1,101 of 2,000 adults are used. The BMI coefficient is 0.685 (SE 0.071): too low (truth about 0.80). BMI is missing more often when SBP is high, so the adults who remain have lower SBP at a given BMI: the slope is attenuated.\n\n\nComplete-case is valid under MCAR, and under some MAR conditions. Here the missingness depends on the outcome: biased."
+  },
+  {
+    "objectID": "missing-workshop/s2_simple_methods.html#mean-imputation",
+    "href": "missing-workshop/s2_simple_methods.html#mean-imputation",
+    "title": "Session 2 — Simple Methods and Why They Fail",
+    "section": "Mean imputation",
+    "text": "Mean imputation\n\nd_mean &lt;- dat |&gt; mutate(bmi_m = ifelse(is.na(bmi), mean(bmi, na.rm = TRUE), bmi))\nc(before = sd(dat$bmi, na.rm = TRUE), after = sd(d_mean$bmi_m)) |&gt; round(2)\n\nbefore  after \n  4.32   3.71 \n\nm_mean &lt;- lm(sbp ~ age + sex + bmi_m + smoker + activity, data = d_mean)\nround(summary(m_mean)$coefficients[\"bmi_m\", 1:2], 3)\n\n  Estimate Std. Error \n     0.697      0.079 \n\n\n\nSD falls from 4.3 to 3.7: a quarter of the adults sit exactly at the mean\nThe coefficient stays biased (0.70) and the SE (0.079) is not valid\nWeakens correlations, distorts distributions\nDo not use it"
+  },
+  {
+    "objectID": "missing-workshop/s2_simple_methods.html#missing-indicator-method",
+    "href": "missing-workshop/s2_simple_methods.html#missing-indicator-method",
+    "title": "Session 2 — Simple Methods and Why They Fail",
+    "section": "Missing-indicator method",
+    "text": "Missing-indicator method\n\nd_ind &lt;- dat |&gt; mutate(bmi_miss = as.integer(is.na(bmi)), bmi0 = ifelse(is.na(bmi), 0, bmi))\nm_ind &lt;- lm(sbp ~ age + sex + bmi0 + bmi_miss + smoker + activity, data = d_ind)\nround(summary(m_ind)$coefficients[c(\"bmi0\", \"bmi_miss\"), 1:2], 3)\n\n         Estimate Std. Error\nbmi0        0.684      0.071\nbmi_miss   28.146      1.812\n\n\n\nBMI coefficient 0.68 (still biased). The indicator absorbs a huge “effect” of 28 mmHg: an artefact of filling missing BMI with 0. The method is biased even when data are MAR."
+  },
+  {
+    "objectID": "missing-workshop/s2_simple_methods.html#single-stochastic-imputation",
+    "href": "missing-workshop/s2_simple_methods.html#single-stochastic-imputation",
+    "title": "Session 2 — Simple Methods and Why They Fail",
+    "section": "Single stochastic imputation",
+    "text": "Single stochastic imputation\n\nimp1 &lt;- mice(dat, m = 1, maxit = 10, seed = 1, printFlag = FALSE)\nm_single &lt;- lm(sbp ~ age + sex + bmi + smoker + activity, data = complete(imp1))\nround(summary(m_single)$coefficients[\"bmi\", 1:2], 3)\n\n  Estimate Std. Error \n     0.750      0.057 \n\n\n\nImputing with noise, using SBP, moves the estimate to 0.75. But the SE is 0.057: smaller than the complete-case SE (0.071) although a quarter of the BMI values were invented. A single imputation treats made-up values as real data."
+  },
+  {
+    "objectID": "missing-workshop/s2_simple_methods.html#comparison",
+    "href": "missing-workshop/s2_simple_methods.html#comparison",
+    "title": "Session 2 — Simple Methods and Why They Fail",
+    "section": "Comparison",
+    "text": "Comparison\n\ntibble(method = c(\"complete case\", \"mean imputation\", \"missing indicator\", \"single imputation\"),\n       estimate = c(coef(m_cc)[[\"bmi\"]], coef(m_mean)[[\"bmi_m\"]], coef(m_ind)[[\"bmi0\"]], coef(m_single)[[\"bmi\"]]),\n       se = c(summary(m_cc)$coefficients[\"bmi\", 2], summary(m_mean)$coefficients[\"bmi_m\", 2], summary(m_ind)$coefficients[\"bmi0\", 2], summary(m_single)$coefficients[\"bmi\", 2])) |&gt;\n  mutate(across(where(is.numeric), \\(x) round(x, 3)))\n\n# A tibble: 4 × 3\n  method            estimate    se\n  &lt;chr&gt;                &lt;dbl&gt; &lt;dbl&gt;\n1 complete case        0.685 0.071\n2 mean imputation      0.697 0.079\n3 missing indicator    0.684 0.071\n4 single imputation    0.75  0.057\n\n\n\nComplete-case, mean and indicator: biased (0.68 to 0.70 vs about 0.80)\nMean imputation and single imputation: wrong SEs\nWe need a method that adds noise to the imputed values and reflects the uncertainty in the SE: multiple imputation (Session 3)"
+  },
+  {
+    "objectID": "missing-workshop/s2_simple_methods.html#switch-to-r-lab-2",
+    "href": "missing-workshop/s2_simple_methods.html#switch-to-r-lab-2",
+    "title": "Session 2 — Simple Methods and Why They Fail",
+    "section": "🔧 Switch to R — Lab 2",
+    "text": "🔧 Switch to R — Lab 2\n\nFile: missing-workshop/labs/lab2_simple.R\n\ncomplete-case model and number of adults used\nmean imputation and its SD\nmissing indicator, single imputation, comparison table\n\n\nTime: 35 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "missing-workshop/s2_simple_methods.html#self-check-quiz-15",
+    "href": "missing-workshop/s2_simple_methods.html#self-check-quiz-15",
+    "title": "Session 2 — Simple Methods and Why They Fail",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nMean imputation reduces the SD of BMI from 4.3 to 3.7. Why?\n\nThe imputed values are drawn from a narrower distribution than the observed ones\nThe imputed values all sit at the mean, so the spread of the variable shrinks\nMean imputation removes the adults with extreme BMI values from the sample\nThe mean is estimated from fewer adults than the standard deviation is"
+  },
+  {
+    "objectID": "missing-workshop/s2_simple_methods.html#self-check-quiz-25",
+    "href": "missing-workshop/s2_simple_methods.html#self-check-quiz-25",
+    "title": "Session 2 — Simple Methods and Why They Fail",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nIn the missing-indicator method the indicator has a coefficient of 28 mmHg. How should this be read?\n\nAdults with a missing BMI truly have an SBP 28 mmHg higher than the others\nIt shows that the data are missing not at random for BMI in the cohort\nIt is the amount of bias that the complete-case analysis has\nIt is an artefact of filling missing BMI with 0, not a real effect"
+  },
+  {
+    "objectID": "missing-workshop/s2_simple_methods.html#self-check-quiz-35",
+    "href": "missing-workshop/s2_simple_methods.html#self-check-quiz-35",
+    "title": "Session 2 — Simple Methods and Why They Fail",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nA single stochastic imputation gives an SE of 0.057, below the complete-case SE of 0.071, although a quarter of BMI is imputed. Why?\n\nThe imputed values are treated as if they had been observed\nImputation increases the sample size, so the SE must fall\nThe SE from a stochastic imputation is too large, not too small\nThe model has more predictors after the BMI values are imputed"
+  },
+  {
+    "objectID": "missing-workshop/s2_simple_methods.html#self-check-quiz-45",
+    "href": "missing-workshop/s2_simple_methods.html#self-check-quiz-45",
+    "title": "Session 2 — Simple Methods and Why They Fail",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nWhen is a complete-case analysis expected to be unbiased?\n\nWhen more than 5% of the values of the variable are missing in the data set\nWhen the incomplete variable is continuous and has a roughly normal shape in the sample\nWhen missingness does not depend on the outcome, given the covariates\nWhen the data are missing at random for the variables in the dataset"
+  },
+  {
+    "objectID": "missing-workshop/s2_simple_methods.html#self-check-quiz-55",
+    "href": "missing-workshop/s2_simple_methods.html#self-check-quiz-55",
+    "title": "Session 2 — Simple Methods and Why They Fail",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nWhat is the fair summary of the simple methods?\n\nThey are as good as multiple imputation when under 30% of values are missing\nThey lose data, bias the estimates, or give SEs that are too small\nThey are valid for MAR data but not for MCAR data in a regression model\nThey fail when the outcome variable is the one that has missing values"
+  },
+  {
+    "objectID": "missing-workshop/s2_simple_methods.html#score-and-take-home",
+    "href": "missing-workshop/s2_simple_methods.html#score-and-take-home",
+    "title": "Session 2 — Simple Methods and Why They Fail",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nComplete-case: loses data, biased if missingness depends on the outcome\nMean imputation: shrinks variance, biased, wrong SE\nMissing indicator: biased even under MAR\nSingle imputation: SE too small (imputed = real)\nNeed multiple imputation\n\nNext: Session 3: multiple imputation with mice"
+  },
+  {
+    "objectID": "missing-workshop/s4_mi_diagnostics.html#where-we-are",
+    "href": "missing-workshop/s4_mi_diagnostics.html#where-we-are",
+    "title": "Session 4 — Diagnostics, Derived Variables and the Number of Imputations",
+    "section": "Where we are",
+    "text": "Where we are\n\nSession 3: impute, analyse, pool\nToday: the details that decide whether MI is done well\nBy the end you can:\n\nread the fraction of missing information\nchoose the number of imputations\nhandle a derived variable and an interaction\nuse auxiliary variables"
+  },
+  {
+    "objectID": "missing-workshop/s4_mi_diagnostics.html#fraction-of-missing-information",
+    "href": "missing-workshop/s4_mi_diagnostics.html#fraction-of-missing-information",
+    "title": "Session 4 — Diagnostics, Derived Variables and the Number of Imputations",
+    "section": "Fraction of missing information",
+    "text": "Fraction of missing information\n\nfit &lt;- with(imp, lm(sbp ~ age + sex + bmi + smoker + activity))\npool(fit)$pooled[, c(\"term\", \"fmi\", \"lambda\")] |&gt; mutate(across(where(is.numeric), \\(x) round(x, 2)))\n\n         term  fmi lambda\n1 (Intercept) 0.25   0.25\n2         age 0.07   0.07\n3     sexMale 0.12   0.11\n4         bmi 0.26   0.26\n5   smokerYes 0.24   0.23\n6    activity 0.15   0.14\n\n\n\nfmi = the share of the variance of the estimate that is due to the missing data\nBMI 0.26, smoking 0.24, activity 0.15; age 0.07 (complete: only the sampling noise of the imputation)\nIt is not the percentage of missing values; it also reflects how well the other variables predict the missing ones\nA high fmi means more imputations are needed"
+  },
+  {
+    "objectID": "missing-workshop/s4_mi_diagnostics.html#how-many-imputations",
+    "href": "missing-workshop/s4_mi_diagnostics.html#how-many-imputations",
+    "title": "Session 4 — Diagnostics, Derived Variables and the Number of Imputations",
+    "section": "How many imputations?",
+    "text": "How many imputations?\n\nse_bmi &lt;- function(m, seed) { i &lt;- mice(dat2, m = m, maxit = 10, seed = seed, printFlag = FALSE); s &lt;- summary(pool(with(i, lm(sbp ~ age + sex + bmi + smoker + activity)))); s$std.error[s$term == \"bmi\"] }\nsapply(c(m5 = 5, m50 = 50), function(m) round(range(sapply(1:6, function(seed) se_bmi(m, seed))), 3))\n\n        m5   m50\n[1,] 0.063 0.065\n[2,] 0.089 0.071\n\n\n\nSix different seeds: with m = 5 the pooled SE of BMI ranges from 0.063 to 0.089; with m = 50, only 0.065 to 0.071. More imputations make the results independent of the seed. Old advice (m = 5) is outdated: use at least as many as the percentage of incomplete cases (here 55), at least 20."
+  },
+  {
+    "objectID": "missing-workshop/s4_mi_diagnostics.html#a-derived-variable-hypertension",
+    "href": "missing-workshop/s4_mi_diagnostics.html#a-derived-variable-hypertension",
+    "title": "Session 4 — Diagnostics, Derived Variables and the Number of Imputations",
+    "section": "A derived variable: hypertension",
+    "text": "A derived variable: hypertension\n\nlong &lt;- complete(imp, \"long\", include = TRUE) |&gt; mutate(htn = as.integer(sbp &gt;= 140))\nimp_h &lt;- as.mids(long)\nfit_h &lt;- with(imp_h, glm(htn ~ age + sex + bmi + smoker, family = binomial))\nsummary(pool(fit_h), conf.int = TRUE, exponentiate = TRUE)[-1, c(\"term\", \"estimate\", \"2.5 %\", \"97.5 %\")] |&gt; mutate(across(where(is.numeric), \\(x) round(x, 2)))\n\n       term estimate 2.5 % 97.5 %\n2       age     1.07  1.06   1.08\n3   sexMale     1.54  1.13   2.10\n4       bmi     1.14  1.09   1.19\n5 smokerYes     1.47  1.02   2.10\n\n\n\nImpute the original variable (SBP), then derive hypertension inside each data set (“passive” imputation)\nNever dichotomise before imputing: you would throw away information and make the imputation model less accurate\nOdds ratio 1.14 per BMI unit (95% CI 1.09 to 1.19)"
+  },
+  {
+    "objectID": "missing-workshop/s4_mi_diagnostics.html#an-interaction",
+    "href": "missing-workshop/s4_mi_diagnostics.html#an-interaction",
+    "title": "Session 4 — Diagnostics, Derived Variables and the Number of Imputations",
+    "section": "An interaction",
+    "text": "An interaction\n\nfit_full &lt;- with(imp, lm(sbp ~ age + sex * bmi + smoker + activity))\nfit_red &lt;- with(imp, lm(sbp ~ age + sex + bmi + smoker + activity))\nD1(fit_full, fit_red)\n\n   test statistic df1      df2 dfcom   p.value      riv\n 1 ~~ 2   0.48808   1 474.1462  1993 0.4851275 0.164633\n\n\n\nD1(): pooled Wald test of the extra term across the imputed data sets (p = 0.49: no sex difference)\nIf you plan an interaction or a curve, the imputation model must contain it (e.g. impute separately by group, or add the product as a variable), otherwise the imputed values behave as if no interaction existed, biasing it towards zero"
+  },
+  {
+    "objectID": "missing-workshop/s4_mi_diagnostics.html#auxiliary-variables",
+    "href": "missing-workshop/s4_mi_diagnostics.html#auxiliary-variables",
+    "title": "Session 4 — Diagnostics, Derived Variables and the Number of Imputations",
+    "section": "Auxiliary variables",
+    "text": "Auxiliary variables\n\nimp_no &lt;- mice(dat2 |&gt; select(-hba1c), m = 20, maxit = 10, seed = 2038, printFlag = FALSE)\nb_no &lt;- summary(pool(with(imp_no, lm(sbp ~ age + sex + bmi + smoker + activity))))\nb_full &lt;- summary(pool(fit))\nround(c(without_hba1c = b_no$estimate[b_no$term == \"bmi\"], with_hba1c = b_full$estimate[b_full$term == \"bmi\"]), 3)\n\nwithout_hba1c    with_hba1c \n        0.799         0.790 \n\n\n\nHbA1c is not in the SBP model, but it is related to BMI and to the missingness. Including it as an auxiliary variable costs nothing and can reduce bias and increase precision; here the effect is small (0.80 vs 0.79). Include variables that predict the missing values or the missingness."
+  },
+  {
+    "objectID": "missing-workshop/s4_mi_diagnostics.html#checklist",
+    "href": "missing-workshop/s4_mi_diagnostics.html#checklist",
+    "title": "Session 4 — Diagnostics, Derived Variables and the Number of Imputations",
+    "section": "Checklist",
+    "text": "Checklist\n\n\nReport the fmi for key estimates\nm large enough that results do not depend on the seed\nDerive variables after imputing; keep interactions and curves in the imputation model\nAdd auxiliary variables\nUse D1()/D3() for tests of several coefficients, not the average of p-values"
+  },
+  {
+    "objectID": "missing-workshop/s4_mi_diagnostics.html#switch-to-r-lab-4",
+    "href": "missing-workshop/s4_mi_diagnostics.html#switch-to-r-lab-4",
+    "title": "Session 4 — Diagnostics, Derived Variables and the Number of Imputations",
+    "section": "🔧 Switch to R — Lab 4",
+    "text": "🔧 Switch to R — Lab 4\n\nFile: missing-workshop/labs/lab4_diagnostics.R\n\nfmi, and the number of imputations\nhypertension derived after imputing\nan interaction with D1, auxiliary variables\n\n\nTime: 40 minutes · answer the Q questions in the comments"
+  },
+  {
+    "objectID": "missing-workshop/s4_mi_diagnostics.html#self-check-quiz-15",
+    "href": "missing-workshop/s4_mi_diagnostics.html#self-check-quiz-15",
+    "title": "Session 4 — Diagnostics, Derived Variables and the Number of Imputations",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nA pooled estimate has an fmi of 0.3. What does that mean?\n\nAbout 30% of the variance of the estimate is due to the missing data\n30% of the values of the variable were found to be missing in the dataset\nThe estimate is 30% biased because of the missing data in the dataset\n30% of the imputed data sets gave a different answer from the others"
+  },
+  {
+    "objectID": "missing-workshop/s4_mi_diagnostics.html#self-check-quiz-25",
+    "href": "missing-workshop/s4_mi_diagnostics.html#self-check-quiz-25",
+    "title": "Session 4 — Diagnostics, Derived Variables and the Number of Imputations",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nWhy use m = 50 rather than m = 5 for the final analysis?\n\nMore imputations remove the bias that comes from data missing not at random\nm = 5 cannot be combined with Rubin’s rules, which need at least ten sets\nThe results, and the SEs in particular, depend much less on the seed\nThe estimates become more extreme as m is increased from 5 to 50 sets"
+  },
+  {
+    "objectID": "missing-workshop/s4_mi_diagnostics.html#self-check-quiz-35",
+    "href": "missing-workshop/s4_mi_diagnostics.html#self-check-quiz-35",
+    "title": "Session 4 — Diagnostics, Derived Variables and the Number of Imputations",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nSBP is incomplete and the analysis needs hypertension (SBP of 140 or more). Which is the right order?\n\nDerive hypertension first and impute the 0/1 variable as it stands\nImpute SBP, then derive hypertension in each completed data set\nImpute both variables separately so that they are independent\nDerive it from the average of the 20 imputed SBP values for each adult"
+  },
+  {
+    "objectID": "missing-workshop/s4_mi_diagnostics.html#self-check-quiz-45",
+    "href": "missing-workshop/s4_mi_diagnostics.html#self-check-quiz-45",
+    "title": "Session 4 — Diagnostics, Derived Variables and the Number of Imputations",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nWhy should the imputation model contain the interaction you plan to test?\n\nThe software refuses to pool a model whose terms were not all imputed together\nInteractions are estimated correctly after the data are standardised first\nOtherwise the imputed data hold no interaction, which biases it to zero\nInteraction terms are the variables that most need imputation in a dataset"
+  },
+  {
+    "objectID": "missing-workshop/s4_mi_diagnostics.html#self-check-quiz-55",
+    "href": "missing-workshop/s4_mi_diagnostics.html#self-check-quiz-55",
+    "title": "Session 4 — Diagnostics, Derived Variables and the Number of Imputations",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nWhat are auxiliary variables in multiple imputation?\n\nVariables that have to appear in the analysis model as well, or results are invalid\nVariables with no missing values, which are used to check the imputations afterwards\nVariables that replace the outcome in the imputation model to avoid circularity\nPredictors of the missing values or of missingness, kept out of the analysis"
+  },
+  {
+    "objectID": "missing-workshop/s4_mi_diagnostics.html#score-and-take-home",
+    "href": "missing-workshop/s4_mi_diagnostics.html#score-and-take-home",
+    "title": "Session 4 — Diagnostics, Derived Variables and the Number of Imputations",
+    "section": "Score and take-home",
+    "text": "Score and take-home\nYour score: \n\nfmi: share of variance due to missing data\nm ≥ percent of incomplete cases (and ≥ 20); fix a seed\nImpute, then derive; never dichotomise first\nPut interactions and curves into the imputation model\nAuxiliary variables help; test several coefficients with D1()\n\nNext: Session 5: sensitivity analysis for MNAR and reporting"
   }
 ]

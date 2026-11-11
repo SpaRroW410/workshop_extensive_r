@@ -423,6 +423,38 @@ ul.task-list li input[type="checkbox"] {
     </ul>
   </li>
   <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-missing-data-workshop" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Missing Data Workshop</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-missing-data-workshop">    
+        <li>
+    <a class="dropdown-item" href="./missing-workshop/s1_patterns_mechanisms.html">
+ <span class="dropdown-text">Session 1 — Missing Data: Patterns and Mechanisms</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./missing-workshop/s2_simple_methods.html">
+ <span class="dropdown-text">Session 2 — Simple Methods and Why They Fail</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./missing-workshop/s3_multiple_imputation.html">
+ <span class="dropdown-text">Session 3 — Multiple Imputation with mice</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./missing-workshop/s4_mi_diagnostics.html">
+ <span class="dropdown-text">Session 4 — Diagnostics, Derived Variables and the Number of Imputations</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./missing-workshop/s5_mnar_reporting.html">
+ <span class="dropdown-text">Session 5 — MNAR Sensitivity Analysis and Reporting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./missing-workshop/cheatsheet.html">
+ <span class="dropdown-text">Missing Data Cheat Sheet</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-quarto" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Quarto</span>
     </a>
@@ -575,6 +607,7 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <h2 class="anchored" data-anchor-id="find-your-way-around">🧭 Find Your Way Around</h2>
 <p>Use the navigation bar above to browse all modules. Key starting points:</p>
 <ul>
+<li>🕳️ <strong><a href="./missing-workshop/s1_patterns_mechanisms.html">Missing Data Workshop</a></strong> — Slides, labs and quizzes: MCAR/MAR/MNAR, multiple imputation with mice, sensitivity analysis (start at Session 1)</li>
 <li>📈 <strong><a href="./curves-workshop/s1_beyond_linear.html">Curves &amp; Interactions Workshop</a></strong> — Slides, labs and quizzes: splines, GAMs, effect modification, prediction plots (start at Session 1)</li>
 <li>📋 <strong><a href="./survey-workshop/s1_survey_design.html">Survey Data Workshop</a></strong> — Slides, labs and quizzes: complex survey design, weights, svyglm, raking (start at Session 1)</li>
 <li>🏘️ <strong><a href="./clustered-workshop/s1_clustered_data.html">Clustered &amp; Repeated Data Workshop</a></strong> — Slides, labs and quizzes: ICC, cluster-robust SEs, GEE, mixed models, repeated measures (start at Session 1)</li>
@@ -596,6 +629,12 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <section id="r-scripts" class="level3">
 <h3 class="anchored" data-anchor-id="r-scripts">📄 R Scripts</h3>
 <ul>
+<li><a href="missing-workshop/make_data.R">Make Data</a></li>
+<li><a href="missing-workshop/labs/lab1_pattern.R">Lab1 Pattern</a></li>
+<li><a href="missing-workshop/labs/lab2_simple.R">Lab2 Simple</a></li>
+<li><a href="missing-workshop/labs/lab3_mice.R">Lab3 Mice</a></li>
+<li><a href="missing-workshop/labs/lab4_diagnostics.R">Lab4 Diagnostics</a></li>
+<li><a href="missing-workshop/labs/lab5_mnar.R">Lab5 Mnar</a></li>
 <li><a href="curves-workshop/make_data.R">Make Data</a></li>
 <li><a href="curves-workshop/labs/lab1_linear.R">Lab1 Linear</a></li>
 <li><a href="curves-workshop/labs/lab2_splines.R">Lab2 Splines</a></li>
@@ -643,6 +682,7 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <section id="datasets" class="level3">
 <h3 class="anchored" data-anchor-id="datasets">🗄️ Datasets</h3>
 <ul>
+<li>📊 <a href="data/ncd_missing.csv">Ncd Missing</a> <code>.csv</code></li>
 <li>📊 <a href="data/ncd_curves.csv">Ncd Curves</a> <code>.csv</code></li>
 <li>📊 <a href="data/survey_adults.csv">Survey Adults</a> <code>.csv</code></li>
 <li>📊 <a href="data/survey_population.csv">Survey Population</a> <code>.csv</code></li>

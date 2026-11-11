@@ -112,6 +112,12 @@ pages:
   curves-workshop/s4_interaction.qmd: {title: "Session 4 — Interaction and Effect Modification"}
   curves-workshop/s5_choose_check_report.qmd: {title: "Session 5 — Choosing, Checking and Reporting"}
   curves-workshop/cheatsheet.qmd: {title: "Curves and Interactions Cheat Sheet"}
+  missing-workshop/s1_patterns_mechanisms.qmd: {title: "Session 1 — Missing Data: Patterns and Mechanisms"}
+  missing-workshop/s2_simple_methods.qmd: {title: "Session 2 — Simple Methods and Why They Fail"}
+  missing-workshop/s3_multiple_imputation.qmd: {title: "Session 3 — Multiple Imputation with mice"}
+  missing-workshop/s4_mi_diagnostics.qmd: {title: "Session 4 — Diagnostics, Derived Variables and the Number of Imputations"}
+  missing-workshop/s5_mnar_reporting.qmd: {title: "Session 5 — MNAR Sensitivity Analysis and Reporting"}
+  missing-workshop/cheatsheet.qmd: {title: "Missing Data Cheat Sheet"}
   regression-workshop/s1_foundations.qmd: {title: "Session 1 — Foundations"}
   regression-workshop/s2_simple_regression.qmd: {title: "Session 2 — Simple Linear Regression"}
   regression-workshop/s3_multiple_regression.qmd: {title: "Session 3 — Inference & Multiple Regression"}
@@ -428,7 +434,7 @@ profiles:
     title: "Data Visualization Workshop — Advanced"
     output-dir: docs/advanced
     logo-href: welcome.html
-    # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1), counts and rates (A2), ordinal/multinomial outcomes (A3) and clustered/repeated data (A4) survey data (A5) and curves/interactions (A6) live here.
+    # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1), counts and rates (A2), ordinal/multinomial outcomes (A3) and clustered/repeated data (A4) survey data (A5) curves/interactions (A6) and missing data (A7) live here.
     project-extra:
       render:
       - survival-workshop/*.qmd
@@ -437,6 +443,7 @@ profiles:
       - clustered-workshop/*.qmd
       - survey-workshop/*.qmd
       - curves-workshop/*.qmd
+      - missing-workshop/*.qmd
       resources:
       - data/tb_cohort.csv
       - survival-workshop/make_data.R
@@ -457,6 +464,9 @@ profiles:
       - data/ncd_curves.csv
       - curves-workshop/make_data.R
       - curves-workshop/labs/*.R
+      - data/ncd_missing.csv
+      - missing-workshop/make_data.R
+      - missing-workshop/labs/*.R
     left:
       - text: "R Foundations"
         items:
@@ -551,6 +561,15 @@ profiles:
           - curves-workshop/s5_choose_check_report.qmd
           - "---"
           - curves-workshop/cheatsheet.qmd
+      - text: "Missing Data Workshop"
+        items:
+          - missing-workshop/s1_patterns_mechanisms.qmd
+          - missing-workshop/s2_simple_methods.qmd
+          - missing-workshop/s3_multiple_imputation.qmd
+          - missing-workshop/s4_mi_diagnostics.qmd
+          - missing-workshop/s5_mnar_reporting.qmd
+          - "---"
+          - missing-workshop/cheatsheet.qmd
       - text: "Quarto"
         items:
           - quarto_repro_w/reproducible_writing.qmd

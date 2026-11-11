@@ -1,0 +1,210 @@
+---
+title: "Session 2 — Simple Methods and Why They Fail"
+subtitle: "Complete case · mean imputation · missing indicator · single imputation · Lab 2"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 1: the amount, pattern and mechanism of missingness
+- Today: the **simple fixes** that people still use, and what goes wrong
+- The question: how does **BMI** relate to **SBP**? (true coefficient about **0.80 mmHg per BMI unit**)
+- By the end you can:
+  - explain the **bias** and **variance** problems of each simple method
+  - see why a **single imputation** gives SEs that are **too small**
+:::
+
+# Topic 1 — Complete-case analysis {background-color="#2C3E50"}
+
+## Listwise deletion
+
+```{r}
+m_cc <- lm(sbp ~ age + sex + bmi + smoker + activity, data = dat)
+c(adults_used = nobs(m_cc), of = nrow(dat))
+round(summary(m_cc)$coefficients["bmi", ], 3)
+```
+
+::: {.key}
+`lm()` silently drops incomplete rows: **1,101 of 2,000** adults are used. The BMI coefficient is **0.685** (SE 0.071): **too low** (truth about 0.80). BMI is missing more often when **SBP is high**, so the adults who remain have **lower SBP at a given BMI**: the slope is **attenuated**.
+:::
+
+::: {.warn}
+Complete-case is valid under **MCAR**, and under some **MAR** conditions. Here the missingness depends on the **outcome**: biased.
+:::
+
+# Topic 2 — Single fixes {background-color="#2C3E50"}
+
+## Mean imputation
+
+```{r}
+d_mean <- dat |> mutate(bmi_m = ifelse(is.na(bmi), mean(bmi, na.rm = TRUE), bmi))
+c(before = sd(dat$bmi, na.rm = TRUE), after = sd(d_mean$bmi_m)) |> round(2)
+m_mean <- lm(sbp ~ age + sex + bmi_m + smoker + activity, data = d_mean)
+round(summary(m_mean)$coefficients["bmi_m", 1:2], 3)
+```
+
+::: {.incremental}
+- SD falls from **4.3 to 3.7**: a quarter of the adults sit **exactly at the mean**
+- The coefficient stays **biased** (0.70) and the SE (0.079) is **not valid**
+- **Weakens correlations**, distorts distributions
+- Do **not** use it
+:::
+
+## Missing-indicator method
+
+```{r}
+d_ind <- dat |> mutate(bmi_miss = as.integer(is.na(bmi)), bmi0 = ifelse(is.na(bmi), 0, bmi))
+m_ind <- lm(sbp ~ age + sex + bmi0 + bmi_miss + smoker + activity, data = d_ind)
+round(summary(m_ind)$coefficients[c("bmi0", "bmi_miss"), 1:2], 3)
+```
+
+::: {.warn}
+BMI coefficient **0.68** (still biased). The indicator absorbs a huge "effect" of **28 mmHg**: an **artefact** of filling missing BMI with 0. The method is **biased even when data are MAR**.
+:::
+
+## Single stochastic imputation
+
+```{r}
+imp1 <- mice(dat, m = 1, maxit = 10, seed = 1, printFlag = FALSE)
+m_single <- lm(sbp ~ age + sex + bmi + smoker + activity, data = complete(imp1))
+round(summary(m_single)$coefficients["bmi", 1:2], 3)
+```
+
+::: {.key}
+Imputing **with noise, using SBP**, moves the estimate to **0.75**. But the **SE is 0.057**: **smaller than the complete-case SE** (0.071) although **a quarter of the BMI values were invented**. A single imputation treats made-up values as **real data**.
+:::
+
+## Comparison
+
+```{r}
+tibble(method = c("complete case", "mean imputation", "missing indicator", "single imputation"),
+       estimate = c(coef(m_cc)[["bmi"]], coef(m_mean)[["bmi_m"]], coef(m_ind)[["bmi0"]], coef(m_single)[["bmi"]]),
+       se = c(summary(m_cc)$coefficients["bmi", 2], summary(m_mean)$coefficients["bmi_m", 2], summary(m_ind)$coefficients["bmi0", 2], summary(m_single)$coefficients["bmi", 2])) |>
+  mutate(across(where(is.numeric), \(x) round(x, 3)))
+```
+
+::: {.incremental}
+- Complete-case, mean and indicator: **biased** (0.68 to 0.70 vs about 0.80)
+- Mean imputation and single imputation: **wrong SEs**
+- We need a method that **adds noise to the imputed values** **and** **reflects the uncertainty** in the SE: **multiple imputation** (Session 3)
+:::
+
+## 🔧 Switch to R — Lab 2 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `missing-workshop/labs/lab2_simple.R`
+
+- complete-case model and number of adults used
+- mean imputation and its SD
+- missing indicator, single imputation, comparison table
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("m2q1", "Mean imputation reduces the SD of BMI from 4.3 to 3.7. Why?",
+         c("The imputed values are drawn from a narrower distribution than the observed ones",
+           "The imputed values all sit at the mean, so the spread of the variable shrinks",
+           "Mean imputation removes the adults with extreme BMI values from the sample",
+           "The mean is estimated from fewer adults than the standard deviation is"), answer = 2,
+         explain = "A quarter of the adults get exactly the same value. That adds no spread, so the variance falls, correlations weaken and the SEs are wrong.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("m2q2", "In the missing-indicator method the indicator has a coefficient of 28 mmHg. How should this be read?",
+         c("Adults with a missing BMI truly have an SBP 28 mmHg higher than the others",
+           "It shows that the data are missing not at random for BMI in the cohort",
+           "It is the amount of bias that the complete-case analysis has",
+           "It is an artefact of filling missing BMI with 0, not a real effect"), answer = 4,
+         explain = "Setting BMI to 0 makes the indicator absorb the gap between 0 and the true BMI, so the large coefficient is created by the method.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("m2q3", "A single stochastic imputation gives an SE of 0.057, below the complete-case SE of 0.071, although a quarter of BMI is imputed. Why?",
+         c("The imputed values are treated as if they had been observed",
+           "Imputation increases the sample size, so the SE must fall",
+           "The SE from a stochastic imputation is too large, not too small",
+           "The model has more predictors after the BMI values are imputed"), answer = 1,
+         explain = "A single completed data set hides the uncertainty about the imputed values, so analysis software counts them as real observations and understates the SE.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("m2q4", "When is a complete-case analysis expected to be unbiased?",
+         c("When more than 5% of the values of the variable are missing in the data set",
+           "When the incomplete variable is continuous and has a roughly normal shape in the sample",
+           "When missingness does not depend on the outcome, given the covariates",
+           "When the data are missing at random for the variables in the dataset"), answer = 3,
+         explain = "If missingness does not depend on the outcome once the model covariates are accounted for, the remaining adults give valid regression estimates. Here it depended on SBP, so it failed.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("m2q5", "What is the fair summary of the simple methods?",
+         c("They are as good as multiple imputation when under 30% of values are missing",
+           "They lose data, bias the estimates, or give SEs that are too small",
+           "They are valid for MAR data but not for MCAR data in a regression model",
+           "They fail when the outcome variable is the one that has missing values"), answer = 2,
+         explain = "Each simple method fails in at least one way: deletion loses data and may bias, mean and indicator methods bias, and single imputation understates the SE.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Complete-case**: loses data, biased if missingness depends on the outcome
+- **Mean imputation**: shrinks variance, biased, wrong SE
+- **Missing indicator**: biased even under MAR
+- **Single imputation**: SE too small (imputed = real)
+- Need **multiple** imputation
+:::
+
+**Next:** Session 3: multiple imputation with mice
