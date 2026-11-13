@@ -43,7 +43,7 @@ round(100 * prop.table(table(resp$residence)), 1)
 round(100 * prop.table(___(weight ~ residence, data = resp)), 1)
 
 # ── Task 6 ──────────────────────────────────────────────────────
-# Goal: Declare the survey design: PSUs as clusters, strata, weights. (PSU codes are unique across strata only if nest is set; here they are labelled within stratum.)
+# Goal: Declare the survey design: PSUs as clusters, strata and weights (nest = TRUE says that PSU labels only need to be unique within a stratum).
 des <- svydesign(___ = ~psu, ___ = ~stratum, weights = ~weight, data = resp, nest = TRUE)
 summary(des)
 
