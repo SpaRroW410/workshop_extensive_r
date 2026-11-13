@@ -236,7 +236,7 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-advanced-workshops">    
         <li>
-    <a class="dropdown-item" href="./advanced-workshops.qmd">
+    <a class="dropdown-item" href="./advanced-workshops.html">
  <span class="dropdown-text">All modules and sessions</span></a>
   </li>  
         <li><hr class="dropdown-divider"></li>
@@ -271,6 +271,10 @@ ul.task-list li input[type="checkbox"] {
         <li>
     <a class="dropdown-item" href="./prediction-workshop/s1_building_model.html">
  <span class="dropdown-text">A8 · Prediction models</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./causal-workshop/s1_causal_questions_dags.html">
+ <span class="dropdown-text">A9 · Causal inference</span></a>
   </li>  
     </ul>
   </li>
@@ -427,6 +431,7 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <h2 class="anchored" data-anchor-id="find-your-way-around">🧭 Find Your Way Around</h2>
 <p>Use the navigation bar above to browse all modules. Key starting points:</p>
 <ul>
+<li>🧭 <strong><a href="./causal-workshop/s1_causal_questions_dags.html">Causal Inference Workshop</a></strong> — Slides, labs and quizzes: DAGs, adjustment, propensity scores, IPW, E-values (start at Session 1)</li>
 <li>🎯 <strong><a href="./prediction-workshop/s1_building_model.html">Prediction Models Workshop</a></strong> — Slides, labs and quizzes: risk models, calibration, validation, shrinkage, decision curves (start at Session 1)</li>
 <li>🕳️ <strong><a href="./missing-workshop/s1_patterns_mechanisms.html">Missing Data Workshop</a></strong> — Slides, labs and quizzes: MCAR/MAR/MNAR, multiple imputation with mice, sensitivity analysis (start at Session 1)</li>
 <li>📈 <strong><a href="./curves-workshop/s1_beyond_linear.html">Curves &amp; Interactions Workshop</a></strong> — Slides, labs and quizzes: splines, GAMs, effect modification, prediction plots (start at Session 1)</li>
@@ -450,6 +455,12 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <section id="r-scripts" class="level3">
 <h3 class="anchored" data-anchor-id="r-scripts">📄 R Scripts</h3>
 <ul>
+<li><a href="causal-workshop/make_data.R">Make Data</a></li>
+<li><a href="causal-workshop/labs/lab1_dag.R">Lab1 Dag</a></li>
+<li><a href="causal-workshop/labs/lab2_adjust.R">Lab2 Adjust</a></li>
+<li><a href="causal-workshop/labs/lab3_match.R">Lab3 Match</a></li>
+<li><a href="causal-workshop/labs/lab4_ipw.R">Lab4 Ipw</a></li>
+<li><a href="causal-workshop/labs/lab5_sens.R">Lab5 Sens</a></li>
 <li><a href="prediction-workshop/make_data.R">Make Data</a></li>
 <li><a href="prediction-workshop/labs/lab1_build.R">Lab1 Build</a></li>
 <li><a href="prediction-workshop/labs/lab2_perf.R">Lab2 Perf</a></li>
@@ -509,6 +520,7 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <section id="datasets" class="level3">
 <h3 class="anchored" data-anchor-id="datasets">🗄️ Datasets</h3>
 <ul>
+<li>📊 <a href="data/htn_programme.csv">Htn Programme</a> <code>.csv</code></li>
 <li>📊 <a href="data/diabetes_dev.csv">Diabetes Dev</a> <code>.csv</code></li>
 <li>📊 <a href="data/diabetes_valid.csv">Diabetes Valid</a> <code>.csv</code></li>
 <li>📊 <a href="data/ncd_missing.csv">Ncd Missing</a> <code>.csv</code></li>
