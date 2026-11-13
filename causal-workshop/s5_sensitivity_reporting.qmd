@@ -1,0 +1,225 @@
+---
+title: "Session 5 — Sensitivity Analysis and Reporting"
+subtitle: "Unmeasured confounding · E-value · benchmarks · positivity · target trial · reporting · Lab 5"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+```{r}
+#| include: false
+m_adj <- lm(f_out, data = htn)
+m_rr <- glm(update(f_out, controlled ~ .), data = htn, family = poisson)
+ct <- coeftest(m_rr, vcov. = vcovHC(m_rr, type = "HC0"))
+rr <- exp(c(RR = ct["programme", 1], lo = ct["programme", 1] - 1.96 * ct["programme", 2], hi = ct["programme", 1] + 1.96 * ct["programme", 2]))
+```
+
+## Where we are
+
+::: {.incremental}
+- Sessions 2 to 4: four methods, one answer (about −6 mmHg)
+- All assume **no unmeasured confounding**. Today: **how fragile** is the conclusion?
+- By the end you can:
+  - compute and interpret an **E-value**
+  - **benchmark** it against measured confounders
+  - frame the study as a **target trial** and **report** it
+:::
+
+# Topic 1 — Unmeasured confounding {background-color="#2C3E50"}
+
+## The untestable assumption
+
+::: {.warn}
+In these data an **unrecorded** factor, **motivation**, raises enrolment and lowers SBP. No method can adjust for it. That is why the estimates are **−6.3** where the truth is **−5.8**: a small **residual bias**. In real data you **never know** its size; you can only ask **how strong** it would have to be.
+:::
+
+## A risk ratio for a binary outcome
+
+```{r}
+round(rr, 2)
+```
+
+Controlled BP at 12 months (SBP below 140): **RR 1.57** (95% CI 1.44 to 1.71), adjusted for the confounders. A Poisson model with **robust SE** gives a **risk ratio** for a common outcome (A2).
+
+## The E-value
+
+```{r}
+evalues.RR(est = rr[["RR"]], lo = rr[["lo"]], hi = rr[["hi"]])
+```
+
+::: {.key}
+**E-value 2.5** (and **2.2** for the confidence limit). An unmeasured confounder would need a risk ratio of **at least 2.5 with both enrolment and BP control**, beyond the measured confounders, to **explain the effect away**; **2.2** would be enough to make the CI include 1. **Large E-value = robust**; close to 1 = fragile.
+:::
+
+## Is 2.5 plausible? Benchmarks
+
+```{r}
+round(exp(coef(m_rr))[c("diabetes", "educationSecondary+", "urban")], 2)
+round(c(full = coef(m_adj)[["programme"]], without_baseline_sbp = coef(update(m_adj, . ~ . - baseline_sbp))[["programme"]]), 2)
+```
+
+::: {.incremental}
+- The **measured** confounders have risk ratios of **0.70** (diabetes; 1.43 inverted), **1.23** and **1.06**: none is near **2.5**
+- Leaving out **baseline SBP**, the strongest one, moves the estimate from **−6.3 to −3.4**: it does **not** remove it
+- So an unmeasured confounder **strong enough** to cancel the effect is **unlikely**; one that **shifts it somewhat** is **plausible**
+- The E-value is **not** a p-value and has **no threshold**: interpret it with **subject knowledge**
+:::
+
+# Topic 2 — Design thinking {background-color="#2C3E50"}
+
+## Other threats
+
+| Threat | Check |
+|---|---|
+| **Positivity** violated | propensity scores near 0 or 1 (here 3 below 0.05, 3 above 0.95) |
+| **Time zero** unclear, immortal time | define eligibility, start of follow-up and exposure **at the same moment** |
+| **Selection** (loss to follow-up) | compare those lost; weights for censoring |
+| **Measurement error** in confounders | residual confounding |
+| **Model misspecification** | flexible terms (A6), doubly robust |
+
+## Emulate a target trial
+
+::: {.good}
+Write the **trial you would have liked to run**, then copy it with the data:
+1. **Eligibility** (who, when)
+2. **Strategies** compared (enrol vs usual care)
+3. **Assignment** (emulated by adjusting for baseline confounders)
+4. **Start of follow-up** (= eligibility = assignment)
+5. **Outcome** and follow-up
+6. **Causal contrast** (ATE, ATT; intention-to-treat or per-protocol)
+7. **Analysis plan**
+:::
+
+# Topic 3 — Reporting {background-color="#2C3E50"}
+
+## What to report
+
+::: {.good}
+- The **causal question**, the **estimand** and the **DAG** (supplement)
+- **Confounders** and why; **what was not** adjusted for (mediators, colliders)
+- The **method**, **balance** (table or love plot), **overlap**, weights or matches dropped
+- **Estimate with CI** from the main method, and the others as **sensitivity**
+- **E-value** or other bias analysis; **limitations**
+- Use careful words: "**estimated effect under the assumption of no unmeasured confounding**"
+:::
+
+::: {.key}
+*Example:* "After adjustment for age, sex, education, residence, BMI, diabetes and baseline SBP, enrolment was associated with a 6.3 mmHg lower SBP at 12 months (95% CI 5.4 to 7.1); matching (−5.9) and weighting (−5.7) gave similar estimates. The E-value for BP control was 2.5 (2.2 for the confidence limit)."
+:::
+
+## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `causal-workshop/labs/lab5_sens.R`
+
+- risk ratio for BP control and its E-value
+- benchmarks: measured confounders, leave-one-out
+- positivity check and a reporting sentence
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z5q1", "Regression, matching and weighting all give about -6 mmHg. What does this agreement show?",
+         c("The estimate is free of confounding, as three methods confirm the same value",
+           "The method does not drive the result, but all share one assumption",
+           "Unmeasured confounding is absent, or else the methods would disagree",
+           "The programme works equally well in each subgroup of adults in the cohort"), answer = 2,
+         explain = "The methods use the same measured confounders in different ways. Their agreement rules out method-specific problems, not unmeasured confounding.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z5q2", "The E-value for the risk ratio is 2.5. What does it mean?",
+         c("There is a 2.5% probability that the effect is due to unmeasured confounding in the data",
+           "The true risk ratio is 2.5 once the unmeasured confounding has been removed from the estimate",
+           "An unmeasured confounder with a risk ratio of 2.5 has been shown to exist in these data",
+           "A hidden confounder needs a risk ratio of 2.5 with exposure and outcome to cancel the effect"), answer = 4,
+         explain = "The E-value is the minimum strength of association, with both the exposure and the outcome, that an unmeasured confounder would need to fully account for the estimate.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z5q3", "How can you judge whether an E-value of 2.5 is reassuring?",
+         c("Compare it with the strength of the measured confounders",
+           "Check whether it is larger than the conventional threshold of 2",
+           "Check whether its p-value is below 0.05 in the output",
+           "Compare it with the E-values of other variables in the same model"), answer = 1,
+         explain = "There is no threshold. If the strongest known confounders are much weaker than the E-value, an unmeasured one of that strength is less plausible.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z5q4", "What is the purpose of emulating a target trial?",
+         c("To replace the observational data by simulated data from a trial",
+           "To make the confidence intervals as narrow as those of a real trial",
+           "To define eligibility, time zero and strategies as a trial would",
+           "To remove the need to measure and adjust for the confounders"), answer = 3,
+         explain = "Specifying the hypothetical trial forces a clear question and aligns eligibility, start of follow-up and exposure, which prevents biases such as immortal time.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z5q5", "Which wording is appropriate when reporting an observational causal analysis?",
+         c("A proven causal effect, since the confounders were adjusted for",
+           "An estimated effect, assuming no unmeasured confounding",
+           "An association, since causal language is not allowed without a trial",
+           "An effect that holds for each individual adult who enrolled"), answer = 2,
+         explain = "The analysis targets a causal effect and should say so, together with the assumptions on which that interpretation rests.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- All methods assume **no unmeasured confounding**
+- **E-value**: how strong must a hidden confounder be?
+- **Benchmark** against measured confounders
+- Think **target trial**: eligibility, time zero, strategies
+- Report **estimand, DAG, balance, sensitivity** and careful wording
+:::
+
+**Next:** Cheat sheet; the advanced series is complete

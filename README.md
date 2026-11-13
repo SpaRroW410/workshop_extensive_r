@@ -100,6 +100,7 @@ a synthetic dataset built by `make_data.R`) is used for each further module. Eac
 | A6 Curves and interactions | `curves-workshop/` | `advanced` |
 | A7 Missing data | `missing-workshop/` | `advanced` |
 | A8 Prediction models | `prediction-workshop/` | `advanced` |
+| A9 Causal inference | `causal-workshop/` | `advanced` |
 
 `advanced-workshops.qmd` lists every session. The quiz engine is shared: edit the master copy in `regression-workshop/assets/` and run
 `scripts/sync_workshop_assets.sh`. Deck quizzes keep the score in the browser and offer a **Save score** button.

@@ -1,6 +1,6 @@
 ---
 title: "Advanced Workshops"
-subtitle: "Eight modules. Each has five slide decks with a self-check quiz, five R labs and a two-page cheat sheet."
+subtitle: "Nine modules. Each has five slide decks with a self-check quiz, five R labs and a two-page cheat sheet."
 format:
   html:
     page-layout: full
@@ -79,3 +79,12 @@ Every module runs on its own synthetic dataset. Open a session to see the slides
 - [Session 4 — Shrinkage and Variable Selection](prediction-workshop/s4_shrinkage_selection.qmd)
 - [Session 5 — External Validation, Decision Curves and Reporting](prediction-workshop/s5_external_reporting.qmd)
 - [Cheat sheet](prediction-workshop/cheatsheet.qmd)
+
+## A9 · Causal inference
+
+- [Session 1 — Causal Questions and DAGs](causal-workshop/s1_causal_questions_dags.qmd)
+- [Session 2 — Adjustment, Bad Controls and Standardisation](causal-workshop/s2_adjustment_standardisation.qmd)
+- [Session 3 — Propensity Scores and Matching](causal-workshop/s3_propensity_matching.qmd)
+- [Session 4 — Inverse Probability Weighting](causal-workshop/s4_ipw.qmd)
+- [Session 5 — Sensitivity Analysis and Reporting](causal-workshop/s5_sensitivity_reporting.qmd)
+- [Cheat sheet](causal-workshop/cheatsheet.qmd)

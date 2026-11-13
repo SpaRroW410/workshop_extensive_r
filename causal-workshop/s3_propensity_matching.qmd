@@ -1,0 +1,227 @@
+---
+title: "Session 3 — Propensity Scores and Matching"
+subtitle: "Propensity score · overlap · matching · balance · love plot · effect in the matched sample · Lab 3"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 2: adjust in the **outcome model**
+- Today: model the **treatment assignment** instead, and build **comparable groups** before looking at the outcome
+- By the end you can:
+  - estimate a **propensity score** and check **overlap**
+  - **match** and check **balance**
+  - estimate the effect in the matched sample
+:::
+
+# Topic 1 — The propensity score {background-color="#2C3E50"}
+
+## Probability of enrolment
+
+```{r}
+ps_model <- glm(f_ps, data = htn, family = binomial)
+htn$ps <- predict(ps_model, type = "response")
+htn |> group_by(programme) |> summarise(min = round(min(ps), 2), mean = round(mean(ps), 2), max = round(max(ps), 2))
+```
+
+::: {.incremental}
+- **Propensity score** = P(enrolled | confounders). Two adults with the **same score** have, on average, the **same confounder distribution**: like a small randomised trial
+- Include the **confounders** (and predictors of the outcome); **not** mediators, colliders or variables that only predict enrolment
+- The aim is **balance**, not prediction: do **not** judge it by the AUC
+:::
+
+## Overlap (positivity)
+
+```{r}
+#| output-location: slide
+#| fig-height: 4.2
+ggplot(htn, aes(ps, fill = factor(programme, labels = c("Not enrolled", "Enrolled")))) + geom_density(alpha = 0.5) + scale_fill_manual(values = c(col_blue, col_red)) + labs(x = "Propensity score", fill = NULL)
+```
+
+::: {.key}
+The two distributions **overlap** over almost the whole range: for nearly every enrolled adult there are **comparable** non-enrolled adults. Regions **without** overlap cannot be compared without **extrapolation**.
+:::
+
+# Topic 2 — Matching {background-color="#2C3E50"}
+
+## Balance before matching
+
+```{r}
+bal.tab(f_ps, data = htn, un = TRUE, s.d.denom = "pooled")$Balance[, "Diff.Un", drop = FALSE] |> round(2)
+```
+
+**Standardised mean difference (SMD)**: difference in means divided by the SD. **Below 0.1** is the usual target. Here **baseline SBP 0.63** and **age 0.43**: far off.
+
+## 1:1 nearest-neighbour matching
+
+```{r}
+m_out <- matchit(f_ps, data = htn, method = "nearest", distance = "glm", caliper = 0.2)
+m_out
+```
+
+::: {.incremental}
+- Each enrolled adult is paired with the **non-enrolled adult with the closest score**; the **caliper** (0.2 SD) refuses poor matches
+- **2,114 adults (1,057 pairs)** remain; **172 enrolled** adults found no match
+- No outcome data are used: the design is fixed **before** looking at SBP
+:::
+
+## Balance after matching
+
+```{r}
+#| output-location: slide
+#| fig-height: 4.4
+love.plot(m_out, thresholds = 0.1, abs = TRUE, stars = "raw")
+```
+
+```{r}
+bal.tab(m_out, un = TRUE)$Balance[c("age", "diabetes", "baseline_sbp"), c("Diff.Un", "Diff.Adj")] |> round(2)
+```
+
+::: {.key}
+All SMDs are now **below 0.1** (baseline SBP 0.63 → 0.06). Judge matching by **balance**, never by p-values. If balance is poor, **change the propensity model** (add interactions, curves) and match again.
+:::
+
+# Topic 3 — The effect {background-color="#2C3E50"}
+
+## In the matched sample
+
+```{r}
+md <- match.data(m_out)
+fit_m <- lm(sbp_12m ~ programme, data = md, weights = weights)
+round(coeftest(fit_m, vcov. = vcovCL, cluster = ~subclass)["programme", 1:2], 2)
+```
+
+::: {.incremental}
+- **−5.9 mmHg** (SE 0.51): close to the regression estimate
+- SE **clustered on the matched pair**
+- Matching the enrolled targets the **ATT**, here for the **enrolled who could be matched**: say so, and describe who was **dropped**
+- Adding the covariates to this model ("double adjustment") removes residual imbalance
+:::
+
+## Strengths and limits
+
+| Strength | Limit |
+|---|---|
+| Separates **design** from **outcome analysis** | Only **measured** confounders are balanced |
+| **Balance** is visible and checkable | Discards unmatched people (precision, target population) |
+| Easy to explain | Many choices (caliper, ratio, replacement): **pre-specify** |
+
+## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `causal-workshop/labs/lab3_match.R`
+
+- propensity score and overlap plot
+- matching with a caliper, balance table and love plot
+- effect in the matched data
+:::
+
+**Time:** 40 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z3q1", "What is a propensity score?",
+         c("The probability of the outcome, given the exposure and the measured confounders",
+           "The number of confounders on which two adults in the data agree exactly",
+           "The share of the outcome variance that the exposure explains in the model",
+           "The probability of receiving the exposure, given the measured confounders"), answer = 4,
+         explain = "The propensity score summarises the measured confounders into one number: the chance of being exposed. Adults with the same score are comparable on those confounders.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z3q2", "How should you judge whether propensity-score matching has worked?",
+         c("By covariate balance, e.g. standardised differences below 0.1",
+           "By the AUC of the propensity model, which should be above 0.8",
+           "By the p-value of the exposure in the matched outcome model",
+           "By the number of adults that are kept in the matched sample"), answer = 1,
+         explain = "The purpose of the score is to balance confounders between groups. A high AUC can even signal poor overlap.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z3q3", "The propensity distributions of the two groups hardly overlap. What does this mean?",
+         c("The propensity model is correct, as it discriminates well between the two groups",
+           "Some adults have no comparable counterpart, so their effect is not estimable",
+           "The exposure has a strong effect on the outcome in most adults of the cohort",
+           "Matching will work especially well, because the two groups are so distinct"), answer = 2,
+         explain = "Without overlap (positivity) the comparison relies on extrapolation. The honest options are to restrict the population or to accept that the effect is not identified there.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z3q4", "In 1:1 matching, 172 enrolled adults found no match within the caliper. What is the consequence?",
+         c("The estimate is biased by the caliper, which should therefore be removed",
+           "The 172 adults should be matched to the nearest adult, whatever the distance",
+           "Nothing follows, since dropped adults do not affect a matched analysis",
+           "The estimate applies to the matched enrolled adults, a changed target"), answer = 4,
+         explain = "Dropping unmatched adults protects comparability but changes who the result is about. Report how many were dropped and who they were.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z3q5", "Which variables belong in the propensity-score model?",
+         c("Confounders measured before the exposure, chosen from the DAG",
+           "Mediators such as adherence, since they predict the outcome well",
+           "Colliders such as clinic visits, since they predict enrolment well",
+           "All the available variables, selected by a stepwise procedure"), answer = 1,
+         explain = "The score must balance pre-exposure confounders. Post-exposure variables (mediators, colliders) bias the estimate, however well they predict.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Propensity score** = P(exposure | confounders)
+- Check **overlap** (positivity) first
+- **Match**, then check **balance** (SMD < 0.1, love plot)
+- Estimate in the matched data with **pair-clustered SE**
+- Matching targets the **ATT** and balances only **measured** confounders
+:::
+
+**Next:** Session 4: inverse probability weighting

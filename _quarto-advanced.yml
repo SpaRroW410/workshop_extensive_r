@@ -16,6 +16,7 @@ project:
     - curves-workshop/*.qmd
     - missing-workshop/*.qmd
     - prediction-workshop/*.qmd
+    - causal-workshop/*.qmd
   resources:
     - data/tb_cohort.csv
     - survival-workshop/make_data.R
@@ -43,6 +44,9 @@ project:
     - data/diabetes_valid.csv
     - prediction-workshop/make_data.R
     - prediction-workshop/labs/*.R
+    - data/htn_programme.csv
+    - causal-workshop/make_data.R
+    - causal-workshop/labs/*.R
 website:
   title: Data Visualization Workshop — Advanced
   site-url: '.'
@@ -133,6 +137,8 @@ website:
             href: missing-workshop/s1_patterns_mechanisms.qmd
           - text: A8 · Prediction models
             href: prediction-workshop/s1_building_model.qmd
+          - text: A9 · Causal inference
+            href: causal-workshop/s1_causal_questions_dags.qmd
       - text: Quarto
         menu:
           - text: Quarto Basics

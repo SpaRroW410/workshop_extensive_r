@@ -125,6 +125,12 @@ pages:
   prediction-workshop/s4_shrinkage_selection.qmd: {title: "Session 4 — Shrinkage and Variable Selection"}
   prediction-workshop/s5_external_reporting.qmd: {title: "Session 5 — External Validation, Decision Curves and Reporting"}
   prediction-workshop/cheatsheet.qmd: {title: "Prediction Models Cheat Sheet"}
+  causal-workshop/s1_causal_questions_dags.qmd: {title: "Session 1 — Causal Questions and DAGs"}
+  causal-workshop/s2_adjustment_standardisation.qmd: {title: "Session 2 — Adjustment, Bad Controls and Standardisation"}
+  causal-workshop/s3_propensity_matching.qmd: {title: "Session 3 — Propensity Scores and Matching"}
+  causal-workshop/s4_ipw.qmd: {title: "Session 4 — Inverse Probability Weighting"}
+  causal-workshop/s5_sensitivity_reporting.qmd: {title: "Session 5 — Sensitivity Analysis and Reporting"}
+  causal-workshop/cheatsheet.qmd: {title: "Causal Inference Cheat Sheet"}
   regression-workshop/s1_foundations.qmd: {title: "Session 1 — Foundations"}
   regression-workshop/s2_simple_regression.qmd: {title: "Session 2 — Simple Linear Regression"}
   regression-workshop/s3_multiple_regression.qmd: {title: "Session 3 — Inference & Multiple Regression"}
@@ -441,7 +447,7 @@ profiles:
     title: "Data Visualization Workshop — Advanced"
     output-dir: docs/advanced
     logo-href: welcome.html
-    # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1), counts and rates (A2), ordinal/multinomial outcomes (A3) and clustered/repeated data (A4) survey data (A5) curves/interactions (A6) missing data (A7) and prediction models (A8) live here.
+    # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1), counts and rates (A2), ordinal/multinomial outcomes (A3) and clustered/repeated data (A4) survey data (A5) curves/interactions (A6) missing data (A7) prediction models (A8) and causal inference (A9) live here.
     project-extra:
       render:
       - advanced-workshops.qmd
@@ -453,6 +459,7 @@ profiles:
       - curves-workshop/*.qmd
       - missing-workshop/*.qmd
       - prediction-workshop/*.qmd
+      - causal-workshop/*.qmd
       resources:
       - data/tb_cohort.csv
       - survival-workshop/make_data.R
@@ -480,6 +487,9 @@ profiles:
       - data/diabetes_valid.csv
       - prediction-workshop/make_data.R
       - prediction-workshop/labs/*.R
+      - data/htn_programme.csv
+      - causal-workshop/make_data.R
+      - causal-workshop/labs/*.R
     left:
       - text: "R Foundations"
         items:
@@ -532,6 +542,7 @@ profiles:
           - {path: curves-workshop/s1_beyond_linear.qmd, text: "A6 · Curves and interactions"}
           - {path: missing-workshop/s1_patterns_mechanisms.qmd, text: "A7 · Missing data"}
           - {path: prediction-workshop/s1_building_model.qmd, text: "A8 · Prediction models"}
+          - {path: causal-workshop/s1_causal_questions_dags.qmd, text: "A9 · Causal inference"}
       - text: "Quarto"
         items:
           - quarto_repro_w/reproducible_writing.qmd

@@ -1,0 +1,97 @@
+---
+title: "Causal Inference Cheat Sheet"
+subtitle: "Estimands · DAGs · adjustment · propensity scores · matching · IPW · E-values · synthetic hypertension programme · print on 2 pages (A4)"
+format:
+  html:
+    theme: cosmo
+    toc: false
+    page-layout: full
+    html-math-method: plain
+    css: assets/cheatsheet.css
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+source("assets/setup.R")
+f <- function(x, d = 1) formatC(x, format = "f", digits = d)
+naive <- coef(lm(sbp_12m ~ programme, data = htn))[["programme"]]
+m_adj <- lm(f_out, data = htn); adj <- coef(m_adj)[["programme"]]
+htn$ps <- predict(glm(f_ps, data = htn, family = binomial), type = "response")
+pt <- mean(htn$programme); htn$sw <- ifelse(htn$programme == 1, pt / htn$ps, (1 - pt) / (1 - htn$ps))
+ipw <- coef(lm(sbp_12m ~ programme, data = htn, weights = sw))[["programme"]]
+med <- coef(update(m_adj, . ~ . + adherent))[["programme"]]; col <- coef(update(m_adj, . ~ . + clinic_visits))[["programme"]]
+```
+
+::: {.sheet}
+
+## 1 · Question first
+
+| Step | Ask |
+|---|---|
+| **Estimand** | **ATE** (everybody treated vs nobody) or **ATT** (effect in those treated)? |
+| **Assumptions** | no unmeasured confounding · positivity (overlap) · consistency (well-defined intervention) |
+| **Design** | emulate a **target trial**: eligibility, time zero, strategies, outcome |
+
+## 2 · DAG roles
+
+| Variable | Structure | For the total effect |
+|---|---|---|
+| **Confounder** | causes exposure and outcome | **adjust** |
+| **Mediator** | exposure → M → outcome | **do not adjust** |
+| **Collider** | exposure → K ← outcome | **do not adjust** |
+| Instrument-like | causes exposure only | leave out |
+
+`dagitty("dag { ... }")`, `adjustmentSets(g, "x", "y")`, `descendants(g, "x")`. Draw the DAG **before** the analysis. Never pick covariates by p-values.
+
+## 3 · What bad controls do (our data)
+
+| Model | Programme effect on SBP (mmHg) |
+|---|---|
+| Naive | `r f(naive)` |
+| Confounders | **`r f(adj)`** |
+| + mediator (adherence) | `r f(med)` (direct effect only) |
+| + collider (clinic visits) | `r f(col)` (biased) |
+
+True effect (synthetic data): −5.8. Only the **exposure** row of a regression table is causal (Table 2 fallacy).
+
+## 4 · Four ways to use the confounders
+
+| Method | R | Notes |
+|---|---|---|
+| **Regression** | `lm(y ~ x + confounders)` | assumes the outcome model |
+| **Standardisation** | predict under x = 1 and x = 0, average | ATE or ATT; bootstrap CI |
+| **Matching** | `matchit(x ~ confounders, caliper = 0.2)`, `match.data()` | ATT; pair-clustered SE |
+| **IPW** | w = 1/PS or 1/(1 − PS); stabilise | ATE; **robust SE**; ATT: 1 and PS/(1 − PS) |
+| **Doubly robust** | weighted outcome model with confounders | right if either model is right |
+
+Ours: regression `r f(adj)`, IPW `r f(ipw)`.
+
+## 5 · Checks
+
+- **Overlap**: density of the propensity score by group; scores near 0 or 1
+- **Balance**: standardised mean differences **below 0.1** (`cobalt::bal.tab`, `love.plot`); never p-values
+- **Weights**: range, mean near 1 (stabilised); truncate at 1st/99th percentile as a sensitivity analysis
+- If balance is poor: **change the propensity model**, do not look at the outcome
+
+## 6 · Unmeasured confounding
+
+**E-value** (`EValue::evalues.RR`, `evalues.OLS`): the minimum risk ratio a hidden confounder needs with **both** exposure and outcome to explain the effect away. No threshold: **benchmark** against measured confounders. Also: leave-one-confounder-out, negative controls.
+
+## 7 · Pitfalls
+
+::: {.bad}
+- Adjusting for **mediators or colliders**; "adjust for everything"
+- Judging the propensity model by its **AUC**
+- **Immortal time**: exposure defined after follow-up starts
+- Agreement between methods read as **proof**
+- No statement of the **estimand** or of who was **dropped**
+:::
+
+## 8 · Report
+
+Question and estimand · DAG · confounders and why · method, overlap and balance · estimate with CI · other methods as sensitivity · E-value · limitations. Wording: "estimated effect **under the assumption of no unmeasured confounding**".
+
+:::
