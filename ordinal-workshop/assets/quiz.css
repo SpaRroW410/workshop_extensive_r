@@ -48,3 +48,7 @@
 .quiz-feedback.is-info { color: #2c3e50; }
 .quiz-feedback code { background: #eef2f4; color: #c2185b; padding: 0 0.3em; border-radius: 3px; }
 .quiz-score { font-weight: 700; color: #2c3e50; }
+
+/* score tools (Save score / Reset) */
+.quiz-score-tools { margin-left: 0.6em; white-space: nowrap; }
+.quiz-score-tools .quiz-btn { font-size: 0.55em; padding: 0.15em 0.6em; margin-left: 0.3em; vertical-align: middle; }

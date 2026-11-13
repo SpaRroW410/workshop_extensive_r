@@ -103,11 +103,11 @@ Outcomes are mapped to Bloom levels (remember → evaluate) per world in §3 and
 | 7 | **Count Country** | Poisson; overdispersion; negative binomial; offsets and rates; zero inflation (mention) | Dengue counts per ward-month | Rate ratio for a ward-level intervention | 3 | ⬜ |
 | 8 | **Ordinal & Nominal Outcomes** | Ordinal logistic; proportional-odds check; multinomial logistic; baseline category logic | BP stage; place-of-delivery survey | Choose and interpret ordinal vs multinomial | 3 | ⬜ |
 | 9 | **Survival Summit** | Censoring; Kaplan–Meier; log-rank; Cox; hazard ratios; PH assumption; time-varying covariates (mention) | DOTS TB cohort | Fix a violated PH assumption | 3 | ⬜ |
-| 10 | **Villages & Clusters** | ICC, design effect; random intercepts (`lme4`); GEE (`geepack`); cluster-robust SE; repeated measures | NCD survey (villages) + repeated BP visits | Compare naive vs mixed vs GEE | 3 | ⬜ |
-| 11 | **Survey Science** | Weights, strata, PSUs; `survey`/`srvyr`; weighted proportions and regression; NFHS-style design | NFHS-type synthetic survey | Weighted vs unweighted prevalence ratios | 3 | ⬜ |
-| 12 | **Curves & Interactions** | Splines, GAMs, polynomials; effect modification; centred interactions; plotting predictions | NCD survey | Is the salt effect different by sex? | 4 | ⬜ |
-| 13 | **Missing Data** | MCAR/MAR/MNAR; complete-case bias; multiple imputation (`mice`); sensitivity analysis | NCD survey with MAR missingness | Imputation report card | 4 | ⬜ |
-| 14 | **Prediction Models** | Apparent vs validated performance; bootstrap/CV; calibration; shrinkage; lasso/ridge (`glmnet`); sample size for prediction; TRIPOD | Diabetes screening cohort | Build, validate and report a risk score | 4 | ⬜ |
+| 10 | **Villages & Clusters** | ICC, design effect; random intercepts (`lme4`); GEE (`geepack`); cluster-robust SE; repeated measures | Village BP trial (`data/bp_trial.csv`) | Compare naive vs mixed vs GEE | 3 | ⬜ |
+| 11 | **Survey Science** | Weights, strata, PSUs; `survey`/`srvyr`; weighted proportions and regression; NFHS-style design | Adult health survey (`data/survey_adults.csv`) | Weighted vs unweighted prevalence ratios | 3 | ⬜ |
+| 12 | **Curves & Interactions** | Splines, GAMs, polynomials; effect modification; centred interactions; plotting predictions | NCD curves survey (`data/ncd_curves.csv`) | Is the salt effect different by age? | 4 | ⬜ |
+| 13 | **Missing Data** | MCAR/MAR/MNAR; complete-case bias; multiple imputation (`mice`); sensitivity analysis | NCD cohort with known missingness (`data/ncd_missing.csv`) | Imputation report card | 4 | ⬜ |
+| 14 | **Prediction Models** | Apparent vs validated performance; bootstrap/CV; calibration; shrinkage; lasso/ridge (`glmnet`); sample size for prediction; TRIPOD | Diabetes screening cohorts (`data/diabetes_dev.csv`, `data/diabetes_valid.csv`) | Build, validate and report a risk score | 4 | ⬜ |
 | 15 | **Causal Thinking** | DAGs; confounder/mediator/collider; propensity scores; IPW; mediation basics; E-values | Observational programme-evaluation data | Draw the DAG, then pick the estimator | 5 | ⬜ |
 | 16 | **Capstone: Your Thesis** | Analysis plan, SAP template, run, check, report, peer review | Learner's own (de-identified) or provided | Peer-reviewed mini-manuscript | 5 | ⬜ |
 
@@ -143,14 +143,15 @@ Outcomes are mapped to Bloom levels (remember → evaluate) per world in §3 and
 
 | Dataset | Used in | Built-in teaching features | Status |
 |---|---|---|---|
-| **NCD survey** (n = 600, 20 villages) | Worlds 0–6, 10, 12, 13 | Confounding, collinearity, heteroscedasticity, curvature, clustering, common outcome, 3% missing | ✅ exists (`make_data.R`) |
-| **Dengue ward-month counts** | World 7 | Overdispersion, exposure offset (population), seasonality, zero inflation | ⬜ |
-| **BP-stage and delivery-site survey** | World 8 | Ordinal (proportional odds holds/fails), nominal outcome | ⬜ |
-| **DOTS TB cohort** | World 9 | Censoring, non-proportional hazards for one covariate, competing outcome (mention) | ⬜ |
-| **Repeated-visit BP clinic data** | World 10 | Within-person correlation, random slopes, missing visits | ⬜ |
-| **NFHS-style complex survey** | World 11 | Stratification, PSUs, unequal weights, design effects | ⬜ |
-| **Missing-data variants of NCD** | World 13 | MCAR vs MAR vs MNAR versions of the same data | ⬜ |
-| **Diabetes screening cohort** | World 14 | Many candidate predictors, low EPV trap, optimism | ⬜ |
+| **NCD survey** (n = 600, 20 villages) | Worlds 0–6 | Confounding, collinearity, heteroscedasticity, curvature, clustering, common outcome, 3% missing | ✅ exists (`make_data.R`) |
+| **NCD curves survey** | World 12 | Bend in age, U-shaped BMI risk, salt × age and smoking × sex interactions | ✅ `data/ncd_curves.csv` (curves workshop) |
+| **Dengue ward-month counts** | World 7 | Overdispersion, exposure offset (population), seasonality, zero inflation | ✅ `data/dengue_wards.csv` (counts workshop) |
+| **BP-stage and delivery-site survey** | World 8 | Ordinal (proportional odds holds/fails), nominal outcome | ✅ `data/maternal_survey.csv` (ordinal workshop: anaemia grade, place of delivery) |
+| **DOTS TB cohort** | World 9 | Censoring, non-proportional hazards for one covariate, competing outcome (mention) | ✅ `data/tb_cohort.csv` (survival workshop) |
+| **Village BP trial, repeated visits** | World 10 | Village clustering (ICC, design effect), within-person correlation, missing visits | ✅ `data/bp_trial.csv` (clustered workshop) |
+| **NFHS-style complex survey** | World 11 | Stratification, PSUs, unequal weights, nonresponse, design effects | ✅ `data/survey_adults.csv` (survey workshop) |
+| **NCD cohort with missing data** | World 13 | MCAR, MAR and MNAR variables in one file, known truth | ✅ `data/ncd_missing.csv` (missing data workshop) |
+| **Diabetes screening cohorts** | World 14 | Noise predictors, low EPV trap, optimism, external cohort with shifted calibration | ✅ `data/diabetes_dev.csv`, `data/diabetes_valid.csv` (prediction workshop) |
 | **Programme evaluation (observational)** | World 15 | Known confounding structure and ground-truth causal effect | ⬜ |
 
 **Rules for every dataset:** simulated with a documented seed; a `make_data_*.R` that **prints a feature check and fails if a teaching feature disappears**; a data dictionary; "ground truth" parameters stored for facilitators; no real patient data in the public repo.

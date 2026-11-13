@@ -76,6 +76,7 @@ pages:
   gis-workshop/s4_local_clusters.qmd: {title: "Session 4 — Local Clusters and Hot Spots"}
   gis-workshop/s5_spatial_regression.qmd: {title: "Session 5 — Spatial Regression and Reporting"}
   gis-workshop/cheatsheet.qmd: {title: "Spatial Statistics Cheat Sheet"}
+  advanced-workshops.qmd: {title: "Advanced Workshops"}
   survival-workshop/s1_time_to_event.qmd: {title: "Session 1 — Time-to-Event Data"}
   survival-workshop/s2_kaplan_meier.qmd: {title: "Session 2 — Kaplan-Meier Curves"}
   survival-workshop/s3_logrank.qmd: {title: "Session 3 — Comparing Survival (Log-Rank)"}
@@ -443,6 +444,7 @@ profiles:
     # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1), counts and rates (A2), ordinal/multinomial outcomes (A3) and clustered/repeated data (A4) survey data (A5) curves/interactions (A6) missing data (A7) and prediction models (A8) live here.
     project-extra:
       render:
+      - advanced-workshops.qmd
       - survival-workshop/*.qmd
       - counts-workshop/*.qmd
       - ordinal-workshop/*.qmd
@@ -518,78 +520,18 @@ profiles:
           - gtsummary/gtsummary_tutorial.qmd
           - statistical-analysis/data_analysis.qmd
           - "---"
-      - text: "Survival Workshop"
+      - text: "Advanced Workshops"
         items:
-          - survival-workshop/s1_time_to_event.qmd
-          - survival-workshop/s2_kaplan_meier.qmd
-          - survival-workshop/s3_logrank.qmd
-          - survival-workshop/s4_cox_regression.qmd
-          - survival-workshop/s5_assumptions_reporting.qmd
+          - {path: advanced-workshops.qmd, text: "All modules and sessions"}
           - "---"
-          - survival-workshop/cheatsheet.qmd
-      - text: "Counts Workshop"
-        items:
-          - counts-workshop/s1_counts_rates.qmd
-          - counts-workshop/s2_poisson_regression.qmd
-          - counts-workshop/s3_overdispersion.qmd
-          - counts-workshop/s4_zeros_checking.qmd
-          - counts-workshop/s5_reporting_extensions.qmd
-          - "---"
-          - counts-workshop/cheatsheet.qmd
-      - text: "Ordinal & Multinomial Workshop"
-        items:
-          - ordinal-workshop/s1_categorical_outcomes.qmd
-          - ordinal-workshop/s2_ordinal_logistic.qmd
-          - ordinal-workshop/s3_proportional_odds_check.qmd
-          - ordinal-workshop/s4_multinomial_logistic.qmd
-          - ordinal-workshop/s5_choosing_reporting.qmd
-          - "---"
-          - ordinal-workshop/cheatsheet.qmd
-      - text: "Clustered & Repeated Data Workshop"
-        items:
-          - clustered-workshop/s1_clustered_data.qmd
-          - clustered-workshop/s2_robust_gee.qmd
-          - clustered-workshop/s3_mixed_models.qmd
-          - clustered-workshop/s4_repeated_measures.qmd
-          - clustered-workshop/s5_choose_check_report.qmd
-          - "---"
-          - clustered-workshop/cheatsheet.qmd
-      - text: "Survey Data Workshop"
-        items:
-          - survey-workshop/s1_survey_design.qmd
-          - survey-workshop/s2_descriptive.qmd
-          - survey-workshop/s3_survey_regression.qmd
-          - survey-workshop/s4_nonresponse_raking.qmd
-          - survey-workshop/s5_choose_check_report.qmd
-          - "---"
-          - survey-workshop/cheatsheet.qmd
-      - text: "Curves & Interactions Workshop"
-        items:
-          - curves-workshop/s1_beyond_linear.qmd
-          - curves-workshop/s2_splines.qmd
-          - curves-workshop/s3_gam.qmd
-          - curves-workshop/s4_interaction.qmd
-          - curves-workshop/s5_choose_check_report.qmd
-          - "---"
-          - curves-workshop/cheatsheet.qmd
-      - text: "Missing Data Workshop"
-        items:
-          - missing-workshop/s1_patterns_mechanisms.qmd
-          - missing-workshop/s2_simple_methods.qmd
-          - missing-workshop/s3_multiple_imputation.qmd
-          - missing-workshop/s4_mi_diagnostics.qmd
-          - missing-workshop/s5_mnar_reporting.qmd
-          - "---"
-          - missing-workshop/cheatsheet.qmd
-      - text: "Prediction Models Workshop"
-        items:
-          - prediction-workshop/s1_building_model.qmd
-          - prediction-workshop/s2_discrimination_calibration.qmd
-          - prediction-workshop/s3_overfitting_internal.qmd
-          - prediction-workshop/s4_shrinkage_selection.qmd
-          - prediction-workshop/s5_external_reporting.qmd
-          - "---"
-          - prediction-workshop/cheatsheet.qmd
+          - {path: survival-workshop/s1_time_to_event.qmd, text: "A1 · Survival analysis"}
+          - {path: counts-workshop/s1_counts_rates.qmd, text: "A2 · Counts and rates"}
+          - {path: ordinal-workshop/s1_categorical_outcomes.qmd, text: "A3 · Ordinal and multinomial"}
+          - {path: clustered-workshop/s1_clustered_data.qmd, text: "A4 · Clustered and repeated data"}
+          - {path: survey-workshop/s1_survey_design.qmd, text: "A5 · Survey data and weights"}
+          - {path: curves-workshop/s1_beyond_linear.qmd, text: "A6 · Curves and interactions"}
+          - {path: missing-workshop/s1_patterns_mechanisms.qmd, text: "A7 · Missing data"}
+          - {path: prediction-workshop/s1_building_model.qmd, text: "A8 · Prediction models"}
       - text: "Quarto"
         items:
           - quarto_repro_w/reproducible_writing.qmd
