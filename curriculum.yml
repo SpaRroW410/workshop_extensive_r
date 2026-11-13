@@ -444,6 +444,7 @@ profiles:
     # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1), counts and rates (A2), ordinal/multinomial outcomes (A3) and clustered/repeated data (A4) survey data (A5) curves/interactions (A6) missing data (A7) and prediction models (A8) live here.
     project-extra:
       render:
+      - advanced-workshops.qmd
       - survival-workshop/*.qmd
       - counts-workshop/*.qmd
       - ordinal-workshop/*.qmd

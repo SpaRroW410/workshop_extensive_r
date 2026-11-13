@@ -46,32 +46,39 @@ Each built module has 5 decks, 5 labs with facilitator solutions, a 5-question q
 | Game bank lint (`dungeons/lint_bank.R`, `dungeons/tests/lint_bank.js --strict`) | 0 hard failures, 0 warnings |
 | Files named in `welcome.qmd` downloads and `curriculum.yml` resources | all exist |
 | Student labs rebuilt from solutions | one stale file found and fixed (see section 4) |
+| Quiz and slide-overflow browser tests, all 51 decks (regression, GIS, advanced) | all quizzes pass; two old regression slides overflow slightly (section 5) |
+| Save score, reload and reset in a browser test | works |
 | Rendered pages in `docs/advanced/` | 6 pages for each of the 8 advanced workshops |
 
-Not re-run for this snapshot: the game end-to-end test (`dungeons/tests/quest_e2e.js`), a full `render-all-profiles.sh`, and the per-deck quiz and overflow browser tests for workshops already on `main`.
+Not re-run for this snapshot: the game end-to-end test (`dungeons/tests/quest_e2e.js`) and a render of the profiles other than regression, GIS and advanced.
 
-## 4. Inconsistencies found
+## 4. Inconsistencies found, and what was done
 
 | Item | State |
 |---|---|
-| `survey-workshop/labs/lab1_design.R` was older than its solution (a garbled hint comment in Task 6) | fixed in this commit, also in `docs/advanced/` |
-| `main` is five modules behind the branches | open; needs a merge decision |
-| Root `README.md` describes only the visualization site and the regression workshop | open |
-| `dungeons/ROADMAP.md` lists Curves, Missing Data and Prediction worlds as using the NCD survey; the workshops now use their own datasets | open; update when Region 4 is built |
+| `survey-workshop/labs/lab1_design.R` was older than its solution | fixed |
+| Root `README.md` described only the visualization site and the regression workshop | fixed: sections for the advanced and GIS workshops and the game |
+| `dungeons/ROADMAP.md` listed old datasets for worlds 10 to 14 | fixed: worlds and the dataset table now name the workshop datasets |
+| Advanced navbar had 14 top-level menus | fixed: one "Advanced Workshops" menu and the page `advanced-workshops.qmd` that lists every session |
+| Quiz engine copied into ten folders with no guard | `scripts/sync_workshop_assets.sh` copies the master (`regression-workshop/assets/`) to the others; `--check` fails if a copy differs |
+| No automatic checks | `.github/workflows/checks.yml`: profile check, asset check, quiz lint, labs in sync, game bank lint (not yet seen running on GitHub) |
+| Deck quiz scores were lost on reload | fixed: scores are kept in the browser per deck; **Save score** downloads a text file, **Reset** clears it |
+| `main` is five modules behind the branches | **open**: needs your merge decision |
 
-## 5. Suggestions
+## 5. Still open
 
-1. **Navbar of the advanced profile.** It now has 14 top-level menus, 8 of them workshops. It will wrap on a laptop screen. Options: one "Advanced Workshops" menu that links to Session 1 and the cheat sheet of each module, or a landing page with one card per module.
-2. **Expert review before the game.** No statistical content in A1 to A8 has been reviewed by a subject expert. Region 4 worlds should follow that review, as planned.
-3. **One shared quiz and lab toolkit.** Every workshop carries its own copy of `assets/quiz.*`, `build_labs.R`, `run_solutions.R` and the two browser tests. A fix must be made ten times. Moving them to one shared folder would remove that risk.
-4. **Deck generators are not in the repository.** The decks of A4 to A8 were written by scripts kept outside the repo; the `.qmd` files are the source of truth from now on. Edit the `.qmd` directly.
-5. **A continuous-integration check.** A GitHub Action that runs the profile check, both linters and `run_solutions.R` would catch stale labs and broken keys on every push.
-6. **Quiz progress in decks is not saved.** Deck quizzes reset on reload. If participants should keep or hand in their scores, an export button like the game's could be added.
+1. **Merge to `main`.** `prediction-workshop` holds A4 to A8 and every change listed above.
+2. **Expert review.** No statistical content in A1 to A8 has been reviewed by a subject expert. Region 4 worlds should follow that review.
+3. **Deck generators are not in the repository.** The `.qmd` files are the source of truth; edit them directly.
+4. **Two slides in the older regression decks overflow by 6 to 7 pixels** (`s1_foundations` slide 5, `s5_logistic_regression` slide 33). Not caused by these changes.
+5. **`build_profiles.R` prints a notice** that sessions 2 to 5 of the advanced modules are in no menu. That is intended: they are reached from the landing page.
+6. **A9 Causal inference** is the next module to build.
 
 ## 6. How to re-verify
 
 ```sh
 Rscript scripts/build_profiles.R --check
+bash scripts/sync_workshop_assets.sh --check
 for w in regression survival counts ordinal gis clustered survey curves missing prediction; do
   Rscript regression-workshop/lint_quizzes.R $w-workshop/s*.qmd | tail -1
 done
