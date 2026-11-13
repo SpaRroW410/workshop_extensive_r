@@ -118,6 +118,12 @@ pages:
   missing-workshop/s4_mi_diagnostics.qmd: {title: "Session 4 — Diagnostics, Derived Variables and the Number of Imputations"}
   missing-workshop/s5_mnar_reporting.qmd: {title: "Session 5 — MNAR Sensitivity Analysis and Reporting"}
   missing-workshop/cheatsheet.qmd: {title: "Missing Data Cheat Sheet"}
+  prediction-workshop/s1_building_model.qmd: {title: "Session 1 — Building a Risk Prediction Model"}
+  prediction-workshop/s2_discrimination_calibration.qmd: {title: "Session 2 — Discrimination and Calibration"}
+  prediction-workshop/s3_overfitting_internal.qmd: {title: "Session 3 — Overfitting and Internal Validation"}
+  prediction-workshop/s4_shrinkage_selection.qmd: {title: "Session 4 — Shrinkage and Variable Selection"}
+  prediction-workshop/s5_external_reporting.qmd: {title: "Session 5 — External Validation, Decision Curves and Reporting"}
+  prediction-workshop/cheatsheet.qmd: {title: "Prediction Models Cheat Sheet"}
   regression-workshop/s1_foundations.qmd: {title: "Session 1 — Foundations"}
   regression-workshop/s2_simple_regression.qmd: {title: "Session 2 — Simple Linear Regression"}
   regression-workshop/s3_multiple_regression.qmd: {title: "Session 3 — Inference & Multiple Regression"}
@@ -434,7 +440,7 @@ profiles:
     title: "Data Visualization Workshop — Advanced"
     output-dir: docs/advanced
     logo-href: welcome.html
-    # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1), counts and rates (A2), ordinal/multinomial outcomes (A3) and clustered/repeated data (A4) survey data (A5) curves/interactions (A6) and missing data (A7) live here.
+    # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1), counts and rates (A2), ordinal/multinomial outcomes (A3) and clustered/repeated data (A4) survey data (A5) curves/interactions (A6) missing data (A7) and prediction models (A8) live here.
     project-extra:
       render:
       - survival-workshop/*.qmd
@@ -444,6 +450,7 @@ profiles:
       - survey-workshop/*.qmd
       - curves-workshop/*.qmd
       - missing-workshop/*.qmd
+      - prediction-workshop/*.qmd
       resources:
       - data/tb_cohort.csv
       - survival-workshop/make_data.R
@@ -467,6 +474,10 @@ profiles:
       - data/ncd_missing.csv
       - missing-workshop/make_data.R
       - missing-workshop/labs/*.R
+      - data/diabetes_dev.csv
+      - data/diabetes_valid.csv
+      - prediction-workshop/make_data.R
+      - prediction-workshop/labs/*.R
     left:
       - text: "R Foundations"
         items:
@@ -570,6 +581,15 @@ profiles:
           - missing-workshop/s5_mnar_reporting.qmd
           - "---"
           - missing-workshop/cheatsheet.qmd
+      - text: "Prediction Models Workshop"
+        items:
+          - prediction-workshop/s1_building_model.qmd
+          - prediction-workshop/s2_discrimination_calibration.qmd
+          - prediction-workshop/s3_overfitting_internal.qmd
+          - prediction-workshop/s4_shrinkage_selection.qmd
+          - prediction-workshop/s5_external_reporting.qmd
+          - "---"
+          - prediction-workshop/cheatsheet.qmd
       - text: "Quarto"
         items:
           - quarto_repro_w/reproducible_writing.qmd

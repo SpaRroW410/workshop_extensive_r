@@ -1,0 +1,230 @@
+---
+title: "Session 1 — Building a Risk Prediction Model"
+subtitle: "Prediction vs explanation · outcome and predictors · events per variable · predicted risks · risk groups · Lab 1"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Earlier workshops: **explain** (the effect of an exposure)
+- Today: **predict** (the **risk for one patient**), as in a **screening score**
+- By the end you can:
+  - state the **aim** of a prediction model and the main **steps** (TRIPOD)
+  - check the **sample size** (events per variable)
+  - fit a model and give a **predicted risk** and **risk groups**
+:::
+
+## Prediction is not explanation
+
+| | Explanation | Prediction |
+|---|---|---|
+| Aim | an **unbiased effect** of one exposure | **accurate risks** for new patients |
+| Variables | chosen by **causal reasoning** (confounders) | chosen for **predictive value**, available at the time of use |
+| Judged by | bias, CI of the effect | **discrimination, calibration**, usefulness |
+| Risk | confounding | **overfitting**, poor transport |
+
+::: {.key}
+Coefficients of correlated predictors need **not** be interpretable in a prediction model; what matters is **how well the predicted risks work in new patients**.
+:::
+
+## Our problem: screening for undiagnosed diabetes
+
+::: {.columns}
+::: {.column width="55%"}
+- **Development cohort**: **700 adults** from one district, **84 (12%)** with undiagnosed diabetes
+- 8 candidate predictors: age, sex, BMI, waist, family history, hypertension, activity, smoking
+- 10 extra lab markers (m1 to m10) used in Session 3
+- **Validation cohort**: **2,000 adults** from **another district** (Session 5)
+- Aim: a **risk score** to decide who gets a **blood test**
+:::
+::: {.column width="45%"}
+```{r}
+dev |> select(age, sex, bmi, waist, fam_history, hypertension, activity, smoker, diabetes) |> head(6)
+```
+:::
+:::
+
+# Topic 1 — Is the sample big enough? {background-color="#2C3E50"}
+
+## Events per variable
+
+```{r}
+c(adults = nrow(dev), events = sum(dev$diabetes), prevalence = mean(dev$diabetes))
+sum(dev$diabetes) / 8
+```
+
+::: {.key}
+It is the **number of events** (the rarer outcome), not the number of adults, that limits the model. **84 events for 8 parameters** = **10.5 events per parameter**, just at the **rule of thumb (10)**. Newer criteria (Riley et al.) give a sample size from the **expected performance** and **shrinkage**; they usually ask for **more**.
+:::
+
+# Topic 2 — The model {background-color="#2C3E50"}
+
+## Fit and read
+
+```{r}
+m1 <- glm(f_true, data = dev, family = binomial)
+round(exp(coef(m1)), 3)
+```
+
+::: {.incremental}
+- Family history OR **3.1**, hypertension **2.0**, smoking **1.9**, age **1.06 per year**, waist **1.06 per cm**
+- The **BMI OR is 0.97**: waist and BMI carry **the same information**, so single coefficients are **unstable**. For **prediction** this is acceptable; for **explanation** it would not be
+:::
+
+## Predicted risks
+
+```{r}
+dev$risk <- predict(m1, type = "response")
+summary(dev$risk) |> round(3)
+```
+
+```{r}
+new <- data.frame(age = 55, sex = factor("Male", levels = levels(dev$sex)), bmi = 29, waist = 100, fam_history = 1, hypertension = 1, activity = 2, smoker = 0)
+predict(m1, newdata = new, type = "response")
+```
+
+::: {.key}
+Risks range from **0.2% to 86%** (median 7.7%); their mean equals the **prevalence (12%)**. A 55-year-old man with BMI 29, waist 100 cm, family history, hypertension, 2 hours of activity, non-smoker has a predicted risk of **54%**. Clinicians use **risks**, not odds ratios.
+:::
+
+## Risk groups
+
+```{r}
+dev |> mutate(group = cut(risk, c(0, 0.05, 0.15, 1), labels = c("low (<5%)", "medium (5-15%)", "high (15%+)"), include.lowest = TRUE)) |> group_by(group) |> summarise(n = n(), observed = round(mean(diabetes), 3))
+```
+
+::: {.warn}
+Observed diabetes: **2%, 10%, 28%**. These look great, but they are in the **same data used to build the model**: **optimistic**. Sessions 2 to 5 show how to **measure** performance **honestly**.
+:::
+
+## The steps (TRIPOD)
+
+::: {.good}
+1. **Define** the outcome, predictors and the intended **use** (who, when, why)
+2. Check the **sample size** and handle **missing data** (A7)
+3. **Fit** the model; avoid unnecessary selection
+4. **Evaluate**: discrimination, calibration, usefulness (Session 2)
+5. **Internal validation** with optimism correction (Session 3), **shrinkage** (Session 4)
+6. **External validation** and recalibration (Session 5)
+7. **Report** with TRIPOD: full equation, performance, limitations
+:::
+
+## 🔧 Switch to R — Lab 1 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `prediction-workshop/labs/lab1_build.R`
+
+- events, prevalence, events per variable
+- fit the model, predicted risks, a new patient
+- risk groups and the difference between cohorts
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p1q1", "The model has 84 events and 8 parameters. What mostly limits how many predictors you can use?",
+         c("The number of events, the less common of the two outcomes",
+           "The number of adults in the cohort, whatever the outcome frequency",
+           "The number of adults without the disease, since they are the majority",
+           "The number of variables that are significant in a univariate analysis"), answer = 1,
+         explain = "The information for a binary outcome sits in the rarer outcome. Events per variable is the usual way to judge how many parameters can be estimated reliably.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p1q2", "Why is a predicted risk more useful to a clinician than an odds ratio?",
+         c("It does not depend on the data that were used to develop the model",
+           "It has a narrower confidence interval than the odds ratio from the model",
+           "It gives the chance for this patient, on a scale one can act on",
+           "It can be compared directly with the odds ratios of other published models"), answer = 3,
+         explain = "A risk of 54% can be compared with a treatment threshold. An odds ratio describes relative differences between groups, not the absolute chance for a patient.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p1q3", "What is the difference between a prediction model and an explanatory model?",
+         c("Prediction needs a randomised design, while explanation does not need one",
+           "Prediction aims at accurate risks, explanation at an unbiased effect",
+           "Prediction models must contain only variables with a causal effect on the outcome",
+           "Explanation models are judged by their AUC, prediction models by p-values"), answer = 2,
+         explain = "A prediction model is judged by the accuracy of its risks in new patients, while an explanatory analysis is concerned with the effect of one exposure, free of confounding.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p1q4", "The BMI odds ratio is 0.97, although BMI is a risk factor, because waist is also in the model. What does this mean for a prediction model?",
+         c("The model is invalid, so BMI should be removed from it before any prediction is made",
+           "BMI protects against diabetes once waist circumference is taken into account",
+           "Coefficients of correlated predictors are unstable, yet predictions can be good",
+           "The correlation shows that waist causes diabetes and that BMI does not"), answer = 3,
+         explain = "Waist and BMI carry almost the same information, so the split of the effect between them is arbitrary. The joint prediction is not affected, but the coefficients should not be interpreted.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p1q5", "Why is the performance of a model in the data used to build it too optimistic?",
+         c("Development data are collected with more accurate measurements",
+           "The predicted risks in the development data are not compared with the observed outcomes",
+           "The outcome is known for the development data, but not for new patients",
+           "The model was fitted to those data, so it partly fits their random noise"), answer = 4,
+         explain = "Parameters are chosen to fit the development data as closely as possible, including chance patterns that will not repeat in new patients.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Prediction** = accurate risks for new patients; **explanation** = unbiased effect
+- **Events** (not adults) limit the model: about 10 per parameter or more
+- Report **predicted risks** and risk groups
+- Single coefficients of **correlated predictors** are unstable
+- Performance in the **development data** is optimistic
+:::
+
+**Next:** Session 2: discrimination and calibration

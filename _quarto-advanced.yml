@@ -14,6 +14,7 @@ project:
     - survey-workshop/*.qmd
     - curves-workshop/*.qmd
     - missing-workshop/*.qmd
+    - prediction-workshop/*.qmd
   resources:
     - data/tb_cohort.csv
     - survival-workshop/make_data.R
@@ -37,6 +38,10 @@ project:
     - data/ncd_missing.csv
     - missing-workshop/make_data.R
     - missing-workshop/labs/*.R
+    - data/diabetes_dev.csv
+    - data/diabetes_valid.csv
+    - prediction-workshop/make_data.R
+    - prediction-workshop/labs/*.R
 website:
   title: Data Visualization Workshop — Advanced
   site-url: '.'
@@ -211,6 +216,21 @@ website:
           - text: '---'
           - text: Missing Data Cheat Sheet
             href: missing-workshop/cheatsheet.qmd
+      - text: Prediction Models Workshop
+        menu:
+          - text: Session 1 — Building a Risk Prediction Model
+            href: prediction-workshop/s1_building_model.qmd
+          - text: Session 2 — Discrimination and Calibration
+            href: prediction-workshop/s2_discrimination_calibration.qmd
+          - text: Session 3 — Overfitting and Internal Validation
+            href: prediction-workshop/s3_overfitting_internal.qmd
+          - text: Session 4 — Shrinkage and Variable Selection
+            href: prediction-workshop/s4_shrinkage_selection.qmd
+          - text: Session 5 — External Validation, Decision Curves and Reporting
+            href: prediction-workshop/s5_external_reporting.qmd
+          - text: '---'
+          - text: Prediction Models Cheat Sheet
+            href: prediction-workshop/cheatsheet.qmd
       - text: Quarto
         menu:
           - text: Quarto Basics

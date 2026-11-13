@@ -1,0 +1,93 @@
+---
+title: "Prediction Models Cheat Sheet"
+subtitle: "Build · discrimination · calibration · internal validation · shrinkage · external validation · decision curves · TRIPOD · synthetic diabetes screening · print on 2 pages (A4)"
+format:
+  html:
+    theme: cosmo
+    toc: false
+    page-layout: full
+    html-math-method: plain
+    css: assets/cheatsheet.css
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+source("assets/setup.R")
+f <- function(x, d = 2) formatC(x, format = "f", digits = d)
+m1 <- glm(f_true, data = dev, family = binomial)
+dev$risk <- predict(m1, type = "response")
+val$risk <- predict(m1, newdata = val, type = "response")
+lpv <- qlogis(val$risk)
+slope_v <- coef(glm(diabetes ~ lpv, data = val, family = binomial))[["lpv"]]
+```
+
+::: {.sheet}
+
+## 1 · Steps (TRIPOD)
+
+Define the **outcome, predictors and use** → check **sample size** (events!) and **missing data** → **fit** → evaluate **discrimination, calibration, usefulness** → **internal validation** (bootstrap) and **shrinkage** → **external validation**, recalibration → **report** (full equation).
+
+Prediction ≠ explanation: aim = **accurate risks for new patients**; coefficients of correlated predictors need not be interpretable.
+
+## 2 · Sample size
+
+Events per parameter: **at least 10** (rule of thumb); better, use the **Riley et al.** criteria (expected R², shrinkage ≥ 0.9). Ours: **`r sum(dev$diabetes)` events**, 8 parameters (**`r f(sum(dev$diabetes) / 8, 1)` per parameter**); with 18 parameters only **`r f(sum(dev$diabetes) / 18, 1)`**.
+
+## 3 · Discrimination
+
+| Measure | Meaning | R |
+|---|---|---|
+| **AUC** | P(case ranked above non-case); 0.5 = chance | `pROC::roc()`, `auc()`, `ci.auc()` |
+| Sensitivity, specificity | at a **threshold** | `table(risk >= t, y)` |
+| PPV, NPV | depend on **prevalence** | same table |
+
+Development AUC (apparent): **`r f(auc_of(dev$diabetes, dev$risk), 3)`**; age alone 0.68.
+
+## 4 · Calibration
+
+| Check | Ideal | R |
+|---|---|---|
+| **Calibration plot** (deciles) | points on the diagonal | `ntile(risk, 10)` → mean predicted vs observed |
+| **Slope** | 1 (below 1 = predictions too extreme) | `glm(y ~ lp, binomial)`, `lp = qlogis(risk)` |
+| **Intercept** (in the large) | 0 | `glm(y ~ offset(lp), binomial)` |
+| **Brier**, scaled Brier | lower; scaled > 0 | `mean((risk - y)^2)` |
+
+The **apparent** slope is **always 1** in the development data. Avoid the Hosmer-Lemeshow test.
+
+## 5 · Internal validation
+
+| Method | Comment |
+|---|---|
+| Apparent | **optimistic** |
+| Split sample | wasteful, noisy (only for very large data) |
+| **10-fold CV** | good; repeat with several fold assignments |
+| **Bootstrap optimism** | corrected = apparent − mean(boot-sample performance − performance in the original data); repeat **the whole modelling process** |
+
+Our bootstrap: optimism **0.020**, corrected AUC **0.776**; with 10 noise markers apparent **0.821**, corrected **0.779**: **no real gain**. Bootstrap **slope** 0.90 (8 predictors) and 0.80 (18).
+
+## 6 · Shrinkage and selection
+
+::: {.bad}
+- **Stepwise / univariable selection**: unstable (noise markers chosen in 12 to 82% of bootstrap samples), biased coefficients, invalid p-values
+:::
+
+**Pre-specify** predictors. **Ridge** (`glmnet`, `alpha = 0`), **lasso** (`alpha = 1`; `lambda.1se` can over-shrink), λ by `cv.glmnet`. **Uniform shrinkage**: coefficients × bootstrap slope, re-fit the intercept.
+
+## 7 · External validation
+
+Our second district (2,000 adults, prevalence **`r f(100 * mean(val$diabetes), 1)`%**): AUC **`r f(auc_of(val$diabetes, val$risk), 2)`**, slope **`r f(slope_v)`**, mean predicted **`r f(100 * mean(val$risk), 1)`%** vs observed **`r f(100 * mean(val$diabetes), 1)`%**. Expect lower discrimination and **calibration drift**. **Recalibrate**: new intercept (and slope) with `glm(y ~ lp)`.
+
+## 8 · Decision curve
+
+net benefit = TP/n − FP/n × t/(1 − t). Compare with **treat all** and **treat none** (= 0). Choose the threshold t from **costs and benefits**. (`dcurves::dca()` or by hand.)
+
+## 9 · Report
+
+Data source and setting · outcome and predictors · sample size and events · missing data · **full model (intercept and coefficients)** · AUC, **calibration plot, slope, intercept** with CIs · bootstrap-corrected and **external** performance · intended use and threshold · limitations.
+
+*The model (8 predictors, 84 events in 700 adults) had an apparent AUC of 0.80 (bootstrap-corrected 0.78); externally the AUC was `r f(auc_of(val$diabetes, val$risk), 2)` and the calibration slope `r f(slope_v)`.*
+
+:::

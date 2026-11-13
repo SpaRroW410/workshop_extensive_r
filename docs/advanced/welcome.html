@@ -455,6 +455,38 @@ ul.task-list li input[type="checkbox"] {
     </ul>
   </li>
   <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-prediction-models-workshop" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Prediction Models Workshop</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-prediction-models-workshop">    
+        <li>
+    <a class="dropdown-item" href="./prediction-workshop/s1_building_model.html">
+ <span class="dropdown-text">Session 1 — Building a Risk Prediction Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./prediction-workshop/s2_discrimination_calibration.html">
+ <span class="dropdown-text">Session 2 — Discrimination and Calibration</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./prediction-workshop/s3_overfitting_internal.html">
+ <span class="dropdown-text">Session 3 — Overfitting and Internal Validation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./prediction-workshop/s4_shrinkage_selection.html">
+ <span class="dropdown-text">Session 4 — Shrinkage and Variable Selection</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./prediction-workshop/s5_external_reporting.html">
+ <span class="dropdown-text">Session 5 — External Validation, Decision Curves and Reporting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./prediction-workshop/cheatsheet.html">
+ <span class="dropdown-text">Prediction Models Cheat Sheet</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-quarto" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Quarto</span>
     </a>
@@ -607,6 +639,7 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <h2 class="anchored" data-anchor-id="find-your-way-around">🧭 Find Your Way Around</h2>
 <p>Use the navigation bar above to browse all modules. Key starting points:</p>
 <ul>
+<li>🎯 <strong><a href="./prediction-workshop/s1_building_model.html">Prediction Models Workshop</a></strong> — Slides, labs and quizzes: risk models, calibration, validation, shrinkage, decision curves (start at Session 1)</li>
 <li>🕳️ <strong><a href="./missing-workshop/s1_patterns_mechanisms.html">Missing Data Workshop</a></strong> — Slides, labs and quizzes: MCAR/MAR/MNAR, multiple imputation with mice, sensitivity analysis (start at Session 1)</li>
 <li>📈 <strong><a href="./curves-workshop/s1_beyond_linear.html">Curves &amp; Interactions Workshop</a></strong> — Slides, labs and quizzes: splines, GAMs, effect modification, prediction plots (start at Session 1)</li>
 <li>📋 <strong><a href="./survey-workshop/s1_survey_design.html">Survey Data Workshop</a></strong> — Slides, labs and quizzes: complex survey design, weights, svyglm, raking (start at Session 1)</li>
@@ -629,6 +662,12 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <section id="r-scripts" class="level3">
 <h3 class="anchored" data-anchor-id="r-scripts">📄 R Scripts</h3>
 <ul>
+<li><a href="prediction-workshop/make_data.R">Make Data</a></li>
+<li><a href="prediction-workshop/labs/lab1_build.R">Lab1 Build</a></li>
+<li><a href="prediction-workshop/labs/lab2_perf.R">Lab2 Perf</a></li>
+<li><a href="prediction-workshop/labs/lab3_internal.R">Lab3 Internal</a></li>
+<li><a href="prediction-workshop/labs/lab4_shrink.R">Lab4 Shrink</a></li>
+<li><a href="prediction-workshop/labs/lab5_external.R">Lab5 External</a></li>
 <li><a href="missing-workshop/make_data.R">Make Data</a></li>
 <li><a href="missing-workshop/labs/lab1_pattern.R">Lab1 Pattern</a></li>
 <li><a href="missing-workshop/labs/lab2_simple.R">Lab2 Simple</a></li>
@@ -682,6 +721,8 @@ Welcome to the <strong>Advanced Track</strong> — the full workshop experience.
 <section id="datasets" class="level3">
 <h3 class="anchored" data-anchor-id="datasets">🗄️ Datasets</h3>
 <ul>
+<li>📊 <a href="data/diabetes_dev.csv">Diabetes Dev</a> <code>.csv</code></li>
+<li>📊 <a href="data/diabetes_valid.csv">Diabetes Valid</a> <code>.csv</code></li>
 <li>📊 <a href="data/ncd_missing.csv">Ncd Missing</a> <code>.csv</code></li>
 <li>📊 <a href="data/ncd_curves.csv">Ncd Curves</a> <code>.csv</code></li>
 <li>📊 <a href="data/survey_adults.csv">Survey Adults</a> <code>.csv</code></li>
