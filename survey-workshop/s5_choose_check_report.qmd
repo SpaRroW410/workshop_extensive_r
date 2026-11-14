@@ -1,0 +1,223 @@
+---
+title: "Session 5 — Choosing, Checking and Reporting"
+subtitle: "Design checklist · common errors · lonely PSUs · sample size · reporting survey results · Lab 5"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Sessions 1 to 4: design, descriptive estimates, regression, weights
+- Today: **put it together**: choose, check, plan and report
+:::
+
+# Topic 1 — Choosing {background-color="#2C3E50"}
+
+## Three analyses of the same prevalence
+
+```{r}
+p0 <- mean(resp$hypertension)
+des_w <- svydesign(ids = ~1, weights = ~weight, data = resp)
+tibble(analysis = c("naive (no design)", "weights only", "full design"),
+       estimate = c(p0, coef(svymean(~hypertension, des_w))[[1]], coef(svymean(~hypertension, des))[[1]]),
+       se = c(sqrt(p0 * (1 - p0) / nrow(resp)), SE(svymean(~hypertension, des_w))[[1]], SE(svymean(~hypertension, des))[[1]])) |>
+  mutate(across(where(is.numeric), \(x) round(x, 4)))
+```
+
+::: {.key}
+**Weights** change the **estimate** (0.233 to 0.200). **Clusters** change the **SE** (0.0096 to 0.0149). Only the **full design** is correct for a population report.
+:::
+
+## Design effects differ by outcome
+
+```{r}
+sapply(c("hypertension", "diabetes", "smoker"), function(v) deff(svymean(as.formula(paste0("~", v)), des, deff = TRUE))[[1]]) |> round(2)
+```
+
+::: {.incremental}
+- **Hypertension 2.6**, smoking 1.6, diabetes 1.1
+- The DEFF is large when the outcome **varies between PSUs** (the ICC from Clustered Data!)
+- No single design effect for the survey: report it **per outcome**
+:::
+
+# Topic 2 — Checking {background-color="#2C3E50"}
+
+## Common errors
+
+::: {.bad}
+- **Not declaring the design**, or declaring only weights
+- The **wrong weight** (household vs women's vs men's module)
+- **`filter()`** then re-declaring, instead of `subset()`
+- **`chisq.test()`, `lm()`, `median()`** on survey data
+- Reporting **weighted n** as the sample size
+- Ignoring **missing data** in the weights or the analysis variables
+:::
+
+## Lonely PSUs
+
+```{r}
+resp |> filter(diabetes == 1, age < 45) |> distinct(stratum, psu) |> count(stratum)
+```
+
+::: {.warn}
+In small subgroups some strata contain **only one PSU**: a variance cannot be computed from one cluster (a "**lonely PSU**"). Keep the **full design** with `subset()`. If it still happens, `options(survey.lonely.psu = "adjust")` (or `"average"`, `"certainty"`) gives a conservative variance. Better: **merge strata** or use a larger group.
+:::
+
+# Topic 3 — Planning and reporting {background-color="#2C3E50"}
+
+## Sample size for a survey
+
+::: {.eq}
+n (survey) = n (simple random sample) × DEFF
+:::
+
+```{r}
+c(srs = 1000, survey = 1000 * 2.2, effective_now = round(nrow(resp) / deff(svymean(~hypertension, des, deff = TRUE))[[1]]))
+```
+
+::: {.incremental}
+- A precision that needs **1,000** under simple random sampling needs about **2,200** with a design effect of 2.2
+- Our 1,853 respondents are worth about **710** independent adults
+- More **PSUs** help more than more adults per PSU
+- Plan for **nonresponse** too: invite 1,000 / 0.74 to get 1,000 respondents
+:::
+
+## Reporting survey results
+
+```{r}
+resp |> as_survey_design(ids = psu, strata = stratum, weights = weight, nest = TRUE) |> group_by(region) |>
+  summarise(n = unweighted(n()), prevalence = survey_mean(hypertension, vartype = "ci")) |> mutate(across(where(is.numeric), \(x) round(x, 3)))
+```
+
+::: {.good}
+- **Describe the design**: strata, PSUs, stages, weights, nonresponse adjustment
+- **Unweighted n** and **weighted** estimates with **95% CI**
+- **Design effect** (or effective n) for key outcomes
+- **Response rate**
+- Software and options (`survey` package, lonely PSU option)
+:::
+
+## An example sentence
+
+::: {.key}
+*Example:* "Hypertension prevalence was 20.0% (95% CI 17.1 to 23.1; design effect 2.6; 1,853 respondents in 48 PSUs; response rate 74%), estimated with survey-weighted analysis in R (survey package)."
+:::
+
+## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `survey-workshop/labs/lab5_report.R`
+
+- three analyses side by side, design effects
+- sample size with the design effect
+- lonely PSUs, reporting table and one-sentence result
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v5q1", "Which analysis of the prevalence is appropriate for a report on the whole population?",
+         c("The unweighted mean with a simple random sample standard error",
+           "The one that declares weights, strata and PSUs with svydesign",
+           "A weighted mean with a standard error that ignores the PSUs",
+           "The mean of the PSU means with a standard error of 1.96"), answer = 2,
+         explain = "Weights are needed for the estimate and the full design for the variance. Weights without clusters give a precise-looking but misleading interval.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v5q2", "A precision needs 1,000 respondents under simple random sampling. About how many does a survey with DEFF 2.2 need?",
+         c("About 1,000 respondents",
+           "About 455 respondents",
+           "About 2,200 respondents",
+           "About 3,200 respondents"), answer = 3,
+         explain = "The sample size is multiplied by the design effect: 1,000 x 2.2 = 2,200 respondents, before allowing for nonresponse.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v5q3", "What is a lonely PSU and what should you do?",
+         c("A PSU that contains a single respondent, which should then be dropped from the sample",
+           "A PSU that is in no stratum, which should be assigned to the nearest stratum",
+           "A stratum without any respondents, which should be removed from the design",
+           "A stratum with one PSU gives no variance, so keep the full design with subset()"), answer = 4,
+         explain = "A variance within a stratum needs at least two PSUs. Subsetting the design, rather than the data, keeps all the PSUs; the lonely.psu option handles the rest.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v5q4", "Which set of information is best to report with a survey estimate?",
+         c("The weighted estimate with its CI, the unweighted n and the DEFF",
+           "The weighted estimate, with the sum of the weights as the sample size",
+           "The unweighted estimate, with a CI from a simple random sample of adults",
+           "The weighted estimate alone, since weights already include the design"), answer = 1,
+         explain = "Readers need to know the precision and how many respondents the estimate rests on. The weighted n is the population size, not the sample size.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v5q5", "Why does the design effect differ between hypertension (2.6) and diabetes (1.1)?",
+         c("Diabetes has less missing data than hypertension in the survey",
+           "It depends on how much each outcome varies between PSUs",
+           "Hypertension was measured on a larger sample of adults",
+           "The design effect is larger for continuous variables than binary ones"), answer = 2,
+         explain = "Clustering matters when the outcome is more alike within a PSU than between PSUs, which is a property of the outcome (its ICC), so the design effect varies by outcome.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- Weights fix the **estimate**; clusters fix the **SE**
+- Report the **design**, **unweighted n**, **CI**, **DEFF** and **response rate**
+- **Lonely PSUs**: `subset()`, merge strata, `survey.lonely.psu`
+- **Sample size** = n (SRS) × DEFF, and allow for nonresponse
+- Different outcomes, different **design effects**
+:::
+
+**Next:** Cheat sheet and the next module

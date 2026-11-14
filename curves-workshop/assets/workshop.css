@@ -1,0 +1,49 @@
+/* workshop.css — shared look for the GIS workshop decks.
+   Builds on ../assets/slide_deck.css (repo-wide). */
+.reveal { font-size: 30px; }
+.reveal h1 { font-size: 1.6em; }
+.reveal h2 { font-size: 1.25em; }
+.reveal pre code { font-size: 0.7em; max-height: 560px; }
+/* Quarto's .smaller is 0.7em, too small at 1280x720 — soften it */
+.reveal .slides section.smaller { font-size: 0.86em !important; }
+.reveal .slides section.smaller pre code { font-size: 0.66em; }
+.reveal .cell-output pre code, .reveal pre.sourceCode + .cell-output code { font-size: 0.64em; background-color: #fbfcfc; color: #2c3e50; border-left: 4px solid #3498db; }
+.reveal .cell-output-display img { max-height: 520px; }
+.reveal table { font-size: 0.82em; }
+.reveal table th, .reveal table td { padding: 0.25em 0.6em; }
+.reveal ul, .reveal ol { margin-left: 0.9em; }
+.reveal .footer { font-size: 0.5em; }
+
+/* section dividers keep the repo's slate colour; make text white */
+.reveal section[data-background-color="#2C3E50"] h1,
+.reveal section[data-background-color="#2C3E50"] h2,
+.reveal section[data-background-color="#2C3E50"] p { color: #fff; }
+
+/* 🔧 lab hand-off slide */
+.reveal section.lab-slide h2 { color: #fff; font-size: 1.7em; }
+.reveal section.lab-slide p, .reveal section.lab-slide li { color: #fff; }
+.reveal section.lab-slide code { background: rgba(255,255,255,.18); color: #fff; }
+.reveal .lab-box { border: 3px dashed rgba(255,255,255,.7); border-radius: 12px; padding: .6em 1em; margin-top: .6em; }
+
+/* callouts */
+.reveal .key { background: #eaf4fb; border-left: 6px solid #3498db; padding: .4em .8em; border-radius: 6px; margin: .5em 0; }
+.reveal .warn { background: #fdf2e9; border-left: 6px solid #e67e22; padding: .4em .8em; border-radius: 6px; margin: .5em 0; }
+.reveal .bad { background: #fdedec; border-left: 6px solid #e74c3c; padding: .4em .8em; border-radius: 6px; margin: .5em 0; }
+.reveal .good { background: #eafaf1; border-left: 6px solid #27ae60; padding: .4em .8em; border-radius: 6px; margin: .5em 0; }
+.reveal .big { font-size: 1.6em; font-weight: 700; color: #2c3e50; }
+.reveal .center { text-align: center; }
+.reveal .tiny { font-size: 0.55em; color: #7f8c8d; }
+.reveal .pill { display: inline-block; padding: 0 .55em; border-radius: 999px; font-size: .7em; font-weight: 700; color: #fff; background: #27ae60; }
+.reveal .pill.no { background: #95a5a6; }
+.reveal .mermaid svg { width: 100% !important; max-width: 1150px !important; max-height: 560px; height: auto; }
+
+.reveal .mermaid, .reveal .mermaid .nodeLabel, .reveal .mermaid .label, .reveal .mermaid text { font-family: Arial, Helvetica, sans-serif !important; }
+
+/* equations (plain Unicode/HTML so decks work offline — no math engine) */
+.reveal .eq { text-align: center; font-size: 1.5em; font-family: 'Cambria Math', Georgia, serif; background: #fdfefe; border: 1px solid #d5dbdb; border-radius: 8px; padding: .35em .6em; margin: .5em auto; width: fit-content; max-width: 100%; }
+.reveal .eq sub { font-size: .65em; }
+.reveal .eq.small { font-size: 1.15em; }
+.reveal .cell-output-display img { width: auto !important; max-width: 100%; height: auto !important; }
+
+/* gtsummary / gt tables on slides */
+.reveal .cell-output-display .gt_table { zoom: 1.1; }

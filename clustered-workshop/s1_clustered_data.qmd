@@ -1,0 +1,269 @@
+---
+title: "Session 1 — Clustered Data: ICC and the Design Effect"
+subtitle: "Why observations are not independent · intra-class correlation · design effect · effective sample size · Lab 1"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Regression workshop: every row was an **independent** person
+- Today: people live in **villages**, wards, clinics or schools, and are measured **repeatedly**
+- By the end you can:
+  - spot **clustered** and **repeated** data
+  - compute and explain the **ICC**
+  - compute the **design effect** and the **effective sample size**
+  - say why a **naive** analysis gives standard errors that are too small
+:::
+
+## Our data: a village blood-pressure trial
+
+::: {.columns}
+::: {.column width="55%"}
+- **40 villages**, randomised 20 + 20 to a **hypertension programme** or usual care (synthetic data)
+- **20 adults per village**, so **800 people**
+- SBP measured at **0, 3, 6 and 12 months** (some visits missing)
+- The **programme is given to a whole village**: the unit of randomisation is the village
+:::
+::: {.column width="45%"}
+```{r}
+bp |> select(village, arm, person, age, months, sbp) |> head(6)
+```
+:::
+:::
+
+# Topic 1 — Levels and clusters {background-color="#2C3E50"}
+
+## Levels in the data
+
+```{r}
+bp |> summarise(villages = n_distinct(village), people = n_distinct(person), rows = n())
+```
+
+::: {.key}
+**Visit** (level 1) inside **person** (level 2) inside **village** (level 3). Rows that share a person or a village are **more alike** than rows that do not: they are **correlated**.
+:::
+
+::: {.incremental}
+- **Clustered** data: people grouped in villages (one measurement each)
+- **Repeated** (longitudinal) data: the same person measured several times
+- Here we have **both**
+:::
+
+## Why this matters
+
+::: {.warn}
+Most methods you know (linear and logistic regression, t-test, chi-square) assume **independent** observations. With correlated observations the **estimates** are often fine, but the **standard errors, CIs and p-values are wrong**, usually **too small**.
+:::
+
+::: {.incremental}
+- Ten people from one village are not ten independent pieces of information
+- The **effective** sample size is smaller than the number of rows
+- The problem is largest for a **cluster-level** exposure, such as our programme
+:::
+
+# Topic 2 — The ICC {background-color="#2C3E50"}
+
+## Villages differ
+
+```{r}
+#| output-location: slide
+#| fig-height: 4.4
+b0 <- bp |> filter(months == 0)
+b0 |> group_by(village, arm) |> summarise(mean_sbp = mean(sbp), .groups = "drop") |> arrange(mean_sbp) |> mutate(village = fct_inorder(village)) |>
+  ggplot(aes(mean_sbp, village, colour = arm)) + geom_point(size = 2.5) + geom_vline(xintercept = mean(b0$sbp), linetype = 2) +
+  scale_colour_manual(values = c(col_blue, col_red)) + labs(x = "Mean baseline SBP (mmHg)", y = "Village", colour = NULL) + theme(axis.text.y = element_blank())
+```
+
+::: {.key}
+At **baseline**, before any programme, village means range from about **120 to 141 mmHg**. With 20 random people per village we would expect much less spread.
+:::
+
+## The intra-class correlation
+
+::: {.eq}
+ICC = σ²~between villages~ / (σ²~between villages~ + σ²~within villages~)
+:::
+
+::: {.incremental}
+- The **share of the total variance** that lies **between** clusters
+- Also the **correlation** between two people from the same village
+- **0**: clusters do not matter. **1**: everyone in a cluster is identical
+- In community health ICCs are often small (**0.01 to 0.1**), but they still matter when clusters are large
+:::
+
+## Estimating the ICC
+
+```{r}
+m0 <- lmer(sbp ~ 1 + (1 | village), data = b0)
+VarCorr(m0)
+icc(m0)
+```
+
+::: {.key}
+ICC **= `r round(performance::icc(m0)$ICC_unadjusted, 3)`**: about **7%** of the variation in baseline SBP is **between villages**. It looks small. The next slide shows why it is not.
+:::
+
+# Topic 3 — The design effect {background-color="#2C3E50"}
+
+## Design effect and effective sample size
+
+::: {.eq}
+DEFF = 1 + (m − 1) × ICC       n~eff~ = n / DEFF
+:::
+
+```{r}
+deff <- 1 + (20 - 1) * 0.074
+c(design_effect = deff, effective_n = 800 / deff)
+```
+
+::: {.incremental}
+- m = **cluster size** (20 per village)
+- DEFF **2.4**: the variance is 2.4 times what a simple random sample would give
+- The 800 people carry the information of only about **330 independent** people
+- A **small ICC** with **large clusters** still gives a **large** design effect
+:::
+
+## The naive analysis at 12 months
+
+```{r}
+fit_naive <- lm(sbp ~ arm, data = bp12)
+summary(fit_naive)$coefficients["armProgramme", ]
+```
+
+::: {.warn}
+The estimate (about **−4.0 mmHg**) is fine, but its **SE (1.2)** treats 657 people as independent. The honest SE is about **1.4 times larger**.
+:::
+
+## One valid simple analysis
+
+```{r}
+vm12 <- bp12 |> group_by(village, arm) |> summarise(mean_sbp = mean(sbp), .groups = "drop")
+t.test(mean_sbp ~ arm, data = vm12)
+```
+
+::: {.incremental}
+- Reduce each village to **one mean**: 40 independent numbers
+- The **difference is about 4.3 mmHg** with a CI of **1.0 to 7.5**: the programme works, with an honest p-value
+- Limits: covariate adjustment is harder, and villages of unequal size are weighted equally
+- The next sessions give **model-based** alternatives
+:::
+
+## 🔧 Switch to R — Lab 1 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `clustered-workshop/labs/lab1_clusters.R`
+
+- count villages, people and rows
+- village means, the **ICC** and the **design effect**
+- the naive analysis vs the village-level t-test
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c1q1", "In this trial the programme is given to whole villages. Which statement about the 800 adults is correct?",
+         c("Adults in the same village are independent, because each was measured on their own",
+           "The village is just a label for location and has no bearing on how the adults are analysed",
+           "Adults in a village tend to resemble each other more than adults elsewhere",
+           "Villages with many adults should be dropped so that all villages carry equal weight"), answer = 3,
+         explain = "People in the same village share environment, diet and services, so their outcomes are correlated. This is the reason for treating the village as a cluster.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c1q2", "A mixed model of baseline SBP gives an ICC of 0.07. What does it say?",
+         c("Seven percent of the adults in the villages have a raised blood pressure",
+           "Two villages differ in their mean SBP by about 7 mmHg on average",
+           "The programme is expected to lower SBP by 7% in each treated village",
+           "About 7% of the variation in SBP lies between villages"), answer = 4,
+         explain = "The ICC is the share of total variance that is between clusters. It is also the correlation between two people from the same cluster.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c1q3", "Why can an ICC of only 0.07 still matter a great deal?",
+         c("The design effect grows with cluster size: with 20 per village it is more than 2",
+           "A small ICC means the villages are nearly identical, so the programme effect gets hidden",
+           "Statistical software rounds a small ICC up to 1 when it computes the standard errors",
+           "The ICC becomes relevant just when the study has fewer than about ten villages"), answer = 1,
+         explain = "DEFF = 1 + (m - 1) x ICC. With m = 20 and ICC = 0.07 the variance is more than doubled, so the effective sample size is less than half the number of people.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c1q4", "A design effect of 2.4 with 800 people gives an effective sample size of about...",
+         c("1,900 people",
+           "330 people",
+           "800 people",
+           "40 people"), answer = 2,
+         explain = "The effective sample size is n divided by the design effect: 800 / 2.4 is about 330. The data carry the information of about 330 independent people.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c1q5", "Which analysis of the cluster-randomised programme effect is valid and simple?",
+         c("A t-test comparing the 800 individual values between the arms",
+           "A chi-square test of the arm against the village number",
+           "A linear model that ignores the village but adds age and sex",
+           "A t-test comparing the 40 village means between the two arms"), answer = 4,
+         explain = "Village means are independent across villages, so a t-test on them gives an honest SE. Analysing people as independent ignores the clustering, whatever covariates are added.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- Data are **clustered** (people in villages) and/or **repeated** (visits in a person)
+- **ICC** = share of variance between clusters
+- **DEFF** = 1 + (m − 1) × ICC; **effective n** = n / DEFF
+- A naive analysis keeps the estimate but gives **SEs that are too small**
+- Simple valid fix: analyse **cluster means**
+:::
+
+**Next:** Session 2: cluster-robust standard errors and GEE

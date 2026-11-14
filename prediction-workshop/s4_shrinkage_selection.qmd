@@ -1,0 +1,223 @@
+---
+title: "Session 4 — Shrinkage and Variable Selection"
+subtitle: "Stepwise selection and its instability · ridge · lasso · uniform shrinkage · Lab 4"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+```{r}
+#| include: false
+m_all <- glm(f_all, data = dev, family = binomial)
+x_all <- model.matrix(f_all, dev)[, -1]; y <- dev$diabetes
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 3: the all-markers model is **overfitted** (bootstrap slope 0.80)
+- Today: ways to **reduce overfitting**
+  - **variable selection**: does it work?
+  - **penalised regression** (ridge, lasso)
+  - **uniform shrinkage**
+:::
+
+# Topic 1 — Variable selection {background-color="#2C3E50"}
+
+## Backward stepwise (AIC)
+
+```{r}
+m_step <- step(m_all, direction = "backward", trace = 0)
+names(coef(m_step))[-1]
+```
+
+::: {.warn}
+The selection kept **age, waist, family history, hypertension, activity, smoking** (BMI and sex were dropped) **and four noise markers: m6, m8, m9, m10**. With 84 events, selection **chases chance**.
+:::
+
+## How stable is the selection?
+
+```{r}
+set.seed(3)
+sel <- replicate(50, { i <- sample(nrow(dev), replace = TRUE); f <- suppressWarnings(step(glm(f_all, data = dev[i, ], family = binomial), direction = "backward", trace = 0)); paste0("m", 1:10) %in% names(coef(f)) })
+round(setNames(rowMeans(sel), paste0("m", 1:10)), 2)
+```
+
+::: {.incremental}
+- **Bootstrap inclusion frequency**: every noise marker is selected **12% to 82%** of the time (m10 82%, m9 70%)
+- The chosen set **changes with the sample**; **coefficients of selected variables are biased away from zero**; **p-values after selection are not valid**
+- **Do not** select by univariable p-values either
+- Prefer: **pre-specify** predictors (clinical knowledge, literature), **penalise**, or accept **shrinkage**
+:::
+
+# Topic 2 — Penalised regression {background-color="#2C3E50"}
+
+## Ridge
+
+```{r}
+set.seed(1)
+cv_r <- cv.glmnet(x_all, y, family = "binomial", alpha = 0)
+round(cbind(ML = coef(m_all)[paste0("m", 1:10)], ridge = as.numeric(coef(cv_r, s = "lambda.min"))[-1][match(paste0("m", 1:10), colnames(x_all))]), 3)
+```
+
+::: {.incremental}
+- **Ridge** adds a **penalty on the size of the coefficients** (λ × sum of squares)
+- **λ is chosen by cross-validation** (`cv.glmnet`; here λ = 0.036)
+- All coefficients **shrink towards zero** (to about **60 to 70%** of the ML values), **none becomes exactly zero**
+- **Standardise** the predictors (glmnet does it by default)
+:::
+
+## Lasso
+
+```{r}
+set.seed(1)
+cv_l <- cv.glmnet(x_all, y, family = "binomial", alpha = 1)
+b_l <- coef(cv_l, s = "lambda.1se")
+rownames(b_l)[as.numeric(b_l) != 0][-1]
+```
+
+::: {.key}
+The **lasso** (penalty on the **sum of absolute values**) sets some coefficients **exactly to zero**: it **selects and shrinks**. At **λ.1se** (largest penalty within one SE of the best) it kept **only age, waist and family history**: it removed all the **noise markers**, but also the real **hypertension, smoking and activity**: a sparse, probably **over-shrunk** model. `lambda.min` keeps more.
+:::
+
+## Uniform shrinkage
+
+```{r}
+lp0 <- predict(m_all, dev)
+lp_s <- 0.80 * lp0
+b0 <- coef(glm(diabetes ~ offset(lp_s), data = dev, family = binomial))[[1]]
+c(mean_predicted_after = mean(plogis(lp_s + b0)), prevalence = mean(dev$diabetes)) |> round(3)
+```
+
+::: {.incremental}
+- Multiply **all coefficients** by the **bootstrap slope (0.80)**, then **re-estimate the intercept** so that the mean risk equals the prevalence
+- Predicted risks become **less extreme**; the **ranking (AUC) does not change**
+- Simple, transparent, and works with **any** model; the same idea as **ridge**, with one factor
+:::
+
+## What to use?
+
+::: {.good}
+1. **Pre-specify** a small set of predictors; avoid data-driven selection when events are few
+2. If you must reduce, use **penalisation** (ridge for prediction; lasso for sparse models)
+3. Always **bootstrap the whole process** (including λ selection and selection steps)
+4. Apply **shrinkage** when the bootstrap slope is below about 0.9
+5. **External validation** (Session 5) tells you whether it worked
+:::
+
+## 🔧 Switch to R — Lab 4 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `prediction-workshop/labs/lab4_shrink.R`
+
+- stepwise selection and its bootstrap stability
+- ridge and lasso with `cv.glmnet`
+- uniform shrinkage
+:::
+
+**Time:** 40 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p4q1", "Backward stepwise selection kept four noise markers. What is the main lesson?",
+         c("The markers are real predictors that were missing from the study design plan",
+           "Stepwise selection removes noise variables, but it fails with the real ones",
+           "Selection follows chance in small samples, and the set varies by sample",
+           "Backward selection works if forward selection has been applied first"), answer = 3,
+         explain = "With few events per variable, selection follows random patterns, and different samples give different models, as the bootstrap inclusion frequencies show.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p4q2", "What does ridge regression do to the coefficients?",
+         c("It sets small coefficients to exactly zero and keeps the large ones unchanged",
+           "It increases the largest coefficients to improve discrimination",
+           "It removes correlated predictors from the model before fitting",
+           "It shrinks all coefficients towards zero without setting them exactly to zero"), answer = 4,
+         explain = "The ridge penalty is on the squares of the coefficients, so all of them are pulled towards zero by an amount that depends on lambda.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p4q3", "How is the penalty lambda usually chosen in glmnet?",
+         c("By cross-validation, taking the value with the best out-of-sample fit",
+           "By the analyst, who picks the value that gives the best apparent AUC value",
+           "By the p-value of each coefficient in the unpenalised version of the model",
+           "It is fixed at the value 1 for all datasets and need not be chosen at all"), answer = 1,
+         explain = "cv.glmnet fits the penalised model over a grid of lambda values and evaluates each by cross-validation. The apparent AUC would favour no penalty at all.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p4q4", "The lasso at lambda.1se kept only age, waist and family history. What does this illustrate?",
+         c("Those three are the variables that are really related to diabetes in the data",
+           "It can remove noise, but also real predictors when the penalty is large",
+           "The lasso keeps variables in the order of their p-values in the full model",
+           "Variables with a low prevalence cannot be selected by the lasso procedure"), answer = 2,
+         explain = "A strong penalty sets many coefficients to zero, including real ones. Choosing lambda.min or checking external calibration shows whether the model is over-shrunk.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p4q5", "What is uniform shrinkage?",
+         c("Dividing the dataset into equal parts and fitting a separate model in each",
+           "Setting every coefficient to the average of the coefficients of the model",
+           "Rounding all coefficients to the nearest whole number for use as a score",
+           "Multiplying coefficients by a factor below 1 and refitting the intercept"), answer = 4,
+         explain = "A single factor, often the bootstrap calibration slope, pulls all coefficients towards zero. The intercept is refitted so that the average risk stays correct.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Stepwise** selection is **unstable**: noise markers chosen, biased coefficients
+- **Ridge** shrinks all; **lasso** shrinks and selects
+- **λ by cross-validation**; standardise predictors
+- **Uniform shrinkage** = bootstrap slope × coefficients, new intercept
+- Pre-specify predictors; **validate externally**
+:::
+
+**Next:** Session 5: external validation, decision curves and reporting

@@ -839,6 +839,9 @@ padding: 0.4em 1.1em; background: #3498db; color: #fff;
 .quiz-feedback.is-info { color: #2c3e50; }
 .quiz-feedback code { background: #eef2f4; color: #c2185b; padding: 0 0.3em; border-radius: 3px; }
 .quiz-score { font-weight: 700; color: #2c3e50; }
+
+.quiz-score-tools { margin-left: 0.6em; white-space: nowrap; }
+.quiz-score-tools .quiz-btn { font-size: 0.55em; padding: 0.15em 0.6em; margin-left: 0.3em; vertical-align: middle; }
 </style>
   <style type="text/css">.reveal
 div.sourceCode
@@ -2825,7 +2828,9 @@ window.QuartoSupport = function () {
  *             explain = "tbl_summary() summarises variables, optionally by a group.")
  *   ```
  *
- * Optional: <span class="quiz-score"></span> anywhere shows "x / y".
+ * Optional: <span class="quiz-score"></span> anywhere shows "x / y", followed by
+ *   "Save score" (downloads a text file) and "Reset" buttons. The first-attempt
+ *   results are kept in localStorage per deck, so a reload keeps the score.
  *
  * BEHAVIOUR
  *   - MCQ: options are SHUFFLED at load (hash uses the authored index, so
@@ -2883,6 +2888,55 @@ window.QuartoSupport = function () {
 
   var state = { total: 0, correct: 0, scored: {} };
 
+  // ── saved score ─────────────────────────────────────────────────────
+  // The first-attempt result of each question is kept in the browser
+  // (localStorage, one entry per deck file), so a reload keeps the score.
+  // "Save score" downloads a small text file a participant can keep or
+  // hand in; "Reset" clears the saved result for this deck.
+  var deckName = (location.pathname.split('/').pop() || 'deck').replace(/\.html?$/, '');
+  var STORE = 'quiz-score:' + deckName;
+  function persist() { try { localStorage.setItem(STORE, JSON.stringify(state.scored)); } catch (e) {} }
+  function restore() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORE)) || {};
+      var qs = document.querySelectorAll('.quiz-q');
+      for (var i = 0; i < qs.length; i++) {
+        var id = qs[i].getAttribute('data-qid');
+        if (saved.hasOwnProperty(id)) { state.scored[id] = !!saved[id]; if (saved[id]) state.correct++; }
+      }
+    } catch (e) {}
+  }
+  function scoreText() {
+    var lines = ['Quiz score', 'Deck: ' + (document.title || deckName), 'File: ' + deckName, 'Saved: ' + new Date().toLocaleString(),
+                 'Score (first attempt): ' + state.correct + ' / ' + state.total, ''];
+    var qs = document.querySelectorAll('.quiz-q');
+    for (var i = 0; i < qs.length; i++) {
+      var id = qs[i].getAttribute('data-qid');
+      lines.push(id + ': ' + (state.scored.hasOwnProperty(id) ? (state.scored[id] ? 'correct' : 'not correct') : 'not attempted'));
+    }
+    return lines.join('\n') + '\n';
+  }
+  function download() {
+    var a = document.createElement('a');
+    a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(scoreText());
+    a.download = 'quiz_' + deckName + '.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  function addScoreTools() {
+    var els = document.querySelectorAll('.quiz-score');
+    for (var i = 0; i < els.length; i++) {
+      if (els[i].getAttribute('data-tools')) continue;
+      els[i].setAttribute('data-tools', '1');
+      var box = document.createElement('span'); box.className = 'quiz-score-tools';
+      var sv = document.createElement('button'); sv.type = 'button'; sv.className = 'quiz-btn quiz-btn-ghost quiz-save'; sv.textContent = 'Save score';
+      sv.addEventListener('click', download);
+      var rs = document.createElement('button'); rs.type = 'button'; rs.className = 'quiz-btn quiz-btn-ghost quiz-reset'; rs.textContent = 'Reset';
+      rs.addEventListener('click', function () { try { localStorage.removeItem(STORE); } catch (e) {} location.reload(); });
+      box.appendChild(sv); box.appendChild(rs);
+      els[i].parentNode.insertBefore(box, els[i].nextSibling);
+    }
+  }
+
   function updateScores() {
     var els = document.querySelectorAll('.quiz-score');
     for (var i = 0; i < els.length; i++) {
@@ -2891,9 +2945,10 @@ window.QuartoSupport = function () {
   }
 
   function record(qid, ok) {
-    if (state.scored[qid]) return;      // first attempt only
-    state.scored[qid] = true;
+    if (state.scored.hasOwnProperty(qid)) return;      // first attempt only
+    state.scored[qid] = !!ok;
     if (ok) state.correct++;
+    persist();
     updateScores();
   }
 
@@ -3032,6 +3087,8 @@ window.QuartoSupport = function () {
       if (type === 'mcq') initMCQ(q);
       else if (type === 'fill') initFill(q);
     }
+    restore();
+    addScoreTools();
     updateScores();
   }
 

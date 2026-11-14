@@ -1,0 +1,233 @@
+---
+title: "Session 4 — Nonresponse, Raking and Replicate Weights"
+subtitle: "Nonresponse adjustment · weight diagnostics · post-stratification and raking · trimming · replicate weights · Lab 4"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+```{r}
+#| include: false
+pp <- c("data/survey_population.csv", "../data/survey_population.csv", "../../data/survey_population.csv"); pp <- pp[file.exists(pp)][1]
+pop <- read_csv(pp, show_col_types = FALSE)
+adults <- adults |> mutate(age_grp = cut(age, c(17, 29, 44, 59, 120), labels = c("18-29", "30-44", "45-59", "60+")))
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 1: weight = 1 / selection probability
+- Today: how the **final weights** are built, and how to **check** them
+- By the end you can:
+  - measure **nonresponse** and adjust for it
+  - compute **weight diagnostics**
+  - **rake** weights to known population totals
+  - use **replicate weights** for variances
+:::
+
+# Topic 1 — Nonresponse {background-color="#2C3E50"}
+
+## Who responds?
+
+```{r}
+adults |> group_by(sex) |> summarise(n = n(), response_rate = round(mean(responded), 2))
+adults |> group_by(age_grp) |> summarise(n = n(), response_rate = round(mean(responded), 2))
+```
+
+::: {.warn}
+Overall response is **74%**, but **men 69%** vs **women 79%**, and young adults least. If you ignore this, **men and the young are under-represented**: any outcome that differs by sex or age is **biased**.
+:::
+
+## The adjustment
+
+::: {.eq}
+final weight = design weight / response rate in the weighting cell
+:::
+
+```{r}
+cells <- adults |> group_by(age_grp, sex, residence) |> summarise(rr = mean(responded), .groups = "drop")
+adj <- adults |> filter(responded == 1) |> left_join(cells, by = c("age_grp", "sex", "residence")) |> mutate(w_new = design_weight / rr)
+all.equal(adj$w_new, adj$weight, tolerance = 0.001)
+```
+
+::: {.incremental}
+- Cells use variables **known for everyone sampled** (age, sex, residence)
+- Each respondent also **stands for the nonrespondents in the same cell**
+- It cannot fix nonresponse that depends on things you did **not** measure (e.g. education here)
+:::
+
+# Topic 2 — Diagnostics and raking {background-color="#2C3E50"}
+
+## Check the weights
+
+```{r}
+w <- weights(des)
+c(min = min(w), median = median(w), max = max(w), cv = sd(w) / mean(w), n_eff_kish = sum(w)^2 / sum(w^2)) |> round(2)
+```
+
+::: {.key}
+CV **0.43**; the **Kish effective sample size** is about **1,560** of 1,853: unequal weights cost about **16% of the precision**. Very large weights (or CV above about 1) are a warning: look at **who** has them.
+:::
+
+## Raking (calibration)
+
+```{r}
+pop_age <- pop |> filter(variable == "age_group") |> transmute(age_grp = level, Freq = adults)
+pop_sex <- pop |> filter(variable == "sex") |> transmute(sex = level, Freq = adults)
+pop_edu <- pop |> filter(variable == "education") |> transmute(education = level, Freq = adults)
+des_r <- rake(des, list(~age_grp, ~sex, ~education), list(pop_age, pop_sex, pop_edu))
+round(rbind(before = prop.table(svytable(~education, des)), after = prop.table(svytable(~education, des_r)),
+            census = setNames(pop_edu$Freq / sum(pop_edu$Freq), pop_edu$education)[levels(resp$education)]), 3)
+```
+
+::: {.incremental}
+- **Raking** adjusts the weights step by step until the weighted **margins** equal **known population totals** (a census)
+- Use when the **joint** distribution is unknown but the **margins** are known
+- Here the change in the prevalence is small (**19.95% to 19.74%**): raking matters most when nonresponse is related to the outcome
+- Check afterwards that the weights are **not too variable**
+:::
+
+## Trimming
+
+```{r}
+des_t <- trimWeights(des_r, upper = 1.5 * median(weights(des_r)), strict = TRUE)
+c(before = max(weights(des_r)), after = max(weights(des_t))) |> round(0)
+```
+
+::: {.warn}
+**Trimming** caps very large weights: it trades a little **bias** for less **variance**. Report it if you do it.
+:::
+
+# Topic 3 — Replicate weights {background-color="#2C3E50"}
+
+## Another way to get the variance
+
+```{r}
+set.seed(1)
+rep_des <- as.svrepdesign(des, type = "bootstrap", replicates = 200)
+c(taylor = SE(svymean(~hypertension, des)), bootstrap = SE(svymean(~hypertension, rep_des))) |> round(4)
+```
+
+::: {.incremental}
+- The estimate is recomputed on **many re-weighted sub-samples** (jackknife, BRR, bootstrap); the spread gives the SE
+- Many data providers release **replicate weights** instead of strata and PSUs (to protect identity): then use `svrepdesign()`
+- Works for **complex statistics** (medians, ratios, differences) where formulas are hard
+- Same answer as Taylor linearisation here (**0.0149** vs **0.015**)
+:::
+
+## 🔧 Switch to R — Lab 4 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `survey-workshop/labs/lab4_weights.R`
+
+- response by sex and age; rebuild the adjusted weight
+- effective sample size, raking, trimming
+- bootstrap replicate weights
+:::
+
+**Time:** 40 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v4q1", "Men respond less often than women. If this is ignored, what is likely to happen?",
+         c("Men are over-represented, and results that differ by sex are unbiased",
+           "The sample size falls, but the estimates stay unbiased",
+           "Men are under-represented, and results that differ by sex are biased",
+           "The standard errors become zero for all the estimates"), answer = 3,
+         explain = "Nonresponse that depends on sex and on the outcome distorts the sample. Weights adjusted for nonresponse give respondents the weight of the missing ones.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v4q2", "In the nonresponse adjustment, why is the design weight divided by the cell response rate?",
+         c("The weights then add up to the number of respondents who answered",
+           "Each respondent also stands for the nonrespondents in the cell",
+           "Cells with high response rates need smaller standard errors in the analysis",
+           "It converts the weights into selection probabilities for the PSUs in the cell"), answer = 2,
+         explain = "A cell with a 50% response rate has half of its sample missing, so each respondent weighs twice as much: the weights keep adding up to the cell total.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v4q3", "What does raking (calibration) do?",
+         c("It drops respondents at random until the sample margins match the population",
+           "It replaces missing answers by values predicted from the population totals",
+           "It adjusts the weights until the weighted margins match known totals",
+           "It divides the weights by their mean so that they add up to one"), answer = 3,
+         explain = "Raking, or iterative proportional fitting, rescales the weights step by step to reproduce known margins such as the census age, sex and education distribution.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v4q4", "The Kish effective sample size is 1,563 for 1,853 respondents. How is this best read?",
+         c("The survey lost 16% of its respondents because of nonresponse",
+           "The design effect due to clustering is 1.16",
+           "The weights should be divided by 1.16 before analysis",
+           "Unequal weights cost about 16% of the precision of the sample"), answer = 4,
+         explain = "The Kish formula measures the loss of precision from variable weights alone. Clustering comes on top of this and is part of the design effect.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v4q5", "What are replicate weights used for?",
+         c("To get variances by recalculating the estimate on re-weighted sub-samples",
+           "To replace the usual weights with equal weights for all of the respondents",
+           "To fill in the answers of adults who did not respond to the survey in the field",
+           "To remove the bias that the usual weights leave in the point estimate"), answer = 1,
+         explain = "The estimate is recomputed with each set of replicate weights, and the variation between the replicates gives the standard error. They do not change the point estimate.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Nonresponse adjustment**: design weight / cell response rate
+- **Check the weights**: range, CV, Kish n~eff~
+- **Raking** to known margins; **trimming** extreme weights
+- **Replicate weights** (`as.svrepdesign`, `svrepdesign`) give variances without strata and PSU
+- Weights cannot fix nonresponse on **unmeasured** variables
+:::
+
+**Next:** Session 5: choosing, checking and reporting

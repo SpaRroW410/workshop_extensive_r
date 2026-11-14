@@ -1,0 +1,215 @@
+---
+title: "Session 5 — Choosing, Checking and Reporting"
+subtitle: "Cross-validation · overfitting · marginal predictions · extrapolation · reporting non-linear effects · Lab 5"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Sessions 1 to 4: curves and interactions
+- Today: **which curve**, **how to check it**, and **how to report it**
+:::
+
+# Topic 1 — Choosing {background-color="#2C3E50"}
+
+## Cross-validated error
+
+```{r}
+set.seed(1)
+fold <- sample(rep(1:10, length.out = nrow(ncd)))
+cv_rmse <- function(fit_fun) sqrt(mean(sapply(1:10, function(k) { f <- fit_fun(ncd[fold != k, ]); mean((ncd$sbp[fold == k] - predict(f, ncd[fold == k, ]))^2) })))
+round(c(linear = cv_rmse(function(d) lm(sbp ~ age + bmi + salt + activity + sex + smoker, d)),
+        hinge = cv_rmse(function(d) lm(sbp ~ age + pmax(age - 45, 0) + bmi + salt + activity + sex + smoker, d)),
+        ns4 = cv_rmse(function(d) lm(sbp ~ ns(age, 4) + bmi + salt + activity + sex + smoker, d)),
+        gam = cv_rmse(function(d) gam(sbp ~ s(age) + s(bmi) + s(activity) + salt + sex + smoker, data = d, method = "REML")),
+        ns15 = cv_rmse(function(d) lm(sbp ~ ns(age, 15) + bmi + salt + activity + sex + smoker, d))), 2)
+```
+
+::: {.incremental}
+- **10-fold cross-validation**: fit on 9/10 of the data, **predict the held-out tenth**
+- Linear **11.33**, hinge **11.27**, spline **11.28**, GAM **11.22**: curved models are **slightly better**; the gains are small because the **noise is large**
+- **ns with 15 df: 11.29**: **more flexibility did not help**; it fits noise
+- Choose the **simplest curve that fits** and is easy to explain
+:::
+
+## Decision guide
+
+| Situation | Suggested approach |
+|---|---|
+| Curvature unknown | **GAM** or **ns() with 3 to 5 df**, then plot |
+| Diminishing returns | **log** transform |
+| Known threshold or bend | **hinge** at a justified knot |
+| Small sample | few df (3), or linear and say so |
+| Report to non-statisticians | **prediction plot**; hinge slopes if simple |
+| Effect depends on another variable | **interaction**, plus simple slopes and risks |
+
+# Topic 2 — Checking and extrapolation {background-color="#2C3E50"}
+
+## Marginal (standardised) predictions
+
+```{r}
+g_ns <- glm(cvd10 ~ age + ns(bmi, 4) + sex * smoker, data = ncd, family = binomial)
+bmis <- c(18.5, 22, 25, 30, 35)
+round(setNames(100 * sapply(bmis, function(b) mean(predict(g_ns, transform(ncd, bmi = b), type = "response"))), bmis), 1)
+```
+
+::: {.key}
+The **average predicted risk if every adult had that BMI**: **13.8%** at 18.5, **6.1%** at 22, **4.7%** at 25, **11.8%** at 30, **39.6%** at 35. It averages over the **real mix** of age, sex and smoking, so it needs **no "typical person"**.
+:::
+
+## Do not extrapolate
+
+```{r}
+range(ncd$bmi); sum(ncd$bmi > 40)
+```
+
+::: {.warn}
+BMI ranges from **14.5 to 40.1**, and **one adult** has a BMI above 40. A prediction at BMI 50 is **pure extrapolation** (the natural spline just continues in a straight line). Restrict plots and statements to the **range of the data**, and show where the data are thin (a **rug** or histogram).
+:::
+
+# Topic 3 — Reporting {background-color="#2C3E50"}
+
+## Reporting a non-linear effect
+
+::: {.good}
+- **A prediction plot** with a **95% band** (and a rug of the data)
+- A **few contrasts** at meaningful values (e.g. OR for BMI 30 vs 24.6)
+- The **test of non-linearity** (LR or F test)
+- The **method**: spline type, **df** (and how chosen), knots
+- **Never** a table of spline coefficients
+:::
+
+```{r}
+ref <- predict(g_ns, transform(ncd[1, ], bmi = 24.6))
+round(setNames(sapply(bmis, function(b) exp(predict(g_ns, transform(ncd[1, ], bmi = b)) - ref)), bmis), 1)
+```
+
+::: {.key}
+OR compared with a BMI of 24.6: **3.8** (18.5), **1.4** (22), **1.0** (25), **3.1** (30), **21.5** (35): the **shape** is the message, not one odds ratio per unit.
+:::
+
+## An example sentence
+
+::: {.key}
+*"The 10-year risk of a cardiovascular event was U-shaped in BMI (natural spline, 4 df; likelihood-ratio test of non-linearity p < 0.001), lowest between BMI 24 and 25 and rising to 4.7% at BMI 25, 11.8% at 30 and 39.6% at 35 (standardised to the sample)."*
+:::
+
+## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `curves-workshop/labs/lab5_report.R`
+
+- 10-fold cross-validated RMSE, overfitting
+- marginal predictions and ORs for chosen BMIs
+- extrapolation check and a one-sentence report
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("k5q1", "Cross-validated RMSE is 11.33 (linear), 11.27 (hinge), 11.28 (spline) and 11.22 (GAM). What is the most sensible conclusion?",
+         c("The GAM is best, since it has the lowest RMSE of the four models compared here",
+           "The linear model is best, since it has the fewest parameters of all the models",
+           "The data are unusable, since all the differences are smaller than 0.1 mmHg",
+           "Curvature helps a little: prefer a simple curve unless the GAM clearly wins"), answer = 4,
+         explain = "The gain from curvature is real but small. A simple, explainable curve is preferred unless a more complex model is clearly better.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("k5q2", "Why is a natural spline for age with 15 df a poor choice?",
+         c("It follows the noise in the sample and predicts new data no better",
+           "It cannot be fitted when there are fewer than 15 distinct ages",
+           "It makes the model non-linear in the coefficients, so least squares fails",
+           "It removes the age effect by splitting it across many terms"), answer = 1,
+         explain = "Too much flexibility fits random variation, which does not repeat in new data. The cross-validated error is no better than with 4 df.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("k5q3", "What is a marginal (standardised) predicted risk at BMI 30?",
+         c("The predicted risk of the adult who has the median BMI of the sample",
+           "The observed risk among the adults who happen to have a BMI of around 30",
+           "The average predicted risk if every adult in the sample had a BMI of 30",
+           "The predicted risk when every other variable in the model is set to zero"), answer = 3,
+         explain = "Set BMI to 30 for everybody, predict for each adult with their own age, sex and smoking, and average. No single typical person is needed.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("k5q4", "Why is it unwise to predict the risk at BMI 50 when only one adult has a BMI above 40?",
+         c("The standard errors are zero outside the range of the data in the survey",
+           "There are almost no data there, so the curve is just an extrapolation",
+           "The spline cannot be evaluated outside the range of the knots it uses",
+           "Predictions are limited to BMI values in the lowest quartile of the data"), answer = 2,
+         explain = "Beyond the data the fitted curve is determined by the form of the spline, not by observations. Stay within the observed range and show where data are thin.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("k5q5", "What is the best way to report a non-linear effect?",
+         c("The p-value of each one of the spline coefficients, listed in a table",
+           "A single odds ratio per unit of BMI taken from the straight-line model",
+           "A prediction plot with a CI band, and a few contrasts at set values",
+           "The degrees of freedom of the spline, together with its AIC value in a table"), answer = 3,
+         explain = "Spline coefficients cannot be read one by one and a single OR hides the shape. A plot, a few contrasts and the test of non-linearity convey the result.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Cross-validate** and prefer the **simplest** adequate curve
+- More df = **overfitting**
+- **Standardised predictions** need no typical person
+- **Do not extrapolate**; show where the data are
+- Report **plot + contrasts + non-linearity test + df**
+:::
+
+**Next:** Cheat sheet and the next module

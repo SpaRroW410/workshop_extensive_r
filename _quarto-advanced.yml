@@ -7,9 +7,16 @@
 project:
   output-dir: docs/advanced
   render:
+    - advanced-workshops.qmd
     - survival-workshop/*.qmd
     - counts-workshop/*.qmd
     - ordinal-workshop/*.qmd
+    - clustered-workshop/*.qmd
+    - survey-workshop/*.qmd
+    - curves-workshop/*.qmd
+    - missing-workshop/*.qmd
+    - prediction-workshop/*.qmd
+    - causal-workshop/*.qmd
   resources:
     - data/tb_cohort.csv
     - survival-workshop/make_data.R
@@ -20,6 +27,26 @@ project:
     - data/maternal_survey.csv
     - ordinal-workshop/make_data.R
     - ordinal-workshop/labs/*.R
+    - data/bp_trial.csv
+    - clustered-workshop/make_data.R
+    - clustered-workshop/labs/*.R
+    - data/survey_adults.csv
+    - data/survey_population.csv
+    - survey-workshop/make_data.R
+    - survey-workshop/labs/*.R
+    - data/ncd_curves.csv
+    - curves-workshop/make_data.R
+    - curves-workshop/labs/*.R
+    - data/ncd_missing.csv
+    - missing-workshop/make_data.R
+    - missing-workshop/labs/*.R
+    - data/diabetes_dev.csv
+    - data/diabetes_valid.csv
+    - prediction-workshop/make_data.R
+    - prediction-workshop/labs/*.R
+    - data/htn_programme.csv
+    - causal-workshop/make_data.R
+    - causal-workshop/labs/*.R
 website:
   title: Data Visualization Workshop — Advanced
   site-url: '.'
@@ -89,51 +116,29 @@ website:
             href: gtsummary/gtsummary_tutorial.qmd
           - text: Data Analysis
             href: statistical-analysis/data_analysis.qmd
-      - text: Survival Workshop
+      - text: Advanced Workshops
         menu:
-          - text: Session 1 — Time-to-Event Data
+          - text: All modules and sessions
+            href: advanced-workshops.qmd
+          - text: '---'
+          - text: A1 · Survival analysis
             href: survival-workshop/s1_time_to_event.qmd
-          - text: Session 2 — Kaplan-Meier Curves
-            href: survival-workshop/s2_kaplan_meier.qmd
-          - text: Session 3 — Comparing Survival (Log-Rank)
-            href: survival-workshop/s3_logrank.qmd
-          - text: Session 4 — Cox Regression
-            href: survival-workshop/s4_cox_regression.qmd
-          - text: Session 5 — Assumptions and Reporting
-            href: survival-workshop/s5_assumptions_reporting.qmd
-          - text: '---'
-          - text: Survival Analysis Cheat Sheet
-            href: survival-workshop/cheatsheet.qmd
-      - text: Counts Workshop
-        menu:
-          - text: Session 1 — Counts, Rates and the Poisson Idea
+          - text: A2 · Counts and rates
             href: counts-workshop/s1_counts_rates.qmd
-          - text: Session 2 — Poisson Regression
-            href: counts-workshop/s2_poisson_regression.qmd
-          - text: Session 3 — Overdispersion
-            href: counts-workshop/s3_overdispersion.qmd
-          - text: Session 4 — Excess Zeros and Model Checking
-            href: counts-workshop/s4_zeros_checking.qmd
-          - text: Session 5 — Reporting and Extensions
-            href: counts-workshop/s5_reporting_extensions.qmd
-          - text: '---'
-          - text: Counts and Rates Cheat Sheet
-            href: counts-workshop/cheatsheet.qmd
-      - text: Ordinal & Multinomial Workshop
-        menu:
-          - text: 'Session 1 — Categorical Outcomes: Nominal or Ordered?'
+          - text: A3 · Ordinal and multinomial
             href: ordinal-workshop/s1_categorical_outcomes.qmd
-          - text: Session 2 — Ordinal Logistic Regression
-            href: ordinal-workshop/s2_ordinal_logistic.qmd
-          - text: Session 3 — Checking Proportional Odds
-            href: ordinal-workshop/s3_proportional_odds_check.qmd
-          - text: Session 4 — Multinomial Logistic Regression
-            href: ordinal-workshop/s4_multinomial_logistic.qmd
-          - text: Session 5 — Choosing, Comparing and Reporting
-            href: ordinal-workshop/s5_choosing_reporting.qmd
-          - text: '---'
-          - text: Ordinal and Multinomial Cheat Sheet
-            href: ordinal-workshop/cheatsheet.qmd
+          - text: A4 · Clustered and repeated data
+            href: clustered-workshop/s1_clustered_data.qmd
+          - text: A5 · Survey data and weights
+            href: survey-workshop/s1_survey_design.qmd
+          - text: A6 · Curves and interactions
+            href: curves-workshop/s1_beyond_linear.qmd
+          - text: A7 · Missing data
+            href: missing-workshop/s1_patterns_mechanisms.qmd
+          - text: A8 · Prediction models
+            href: prediction-workshop/s1_building_model.qmd
+          - text: A9 · Causal inference
+            href: causal-workshop/s1_causal_questions_dags.qmd
       - text: Quarto
         menu:
           - text: Quarto Basics

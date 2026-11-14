@@ -1,0 +1,206 @@
+---
+title: "Session 2 — Adjustment, Bad Controls and Standardisation"
+subtitle: "Regression adjustment · mediator and collider bias · effect modification · g-computation · ATE and ATT · Lab 2"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 1: the DAG says **adjust for** age, sex, education, urban, BMI, diabetes, baseline SBP
+- Today: **do it with regression**, see what **bad controls** do, and get **ATE and ATT** by **standardisation**
+:::
+
+# Topic 1 — Regression adjustment {background-color="#2C3E50"}
+
+## Adjusted for the confounders
+
+```{r}
+m_adj <- lm(f_out, data = htn)
+round(c(estimate = coef(m_adj)[["programme"]], confint(m_adj)["programme", ]), 2)
+```
+
+::: {.key}
+**−6.3 mmHg** (95% CI −7.1 to −5.4), against the naive **−1.4**. Confounding **hid** most of the benefit, because the enrolled started with a **higher** SBP. (Because the data are synthetic we know the truth: **−5.8**.)
+:::
+
+# Topic 2 — Bad controls {background-color="#2C3E50"}
+
+## Adjusting for a mediator or a collider
+
+```{r}
+m_med <- update(m_adj, . ~ . + adherent); m_col <- update(m_adj, . ~ . + clinic_visits)
+round(c(naive = coef(lm(sbp_12m ~ programme, data = htn))[["programme"]], adjusted = coef(m_adj)[["programme"]], plus_mediator = coef(m_med)[["programme"]], plus_collider = coef(m_col)[["programme"]]), 2)
+```
+
+::: {.incremental}
+- **+ adherence (mediator): −3.0**. Half of the effect has gone: this is only the **direct** effect, **not** what the programme achieves
+- **+ clinic visits (collider): −8.8**. The effect is **exaggerated** by a non-causal path
+- Both models have a **higher R²** than the correct one: **fit is not a guide** to causal adjustment
+- "Adjust for everything available" is **wrong**
+:::
+
+## Table 2 fallacy
+
+::: {.warn}
+In the adjusted model, **only the programme coefficient** has a causal reading. The coefficients of age, diabetes and so on are **not** their total effects (their own confounders and mediators differ). Do not interpret every row of a regression table causally.
+:::
+
+# Topic 3 — Standardisation {background-color="#2C3E50"}
+
+## The effect may differ between people
+
+```{r}
+htn <- htn |> mutate(bsbp_c = baseline_sbp - 150)
+m_int <- lm(sbp_12m ~ programme * bsbp_c + age + sex + education + urban + bmi + diabetes, data = htn)
+round(summary(m_int)$coefficients[c("programme", "programme:bsbp_c"), 1:2], 3)
+```
+
+The programme lowers SBP by **5.9 mmHg at a baseline of 150**, and by **0.09 mmHg more for each extra mmHg** of baseline SBP. So **which average** do we want?
+
+## g-computation
+
+```{r}
+p1 <- predict(m_int, transform(htn, programme = 1)); p0 <- predict(m_int, transform(htn, programme = 0))
+round(c(ATE = mean(p1 - p0), ATT = mean((p1 - p0)[htn$programme == 1])), 2)
+```
+
+::: {.incremental}
+1. Fit an outcome model (with interactions if needed)
+2. **Predict for every adult twice**: as if **enrolled**, as if **not**
+3. **Average the difference**: over everybody (**ATE −6.2**) or over the enrolled (**ATT −6.6**)
+- The ATT is larger: the enrolled have a **higher baseline SBP**, where the programme **works better**
+- Confidence intervals: **bootstrap** the whole procedure
+- Works for **any** outcome model (logistic: risk differences and risk ratios)
+:::
+
+## Which estimand?
+
+| Question | Estimand |
+|---|---|
+| Should the programme be offered to **all** hypertensive adults? | **ATE** |
+| Did it benefit the adults **who enrolled**? | **ATT** |
+| What happens in adults **like those not yet enrolled**? | ATU (untreated) |
+
+::: {.key}
+State the **estimand** before choosing the method: regression, matching and weighting can each target **different** populations.
+:::
+
+## 🔧 Switch to R — Lab 2 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `causal-workshop/labs/lab2_adjust.R`
+
+- adjusted effect with CI
+- mediator and collider as bad controls
+- interaction, standardisation: ATE and ATT
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z2q1", "The naive difference is -1.4 mmHg and the confounder-adjusted estimate -6.3 mmHg. Why was the naive estimate so close to zero?",
+         c("The adjusted model has more parameters, which makes the estimates larger",
+           "The naive estimate uses fewer adults than the adjusted estimate does",
+           "The enrolled were sicker at baseline, which masked the benefit",
+           "The programme has no effect, and the adjustment created one by chance"), answer = 3,
+         explain = "Enrolled adults started with a higher SBP and more risk factors, so without the programme they would have had a higher SBP. The confounding worked against the benefit.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z2q2", "After adding adherence to the model the programme coefficient falls from -6.3 to -3.0. What does -3.0 estimate?",
+         c("The total effect, now free of the confounding by adherence",
+           "The effect of adherence on blood pressure in the enrolled adults",
+           "The bias that was present in the confounder-adjusted model before",
+           "The part of the effect that does not pass through adherence"), answer = 4,
+         explain = "Adherence is on the causal path. Holding it fixed leaves only the direct effect, which is not the total benefit of the programme.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z2q3", "The model that includes clinic visits has a higher R-squared but gives -8.8 mmHg. What is the lesson?",
+         c("A better fit is not a better causal estimate; a collider adds bias",
+           "A model with a higher R-squared should be preferred for causal questions",
+           "The effect of the programme is truly -8.8 once clinic visits are held fixed",
+           "Clinic visits are a confounder that the first model failed to include"), answer = 1,
+         explain = "Variables affected by the exposure and the outcome predict the outcome well, yet conditioning on them biases the effect. Choose covariates from the DAG.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z2q4", "What does standardisation (g-computation) do?",
+         c("It divides each coefficient by its standard error to compare the effect sizes",
+           "It predicts each outcome under both options and averages the difference",
+           "It matches each enrolled adult with a non-enrolled adult of the same age",
+           "It rescales the covariates to a mean of zero and a variance of one"), answer = 2,
+         explain = "Predictions under exposure and under no exposure for the same people are compared, and the average difference estimates the causal effect in that population.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z2q5", "The ATT (-6.6) is larger than the ATE (-6.2). What explains this?",
+         c("The ATT is computed with fewer adults, so it is biased away from zero by chance",
+           "The ATE includes adults whose data are missing at the twelve-month visit",
+           "The ATT is adjusted for adherence to medication, and the ATE is not",
+           "The enrolled have a higher baseline SBP, where the programme works better"), answer = 4,
+         explain = "The effect increases with baseline SBP, and the enrolled have higher values. Averaging over them gives a larger effect than averaging over everyone.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- Adjust for **confounders** from the DAG: −6.3 vs naive −1.4
+- **Mediator** → direct effect only; **collider** → bias
+- **R² is not a guide**; only the exposure row is causal
+- **g-computation**: predict under both options, average
+- Say whether you estimate the **ATE** or the **ATT**
+:::
+
+**Next:** Session 3: propensity scores and matching

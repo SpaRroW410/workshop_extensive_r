@@ -1,0 +1,243 @@
+---
+title: "Session 5 — External Validation, Decision Curves and Reporting"
+subtitle: "Transportability · calibration in a new district · model comparison · recalibration · net benefit · TRIPOD · Lab 5"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+```{r}
+#| include: false
+m_true <- glm(f_true, data = dev, family = binomial)
+m_all <- glm(f_all, data = dev, family = binomial)
+x_all <- model.matrix(f_all, dev)[, -1]; xv_all <- model.matrix(f_all, val)[, -1]
+set.seed(1); cv_r <- cv.glmnet(x_all, dev$diabetes, family = "binomial", alpha = 0); cv_l <- cv.glmnet(x_all, dev$diabetes, family = "binomial", alpha = 1)
+val$risk <- predict(m_true, newdata = val, type = "response"); lpv <- qlogis(val$risk)
+```
+
+## Where we are
+
+::: {.incremental}
+- Sessions 1 to 4: build, evaluate, internally validate, shrink
+- Today: the **real test**: a **different district**, 2,000 adults, **never used for fitting**
+- By the end you can:
+  - **validate externally** (discrimination, calibration)
+  - **recalibrate** a model for a new setting
+  - judge **clinical usefulness** with a **decision curve**
+  - **report** with TRIPOD
+:::
+
+# Topic 1 — Validation in a new district {background-color="#2C3E50"}
+
+## Discrimination and average calibration
+
+```{r}
+roc_v <- roc(val$diabetes, val$risk, quiet = TRUE)
+c(auc = as.numeric(auc(roc_v)), predicted = mean(val$risk), observed = mean(val$diabetes)) |> round(3)
+ci.auc(roc_v)
+```
+
+::: {.key}
+**AUC 0.71** (95% CI 0.68 to 0.74): **lower** than the apparent 0.80 and the bootstrap-corrected 0.776. **Mean predicted risk 17.9%** vs **24.6% observed**: the model **under-estimates** risk in this district (older, less active, higher prevalence).
+:::
+
+## Calibration slope and plot
+
+```{r}
+c(slope = coef(glm(diabetes ~ lpv, data = val, family = binomial))[["lpv"]], intercept_offset = coef(glm(diabetes ~ offset(lpv), data = val, family = binomial))[[1]]) |> round(2)
+```
+
+```{r}
+#| output-location: slide
+#| fig-height: 4.4
+calv <- val |> mutate(decile = ntile(risk, 10)) |> group_by(decile) |> summarise(predicted = mean(risk), observed = mean(diabetes))
+ggplot(calv, aes(predicted, observed)) + geom_abline(linetype = 2) + geom_point(size = 3, colour = col_red) + geom_line(colour = col_red) + coord_equal(xlim = c(0, 0.7), ylim = c(0, 0.7)) + labs(x = "Mean predicted risk", y = "Observed proportion with diabetes")
+```
+
+::: {.incremental}
+- **Slope 0.67**: predictions are **too extreme** (low risks too low, high risks too high): some **overfitting** and **weaker effects** in the new district
+- **Intercept +0.50** (calibration-in-the-large): risk **under-estimated on average**
+- Typical of **external validation**: performance **drops** and **calibration** needs updating
+:::
+
+## Which development strategy transports best?
+
+```{r}
+slope_of <- function(lp) coef(glm(diabetes ~ lp, data = val, family = binomial))[["lp"]]
+lps <- list(ML_8 = predict(m_true, val), ML_all = predict(m_all, val), ridge = as.numeric(predict(cv_r, xv_all, s = "lambda.min")), lasso = as.numeric(predict(cv_l, xv_all, s = "lambda.1se")))
+sapply(lps, function(lp) c(auc = auc_of(val$diabetes, lp), slope = slope_of(lp))) |> t() |> round(2)
+```
+
+::: {.incremental}
+- The **all-markers** ML model is the **worst calibrated** (slope **0.53**) and has the lowest AUC (0.69)
+- **Ridge**: slope **0.80**, closest to 1 among the full models
+- **Lasso at λ.1se**: slope **1.59**: **over-shrunk** (too narrow)
+- **No strategy fully repairs** the change of population: that needs **recalibration**
+:::
+
+# Topic 2 — Updating and usefulness {background-color="#2C3E50"}
+
+## Recalibration
+
+```{r}
+rec <- glm(diabetes ~ lpv, data = val, family = binomial)
+val$risk_rec <- predict(rec, type = "response")
+c(brier_before = mean((val$risk - val$diabetes)^2), brier_after = mean((val$risk_rec - val$diabetes)^2)) |> round(3)
+```
+
+::: {.incremental}
+- **Recalibrate**: re-estimate the **intercept** (and the **slope**) in the new setting; keep the predictors and relative weights
+- **Brier 0.170 to 0.165**; the **AUC does not change** (only the calibration)
+- Better than **refitting everything** on a small local sample (overfitting), but needs **local outcome data**
+- Models need **updating over time** and across **settings**
+:::
+
+## Decision curve: net benefit
+
+::: {.eq}
+net benefit = TP / n − FP / n × t / (1 − t)       t = the risk threshold at which you would act
+:::
+
+```{r}
+nb <- function(risk, y, t) { tp <- sum(risk >= t & y == 1); fp <- sum(risk >= t & y == 0); tp / length(y) - fp / length(y) * t / (1 - t) }
+ts <- seq(0.05, 0.40, 0.05)
+tibble(threshold = ts, model = sapply(ts, \(t) nb(val$risk_rec, val$diabetes, t)), treat_all = sapply(ts, \(t) mean(val$diabetes) - (1 - mean(val$diabetes)) * t / (1 - t))) |> mutate(across(-threshold, \(x) round(x, 3)))
+```
+
+## Reading the decision curve
+
+::: {.key}
+**Treat none = 0.** The model has the **same** net benefit as **treat-all** up to a threshold of **10%**, and a **clearly higher** one from **15%** (0.126 vs 0.112) up to 40%, where treating everyone becomes **harmful** (negative above about 25%). A net benefit of **0.10 at 20%** is like finding **10 extra true cases per 100 adults with no unnecessary test**. **Choose the threshold from costs and benefits**, not from the AUC.
+:::
+
+## Reporting: TRIPOD
+
+::: {.good}
+- **Source of data**, setting, **outcome**, **predictors** and their measurement
+- **Sample size** and **events**; handling of **missing data**
+- The **full model** (**intercept and all coefficients**) so others can use it
+- **Performance**: AUC, **calibration** (plot, slope, intercept), with CIs
+- **Internal validation** (bootstrap) and **external validation**, any **updating**
+- **Limitations** and intended **use** (threshold, who)
+:::
+
+::: {.key}
+*Example:* "The model (logistic regression, 8 predictors, 84 events in 700 adults) had an apparent AUC of 0.80 (bootstrap-corrected 0.78); in an external cohort of 2,000 adults the AUC was 0.71, the calibration slope 0.67 and risk was under-estimated (mean 17.9% vs 24.6% observed)."
+:::
+
+## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `prediction-workshop/labs/lab5_external.R`
+
+- apply the model to the new district: AUC, calibration
+- compare ML, ridge and lasso; recalibrate
+- decision curve and a TRIPOD sentence
+:::
+
+**Time:** 45 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p5q1", "The AUC is 0.80 in development and 0.71 in the external cohort. What is the most likely reason?",
+         c("The external cohort is larger, and large cohorts give lower AUCs",
+           "The model was fitted to the external cohort and is therefore too optimistic",
+           "AUC values cannot be compared between cohorts",
+           "A different case-mix and weaker predictor effects, plus some overfitting"), answer = 4,
+         explain = "External validation usually shows lower performance because of overfitting and because the new population has a different case-mix or different predictor effects.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p5q2", "The mean predicted risk is 17.9% and the observed risk 24.6% in the external cohort. What does this show?",
+         c("Poor calibration-in-the-large: risk is under-estimated in this district",
+           "Poor discrimination: the model cannot rank the adults correctly",
+           "Good calibration, because both numbers are in the same range",
+           "Overfitting in the development data, which the calibration slope measures"), answer = 1,
+         explain = "A mean predicted risk below the observed prevalence means the model under-estimates risk on average. This is a different problem from poor ranking or too-extreme predictions.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p5q3", "What does an external calibration slope of 0.67 mean?",
+         c("Risks are under-estimated by 33% for all of the patients in the cohort",
+           "Predictions are too extreme: low risks too low, high risks too high",
+           "The model gets two thirds of the patients right in the new cohort",
+           "The AUC is 0.67 in the validation cohort and 0.80 in development"), answer = 2,
+         explain = "A slope below 1 shows that the predicted risks vary more than the true risks. Shrinking the linear predictor by the slope would fix this.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p5q4", "What is a decision curve used for?",
+         c("To plot the ROC curves of several different cohorts together on one graph",
+           "To find the risk threshold that gives the highest AUC for the model",
+           "To compare the calibration slopes of competing models in one picture",
+           "To show the net benefit of the model at different risk thresholds"), answer = 4,
+         explain = "A decision curve weighs true positives against false positives at the threshold where a clinician would act, and compares the model with treating everybody or nobody.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p5q5", "Which item is essential in a report of a model that others will want to use?",
+         c("The full equation with the intercept, and how it was validated",
+           "The p-value of each predictor in the final model, with its estimate",
+           "The software code that was used to draw the ROC curve in the paper",
+           "The name of the statistician who developed the model and their institute"), answer = 1,
+         explain = "TRIPOD asks for the complete model so that risks can be calculated by others, together with its performance and validation.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **External validation** = the real test: AUC drops, calibration shifts
+- Report **calibration-in-the-large**, **slope** and a **calibration plot**
+- **Recalibrate** for a new setting; update over time
+- **Decision curve**: net benefit at the thresholds that matter
+- **TRIPOD**: full equation, performance, validation, limitations
+:::
+
+**Next:** Cheat sheet and the next module

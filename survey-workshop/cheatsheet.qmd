@@ -1,0 +1,94 @@
+---
+title: "Survey Data Cheat Sheet"
+subtitle: "Design · weights · svy functions · design effect · raking · reporting · synthetic adult health survey · print on 2 pages (A4)"
+format:
+  html:
+    theme: cosmo
+    toc: false
+    page-layout: full
+    html-math-method: plain
+    css: assets/cheatsheet.css
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+source("assets/setup.R")
+f <- function(x, d = 2) formatC(x, format = "f", digits = d)
+p0 <- mean(resp$hypertension)
+pw <- svymean(~hypertension, des, deff = TRUE)
+ci <- confint(svyciprop(~I(hypertension == 1), des, method = "logit"))
+```
+
+::: {.sheet}
+
+## 1 · What makes a survey different?
+
+| Feature | Effect | Fix |
+|---|---|---|
+| **Unequal selection probabilities** (over-sampling) | estimate **biased** if unweighted | **weights** = 1 / probability |
+| **Clustering** (PSUs) | **variance larger** | declare `ids = ~psu` |
+| **Stratification** | variance smaller | declare `strata = ~stratum` |
+| **Nonresponse** | biased if related to outcome | adjust or **rake** weights |
+
+## 2 · Declare once, use `svy*`
+
+`des <- svydesign(ids = ~psu, strata = ~stratum, weights = ~weight, data = d, nest = TRUE)`
+Replicate weights: `svrepdesign()`. `fpc = ` only when a large share of PSUs is sampled. Tidy: `as_survey_design()` (srvyr). Sum of weights = **population size** (here `r f(sum(weights(des)), 0)` adults).
+
+## 3 · Which function?
+
+| Need | Function |
+|---|---|
+| Mean, total | `svymean(~x, des)`, `svytotal(~x, des)` |
+| Proportion with CI | `svyciprop(~I(x == 1), des, method = "logit")` |
+| By group | `svyby(~x, ~g, des, svymean)` |
+| Median, quartiles | `svyquantile(~x, des, c(.25, .5, .75))` |
+| Weighted table, test | `svytable()`, `svychisq()` (Rao-Scott) |
+| Regression | `svyglm(y ~ x, des, family = quasibinomial())` |
+| Term test | `regTermTest(m, ~g)` |
+| Subgroup | **`subset(des, cond)`** (never `filter()` first) |
+
+## 4 · Our survey in numbers
+
+Unweighted prevalence of hypertension **`r f(100 * p0, 1)`%** (naive SE `r f(sqrt(p0 * (1 - p0) / nrow(resp)), 4)`); weighted **`r f(100 * coef(pw)[[1]], 1)`%** (95% CI `r f(100 * ci[1], 1)` to `r f(100 * ci[2], 1)`; SE `r f(SE(pw)[[1]], 4)`). **DEFF = `r f(deff(pw)[[1]], 1)`**; effective n = `r f(nrow(resp) / deff(pw)[[1]], 0)` of `r nrow(resp)` respondents.
+
+## 5 · Design effect
+
+::: {.eq}
+DEFF = variance (design) / variance (simple random sample)       n~eff~ = n / DEFF       n (survey) = n (SRS) × DEFF
+:::
+
+Large when the outcome **varies between PSUs** (high ICC) and when **weights are unequal** (Kish: n~eff~ = (Σw)² / Σw²). Differs **by outcome**.
+
+## 6 · Building the weights
+
+1. **Design weight** = 1 / (P(PSU) × P(adult | PSU))
+2. **Nonresponse**: divide by the response rate in cells (age × sex × residence)
+3. **Calibrate / rake** to known margins: `rake(des, list(~age, ~sex), list(pop_age, pop_sex))`
+4. **Check**: range, CV, Kish n~eff~; `trimWeights()` if extreme
+
+## 7 · Regression
+
+`glm` and `svyglm` give **similar estimates**; `glm` SE is **too small**. Weights alone (no clusters) fix the bias, not the SE. No LR test or AIC: use `regTermTest`. Report OR **and** predicted probabilities.
+
+## 8 · Pitfalls
+
+::: {.bad}
+- **Not declaring** strata and PSUs (SE too small)
+- `mean()`, `median()`, `lm()`, `chisq.test()` on survey data
+- `filter()` then new `svydesign()`: use `subset()`
+- Wrong **weight** (household vs woman vs man)
+- **Lonely PSU**: `options(survey.lonely.psu = "adjust")`; merge strata
+- Reporting **weighted n** as the sample size
+:::
+
+## 9 · Report
+
+Design (strata, PSUs, stages), response rate, **unweighted n**, weighted estimate with **95% CI**, **DEFF** for key outcomes, software.
+
+*Hypertension prevalence was `r f(100 * coef(pw)[[1]], 1)`% (95% CI `r f(100 * ci[1], 1)` to `r f(100 * ci[2], 1)`; design effect `r f(deff(pw)[[1]], 1)`; `r nrow(resp)` respondents in 48 PSUs; response rate 74%), estimated with the R survey package.*
+
+:::

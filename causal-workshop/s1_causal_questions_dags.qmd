@@ -1,0 +1,226 @@
+---
+title: "Session 1 — Causal Questions and DAGs"
+subtitle: "Association vs causation · potential outcomes · confounder, mediator, collider · adjustment sets · Lab 1"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Prediction (A8) asked **who** is at risk. Today: **what would happen if we intervened?**
+- By the end you can:
+  - state a **causal question** and the **estimand**
+  - draw a **DAG** and name **confounders, mediators, colliders**
+  - let the DAG choose the **adjustment set**
+:::
+
+## Our question: did the programme lower blood pressure?
+
+::: {.columns}
+::: {.column width="55%"}
+- **3,000 adults with hypertension** from routine clinic records (synthetic)
+- **1,229 (41%) enrolled** in a community health-worker **programme**: **not randomised**
+- Outcome: **SBP at 12 months**
+- Also recorded: age, sex, education, urban, BMI, diabetes, **baseline SBP**, **adherence** at 6 months, **clinic visits** in the year
+:::
+::: {.column width="45%"}
+```{r}
+htn |> select(age, diabetes, baseline_sbp, programme, adherent, clinic_visits, sbp_12m) |> head(6)
+```
+:::
+:::
+
+# Topic 1 — The naive comparison {background-color="#2C3E50"}
+
+## Enrolled vs not enrolled
+
+```{r}
+htn |> group_by(programme) |> summarise(n = n(), sbp_12m = round(mean(sbp_12m), 1), age = round(mean(age), 1), baseline_sbp = round(mean(baseline_sbp), 1), diabetes = round(mean(diabetes), 2))
+```
+
+::: {.warn}
+SBP at 12 months is **142 vs 143**: a difference of **−1.4 mmHg**. "The programme hardly works"? But the enrolled were **older**, had a **higher baseline SBP (157 vs 150)** and **more diabetes (25% vs 13%)**. Sicker people enrol: **confounding by indication**. The groups were **never comparable**.
+:::
+
+## Potential outcomes
+
+::: {.eq}
+Y¹ = SBP if enrolled      Y⁰ = SBP if not enrolled      effect for one person = Y¹ − Y⁰
+:::
+
+::: {.incremental}
+- We only ever see **one** of the two for each person: the **fundamental problem** of causal inference
+- **ATE** = average of Y¹ − Y⁰ over **everybody** (what if all enrolled vs none?)
+- **ATT** = average over **those who enrolled** (did it help them?)
+- A **randomised trial** makes the groups exchangeable. In observational data we need **assumptions**: **no unmeasured confounding** (exchangeability given covariates), **positivity** (everyone could get either option), **consistency** (a well-defined intervention)
+:::
+
+# Topic 2 — DAGs {background-color="#2C3E50"}
+
+## Three roles a variable can play
+
+| Role | Structure | Adjust? |
+|---|---|---|
+| **Confounder** | C → exposure and C → outcome | **Yes**: closes a back-door path |
+| **Mediator** | exposure → M → outcome | **No** for the total effect (it removes part of the effect) |
+| **Collider** | exposure → K ← outcome | **No**: adjusting **opens** a biasing path |
+
+::: {.key}
+Here: **baseline SBP, age, diabetes, education** are confounders; **adherence** is a **mediator** (the programme works partly by improving adherence); **clinic visits** are a **collider** (the programme brings people in, and so does poor BP).
+:::
+
+## The DAG in R
+
+```{r}
+#| fig-height: 4
+g <- dagitty("dag {
+  programme -> sbp_12m ; programme -> adherent -> sbp_12m
+  programme -> clinic_visits ; sbp_12m -> clinic_visits
+  age -> programme ; age -> sbp_12m ; diabetes -> programme ; diabetes -> sbp_12m
+  baseline_sbp -> programme ; baseline_sbp -> sbp_12m
+  education -> programme ; education -> sbp_12m ; education -> adherent
+  urban -> programme ; urban -> bmi ; bmi -> sbp_12m ; bmi -> baseline_sbp ; bmi -> diabetes
+  age -> baseline_sbp ; age -> diabetes
+}")
+plot(graphLayout(g))
+```
+
+## Let the DAG choose
+
+```{r}
+adjustmentSets(g, exposure = "programme", outcome = "sbp_12m", effect = "total")
+descendants(g, "programme")
+```
+
+::: {.incremental}
+- Two **minimal sufficient sets**: {age, baseline SBP, BMI, diabetes, education} or {age, baseline SBP, diabetes, education, urban}
+- **Never** adjust for **descendants** of the exposure (adherent, clinic_visits) when you want the **total** effect
+- The DAG encodes **assumptions**, mostly the **arrows you left out**; the data cannot prove it. Draw it **before** the analysis, from subject knowledge
+:::
+
+## What a DAG does not do
+
+::: {.warn}
+- It cannot show **unmeasured** confounders you did not think of (here an unrecorded "motivation" exists)
+- It says **what** to adjust for, not **how** (functional form, interactions: A6)
+- Selecting covariates by **p-values** or stepwise methods is **not** a causal strategy
+:::
+
+## 🔧 Switch to R — Lab 1 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `causal-workshop/labs/lab1_dag.R`
+
+- the naive comparison and baseline imbalance
+- write the DAG with `dagitty`
+- adjustment sets, paths, descendants
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z1q1", "Enrolled adults had a higher baseline SBP and more diabetes. Why can the naive difference in 12-month SBP not be read as the effect?",
+         c("The sample of 3,000 adults is too small to estimate a difference between two means",
+           "The groups differed before the programme, so outcomes would differ anyway",
+           "The outcome was measured at 12 months and not at the time of enrolment in the programme",
+           "The naive difference has a confidence interval, and causal effects do not have one"), answer = 2,
+         explain = "Baseline differences that also affect the outcome are confounding: the comparison mixes the effect of the programme with the effect of being sicker.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z1q2", "What is the average treatment effect (ATE)?",
+         c("The mean difference between the enrolled and the non-enrolled adults as observed",
+           "The mean benefit among the adults who actually enrolled in the programme",
+           "The mean difference if everybody were enrolled versus nobody enrolled",
+           "The largest effect that is seen in any of the subgroups of the cohort"), answer = 3,
+         explain = "The ATE averages the individual effects Y1 - Y0 over the whole population. The effect in those who enrolled is the ATT.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z1q3", "Adherence is improved by the programme and lowers SBP. If you want the total effect of the programme, should you adjust for adherence?",
+         c("Yes: it is a confounder, since it is related to both variables",
+           "Yes: adjusting for more variables makes the estimate less biased",
+           "No: adherence was measured after baseline, so it carries no information",
+           "No: it is a mediator, and adjusting removes part of the effect"), answer = 4,
+         explain = "A mediator lies on the causal path. Conditioning on it blocks that path and leaves the direct effect only.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z1q4", "Clinic visits are increased by the programme and by a high SBP. What happens if you adjust for clinic visits?",
+         c("A biasing path is opened, because clinic visits are a collider",
+           "The confounding by baseline SBP is removed more completely than before",
+           "Nothing changes, because clinic visits are not a cause of the 12-month SBP",
+           "The estimate becomes the direct effect of the programme on blood pressure"), answer = 1,
+         explain = "Conditioning on a common effect of exposure and outcome creates an association between them that is not causal: collider bias.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z1q5", "What is the best source for the arrows in a DAG?",
+         c("The p-values of the associations between the variables found in the data",
+           "Subject knowledge about how the variables arise, set down in advance",
+           "A stepwise selection procedure applied to all of the measured variables",
+           "The correlation matrix of the variables, with a cut-off of 0.3 for an arrow"), answer = 2,
+         explain = "A DAG states causal assumptions. Data show associations, which cannot distinguish a confounder from a mediator or a collider.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Causal question** → estimand (**ATE**, **ATT**) → assumptions
+- **Confounder**: adjust. **Mediator, collider**: do not (for the total effect)
+- **DAG first**, from subject knowledge; `adjustmentSets()`
+- The naive comparison is **confounded by indication**
+- A DAG cannot reveal **unmeasured** confounders
+:::
+
+**Next:** Session 2: adjustment, bad controls and standardisation

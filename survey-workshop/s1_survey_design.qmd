@@ -1,0 +1,235 @@
+---
+title: "Session 1 — Survey Design and Weights"
+subtitle: "Strata · PSUs · selection probabilities · sampling weights · declaring the design · Lab 1"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Earlier workshops: data from a **simple random sample** (every person equally likely, independent)
+- Today: **household surveys** (NFHS, NCD risk-factor surveys, district surveys) do **not** work that way
+- By the end you can:
+  - name the three features that make survey data different
+  - explain what a **sampling weight** is
+  - see why **unweighted** estimates are biased
+  - **declare the design** in R with `svydesign()`
+:::
+
+## What is different about survey data
+
+| Feature | Why it is used | Effect on analysis |
+|---|---|---|
+| **Stratification** | guarantee a sample in every region and in urban and rural areas | variance is **smaller** (strata are separated) |
+| **Clustering** (PSUs) | visit a few villages or census blocks, not people scattered everywhere | variance is **larger** (people in a PSU are alike) |
+| **Unequal probabilities** | oversample small or important groups | estimates are **biased unless weighted** |
+
+::: {.key}
+A **simple random sample** analysis (`mean()`, `lm()`, `t.test()`) ignores all three: the **estimate** can be biased and the **standard error** is usually **too small**.
+:::
+
+## Our survey: an adult health survey (synthetic)
+
+::: {.columns}
+::: {.column width="55%"}
+- **8 strata**: 4 regions × urban/rural
+- **6 PSUs** per stratum (villages or blocks), chosen with probability proportional to size; then **40 to 60 adults** per PSU
+- **2,504 adults** sampled, **1,853** responded
+- **Urban areas are over-sampled**: 50% of the sample but about **28%** of the adults
+- Outcomes: hypertension (SBP ≥ 140), diabetes, SBP, BMI
+:::
+::: {.column width="45%"}
+```{r}
+resp |> select(stratum, psu, weight, age, sex, residence, sbp, hypertension) |> head(6)
+```
+:::
+:::
+
+# Topic 1 — Weights {background-color="#2C3E50"}
+
+## What is a sampling weight?
+
+::: {.eq}
+weight = 1 / (probability of being selected)
+:::
+
+::: {.incremental}
+- A respondent with weight **200** was one of about **1 in 200** adults who could have been chosen: he or she **represents about 200 adults**
+- Over-sampled groups have **small** weights; under-sampled groups have **large** weights
+- Weights are also **adjusted for nonresponse** (Session 4)
+- The **sum of the weights** estimates the **population size**
+:::
+
+```{r}
+c(respondents = nrow(resp), sum_of_weights = round(sum(resp$weight)))
+```
+
+## Weighted and unweighted prevalence
+
+```{r}
+c(unweighted = mean(resp$hypertension), weighted = weighted.mean(resp$hypertension, resp$weight)) |> round(3)
+```
+
+::: {.warn}
+**Unweighted: 23.3%. Weighted: 20.0%.** Urban adults have more hypertension and are **over-sampled** (50% of the sample), so the raw sample over-states it. The weighted estimate **restores the population mix** (28% urban).
+:::
+
+```{r}
+rbind(sample = prop.table(table(resp$residence)), weighted = prop.table(xtabs(weight ~ residence, resp))) |> round(3)
+```
+
+# Topic 2 — The design in R {background-color="#2C3E50"}
+
+## Declaring the design
+
+```{r}
+des <- svydesign(ids = ~psu, strata = ~stratum, weights = ~weight, data = resp, nest = TRUE)
+des
+```
+
+::: {.incremental}
+- `ids`: the **primary sampling units** (PSUs); `strata`; `weights`
+- `nest = TRUE`: PSU labels need only be unique **within** a stratum
+- Declare it **once**, then use `svy*` functions for **everything**
+- Add `fpc =` only when a large part of the PSUs was sampled (more than about 5%)
+:::
+
+## Design-based estimate and standard error
+
+```{r}
+svymean(~hypertension, des)
+p <- mean(resp$hypertension); sqrt(p * (1 - p) / nrow(resp))
+```
+
+::: {.key}
+The design-based SE is **0.015**. The naive SE (simple random sample) is **0.0098**, about **one third too small**: respondents from the same PSU are alike, so there is less independent information than the sample size suggests.
+:::
+
+## Checklist when you get a survey file
+
+::: {.good}
+1. Which variables are the **strata**, **PSU** and **weight**? (read the user guide)
+2. Which weight for which analysis? (household, women's, men's: **different weights**)
+3. Declare the design **before** any estimate
+4. Look at the **weights**: range, very large values
+5. Report **unweighted n** and **weighted estimates**
+:::
+
+## 🔧 Switch to R — Lab 1 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `survey-workshop/labs/lab1_design.R`
+
+- response rate, strata and PSUs
+- unweighted and weighted prevalence
+- declare the design, sum of the weights, naive vs design SE
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v1q1", "A survey over-samples urban adults, who have more hypertension. What happens to the unweighted prevalence?",
+         c("It is too low, because urban adults get larger weights than rural ones",
+           "It is too high, because urban adults are over-represented",
+           "It is unbiased, because the sample is large enough to include every stratum",
+           "It is unbiased, but its standard error is too small to be useful"), answer = 2,
+         explain = "Over-sampled groups count more in the raw sample than in the population. Weights, the inverse of the selection probabilities, restore the population mix.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v1q2", "What does a sampling weight of 200 tell you?",
+         c("The respondent answered 200 questions during the household interview",
+           "The respondent comes from a PSU in which 200 adults were sampled",
+           "The answers of this respondent are 200 times more reliable than usual",
+           "The respondent stands for about 200 adults in the population"), answer = 4,
+         explain = "The weight is the inverse of the selection probability, so it is the number of adults in the population that the respondent represents.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v1q3", "Why must the PSUs be declared in svydesign() and not only the weights?",
+         c("Adults in the same PSU are alike, and the standard error has to reflect that",
+           "The PSU removes the bias of the estimate, while the weights fix its variance",
+           "Weights alone cannot be used when the outcome is a yes or no variable",
+           "The software needs the PSU to find which adults answered the questionnaire"), answer = 1,
+         explain = "Weights correct the estimate. Clustering affects the variance: ignoring it gives a standard error that is too small.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v1q4", "The weights of the 1,853 respondents sum to about 414,000. What does this number estimate?",
+         c("The number of adults who were sampled before nonresponse",
+           "The number of PSUs that were chosen within the strata",
+           "The number of adults in the target population",
+           "The number of respondents with a complete questionnaire"), answer = 3,
+         explain = "Each weight is the number of adults a respondent represents, so the weights add up to an estimate of the population size.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("v1q5", "The naive SE of the prevalence is 0.0098 and the design-based SE is 0.0149. What does this show?",
+         c("The design-based SE must be wrong, since it is larger than the simple one",
+           "Ignoring the design makes the prevalence look more precise than it is",
+           "The weights have corrected the bias but they cannot change the SE",
+           "The two SEs would be equal if the sample were big enough"), answer = 2,
+         explain = "Clustering and unequal weights reduce the information per respondent, so the proper SE is larger than the simple random sample one.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- Surveys have **strata, clusters (PSUs) and unequal probabilities**
+- **Weight** = 1 / selection probability = adults represented
+- Unweighted estimates are **biased** when groups are over-sampled
+- `svydesign(ids, strata, weights, nest = TRUE)` once, then `svy*()`
+- The naive SE is **too small**
+:::
+
+**Next:** Session 2: descriptive estimates
