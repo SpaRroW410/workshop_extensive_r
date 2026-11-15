@@ -1,0 +1,229 @@
+---
+title: "Session 4 — Inverse Probability Weighting"
+subtitle: "IPW · stabilised weights · balance · robust SE · ATT weights · truncation · doubly robust · Lab 4"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+```{r}
+#| include: false
+ps_model <- glm(f_ps, data = htn, family = binomial)
+htn$ps <- predict(ps_model, type = "response")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 3: matching **discards** people and targets the **ATT**
+- Today: **weighting** keeps **everybody** and can target the **ATE**
+- By the end you can:
+  - build **inverse probability weights** and check them
+  - estimate the **ATE** and the **ATT** with a **robust SE**
+  - combine weights with an outcome model (**doubly robust**)
+:::
+
+# Topic 1 — The weights {background-color="#2C3E50"}
+
+## Inverse probability of the option received
+
+::: {.eq}
+enrolled: w = 1 / PS      not enrolled: w = 1 / (1 − PS)
+:::
+
+```{r}
+htn$w <- ifelse(htn$programme == 1, 1 / htn$ps, 1 / (1 - htn$ps))
+pt <- mean(htn$programme)
+htn$sw <- ifelse(htn$programme == 1, pt / htn$ps, (1 - pt) / (1 - htn$ps))
+rbind(unstabilised = summary(htn$w), stabilised = summary(htn$sw)) |> round(2)
+```
+
+::: {.incremental}
+- An adult who enrolled **against the odds** (PS 0.1) stands for **10** similar adults: weight 10
+- The weighted sample is a **pseudo-population** in which enrolment is **unrelated to the confounders**: like a trial
+- **Stabilised** weights (multiplied by the overall probability) have **mean 1** and a smaller range (**0.42 to 6.2** instead of up to 15)
+:::
+
+## Balance after weighting
+
+```{r}
+bal.tab(f_ps, data = htn, weights = "sw", un = TRUE, s.d.denom = "pooled")$Balance[, c("Diff.Un", "Diff.Adj")] |> round(2)
+```
+
+All SMDs are **0.03 or less**: the same check as for matching. If not, **improve the propensity model**.
+
+# Topic 2 — The effect {background-color="#2C3E50"}
+
+## ATE with a robust SE
+
+```{r}
+fit_w <- lm(sbp_12m ~ programme, data = htn, weights = sw)
+round(coeftest(fit_w, vcov. = vcovHC(fit_w, type = "HC3"))["programme", 1:2], 2)
+```
+
+::: {.key}
+**ATE −5.7 mmHg** (robust SE 0.55); the truth is **−5.8**. A **robust (sandwich) SE** is needed: weighted observations do not count equally and the weights are **estimated**. The bootstrap is the alternative.
+:::
+
+## ATT weights
+
+```{r}
+htn$w_att <- ifelse(htn$programme == 1, 1, htn$ps / (1 - htn$ps))
+fit_att <- lm(sbp_12m ~ programme, data = htn, weights = w_att)
+round(coeftest(fit_att, vcov. = vcovHC(fit_att, type = "HC3"))["programme", 1:2], 2)
+```
+
+Enrolled adults keep weight **1**; the others are re-weighted to **look like the enrolled** (PS / (1 − PS)). **ATT −6.6 mmHg**: larger than the ATE, as in Session 2.
+
+## Extreme weights
+
+```{r}
+q <- quantile(htn$sw, c(0.01, 0.99)); htn$sw_t <- pmin(pmax(htn$sw, q[1]), q[2])
+round(c(ipw = coef(fit_w)[["programme"]], truncated = coef(lm(sbp_12m ~ programme, data = htn, weights = sw_t))[["programme"]]), 2)
+```
+
+::: {.warn}
+A few **very large weights** make the estimate **unstable** and signal **poor overlap**. **Look at them** (who are these people?). **Truncating** at the 1st and 99th percentile trades a little bias for stability: here **−5.7 → −5.6**, so the result does not rest on a few adults.
+:::
+
+# Topic 3 — Doubly robust {background-color="#2C3E50"}
+
+## Weights plus an outcome model
+
+```{r}
+fit_dr <- lm(f_out, data = htn, weights = sw)
+round(coeftest(fit_dr, vcov. = vcovHC(fit_dr, type = "HC3"))["programme", 1:2], 2)
+```
+
+::: {.incremental}
+- **−6.0 mmHg** (SE 0.46): **more precise**
+- **Doubly robust**: consistent if **either** the propensity model **or** the outcome model is right
+- It does **not** protect against **unmeasured** confounding
+:::
+
+## All the estimates
+
+```{r}
+round(c(naive = coef(lm(sbp_12m ~ programme, data = htn))[["programme"]], regression = coef(lm(f_out, data = htn))[["programme"]], ipw = coef(fit_w)[["programme"]], doubly_robust = coef(fit_dr)[["programme"]]), 2)
+```
+
+::: {.key}
+Regression **−6.3**, matching **−5.9**, IPW **−5.7**, doubly robust **−6.0**; truth **−5.8**. Methods that use the **same confounders** agree. **Agreement is reassuring, but it is not proof**: they all share the assumption of **no unmeasured confounding**.
+:::
+
+## 🔧 Switch to R — Lab 4 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `causal-workshop/labs/lab4_ipw.R`
+
+- weights, stabilised weights, balance
+- ATE with robust SE; ATT weights
+- truncation and a doubly robust model
+:::
+
+**Time:** 40 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z4q1", "An adult with a propensity score of 0.1 enrolled in the programme. What is the unstabilised weight, and why?",
+         c("10, since this adult stands for ten similar adults in the population",
+           "0.1, since adults who are unlikely to enrol should count for less in the analysis",
+           "1.1, since the weight is one plus the propensity score of the adult",
+           "0.9, since the weight is the chance of not being enrolled in the programme"), answer = 1,
+         explain = "The weight is one divided by the probability of the option actually received. Unlikely choices are rare in the data and so are weighted up.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z4q2", "What does weighting create?",
+         c("A smaller sample that contains matched pairs of similar adults from both groups",
+           "A pseudo-population where exposure is unrelated to measured confounders",
+           "A dataset in which every adult has the same predicted outcome at twelve months",
+           "A population in which the unmeasured confounders are balanced as well"), answer = 2,
+         explain = "After weighting, confounders have the same distribution in both groups, as they would after randomisation. Unmeasured confounders are not addressed.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z4q3", "Why use a robust (sandwich) standard error with inverse probability weights?",
+         c("The robust standard error is smaller than the model-based standard error",
+           "The outcome is not normally distributed in the weighted sample of adults",
+           "Robust standard errors remove the bias from unmeasured confounding",
+           "Weighted observations count unequally, and the weights are estimated"), answer = 4,
+         explain = "The usual model-based SE treats weights as known frequencies, which is wrong. The sandwich estimator, or a bootstrap, gives valid inference.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z4q4", "A few adults have very large weights. What is the right response?",
+         c("Examine them, check overlap, and consider truncating the weights",
+           "Delete those adults and report the analysis of the remaining ones",
+           "Ignore it, because large weights make the estimate more precise",
+           "Multiply all the weights by a constant to make them smaller"), answer = 1,
+         explain = "Large weights indicate adults with few comparable counterparts. They make estimates unstable; truncation trades a little bias for stability, and should be reported.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("z4q5", "What does 'doubly robust' mean?",
+         c("It is protected against both measured and unmeasured confounding alike",
+           "The analysis was repeated twice with two different random seeds",
+           "It is consistent if the propensity or outcome model is right",
+           "The standard error is computed by two different robust methods"), answer = 3,
+         explain = "Combining weights with an outcome model gives two chances to model the confounding correctly. Neither helps if a confounder was not measured.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **IPW**: weight = 1 / P(option received); **stabilise**
+- Check **balance** and the **weight distribution**
+- **Robust SE** (or bootstrap)
+- ATE and **ATT** need different weights
+- **Doubly robust** = weights + outcome model; still no cure for unmeasured confounding
+:::
+
+**Next:** Session 5: sensitivity analysis and reporting

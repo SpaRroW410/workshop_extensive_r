@@ -1,0 +1,235 @@
+---
+title: "Session 3 — Multiple Imputation with mice"
+subtitle: "Chained equations · pmm · m imputations · convergence · checking · pooling with Rubin's rules · Lab 3"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 2: simple methods are biased or have wrong SEs
+- Today: **multiple imputation (MI)** with the **`mice`** package
+- By the end you can:
+  - run `mice()` and read its **methods and predictor matrix**
+  - **check** convergence and imputed values
+  - **analyse** each data set and **pool** with Rubin's rules
+:::
+
+# Topic 1 — The idea {background-color="#2C3E50"}
+
+## Three steps
+
+::: {.eq}
+**Impute** (m times)  →  **Analyse** (each data set)  →  **Pool** (Rubin's rules)
+:::
+
+::: {.incremental}
+1. Create **m complete data sets**; the imputed values **differ** between them, reflecting **uncertainty**
+2. Run the **same analysis** in each (`with()`)
+3. **Pool**: the estimate is the **average**; the variance combines **within-imputation** and **between-imputation** variance (`pool()`)
+- `mice` uses **chained equations**: each incomplete variable is imputed from a model with **all the other variables**, cycling through them (**iterations**)
+:::
+
+## Setup before imputing
+
+```{r}
+ini <- mice(dat, maxit = 0, printFlag = FALSE)
+ini$method
+```
+
+::: {.incremental}
+- **pmm** (predictive mean matching): the missing value is replaced by an **observed value from an adult with a similar prediction**; keeps the **distribution** and works for skewed variables
+- Binary variables: make them **factors** and `mice` uses **logistic regression** (`logreg`)
+- The **predictor matrix** (1 = use as predictor): by default **everything predicts everything**; remove the **id**, include the **outcome** (SBP)
+:::
+
+## Run it
+
+```{r}
+dat2 <- dat |> mutate(smoker = factor(smoker, labels = c("No", "Yes")))
+imp <- mice(dat2, m = 20, maxit = 10, seed = 2038, printFlag = FALSE)
+imp$method
+```
+
+::: {.key}
+**20 imputations**, **10 iterations**, a **fixed seed** (reproducible). Smoking is now imputed by `logreg`, the continuous variables by `pmm`.
+:::
+
+# Topic 2 — Checking {background-color="#2C3E50"}
+
+## Convergence
+
+```{r}
+#| output-location: slide
+#| fig-height: 4.2
+plot(imp, c("bmi", "hba1c", "activity"))
+```
+
+::: {.incremental}
+- Mean and SD of the imputed values **by iteration**, one line per imputation
+- Lines should **mix** (cross freely) with **no trend**
+- A trend or lines that **stay apart** = not converged: more iterations or fix the model
+:::
+
+## Imputed vs observed values
+
+```{r}
+#| output-location: slide
+#| fig-height: 4
+densityplot(imp, ~ bmi)
+```
+
+::: {.key}
+**Blue** = observed, **red** = imputed (each imputation). Imputed BMI is **shifted to the right** (mean 25.1 vs 24.1 observed): adults with a **high SBP**, who are more often missing, tend to have a **higher BMI**. Differences are **allowed** when the missingness is not random; **implausible values** are not.
+:::
+
+# Topic 3 — Analyse and pool {background-color="#2C3E50"}
+
+## with() and pool()
+
+```{r}
+fit <- with(imp, lm(sbp ~ age + sex + bmi + smoker + activity))
+pooled <- pool(fit)
+summary(pooled, conf.int = TRUE)[, c("term", "estimate", "std.error", "df", "conf.low", "conf.high")] |> mutate(across(where(is.numeric), \(x) round(x, 3)))
+```
+
+## Comparison with complete case
+
+```{r}
+m_cc <- lm(sbp ~ age + sex + bmi + smoker + activity, data = dat)
+s <- summary(pooled, conf.int = TRUE)
+round(rbind(complete_case = summary(m_cc)$coefficients["bmi", 1:2], multiple_imputation = unlist(s[s$term == "bmi", c("estimate", "std.error")])), 3)
+```
+
+::: {.key}
+**MI 0.79 (SE 0.066)** against **complete case 0.69 (SE 0.071)**; the truth is about **0.80 to 0.86**. MI **removes most of the bias** and is **more precise** because it **uses all 2,000 adults**. The SE is **honest**: it includes the **between-imputation** variance.
+:::
+
+## Rules for good imputation models
+
+::: {.good}
+1. Include **all variables in the analysis model**, **including the outcome**
+2. Include **auxiliary variables** that predict the missing values or the missingness
+3. Include **interactions** and **non-linear terms** you will analyse (Session 4)
+4. Use **enough imputations** (Session 4); set a **seed**
+5. **Check** convergence and imputed values
+:::
+
+## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `missing-workshop/labs/lab3_mice.R`
+
+- default methods and predictor matrix
+- `mice()` with 20 imputations, convergence, densities
+- `with()` and `pool()`, comparison with complete case
+:::
+
+**Time:** 40 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("m3q1", "What does predictive mean matching (pmm) do?",
+         c("It imputes the mean of the observed values in each imputed data set",
+           "It predicts the missing value from a regression and uses the prediction as it is",
+           "It matches adults with missing values to adults with the same pattern of missingness",
+           "It imputes by borrowing an observed value from an adult with a similar prediction"), answer = 4,
+         explain = "pmm predicts a value for each missing entry, finds observed adults with close predictions, and takes one of their actual values, so imputations look like real data.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("m3q2", "Why are m imputed data sets created and analysed separately?",
+         c("To reflect the uncertainty about the missing values in the pooled SEs",
+           "To obtain m independent estimates that are averaged without further steps",
+           "Because each variable needs its own completed data set to be analysed",
+           "To check that the results are identical across the m data sets of adults"), answer = 1,
+         explain = "The imputed values differ between data sets, and so do the estimates. The between-imputation variance carries the uncertainty due to missing data.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("m3q3", "What do Rubin's rules do?",
+         c("They select the best imputed data set by the model fit statistics",
+           "They average the imputed data sets before the model is fitted to them",
+           "They average the estimates and add up two sources of variance",
+           "They correct the p-values for the number of variables with missing data"), answer = 3,
+         explain = "The pooled estimate is the mean of the m estimates, and the total variance is the mean within-imputation variance plus an inflated between-imputation variance.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("m3q4", "In the convergence plot the lines of different imputations cross freely, with no trend. What does this suggest?",
+         c("The imputed values are the same in all of the data sets generated",
+           "The iterations have mixed well, so it has probably converged",
+           "The imputation model is correct and no other check is needed at all",
+           "The number of iterations is too small and has to be increased"), answer = 2,
+         explain = "Mixing without a trend is the sign of convergence. It does not prove that the imputation model is right, which needs checks of the imputed values.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("m3q5", "Why is the id column left out of the imputation model?",
+         c("mice cannot read character variables when they are stored in the data frame",
+           "The id is nearly always strongly correlated with the outcome variable in the data",
+           "A unique code carries no information, and as a predictor it adds noise",
+           "Variables without missing values are not allowed in the imputation model"), answer = 3,
+         explain = "A unique identifier has no relationship with the variables, but would be treated as a predictor, which adds noise and can cause errors.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Impute → analyse → pool** (`mice`, `with`, `pool`)
+- **pmm** for continuous, **factors** for binary (`logreg`)
+- Include the **outcome** and **auxiliary** variables; drop the **id**
+- **Check**: convergence plot, density of imputed vs observed
+- MI **0.79** vs complete-case **0.69** (truth about 0.80)
+:::
+
+**Next:** Session 4: diagnostics, derived variables and the number of imputations

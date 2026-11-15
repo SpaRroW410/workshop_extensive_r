@@ -1,0 +1,90 @@
+---
+title: "Advanced Workshops"
+subtitle: "Nine modules. Each has five slide decks with a self-check quiz, five R labs and a two-page cheat sheet."
+format:
+  html:
+    page-layout: full
+---
+
+Every module runs on its own synthetic dataset. Open a session to see the slides; the lab file named on the lab slide is in the downloads on the [welcome page](welcome.qmd). Quiz scores are kept in your browser and can be saved as a text file from the last quiz slide.
+
+## A1 · Survival analysis
+
+- [Session 1 — Time-to-Event Data](survival-workshop/s1_time_to_event.qmd)
+- [Session 2 — Kaplan-Meier Curves](survival-workshop/s2_kaplan_meier.qmd)
+- [Session 3 — Comparing Survival (Log-Rank)](survival-workshop/s3_logrank.qmd)
+- [Session 4 — Cox Regression](survival-workshop/s4_cox_regression.qmd)
+- [Session 5 — Assumptions and Reporting](survival-workshop/s5_assumptions_reporting.qmd)
+- [Cheat sheet](survival-workshop/cheatsheet.qmd)
+
+## A2 · Counts and rates
+
+- [Session 1 — Counts, Rates and the Poisson Idea](counts-workshop/s1_counts_rates.qmd)
+- [Session 2 — Poisson Regression](counts-workshop/s2_poisson_regression.qmd)
+- [Session 3 — Overdispersion](counts-workshop/s3_overdispersion.qmd)
+- [Session 4 — Excess Zeros and Model Checking](counts-workshop/s4_zeros_checking.qmd)
+- [Session 5 — Reporting and Extensions](counts-workshop/s5_reporting_extensions.qmd)
+- [Cheat sheet](counts-workshop/cheatsheet.qmd)
+
+## A3 · Ordinal and multinomial
+
+- [Session 1 — Categorical Outcomes: Nominal or Ordered?](ordinal-workshop/s1_categorical_outcomes.qmd)
+- [Session 2 — Ordinal Logistic Regression](ordinal-workshop/s2_ordinal_logistic.qmd)
+- [Session 3 — Checking Proportional Odds](ordinal-workshop/s3_proportional_odds_check.qmd)
+- [Session 4 — Multinomial Logistic Regression](ordinal-workshop/s4_multinomial_logistic.qmd)
+- [Session 5 — Choosing, Comparing and Reporting](ordinal-workshop/s5_choosing_reporting.qmd)
+- [Cheat sheet](ordinal-workshop/cheatsheet.qmd)
+
+## A4 · Clustered and repeated data
+
+- [Session 1 — Clustered Data: ICC and the Design Effect](clustered-workshop/s1_clustered_data.qmd)
+- [Session 2 — Cluster-Robust Standard Errors and GEE](clustered-workshop/s2_robust_gee.qmd)
+- [Session 3 — Random-Intercept (Mixed) Models](clustered-workshop/s3_mixed_models.qmd)
+- [Session 4 — Repeated Measures and Trajectories](clustered-workshop/s4_repeated_measures.qmd)
+- [Session 5 — Choosing, Checking and Reporting](clustered-workshop/s5_choose_check_report.qmd)
+- [Cheat sheet](clustered-workshop/cheatsheet.qmd)
+
+## A5 · Survey data and weights
+
+- [Session 1 — Survey Design and Weights](survey-workshop/s1_survey_design.qmd)
+- [Session 2 — Descriptive Estimates](survey-workshop/s2_descriptive.qmd)
+- [Session 3 — Regression with Survey Data](survey-workshop/s3_survey_regression.qmd)
+- [Session 4 — Nonresponse, Raking and Replicate Weights](survey-workshop/s4_nonresponse_raking.qmd)
+- [Session 5 — Choosing, Checking and Reporting](survey-workshop/s5_choose_check_report.qmd)
+- [Cheat sheet](survey-workshop/cheatsheet.qmd)
+
+## A6 · Curves and interactions
+
+- [Session 1 — Is It Really a Straight Line?](curves-workshop/s1_beyond_linear.qmd)
+- [Session 2 — Splines](curves-workshop/s2_splines.qmd)
+- [Session 3 — Generalised Additive Models (GAM)](curves-workshop/s3_gam.qmd)
+- [Session 4 — Interaction and Effect Modification](curves-workshop/s4_interaction.qmd)
+- [Session 5 — Choosing, Checking and Reporting](curves-workshop/s5_choose_check_report.qmd)
+- [Cheat sheet](curves-workshop/cheatsheet.qmd)
+
+## A7 · Missing data
+
+- [Session 1 — Missing Data: Patterns and Mechanisms](missing-workshop/s1_patterns_mechanisms.qmd)
+- [Session 2 — Simple Methods and Why They Fail](missing-workshop/s2_simple_methods.qmd)
+- [Session 3 — Multiple Imputation with mice](missing-workshop/s3_multiple_imputation.qmd)
+- [Session 4 — Diagnostics, Derived Variables and the Number of Imputations](missing-workshop/s4_mi_diagnostics.qmd)
+- [Session 5 — MNAR Sensitivity Analysis and Reporting](missing-workshop/s5_mnar_reporting.qmd)
+- [Cheat sheet](missing-workshop/cheatsheet.qmd)
+
+## A8 · Prediction models
+
+- [Session 1 — Building a Risk Prediction Model](prediction-workshop/s1_building_model.qmd)
+- [Session 2 — Discrimination and Calibration](prediction-workshop/s2_discrimination_calibration.qmd)
+- [Session 3 — Overfitting and Internal Validation](prediction-workshop/s3_overfitting_internal.qmd)
+- [Session 4 — Shrinkage and Variable Selection](prediction-workshop/s4_shrinkage_selection.qmd)
+- [Session 5 — External Validation, Decision Curves and Reporting](prediction-workshop/s5_external_reporting.qmd)
+- [Cheat sheet](prediction-workshop/cheatsheet.qmd)
+
+## A9 · Causal inference
+
+- [Session 1 — Causal Questions and DAGs](causal-workshop/s1_causal_questions_dags.qmd)
+- [Session 2 — Adjustment, Bad Controls and Standardisation](causal-workshop/s2_adjustment_standardisation.qmd)
+- [Session 3 — Propensity Scores and Matching](causal-workshop/s3_propensity_matching.qmd)
+- [Session 4 — Inverse Probability Weighting](causal-workshop/s4_ipw.qmd)
+- [Session 5 — Sensitivity Analysis and Reporting](causal-workshop/s5_sensitivity_reporting.qmd)
+- [Cheat sheet](causal-workshop/cheatsheet.qmd)

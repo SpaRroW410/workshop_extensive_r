@@ -839,6 +839,9 @@ padding: 0.4em 1.1em; background: #3498db; color: #fff;
 .quiz-feedback.is-info { color: #2c3e50; }
 .quiz-feedback code { background: #eef2f4; color: #c2185b; padding: 0 0.3em; border-radius: 3px; }
 .quiz-score { font-weight: 700; color: #2c3e50; }
+
+.quiz-score-tools { margin-left: 0.6em; white-space: nowrap; }
+.quiz-score-tools .quiz-btn { font-size: 0.55em; padding: 0.15em 0.6em; margin-left: 0.3em; vertical-align: middle; }
 </style>
   <style type="text/css">.reveal
 div.sourceCode
@@ -1375,20 +1378,20 @@ Community Medicine Workshop
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a>m_nb <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">glm.nb</span>(cases <span class="sc">~</span> fogging <span class="sc">+</span> slum <span class="sc">+</span> rain_lag1 <span class="sc">+</span> month_index <span class="sc">+</span> <span class="fu">sin</span>(<span class="dv">2</span> <span class="sc">*</span> pi <span class="sc">*</span> month <span class="sc">/</span> <span class="dv">12</span>) <span class="sc">+</span> <span class="fu">cos</span>(<span class="dv">2</span> <span class="sc">*</span> pi <span class="sc">*</span> month <span class="sc">/</span> <span class="dv">12</span>) <span class="sc">+</span> <span class="fu">offset</span>(<span class="fu">log</span>(population)), <span class="at">data =</span> dg)</span>
 <span id="cb1-2"><a aria-label="2"></a><span class="fu">tbl_regression</span>(m_nb, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">include =</span> <span class="fu">c</span>(fogging, slum, rain_lag1, month_index))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="apnfoodxuk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#apnfoodxuk table {
+<div id="cgwjnisqin" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#cgwjnisqin table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#apnfoodxuk thead, #apnfoodxuk tbody, #apnfoodxuk tfoot, #apnfoodxuk tr, #apnfoodxuk td, #apnfoodxuk th {
+#cgwjnisqin thead, #cgwjnisqin tbody, #cgwjnisqin tfoot, #cgwjnisqin tr, #cgwjnisqin td, #cgwjnisqin th {
 border-style: none;
 }
-#apnfoodxuk p {
+#cgwjnisqin p {
 margin: 0;
 padding: 0;
 }
-#apnfoodxuk .gt_table {
+#cgwjnisqin .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -1413,11 +1416,11 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#apnfoodxuk .gt_caption {
+#cgwjnisqin .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#apnfoodxuk .gt_title {
+#cgwjnisqin .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -1428,7 +1431,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#apnfoodxuk .gt_subtitle {
+#cgwjnisqin .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -1439,7 +1442,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#apnfoodxuk .gt_heading {
+#cgwjnisqin .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -1450,12 +1453,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#apnfoodxuk .gt_bottom_border {
+#cgwjnisqin .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#apnfoodxuk .gt_col_headings {
+#cgwjnisqin .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -1469,7 +1472,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#apnfoodxuk .gt_col_heading {
+#cgwjnisqin .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1488,7 +1491,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#apnfoodxuk .gt_column_spanner_outer {
+#cgwjnisqin .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1499,13 +1502,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#apnfoodxuk .gt_column_spanner_outer:first-child {
+#cgwjnisqin .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#apnfoodxuk .gt_column_spanner_outer:last-child {
+#cgwjnisqin .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#apnfoodxuk .gt_column_spanner {
+#cgwjnisqin .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -1516,10 +1519,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#apnfoodxuk .gt_spanner_row {
+#cgwjnisqin .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#apnfoodxuk .gt_group_heading {
+#cgwjnisqin .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1544,7 +1547,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#apnfoodxuk .gt_empty_group_heading {
+#cgwjnisqin .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -1558,13 +1561,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#apnfoodxuk .gt_from_md > :first-child {
+#cgwjnisqin .gt_from_md > :first-child {
 margin-top: 0;
 }
-#apnfoodxuk .gt_from_md > :last-child {
+#cgwjnisqin .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#apnfoodxuk .gt_row {
+#cgwjnisqin .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1582,7 +1585,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#apnfoodxuk .gt_stub {
+#cgwjnisqin .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1594,7 +1597,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#apnfoodxuk .gt_stub_row_group {
+#cgwjnisqin .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1607,13 +1610,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#apnfoodxuk .gt_row_group_first td {
+#cgwjnisqin .gt_row_group_first td {
 border-top-width: 2px;
 }
-#apnfoodxuk .gt_row_group_first th {
+#cgwjnisqin .gt_row_group_first th {
 border-top-width: 2px;
 }
-#apnfoodxuk .gt_summary_row {
+#cgwjnisqin .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -1622,14 +1625,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#apnfoodxuk .gt_first_summary_row {
+#cgwjnisqin .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#apnfoodxuk .gt_first_summary_row.thick {
+#cgwjnisqin .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#apnfoodxuk .gt_last_summary_row {
+#cgwjnisqin .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1638,7 +1641,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#apnfoodxuk .gt_grand_summary_row {
+#cgwjnisqin .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -1647,7 +1650,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#apnfoodxuk .gt_first_grand_summary_row {
+#cgwjnisqin .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1656,7 +1659,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#apnfoodxuk .gt_last_grand_summary_row_top {
+#cgwjnisqin .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1665,10 +1668,10 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#apnfoodxuk .gt_striped {
+#cgwjnisqin .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#apnfoodxuk .gt_table_body {
+#cgwjnisqin .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -1676,7 +1679,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#apnfoodxuk .gt_footnotes {
+#cgwjnisqin .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -1689,7 +1692,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#apnfoodxuk .gt_footnote {
+#cgwjnisqin .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -1697,7 +1700,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#apnfoodxuk .gt_sourcenotes {
+#cgwjnisqin .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -1710,64 +1713,64 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#apnfoodxuk .gt_sourcenote {
+#cgwjnisqin .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#apnfoodxuk .gt_left {
+#cgwjnisqin .gt_left {
 text-align: left;
 }
-#apnfoodxuk .gt_center {
+#cgwjnisqin .gt_center {
 text-align: center;
 }
-#apnfoodxuk .gt_right {
+#cgwjnisqin .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#apnfoodxuk .gt_font_normal {
+#cgwjnisqin .gt_font_normal {
 font-weight: normal;
 }
-#apnfoodxuk .gt_font_bold {
+#cgwjnisqin .gt_font_bold {
 font-weight: bold;
 }
-#apnfoodxuk .gt_font_italic {
+#cgwjnisqin .gt_font_italic {
 font-style: italic;
 }
-#apnfoodxuk .gt_super {
+#cgwjnisqin .gt_super {
 font-size: 65%;
 }
-#apnfoodxuk .gt_footnote_marks {
+#cgwjnisqin .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#apnfoodxuk .gt_asterisk {
+#cgwjnisqin .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#apnfoodxuk .gt_indent_1 {
+#cgwjnisqin .gt_indent_1 {
 text-indent: 5px;
 }
-#apnfoodxuk .gt_indent_2 {
+#cgwjnisqin .gt_indent_2 {
 text-indent: 10px;
 }
-#apnfoodxuk .gt_indent_3 {
+#cgwjnisqin .gt_indent_3 {
 text-indent: 15px;
 }
-#apnfoodxuk .gt_indent_4 {
+#cgwjnisqin .gt_indent_4 {
 text-indent: 20px;
 }
-#apnfoodxuk .gt_indent_5 {
+#cgwjnisqin .gt_indent_5 {
 text-indent: 25px;
 }
-#apnfoodxuk .katex-display {
+#cgwjnisqin .katex-display {
 display: inline-flex !important;
 margin-bottom: 0.75em !important;
 }
-#apnfoodxuk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#cgwjnisqin div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
 height: 0px !important;
 }
 </style>
@@ -3246,7 +3249,9 @@ window.QuartoSupport = function () {
  *             explain = "tbl_summary() summarises variables, optionally by a group.")
  *   ```
  *
- * Optional: <span class="quiz-score"></span> anywhere shows "x / y".
+ * Optional: <span class="quiz-score"></span> anywhere shows "x / y", followed by
+ *   "Save score" (downloads a text file) and "Reset" buttons. The first-attempt
+ *   results are kept in localStorage per deck, so a reload keeps the score.
  *
  * BEHAVIOUR
  *   - MCQ: options are SHUFFLED at load (hash uses the authored index, so
@@ -3304,6 +3309,55 @@ window.QuartoSupport = function () {
 
   var state = { total: 0, correct: 0, scored: {} };
 
+  // ── saved score ─────────────────────────────────────────────────────
+  // The first-attempt result of each question is kept in the browser
+  // (localStorage, one entry per deck file), so a reload keeps the score.
+  // "Save score" downloads a small text file a participant can keep or
+  // hand in; "Reset" clears the saved result for this deck.
+  var deckName = (location.pathname.split('/').pop() || 'deck').replace(/\.html?$/, '');
+  var STORE = 'quiz-score:' + deckName;
+  function persist() { try { localStorage.setItem(STORE, JSON.stringify(state.scored)); } catch (e) {} }
+  function restore() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORE)) || {};
+      var qs = document.querySelectorAll('.quiz-q');
+      for (var i = 0; i < qs.length; i++) {
+        var id = qs[i].getAttribute('data-qid');
+        if (saved.hasOwnProperty(id)) { state.scored[id] = !!saved[id]; if (saved[id]) state.correct++; }
+      }
+    } catch (e) {}
+  }
+  function scoreText() {
+    var lines = ['Quiz score', 'Deck: ' + (document.title || deckName), 'File: ' + deckName, 'Saved: ' + new Date().toLocaleString(),
+                 'Score (first attempt): ' + state.correct + ' / ' + state.total, ''];
+    var qs = document.querySelectorAll('.quiz-q');
+    for (var i = 0; i < qs.length; i++) {
+      var id = qs[i].getAttribute('data-qid');
+      lines.push(id + ': ' + (state.scored.hasOwnProperty(id) ? (state.scored[id] ? 'correct' : 'not correct') : 'not attempted'));
+    }
+    return lines.join('\n') + '\n';
+  }
+  function download() {
+    var a = document.createElement('a');
+    a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(scoreText());
+    a.download = 'quiz_' + deckName + '.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  function addScoreTools() {
+    var els = document.querySelectorAll('.quiz-score');
+    for (var i = 0; i < els.length; i++) {
+      if (els[i].getAttribute('data-tools')) continue;
+      els[i].setAttribute('data-tools', '1');
+      var box = document.createElement('span'); box.className = 'quiz-score-tools';
+      var sv = document.createElement('button'); sv.type = 'button'; sv.className = 'quiz-btn quiz-btn-ghost quiz-save'; sv.textContent = 'Save score';
+      sv.addEventListener('click', download);
+      var rs = document.createElement('button'); rs.type = 'button'; rs.className = 'quiz-btn quiz-btn-ghost quiz-reset'; rs.textContent = 'Reset';
+      rs.addEventListener('click', function () { try { localStorage.removeItem(STORE); } catch (e) {} location.reload(); });
+      box.appendChild(sv); box.appendChild(rs);
+      els[i].parentNode.insertBefore(box, els[i].nextSibling);
+    }
+  }
+
   function updateScores() {
     var els = document.querySelectorAll('.quiz-score');
     for (var i = 0; i < els.length; i++) {
@@ -3312,9 +3366,10 @@ window.QuartoSupport = function () {
   }
 
   function record(qid, ok) {
-    if (state.scored[qid]) return;      // first attempt only
-    state.scored[qid] = true;
+    if (state.scored.hasOwnProperty(qid)) return;      // first attempt only
+    state.scored[qid] = !!ok;
     if (ok) state.correct++;
+    persist();
     updateScores();
   }
 
@@ -3453,6 +3508,8 @@ window.QuartoSupport = function () {
       if (type === 'mcq') initMCQ(q);
       else if (type === 'fill') initFill(q);
     }
+    restore();
+    addScoreTools();
     updateScores();
   }
 

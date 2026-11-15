@@ -1,0 +1,219 @@
+---
+title: "Session 5 — Choosing, Checking and Reporting"
+subtitle: "Decision guide · diagnostics · few clusters · sample size for cluster trials · reporting · Lab 5"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Sessions 1 to 4: ICC, design effect, robust SEs, GEE, mixed models, repeated measures
+- Today: **which one to use**, how to **check** it, how to **plan** a cluster trial and how to **report** it
+:::
+
+# Topic 1 — Choosing {background-color="#2C3E50"}
+
+## Decision guide
+
+| Situation | Suggested approach |
+|---|---|
+| Few clusters (below about 10) | **Cluster-level** analysis (means, permutation); avoid model-based |
+| 10 to 40 clusters | **Mixed model** with Satterthwaite/Kenward-Roger df, or **CR2** |
+| Many clusters, marginal effect wanted | **GEE** or cluster-robust `glm` |
+| Cluster effects of interest, predictions | **Mixed model** |
+| Repeated measures, missing visits | **Mixed model** (MAR) |
+| Binary outcome, population-averaged OR | **GEE** |
+| Binary outcome, within-cluster OR | **Mixed logistic** (`glmer`) |
+
+## One table of the approaches
+
+```{r}
+m_lm <- lm(sbp ~ arm + age + sex + bmi, data = bp12)
+m_mx <- lmer(sbp ~ arm + age + sex + bmi + (1 | village), data = bp12)
+tibble(method = c("naive lm", "cluster-robust lm", "mixed model"),
+       estimate = c(coef(m_lm)[["armProgramme"]], coef(m_lm)[["armProgramme"]], fixef(m_mx)[["armProgramme"]]),
+       se = c(summary(m_lm)$coefficients["armProgramme", 2], coeftest(m_lm, vcov = vcovCL(m_lm, cluster = bp12$village))["armProgramme", 2], summary(m_mx)$coefficients["armProgramme", 2])) |>
+  mutate(across(where(is.numeric), \(x) round(x, 2)))
+```
+
+::: {.key}
+Report the **honest SE** (cluster-robust or mixed). If someone shows you a clustered analysis with the **naive SE** of 1.15, the result looks **more significant than it is**.
+:::
+
+# Topic 2 — Checking {background-color="#2C3E50"}
+
+## Residuals and random effects
+
+```{r}
+#| fig-height: 3.6
+par(mfrow = c(1, 2))
+qqnorm(ranef(m_mx)$village[, 1], main = "Village effects"); qqline(ranef(m_mx)$village[, 1])
+plot(fitted(m_mx), resid(m_mx), xlab = "Fitted", ylab = "Residual", main = "Residuals"); abline(h = 0, col = "red")
+```
+
+::: {.incremental}
+- **Village effects** roughly on the line: normality is plausible. With 40 villages the check is rough
+- **Residuals**: even band, no funnel
+- Mixed models are **fairly robust** to the shape of random effects; they are **not** robust to wrong **mean** or **correlation** structures
+:::
+
+## Common problems
+
+::: {.warn}
+- **Singular fit** or non-convergence: too complex (random slopes with few visits): **simplify**
+- **Few clusters**: SEs and df unreliable
+- **Cluster-level covariates** with few clusters: low power whatever the number of people
+- **Treating repeated measures as independent**: the commonest mistake
+:::
+
+# Topic 3 — Planning and reporting {background-color="#2C3E50"}
+
+## Sample size for a cluster trial
+
+::: {.eq}
+n~cluster~ = n~individual~ × [ 1 + (m − 1) × ICC ]
+:::
+
+```{r}
+300 * (1 + (25 - 1) * 0.07)
+ceiling(804 / 25)
+```
+
+::: {.incremental}
+- 300 per arm if individually randomised, **25 per village**, ICC 0.07: about **804 people** (**33 villages**) per arm
+- More **people per village** gives **diminishing returns**; more **villages** helps more
+- Take the ICC from **earlier studies** and test a range
+:::
+
+## Reporting a clustered analysis
+
+::: {.good}
+- Follow the **CONSORT extension for cluster trials**: number of clusters per arm, mean cluster size, **ICC**
+- State **how clustering was handled** (mixed model, GEE, cluster-robust, cluster means)
+- Give **effect, 95% CI**, and the **df method** if few clusters
+- Say whether the effect is **conditional or marginal** for binary outcomes
+- Describe how **missing visits** were handled
+:::
+
+::: {.key}
+*Example:* "At 12 months, the programme lowered SBP by 3.6 mmHg (95% CI −6.7 to −0.4), estimated with a linear mixed model with a random intercept for village (40 villages; ICC 0.06)."
+:::
+
+## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `clustered-workshop/labs/lab5_report.R`
+
+- compare the approaches in one table
+- sample size for a cluster trial
+- model checks and a one-sentence result
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c5q1", "You have 8 villages in a cluster-randomised trial. What is the safest approach?",
+         c("Fit a cluster-robust lm and report its standard errors without a correction",
+           "Treat the 160 adults as independent observations after adjusting for age",
+           "Use a GEE with an unstructured working correlation matrix and robust SEs",
+           "Analyse the village means, for example with a permutation test between arms"), answer = 4,
+         explain = "With very few clusters, robust SEs and model-based df are unreliable. Analysing cluster-level summaries or using permutation methods keeps the type I error right.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c5q2", "Why does adding more people per village help less than adding more villages?",
+         c("Extra people in a village add little, since they share its information",
+           "Villages contain more information than the individual people who live in them",
+           "Increasing the number of people per village raises the ICC in a linear way",
+           "Extra people can be used in a GEE, but a mixed model cannot use them"), answer = 1,
+         explain = "The information within a village is limited by the ICC. Once clusters are large, extra people add little precision, while a new village adds independent information.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c5q3", "A trial needs 400 per arm if individually randomised. With 20 per cluster and ICC 0.05, about how many per arm are needed?",
+         c("About 400",
+           "About 420",
+           "About 780",
+           "About 8,000"), answer = 3,
+         explain = "DEFF = 1 + 19 x 0.05 = 1.95, so 400 x 1.95 = 780 per arm, or about 39 clusters per arm.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c5q4", "Which information should a cluster-randomised trial report according to CONSORT for cluster trials?",
+         c("The total number of people who took part in the whole trial",
+           "The number of clusters per arm, the cluster sizes and the ICC",
+           "The p-value of the random intercept test, reported on its own",
+           "The names of the villages that were put in each of the arms"), answer = 2,
+         explain = "The extension asks for the number and size of clusters, the ICC, and a description of how clustering was accounted for in the analysis.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c5q5", "Which mistake is the most common with repeated measures data?",
+         c("Using a model with a random intercept for each person followed in the study",
+           "Plotting the mean trajectory of each group against time since baseline",
+           "Treating visits as independent observations in a regression model",
+           "Keeping the data in long format, with one row for each visit made"), answer = 3,
+         explain = "Analysing every visit as an independent row ignores the correlation within a person and gives SEs that are too small for between-person effects.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Few clusters** → cluster-level analysis or small-sample corrections
+- Check **residuals** and **random effects**; simplify if singular
+- **Sample size** = individual n × DEFF; **more clusters** beat bigger clusters
+- Report **clusters, cluster size, ICC**, the method and the **CI**
+- Never treat repeated measures as independent
+:::
+
+**Next:** Cheat sheet and the next module

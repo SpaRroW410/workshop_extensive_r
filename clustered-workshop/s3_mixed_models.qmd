@@ -1,0 +1,248 @@
+---
+title: "Session 3 — Random-Intercept (Mixed) Models"
+subtitle: "Variance components · adjusted ICC · BLUPs and shrinkage · conditional vs marginal · Lab 3"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 2: keep an ordinary model and **repair the SE**
+- Today: **model the clustering** with a **random intercept** for village
+- By the end you can:
+  - fit and read a **linear mixed model** with `lmer`
+  - read **variance components** and the **adjusted ICC**
+  - explain **shrinkage** of village estimates
+  - contrast **conditional** and **marginal** effects
+:::
+
+# Topic 1 — The model {background-color="#2C3E50"}
+
+## A random intercept for each village
+
+::: {.eq}
+SBP~ij~ = β~0~ + β~1~ Programme~j~ + β~2~ Age~ij~ + … + **u~j~** + ε~ij~       u~j~ ~ N(0, τ²),  ε~ij~ ~ N(0, σ²)
+:::
+
+::: {.incremental}
+- **Fixed effects** β: the average relationship (the programme effect)
+- **Random intercept** u~j~: each village has its own shift, **drawn from a normal distribution**
+- τ² = **between-village** variance, σ² = **within-village** variance
+- ICC = **τ² / (τ² + σ²)**
+:::
+
+## Fit it
+
+```{r}
+m1 <- lmer(sbp ~ arm + age + sex + bmi + (1 | village), data = bp12)
+summary(m1)$coefficients |> round(3)
+```
+
+::: {.key}
+The programme effect is **−3.6 mmHg** (SE **1.6**), with **Satterthwaite degrees of freedom of about 39** from `lmerTest`. `(1 | village)` means *a separate intercept for each village*.
+:::
+
+## Variance components and ICC
+
+```{r}
+VarCorr(m1)
+icc(m1)
+```
+
+::: {.incremental}
+- Village SD **3.6** mmHg, residual SD **14.2** mmHg
+- **Adjusted ICC ≈ 0.06**: after accounting for age, sex, BMI and arm
+- Adjusted and unadjusted ICC differ because covariates explain part of the variance
+:::
+
+## Is the village effect needed?
+
+```{r}
+ranova(m1)
+```
+
+::: {.incremental}
+- A **likelihood-ratio** test of the random intercept: p ≈ **0.0005**
+- The test is on the **boundary** (τ² cannot be negative), so the p-value is conservative
+- **Do not drop** the cluster effect because the ICC is small or the test is not significant: the **design** says the data are clustered
+:::
+
+# Topic 2 — Shrinkage {background-color="#2C3E50"}
+
+## Predicted village effects (BLUPs)
+
+```{r}
+#| output-location: slide
+#| fig-height: 4.4
+tibble(village = rownames(ranef(m1)$village), re = ranef(m1)$village[, 1]) |> arrange(re) |> mutate(village = fct_inorder(village)) |>
+  ggplot(aes(re, village)) + geom_point(colour = col_blue, size = 2.5) + geom_vline(xintercept = 0, linetype = 2) +
+  labs(x = "Predicted village shift (mmHg)", y = "Village") + theme(axis.text.y = element_blank())
+```
+
+::: {.key}
+Shifts range from about **−5 to +6 mmHg**. They are **predictions** (BLUPs), not parameters.
+:::
+
+## Shrinkage
+
+::: {.eq}
+û~j~ = [ τ² / (τ² + σ²/n~j~) ] × (village mean − overall mean)
+:::
+
+::: {.incremental}
+- The factor is **between 0 and 1**: village estimates are **pulled towards the overall mean**
+- **Small** villages and **noisy** data are pulled **more**; large, precise villages less
+- Good for ranking or flagging villages: extremes by chance are **moderated**
+:::
+
+# Topic 3 — Comparing approaches {background-color="#2C3E50"}
+
+## Same effect, three standard errors
+
+```{r}
+rbind(naive = summary(m_lm <- lm(sbp ~ arm + age + sex + bmi, data = bp12))$coefficients["armProgramme", 1:2],
+      cluster_robust = coeftest(m_lm, vcov = vcovCL(m_lm, cluster = bp12$village))["armProgramme", 1:2],
+      mixed = summary(m1)$coefficients["armProgramme", 1:2]) |> round(2)
+```
+
+::: {.key}
+The **naive** SE is too small. The **cluster-robust** and **mixed-model** SEs agree. For a linear model with an identity link, the **conditional** and **marginal** effects are the **same**.
+:::
+
+## Conditional or marginal?
+
+| | Mixed model | GEE / robust |
+|---|---|---|
+| Effect | **Conditional**: same village | **Marginal**: average over villages |
+| Linear outcome | same number | same number |
+| Logistic outcome | **larger** odds ratio (further from 1) | smaller OR |
+| Also gives | village predictions, variance components | no cluster-level estimates |
+| Missing data | valid under MAR | needs more care |
+
+## Reporting a mixed model
+
+::: {.good}
+- State the **model**: fixed effects, the **random effect** and the **estimation** (REML)
+- Report the **effect with CI**, and say how the **df** were obtained
+- Report the **ICC** (adjusted) or the variance components
+- Say whether the effect is **conditional**
+:::
+
+## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `clustered-workshop/labs/lab3_mixed.R`
+
+- `lmer` with `(1 | village)`
+- variance components, ICC, `ranova`
+- BLUPs, a caterpillar plot and a comparison of SEs
+:::
+
+**Time:** 40 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c3q1", "In a model with (1 | village), what is the random intercept?",
+         c("A shift in mean SBP for each village, assumed to follow a normal distribution",
+           "A separate fixed effect estimated for each of the forty villages in the study",
+           "The average SBP of the villages that were given the programme",
+           "The residual error of each adult measured within the study sample"), answer = 1,
+         explain = "The random intercept is a village-specific deviation from the overall intercept, drawn from a normal distribution with variance tau squared.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c3q2", "The village SD is 3.6 and the residual SD is 14.2. Which expression gives the ICC?",
+         c("(3.6 + 14.2)^2 / 3.6^2",
+           "3.6^2 / (3.6^2 + 14.2^2)",
+           "3.6 / (3.6 + 14.2)^2",
+           "14.2^2 / (3.6^2 + 14.2^2)"), answer = 2,
+         explain = "The ICC is the between-cluster variance divided by the total variance, so squared SDs are needed: 13 / (13 + 202), about 0.06.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c3q3", "What does shrinkage do to a village's predicted effect?",
+         c("It moves the estimate further from the mean, which is stronger for small villages",
+           "It sets the village estimate to zero when the village has few adults in it",
+           "It drops from the model villages that have fewer than ten adults in them",
+           "It pulls the estimate towards the overall mean, more so for small villages"), answer = 4,
+         explain = "BLUPs combine the village's own data with the overall mean, with a weight that depends on how much data the village has. Less data means more shrinkage.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c3q4", "An ICC of 0.02 is found in a cluster-randomised trial with 50 per cluster. What is the best action?",
+         c("Keep the cluster in the analysis, since the design makes data clustered",
+           "Drop the cluster effect from the model, because an ICC this small is negligible",
+           "Drop the cluster effect once the ICC is shown to fall under a cut-off of 0.05",
+           "Replace the cluster by a fixed effect for each person in the whole trial"), answer = 1,
+         explain = "With 50 per cluster, DEFF = 1 + 49 x 0.02 = 2. The analysis should follow the design, not a test or a small ICC.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c3q5", "For a continuous outcome, how do the mixed model and cluster-robust lm effects compare?",
+         c("The mixed model effect is about twice as large as the robust one",
+           "The cluster-robust SE is clearly smaller than the mixed model SE",
+           "The estimates are close and the standard errors are similar",
+           "They estimate different quantities and cannot be put side by side"), answer = 3,
+         explain = "With an identity link the conditional and marginal effects coincide, so the estimates are alike, and both approaches give honest SEs.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Random intercept** (1 | village): a normal shift per cluster
+- **ICC = τ² / (τ² + σ²)**; the adjusted ICC uses the model's variances
+- **BLUPs** are shrunk towards the mean
+- Keep the cluster effect because of the **design**
+- Linear model: conditional = marginal; not for logistic
+:::
+
+**Next:** Session 4: repeated measures

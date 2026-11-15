@@ -839,6 +839,9 @@ padding: 0.4em 1.1em; background: #3498db; color: #fff;
 .quiz-feedback.is-info { color: #2c3e50; }
 .quiz-feedback code { background: #eef2f4; color: #c2185b; padding: 0 0.3em; border-radius: 3px; }
 .quiz-score { font-weight: 700; color: #2c3e50; }
+
+.quiz-score-tools { margin-left: 0.6em; white-space: nowrap; }
+.quiz-score-tools .quiz-btn { font-size: 0.55em; padding: 0.15em 0.6em; margin-left: 0.3em; vertical-align: middle; }
 </style>
   <style type="text/css">.reveal
 div.sourceCode
@@ -1435,20 +1438,20 @@ Response: delivery
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a aria-label="1"></a><span class="fu">tbl_regression</span>(mn, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">include =</span> wealth)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fubcruupqv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#fubcruupqv table {
+<div id="zvftbfubky" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zvftbfubky table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#fubcruupqv thead, #fubcruupqv tbody, #fubcruupqv tfoot, #fubcruupqv tr, #fubcruupqv td, #fubcruupqv th {
+#zvftbfubky thead, #zvftbfubky tbody, #zvftbfubky tfoot, #zvftbfubky tr, #zvftbfubky td, #zvftbfubky th {
 border-style: none;
 }
-#fubcruupqv p {
+#zvftbfubky p {
 margin: 0;
 padding: 0;
 }
-#fubcruupqv .gt_table {
+#zvftbfubky .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -1473,11 +1476,11 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#fubcruupqv .gt_caption {
+#zvftbfubky .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#fubcruupqv .gt_title {
+#zvftbfubky .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -1488,7 +1491,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#fubcruupqv .gt_subtitle {
+#zvftbfubky .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -1499,7 +1502,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#fubcruupqv .gt_heading {
+#zvftbfubky .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -1510,12 +1513,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#fubcruupqv .gt_bottom_border {
+#zvftbfubky .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#fubcruupqv .gt_col_headings {
+#zvftbfubky .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -1529,7 +1532,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#fubcruupqv .gt_col_heading {
+#zvftbfubky .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1548,7 +1551,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#fubcruupqv .gt_column_spanner_outer {
+#zvftbfubky .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1559,13 +1562,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#fubcruupqv .gt_column_spanner_outer:first-child {
+#zvftbfubky .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#fubcruupqv .gt_column_spanner_outer:last-child {
+#zvftbfubky .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#fubcruupqv .gt_column_spanner {
+#zvftbfubky .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -1576,10 +1579,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#fubcruupqv .gt_spanner_row {
+#zvftbfubky .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#fubcruupqv .gt_group_heading {
+#zvftbfubky .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1604,7 +1607,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#fubcruupqv .gt_empty_group_heading {
+#zvftbfubky .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -1618,13 +1621,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#fubcruupqv .gt_from_md > :first-child {
+#zvftbfubky .gt_from_md > :first-child {
 margin-top: 0;
 }
-#fubcruupqv .gt_from_md > :last-child {
+#zvftbfubky .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#fubcruupqv .gt_row {
+#zvftbfubky .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1642,7 +1645,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#fubcruupqv .gt_stub {
+#zvftbfubky .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1654,7 +1657,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#fubcruupqv .gt_stub_row_group {
+#zvftbfubky .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1667,13 +1670,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#fubcruupqv .gt_row_group_first td {
+#zvftbfubky .gt_row_group_first td {
 border-top-width: 2px;
 }
-#fubcruupqv .gt_row_group_first th {
+#zvftbfubky .gt_row_group_first th {
 border-top-width: 2px;
 }
-#fubcruupqv .gt_summary_row {
+#zvftbfubky .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -1682,14 +1685,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#fubcruupqv .gt_first_summary_row {
+#zvftbfubky .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#fubcruupqv .gt_first_summary_row.thick {
+#zvftbfubky .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#fubcruupqv .gt_last_summary_row {
+#zvftbfubky .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1698,7 +1701,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#fubcruupqv .gt_grand_summary_row {
+#zvftbfubky .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -1707,7 +1710,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#fubcruupqv .gt_first_grand_summary_row {
+#zvftbfubky .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1716,7 +1719,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#fubcruupqv .gt_last_grand_summary_row_top {
+#zvftbfubky .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1725,10 +1728,10 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#fubcruupqv .gt_striped {
+#zvftbfubky .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#fubcruupqv .gt_table_body {
+#zvftbfubky .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -1736,7 +1739,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#fubcruupqv .gt_footnotes {
+#zvftbfubky .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -1749,7 +1752,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#fubcruupqv .gt_footnote {
+#zvftbfubky .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -1757,7 +1760,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#fubcruupqv .gt_sourcenotes {
+#zvftbfubky .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -1770,64 +1773,64 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#fubcruupqv .gt_sourcenote {
+#zvftbfubky .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#fubcruupqv .gt_left {
+#zvftbfubky .gt_left {
 text-align: left;
 }
-#fubcruupqv .gt_center {
+#zvftbfubky .gt_center {
 text-align: center;
 }
-#fubcruupqv .gt_right {
+#zvftbfubky .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#fubcruupqv .gt_font_normal {
+#zvftbfubky .gt_font_normal {
 font-weight: normal;
 }
-#fubcruupqv .gt_font_bold {
+#zvftbfubky .gt_font_bold {
 font-weight: bold;
 }
-#fubcruupqv .gt_font_italic {
+#zvftbfubky .gt_font_italic {
 font-style: italic;
 }
-#fubcruupqv .gt_super {
+#zvftbfubky .gt_super {
 font-size: 65%;
 }
-#fubcruupqv .gt_footnote_marks {
+#zvftbfubky .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#fubcruupqv .gt_asterisk {
+#zvftbfubky .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#fubcruupqv .gt_indent_1 {
+#zvftbfubky .gt_indent_1 {
 text-indent: 5px;
 }
-#fubcruupqv .gt_indent_2 {
+#zvftbfubky .gt_indent_2 {
 text-indent: 10px;
 }
-#fubcruupqv .gt_indent_3 {
+#zvftbfubky .gt_indent_3 {
 text-indent: 15px;
 }
-#fubcruupqv .gt_indent_4 {
+#zvftbfubky .gt_indent_4 {
 text-indent: 20px;
 }
-#fubcruupqv .gt_indent_5 {
+#zvftbfubky .gt_indent_5 {
 text-indent: 25px;
 }
-#fubcruupqv .katex-display {
+#zvftbfubky .katex-display {
 display: inline-flex !important;
 margin-bottom: 0.75em !important;
 }
-#fubcruupqv div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#zvftbfubky div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
 height: 0px !important;
 }
 </style>
@@ -3208,7 +3211,9 @@ window.QuartoSupport = function () {
  *             explain = "tbl_summary() summarises variables, optionally by a group.")
  *   ```
  *
- * Optional: <span class="quiz-score"></span> anywhere shows "x / y".
+ * Optional: <span class="quiz-score"></span> anywhere shows "x / y", followed by
+ *   "Save score" (downloads a text file) and "Reset" buttons. The first-attempt
+ *   results are kept in localStorage per deck, so a reload keeps the score.
  *
  * BEHAVIOUR
  *   - MCQ: options are SHUFFLED at load (hash uses the authored index, so
@@ -3266,6 +3271,55 @@ window.QuartoSupport = function () {
 
   var state = { total: 0, correct: 0, scored: {} };
 
+  // ── saved score ─────────────────────────────────────────────────────
+  // The first-attempt result of each question is kept in the browser
+  // (localStorage, one entry per deck file), so a reload keeps the score.
+  // "Save score" downloads a small text file a participant can keep or
+  // hand in; "Reset" clears the saved result for this deck.
+  var deckName = (location.pathname.split('/').pop() || 'deck').replace(/\.html?$/, '');
+  var STORE = 'quiz-score:' + deckName;
+  function persist() { try { localStorage.setItem(STORE, JSON.stringify(state.scored)); } catch (e) {} }
+  function restore() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORE)) || {};
+      var qs = document.querySelectorAll('.quiz-q');
+      for (var i = 0; i < qs.length; i++) {
+        var id = qs[i].getAttribute('data-qid');
+        if (saved.hasOwnProperty(id)) { state.scored[id] = !!saved[id]; if (saved[id]) state.correct++; }
+      }
+    } catch (e) {}
+  }
+  function scoreText() {
+    var lines = ['Quiz score', 'Deck: ' + (document.title || deckName), 'File: ' + deckName, 'Saved: ' + new Date().toLocaleString(),
+                 'Score (first attempt): ' + state.correct + ' / ' + state.total, ''];
+    var qs = document.querySelectorAll('.quiz-q');
+    for (var i = 0; i < qs.length; i++) {
+      var id = qs[i].getAttribute('data-qid');
+      lines.push(id + ': ' + (state.scored.hasOwnProperty(id) ? (state.scored[id] ? 'correct' : 'not correct') : 'not attempted'));
+    }
+    return lines.join('\n') + '\n';
+  }
+  function download() {
+    var a = document.createElement('a');
+    a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(scoreText());
+    a.download = 'quiz_' + deckName + '.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  function addScoreTools() {
+    var els = document.querySelectorAll('.quiz-score');
+    for (var i = 0; i < els.length; i++) {
+      if (els[i].getAttribute('data-tools')) continue;
+      els[i].setAttribute('data-tools', '1');
+      var box = document.createElement('span'); box.className = 'quiz-score-tools';
+      var sv = document.createElement('button'); sv.type = 'button'; sv.className = 'quiz-btn quiz-btn-ghost quiz-save'; sv.textContent = 'Save score';
+      sv.addEventListener('click', download);
+      var rs = document.createElement('button'); rs.type = 'button'; rs.className = 'quiz-btn quiz-btn-ghost quiz-reset'; rs.textContent = 'Reset';
+      rs.addEventListener('click', function () { try { localStorage.removeItem(STORE); } catch (e) {} location.reload(); });
+      box.appendChild(sv); box.appendChild(rs);
+      els[i].parentNode.insertBefore(box, els[i].nextSibling);
+    }
+  }
+
   function updateScores() {
     var els = document.querySelectorAll('.quiz-score');
     for (var i = 0; i < els.length; i++) {
@@ -3274,9 +3328,10 @@ window.QuartoSupport = function () {
   }
 
   function record(qid, ok) {
-    if (state.scored[qid]) return;      // first attempt only
-    state.scored[qid] = true;
+    if (state.scored.hasOwnProperty(qid)) return;      // first attempt only
+    state.scored[qid] = !!ok;
     if (ok) state.correct++;
+    persist();
     updateScores();
   }
 
@@ -3415,6 +3470,8 @@ window.QuartoSupport = function () {
       if (type === 'mcq') initMCQ(q);
       else if (type === 'fill') initFill(q);
     }
+    restore();
+    addScoreTools();
     updateScores();
   }
 

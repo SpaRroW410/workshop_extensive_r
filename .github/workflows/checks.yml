@@ -1,0 +1,32 @@
+name: checks
+# Fast consistency checks on every push and pull request. No rendering: the site is rendered locally and committed in docs/.
+on:
+  push:
+  pull_request:
+jobs:
+  consistency:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - name: Install R packages used by the checks
+        run: Rscript -e 'install.packages(c("yaml", "jsonlite"))'
+      - name: Profile files match curriculum.yml
+        run: Rscript scripts/build_profiles.R --check
+      - name: Quiz engine copies match the master copy
+        run: bash scripts/sync_workshop_assets.sh --check
+      - name: Quiz quality gate (all workshops)
+        run: |
+          for d in *-workshop; do
+            echo "== $d"
+            Rscript regression-workshop/lint_quizzes.R "$d"/s*.qmd | tee /tmp/lint.txt
+            grep -q "^0 hard failures" /tmp/lint.txt
+          done
+      - name: Student labs are in sync with the solutions
+        run: |
+          for d in *-workshop; do Rscript "$d/build_labs.R" > /dev/null; done
+          git diff --exit-code -- '*-workshop/labs'
+      - name: Game item bank
+        run: node dungeons/tests/lint_bank.js --strict

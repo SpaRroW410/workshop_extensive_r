@@ -1,0 +1,99 @@
+---
+title: "Clustered and Repeated Data Cheat Sheet"
+subtitle: "ICC · design effect · robust SE · GEE · mixed models · synthetic village BP trial · print on 2 pages (A4)"
+format:
+  html:
+    theme: cosmo
+    toc: false
+    page-layout: full
+    html-math-method: plain
+    css: assets/cheatsheet.css
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+source("assets/setup.R")
+b0 <- bp |> filter(months == 0)
+m0 <- lmer(sbp ~ 1 + (1 | village), data = b0)
+icc0 <- performance::icc(m0)$ICC_unadjusted
+m_lm <- lm(sbp ~ arm + age + sex + bmi, data = bp12)
+m_mx <- lmer(sbp ~ arm + age + sex + bmi + (1 | village), data = bp12)
+se_naive <- summary(m_lm)$coefficients["armProgramme", 2]
+se_rob <- coeftest(m_lm, vcov = vcovCL(m_lm, cluster = bp12$village))["armProgramme", 2]
+se_mix <- summary(m_mx)$coefficients["armProgramme", 2]
+f <- function(x, d = 2) formatC(x, format = "f", digits = d)
+```
+
+::: {.sheet}
+
+## 1 · Is my data clustered?
+
+| Structure | Example | Problem if ignored |
+|---|---|---|
+| People in **villages, clinics, schools** | adults in 40 villages | SE too small for **cluster-level** exposures |
+| **Repeated** visits on a person | SBP at 0, 3, 6, 12 months | SEs wrong; time effects mis-stated |
+| **Both** | visits in people in villages | use **nested** random effects |
+
+If the exposure is given to **whole clusters**, the cluster is the unit of analysis.
+
+## 2 · ICC and design effect
+
+::: {.eq}
+ICC = τ² / (τ² + σ²)      DEFF = 1 + (m − 1) × ICC      n~eff~ = n / DEFF
+:::
+
+Our trial: **ICC = `r f(icc0, 3)`**, m = 20, so **DEFF = `r f(1 + 19 * icc0)`** and the 800 adults carry the information of about **`r f(800 / (1 + 19 * icc0), 0)`**. `performance::icc(model)`; `lmer(y ~ 1 + (1 | cluster))`.
+
+## 3 · Which method?
+
+| Situation | Method | R |
+|---|---|---|
+| Quick and valid | **Cluster means**, t-test | `summarise()` by cluster |
+| Keep `lm`/`glm`, fix the SE | **Cluster-robust SE** | `coeftest(m, vcov = vcovCL(m, cluster = d$village))` |
+| Fewer than about 40 clusters | **CR2** + Satterthwaite df | `clubSandwich::coef_test(m, "CR2", cluster)` |
+| Marginal (population-averaged) effect | **GEE** | `geepack::geeglm(id = village, corstr = ...)` |
+| Cluster effects, predictions, repeated measures | **Mixed model** | `lme4::lmer` / `glmer`, `lmerTest` for df |
+
+## 4 · What the SEs look like
+
+| | Estimate | SE |
+|---|---|---|
+| Naive `lm` | `r f(coef(m_lm)[["armProgramme"]])` | **`r f(se_naive)`** (too small) |
+| Cluster-robust `lm` | same | `r f(se_rob)` |
+| Mixed model | `r f(fixef(m_mx)[["armProgramme"]])` | `r f(se_mix)` |
+
+## 5 · Mixed model syntax
+
+- `(1 | village)`: random intercept per village
+- `(1 | village / person)`: persons nested in villages
+- `(months | person)`: random intercept and slope for time
+- `months * arm`: difference in **slopes** between arms
+
+Use **REML** to compare variance structures and **ML** to compare fixed effects. A **singular** fit means the random-effects structure is too rich: simplify.
+
+## 6 · GEE choices
+
+`corstr`: **exchangeable** (clusters), **ar1** (equally spaced visits), **independence** (robust SEs still valid), **unstructured** (many visits, small clusters risky).
+Sort by `id` first, no missing values in the model; `waves =` for the visit order. The OR is **population-averaged**; a mixed logistic OR is **conditional** (further from 1).
+
+## 7 · Missing visits and pitfalls
+
+::: {.bad}
+- Treating visits (or people in a village) as **independent**
+- **Dropping** the cluster term because the ICC is small
+- Robust SEs with **few clusters** (below about 40): use CR2 / cluster-level analysis
+- **Complete-case** analysis when dropout depends on earlier values (MAR)
+- Reading a mixed-model OR as a population-averaged OR
+- A random slope with few visits: non-convergence
+:::
+
+## 8 · Planning and reporting
+
+n (cluster trial) = n (individual) × DEFF; **more clusters beat bigger clusters**. Report (CONSORT cluster extension): clusters per arm, mean cluster size, **ICC**, method, effect with **95% CI**.
+
+*At 12 months the programme lowered SBP by `r f(abs(fixef(m_mx)[["armProgramme"]]), 1)` mmHg (95% CI `r f(confint(m_mx, method = "Wald")["armProgramme", 1], 1)` to `r f(confint(m_mx, method = "Wald")["armProgramme", 2], 1)`), from a linear mixed model with a random intercept for village (40 villages; adjusted ICC `r f(performance::icc(m_mx)$ICC_adjusted, 2)`).*
+
+:::

@@ -1,0 +1,234 @@
+---
+title: "Session 2 — Cluster-Robust Standard Errors and GEE"
+subtitle: "Sandwich variance · few clusters (CR2) · generalised estimating equations · working correlation · Lab 2"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 1: clusters make the naive **SE too small** (design effect 2.4)
+- Today: two ways to **keep the model and fix the SE**
+- By the end you can:
+  - compute **cluster-robust** standard errors
+  - fit a **GEE** and choose a **working correlation**
+  - read a GEE odds ratio as a **population-averaged** effect
+  - know when robust methods are **unreliable** (few clusters)
+:::
+
+# Topic 1 — Cluster-robust SEs {background-color="#2C3E50"}
+
+## Same model, honest SE
+
+```{r}
+m_lm <- lm(sbp ~ arm + age + sex + bmi, data = bp12)
+rbind(naive = summary(m_lm)$coefficients["armProgramme", 1:2],
+      cluster_robust = coeftest(m_lm, vcov = vcovCL(m_lm, cluster = bp12$village))["armProgramme", 1:2]) |> round(3)
+```
+
+::: {.key}
+The **estimate does not change**. The **standard error** grows from **1.15 to 1.59** (about 40% larger), because the sandwich estimator uses the **actual variability between villages** instead of assuming independence.
+:::
+
+## How it works (idea only)
+
+::: {.incremental}
+- Fit the usual model; keep the **coefficients**
+- For the **variance**, add up the residuals **within each cluster** before squaring: correlation inside a cluster is then **captured**, whatever its form
+- No assumption about **why** or **how** observations are correlated
+- Works for `lm`, `glm` and many other models: `vcovCL(model, cluster = ...)`
+:::
+
+::: {.warn}
+It needs **enough clusters**. With about **fewer than 40**, the robust SE tends to be **too small**, and with fewer than about 10 it is unreliable.
+:::
+
+## Few clusters: the CR2 correction
+
+```{r}
+coef_test(m_lm, vcov = "CR2", cluster = bp12$village)["armProgramme", ]
+```
+
+::: {.incremental}
+- `clubSandwich` gives a **small-sample correction** (CR2) and **Satterthwaite degrees of freedom** (about **37** here)
+- SE 1.62 vs 1.59 and a **t-test** instead of a z-test: a more honest p-value
+- With 40 villages the difference is small; with 15 it can be large
+:::
+
+# Topic 2 — GEE {background-color="#2C3E50"}
+
+## Generalised estimating equations
+
+::: {.incremental}
+- Fit a **population-averaged** (marginal) model: *what is the average difference between arms?*
+- Choose a **working correlation** for observations in a cluster: `independence`, `exchangeable`, `ar1`, `unstructured`
+- Use **robust (sandwich) SEs** so inference stays valid **even if the working correlation is wrong**
+- `geepack::geeglm()`: data **sorted by cluster id**, and no missing values in the model variables
+:::
+
+## A GEE for SBP
+
+```{r}
+d12 <- bp12 |> arrange(village)
+g1 <- geeglm(sbp ~ arm + age + sex + bmi, id = village, data = d12, family = gaussian, corstr = "exchangeable")
+round(summary(g1)$coefficients["armProgramme", ], 3)
+summary(g1)$corr
+```
+
+::: {.key}
+The estimate is about **−3.6 mmHg** with a robust SE of about **1.5**. The **alpha** (≈ 0.06) is the estimated within-village correlation, in line with the ICC.
+:::
+
+## Working correlation: does the choice matter?
+
+```{r}
+g_ind <- geeglm(sbp ~ arm + age + sex + bmi, id = village, data = d12, family = gaussian, corstr = "independence")
+c(independence = coef(g_ind)[["armProgramme"]], exchangeable = coef(g1)[["armProgramme"]]) |> round(2)
+```
+
+::: {.incremental}
+- Both are **valid** with robust SEs
+- A **good** working correlation gives **narrower CIs** (more efficient)
+- For a **cluster-level** exposure the choice matters little
+- Use **exchangeable** for clusters, **ar1** for equally spaced repeated measures
+:::
+
+## A binary outcome: controlled BP
+
+```{r}
+g2 <- geeglm(controlled ~ arm + age + sex + bmi, id = village, data = d12, family = binomial, corstr = "exchangeable")
+round(exp(cbind(OR = coef(g2), confint.default(g2)))["armProgramme", ], 2)
+```
+
+::: {.key}
+OR **1.2** (95% CI **0.7 to 2.0**): the interval includes 1, so there is **no clear evidence** of an effect on **controlled BP** (SBP below 140) at 12 months. It is the **population-averaged** odds ratio: the odds in the average person of one arm compared with the other.
+:::
+
+## Cluster-robust lm or GEE?
+
+| | Cluster-robust `lm`/`glm` | GEE |
+|---|---|---|
+| Correlation | ignored in the estimate, fixed in the SE | modelled (working correlation) |
+| Estimate | the independence one | can be more **efficient** |
+| Repeated measures | not designed for it | yes (`waves`, `ar1`) |
+| Interpretation | marginal | **marginal** |
+| Few clusters | use **CR2** | use small-sample corrections |
+
+## 🔧 Switch to R — Lab 2 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `clustered-workshop/labs/lab2_gee.R`
+
+- cluster-robust SEs with `vcovCL`
+- `geeglm` with exchangeable and independence
+- a binary GEE and the CR2 correction
+:::
+
+**Time:** 40 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c2q1", "What changes when you replace the naive SE by a cluster-robust SE in the same linear model?",
+         c("The coefficient and the standard error are both recomputed from the data",
+           "The p-value changes, while the confidence interval keeps the same width",
+           "The model is refitted with a random intercept for each cluster",
+           "The standard error changes; the coefficient stays the same"), answer = 4,
+         explain = "A cluster-robust (sandwich) SE only replaces the variance estimate. The coefficients are those of the ordinary model.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c2q2", "A trial has 12 villages. Why is a standard cluster-robust SE not reliable here?",
+         c("The sandwich variance relies on many clusters, and 12 is too few",
+           "Cluster-robust SEs are defined for binary outcomes and cannot be used for SBP",
+           "Villages need to have the same number of people for the method to work",
+           "The method requires measurements from at least four visits per person"), answer = 1,
+         explain = "The sandwich variance is estimated from the clusters. With few clusters it is biased downwards, so use small-sample corrections like CR2 or a cluster-level analysis.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c2q3", "In a GEE with an exchangeable working correlation, the odds ratio for the arm is best described as...",
+         c("the effect for one particular village in the trial",
+           "a population-averaged effect between the two arms",
+           "the effect holding the village random effect constant",
+           "an effect that holds only when the correlation is exchangeable"), answer = 2,
+         explain = "GEE models the average outcome in each arm across the population. The robust SE keeps inference valid even if the working correlation is wrong.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c2q4", "What is the role of the working correlation in a GEE?",
+         c("It decides whether the coefficients are biased, so it needs to be right",
+           "It is the true correlation, which has to be known before the model is fitted",
+           "It switches off the robust variance and uses the model-based one instead",
+           "It can improve efficiency, and inference stays valid if it is wrong"), answer = 4,
+         explain = "A good working structure gives narrower intervals. Because the SE is robust, a misspecified structure costs efficiency but does not invalidate the CI.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c2q5", "Which data preparation does geeglm need?",
+         c("Rows sorted by the cluster id, with no missing values in the model variables",
+           "Rows sorted by the outcome value, keeping a single summary row for each village",
+           "One column for each visit, with the data reshaped into wide format beforehand",
+           "Complete villages, with the same number of adults in each of the villages"), answer = 1,
+         explain = "geeglm assumes that observations of a cluster are contiguous and it does not handle missing values in the model variables, so sort first and drop incomplete rows.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Cluster-robust SE**: same estimate, honest SE (`vcovCL`)
+- **CR2** for fewer than about 40 clusters
+- **GEE**: population-averaged effect, working correlation, robust SE
+- **Exchangeable** for clusters, **ar1** for ordered repeated measures
+- Data sorted by cluster, no missing values in the model
+:::
+
+**Next:** Session 3: random-intercept (mixed) models

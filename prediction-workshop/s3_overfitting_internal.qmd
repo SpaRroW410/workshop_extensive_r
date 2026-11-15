@@ -1,0 +1,214 @@
+---
+title: "Session 3 — Overfitting and Internal Validation"
+subtitle: "Optimism · noise variables · split sample · cross-validation · bootstrap · shrinkage factor · Lab 3"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+```{r}
+#| include: false
+m_true <- glm(f_true, data = dev, family = binomial)
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 2: the **apparent** performance is measured on the data that built the model
+- Today: **how optimistic** is it, and how can we **correct** it using only the development data?
+- By the end you can:
+  - see **overfitting** with noise variables
+  - run **cross-validation** and the **bootstrap** optimism correction
+  - read a **bootstrap calibration slope** as a shrinkage factor
+:::
+
+# Topic 1 — Overfitting {background-color="#2C3E50"}
+
+## Adding noise
+
+```{r}
+m_all <- glm(f_all, data = dev, family = binomial)
+c(true = auc_of(dev$diabetes, fitted(m_true)), all = auc_of(dev$diabetes, fitted(m_all))) |> round(3)
+c(parameters = length(coef(m_all)) - 1, events_per_parameter = round(sum(dev$diabetes) / (length(coef(m_all)) - 1), 1))
+```
+
+::: {.warn}
+The ten extra markers are **pure noise**, yet the **apparent AUC rises from 0.796 to 0.821**. With **18 parameters** and **84 events (4.7 per parameter)** the model **memorises** chance patterns. This is **overfitting**: the apparent performance is **optimistic** and the predictions in new patients will be **too extreme**.
+:::
+
+# Topic 2 — Internal validation {background-color="#2C3E50"}
+
+## Split sample
+
+```{r}
+set.seed(1)
+idx <- sample(nrow(dev), 0.7 * nrow(dev))
+fit_s <- glm(f_all, data = dev[idx, ], family = binomial)
+auc_of(dev$diabetes[-idx], predict(fit_s, dev[-idx, ], type = "response")) |> round(3)
+```
+
+::: {.incremental}
+- Fit on **70%**, test on **30%**: here **0.74**
+- **Wasteful**: the final model should use **all** the data, and a third of the sample is only used for testing
+- **Noisy**: the result **changes with the seed**; with few events it is unreliable
+- Reasonable only for **very large** data sets
+:::
+
+## Cross-validation
+
+```{r}
+set.seed(1)
+fold <- sample(rep(1:10, length.out = nrow(dev)))
+cv_auc <- function(form) { p <- numeric(nrow(dev)); for (k in 1:10) p[fold == k] <- predict(glm(form, data = dev[fold != k, ], family = binomial), dev[fold == k, ], type = "response"); auc_of(dev$diabetes, p) }
+c(true = cv_auc(f_true), all = cv_auc(f_all)) |> round(3)
+```
+
+::: {.key}
+**10-fold CV**: fit on nine tenths, predict the held-out tenth, repeat. The AUC is **0.77** (8 predictors) and **0.76** (all markers): **lower than the apparent** 0.80 and 0.82, and **no gain from the markers**. Repeat with **several random fold assignments** for stability.
+:::
+
+## Bootstrap optimism
+
+```{r}
+optimism <- function(form, B = 200) { set.seed(7); mean(replicate(B, { i <- sample(nrow(dev), replace = TRUE); f <- glm(form, data = dev[i, ], family = binomial)
+  auc_of(dev$diabetes[i], fitted(f)) - auc_of(dev$diabetes, predict(f, dev, type = "response")) })) }
+o_true <- optimism(f_true); o_all <- optimism(f_all)
+round(rbind(apparent = c(true = auc_of(dev$diabetes, fitted(m_true)), all = auc_of(dev$diabetes, fitted(m_all))), optimism = c(o_true, o_all),
+            corrected = c(auc_of(dev$diabetes, fitted(m_true)) - o_true, auc_of(dev$diabetes, fitted(m_all)) - o_all)), 3)
+```
+
+::: {.incremental}
+- In each **bootstrap sample**: fit the model, then compute the AUC **in that sample** (apparent) and **in the original data** (test); the **mean difference is the optimism**
+- **Corrected AUC = apparent AUC − optimism**: **0.776** (8 predictors) vs **0.779** (all markers): **the same**. The ten markers add **nothing**
+- The **entire modelling process** (including any variable selection) must be **repeated** in each bootstrap sample
+- Uses **all** the data, and is the **recommended** internal validation for development studies
+:::
+
+## Optimism in calibration
+
+```{r}
+slope_boot <- function(form, B = 200) { set.seed(7); mean(replicate(B, { i <- sample(nrow(dev), replace = TRUE); f <- glm(form, data = dev[i, ], family = binomial)
+  coef(glm(diabetes ~ lp, data = transform(dev, lp = predict(f, dev)), family = binomial))[["lp"]] })) }
+c(true = slope_boot(f_true), all = slope_boot(f_all)) |> round(2)
+```
+
+::: {.key}
+The bootstrap **calibration slope** is **0.90** (8 predictors) and **0.80** (all markers). A slope of 0.80 means the predictions are **too extreme by about 20%**: they should be **shrunk** (Session 4). The **more parameters per event**, the **smaller** the slope.
+:::
+
+## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `prediction-workshop/labs/lab3_internal.R`
+
+- noise markers and events per parameter
+- split sample and 10-fold cross-validation
+- bootstrap optimism for AUC and calibration slope
+:::
+
+**Time:** 40 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p3q1", "Adding ten pure-noise markers raises the apparent AUC from 0.796 to 0.821. Why?",
+         c("The markers contain real information that the 8 predictors do not capture",
+           "The model fits random noise, so apparent performance is optimistic",
+           "A model with more variables has a higher AUC in new data as well as here",
+           "The AUC is computed on a different sample when more variables are used"), answer = 2,
+         explain = "Extra parameters let the model follow chance patterns in the development data. This raises the apparent but not the real performance.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p3q2", "Why is a single 70/30 split a poor way to validate a model in a small cohort?",
+         c("It cannot give an AUC, and it can only give a calibration slope for the model",
+           "It biases the AUC upwards because the test set is part of the training",
+           "It wastes data and gives a noisy estimate that depends on the split",
+           "It requires at least 10,000 adults to run, whatever the number of events"), answer = 3,
+         explain = "With few events, a third of the data for testing leaves little for fitting and testing, and a different seed gives a different answer.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p3q3", "What does the bootstrap optimism correction do?",
+         c("It replaces the development data by a much larger simulated cohort of adults",
+           "It tests the model in an independent cohort taken from another district",
+           "It removes the variables that do not improve the AUC of the final model",
+           "It estimates how much apparent performance is inflated and subtracts it"), answer = 4,
+         explain = "Fitting in bootstrap samples and testing in the original data mimics fitting and applying a model, giving the average inflation to subtract from the apparent value.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p3q4", "The optimism-corrected AUCs of the 8-predictor and the all-markers models are 0.776 and 0.779. What is the conclusion?",
+         c("The markers add no real value, so the larger model only adds complexity",
+           "The all-markers model is better, since its AUC is higher than the other",
+           "Corrected AUCs cannot be compared between two different models of the data",
+           "The 8-predictor model is overfitted, but the all-markers model is not overfitted"), answer = 1,
+         explain = "After correcting for optimism the two models perform equally, so the apparent gain of the larger model was optimism.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p3q5", "A bootstrap calibration slope of 0.80 suggests what?",
+         c("The model under-estimates the risk by 20% on average in new patients",
+           "Predictions are too extreme and should be shrunk by about 20%",
+           "About 20% of the predicted risks fall outside the range of zero to one",
+           "The AUC will fall by 0.20 when the model is applied to new data"), answer = 2,
+         explain = "A slope below 1 means that low risks are too low and high risks too high. Multiplying the linear predictor by about 0.8 corrects this.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Overfitting**: too many parameters per event fit noise
+- **Split sample** is wasteful and noisy; use **CV** or the **bootstrap**
+- **Bootstrap**: optimism = apparent − test; corrected = apparent − optimism
+- Repeat the **whole** modelling process in each bootstrap sample
+- The bootstrap **slope** is the **shrinkage factor**
+:::
+
+**Next:** Session 4: shrinkage and variable selection

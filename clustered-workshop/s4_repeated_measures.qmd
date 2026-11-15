@@ -1,0 +1,243 @@
+---
+title: "Session 4 — Repeated Measures and Trajectories"
+subtitle: "Long format · time × arm · nested random effects · random slopes · AR(1) · missing visits · Lab 4"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 3: a random intercept for **village**
+- Today: the **same person is measured four times**
+- By the end you can:
+  - look at **trajectories** by group
+  - fit **time × arm** with a **nested** random effect
+  - decide on a **random slope**
+  - fit a **GEE** with AR(1)
+  - explain why mixed models cope with **missing visits** (MAR)
+:::
+
+# Topic 1 — Looking at trajectories {background-color="#2C3E50"}
+
+## Long format
+
+```{r}
+bp |> filter(person %in% c("V01-P01", "V01-P02")) |> select(person, arm, months, sbp)
+bp |> count(person) |> count(n, name = "people")
+```
+
+::: {.key}
+**One row per visit** (long format) is what the models need. Only **59%** of people have all four visits.
+:::
+
+## Mean SBP by arm and visit
+
+```{r}
+#| output-location: slide
+#| fig-height: 4.4
+bp |> group_by(arm, months) |> summarise(mean_sbp = mean(sbp), .groups = "drop") |>
+  ggplot(aes(months, mean_sbp, colour = arm)) + geom_line(linewidth = 1.2) + geom_point(size = 3) +
+  scale_colour_manual(values = c(col_blue, col_red)) + scale_x_continuous(breaks = c(0, 3, 6, 12)) + labs(x = "Months", y = "Mean SBP (mmHg)", colour = NULL)
+```
+
+::: {.key}
+Similar at baseline (randomised). The **programme arm declines** and the **control arm** stays about flat.
+:::
+
+# Topic 2 — The model {background-color="#2C3E50"}
+
+## Time × arm with nested random effects
+
+```{r}
+m_t <- lmer(sbp ~ months * arm + age + sex + bmi + (1 | village / person), data = bp)
+summary(m_t)$coefficients["months:armProgramme", ] |> round(3)
+```
+
+::: {.key}
+The **interaction** is the **difference in slopes**: the programme arm declines **about 0.4 mmHg per month faster**. `(1 | village / person)` gives a random intercept for each village **and** for each person within it.
+:::
+
+## The effect at 12 months
+
+```{r}
+fe <- fixef(m_t)
+fe[["armProgramme"]] + 12 * fe[["months:armProgramme"]]
+```
+
+::: {.incremental}
+- **arm** alone is the difference **at month 0** (near 0 after randomisation)
+- At 12 months: arm + 12 × interaction ≈ **−4.4 mmHg**
+- To get a CI for this contrast, use `emmeans` or a linear-combination function
+- If the trend is not a straight line, use **months as a factor** or a spline
+:::
+
+## Is the interaction within-person or between-village?
+
+::: {.warn}
+The **interaction** compares **changes within people**, so the naive SE is not too small, it is **too large** (0.12 instead of 0.07). Clustering inflates SEs of **between-cluster** effects and can **reduce** them for **within-cluster** effects. That is why the model must follow the design.
+:::
+
+# Topic 3 — Slopes, AR(1) and missing data {background-color="#2C3E50"}
+
+## A random slope for time
+
+```{r}
+m_s <- lmer(sbp ~ months * arm + age + sex + bmi + (1 | village) + (months | person), data = bp, control = lmerControl(optimizer = "bobyqa"))
+anova(m_t, m_s)
+```
+
+::: {.incremental}
+- Allows each person to have their **own trend**
+- The likelihood-ratio test has **p ≈ 0.7**: no evidence that trends differ: keep the **simpler** model
+- Random slopes need **many** visits per person; with 4 visits the model can fail to converge
+:::
+
+## GEE with AR(1)
+
+```{r}
+d <- bp |> arrange(person, months)
+g_ar <- geeglm(sbp ~ months * arm + age + sex + bmi, id = person, waves = months, data = d, family = gaussian, corstr = "ar1")
+round(summary(g_ar)$coefficients["months:armProgramme", ], 3)
+```
+
+::: {.incremental}
+- **Population-averaged** slope difference: about **−0.34**, close to the mixed model (**−0.39**)
+- **AR(1)**: correlation falls as visits are further apart
+- This GEE has `id = person` and so **ignores the village** level
+:::
+
+## Missing visits
+
+::: {.key}
+About **13% of visits are missing**, and dropout is more likely for **older** people and after a **high** SBP. That is **missing at random** (MAR): the reason depends on **observed** values.
+:::
+
+```{r}
+complete <- bp |> group_by(person) |> filter(n() == 4) |> ungroup()
+c(complete_cases = n_distinct(complete$person), all_people = n_distinct(bp$person))
+```
+
+::: {.incremental}
+- The **mixed model** uses **all available visits** and is valid under **MAR** if the model includes the predictors of missingness
+- A **complete-case** analysis drops **41% of people** and can be **biased**
+- If missingness depends on the **unobserved** value itself (MNAR), neither is safe: run a **sensitivity analysis** (later module)
+:::
+
+## 🔧 Switch to R — Lab 4 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `clustered-workshop/labs/lab4_long.R`
+
+- visits per person and a mean-by-arm plot
+- `months * arm` with `(1 | village / person)`
+- random slope, AR(1) GEE and complete cases
+:::
+
+**Time:** 45 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c4q1", "What does the months:armProgramme coefficient in the model estimate?",
+         c("The difference in mean SBP between arms at month zero",
+           "The difference between arms in the change in SBP per month",
+           "The change in SBP per month in the control arm only",
+           "The fraction of visits that are missing in the programme arm"), answer = 2,
+         explain = "The interaction is the difference in slopes between the arms. The 'months' term alone is the control slope, and the arm term alone is the baseline difference.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c4q2", "What does (1 | village / person) specify?",
+         c("Random slopes for time, estimated separately for each village and each person",
+           "A single random intercept shared by all visits of the people in a village",
+           "A fixed effect for each village and a fixed effect for each person",
+           "A random intercept for village and one for person within village"), answer = 4,
+         explain = "The slash nests the grouping factors: persons within villages. This takes account of both the village level and the repeated visits.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c4q3", "In this model the interaction naive SE (0.12) was larger than the mixed one (0.07). What is the reason?",
+         c("It compares change within people, where the clustering can shrink the variance",
+           "A mixed model gives a smaller SE than a naive model for the coefficients it estimates",
+           "Clustering increases the variance of each estimate, and this one is no different",
+           "The naive model had fewer observations available than the mixed model did"), answer = 1,
+         explain = "A comparison of change within each person removes the stable person-to-person differences. Clustering mainly inflates between-cluster estimates, such as the arm effect.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c4q4", "Under missing at random, why can the mixed model be used with incomplete follow-up?",
+         c("It fills the missing visits in with the last value observed for that person",
+           "It drops everyone with a missing visit before the model is fitted to the data",
+           "It uses all observed visits, and dropout depends on values in the model",
+           "It assumes the missing visits would have had the same SBP as the observed ones"), answer = 3,
+         explain = "Likelihood-based mixed models are valid when the chance of missingness depends only on observed data that are in the model. They do not need complete cases.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("c4q5", "A random slope for months is tried and the likelihood-ratio p-value is 0.7. What do you conclude?",
+         c("The random slope shows that the people in the trial share one identical trend",
+           "There is no evidence that trends differ, so the simpler model is kept",
+           "The model needs to be rerun with months entered as a categorical variable",
+           "The random intercept for village should now be removed from the model"), answer = 2,
+         explain = "A non-significant improvement means the extra variance component is not needed. It is not proof of no difference, but the simpler model is preferred.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Long format**, one row per visit
+- **months × arm** = difference in slopes; `(1 | village / person)`
+- Within-person comparisons: SE can be **smaller** than a naive one
+- **Random slope** only if the data support it
+- **MAR**: mixed models use all visits; avoid complete cases
+:::
+
+**Next:** Session 5: choosing, checking and reporting

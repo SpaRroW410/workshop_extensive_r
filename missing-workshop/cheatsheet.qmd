@@ -1,0 +1,102 @@
+---
+title: "Missing Data Cheat Sheet"
+subtitle: "Mechanisms · describing · why simple fixes fail · multiple imputation with mice · MNAR sensitivity · synthetic NCD cohort · print on 2 pages (A4)"
+format:
+  html:
+    theme: cosmo
+    toc: false
+    page-layout: full
+    html-math-method: plain
+    css: assets/cheatsheet.css
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+source("assets/setup.R")
+f <- function(x, d = 2) formatC(x, format = "f", digits = d)
+pm <- round(100 * colMeans(is.na(ncd)), 0)
+dat2 <- dat |> mutate(smoker = factor(smoker, labels = c("No", "Yes")))
+imp <- mice(dat2, m = 20, maxit = 10, seed = 2038, printFlag = FALSE)
+m_cc <- lm(sbp ~ age + sex + bmi + smoker + activity, data = dat)
+s <- summary(pool(with(imp, lm(sbp ~ age + sex + bmi + smoker + activity))))
+cc_b <- coef(m_cc)[["bmi"]]; mi_b <- s$estimate[s$term == "bmi"]
+```
+
+::: {.sheet}
+
+## 1 · Three mechanisms
+
+| | Missingness depends on | Complete-case | Multiple imputation |
+|---|---|---|---|
+| **MCAR** | nothing | unbiased, loses precision | valid |
+| **MAR** | **observed** data | can be **biased** | **valid** |
+| **MNAR** | the **missing value** itself | biased | **biased** unless an MNAR assumption is modelled |
+
+MAR = "explained by observed variables", **not** "random". **MNAR cannot be tested** from the observed data.
+
+## 2 · Describe it first
+
+`colMeans(is.na(d))` · `sum(complete.cases(d))` · `md.pattern(d)` · `naniar::miss_var_summary()`, `gg_miss_upset()`, `vis_miss()`. Compare observed variables between **complete and incomplete** adults; model `is.na(x) ~ observed variables` (include the **outcome**). `naniar::mcar_test()`: rejecting MCAR does **not** prove MAR.
+
+Our cohort: BMI **`r pm[["bmi"]]`%**, HbA1c **`r pm[["hba1c"]]`%**, activity **`r pm[["activity"]]`%**, smoking **`r pm[["smoker"]]`%**, SBP **`r pm[["sbp"]]`%**; only **`r f(100 * mean(complete.cases(ncd)), 0)`%** of adults complete.
+
+## 3 · Simple methods: do not use
+
+| Method | Problem |
+|---|---|
+| **Complete case** | loses data; biased if missingness depends on the outcome |
+| **Mean imputation** | shrinks variance, biases, wrong SE |
+| **Missing indicator** | biased even under MAR |
+| **Single imputation** | SE too small (imputed values treated as real) |
+
+BMI slope in the SBP model (truth about 0.80): complete case **`r f(cc_b)`**, multiple imputation **`r f(mi_b)`**.
+
+## 4 · mice in six lines
+
+```r
+dat$smoker <- factor(dat$smoker)                      # binary -> logreg
+imp <- mice(dat, m = 20, maxit = 10, seed = 1)        # drop the id first
+plot(imp); densityplot(imp, ~ bmi)                    # converged? plausible?
+fit <- with(imp, lm(sbp ~ age + sex + bmi))
+summary(pool(fit), conf.int = TRUE)                   # Rubin's rules
+```
+
+Methods: `pmm` (continuous, default), `logreg` (binary factor), `polyreg` (unordered factor), `polr` (ordered). Inspect `imp$method`, `imp$predictorMatrix`, `imp$loggedEvents`.
+
+## 5 · Rubin's rules
+
+::: {.eq}
+estimate = mean of the m estimates       T = W + (1 + 1/m) B       W = mean within-imputation variance, B = variance of the estimates
+:::
+
+**fmi** (`pool(fit)$pooled`): share of the variance due to the missing data (not the % missing).
+
+## 6 · Doing it well
+
+::: {.good}
+- Put the **outcome**, all **analysis variables**, **interactions/curves** you will fit, and **auxiliary** variables in the imputation model
+- **m** at least the % of incomplete cases (at least 20); fixed **seed**
+- **Derive** variables (e.g. hypertension) **after** imputing: `complete(imp, "long", include = TRUE)` then `as.mids()`
+- Test several coefficients with **`D1()`**; do not average p-values
+- Check **convergence** and imputed **distributions**
+:::
+
+## 7 · MNAR sensitivity (delta adjustment)
+
+```r
+post <- make.post(dat); post["hba1c"] <- "imp[[j]][, i] <- imp[[j]][, i] + 0.5"
+imp_d <- mice(dat, m = 20, post = post)
+```
+
+Run delta = 0 (MAR), 0.2, 0.4 ... and ask **at which delta does the conclusion change** (tipping point). Tails and prevalences are most sensitive: HbA1c mean `r f(mean(dat$hba1c, na.rm = TRUE))` observed.
+
+## 8 · Report
+
+Amount of missing data per variable and complete cases · assumed mechanism and reasons · method (MICE, pmm), **m**, iterations, variables used · pooled estimates and complete-case comparison · MNAR sensitivity analysis.
+
+*Missing values were handled by multiple imputation by chained equations (20 imputations, predictive mean matching, outcome and auxiliary variables included, Rubin's rules); a delta-adjustment analysis explored departures from MAR.*
+
+:::

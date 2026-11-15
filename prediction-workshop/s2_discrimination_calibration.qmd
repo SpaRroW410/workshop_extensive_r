@@ -1,0 +1,221 @@
+---
+title: "Session 2 — Discrimination and Calibration"
+subtitle: "ROC and AUC · thresholds · sensitivity, specificity, PPV, NPV · calibration plot, slope and intercept · Brier score · Lab 2"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+```{r}
+#| include: false
+m1 <- glm(f_true, data = dev, family = binomial)
+dev$risk <- predict(m1, type = "response")
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 1: a model that gives a **risk** for each adult
+- Today: **how good** are these risks? Two questions:
+  - **Discrimination**: does the model **rank** adults with diabetes above those without?
+  - **Calibration**: are the **risks themselves right**?
+- (Both are still **apparent** here: in the development data)
+:::
+
+# Topic 1 — Discrimination {background-color="#2C3E50"}
+
+## ROC curve and AUC
+
+```{r}
+#| output-location: slide
+#| fig-height: 4.4
+roc1 <- roc(dev$diabetes, dev$risk, quiet = TRUE)
+plot(roc1, legacy.axes = TRUE, col = col_blue, lwd = 3, print.auc = TRUE)
+```
+
+```{r}
+ci.auc(roc1)
+```
+
+::: {.key}
+**AUC 0.80** (95% CI 0.75 to 0.85). It is the probability that a **randomly chosen adult with diabetes has a higher predicted risk** than one without. **0.5 = coin toss, 1 = perfect**. A common reading: 0.7 to 0.8 acceptable, 0.8 to 0.9 good, but the **usefulness depends on the use**.
+:::
+
+## A threshold
+
+```{r}
+tab <- table(predicted = dev$risk >= 0.15, diabetes = dev$diabetes); tab
+round(c(sensitivity = tab["TRUE", "1"] / sum(tab[, "1"]), specificity = tab["FALSE", "0"] / sum(tab[, "0"]),
+        PPV = tab["TRUE", "1"] / sum(tab["TRUE", ]), NPV = tab["FALSE", "0"] / sum(tab["FALSE", ])), 2)
+```
+
+::: {.incremental}
+- At **15%**: sensitivity **0.62**, specificity **0.78**, PPV **0.28**, NPV **0.94**
+- **Lower the threshold**: sensitivity **up**, specificity **down** (more adults tested)
+- **PPV and NPV depend on the prevalence**: they change from district to district
+- The **AUC** summarises **all thresholds**; the **choice of threshold** needs **costs and benefits** (Session 5)
+:::
+
+## Added value
+
+```{r}
+c(age_only = auc_of(dev$diabetes, predict(glm(diabetes ~ age, data = dev, family = binomial), type = "response")), full_model = auc_of(dev$diabetes, dev$risk)) |> round(3)
+```
+
+Age alone gives **0.68**; the full model **0.80**: the other predictors add **real discrimination**.
+
+# Topic 2 — Calibration {background-color="#2C3E50"}
+
+## Calibration plot
+
+```{r}
+#| output-location: slide
+#| fig-height: 4.4
+cal <- dev |> mutate(decile = ntile(risk, 10)) |> group_by(decile) |> summarise(predicted = mean(risk), observed = mean(diabetes))
+ggplot(cal, aes(predicted, observed)) + geom_abline(linetype = 2) + geom_point(size = 3, colour = col_blue) + geom_line(colour = col_blue) + coord_equal(xlim = c(0, 0.6), ylim = c(0, 0.6)) + labs(x = "Mean predicted risk", y = "Observed proportion with diabetes")
+```
+
+::: {.key}
+Group the adults by **deciles of predicted risk** and compare the **mean predicted** with the **observed** proportion. **Points on the diagonal** = well calibrated. **Below** = the model **over-estimates**; **above** = it **under-estimates**.
+:::
+
+## Calibration slope and intercept
+
+```{r}
+lp <- qlogis(dev$risk)
+round(coef(glm(diabetes ~ lp, data = dev, family = binomial)), 3)
+```
+
+::: {.warn}
+Intercept **0** and slope **1.000** in the development data: this is **guaranteed** when a logistic model is fitted by maximum likelihood. It says **nothing** about new patients. In **new data**: **slope below 1** = predictions **too extreme** (overfitting); **intercept (calibration-in-the-large)** shows **average over- or under-estimation**.
+:::
+
+## Brier score
+
+```{r}
+brier <- mean((dev$risk - dev$diabetes)^2); brier_null <- mean((mean(dev$diabetes) - dev$diabetes)^2)
+round(c(brier = brier, scaled = 1 - brier / brier_null), 3)
+```
+
+::: {.incremental}
+- **Brier** = mean squared difference between **risk and outcome** (0 = perfect); combines **discrimination and calibration**
+- **Scaled Brier** = 1 − Brier / Brier of "everyone gets the prevalence": **0.15** here (0 = no better than the prevalence)
+- Avoid the **Hosmer-Lemeshow test**: it depends on the grouping, has low power and says **nothing about how** the calibration fails
+:::
+
+## 🔧 Switch to R — Lab 2 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `prediction-workshop/labs/lab2_perf.R`
+
+- ROC, AUC and its CI
+- threshold, sensitivity, specificity, PPV, NPV
+- calibration plot, slope, Brier score
+:::
+
+**Time:** 40 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p2q1", "How do you read an AUC of 0.80?",
+         c("80% of the adults are classified correctly if a threshold of 50% is used",
+           "The predicted risks are within 20% of the true risks, on average, for adults",
+           "A random case has a higher risk than a random non-case, 80% of the time",
+           "The model explains 80% of the variation in diabetes within the cohort studied"), answer = 3,
+         explain = "The AUC is the probability that a randomly chosen case has a higher predicted risk than a randomly chosen non-case. It says nothing about the calibration of the risks.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p2q2", "A threshold of 15% gives a sensitivity of 0.62. What happens when the threshold is lowered to 5%?",
+         c("Both sensitivity and specificity rise",
+           "Sensitivity rises and specificity falls",
+           "Sensitivity falls and specificity rises",
+           "Neither changes, since the AUC does not depend on the threshold"), answer = 2,
+         explain = "A lower threshold labels more adults as positive, so more cases are found (higher sensitivity) but more non-cases are labelled positive (lower specificity).")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p2q3", "In the development data the calibration slope is exactly 1 and the intercept 0. What does this tell you?",
+         c("The model is well calibrated and will be well calibrated in other cohorts",
+           "The model does not overfit, since the slope is not below 1 in these data",
+           "Nothing about new patients: it is guaranteed by the fitting",
+           "The predicted risks are accurate for each of the risk groups in the cohort"), answer = 3,
+         explain = "Maximum likelihood forces the apparent calibration to be perfect. Calibration has to be assessed in new data or with a bootstrap.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p2q4", "In a calibration plot the points lie below the diagonal at high predicted risk. What does that mean?",
+         c("The model under-estimates risk, since more events are observed than predicted",
+           "The model discriminates poorly, with an AUC close to 0.5",
+           "The sample is too small to draw a calibration plot",
+           "The model over-estimates risk: fewer events are observed than predicted"), answer = 4,
+         explain = "Observed proportions below predicted ones mean that the predicted risk is too high. Discrimination is a separate question.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("p2q5", "Why do PPV and NPV differ between a screening clinic and the general population for the same model?",
+         c("They depend on the prevalence of the disease in the population",
+           "The AUC of the model changes with the setting by definition",
+           "Sensitivity and specificity are defined in clinics but not elsewhere",
+           "The threshold has to be changed when the setting changes"), answer = 1,
+         explain = "Predictive values combine sensitivity and specificity with the prevalence. With a higher prevalence, the PPV rises and the NPV falls.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- **Discrimination**: AUC = chance of ranking a case above a non-case
+- **Threshold**: sensitivity, specificity; PPV/NPV depend on **prevalence**
+- **Calibration**: plot, **slope** (spread), **intercept** (average level)
+- Apparent slope is always **1**: check in **new data**
+- **Brier** combines both; avoid Hosmer-Lemeshow
+:::
+
+**Next:** Session 3: overfitting and internal validation

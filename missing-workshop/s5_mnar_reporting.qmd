@@ -1,0 +1,227 @@
+---
+title: "Session 5 — MNAR Sensitivity Analysis and Reporting"
+subtitle: "Delta adjustment · tipping point · Rubin's rules by hand · reporting missing data · Lab 5"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+```
+
+```{r}
+#| include: false
+dat2 <- dat |> mutate(smoker = factor(smoker, labels = c("No", "Yes")))
+imp <- mice(dat2, m = 30, maxit = 10, seed = 2038, printFlag = FALSE)
+```
+
+## Where we are
+
+::: {.incremental}
+- Sessions 3 and 4: MI under **MAR**
+- Today: **HbA1c** is missing for 21% of the adults, and the **high values** are the ones that go missing (**MNAR**)
+- By the end you can:
+  - show why **MAR imputation cannot fix** MNAR
+  - run a **delta-adjustment** sensitivity analysis and a **tipping point**
+  - **report** missing data properly
+:::
+
+# Topic 1 — The MNAR problem {background-color="#2C3E50"}
+
+## Observed vs MAR imputation
+
+```{r}
+obs <- mean(dat$hba1c, na.rm = TRUE)
+mar <- summary(pool(with(imp, lm(hba1c ~ 1))))$estimate
+round(c(observed = obs, MAR_imputation = mar), 2)
+```
+
+::: {.warn}
+**5.35%** observed and **5.38%** after MAR imputation. The **truth is 5.50%** (known only because the data are synthetic). Adults with a **high HbA1c** did not come to the lab, and **nothing in the data says so**: MAR imputation learns from the **observed** (lower) values.
+:::
+
+# Topic 2 — Delta adjustment {background-color="#2C3E50"}
+
+## Assume the missing values are higher
+
+```{r}
+post <- make.post(dat2)
+post["hba1c"] <- "imp[[j]][, i] <- imp[[j]][, i] + 0.2"
+imp_d <- mice(dat2, m = 30, maxit = 10, seed = 2038, post = post, printFlag = FALSE)
+round(summary(pool(with(imp_d, lm(hba1c ~ 1))))$estimate, 2)
+```
+
+::: {.incremental}
+- **Delta** = the amount (here 0.2 percentage points) **added to every imputed HbA1c** to say: *"the missing values are on average higher by delta than a MAR model predicts"*
+- A **pattern-mixture** idea, done with `post` in `mice`: after each imputation step, **shift** the values
+- delta = 0 is **MAR**; delta > 0 is **MNAR**
+:::
+
+## A tipping-point table
+
+```{r}
+run_delta <- function(delta) { po <- make.post(dat2); po["hba1c"] <- paste0("imp[[j]][, i] <- imp[[j]][, i] + ", delta)
+  i <- mice(dat2, m = 20, maxit = 5, seed = 2038, post = po, printFlag = FALSE); s <- summary(pool(with(i, lm(hba1c ~ 1)))); c(delta = delta, mean = s$estimate, se = s$std.error) }
+do.call(rbind, lapply(c(0, 0.2, 0.4, 0.6, 0.8), run_delta)) |> round(3)
+```
+
+::: {.key}
+The mean rises by about **0.045 for each 0.2** (a fifth of the values are missing). With **delta of about 0.55** we reach the **true value 5.50**. In practice you **do not know the truth**: show **a range of plausible deltas** (from clinical knowledge) and ask **at which delta does my conclusion change?** (the **tipping point**).
+:::
+
+## Which conclusions are fragile?
+
+```{r}
+prev <- function(i) mean(sapply(1:i$m, function(k) mean(complete(i, k)$hba1c >= 6.5)))
+po5 <- make.post(dat2); po5["hba1c"] <- "imp[[j]][, i] <- imp[[j]][, i] + 0.5"
+imp_5 <- mice(dat2, m = 20, maxit = 5, seed = 2038, post = po5, printFlag = FALSE)
+round(100 * c(MAR = prev(imp), delta_0.5 = prev(imp_5)), 1)
+```
+
+::: {.warn}
+The share with **HbA1c of 6.5% or more** is **0.4%** under MAR (the same as the observed 0.4%) and **3.1%** with delta = 0.5 (the facilitator truth: **4.4%**). The **mean** moved a little; the **prevalence** of the high range moved **eightfold**. Conclusions about **tails** are the most **sensitive** to MNAR.
+:::
+
+# Topic 3 — Rubin's rules and reporting {background-color="#2C3E50"}
+
+## Rubin's rules by hand
+
+```{r}
+fits <- with(imp, lm(hba1c ~ 1))
+est <- sapply(fits$analyses, coef); vr <- sapply(fits$analyses, \(f) vcov(f)[1, 1])
+m <- length(est); W <- mean(vr); B <- var(est)
+c(estimate = mean(est), W = W, B = B, total_se = sqrt(W + (1 + 1 / m) * B)) |> signif(4)
+```
+
+::: {.eq}
+T = W + (1 + 1/m) B        W = mean within-imputation variance        B = variance of the m estimates
+:::
+
+## Reporting missing data
+
+::: {.good}
+- The **amount** of missing data **per variable**, and the number of **complete cases**
+- The **assumed mechanism** and the **reasons** (what you know)
+- The **method** (MICE, `pmm`), **m**, iterations, **variables in the imputation model** (outcome, auxiliary), software
+- **Pooled** estimates (Rubin's rules) and a **comparison with complete-case**
+- A **sensitivity analysis** for MNAR (delta, tipping point)
+- Follow **STROBE**/**TRIPOD**/**CONSORT** items on missing data
+:::
+
+::: {.key}
+*Example:* "Missing values (BMI 26%, HbA1c 21%, activity 12%, smoking 9%, SBP 6%) were handled by multiple imputation by chained equations (20 imputations, predictive mean matching, outcome and auxiliary variables in the imputation model, estimates pooled by Rubin's rules); a delta-adjustment sensitivity analysis explored departures from missing at random for HbA1c."
+:::
+
+## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `missing-workshop/labs/lab5_mnar.R`
+
+- observed vs MAR-imputed mean HbA1c
+- delta adjustment, tipping-point table
+- Rubin's rules by hand, prevalence under MNAR, methods sentence
+:::
+
+**Time:** 40 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("m5q1", "Why does MAR imputation barely change the mean HbA1c (5.35 to 5.38) when it is the high values that are missing?",
+         c("The imputation used too few iterations to reach the high values in the data",
+           "pmm cannot impute values larger than the observed mean of the variable in the data",
+           "It learns from observed values, so it cannot know the missing ones are high",
+           "MNAR data need to be removed from the dataset before the imputation starts"), answer = 3,
+         explain = "A MAR imputation model is estimated on observed values. If the missingness depends on the unobserved value itself, nothing in the data corrects for it.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("m5q2", "What is a delta adjustment?",
+         c("Dividing the pooled estimate by the fraction of missing information in it",
+           "Shifting imputed values by a chosen amount to express MNAR",
+           "Replacing the imputed values by the difference between two imputations",
+           "Adding the between-imputation variance to the standard errors of the estimates"), answer = 2,
+         explain = "Delta is the assumed average difference between missing and observed-like values. delta = 0 is MAR, and larger values express stronger departures.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("m5q3", "The pooled mean HbA1c is 5.38 for delta = 0 and 5.55 for delta = 0.8. What does a tipping-point analysis ask?",
+         c("What is the smallest delta that gives a significant result?",
+           "Which imputation method gives the highest estimate of the mean?",
+           "How large must delta be before the conclusion changes?",
+           "How many imputations does each delta need to converge?"), answer = 3,
+         explain = "Tipping-point analysis varies the MNAR assumption and finds the value at which the substantive conclusion would change, so readers can judge whether it is plausible.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("m5q4", "The share with HbA1c of 6.5% or more is 0.4% under MAR and 3.1% with delta = 0.5. What is the lesson?",
+         c("MAR imputation is correct, and delta = 0.5 is the wrong assumption",
+           "Delta adjustment should replace MAR imputation in all of the analyses",
+           "The prevalence cannot be estimated from data that have missing values",
+           "Some results are sensitive to the MNAR assumption, so show a range"), answer = 4,
+         explain = "Estimates of tails and prevalences can change greatly with an MNAR assumption. Reporting a range of plausible deltas gives an honest picture.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("m5q5", "What should a report say about missing data?",
+         c("Amount per variable, mechanism, method, m and a sensitivity analysis",
+           "The p-value of Little's test together with the number of complete cases",
+           "The number of adults who were excluded from the study for missing data",
+           "The imputed values for each of the adults in the study, in a table"), answer = 1,
+         explain = "Readers need to know how much is missing, why, how it was handled, with what settings, and how robust the conclusions are to the assumption.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- MAR imputation **cannot repair MNAR**
+- **Delta adjustment**: shift imputed values; delta = 0 is MAR
+- **Tipping point**: the delta at which the conclusion changes
+- Tails and prevalences are the most **sensitive**
+- Report **amount, mechanism, method, m, variables, pooling and sensitivity**
+:::
+
+**Next:** Cheat sheet and the next module
