@@ -53,9 +53,6 @@ format:
     filters:
       - _filters/level.lua
     lightbox: auto
-    include-in-header:
-      text: |
-        <script src="assets/fitty-init.js"></script>
     include-after-body:
       text: |
         <script>

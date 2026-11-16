@@ -47,7 +47,10 @@ build <- function(prof) {
         left  = Filter(Negate(is.null), lapply(p$left,  entry, prof = prof)),
         right = Filter(Negate(is.null), lapply(p$right, entry, prof = prof))
       )
-    )
+    ),
+    # Marks a page as rendered inside a track site. index.qmd uses it (when-meta) to show a
+    # redirect to the track home instead of a second copy of the landing page with dead links.
+    `ws-track` = TRUE
   )
 }
 

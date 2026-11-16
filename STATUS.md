@@ -63,6 +63,13 @@ Not re-run for this snapshot: the game end-to-end test (`dungeons/tests/quest_e2
 | Quiz engine copied into ten folders with no guard | `scripts/sync_workshop_assets.sh` copies the master (`regression-workshop/assets/`) to the others; `--check` fails if a copy differs |
 | No automatic checks | `.github/workflows/checks.yml`: profile check, asset check, quiz lint, labs in sync, game bank lint (not yet seen running on GitHub) |
 | Deck quiz scores were lost on reload | fixed: scores are kept in the browser per deck; **Save score** downloads a text file, **Reset** clears it |
+| Every track home showed one track's content (Basic opened the GIS home) | fixed 2026-11-16: `welcome.qmd` built its content in an R chunk from `QUARTO_PROFILE`, and `freeze: auto` keeps one cached result per file for all profiles. The page is now plain markdown with one `when-profile` block per track, so nothing is frozen |
+| Download links on the track homes pointed at files that do not exist (`downloads/basic_r_foundations.R`, `workshop_data.csv`, …) | fixed: each track home links only to files in the repository |
+| `docs/<track>/index.html` was a second copy of the landing page with dead links | fixed: inside a track `index.qmd` renders a redirect to the track home (`ws-track: true` in the generated profile files) |
+| `assets/fitty-init.js` was requested with a wrong path on every nested page (404) and is not used by any HTML page | fixed: include removed from `_quarto.yml` |
+| GIS sources and labs were copied into the other tracks' output | fixed: caused by the frozen GIS welcome page; stale copies removed from `docs/` |
+| Landing page footer links (Downloads, Contact, References) were dead; game card listed Region 4 as playable | fixed |
+| `data-visualization/plot_data.qmd` names `custom-theme.css`, which does not exist | **open**: harmless 404; fixing it means re-running the deck in R |
 | `main` is six modules behind the branches | **open**: needs your merge decision |
 
 ## 5. Still open

@@ -72,7 +72,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script src="assets/fitty-init.js"></script>
 
 
 <link rel="stylesheet" href="assets/theme_webp.css">
@@ -93,204 +92,250 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+<!--
+  index.qmd is rendered twice:
+    1. on its own (no profile) to docs/index.html: the landing page below.
+    2. inside every track site (docs/<track>/index.html), where its relative links would be wrong.
+       There it shows only a redirect to the track home. `ws-track` is set in each _quarto-<track>.yml.
+-->
 <!-- ═══════════════════════════════════════════════════════
-     HERO SECTION
+     HEADER
      ═══════════════════════════════════════════════════════ -->
-<div class="ws-hero">
-  <div class="ws-hero-inner">
-    <div class="ws-logo-row">
-      <span class="ws-logo-icon">📊</span>
-    </div>
-    <h1 class="ws-title">R Data Visualization Workshop</h1>
+<header class="ws-top">
+  <div class="ws-top-inner">
+    <!-- not an <h1>: Quarto lifts the first h1 into its (hidden) title block -->
+    <div class="ws-title" role="heading" aria-level="1">R Data Visualization Workshop</div>
     <p class="ws-subtitle">
-      A comprehensive, tiered learning platform for data wrangling,
-      statistical analysis, and visualization in R
+      A self-study path through data wrangling, visualization and statistical analysis in R
     </p>
     <p class="ws-authors">
-      Dr. Mukul Maheshwari &nbsp;·&nbsp; Dr. Rudresh Negi<br>
-      <span class="ws-dept">Department of Community Medicine</span>
+      Dr. Mukul Maheshwari &nbsp;·&nbsp; Dr. Rudresh Negi
+      <span class="ws-dept">&nbsp;·&nbsp; Department of Community Medicine</span>
     </p>
   </div>
-</div>
+</header>
 
 
-<!-- ═══════════════════════════════════════════════════════
-     TRACK SELECTION
-     ═══════════════════════════════════════════════════════ -->
-<div class="ws-tracks-section">
-  <h2 class="ws-section-heading anchored">Choose Your Workshop Track</h2>
-  <p class="ws-section-sub">
-    Select the track that matches your level. Basic is open to everyone.
-    Other tracks require a workshop key provided by the session organiser.
-  </p>
+<main class="ws-main">
 
-
-  <!-- Top: the game, spanning all three columns -->
+  <!-- ═════════════════════════════════════════════════════
+       1 · THE GAME (always first)
+       ═════════════════════════════════════════════════════ -->
   <a class="ws-game" href="dungeons/dungeons/index.html">
-    <div class="ws-game-icon">🗺️</div>
+    <div class="ws-game-icon" aria-hidden="true">🗺️</div>
     <div class="ws-game-body">
-      <div class="ws-card-badge ws-badge--open">🟢 Open Access · New</div>
-      <h3 class="ws-game-title anchored">Dungeons &amp; Dataframes</h3>
-      <p class="ws-game-sub">Medical statistics in R as a game, from your first script to regression and beyond.
-        Clear worlds, beat bosses, earn XP and grow your skill tree. The workshop tracks below are its library.</p>
+      <div class="ws-card-badge ws-badge--open">🟢 Open Access</div>
+      <h2 class="ws-game-title anchored">Dungeons &amp; Dataframes</h2>
+      <p class="ws-game-sub">Medical statistics in R as a game, from your first script to regression.
+        Clear worlds, beat bosses, earn XP and grow your skill tree. Each region of the game
+        matches one step of the study plan below, so you can read a step and then play it.</p>
       <ul class="ws-game-regions">
-        <li>Region 1 · Basics</li><li>Region 2 · Moderate</li><li>Region 3 · Regression</li><li>Region 4 · Advanced</li>
+        <li>Region 1 · Basics</li>
+        <li>Region 2 · Moderate</li>
+        <li>Region 3 · Regression</li>
+        <li class="ws-game-soon">Region 4 · Advanced (coming later)</li>
       </ul>
     </div>
     <span class="ws-btn ws-btn--game">Start playing →</span>
   </a>
 
 
-  <!-- Row 1: Basic · Moderate · Advanced -->
-  <div class="ws-cards-row" id="cards-row-1">
+  <!-- ═════════════════════════════════════════════════════
+       2 · SELF-STUDY PLAN (the four core tracks, in order)
+       ═════════════════════════════════════════════════════ -->
+  <section class="ws-plan-section" aria-labelledby="ws-plan-heading">
+    <h2 class="ws-section-heading anchored" id="ws-plan-heading">Your self-study plan</h2>
+    <p class="ws-section-sub">
+      Four steps, in order. Each step is a track with its own day-by-day plan inside.
+      Step 1 is open to everyone; the others need the workshop key from your session organiser.
+    </p>
 
-
-    <div class="ws-card ws-card--open" data-profile="basic">
-      <div class="ws-card-badge ws-badge--open">🟢 Open Access</div>
-      <h3 class="ws-card-title anchored">Basic</h3>
-      <ul class="ws-card-list">
-        <li>R Foundations &amp; Data Wrangling</li>
-        <li>Basic Visualization (ggplot2)</li>
-        <li>Statistical Test Selection</li>
-        <li>ggstatsplot — Introduction</li>
-        <li>Quarto Basics</li>
-      </ul>
-      <button class="ws-btn ws-btn--open ws-btn--loading" onclick="enterTrack('basic')" disabled="">
-        Enter Track →
-      </button>
+    <div class="ws-progress" aria-live="polite">
+      <div class="ws-progress-bar"><span id="ws-progress-fill"></span></div>
+      <span id="ws-progress-text">0 of 4 steps done</span>
     </div>
 
+    <ol class="ws-path">
 
-    <div class="ws-card ws-card--locked" data-profile="moderate">
-      <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
-      <h3 class="ws-card-title anchored">Moderate</h3>
-      <ul class="ws-card-list">
-        <li>Everything in Basic</li>
-        <li>Best Practices &amp; Plot Matching</li>
-        <li>Intermediate Plots + Modules 1–2</li>
-        <li>ggstatsplot — Intermediate</li>
-        <li>Quarto Dynamic Documents</li>
-        <li>gtsummary Tables</li>
-        <li>Applied Healthcare Examples</li>
-      </ul>
-      <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('moderate')" disabled="">
-        Enter Key →
-      </button>
+      <li class="ws-step">
+        <div class="ws-step-num" aria-hidden="true">1</div>
+        <div class="ws-card ws-step-card ws-card--open" data-profile="basic">
+          <div class="ws-step-main">
+            <div class="ws-card-badge ws-badge--open">🟢 Open Access</div>
+            <h3 class="ws-card-title anchored">Step 1 · Basic</h3>
+            <p class="ws-step-lead">New to R? Start here.</p>
+            <ul class="ws-card-list">
+              <li>R Foundations &amp; Data Wrangling</li>
+              <li>Basic Visualization (ggplot2)</li>
+              <li>Statistical Test Selection</li>
+              <li>ggstatsplot: Introduction</li>
+              <li>Quarto Basics</li>
+            </ul>
+          </div>
+          <div class="ws-step-side">
+            <span class="ws-step-game">🗺️ In the game: Region 1</span>
+            <button class="ws-btn ws-btn--open ws-btn--loading" onclick="enterTrack('basic')" disabled="">
+              Enter Track →
+            </button>
+            <label class="ws-step-done"><input type="checkbox" data-step="basic"> I have finished this step</label>
+          </div>
+        </div>
+      </li>
+
+      <li class="ws-step">
+        <div class="ws-step-num" aria-hidden="true">2</div>
+        <div class="ws-card ws-step-card ws-card--locked" data-profile="moderate">
+          <div class="ws-step-main">
+            <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+            <h3 class="ws-card-title anchored">Step 2 · Moderate</h3>
+            <p class="ws-step-lead">Real, messy data and figures and tables fit for a paper.</p>
+            <ul class="ws-card-list">
+              <li>Cleaning Messy Data &amp; Iteration</li>
+              <li>Best Practices &amp; Plot Matching</li>
+              <li>ggplot2 Modules 1–2, Intermediate Plots</li>
+              <li>ggstatsplot: Intermediate</li>
+              <li>gtsummary Tables</li>
+              <li>Quarto Dynamic Documents</li>
+            </ul>
+          </div>
+          <div class="ws-step-side">
+            <span class="ws-step-game">🗺️ In the game: Region 2</span>
+            <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('moderate')" disabled="">
+              Enter Key →
+            </button>
+            <label class="ws-step-done"><input type="checkbox" data-step="moderate"> I have finished this step</label>
+          </div>
+        </div>
+      </li>
+
+      <li class="ws-step">
+        <div class="ws-step-num" aria-hidden="true">3</div>
+        <div class="ws-card ws-step-card ws-card--locked" data-profile="regression">
+          <div class="ws-step-main">
+            <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+            <h3 class="ws-card-title anchored">Step 3 · Regression</h3>
+            <p class="ws-step-lead">A full-day workshop: six slide decks, six R labs, quizzes and a cheat sheet.</p>
+            <ul class="ws-card-list">
+              <li>Simple &amp; Multiple Linear Regression</li>
+              <li>Univariate Regression Screening</li>
+              <li>Logistic Regression</li>
+              <li>Cox Proportional Hazards Regression</li>
+              <li>Model Diagnostics with performance</li>
+              <li>Interpreting &amp; Reporting</li>
+            </ul>
+          </div>
+          <div class="ws-step-side">
+            <span class="ws-step-game">🗺️ In the game: Region 3</span>
+            <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('regression')" disabled="">
+              Enter Key →
+            </button>
+            <label class="ws-step-done"><input type="checkbox" data-step="regression"> I have finished this step</label>
+          </div>
+        </div>
+      </li>
+
+      <li class="ws-step">
+        <div class="ws-step-num" aria-hidden="true">4</div>
+        <div class="ws-card ws-step-card ws-card--locked" data-profile="advanced">
+          <div class="ws-step-main">
+            <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+            <h3 class="ws-card-title anchored">Step 4 · Advanced</h3>
+            <p class="ws-step-lead">The complete visualization library and nine advanced analysis workshops (A1 to A9).</p>
+            <ul class="ws-card-list">
+              <li>ggplot2 Modules 3–4, Advanced &amp; Interactive Plots</li>
+              <li>ggstatsplot: Advanced, Quarto for Publication</li>
+              <li>Survival · Counts &amp; Rates · Ordinal Outcomes</li>
+              <li>Clustered Data · Survey Weights · Curves</li>
+              <li>Missing Data · Prediction Models</li>
+              <li>Causal Inference</li>
+            </ul>
+          </div>
+          <div class="ws-step-side">
+            <span class="ws-step-game ws-step-game--soon">🗺️ Region 4 is coming later</span>
+            <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('advanced')" disabled="">
+              Enter Key →
+            </button>
+            <label class="ws-step-done"><input type="checkbox" data-step="advanced"> I have finished this step</label>
+          </div>
+        </div>
+      </li>
+
+    </ol>
+  </section>
+
+
+  <!-- ═════════════════════════════════════════════════════
+       3 · ELECTIVES (single-topic tracks, outside the main path)
+       ═════════════════════════════════════════════════════ -->
+  <section class="ws-electives" aria-labelledby="ws-electives-heading">
+    <h2 class="ws-section-heading anchored" id="ws-electives-heading">Electives</h2>
+    <p class="ws-section-sub">
+      Single-topic tracks you can add to the plan when you need them.
+    </p>
+
+    <div class="ws-cards-row">
+
+      <div class="ws-card ws-card--locked ws-card--viz" data-profile="dataviz-base">
+        <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+        <h3 class="ws-card-title anchored">Data Visualization: Foundations</h3>
+        <p class="ws-card-when">Take it any time. No statistics needed.</p>
+        <ul class="ws-card-list">
+          <li>Grammar of Graphics</li>
+          <li>Best Practices</li>
+          <li>Matching Data to Plots</li>
+          <li>ggplot2 Modules 1–2</li>
+          <li>Basic &amp; Intermediate Gallery</li>
+        </ul>
+        <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('dataviz-base')" disabled="">
+          Enter Key →
+        </button>
+      </div>
+
+      <div class="ws-card ws-card--locked ws-card--viz" data-profile="dataviz-complete">
+        <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+        <h3 class="ws-card-title anchored">Data Visualization: Complete</h3>
+        <p class="ws-card-when">Best after Foundations.</p>
+        <ul class="ws-card-list">
+          <li>Everything in Foundations</li>
+          <li>ggplot2 Modules 3–4</li>
+          <li>Advanced Plot Gallery</li>
+          <li>Interactive Plots</li>
+          <li>Debugging &amp; Advanced Export</li>
+        </ul>
+        <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('dataviz-complete')" disabled="">
+          Enter Key →
+        </button>
+      </div>
+
+      <div class="ws-card ws-card--locked ws-card--gis" data-profile="gis">
+        <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+        <h3 class="ws-card-title anchored">GIS &amp; Spatial Statistics</h3>
+        <p class="ws-card-when">Best after Step 3 · Regression.</p>
+        <ul class="ws-card-list">
+          <li>Spatial Data with sf &amp; Maps</li>
+          <li>Neighbours &amp; Spatial Weights</li>
+          <li>Moran's I &amp; Local Moran's I (LISA)</li>
+          <li>Geary's C, Getis-Ord, Scan Statistic</li>
+          <li>Spatial Regression</li>
+        </ul>
+        <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('gis')" disabled="">
+          Enter Key →
+        </button>
+      </div>
+
     </div>
+  </section>
 
-
-    <div class="ws-card ws-card--locked" data-profile="advanced">
-      <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
-      <h3 class="ws-card-title anchored">Advanced</h3>
-      <ul class="ws-card-list">
-        <li>Everything in Moderate</li>
-        <li>Advanced &amp; Interactive Plots</li>
-        <li>ggplot2 Modules 3–4</li>
-        <li>ggstatsplot — Advanced</li>
-        <li>Quarto for Publication</li>
-        <li>Deep Statistical Analysis</li>
-      </ul>
-      <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('advanced')" disabled="">
-        Enter Key →
-      </button>
-    </div>
-
-
-  </div>
-
-
-  <!-- Row 2: DataViz Foundations · DataViz Complete · Regression -->
-  <h2 class="ws-section-heading ws-section-heading--second anchored">
-    Focused Tracks
-  </h2>
-  <p class="ws-section-sub">
-    Dedicated tracks covering a single area in depth — visualization only, or
-    statistics only. Ideal for focused workshops.
-  </p>
-
-
-  <div class="ws-cards-row ws-cards-row--4" id="cards-row-2">
-
-
-    <div class="ws-card ws-card--locked ws-card--viz" data-profile="dataviz-base">
-      <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
-      <h3 class="ws-card-title anchored">Data Visualization — Foundations</h3>
-      <ul class="ws-card-list">
-        <li>Grammar of Graphics</li>
-        <li>Best Practices</li>
-        <li>Matching Data to Plots</li>
-        <li>ggplot2 Modules 1–2</li>
-        <li>Basic &amp; Intermediate Gallery</li>
-        <li>Applied Visualization Examples</li>
-      </ul>
-      <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('dataviz-base')" disabled="">
-        Enter Key →
-      </button>
-    </div>
-
-
-    <div class="ws-card ws-card--locked ws-card--viz" data-profile="dataviz-complete">
-      <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
-      <h3 class="ws-card-title anchored">Data Visualization — Complete</h3>
-      <ul class="ws-card-list">
-        <li>Everything in Foundations</li>
-        <li>ggplot2 Modules 3–4</li>
-        <li>Advanced Plot Gallery</li>
-        <li>Interactive Plots</li>
-        <li>Practical Applications</li>
-        <li>Debugging &amp; Advanced Export</li>
-      </ul>
-      <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('dataviz-complete')" disabled="">
-        Enter Key →
-      </button>
-    </div>
-
-
-    <div class="ws-card ws-card--locked ws-card--stats" data-profile="regression">
-      <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
-      <h3 class="ws-card-title anchored">Regression</h3>
-      <ul class="ws-card-list">
-        <li>R Foundations &amp; Data Wrangling</li>
-        <li>Simple &amp; Multiple Linear Regression</li>
-        <li>Univariate Regression Screening</li>
-        <li>Logistic Regression</li>
-        <li>Cox Proportional Hazards Regression</li>
-        <li>Model Diagnostics with performance</li>
-      </ul>
-      <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('regression')" disabled="">
-        Enter Key →
-      </button>
-    </div>
-
-
-    <div class="ws-card ws-card--locked ws-card--gis" data-profile="gis">
-      <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
-      <h3 class="ws-card-title anchored">GIS &amp; Spatial Statistics</h3>
-      <ul class="ws-card-list">
-        <li>Spatial Data with sf &amp; Maps</li>
-        <li>Neighbours &amp; Spatial Weights</li>
-        <li>Moran's I &amp; Local Moran's I (LISA)</li>
-        <li>Geary's C, Getis-Ord, Scan Statistic</li>
-        <li>Spatial Regression Diagnostics</li>
-        <li>Advanced Visualization pages</li>
-      </ul>
-      <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('gis')" disabled="">
-        Enter Key →
-      </button>
-    </div>
-
-
-  </div>
-</div>
+</main>
 
 
 <!-- ═══════════════════════════════════════════════════════
-     FOOTER LINKS
+     FOOTER LINKS (these pages live in the open Basic track)
      ═══════════════════════════════════════════════════════ -->
 <div class="ws-footer-links">
-  <a href="./downloads.html">📥 Downloads &amp; Cheatsheets</a>
-  <a href="./contact.html">✉️ Contact Us</a>
-  <a href="./references.html">📚 References</a>
+  <a href="basic/downloads.html">📥 Downloads &amp; Cheatsheets</a>
+  <a href="basic/contact.html">✉️ Contact Us</a>
+  <a href="basic/references.html">📚 References</a>
 </div>
 
 
@@ -433,6 +478,36 @@ document.addEventListener('keydown', e => {
 
 
 loadConfig();
+
+
+// ── Self-study plan progress (kept in this browser only) ──
+(function () {
+  var KEY = 'ws-path-done';
+  var boxes = document.querySelectorAll('.ws-step-done input[data-step]');
+  var done = {};
+  try { done = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { done = {}; }
+
+  function refresh() {
+    var n = 0;
+    boxes.forEach(function (box) {
+      var on = !!done[box.dataset.step];
+      box.checked = on;
+      box.closest('.ws-step').classList.toggle('ws-step--done', on);
+      if (on) n++;
+    });
+    document.getElementById('ws-progress-fill').style.width = (100 * n / boxes.length) + '%';
+    document.getElementById('ws-progress-text').textContent = n + ' of ' + boxes.length + ' steps done';
+  }
+
+  boxes.forEach(function (box) {
+    box.addEventListener('change', function () {
+      if (box.checked) done[box.dataset.step] = 1; else delete done[box.dataset.step];
+      try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {}
+      refresh();
+    });
+  });
+  refresh();
+})();
 </script>
 
 

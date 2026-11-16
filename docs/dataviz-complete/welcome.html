@@ -73,10 +73,10 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script src="assets/fitty-init.js"></script>
 
 
 <link rel="stylesheet" href="assets/theme_webp.css">
+<link rel="stylesheet" href="assets/welcome.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -236,10 +236,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul class="collapse">
-  <li><a href="#workshop-goals" id="toc-workshop-goals" class="nav-link active" data-scroll-target="#workshop-goals">🎯 Workshop Goals</a></li>
-  <li><a href="#what-this-track-covers" id="toc-what-this-track-covers" class="nav-link" data-scroll-target="#what-this-track-covers">📚 What This Track Covers</a></li>
-  <li><a href="#find-your-way-around" id="toc-find-your-way-around" class="nav-link" data-scroll-target="#find-your-way-around">🧭 Find Your Way Around</a></li>
-  <li><a href="#downloadable-resources" id="toc-downloadable-resources" class="nav-link" data-scroll-target="#downloadable-resources">📥 Downloadable Resources</a></li>
+  <li><a href="#self-study-plan-5" id="toc-self-study-plan-5" class="nav-link active" data-scroll-target="#self-study-plan-5">🗓️ Self-study plan</a></li>
+  <li><a href="#what-you-will-be-able-to-do-5" id="toc-what-you-will-be-able-to-do-5" class="nav-link" data-scroll-target="#what-you-will-be-able-to-do-5">🎯 What you will be able to do</a></li>
+  <li><a href="#downloads-5" id="toc-downloads-5" class="nav-link" data-scroll-target="#downloads-5">📥 Downloads</a></li>
   </ul>
 </nav>
     </div>
@@ -265,93 +264,121 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div style="background:#f1faf8;border-left:5px solid #00695c;border-radius:10px;
-            padding:1.5rem 2rem;margin-bottom:2rem;">
-<span style="display:inline-block;background:#00695c;color:white;font-size:0.8rem;
-               font-weight:600;padding:0.2rem 0.75rem;border-radius:999px;
-               margin-bottom:0.75rem;">🟤 Workshop Key Unlocked</span>
-<h2 style="color:#00695c;margin-top:0.4rem;margin-bottom:0.6rem;" class="anchored">
-GIS and Spatial Statistics Track
-</h2>
-<p style="font-size:1.05rem;line-height:1.7;margin:0;">
-Welcome to the <strong>GIS and Spatial Statistics Track</strong>. It builds on the advanced visualization pages (ggplot2 modules, galleries, interactive plots, exporting) and adds a spatial toolkit: reading and mapping spatial data with <code>sf</code>, defining neighbours and spatial weights, testing for spatial autocorrelation with <strong>Moran’s I</strong>, finding clusters with <strong>local Moran’s I (LISA)</strong>, <strong>Getis-Ord Gi*</strong>, <strong>Geary’s C</strong>, join counts and the scan statistic, and checking regression residuals for spatial structure. All examples use a synthetic district of 80 blocks with a planted hot spot, so no real boundaries or personal data are involved.
-</p>
+<!--
+  TRACK HOME PAGE — one block per profile, chosen by Quarto itself (when-profile).
+
+  This page deliberately contains NO R code. It used to build its content in an R chunk from
+  Sys.getenv("QUARTO_PROFILE"), but `freeze: auto` keeps ONE cached result per file for all
+  profiles, so every track ended up showing whichever track was rendered last (Basic opened the
+  GIS home page). Plain markdown is never frozen, so each profile always gets its own block.
+
+  Every block has the same order:  banner → game → self-study plan → goals → downloads → tip.
+  Link only to files that exist in the repository: Quarto copies linked files into the track site.
+-->
+<!-- ═══════════════════════════════════════════════════════════════ BASIC -->
+<!-- ═══════════════════════════════════════════════════════════════ MODERATE -->
+<!-- ═══════════════════════════════════════════════════════════════ REGRESSION -->
+<!-- ═══════════════════════════════════════════════════════════════ ADVANCED -->
+<!-- ═══════════════════════════════════════════════════════════════ DATAVIZ FOUNDATIONS -->
+<!-- ═══════════════════════════════════════════════════════════════ DATAVIZ COMPLETE -->
+<div class="ws-track-hero ws-track--dataviz-complete" data-track="dataviz-complete">
+<p><span class="ws-track-badge">🟠 Workshop Key Unlocked</span></p>
+<p><span class="ws-track-title">Data Visualization — Complete</span></p>
+<p>An elective, visualization-only track with everything in Foundations plus ggplot2 modules 3–4, the advanced gallery, interactive plots, practical applications, debugging and advanced export.</p>
 </div>
-<section id="workshop-goals" class="level2">
-<h2 class="anchored" data-anchor-id="workshop-goals">🎯 Workshop Goals</h2>
+<div class="ws-track-game">
+<p>🗺️ <strong>Play as you learn.</strong> The plotting worlds of <em>Dungeons &amp; Dataframes</em> (First Plots in Region 1, Explore by Picture in Region 2) practise what this track teaches. <a href="../dungeons/dungeons/index.html" class="ws-track-game-btn">Open the game →</a></p>
+</div>
+<section id="self-study-plan-5" class="level2">
+<h2 class="anchored" data-anchor-id="self-study-plan-5">🗓️ Self-study plan</h2>
+<p>Steps 1 to 4 are the Foundations track: skip them if you have done it. Tick a step when you have finished it; ticks are saved in this browser.</p>
+<div class="ws-plan">
+<ol type="1">
+<li><p><strong>Principles</strong></p>
+<p><a href="./data-visualization/ggplot_grammar.html">Grammar of Graphics</a> · <a href="./data-visualization/best_practices.html">Best Practices</a> · <a href="./data-visualization/plot_data.html">Matching Data to Plots</a></p></li>
+<li><p><strong>ggplot2 Modules 1 and 2</strong></p>
+<p><a href="./data-visualization/gram_ggplot/module_1_foundations_geoms.html">Module 1 — Foundations &amp; Geoms</a>, then <a href="./data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html">Module 2 — Aesthetics, Faceting &amp; Themes</a>.</p></li>
+<li><p><strong>Basic and intermediate galleries</strong></p>
+<p><a href="./plot-gallery/basic.html">Basic Plots</a> · <a href="./plot-gallery/moderate.html">Intermediate Plots</a> · <a href="./specialized/merge_visuals.html">Merged Visuals</a> · <a href="./specialized/plot_stats.html">Statistical Plots</a></p></li>
+<li><p><strong>Export basics</strong></p>
+<p><a href="./exporting_tools/exporting_plots.html">Exporting Plots</a> · <a href="./exporting_tools/plotting_tools.html">Plotting Tools</a></p></li>
+<li><p><strong>ggplot2 Module 3</strong></p>
+<p><a href="./data-visualization/gram_ggplot/module_3_colors_scales_themes.html">Colors, Scales &amp; Themes</a></p></li>
+<li><p><strong>ggplot2 Module 4</strong></p>
+<p><a href="./data-visualization/gram_ggplot/module_4_advanced_best_practices.html">Advanced Best Practices</a></p></li>
+<li><p><strong>Advanced and interactive plots</strong></p>
+<p><a href="./plot-gallery/advanced.html">Advanced Plots</a>, then <a href="./specialized/interactive.html">Interactive Plots</a>.</p></li>
+<li><p><strong>Put it to work</strong></p>
+<p><a href="./plot-gallery/practical_application.html">Practical Applications</a></p></li>
+<li><p><strong>Fix and publish</strong></p>
+<p><a href="./exporting_tools/debugging_plots.html">Debugging Plots</a> · <a href="./exporting_tools/advanced_exporting.html">Advanced Exporting</a></p></li>
+</ol>
+</div>
+</section>
+<section id="what-you-will-be-able-to-do-5" class="level2">
+<h2 class="anchored" data-anchor-id="what-you-will-be-able-to-do-5">🎯 What you will be able to do</h2>
 <ul>
-<li>Read, transform and join spatial data with sf, and keep track of coordinate reference systems</li>
-<li>Make clear static and interactive maps and choose a sensible classification</li>
-<li>Define neighbours and spatial weights, and know how the choice changes the answer</li>
-<li>Test for global spatial autocorrelation with Moran’s I and read the Moran scatterplot</li>
-<li>Locate clusters and outliers with local Moran’s I (LISA) and hot spots with Getis-Ord Gi*</li>
-<li>Use Geary’s C, join counts and the scan statistic, and check regression residuals for spatial structure</li>
+<li>Use all four ggplot2 modules</li>
+<li>Build advanced and interactive visualizations</li>
+<li>Debug a plot that does not look right</li>
+<li>Export figures to the standard a journal asks for</li>
 </ul>
 </section>
-<section id="what-this-track-covers" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-track-covers">📚 What This Track Covers</h2>
+<section id="downloads-5" class="level2">
+<h2 class="anchored" data-anchor-id="downloads-5">📥 Downloads</h2>
 <ul>
-<li>📁 R Foundations &amp; Data Wrangling</li>
-<li>📐 Data Visualization — grammar, best practices, ggplot2 modules 1–4</li>
-<li>🖼️ Plot Gallery (basic to advanced) and Specialized &amp; Interactive Plots</li>
-<li>⚙️ Exporting, Plotting Tools and Debugging</li>
-<li>🎓 GIS Workshop — 5 sessions, 5 labs, quizzes, cheat sheet</li>
-<li>🗺️ Spatial Data with sf, Maps and Choropleths</li>
-<li>🧭 Neighbours and Spatial Weights</li>
-<li>📍 Global Moran’s I and Local Moran’s I (LISA)</li>
-<li>🔥 Geary’s C, Getis-Ord, Join Counts and the Scan Statistic</li>
-<li>📉 Spatial Regression and Residual Tests</li>
-</ul>
-</section>
-<section id="find-your-way-around" class="level2">
-<h2 class="anchored" data-anchor-id="find-your-way-around">🧭 Find Your Way Around</h2>
-<p>Use the navigation bar above to browse all modules. Key starting points:</p>
-<ul>
-<li>🎓 <strong><a href="gis-workshop/s1_spatial_data.qmd">GIS Workshop</a></strong> — Slides, labs and quizzes: start at Session 1 (spatial data and maps)</li>
-<li>📋 <strong><a href="gis-workshop/cheatsheet.qmd">Cheat Sheet</a></strong> — Two-page guide to choosing and reading spatial tests</li>
-<li>🗺️ <strong><a href="gis/spatial_data_sf.qmd">Spatial Data with sf</a></strong> — Start here: spatial objects, coordinate systems, joining attributes</li>
-<li>🧭 <strong><a href="gis/spatial_weights.qmd">Neighbours and Weights</a></strong> — Queen, rook and k-nearest neighbours, and row-standardised weights</li>
-<li>📍 <strong><a href="gis/morans_i.qmd">Global Moran’s I</a></strong> — Is the pattern clustered? Test, permutation p-value and Moran scatterplot</li>
-<li>🔥 <strong><a href="gis/local_moran_lisa.qmd">Local Moran’s I (LISA)</a></strong> — Where are the clusters and spatial outliers?</li>
-<li>🎨 <strong><a href="./data-visualization/ggplot_grammar.html">Data Visualization</a></strong> — Grammar of graphics and all four ggplot2 modules</li>
+<li>Cheat sheets: <a href="downloads/cheatsheets/data-visualization.pdf">Data visualization (ggplot2)</a> · <a href="downloads/cheatsheets/data-transformation.pdf">Data transformation</a> · <a href="downloads/cheatsheets/factors.pdf">Factors</a></li>
+<li>Example script: <a href="downloads/source-scripts/nctoh/data_vis.R">Data visualization</a></li>
+<li>Everything else is on the <a href="./downloads.html">Downloads</a> page.</li>
 </ul>
 <blockquote class="blockquote">
-<p>The navbar has the full visualization library as well as the spatial pages.</p>
+<p>💡 <strong>Tip:</strong> Finished Foundations? Start at Step 5, <strong>Module 3 — Colors, Scales &amp; Themes</strong>.</p>
 </blockquote>
-</section>
-<section id="downloadable-resources" class="level2">
-<h2 class="anchored" data-anchor-id="downloadable-resources">📥 Downloadable Resources</h2>
-<p>All files for this track are available below, grouped by type.</p>
-<section id="r-scripts" class="level3">
-<h3 class="anchored" data-anchor-id="r-scripts">📄 R Scripts</h3>
-<ul>
-<li><a href="gis/make_gis_data.R">Make Gis Data</a></li>
-<li><a href="gis-workshop/labs/lab1_data.R">Lab1 Data</a></li>
-<li><a href="gis-workshop/labs/lab2_weights.R">Lab2 Weights</a></li>
-<li><a href="gis-workshop/labs/lab3_global.R">Lab3 Global</a></li>
-<li><a href="gis-workshop/labs/lab4_local.R">Lab4 Local</a></li>
-<li><a href="gis-workshop/labs/lab5_regression.R">Lab5 Regression</a></li>
-</ul>
-</section>
-<section id="datasets" class="level3">
-<h3 class="anchored" data-anchor-id="datasets">🗄️ Datasets</h3>
-<ul>
-<li>📦 <a href="data/gis/district_blocks.geojson">District Blocks</a> <code>.geojson</code></li>
-<li>📊 <a href="data/gis/facilities.csv">Facilities</a> <code>.csv</code></li>
-</ul>
-</section>
-<section id="cheatsheets" class="level3">
-<h3 class="anchored" data-anchor-id="cheatsheets">📋 Cheatsheets</h3>
-<ul>
-<li><a href="gis-workshop/cheatsheet.qmd">Cheatsheet</a></li>
-</ul>
-<hr>
-<blockquote class="blockquote">
-<p>💡 <strong>Tip:</strong> Never mapped data in R? Read <strong>Spatial Data with sf</strong> and <strong>Maps and Choropleths</strong> first, then go straight to <strong>Global Moran’s I</strong>.</p>
-</blockquote>
+<!-- ═══════════════════════════════════════════════════════════════ GIS -->
+<!-- ═══════════════════════════════════════════════════════════════ DUNGEONS (the game's own site) -->
+<script>
+// Self-study plan: a tick box on every step, remembered in this browser (per track).
+(function () {
+  var hero = document.querySelector('.ws-track-hero[data-track]');
+  var steps = document.querySelectorAll('.ws-plan > ol > li');
+  if (!hero || !steps.length) return;
+  var key = 'ws-plan:' + hero.getAttribute('data-track');
+  var done = {};
+  try { done = JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch (e) { done = {}; }
+
+  var status = document.createElement('p');
+  status.className = 'ws-plan-status';
+  var plan = document.querySelector('.ws-plan');
+  plan.parentNode.insertBefore(status, plan);
+
+  function refresh() {
+    var n = 0;
+    steps.forEach(function (li, i) {
+      var on = !!done[i];
+      li.classList.toggle('ws-plan-done', on);
+      li.querySelector('.ws-plan-tick').checked = on;
+      if (on) n++;
+    });
+    status.textContent = n + ' of ' + steps.length + ' steps done';
+  }
+
+  steps.forEach(function (li, i) {
+    var box = document.createElement('input');
+    box.type = 'checkbox';
+    box.className = 'ws-plan-tick';
+    box.setAttribute('aria-label', 'Mark step ' + (i + 1) + ' as done');
+    box.addEventListener('change', function () {
+      if (box.checked) done[i] = 1; else delete done[i];
+      try { localStorage.setItem(key, JSON.stringify(done)); } catch (e) {}
+      refresh();
+    });
+    li.appendChild(box);
+  });
+  refresh();
+})();
+</script>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

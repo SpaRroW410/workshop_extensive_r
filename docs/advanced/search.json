@@ -4666,7 +4666,7 @@
     "href": "welcome.html",
     "title": "Welcome",
     "section": "",
-    "text": "🔴 Workshop Key Unlocked\n\n\nWelcome to the Advanced Track — the full workshop experience. This track covers all four ggplot2 modules, advanced and interactive plots, ggstatsplot advanced, Quarto for publication, deep statistical analysis, and real-world applied NCTOH healthcare examples."
+    "text": "🔴 Workshop Key Unlocked\nAdvanced Track\nStep 4 of the self-study path. The complete visualization library (all four ggplot2 modules, advanced and interactive plots, publication-ready Quarto) and nine advanced analysis workshops, A1 to A9. Each workshop has five slide decks with a quiz, five R labs and a two-page cheat sheet."
   },
   {
     "objectID": "welcome.html#workshop-goals",
@@ -4699,9 +4699,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "R Data Visualization Workshop",
+    "title": "Data Visualization Workshop — Advanced",
     "section": "",
-    "text": "📊\n    \n    R Data Visualization Workshop\n    \n      A comprehensive, tiered learning platform for data wrangling,\n      statistical analysis, and visualization in R\n    \n    \n      Dr. Mukul Maheshwari  ·  Dr. Rudresh Negi\n      Department of Community Medicine\n    \n  \n\n\n\n\n\n  Choose Your Workshop Track\n  \n    Select the track that matches your level. Basic is open to everyone.\n    Other tracks require a workshop key provided by the session organiser.\n  \n\n\n  \n  \n    🗺️\n    \n      🟢 Open Access · New\n      Dungeons & Dataframes\n      Medical statistics in R as a game, from your first script to regression and beyond.\n        Clear worlds, beat bosses, earn XP and grow your skill tree. The workshop tracks below are its library.\n      \n        Region 1 · BasicsRegion 2 · ModerateRegion 3 · RegressionRegion 4 · Advanced\n      \n    \n    Start playing →\n  \n\n\n  \n  \n\n\n    \n      🟢 Open Access\n      Basic\n      \n        R Foundations & Data Wrangling\n        Basic Visualization (ggplot2)\n        Statistical Test Selection\n        ggstatsplot — Introduction\n        Quarto Basics\n      \n      \n        Enter Track →\n      \n    \n\n\n    \n      🔒 Workshop Key\n      Moderate\n      \n        Everything in Basic\n        Best Practices & Plot Matching\n        Intermediate Plots + Modules 1–2\n        ggstatsplot — Intermediate\n        Quarto Dynamic Documents\n        gtsummary Tables\n        Applied Healthcare Examples\n      \n      \n        Enter Key →\n      \n    \n\n\n    \n      🔒 Workshop Key\n      Advanced\n      \n        Everything in Moderate\n        Advanced & Interactive Plots\n        ggplot2 Modules 3–4\n        ggstatsplot — Advanced\n        Quarto for Publication\n        Deep Statistical Analysis\n      \n      \n        Enter Key →\n      \n    \n\n\n  \n\n\n  \n  \n    Focused Tracks\n  \n  \n    Dedicated tracks covering a single area in depth — visualization only, or\n    statistics only. Ideal for focused workshops.\n  \n\n\n  \n\n\n    \n      🔒 Workshop Key\n      Data Visualization — Foundations\n      \n        Grammar of Graphics\n        Best Practices\n        Matching Data to Plots\n        ggplot2 Modules 1–2\n        Basic & Intermediate Gallery\n        Applied Visualization Examples\n      \n      \n        Enter Key →\n      \n    \n\n\n    \n      🔒 Workshop Key\n      Data Visualization — Complete\n      \n        Everything in Foundations\n        ggplot2 Modules 3–4\n        Advanced Plot Gallery\n        Interactive Plots\n        Practical Applications\n        Debugging & Advanced Export\n      \n      \n        Enter Key →\n      \n    \n\n\n    \n      🔒 Workshop Key\n      Regression\n      \n        R Foundations & Data Wrangling\n        Simple & Multiple Linear Regression\n        Univariate Regression Screening\n        Logistic Regression\n        Cox Proportional Hazards Regression\n        Model Diagnostics with performance\n      \n      \n        Enter Key →\n      \n    \n\n\n    \n      🔒 Workshop Key\n      GIS & Spatial Statistics\n      \n        Spatial Data with sf & Maps\n        Neighbours & Spatial Weights\n        Moran's I & Local Moran's I (LISA)\n        Geary's C, Getis-Ord, Scan Statistic\n        Spatial Regression Diagnostics\n        Advanced Visualization pages\n      \n      \n        Enter Key →\n      \n    \n\n\n  \n\n\n\n\n\n  📥 Downloads & Cheatsheets\n  ✉️ Contact Us\n  📚 References\n\n\n\n\n\n  \n    ✕\n    🔑\n    Enter Workshop Key\n    \n    \n    \n    Unlock →"
+    "text": "Opening the track home… continue."
   },
   {
     "objectID": "contact.html",
@@ -9938,5 +9938,26 @@
     "title": "Session 4 — Inverse Probability Weighting",
     "section": "Score and take-home",
     "text": "Score and take-home\nYour score: \n\nIPW: weight = 1 / P(option received); stabilise\nCheck balance and the weight distribution\nRobust SE (or bootstrap)\nATE and ATT need different weights\nDoubly robust = weights + outcome model; still no cure for unmeasured confounding\n\nNext: Session 5: sensitivity analysis and reporting"
+  },
+  {
+    "objectID": "welcome.html#self-study-plan-3",
+    "href": "welcome.html#self-study-plan-3",
+    "title": "Welcome",
+    "section": "🗓️ Self-study plan",
+    "text": "🗓️ Self-study plan\nSteps 1 and 2 finish the visualization library. Steps 3 to 11 are the workshops: do A1 to A3 first, then take the others in the order your own work needs. Every session is listed on Advanced Workshops. Tick a step when you have finished it; ticks are saved in this browser.\n\n\nFinish ggplot2 and the plot galleries\nModule 3 — Colors, Scales & Themes · Module 4 — Advanced Best Practices · Advanced Plot Gallery · Practical Applications · Interactive Plots\nPublication-ready output\nggstatsplot — Advanced · Quarto — Publication · Debugging Plots · Advanced Exporting\nA1 · Survival analysis\nTime-to-event data, Kaplan-Meier, log-rank, Cox. Start at Session 1 · Cheat sheet\nA2 · Counts and rates\nPoisson and negative binomial regression, offsets, excess zeros. Start at Session 1 · Cheat sheet\nA3 · Ordinal and multinomial outcomes\nOrdinal logistic regression, the proportional-odds check, multinomial models. Start at Session 1 · Cheat sheet\nA4 · Clustered and repeated data\nICC, cluster-robust standard errors, GEE, mixed models. Start at Session 1 · Cheat sheet\nA5 · Survey data and weights\nComplex survey design, weights, svyglm, raking. Start at Session 1 · Cheat sheet\nA6 · Curves and interactions\nSplines, GAMs, effect modification, prediction plots. Start at Session 1 · Cheat sheet\nA7 · Missing data\nMCAR, MAR and MNAR, multiple imputation with mice, sensitivity analysis. Start at Session 1 · Cheat sheet\nA8 · Prediction models\nRisk models, discrimination and calibration, validation, shrinkage, decision curves. Start at Session 1 · Cheat sheet\nA9 · Causal inference\nDAGs, adjustment, propensity scores, inverse probability weighting, E-values. Start at Session 1 · Cheat sheet"
+  },
+  {
+    "objectID": "welcome.html#what-you-will-be-able-to-do-3",
+    "href": "welcome.html#what-you-will-be-able-to-do-3",
+    "title": "Welcome",
+    "section": "🎯 What you will be able to do",
+    "text": "🎯 What you will be able to do\n\nUse all four ggplot2 modules and build advanced and interactive figures\nProduce publication-ready documents with Quarto\nChoose and fit the right model for survival, count, ordinal, clustered and survey data\nHandle non-linear effects, interactions and missing data properly\nBuild and validate a prediction model, and reason about causal questions"
+  },
+  {
+    "objectID": "welcome.html#downloads-3",
+    "href": "welcome.html#downloads-3",
+    "title": "Welcome",
+    "section": "📥 Downloads",
+    "text": "📥 Downloads\nEach workshop runs on its own synthetic dataset. make_data.R rebuilds it; the labs have ___ blanks to fill in.\n\n\n\nWorkshop\nData\nScripts\n\n\n\n\nA1 Survival\ntb_cohort.csv\nmake_data.R · Lab 1 · Lab 2 · Lab 3 · Lab 4 · Lab 5\n\n\nA2 Counts and rates\ndengue_wards.csv\nmake_data.R · Lab 1 · Lab 2 · Lab 3 · Lab 4 · Lab 5\n\n\nA3 Ordinal and multinomial\nmaternal_survey.csv\nmake_data.R · Lab 1 · Lab 2 · Lab 3 · Lab 4 · Lab 5\n\n\nA4 Clustered and repeated\nbp_trial.csv\nmake_data.R · Lab 1 · Lab 2 · Lab 3 · Lab 4 · Lab 5\n\n\nA5 Survey data\nsurvey_adults.csv · survey_population.csv\nmake_data.R · Lab 1 · Lab 2 · Lab 3 · Lab 4 · Lab 5\n\n\nA6 Curves and interactions\nncd_curves.csv\nmake_data.R · Lab 1 · Lab 2 · Lab 3 · Lab 4 · Lab 5\n\n\nA7 Missing data\nncd_missing.csv\nmake_data.R · Lab 1 · Lab 2 · Lab 3 · Lab 4 · Lab 5\n\n\nA8 Prediction models\ndiabetes_dev.csv · diabetes_valid.csv\nmake_data.R · Lab 1 · Lab 2 · Lab 3 · Lab 4 · Lab 5\n\n\nA9 Causal inference\nhtn_programme.csv\nmake_data.R · Lab 1 · Lab 2 · Lab 3 · Lab 4 · Lab 5\n\n\n\nGeneral cheat sheets and example scripts are on the Downloads page.\n\n💡 Tip: The workshops assume the Regression track. If odds ratios or residual plots feel shaky, revise them there first."
   }
 ]

@@ -4,432 +4,649 @@ format:
   html:
     toc: true
     toc-depth: 2
+    css:
+      - assets/theme_webp.css
+      - assets/welcome.css
 ---
 
-```{r}
-#| echo: false
-#| output: asis
+<!--
+  TRACK HOME PAGE — one block per profile, chosen by Quarto itself (when-profile).
 
-profile <- Sys.getenv("QUARTO_PROFILE", unset = "basic")
+  This page deliberately contains NO R code. It used to build its content in an R chunk from
+  Sys.getenv("QUARTO_PROFILE"), but `freeze: auto` keeps ONE cached result per file for all
+  profiles, so every track ended up showing whichever track was rendered last (Basic opened the
+  GIS home page). Plain markdown is never frozen, so each profile always gets its own block.
 
-# ── Profile metadata ──────────────────────────────────────────────────────────
-meta <- list(
+  Every block has the same order:  banner → game → self-study plan → goals → downloads → tip.
+  Link only to files that exist in the repository: Quarto copies linked files into the track site.
+-->
 
-  basic = list(
-    title   = "Basic Track",
-    badge   = "🟢 Open Access",
-    colour  = "#2e7d32",
-    bg      = "#f1f8f1",
-    intro   = "Welcome to the **Basic Track** of the R Data Visualization Workshop — an open-access, self-paced learning platform for data wrangling, visualization, and statistical analysis in R. This site contains hands-on examples, best practices, and plotting techniques all in one place.",
-    goals   = c(
-      "Learn the basics of good data visualization",
-      "Use R to wrangle and prepare data",
-      "Explore basic visualization and statistical testing",
-      "Create reproducible reports using Quarto"
-    ),
-    modules = c(
-      "📁 R Foundations & Data Wrangling",
-      "📊 Basic Visualization with ggplot2",
-      "🧪 Statistical Test Selection",
-      "📈 ggstatsplot — Introduction",
-      "📝 Quarto Basics"
-    ),
-    nav = list(
-      list(icon="📁", label="R Foundations",     href="r-foundations/getting-started.qmd",          desc="R syntax, data cleaning, and tidy workflows"),
-      list(icon="📊", label="Data Visualization", href="data-visualization/ggplot_grammar.qmd",       desc="Grammar of graphics and basic ggplot2"),
-      list(icon="🧪", label="Statistical Analysis",href="statistical-analysis/statistical_tests.qmd", desc="Choosing the right statistical test"),
-      list(icon="📝", label="Reproducibility",    href="statistical-analysis/reproducible_writing.qmd",desc="Creating reports with Quarto")
-    ),
-    show_stats   = TRUE,
-    show_quarto  = TRUE,
-    downloads = list(
-      scripts    = c("downloads/basic_r_foundations.R", "downloads/basic_visualization.R"),
-      datasets   = c("downloads/workshop_data.csv", "downloads/workshop_data.xlsx", "downloads/workshop_data.rds"),
-      cheatsheets= c("downloads/ggplot2_cheatsheet.pdf", "downloads/dplyr_cheatsheet.pdf"),
-      quarto     = c("downloads/quarto_basics.qmd")
-    ),
-    tip  = "New to R? Start with **R Foundations → Getting Started** before anything else.",
-    nav_note = "Use the navbar above to explore topics in any order."
-  ),
+::: {.content-visible unless-meta="ws-track"}
+::: {.callout-warning}
+This page was rendered without a track profile. Render with `quarto render --profile basic` (or another profile), or run `bash render-all-profiles.sh`.
+:::
+:::
 
-  moderate = list(
-    title   = "Moderate Track",
-    badge   = "🔵 Workshop Key Unlocked",
-    colour  = "#1565c0",
-    bg      = "#f0f4ff",
-    intro   = "Welcome to the **Moderate Track** — unlocked for workshop participants. This track builds on the basics with best practices, intermediate plots, ggplot2 modules 1–2, gtsummary tables, and applied healthcare examples from real public health datasets.",
-    goals   = c(
-      "Apply best practices to plot design",
-      "Use ggplot2 modules 1–2 for intermediate visualization",
-      "Summarise data with gtsummary tables",
-      "Create dynamic Quarto documents with inline R code"
-    ),
-    modules = c(
-      "📁 R Foundations & Data Wrangling (+ Applied Examples)",
-      "📊 Best Practices & Plot Matching",
-      "🎨 ggplot2 Modules 1–2",
-      "🖼️ Basic & Intermediate Plot Gallery",
-      "🔗 Specialized Plots — Merged & Statistical",
-      "🧪 ggstatsplot — Intro & Intermediate",
-      "📋 gtsummary Tables",
-      "📝 Quarto Basics & Dynamic Documents",
-      "⚙️ Exporting & Plotting Tools"
-    ),
-    nav = list(
-      list(icon="📁", label="R Foundations",     href="r-foundations/getting-started.qmd",             desc="R syntax, wrangling, and applied healthcare examples"),
-      list(icon="📊", label="Data Visualization", href="data-visualization/ggplot_grammar.qmd",          desc="Best practices, plot matching, and ggplot2 modules 1–2"),
-      list(icon="🧪", label="Statistical Analysis",href="statistical-analysis/statistical_tests.qmd",    desc="ggstatsplot intermediate and gtsummary tables"),
-      list(icon="📝", label="Reproducibility",    href="statistical-analysis/reproducible_writing.qmd",  desc="Quarto basics and dynamic documents with inline R")
-    ),
-    show_stats   = TRUE,
-    show_quarto  = TRUE,
-    downloads = list(
-      scripts    = c("downloads/basic_r_foundations.R", "downloads/basic_visualization.R",
-                     "downloads/moderate_visualization.R", "downloads/gtsummary_examples.R"),
-      datasets   = c("downloads/workshop_data.csv", "downloads/workshop_data.xlsx",
-                     "downloads/workshop_data.rds", "downloads/nctoh_data.rds"),
-      cheatsheets= c("downloads/ggplot2_cheatsheet.pdf", "downloads/dplyr_cheatsheet.pdf",
-                     "downloads/gtsummary_cheatsheet.pdf"),
-      quarto     = c("downloads/quarto_basics.qmd")
-    ),
-    tip  = "Already comfortable with basics? Jump to **ggplot2 Module 1** or **Best Practices** directly.",
-    nav_note = "All Basic content remains accessible from the navbar above."
-  ),
+<!-- ═══════════════════════════════════════════════════════════════ BASIC -->
 
-  advanced = list(
-    title   = "Advanced Track",
-    badge   = "🔴 Workshop Key Unlocked",
-    colour  = "#b71c1c",
-    bg      = "#fff5f5",
-    intro   = "Welcome to the **Advanced Track** — the full workshop experience. This track covers all four ggplot2 modules, advanced and interactive plots, ggstatsplot advanced, Quarto for publication, deep statistical analysis, and real-world applied NCTOH healthcare examples.",
-    goals   = c(
-      "Master all four ggplot2 modules",
-      "Build interactive and advanced visualizations",
-      "Perform deep statistical analysis with ggstatsplot",
-      "Produce publication-ready documents using Quarto"
-    ),
-    modules = c(
-      "🪜 Ordinal and Multinomial Outcomes Workshop — 5 sessions, 5 labs, quizzes, cheat sheet",
-      "⏳ Survival Analysis Workshop — 5 sessions, 5 labs, quizzes, cheat sheet",
-      "🦟 Counts and Rates Workshop — 5 sessions, 5 labs, quizzes, cheat sheet",
-      "📁 R Foundations & Data Wrangling (+ Applied Examples)",
-      "📊 Best Practices & Plot Matching",
-      "🎨 ggplot2 Modules 1–4 (Complete)",
-      "🖼️ Basic, Intermediate & Advanced Plot Gallery",
-      "🔗 Specialized Plots — Merged, Statistical & Interactive",
-      "🧪 ggstatsplot — Intro, Intermediate & Advanced",
-      "📋 gtsummary Tables & Deep Statistical Analysis",
-      "📝 Quarto — Basics, Dynamic Documents & Publication",
-      "⚙️ Full Exporting, Debugging & Advanced Tools",
-      "🏥 Applied NCTOH Healthcare Examples"
-    ),
-    nav = list(
-      list(icon="🧭", label="Causal Inference Workshop", href="causal-workshop/s1_causal_questions_dags.qmd", desc="Slides, labs and quizzes: DAGs, adjustment, propensity scores, IPW, E-values (start at Session 1)"),
-      list(icon="🎯", label="Prediction Models Workshop", href="prediction-workshop/s1_building_model.qmd", desc="Slides, labs and quizzes: risk models, calibration, validation, shrinkage, decision curves (start at Session 1)"),
-      list(icon="🕳️", label="Missing Data Workshop", href="missing-workshop/s1_patterns_mechanisms.qmd", desc="Slides, labs and quizzes: MCAR/MAR/MNAR, multiple imputation with mice, sensitivity analysis (start at Session 1)"),
-      list(icon="📈", label="Curves & Interactions Workshop", href="curves-workshop/s1_beyond_linear.qmd", desc="Slides, labs and quizzes: splines, GAMs, effect modification, prediction plots (start at Session 1)"),
-      list(icon="📋", label="Survey Data Workshop", href="survey-workshop/s1_survey_design.qmd", desc="Slides, labs and quizzes: complex survey design, weights, svyglm, raking (start at Session 1)"),
-      list(icon="🏘️", label="Clustered & Repeated Data Workshop", href="clustered-workshop/s1_clustered_data.qmd", desc="Slides, labs and quizzes: ICC, cluster-robust SEs, GEE, mixed models, repeated measures (start at Session 1)"),
-      list(icon="🪜", label="Ordinal & Multinomial Workshop", href="ordinal-workshop/s1_categorical_outcomes.qmd", desc="Slides, labs and quizzes: ordinal and multinomial logistic regression (start at Session 1)"),
-      list(icon="⏳", label="Survival Workshop", href="survival-workshop/s1_time_to_event.qmd", desc="Slides, labs and quizzes on time-to-event data: Kaplan-Meier, log-rank, Cox (start at Session 1)"),
-      list(icon="🦟", label="Counts Workshop", href="counts-workshop/s1_counts_rates.qmd", desc="Slides, labs and quizzes on counts and rates: Poisson, negative binomial, offsets (start at Session 1)"),
-      list(icon="📁", label="R Foundations",     href="r-foundations/getting-started.qmd",             desc="R syntax, wrangling, and full NCTOH applied examples"),
-      list(icon="📊", label="Data Visualization", href="data-visualization/ggplot_grammar.qmd",          desc="All four ggplot2 modules, advanced and interactive plots"),
-      list(icon="🧪", label="Statistical Analysis",href="statistical-analysis/statistical_tests.qmd",    desc="Full ggstatsplot, gtsummary, and deep analysis"),
-      list(icon="📝", label="Reproducibility",    href="statistical-analysis/reproducible_writing.qmd",  desc="Quarto basics through publication-ready documents")
-    ),
-    show_stats   = TRUE,
-    show_quarto  = TRUE,
-    downloads = list(
-      scripts    = c("causal-workshop/make_data.R", "causal-workshop/labs/lab1_dag.R", "causal-workshop/labs/lab2_adjust.R", "causal-workshop/labs/lab3_match.R", "causal-workshop/labs/lab4_ipw.R", "causal-workshop/labs/lab5_sens.R", "prediction-workshop/make_data.R", "prediction-workshop/labs/lab1_build.R", "prediction-workshop/labs/lab2_perf.R", "prediction-workshop/labs/lab3_internal.R", "prediction-workshop/labs/lab4_shrink.R", "prediction-workshop/labs/lab5_external.R", "missing-workshop/make_data.R", "missing-workshop/labs/lab1_pattern.R", "missing-workshop/labs/lab2_simple.R", "missing-workshop/labs/lab3_mice.R", "missing-workshop/labs/lab4_diagnostics.R", "missing-workshop/labs/lab5_mnar.R", "curves-workshop/make_data.R", "curves-workshop/labs/lab1_linear.R", "curves-workshop/labs/lab2_splines.R", "curves-workshop/labs/lab3_gam.R", "curves-workshop/labs/lab4_interaction.R", "curves-workshop/labs/lab5_report.R", "survey-workshop/make_data.R", "survey-workshop/labs/lab1_design.R", "survey-workshop/labs/lab2_describe.R", "survey-workshop/labs/lab3_regression.R", "survey-workshop/labs/lab4_weights.R", "survey-workshop/labs/lab5_report.R", "clustered-workshop/make_data.R", "clustered-workshop/labs/lab1_clusters.R", "clustered-workshop/labs/lab2_gee.R", "clustered-workshop/labs/lab3_mixed.R", "clustered-workshop/labs/lab4_long.R", "clustered-workshop/labs/lab5_report.R", "ordinal-workshop/make_data.R", "ordinal-workshop/labs/lab1_outcomes.R", "ordinal-workshop/labs/lab2_ordinal.R", "ordinal-workshop/labs/lab3_po.R", "ordinal-workshop/labs/lab4_multinom.R", "ordinal-workshop/labs/lab5_report.R", "survival-workshop/make_data.R", "survival-workshop/labs/lab1_data.R", "survival-workshop/labs/lab2_km.R", "survival-workshop/labs/lab3_logrank.R", "survival-workshop/labs/lab4_cox.R", "survival-workshop/labs/lab5_assumptions.R", "counts-workshop/make_data.R", "counts-workshop/labs/lab1_counts.R", "counts-workshop/labs/lab2_poisson.R", "counts-workshop/labs/lab3_overdisp.R", "counts-workshop/labs/lab4_zeros.R", "counts-workshop/labs/lab5_report.R", "downloads/basic_r_foundations.R", "downloads/basic_visualization.R",
-                     "downloads/moderate_visualization.R", "downloads/advanced_visualization.R",
-                     "downloads/gtsummary_examples.R", "downloads/interactive_plots.R"),
-      datasets   = c("data/htn_programme.csv", "data/diabetes_dev.csv", "data/diabetes_valid.csv", "data/ncd_missing.csv", "data/ncd_curves.csv", "data/survey_adults.csv", "data/survey_population.csv", "data/bp_trial.csv", "data/maternal_survey.csv", "data/tb_cohort.csv", "data/dengue_wards.csv", "downloads/workshop_data.csv", "downloads/workshop_data.xlsx",
-                     "downloads/workshop_data.rds", "downloads/nctoh_data.rds",
-                     "downloads/nctoh_complete.rds"),
-      cheatsheets= c("downloads/ggplot2_cheatsheet.pdf", "downloads/dplyr_cheatsheet.pdf",
-                     "downloads/gtsummary_cheatsheet.pdf", "downloads/quarto_cheatsheet.pdf",
-                     "downloads/ggstatsplot_cheatsheet.pdf"),
-      quarto     = c("downloads/quarto_basics.qmd")
-    ),
-    tip  = "Explore **Applied Examples** under each section for real-world healthcare data workflows.",
-    nav_note = "The complete navbar gives full access to all workshop content."
-  ),
+::: {.content-visible when-profile="basic"}
 
-  `dataviz-base` = list(
-    title   = "Data Visualization — Foundations",
-    badge   = "🟣 Workshop Key Unlocked",
-    colour  = "#6a1b9a",
-    bg      = "#faf0ff",
-    intro   = "Welcome to the **Data Visualization Foundations** track. This focused track covers the grammar of graphics, visualization best practices, ggplot2 Modules 1–2, and the basic and intermediate plot galleries. No statistical analysis or Quarto modules are included.",
-    goals   = c(
-      "Understand the grammar of graphics",
-      "Apply best practices to plot design",
-      "Use ggplot2 Modules 1–2 for effective visualization",
-      "Export and share publication-ready plots"
-    ),
-    modules = c(
-      "📐 Grammar of Graphics",
-      "✅ Best Practices",
-      "🗂️ Matching Data to Plots",
-      "🎨 ggplot2 Modules 1–2",
-      "🖼️ Basic & Intermediate Plot Gallery",
-      "🔗 Specialized Plots — Merged & Statistical",
-      "⚙️ Exporting & Plotting Tools",
-      "🏥 Applied Visualization Examples"
-    ),
-    nav = list(
-      list(icon="📐", label="Data Visualization", href="data-visualization/ggplot_grammar.qmd",    desc="Grammar of graphics, best practices, and plot matching"),
-      list(icon="🎨", label="ggplot2 Modules",    href="data-visualization/gram_ggplot/module_1_foundations_geoms.qmd", desc="Modules 1–2: foundations, geoms, aesthetics, and faceting"),
-      list(icon="🖼️", label="Plot Gallery",       href="plot-gallery/basic.qmd",                   desc="Basic and intermediate plot examples"),
-      list(icon="⚙️", label="Exporting & Tools",  href="exporting_tools/exporting_plots.qmd",       desc="Export plots and use plotting tools effectively")
-    ),
-    show_stats   = FALSE,
-    show_quarto  = FALSE,
-    downloads = list(
-      scripts    = c("downloads/basic_visualization.R", "downloads/moderate_visualization.R"),
-      datasets   = c("downloads/workshop_data.csv", "downloads/workshop_data.xlsx",
-                     "downloads/workshop_data.rds"),
-      cheatsheets= c("downloads/ggplot2_cheatsheet.pdf", "downloads/dplyr_cheatsheet.pdf"),
-      quarto     = character(0)
-    ),
-    tip  = "Start with **Grammar of Graphics** for a solid conceptual foundation before the modules.",
-    nav_note = "Use the navbar above to move through visualization topics in sequence."
-  ),
+::: {.ws-track-hero .ws-track--basic data-track="basic"}
+[🟢 Open Access]{.ws-track-badge}
 
-  `dataviz-complete` = list(
-    title   = "Data Visualization — Complete",
-    badge   = "🟠 Workshop Key Unlocked",
-    colour  = "#e65100",
-    bg      = "#fff8f0",
-    intro   = "Welcome to the **Data Visualization Complete** track — the full visualization experience. All four ggplot2 modules, the complete plot gallery including advanced and interactive plots, debugging tools, advanced export, and practical applied examples.",
-    goals   = c(
-      "Master all four ggplot2 modules",
-      "Build advanced and interactive visualizations",
-      "Debug and optimize plots for publication",
-      "Apply visualization skills to real-world datasets"
-    ),
-    modules = c(
-      "📐 Grammar of Graphics & Best Practices",
-      "🗂️ Matching Data to Plots",
-      "🎨 ggplot2 Modules 1–4 (All Modules)",
-      "🖼️ Basic, Intermediate, Advanced & Practical Gallery",
-      "🔗 Specialized Plots — Merged, Statistical & Interactive",
-      "⚙️ Exporting, Plotting Tools, Debugging & Advanced Export",
-      "🏥 Applied Visualization & Practical Examples"
-    ),
-    nav = list(
-      list(icon="📐", label="Data Visualization", href="data-visualization/ggplot_grammar.qmd",    desc="Grammar of graphics, best practices, and all four ggplot2 modules"),
-      list(icon="🎨", label="ggplot2 Modules",    href="data-visualization/gram_ggplot/module_1_foundations_geoms.qmd", desc="All four modules from foundations to advanced best practices"),
-      list(icon="🖼️", label="Plot Gallery",       href="plot-gallery/basic.qmd",                   desc="Full gallery — basic through practical applications"),
-      list(icon="⚙️", label="Exporting & Tools",  href="exporting_tools/exporting_plots.qmd",       desc="Exporting, debugging, and advanced export techniques")
-    ),
-    show_stats   = FALSE,
-    show_quarto  = FALSE,
-    downloads = list(
-      scripts    = c("downloads/basic_visualization.R", "downloads/moderate_visualization.R",
-                     "downloads/advanced_visualization.R", "downloads/interactive_plots.R"),
-      datasets   = c("downloads/workshop_data.csv", "downloads/workshop_data.xlsx",
-                     "downloads/workshop_data.rds", "downloads/nctoh_data.rds"),
-      cheatsheets= c("downloads/ggplot2_cheatsheet.pdf", "downloads/dplyr_cheatsheet.pdf",
-                     "downloads/quarto_cheatsheet.pdf"),
-      quarto     = character(0)
-    ),
-    tip  = "Already done Foundations? Start at **Module 3 — Colors, Scales & Themes** to pick up where you left off.",
-    nav_note = "The full navbar above gives access to all visualization content."
-  ),
+[Basic Track]{.ws-track-title}
 
-  gis = list(
-    title   = "GIS and Spatial Statistics Track",
-    badge   = "🟤 Workshop Key Unlocked",
-    colour  = "#00695c",
-    bg      = "#f1faf8",
-    intro   = "Welcome to the **GIS and Spatial Statistics Track**. It builds on the advanced visualization pages (ggplot2 modules, galleries, interactive plots, exporting) and adds a spatial toolkit: reading and mapping spatial data with `sf`, defining neighbours and spatial weights, testing for spatial autocorrelation with **Moran's I**, finding clusters with **local Moran's I (LISA)**, **Getis-Ord Gi\\***, **Geary's C**, join counts and the scan statistic, and checking regression residuals for spatial structure. All examples use a synthetic district of 80 blocks with a planted hot spot, so no real boundaries or personal data are involved.",
-    goals   = c(
-      "Read, transform and join spatial data with sf, and keep track of coordinate reference systems",
-      "Make clear static and interactive maps and choose a sensible classification",
-      "Define neighbours and spatial weights, and know how the choice changes the answer",
-      "Test for global spatial autocorrelation with Moran's I and read the Moran scatterplot",
-      "Locate clusters and outliers with local Moran's I (LISA) and hot spots with Getis-Ord Gi*",
-      "Use Geary's C, join counts and the scan statistic, and check regression residuals for spatial structure"
-    ),
-    modules = c(
-      "📁 R Foundations & Data Wrangling",
-      "📐 Data Visualization — grammar, best practices, ggplot2 modules 1–4",
-      "🖼️ Plot Gallery (basic to advanced) and Specialized & Interactive Plots",
-      "⚙️ Exporting, Plotting Tools and Debugging",
-      "🎓 GIS Workshop — 5 sessions, 5 labs, quizzes, cheat sheet",
-      "🗺️ Spatial Data with sf, Maps and Choropleths",
-      "🧭 Neighbours and Spatial Weights",
-      "📍 Global Moran's I and Local Moran's I (LISA)",
-      "🔥 Geary's C, Getis-Ord, Join Counts and the Scan Statistic",
-      "📉 Spatial Regression and Residual Tests"
-    ),
-    nav = list(
-      list(icon="🎓", label="GIS Workshop", href="gis-workshop/s1_spatial_data.qmd", desc="Slides, labs and quizzes: start at Session 1 (spatial data and maps)"),
-      list(icon="📋", label="Cheat Sheet", href="gis-workshop/cheatsheet.qmd", desc="Two-page guide to choosing and reading spatial tests"),
-      list(icon="🗺️", label="Spatial Data with sf", href="gis/spatial_data_sf.qmd", desc="Start here: spatial objects, coordinate systems, joining attributes"),
-      list(icon="🧭", label="Neighbours and Weights", href="gis/spatial_weights.qmd", desc="Queen, rook and k-nearest neighbours, and row-standardised weights"),
-      list(icon="📍", label="Global Moran's I", href="gis/morans_i.qmd", desc="Is the pattern clustered? Test, permutation p-value and Moran scatterplot"),
-      list(icon="🔥", label="Local Moran's I (LISA)", href="gis/local_moran_lisa.qmd", desc="Where are the clusters and spatial outliers?"),
-      list(icon="🎨", label="Data Visualization", href="data-visualization/ggplot_grammar.qmd", desc="Grammar of graphics and all four ggplot2 modules")
-    ),
-    show_stats   = FALSE,
-    show_quarto  = FALSE,
-    downloads = list(
-      scripts    = c("gis/make_gis_data.R", "gis-workshop/labs/lab1_data.R", "gis-workshop/labs/lab2_weights.R",
-                     "gis-workshop/labs/lab3_global.R", "gis-workshop/labs/lab4_local.R", "gis-workshop/labs/lab5_regression.R"),
-      datasets   = c("data/gis/district_blocks.geojson", "data/gis/facilities.csv"),
-      cheatsheets= c("gis-workshop/cheatsheet.qmd"),
-      quarto     = character(0)
-    ),
-    tip  = "Never mapped data in R? Read **Spatial Data with sf** and **Maps and Choropleths** first, then go straight to **Global Moran's I**.",
-    nav_note = "The navbar has the full visualization library as well as the spatial pages."
-  ),
+Step 1 of the self-study path. Start here if you are new to R: you will set up R, wrangle a dataset, draw your first plots, choose a statistical test and write a reproducible report.
+:::
 
-  regression = list(
-    title   = "Regression Track",
-    badge   = "🟡 Workshop Key Unlocked",
-    colour  = "#b8860b",
-    bg      = "#fffbf0",
-    intro   = "Welcome to the **Regression Track** — a focused, statistics-first path through R. This track covers R foundations and data wrangling, then goes deep on regression: simple and multiple linear regression, logistic regression, univariate screening, Cox proportional hazards models, and model diagnostics with the `performance` package. It also hosts the full-day **Theory of Regression Analysis workshop**: six slide decks, six R labs with fill-in-the-blank exercises, self-check quizzes and a cheat sheet.",
-    goals   = c(
-      "Get comfortable with R syntax and importing/wrangling data",
-      "Fit and interpret simple and multiple linear regression models",
-      "Screen predictors with univariate regression and build multivariable models",
-      "Fit logistic and Cox proportional hazards models for binary and time-to-event outcomes",
-      "Check model assumptions with base-R diagnostics and the `performance` package",
-      "Interpret and report linear and logistic models for a thesis or paper (full-day workshop)"
-    ),
-    modules = c(
-      "📁 R Foundations & Data Wrangling",
-      "📈 Simple & Multiple Linear Regression",
-      "🧮 Univariate Regression Screening",
-      "🎯 Logistic Regression",
-      "⏱️ Cox Proportional Hazards Regression",
-      "🩺 Model Diagnostics (base R + `performance`)",
-      "🎓 Regression Workshop — 6 sessions, 6 labs, quizzes, cheat sheet"
-    ),
-    nav = list(
-      list(icon="📁", label="R Foundations",     href="r-foundations/getting-started.qmd", desc="R syntax, data import, and tidy data wrangling"),
-      list(icon="📈", label="Regression Analysis",href="statistical-analysis/regression.qmd",desc="Linear, logistic, and Cox regression, plus diagnostics"),
-      list(icon="🎓", label="Regression Workshop",href="regression-workshop/s1_foundations.qmd",desc="Full-day theory workshop: slides, labs, quizzes (start at Session 1)"),
-      list(icon="📋", label="Cheat Sheet",href="regression-workshop/cheatsheet.qmd",desc="Two-page interpretation cheat sheet for linear and logistic output")
-    ),
-    show_stats   = TRUE,
-    show_quarto  = FALSE,
-    downloads = list(
-      scripts    = c("regression-workshop/make_data.R",
-                     "regression-workshop/labs/lab1_explore.R", "regression-workshop/labs/lab2_simple.R",
-                     "regression-workshop/labs/lab3_multiple.R", "regression-workshop/labs/lab4_assumptions.R",
-                     "regression-workshop/labs/lab5_logistic.R", "regression-workshop/labs/lab6_reporting.R"),
-      datasets   = c("data/ncd_survey.csv"),
-      cheatsheets= c("downloads/cheatsheets/data-import.pdf", "downloads/cheatsheets/data-transformation.pdf",
-                     "regression-workshop/cheatsheet.qmd"),
-      quarto     = character(0)
-    ),
-    tip  = "New to R? Start with **R Foundations → Getting Started**, then head straight to **Regression Analysis** — it covers everything from a single predictor through Cox regression on one page.",
-    nav_note = "Use the navbar above to jump straight to Regression Analysis at any time."
-  )
-)
+::: {.ws-track-game}
+🗺️ **Play as you learn.** This track is **Region 1 · Basics** of *Dungeons & Dataframes*. Take the pre-test, read a step below, then clear the matching world.
+[Open the game →](../dungeons/dungeons/index.html){.ws-track-game-btn}
+:::
 
-m <- if (!is.null(meta[[profile]])) meta[[profile]] else meta[["basic"]]
+## 🗓️ Self-study plan
 
-# ── Helper: file label from path ──────────────────────────────────────────────
-file_label <- function(path) {
-  base <- basename(path)
-  tools::file_path_sans_ext(base) |>
-    gsub("_", " ", x = _) |>
-    tools::toTitleCase()
-}
+Work through the steps in order. Tick a step when you have finished it; ticks are saved in this browser.
 
-# ═══════════════════════════════════════════════════════
-# HERO BADGE + INTRO
-# ═══════════════════════════════════════════════════════
-cat(sprintf('
-<div style="background:%s;border-left:5px solid %s;border-radius:10px;
-            padding:1.5rem 2rem;margin-bottom:2rem;">
-  <span style="display:inline-block;background:%s;color:white;font-size:0.8rem;
-               font-weight:600;padding:0.2rem 0.75rem;border-radius:999px;
-               margin-bottom:0.75rem;">%s</span>
-  <h2 style="color:%s;margin-top:0.4rem;margin-bottom:0.6rem;">%s</h2>
-  <p style="font-size:1.05rem;line-height:1.7;margin:0;">%s</p>
-</div>
-', m$bg, m$colour, m$colour, m$badge, m$colour, m$title, m$intro))
+::: {.ws-plan}
+1.  **Set up R and write your first lines**
 
-# ═══════════════════════════════════════════════════════
-# WORKSHOP GOALS
-# ═══════════════════════════════════════════════════════
-cat('\n## 🎯 Workshop Goals\n\n')
-for (g in m$goals) cat(sprintf('- %s\n', g))
+    [Getting Started](r-foundations/getting-started.qmd): install R and RStudio, objects, vectors and data frames.
 
-# ═══════════════════════════════════════════════════════
-# WHAT THIS TRACK COVERS
-# ═══════════════════════════════════════════════════════
-cat('\n\n## 📚 What This Track Covers\n\n')
-for (mod in m$modules) cat(sprintf('- %s\n', mod))
+2.  **Wrangle a dataset**
 
-# ═══════════════════════════════════════════════════════
-# NAVIGATION GUIDE
-# ═══════════════════════════════════════════════════════
-cat('\n\n## 🧭 Find Your Way Around\n\n')
-cat('Use the navigation bar above to browse all modules. Key starting points:\n\n')
+    [Data Wrangling (Tidyverse)](r-foundations/data-wrangling.qmd), then [Merging Datasets](r-foundations/merging_dataset.qmd). Practise with the [Practice Slides](r-foundations/data_wrangling_prac_s.qmd).
 
-for (item in m$nav) {
-  cat(sprintf('- %s **[%s](%s)** — %s\n',
-              item$icon, item$label, item$href, item$desc))
-}
-cat(sprintf('\n> %s\n', m$nav_note))
+3.  **Draw your first plots**
 
-# ═══════════════════════════════════════════════════════
-# DOWNLOADABLE RESOURCES
-# ═══════════════════════════════════════════════════════
-cat('\n\n## 📥 Downloadable Resources\n\n')
-cat('All files for this track are available below, grouped by type.\n\n')
+    [Grammar of Graphics](data-visualization/ggplot_grammar.qmd), then copy and adapt examples from the [Basic Plot Gallery](plot-gallery/basic.qmd).
 
-dl <- m$downloads
+4.  **Choose and run a statistical test**
 
-# R Scripts
-if (length(dl$scripts) > 0) {
-  cat('### 📄 R Scripts\n\n')
-  for (f in dl$scripts) {
-    cat(sprintf('- [%s](%s)\n', file_label(f), f))
+    [Test Selection Guide](statistical-analysis/statistical_tests.qmd), then [ggstatsplot — Intro](ggstatsplot/ggstatsplot_intro.qmd) to plot a test and its result together.
+
+5.  **Meet regression**
+
+    [Regression Analysis](statistical-analysis/regression.qmd): a first look. The Regression track covers it in depth.
+
+6.  **Write it up**
+
+    [Quarto Basics](quarto_repro_w/reproducible_writing.qmd): turn your code and results into a report.
+
+7.  **Check yourself and move on**
+
+    Take the Region 1 post-test in the game. At 70% or more, continue with the **Moderate** track (Step 2 on the main page).
+:::
+
+## 🎯 What you will be able to do
+
+- Use R to import, clean and reshape data
+- Build clear basic plots with ggplot2
+- Pick a suitable statistical test and read its output
+- Produce a reproducible report with Quarto
+
+## 📥 Downloads
+
+- Cheat sheets: [RStudio IDE](downloads/cheatsheets/rstudio-ide.pdf) · [Data import](downloads/cheatsheets/data-import.pdf) · [Data transformation](downloads/cheatsheets/data-transformation.pdf) · [Data visualization](downloads/cheatsheets/data-visualization.pdf) · [R Markdown](downloads/cheatsheets/rmarkdown.pdf)
+- Example scripts: [Intro](downloads/source-scripts/nctoh/Intro.R) · [Data wrangling](downloads/source-scripts/nctoh/data_wrangle.R) · [Data visualization](downloads/source-scripts/nctoh/data_vis.R)
+- Everything else is on the [Downloads](downloads.qmd) page.
+
+> 💡 **Tip:** New to R? Do not skip Step 1. Everything later assumes it.
+
+:::
+
+<!-- ═══════════════════════════════════════════════════════════════ MODERATE -->
+
+::: {.content-visible when-profile="moderate"}
+
+::: {.ws-track-hero .ws-track--moderate data-track="moderate"}
+[🔵 Workshop Key Unlocked]{.ws-track-badge}
+
+[Moderate Track]{.ws-track-title}
+
+Step 2 of the self-study path. It builds on Basic: messy data, iteration, plot design, ggplot2 modules 1–2, summary tables with gtsummary and dynamic Quarto documents.
+:::
+
+::: {.ws-track-game}
+🗺️ **Play as you learn.** This track is **Region 2 · Moderate** of *Dungeons & Dataframes*: Messy Data Dungeon, Loop Labyrinth, Explore by Picture, Table 1 Forge and Tests in Context.
+[Open the game →](../dungeons/dungeons/index.html){.ws-track-game-btn}
+:::
+
+## 🗓️ Self-study plan
+
+Work through the steps in order. Tick a step when you have finished it; ticks are saved in this browser.
+
+::: {.ws-plan}
+1.  **Refresh the basics** (skip if you finished the Basic track)
+
+    [Getting Started](r-foundations/getting-started.qmd) · [Data Wrangling (Tidyverse)](r-foundations/data-wrangling.qmd) · [Merging Datasets](r-foundations/merging_dataset.qmd)
+
+2.  **Clean messy data and stop repeating yourself**
+
+    [Cleaning Messy Data](r-foundations/cleaning_messy_data.qmd), then [Iteration (across, loops, functions)](r-foundations/iteration.qmd).
+
+3.  **Learn what makes a plot good**
+
+    [Grammar of Graphics](data-visualization/ggplot_grammar.qmd) · [Best Practices](data-visualization/best_practices.qmd) · [Matching Data to Plots](data-visualization/plot_data.qmd)
+
+4.  **ggplot2 in depth**
+
+    [Module 1 — Foundations & Geoms](data-visualization/gram_ggplot/module_1_foundations_geoms.qmd), then [Module 2 — Aesthetics, Faceting & Themes](data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd).
+
+5.  **Widen your plot vocabulary**
+
+    [Basic](plot-gallery/basic.qmd) and [Intermediate](plot-gallery/moderate.qmd) plot galleries, then [Merged Visuals](specialized/merge_visuals.qmd) and [Statistical Plots](specialized/plot_stats.qmd).
+
+6.  **Tests and tables for a paper**
+
+    [Test Selection Guide](statistical-analysis/statistical_tests.qmd) · [ggstatsplot — Intro](ggstatsplot/ggstatsplot_intro.qmd) · [ggstatsplot — Intermediate](ggstatsplot/ggstatsplot_moderate.qmd) · [gtsummary Tables](gtsummary/gtsummary_tutorial.qmd) · [Data Analysis](statistical-analysis/data_analysis.qmd) · [Regression Analysis](statistical-analysis/regression.qmd)
+
+7.  **Reports that update themselves**
+
+    [Quarto Basics](quarto_repro_w/reproducible_writing.qmd), then [Quarto — Dynamic Documents](quarto_repro_w/quarto_moderate.qmd).
+
+8.  **Export your figures**
+
+    [Exporting Plots](exporting_tools/exporting_plots.qmd) · [Plotting Tools](exporting_tools/plotting_tools.qmd)
+
+9.  **Check yourself and move on**
+
+    Take the Region 2 post-test in the game, then continue with the **Regression** track (Step 3 on the main page).
+:::
+
+## 🎯 What you will be able to do
+
+- Clean real, messy data and automate repeated steps
+- Apply design principles and ggplot2 modules 1–2 to your own figures
+- Build a Table 1 and other summary tables with gtsummary
+- Write Quarto documents whose numbers update with the data
+
+## 📥 Downloads
+
+- Cheat sheets: [Data transformation](downloads/cheatsheets/data-transformation.pdf) · [tidyr](downloads/cheatsheets/tidyr.pdf) · [Factors](downloads/cheatsheets/factors.pdf) · [Strings](downloads/cheatsheets/strings.pdf) · [purrr](downloads/cheatsheets/purrr.pdf) · [Data visualization](downloads/cheatsheets/data-visualization.pdf)
+- Example scripts: [Data wrangling](downloads/source-scripts/nctoh/data_wrangle.R) · [Data visualization](downloads/source-scripts/nctoh/data_vis.R) · [Data analysis (abridged)](downloads/source-scripts/nctoh/data_analysis_Abridged_for_Workshop.R)
+- Everything else is on the [Downloads](downloads.qmd) page.
+
+> 💡 **Tip:** Already comfortable with the basics? Start at Step 2 and come back to Step 1 only if something is unclear.
+
+:::
+
+<!-- ═══════════════════════════════════════════════════════════════ REGRESSION -->
+
+::: {.content-visible when-profile="regression"}
+
+::: {.ws-track-hero .ws-track--regression data-track="regression"}
+[🟡 Workshop Key Unlocked]{.ws-track-badge}
+
+[Regression Track]{.ws-track-title}
+
+Step 3 of the self-study path. A statistics-first route: a one-page tour of linear, logistic and Cox regression, then the full-day **Theory of Regression Analysis** workshop with six slide decks, six R labs, self-check quizzes and a cheat sheet.
+:::
+
+::: {.ws-track-game}
+🗺️ **Play as you learn.** This track is **Region 3 · Regression** of *Dungeons & Dataframes*: six worlds, one for each workshop session.
+[Open the game →](../dungeons/dungeons/index.html){.ws-track-game-btn}
+:::
+
+## 🗓️ Self-study plan
+
+One session a day is a comfortable pace: read the slides, answer the quiz on the last slides, then do the lab. Tick a step when you have finished it; ticks are saved in this browser.
+
+::: {.ws-plan}
+1.  **Check your R basics**
+
+    [Getting Started](r-foundations/getting-started.qmd) · [Data Wrangling (Tidyverse)](r-foundations/data-wrangling.qmd)
+
+2.  **See the whole map first**
+
+    [Regression Analysis](statistical-analysis/regression.qmd): simple, multiple, logistic and Cox regression and diagnostics on one page.
+
+3.  **Session 1 — Foundations**
+
+    [Slides and quiz](regression-workshop/s1_foundations.qmd) · [Lab 1](regression-workshop/labs/lab1_explore.R)
+
+4.  **Session 2 — Simple Linear Regression**
+
+    [Slides and quiz](regression-workshop/s2_simple_regression.qmd) · [Lab 2](regression-workshop/labs/lab2_simple.R)
+
+5.  **Session 3 — Inference & Multiple Regression**
+
+    [Slides and quiz](regression-workshop/s3_multiple_regression.qmd) · [Lab 3](regression-workshop/labs/lab3_multiple.R)
+
+6.  **Session 4 — Assumptions**
+
+    [Slides and quiz](regression-workshop/s4_assumptions.qmd) · [Lab 4](regression-workshop/labs/lab4_assumptions.R)
+
+7.  **Session 5 — Logistic Regression**
+
+    [Slides and quiz](regression-workshop/s5_logistic_regression.qmd) · [Lab 5](regression-workshop/labs/lab5_logistic.R)
+
+8.  **Session 6 — Interpreting & Reporting**
+
+    [Slides and quiz](regression-workshop/s6_reporting.qmd) · [Lab 6](regression-workshop/labs/lab6_reporting.R)
+
+9.  **Keep the cheat sheet, then move on**
+
+    [Interpretation Cheat Sheet](regression-workshop/cheatsheet.qmd). Take the Region 3 post-test in the game, then continue with the **Advanced** track (Step 4 on the main page).
+:::
+
+## 🎯 What you will be able to do
+
+- Fit and interpret simple and multiple linear regression models
+- Screen predictors and build a multivariable model
+- Fit logistic and Cox models for binary and time-to-event outcomes
+- Check assumptions with base R and the `performance` package
+- Report a model for a thesis or a paper
+
+## 📥 Downloads
+
+- Dataset: [Simulated NCD survey (CSV)](data/ncd_survey.csv), n = 600 in 20 villages · [make_data.R](regression-workshop/make_data.R) rebuilds it
+- Labs (fill in the `___` blanks): [Lab 1](regression-workshop/labs/lab1_explore.R) · [Lab 2](regression-workshop/labs/lab2_simple.R) · [Lab 3](regression-workshop/labs/lab3_multiple.R) · [Lab 4](regression-workshop/labs/lab4_assumptions.R) · [Lab 5](regression-workshop/labs/lab5_logistic.R) · [Lab 6](regression-workshop/labs/lab6_reporting.R)
+- Cheat sheets: [Data import](downloads/cheatsheets/data-import.pdf) · [Data transformation](downloads/cheatsheets/data-transformation.pdf)
+- Everything else is on the [Downloads](downloads.qmd) page.
+
+> 💡 **Tip:** Do the lab on the same day as its session. The labs reuse one dataset, so each one starts where the last one ended.
+
+:::
+
+<!-- ═══════════════════════════════════════════════════════════════ ADVANCED -->
+
+::: {.content-visible when-profile="advanced"}
+
+::: {.ws-track-hero .ws-track--advanced data-track="advanced"}
+[🔴 Workshop Key Unlocked]{.ws-track-badge}
+
+[Advanced Track]{.ws-track-title}
+
+Step 4 of the self-study path. The complete visualization library (all four ggplot2 modules, advanced and interactive plots, publication-ready Quarto) and nine advanced analysis workshops, A1 to A9. Each workshop has five slide decks with a quiz, five R labs and a two-page cheat sheet.
+:::
+
+::: {.ws-track-game}
+🗺️ **Play as you learn.** Region 4 · Advanced of *Dungeons & Dataframes* is not built yet. Regions 1 to 3 are a quick way to check the foundations this track assumes.
+[Open the game →](../dungeons/dungeons/index.html){.ws-track-game-btn}
+:::
+
+## 🗓️ Self-study plan
+
+Steps 1 and 2 finish the visualization library. Steps 3 to 11 are the workshops: do A1 to A3 first, then take the others in the order your own work needs. Every session is listed on [Advanced Workshops](advanced-workshops.qmd). Tick a step when you have finished it; ticks are saved in this browser.
+
+::: {.ws-plan}
+1.  **Finish ggplot2 and the plot galleries**
+
+    [Module 3 — Colors, Scales & Themes](data-visualization/gram_ggplot/module_3_colors_scales_themes.qmd) · [Module 4 — Advanced Best Practices](data-visualization/gram_ggplot/module_4_advanced_best_practices.qmd) · [Advanced Plot Gallery](plot-gallery/advanced.qmd) · [Practical Applications](plot-gallery/practical_application.qmd) · [Interactive Plots](specialized/interactive.qmd)
+
+2.  **Publication-ready output**
+
+    [ggstatsplot — Advanced](ggstatsplot/ggstatsplot_advanced.qmd) · [Quarto — Publication](quarto_repro_w/quarto_advanced.qmd) · [Debugging Plots](exporting_tools/debugging_plots.qmd) · [Advanced Exporting](exporting_tools/advanced_exporting.qmd)
+
+3.  **A1 · Survival analysis**
+
+    Time-to-event data, Kaplan-Meier, log-rank, Cox. [Start at Session 1](survival-workshop/s1_time_to_event.qmd) · [Cheat sheet](survival-workshop/cheatsheet.qmd)
+
+4.  **A2 · Counts and rates**
+
+    Poisson and negative binomial regression, offsets, excess zeros. [Start at Session 1](counts-workshop/s1_counts_rates.qmd) · [Cheat sheet](counts-workshop/cheatsheet.qmd)
+
+5.  **A3 · Ordinal and multinomial outcomes**
+
+    Ordinal logistic regression, the proportional-odds check, multinomial models. [Start at Session 1](ordinal-workshop/s1_categorical_outcomes.qmd) · [Cheat sheet](ordinal-workshop/cheatsheet.qmd)
+
+6.  **A4 · Clustered and repeated data**
+
+    ICC, cluster-robust standard errors, GEE, mixed models. [Start at Session 1](clustered-workshop/s1_clustered_data.qmd) · [Cheat sheet](clustered-workshop/cheatsheet.qmd)
+
+7.  **A5 · Survey data and weights**
+
+    Complex survey design, weights, `svyglm`, raking. [Start at Session 1](survey-workshop/s1_survey_design.qmd) · [Cheat sheet](survey-workshop/cheatsheet.qmd)
+
+8.  **A6 · Curves and interactions**
+
+    Splines, GAMs, effect modification, prediction plots. [Start at Session 1](curves-workshop/s1_beyond_linear.qmd) · [Cheat sheet](curves-workshop/cheatsheet.qmd)
+
+9.  **A7 · Missing data**
+
+    MCAR, MAR and MNAR, multiple imputation with `mice`, sensitivity analysis. [Start at Session 1](missing-workshop/s1_patterns_mechanisms.qmd) · [Cheat sheet](missing-workshop/cheatsheet.qmd)
+
+10. **A8 · Prediction models**
+
+    Risk models, discrimination and calibration, validation, shrinkage, decision curves. [Start at Session 1](prediction-workshop/s1_building_model.qmd) · [Cheat sheet](prediction-workshop/cheatsheet.qmd)
+
+11. **A9 · Causal inference**
+
+    DAGs, adjustment, propensity scores, inverse probability weighting, E-values. [Start at Session 1](causal-workshop/s1_causal_questions_dags.qmd) · [Cheat sheet](causal-workshop/cheatsheet.qmd)
+:::
+
+## 🎯 What you will be able to do
+
+- Use all four ggplot2 modules and build advanced and interactive figures
+- Produce publication-ready documents with Quarto
+- Choose and fit the right model for survival, count, ordinal, clustered and survey data
+- Handle non-linear effects, interactions and missing data properly
+- Build and validate a prediction model, and reason about causal questions
+
+## 📥 Downloads
+
+Each workshop runs on its own synthetic dataset. `make_data.R` rebuilds it; the labs have `___` blanks to fill in.
+
+| Workshop | Data | Scripts |
+|---|---|---|
+| A1 Survival | [tb_cohort.csv](data/tb_cohort.csv) | [make_data.R](survival-workshop/make_data.R) · [Lab 1](survival-workshop/labs/lab1_data.R) · [Lab 2](survival-workshop/labs/lab2_km.R) · [Lab 3](survival-workshop/labs/lab3_logrank.R) · [Lab 4](survival-workshop/labs/lab4_cox.R) · [Lab 5](survival-workshop/labs/lab5_assumptions.R) |
+| A2 Counts and rates | [dengue_wards.csv](data/dengue_wards.csv) | [make_data.R](counts-workshop/make_data.R) · [Lab 1](counts-workshop/labs/lab1_counts.R) · [Lab 2](counts-workshop/labs/lab2_poisson.R) · [Lab 3](counts-workshop/labs/lab3_overdisp.R) · [Lab 4](counts-workshop/labs/lab4_zeros.R) · [Lab 5](counts-workshop/labs/lab5_report.R) |
+| A3 Ordinal and multinomial | [maternal_survey.csv](data/maternal_survey.csv) | [make_data.R](ordinal-workshop/make_data.R) · [Lab 1](ordinal-workshop/labs/lab1_outcomes.R) · [Lab 2](ordinal-workshop/labs/lab2_ordinal.R) · [Lab 3](ordinal-workshop/labs/lab3_po.R) · [Lab 4](ordinal-workshop/labs/lab4_multinom.R) · [Lab 5](ordinal-workshop/labs/lab5_report.R) |
+| A4 Clustered and repeated | [bp_trial.csv](data/bp_trial.csv) | [make_data.R](clustered-workshop/make_data.R) · [Lab 1](clustered-workshop/labs/lab1_clusters.R) · [Lab 2](clustered-workshop/labs/lab2_gee.R) · [Lab 3](clustered-workshop/labs/lab3_mixed.R) · [Lab 4](clustered-workshop/labs/lab4_long.R) · [Lab 5](clustered-workshop/labs/lab5_report.R) |
+| A5 Survey data | [survey_adults.csv](data/survey_adults.csv) · [survey_population.csv](data/survey_population.csv) | [make_data.R](survey-workshop/make_data.R) · [Lab 1](survey-workshop/labs/lab1_design.R) · [Lab 2](survey-workshop/labs/lab2_describe.R) · [Lab 3](survey-workshop/labs/lab3_regression.R) · [Lab 4](survey-workshop/labs/lab4_weights.R) · [Lab 5](survey-workshop/labs/lab5_report.R) |
+| A6 Curves and interactions | [ncd_curves.csv](data/ncd_curves.csv) | [make_data.R](curves-workshop/make_data.R) · [Lab 1](curves-workshop/labs/lab1_linear.R) · [Lab 2](curves-workshop/labs/lab2_splines.R) · [Lab 3](curves-workshop/labs/lab3_gam.R) · [Lab 4](curves-workshop/labs/lab4_interaction.R) · [Lab 5](curves-workshop/labs/lab5_report.R) |
+| A7 Missing data | [ncd_missing.csv](data/ncd_missing.csv) | [make_data.R](missing-workshop/make_data.R) · [Lab 1](missing-workshop/labs/lab1_pattern.R) · [Lab 2](missing-workshop/labs/lab2_simple.R) · [Lab 3](missing-workshop/labs/lab3_mice.R) · [Lab 4](missing-workshop/labs/lab4_diagnostics.R) · [Lab 5](missing-workshop/labs/lab5_mnar.R) |
+| A8 Prediction models | [diabetes_dev.csv](data/diabetes_dev.csv) · [diabetes_valid.csv](data/diabetes_valid.csv) | [make_data.R](prediction-workshop/make_data.R) · [Lab 1](prediction-workshop/labs/lab1_build.R) · [Lab 2](prediction-workshop/labs/lab2_perf.R) · [Lab 3](prediction-workshop/labs/lab3_internal.R) · [Lab 4](prediction-workshop/labs/lab4_shrink.R) · [Lab 5](prediction-workshop/labs/lab5_external.R) |
+| A9 Causal inference | [htn_programme.csv](data/htn_programme.csv) | [make_data.R](causal-workshop/make_data.R) · [Lab 1](causal-workshop/labs/lab1_dag.R) · [Lab 2](causal-workshop/labs/lab2_adjust.R) · [Lab 3](causal-workshop/labs/lab3_match.R) · [Lab 4](causal-workshop/labs/lab4_ipw.R) · [Lab 5](causal-workshop/labs/lab5_sens.R) |
+
+General cheat sheets and example scripts are on the [Downloads](downloads.qmd) page.
+
+> 💡 **Tip:** The workshops assume the Regression track. If odds ratios or residual plots feel shaky, revise them there first.
+
+:::
+
+<!-- ═══════════════════════════════════════════════════════════════ DATAVIZ FOUNDATIONS -->
+
+::: {.content-visible when-profile="dataviz-base"}
+
+::: {.ws-track-hero .ws-track--dataviz-base data-track="dataviz-base"}
+[🟣 Workshop Key Unlocked]{.ws-track-badge}
+
+[Data Visualization — Foundations]{.ws-track-title}
+
+An elective, visualization-only track: the grammar of graphics, design best practices, ggplot2 modules 1–2 and the basic and intermediate plot galleries. It has no statistics or Quarto pages.
+:::
+
+::: {.ws-track-game}
+🗺️ **Play as you learn.** The plotting worlds of *Dungeons & Dataframes* (First Plots in Region 1, Explore by Picture in Region 2) practise what this track teaches.
+[Open the game →](../dungeons/dungeons/index.html){.ws-track-game-btn}
+:::
+
+## 🗓️ Self-study plan
+
+Work through the steps in order. Tick a step when you have finished it; ticks are saved in this browser.
+
+::: {.ws-plan}
+1.  **Understand how a plot is built**
+
+    [Grammar of Graphics](data-visualization/ggplot_grammar.qmd)
+
+2.  **Learn what makes a plot good**
+
+    [Best Practices](data-visualization/best_practices.qmd), then [Matching Data to Plots](data-visualization/plot_data.qmd).
+
+3.  **ggplot2 Module 1**
+
+    [Foundations & Geoms](data-visualization/gram_ggplot/module_1_foundations_geoms.qmd)
+
+4.  **ggplot2 Module 2**
+
+    [Aesthetics, Faceting & Themes](data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd)
+
+5.  **Build your plot vocabulary**
+
+    [Basic Plots](plot-gallery/basic.qmd), then [Intermediate Plots](plot-gallery/moderate.qmd).
+
+6.  **Combine plots and add statistics**
+
+    [Merged Visuals](specialized/merge_visuals.qmd) · [Statistical Plots](specialized/plot_stats.qmd)
+
+7.  **Export and share**
+
+    [Exporting Plots](exporting_tools/exporting_plots.qmd) · [Plotting Tools](exporting_tools/plotting_tools.qmd). Next: **Data Visualization — Complete**.
+:::
+
+## 🎯 What you will be able to do
+
+- Explain a plot in terms of the grammar of graphics
+- Choose a suitable plot for your data and apply design best practices
+- Use ggplot2 modules 1–2 confidently
+- Export figures ready for a report or a slide
+
+## 📥 Downloads
+
+- Cheat sheets: [Data visualization (ggplot2)](downloads/cheatsheets/data-visualization.pdf) · [Data transformation](downloads/cheatsheets/data-transformation.pdf)
+- Example script: [Data visualization](downloads/source-scripts/nctoh/data_vis.R)
+- Everything else is on the [Downloads](downloads.qmd) page.
+
+> 💡 **Tip:** Read **Grammar of Graphics** before the modules. It makes every later page easier.
+
+:::
+
+<!-- ═══════════════════════════════════════════════════════════════ DATAVIZ COMPLETE -->
+
+::: {.content-visible when-profile="dataviz-complete"}
+
+::: {.ws-track-hero .ws-track--dataviz-complete data-track="dataviz-complete"}
+[🟠 Workshop Key Unlocked]{.ws-track-badge}
+
+[Data Visualization — Complete]{.ws-track-title}
+
+An elective, visualization-only track with everything in Foundations plus ggplot2 modules 3–4, the advanced gallery, interactive plots, practical applications, debugging and advanced export.
+:::
+
+::: {.ws-track-game}
+🗺️ **Play as you learn.** The plotting worlds of *Dungeons & Dataframes* (First Plots in Region 1, Explore by Picture in Region 2) practise what this track teaches.
+[Open the game →](../dungeons/dungeons/index.html){.ws-track-game-btn}
+:::
+
+## 🗓️ Self-study plan
+
+Steps 1 to 4 are the Foundations track: skip them if you have done it. Tick a step when you have finished it; ticks are saved in this browser.
+
+::: {.ws-plan}
+1.  **Principles**
+
+    [Grammar of Graphics](data-visualization/ggplot_grammar.qmd) · [Best Practices](data-visualization/best_practices.qmd) · [Matching Data to Plots](data-visualization/plot_data.qmd)
+
+2.  **ggplot2 Modules 1 and 2**
+
+    [Module 1 — Foundations & Geoms](data-visualization/gram_ggplot/module_1_foundations_geoms.qmd), then [Module 2 — Aesthetics, Faceting & Themes](data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd).
+
+3.  **Basic and intermediate galleries**
+
+    [Basic Plots](plot-gallery/basic.qmd) · [Intermediate Plots](plot-gallery/moderate.qmd) · [Merged Visuals](specialized/merge_visuals.qmd) · [Statistical Plots](specialized/plot_stats.qmd)
+
+4.  **Export basics**
+
+    [Exporting Plots](exporting_tools/exporting_plots.qmd) · [Plotting Tools](exporting_tools/plotting_tools.qmd)
+
+5.  **ggplot2 Module 3**
+
+    [Colors, Scales & Themes](data-visualization/gram_ggplot/module_3_colors_scales_themes.qmd)
+
+6.  **ggplot2 Module 4**
+
+    [Advanced Best Practices](data-visualization/gram_ggplot/module_4_advanced_best_practices.qmd)
+
+7.  **Advanced and interactive plots**
+
+    [Advanced Plots](plot-gallery/advanced.qmd), then [Interactive Plots](specialized/interactive.qmd).
+
+8.  **Put it to work**
+
+    [Practical Applications](plot-gallery/practical_application.qmd)
+
+9.  **Fix and publish**
+
+    [Debugging Plots](exporting_tools/debugging_plots.qmd) · [Advanced Exporting](exporting_tools/advanced_exporting.qmd)
+:::
+
+## 🎯 What you will be able to do
+
+- Use all four ggplot2 modules
+- Build advanced and interactive visualizations
+- Debug a plot that does not look right
+- Export figures to the standard a journal asks for
+
+## 📥 Downloads
+
+- Cheat sheets: [Data visualization (ggplot2)](downloads/cheatsheets/data-visualization.pdf) · [Data transformation](downloads/cheatsheets/data-transformation.pdf) · [Factors](downloads/cheatsheets/factors.pdf)
+- Example script: [Data visualization](downloads/source-scripts/nctoh/data_vis.R)
+- Everything else is on the [Downloads](downloads.qmd) page.
+
+> 💡 **Tip:** Finished Foundations? Start at Step 5, **Module 3 — Colors, Scales & Themes**.
+
+:::
+
+<!-- ═══════════════════════════════════════════════════════════════ GIS -->
+
+::: {.content-visible when-profile="gis"}
+
+::: {.ws-track-hero .ws-track--gis data-track="gis"}
+[🟤 Workshop Key Unlocked]{.ws-track-badge}
+
+[GIS and Spatial Statistics Track]{.ws-track-title}
+
+An elective track. A five-session workshop on spatial data and spatial statistics in R: maps with `sf`, neighbours and weights, Moran's I, local clusters and hot spots, and spatial regression. All examples use a synthetic district of 80 blocks with a planted hot spot, so no real boundaries or personal data are involved. The full visualization library is in the navbar as well.
+:::
+
+::: {.ws-track-game}
+🗺️ **Play as you learn.** A GIS region of *Dungeons & Dataframes* is not built yet. Regions 1 to 3 cover the R, plotting and regression this track assumes.
+[Open the game →](../dungeons/dungeons/index.html){.ws-track-game-btn}
+:::
+
+## 🗓️ Self-study plan
+
+Each session pairs a slide deck (with a quiz on the last slides), a longer reading page and a lab. Tick a step when you have finished it; ticks are saved in this browser.
+
+::: {.ws-plan}
+1.  **Check the prerequisites**
+
+    [Getting Started](r-foundations/getting-started.qmd) · [Data Wrangling (Tidyverse)](r-foundations/data-wrangling.qmd) · [Grammar of Graphics](data-visualization/ggplot_grammar.qmd). Session 5 also assumes linear regression.
+
+2.  **Session 1 — Spatial data and maps**
+
+    [Slides and quiz](gis-workshop/s1_spatial_data.qmd) · read [Spatial Data with sf](gis/spatial_data_sf.qmd) and [Maps and Choropleths](gis/maps_choropleth.qmd) · [Lab 1](gis-workshop/labs/lab1_data.R)
+
+3.  **Session 2 — Neighbours and spatial weights**
+
+    [Slides and quiz](gis-workshop/s2_neighbours_weights.qmd) · read [Neighbours and Spatial Weights](gis/spatial_weights.qmd) · [Lab 2](gis-workshop/labs/lab2_weights.R)
+
+4.  **Session 3 — Global spatial autocorrelation**
+
+    [Slides and quiz](gis-workshop/s3_global_autocorrelation.qmd) · read [Global Moran's I](gis/morans_i.qmd) · [Lab 3](gis-workshop/labs/lab3_global.R)
+
+5.  **Session 4 — Local clusters and hot spots**
+
+    [Slides and quiz](gis-workshop/s4_local_clusters.qmd) · read [Local Moran's I (LISA)](gis/local_moran_lisa.qmd) and [Geary's C, Getis-Ord, Join Counts, Scan Statistic](gis/other_spatial_tests.qmd) · [Lab 4](gis-workshop/labs/lab4_local.R)
+
+6.  **Session 5 — Spatial regression and reporting**
+
+    [Slides and quiz](gis-workshop/s5_spatial_regression.qmd) · read [Spatial Regression and Residual Tests](gis/spatial_regression.qmd) · [Lab 5](gis-workshop/labs/lab5_regression.R)
+
+7.  **Keep the cheat sheet**
+
+    [Spatial Statistics Cheat Sheet](gis-workshop/cheatsheet.qmd): a two-page guide to choosing and reading spatial tests.
+:::
+
+## 🎯 What you will be able to do
+
+- Read, transform and join spatial data with `sf`, and keep track of coordinate reference systems
+- Make clear static and interactive maps and choose a sensible classification
+- Define neighbours and spatial weights, and know how the choice changes the answer
+- Test for global spatial autocorrelation with Moran's I and read the Moran scatterplot
+- Locate clusters and outliers with local Moran's I (LISA) and hot spots with Getis-Ord Gi\*
+- Check regression residuals for spatial structure
+
+## 📥 Downloads
+
+- Data: [district_blocks.geojson](data/gis/district_blocks.geojson) · [facilities.csv](data/gis/facilities.csv) · [make_gis_data.R](gis/make_gis_data.R) rebuilds them
+- Labs (fill in the `___` blanks): [Lab 1](gis-workshop/labs/lab1_data.R) · [Lab 2](gis-workshop/labs/lab2_weights.R) · [Lab 3](gis-workshop/labs/lab3_global.R) · [Lab 4](gis-workshop/labs/lab4_local.R) · [Lab 5](gis-workshop/labs/lab5_regression.R)
+- General cheat sheets are on the [Downloads](downloads.qmd) page.
+
+> 💡 **Tip:** Never mapped data in R? Spend extra time on Session 1 before moving on. Everything later depends on getting the spatial object and its coordinate system right.
+
+:::
+
+<!-- ═══════════════════════════════════════════════════════════════ DUNGEONS (the game's own site) -->
+
+::: {.content-visible when-profile="dungeons"}
+
+::: {.ws-track-hero .ws-track--dungeons data-track="dungeons"}
+[🟢 Open Access]{.ws-track-badge}
+
+[Dungeons & Dataframes — Library]{.ws-track-title}
+
+This site is the game and its library. The workshop pages in the *Library* menu are the "📖 Read first" pages that each world links to.
+:::
+
+::: {.ws-track-game}
+🗺️ **The game starts at the quest map.**
+[Open the quest map →](dungeons/index.qmd){.ws-track-game-btn}
+:::
+
+## 🗓️ Self-study plan
+
+Tick a step when you have finished it; ticks are saved in this browser.
+
+::: {.ws-plan}
+1.  **Find your starting point**
+
+    New to R: take the [Region 1 pre-test](dungeons/r1pretest.qmd). Already comfortable: take the [placement check](dungeons/readiness.qmd).
+
+2.  **Region 1 · Basics**
+
+    Five worlds, from [Your First Script](dungeons/b1_first_script.qmd) to [Which Test?](dungeons/b5_which_test.qmd), then the [Region 1 post-test](dungeons/r1posttest.qmd).
+
+3.  **Region 2 · Moderate**
+
+    [Region 2 pre-test](dungeons/r2pretest.qmd), five worlds starting at the [Messy Data Dungeon](dungeons/m1_messy_data_dungeon.qmd), then the [Region 2 post-test](dungeons/r2posttest.qmd).
+
+4.  **Region 3 · Regression**
+
+    [Region 3 pre-test](dungeons/pretest.qmd), six worlds starting at [The Outcome Detective](dungeons/world1_outcome_detective.qmd), then the [Region 3 post-test](dungeons/posttest.qmd).
+
+5.  **Track your growth**
+
+    The [Campus (skill tree)](dungeons/campus.qmd) shows what you have mastered and lets you export your progress.
+:::
+
+> 💡 **Tip:** Stuck in a world? Open its "📖 Read first" page, then try again. Hints cost XP; reading is free.
+
+:::
+
+```{=html}
+<script>
+// Self-study plan: a tick box on every step, remembered in this browser (per track).
+(function () {
+  var hero = document.querySelector('.ws-track-hero[data-track]');
+  var steps = document.querySelectorAll('.ws-plan > ol > li');
+  if (!hero || !steps.length) return;
+  var key = 'ws-plan:' + hero.getAttribute('data-track');
+  var done = {};
+  try { done = JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch (e) { done = {}; }
+
+  var status = document.createElement('p');
+  status.className = 'ws-plan-status';
+  var plan = document.querySelector('.ws-plan');
+  plan.parentNode.insertBefore(status, plan);
+
+  function refresh() {
+    var n = 0;
+    steps.forEach(function (li, i) {
+      var on = !!done[i];
+      li.classList.toggle('ws-plan-done', on);
+      li.querySelector('.ws-plan-tick').checked = on;
+      if (on) n++;
+    });
+    status.textContent = n + ' of ' + steps.length + ' steps done';
   }
-  cat('\n')
-}
 
-# Datasets
-if (length(dl$datasets) > 0) {
-  cat('### 🗄️ Datasets\n\n')
-  for (f in dl$datasets) {
-    ext  <- tools::file_ext(f)
-    icon <- switch(ext, csv="📊", xlsx="📗", rds="🔵", "📦")
-    cat(sprintf('- %s [%s](%s) `.%s`\n', icon, file_label(f), f, ext))
-  }
-  cat('\n')
-}
-
-# Cheatsheets
-if (length(dl$cheatsheets) > 0) {
-  cat('### 📋 Cheatsheets\n\n')
-  for (f in dl$cheatsheets) {
-    cat(sprintf('- [%s](%s)\n', file_label(f), f))
-  }
-  cat('\n')
-}
-
-# Quarto file (only if profile includes Quarto)
-if (m$show_quarto && length(dl$quarto) > 0) {
-  cat('### 📝 Quarto Template\n\n')
-  for (f in dl$quarto) {
-    cat(sprintf('- [%s](%s) — starter `.qmd` file covering Quarto basics\n',
-                file_label(f), f))
-  }
-  cat('\n')
-}
-
-# ═══════════════════════════════════════════════════════
-# CLOSING TIP
-# ═══════════════════════════════════════════════════════
-cat(sprintf('\n---\n\n> 💡 **Tip:** %s\n', m$tip))
+  steps.forEach(function (li, i) {
+    var box = document.createElement('input');
+    box.type = 'checkbox';
+    box.className = 'ws-plan-tick';
+    box.setAttribute('aria-label', 'Mark step ' + (i + 1) + ' as done');
+    box.addEventListener('change', function () {
+      if (box.checked) done[i] = 1; else delete done[i];
+      try { localStorage.setItem(key, JSON.stringify(done)); } catch (e) {}
+      refresh();
+    });
+    li.appendChild(box);
+  });
+  refresh();
+})();
+</script>
 ```
