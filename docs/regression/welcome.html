@@ -301,6 +301,8 @@ ul.task-list li input[type="checkbox"] {
   var key = 'ws-plan:' + hero.getAttribute('data-track');
   var done = {};
   try { done = JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch (e) { done = {}; }
+  // the landing page's profile card reads these totals
+  try { localStorage.setItem('ws-plan-total:' + hero.getAttribute('data-track'), String(steps.length)); } catch (e) {}
 
   var status = document.createElement('p');
   status.className = 'ws-plan-status';

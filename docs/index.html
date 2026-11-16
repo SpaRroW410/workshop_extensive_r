@@ -87,7 +87,7 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content column-page" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content page-columns page-full column-page" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
@@ -99,45 +99,91 @@ ul.task-list li input[type="checkbox"] {
        There it shows only a redirect to the track home. `ws-track` is set in each _quarto-<track>.yml.
 -->
 <!-- ═══════════════════════════════════════════════════════
-     HEADER
+     TOP BAR: site name + profile chip
      ═══════════════════════════════════════════════════════ -->
-<header class="ws-top">
-  <div class="ws-top-inner">
-    <!-- not an <h1>: Quarto lifts the first h1 into its (hidden) title block -->
-    <div class="ws-title" role="heading" aria-level="1">R Data Visualization Workshop</div>
-    <p class="ws-subtitle">
-      A self-study path through data wrangling, visualization and statistical analysis in R
-    </p>
-    <p class="ws-authors">
-      Dr. Mukul Maheshwari &nbsp;·&nbsp; Dr. Rudresh Negi
-      <span class="ws-dept">&nbsp;·&nbsp; Department of Community Medicine</span>
-    </p>
-  </div>
+<header class="ws-bar">
+  <!-- not an <h1>: Quarto lifts the first h1 into its (hidden) title block -->
+  <div class="ws-bar-name" role="heading" aria-level="1">Medical Statistics in R</div>
+  <a class="ws-bar-profile" href="#ws-profile" title="Your profile">
+    <span class="ws-avatar ws-avatar--sm" data-profile-initials="" aria-hidden="true">?</span>
+    <span data-profile-name="">Set up your profile</span>
+  </a>
 </header>
 
 
-<main class="ws-main">
+<main class="ws-main page-columns page-full">
 
   <!-- ═════════════════════════════════════════════════════
-       1 · THE GAME (always first)
+       1 · THE GAME (always first) + THE LEARNER PROFILE
        ═════════════════════════════════════════════════════ -->
-  <a class="ws-game" href="dungeons/dungeons/index.html">
-    <div class="ws-game-icon" aria-hidden="true">🗺️</div>
-    <div class="ws-game-body">
-      <div class="ws-card-badge ws-badge--open">🟢 Open Access</div>
-      <h2 class="ws-game-title anchored">Dungeons &amp; Dataframes</h2>
-      <p class="ws-game-sub">Medical statistics in R as a game, from your first script to regression.
-        Clear worlds, beat bosses, earn XP and grow your skill tree. Each region of the game
-        matches one step of the study plan below, so you can read a step and then play it.</p>
-      <ul class="ws-game-regions">
-        <li>Region 1 · Basics</li>
-        <li>Region 2 · Moderate</li>
-        <li>Region 3 · Regression</li>
-        <li class="ws-game-soon">Region 4 · Advanced (coming later)</li>
+  <div class="ws-lead page-columns page-full">
+
+    <a class="ws-game" href="dungeons/dungeons/index.html">
+      <div class="ws-game-icon" aria-hidden="true">🗺️</div>
+      <div class="ws-game-body">
+        <div class="ws-card-badge ws-badge--open">🟢 Open Access</div>
+        <h2 class="ws-game-title anchored">Dungeons &amp; Dataframes</h2>
+        <p class="ws-game-sub">Medical statistics in R as a game, from your first script to regression.
+          Clear worlds, beat bosses, earn XP and grow your skill tree. Each region of the game
+          matches one step of the study plan below, so you can read a step and then play it.</p>
+        <ul class="ws-game-regions">
+          <li>Region 1 · Basics</li>
+          <li>Region 2 · Moderate</li>
+          <li>Region 3 · Regression</li>
+          <li class="ws-game-soon">Region 4 · Advanced (coming later)</li>
+        </ul>
+        <span class="ws-btn ws-btn--game">Start playing →</span>
+      </div>
+    </a>
+
+    <!-- PROFILE CARD
+         Layout for the planned profile system. Today it is filled from this browser only
+         (see WSProfile in the script below); a real account system only has to replace
+         WSProfile.read() / WSProfile.saveName(). -->
+    <aside class="ws-profile" id="ws-profile" aria-labelledby="ws-profile-heading">
+      <div class="ws-profile-head">
+        <span class="ws-avatar" data-profile-initials="" aria-hidden="true">?</span>
+        <div class="ws-profile-id">
+          <h2 class="ws-profile-name anchored" id="ws-profile-heading" data-profile-name="">Set up your profile</h2>
+          <p class="ws-profile-rank"><span id="ws-profile-rank">Field Volunteer</span></p>
+        </div>
+        <button type="button" class="ws-profile-edit" id="ws-profile-edit">Edit</button>
+      </div>
+
+      <form class="ws-profile-form" id="ws-profile-form" hidden="">
+        <label for="ws-profile-input">Display name</label>
+        <div class="ws-profile-form-row">
+          <input type="text" id="ws-profile-input" maxlength="40" autocomplete="nickname" placeholder="Your name">
+          <button type="submit" class="ws-profile-save">Save</button>
+        </div>
+      </form>
+
+      <div class="ws-profile-xp">
+        <div class="ws-progress-bar"><span id="ws-profile-xp-fill"></span></div>
+        <p><b id="ws-profile-xp">0</b> XP · <span id="ws-profile-next">100 XP to Health Worker</span></p>
+      </div>
+
+      <dl class="ws-profile-stats">
+        <div><dt>Day streak</dt><dd id="ws-profile-streak">0</dd></div>
+        <div><dt>Badges</dt><dd id="ws-profile-badges">0</dd></div>
+        <div><dt>Steps done</dt><dd id="ws-profile-steps">0/4</dd></div>
+      </dl>
+
+      <h3 class="ws-profile-sub anchored">Study plan progress</h3>
+      <ul class="ws-profile-tracks">
+        <li data-track="basic" data-total="7"><span>Basic</span><div class="ws-progress-bar"><span></span></div><em>0/7</em></li>
+        <li data-track="moderate" data-total="9"><span>Moderate</span><div class="ws-progress-bar"><span></span></div><em>0/9</em></li>
+        <li data-track="regression" data-total="9"><span>Regression</span><div class="ws-progress-bar"><span></span></div><em>0/9</em></li>
+        <li data-track="advanced" data-total="11"><span>Advanced</span><div class="ws-progress-bar"><span></span></div><em>0/11</em></li>
       </ul>
-    </div>
-    <span class="ws-btn ws-btn--game">Start playing →</span>
-  </a>
+
+      <p class="ws-profile-note">
+        Saved in this browser only. Sign-in and accounts are planned.
+        <a href="dungeons/dungeons/campus.html">Skill tree and backup →</a>
+      </p>
+    </aside>
+
+  </div>
 
 
   <!-- ═════════════════════════════════════════════════════
@@ -330,13 +376,26 @@ ul.task-list li input[type="checkbox"] {
 
 
 <!-- ═══════════════════════════════════════════════════════
-     FOOTER LINKS (these pages live in the open Basic track)
+     CONTACT (last thing on the page)
      ═══════════════════════════════════════════════════════ -->
-<div class="ws-footer-links">
-  <a href="basic/downloads.html">📥 Downloads &amp; Cheatsheets</a>
-  <a href="basic/contact.html">✉️ Contact Us</a>
-  <a href="basic/references.html">📚 References</a>
-</div>
+<footer class="ws-contact">
+  <div class="ws-contact-inner">
+    <div class="ws-contact-people">
+      <h2 class="ws-contact-heading anchored">Contact</h2>
+      <p><b>Dr. Mukul Maheshwari</b> · <b>Dr. Rudresh Negi</b><br>
+        Assistant Professors, Department of Community Medicine</p>
+      <p>
+        <a href="mailto:ryan00700@gmail.com">✉️ ryan00700@gmail.com</a><br>
+        <a href="https://github.com/SpaRroW410">GitHub: SpaRroW410</a>
+      </p>
+    </div>
+    <nav class="ws-contact-links" aria-label="More">
+      <a href="basic/downloads.html">📥 Downloads &amp; cheat sheets</a>
+      <a href="basic/references.html">📚 References</a>
+      <a href="basic/contact.html">🤝 Feedback &amp; collaboration</a>
+    </nav>
+  </div>
+</footer>
 
 
 <!-- ═══════════════════════════════════════════════════════
@@ -480,14 +539,61 @@ document.addEventListener('keydown', e => {
 loadConfig();
 
 
-// ── Self-study plan progress (kept in this browser only) ──
+// ── Profile + self-study progress ─────────────────────────
+// Everything a profile shows comes through WSProfile. Today it reads this browser's
+// localStorage (the game's save 'rq:v1', the plan ticks 'ws-plan:<track>', the step ticks
+// 'ws-path-done' and the name 'ws-profile'). A real account system replaces read()/write().
+var WSProfile = (function () {
+  function read(key, fallback) {
+    try { var v = JSON.parse(localStorage.getItem(key)); return v == null ? fallback : v; } catch (e) { return fallback; }
+  }
+  function write(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {} }
+
+  // Same XP rules and ranks as dungeons/assets/quest.js (keep the two in step).
+  var RANKS = [[0, 'Field Volunteer'], [100, 'Health Worker'], [250, 'Medical Officer'], [500, 'Epidemiologist'],
+               [900, 'Senior Epidemiologist'], [1500, 'Chief Biostatistician']];
+  function itemXP(r) {
+    if (!r || !r.solved || r.shown) return 0;
+    var cost = 0, hint = [3, 5, 8];
+    for (var i = 0; i < (r.hints || 0); i++) cost += hint[Math.min(i, 2)];
+    var factor = r.tries <= 1 ? 1 : r.tries === 2 ? 0.5 : 0.25;
+    return Math.max(0, Math.round(({ 1: 10, 2: 20, 3: 30 }[r.diff] || 10) * factor - cost) + (r.boss ? 50 : 0));
+  }
+  function game() {
+    var g = read('rq:v1', null) || {}, xp = 0, k;
+    for (k in (g.items || {})) xp += itemXP(g.items[k]);
+    var rank = RANKS[0], next = null;
+    RANKS.forEach(function (r, i) { if (xp >= r[0]) { rank = r; next = RANKS[i + 1] || null; } });
+    return {
+      xp: xp, rank: rank[1], next: next,
+      pct: next ? Math.round(100 * (xp - rank[0]) / (next[0] - rank[0])) : 100,
+      streak: (g.streak && g.streak.count) || 0,
+      badges: Object.keys(g.badges || {}).length
+    };
+  }
+  return {
+    name: function () { return (read('ws-profile', {}).name || '').trim(); },
+    saveName: function (n) { write('ws-profile', { name: n.trim().slice(0, 40) }); },
+    game: game,
+    steps: function () { return read('ws-path-done', {}); },
+    saveSteps: function (d) { write('ws-path-done', d); },
+    planDone: function (track) { return Object.keys(read('ws-plan:' + track, {})).length; },
+    planTotal: function (track, fallback) { return read('ws-plan-total:' + track, 0) || fallback; }
+  };
+})();
+
 (function () {
-  var KEY = 'ws-path-done';
   var boxes = document.querySelectorAll('.ws-step-done input[data-step]');
-  var done = {};
-  try { done = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { done = {}; }
+  var done = WSProfile.steps();
+  function $(id) { return document.getElementById(id); }
+
+  function initials(name) {
+    var p = name.split(/\s+/).filter(Boolean);
+    return p.length ? (p[0][0] + (p.length > 1 ? p[p.length - 1][0] : '')).toUpperCase() : '?';
+  }
 
   function refresh() {
+    // steps of the plan
     var n = 0;
     boxes.forEach(function (box) {
       var on = !!done[box.dataset.step];
@@ -495,18 +601,58 @@ loadConfig();
       box.closest('.ws-step').classList.toggle('ws-step--done', on);
       if (on) n++;
     });
-    document.getElementById('ws-progress-fill').style.width = (100 * n / boxes.length) + '%';
-    document.getElementById('ws-progress-text').textContent = n + ' of ' + boxes.length + ' steps done';
+    $('ws-progress-fill').style.width = (100 * n / boxes.length) + '%';
+    $('ws-progress-text').textContent = n + ' of ' + boxes.length + ' steps done';
+    $('ws-profile-steps').textContent = n + '/' + boxes.length;
+
+    // name and avatar
+    var name = WSProfile.name();
+    document.querySelectorAll('[data-profile-name]').forEach(function (e) { e.textContent = name || 'Set up your profile'; });
+    document.querySelectorAll('[data-profile-initials]').forEach(function (e) { e.textContent = initials(name); });
+    $('ws-profile-edit').textContent = name ? 'Edit' : 'Add name';
+
+    // game: rank, XP, streak, badges
+    var g = WSProfile.game();
+    $('ws-profile-rank').textContent = g.rank;
+    $('ws-profile-xp').textContent = g.xp;
+    $('ws-profile-xp-fill').style.width = g.pct + '%';
+    $('ws-profile-next').textContent = g.next ? (g.next[0] - g.xp) + ' XP to ' + g.next[1] : 'top rank reached';
+    $('ws-profile-streak').textContent = g.streak;
+    $('ws-profile-badges').textContent = g.badges;
+
+    // ticks made on each track's own study plan
+    document.querySelectorAll('.ws-profile-tracks li').forEach(function (li) {
+      var total = WSProfile.planTotal(li.dataset.track, +li.dataset.total);
+      var d = Math.min(WSProfile.planDone(li.dataset.track), total);
+      li.querySelector('.ws-progress-bar span').style.width = (100 * d / total) + '%';
+      li.querySelector('em').textContent = d + '/' + total;
+    });
   }
 
   boxes.forEach(function (box) {
     box.addEventListener('change', function () {
       if (box.checked) done[box.dataset.step] = 1; else delete done[box.dataset.step];
-      try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {}
+      WSProfile.saveSteps(done);
       refresh();
     });
   });
+
+  var form = $('ws-profile-form'), input = $('ws-profile-input');
+  $('ws-profile-edit').addEventListener('click', function () {
+    form.hidden = !form.hidden;
+    if (!form.hidden) { input.value = WSProfile.name(); input.focus(); }
+  });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    WSProfile.saveName(input.value);
+    form.hidden = true;
+    refresh();
+  });
+
   refresh();
+  // progress made in another tab (the game, a track home) shows up when you come back
+  window.addEventListener('pageshow', refresh);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) refresh(); });
 })();
 </script>
 
