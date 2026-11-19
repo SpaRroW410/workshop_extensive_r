@@ -27,6 +27,8 @@ const FORBIDDEN = [
   /(^|\/)solutions\//i,
   /_solution\.[A-Za-z]+$/i,
   /(^|\/)run_solutions\.R$/i,
+  /(^|\/)\.deploy\//, // a staging copy rendered into docs/ by mistake
+  /(^|\/)\.dev\.vars$/,
 ];
 // Files that are build leftovers and are not copied.
 const SKIP = [/(^|\/)\.render-stamp$/];
