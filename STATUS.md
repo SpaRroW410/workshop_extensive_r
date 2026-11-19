@@ -81,9 +81,17 @@ Not re-run for this snapshot: the game end-to-end test (`dungeons/tests/quest_e2
 5. **`build_profiles.R` prints a notice** that sessions 2 to 5 of the advanced modules are in no menu. That is intended: they are reached from the landing page.
 6. **The planned series A1 to A9 is complete.** Next options: Region 4 of the game (after the workshops have been run), or A10 advanced survival.
 
+## 5b. Launch plan (LAUNCH_PLAN.md), 2026-11-19
+
+Phases 0 to 3 are built and tested locally in `cloud/` (see `cloud/README.md` and `NIGHT_NOTES.md`):
+deploy tooling, Google sign-in, the gate on paid paths, progress sync and "continue where you left off".
+Not live: it needs your Cloudflare account, Google OAuth client and a first deploy. Phases 4 (Razorpay)
+and 5 (seat codes, cohorts) are not started. GitHub Pages still serves `docs/` with the workshop keys.
+
 ## 6. How to re-verify
 
 ```sh
+(cd cloud && npm ci && npm test)                   # sign-in, gate and sync, against a local Cloudflare
 Rscript scripts/build_profiles.R --check
 bash scripts/sync_workshop_assets.sh --check
 for w in regression survival counts ordinal gis clustered survey curves missing prediction causal; do
