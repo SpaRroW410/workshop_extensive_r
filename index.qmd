@@ -151,6 +151,7 @@ format:
             <span class="ws-pt-score">Pre <b data-test="pre">–</b></span>
             <span class="ws-pt-score">Post <b data-test="post">–</b></span>
           </div>
+          <p class="ws-pt-quiz" data-folders="regression-workshop" data-decks="6"></p>
         </li>
         <li data-track="advanced" data-total="11">
           <div class="ws-pt-top">
@@ -161,6 +162,7 @@ format:
             <div class="ws-progress-bar"><span></span></div>
             <em>0/11</em>
           </div>
+          <p class="ws-pt-quiz" data-folders="survival-workshop counts-workshop ordinal-workshop clustered-workshop survey-workshop curves-workshop missing-workshop prediction-workshop causal-workshop" data-decks="45"></p>
         </li>
         <li data-track="dataviz-base" data-total="7">
           <div class="ws-pt-top">
@@ -191,6 +193,7 @@ format:
             <div class="ws-progress-bar"><span></span></div>
             <em>0/7</em>
           </div>
+          <p class="ws-pt-quiz" data-folders="gis-workshop" data-decks="5"></p>
         </li>
       </ul>
 
@@ -493,6 +496,20 @@ var WSProfile = (function () {
     planDone: function (track) { return Object.keys(read('ws-plan:' + track, {})).length; },
     planTotal: function (track, fallback) { return read('ws-plan-total:' + track, 0) || fallback; },
     tests: function () { return (read('rq:v1', null) || {}).tests || {}; },
+    // Deck quizzes (quiz.js keeps 'quiz-score:<workshop folder>/<deck>': { questionId: right? }).
+    // Returns { decks: decks with an answer, right, answered } for the given workshop folders.
+    quizzes: function (folders) {
+      var out = { decks: 0, right: 0, answered: 0 };
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i), m = /^quiz-score:([^\/]+)\//.exec(k || '');
+        if (!m || folders.indexOf(m[1]) < 0) continue;
+        var v = read(k, {}), ids = Object.keys(v);
+        if (!ids.length) continue;
+        out.decks++; out.answered += ids.length;
+        ids.forEach(function (id) { if (v[id]) out.right++; });
+      }
+      return out;
+    },
     unlocked: function () { return read('ws-unlocked', {}); },
     unlock: function (track) { var u = read('ws-unlocked', {}); u[track] = 1; write('ws-unlocked', u); }
   };
@@ -725,6 +742,13 @@ document.addEventListener('keydown', e => {
         var t = tests[b.dataset.test];
         b.textContent = t && typeof t.pct === 'number' ? t.pct + '%' : '–';
       });
+      var qz = li.querySelector('.ws-pt-quiz');
+      if (qz) {
+        var q = WSProfile.quizzes(qz.dataset.folders.split(' '));
+        qz.textContent = q.decks
+          ? 'Quizzes: ' + q.decks + ' of ' + qz.dataset.decks + ' decks · ' + Math.round(100 * q.right / q.answered) + '% right first time'
+          : 'Quizzes: none answered yet';
+      }
       var link = li.querySelector('.ws-pt-link'), open = isUnlocked(id);
       var cfg = workshopConfig && workshopConfig.profiles[id];
       li.classList.toggle('ws-pt--locked', !open);
