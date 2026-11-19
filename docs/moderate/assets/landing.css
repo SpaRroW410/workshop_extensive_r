@@ -582,3 +582,7 @@ a.ws-pt-link[href]:hover { text-decoration: underline; color: #1e8449; }
   .ws-game { grid-template-columns: 1fr; }
   .ws-game-icon { display: none; }
 }
+
+/* Google profile picture inside the avatar circle (signed in on Cloudflare) */
+.ws-avatar { overflow: hidden; }
+.ws-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }

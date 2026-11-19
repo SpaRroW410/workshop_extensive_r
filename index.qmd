@@ -203,7 +203,7 @@ format:
        ═════════════════════════════════════════════════════ -->
   <section class="ws-plan-section" aria-labelledby="ws-plan-heading">
     <h2 class="ws-section-heading" id="ws-plan-heading">Your self-study plan</h2>
-    <p class="ws-section-sub">
+    <p class="ws-section-sub" id="ws-plan-sub">
       Four steps, in order. Each step is a track with its own day-by-day plan inside.
       Step 1 is open to everyone; the others need the workshop key from your session organiser.
     </p>
@@ -441,6 +441,11 @@ format:
 // can change keys or unlock tiers by editing that one file on GitHub.
 let workshopConfig = null;
 let activeProfile  = null;
+// On Cloudflare (config.json says gate: "server") the account service decides what is open.
+// cloudMe holds its answer from /api/me, or stays null when it cannot be reached.
+// On GitHub Pages there is no account service and the workshop keys work as before.
+let cloudMe = null;
+function serverGate() { return !!(workshopConfig && workshopConfig.gate === 'server'); }
 
 // ── Profile + self-study progress ─────────────────────────
 // Everything a profile shows comes through WSProfile. Today it reads this browser's
@@ -505,6 +510,14 @@ async function loadConfig() {
   try {
     const res = await fetch('config.json');
     workshopConfig = await res.json();
+    if (serverGate()) {
+      try {
+        const me = await fetch('/api/me', { credentials: 'same-origin' });
+        if (me.ok) cloudMe = await me.json();
+      } catch (e) {
+        console.warn('Account service unavailable; showing free tracks only.');
+      }
+    }
   } catch (e) {
     // If config.json can't be fetched (e.g. local file:// preview),
     // fall back to locked state for all non-basic profiles.
@@ -520,14 +533,31 @@ async function loadConfig() {
 // A track is unlocked when config.json says so, or when its key was entered in this
 // browser before (remembered through WSProfile).
 function isUnlocked(id) {
+  if (serverGate()) return cloudMe ? !!cloudMe.open[id] : (id === 'basic' || id === 'dungeons');
   const cfg = workshopConfig && workshopConfig.profiles[id];
   return (cfg ? !cfg.locked : id === 'basic') || !!WSProfile.unlocked()[id];
+}
+
+// Where a locked track sends you on Cloudflare: the account page, which offers sign-in or says
+// which product to ask the organiser for.
+function accountUrl(id) {
+  const need = cloudMe && cloudMe.tracks ? cloudMe.tracks[id] : '';
+  return '/account?' + (need ? 'need=' + encodeURIComponent(need) + '&' : '') +
+    'next=' + encodeURIComponent('/' + id + '/welcome');
 }
 
 function applyLockStates() {
   document.querySelectorAll('.ws-card[data-profile]').forEach(card => {
     const id = card.dataset.profile;
-    if (!isUnlocked(id)) return;
+    if (!isUnlocked(id)) {
+      if (serverGate()) {
+        const badge = card.querySelector('.ws-card-badge');
+        if (badge) badge.textContent = cloudMe && cloudMe.user ? '🔒 Not in your account' : '🔒 Sign in';
+        const btn = card.querySelector('.ws-btn');
+        if (btn) btn.textContent = cloudMe && cloudMe.user ? 'How to unlock →' : 'Sign in →';
+      }
+      return;
+    }
     card.classList.remove('ws-card--locked');
     card.classList.add('ws-card--open');
     const badge = card.querySelector('.ws-card-badge');
@@ -539,6 +569,11 @@ function applyLockStates() {
       btn.setAttribute('onclick', `enterTrack('${id}')`);
     }
   });
+  if (serverGate()) {
+    const sub = document.getElementById('ws-plan-sub');
+    if (sub) sub.textContent = 'Four steps, in order. Each step is a track with its own day-by-day plan inside. ' +
+      'Step 1 is open to everyone; the others open when your account includes them.';
+  }
   if (window.wsRefreshProfile) window.wsRefreshProfile();
 }
 
@@ -557,6 +592,8 @@ function openKeyModal(profileId) {
 
   // Open track, or key already entered in this browser: go straight in
   if (isUnlocked(profileId)) { enterTrack(profileId); return; }
+  // Cloudflare: no keys; the account page explains how to get access
+  if (serverGate()) { activeProfile = null; window.location.href = accountUrl(profileId); return; }
 
   document.getElementById('modal-track-name').textContent =
     cfg ? cfg.label : profileId;
@@ -627,11 +664,26 @@ document.addEventListener('keydown', e => {
     $('ws-progress-text').textContent = n + ' of ' + boxes.length + ' steps done';
     $('ws-profile-steps').textContent = n + '/' + boxes.length;
 
-    // name and avatar
-    var name = WSProfile.name();
-    document.querySelectorAll('[data-profile-name]').forEach(function (e) { e.textContent = name || 'Set up your profile'; });
-    document.querySelectorAll('[data-profile-initials]').forEach(function (e) { e.textContent = initials(name); });
-    $('ws-profile-edit').textContent = name ? 'Edit' : 'Add name';
+    // name and avatar: the Google account when signed in on Cloudflare, else the name typed here
+    var user = cloudMe && cloudMe.user;
+    var name = user ? user.name : WSProfile.name();
+    var empty = serverGate() ? 'Sign in' : 'Set up your profile';
+    document.querySelectorAll('[data-profile-name]').forEach(function (e) { e.textContent = name || empty; });
+    document.querySelectorAll('[data-profile-initials]').forEach(function (e) {
+      e.textContent = initials(name);
+      var old = e.querySelector('img'); if (old) old.remove();
+      if (user && user.image) {
+        var img = document.createElement('img');
+        img.src = user.image; img.alt = ''; img.referrerPolicy = 'no-referrer';
+        e.textContent = ''; e.appendChild(img);
+      }
+    });
+    if (serverGate()) {
+      $('ws-profile-edit').textContent = user ? 'Account' : 'Sign in';
+      document.querySelector('.ws-bar-profile').setAttribute('href', user ? '/account' : '/account?next=%2F');
+    } else {
+      $('ws-profile-edit').textContent = name ? 'Edit' : 'Add name';
+    }
 
     // game: rank, XP, streak, badges
     var g = WSProfile.game();
@@ -681,6 +733,7 @@ document.addEventListener('keydown', e => {
 
   var form = $('ws-profile-form'), input = $('ws-profile-input');
   $('ws-profile-edit').addEventListener('click', function () {
+    if (serverGate()) { window.location.href = cloudMe && cloudMe.user ? '/account' : '/account?next=%2F'; return; }
     form.hidden = !form.hidden;
     if (!form.hidden) { input.value = WSProfile.name(); input.focus(); }
   });

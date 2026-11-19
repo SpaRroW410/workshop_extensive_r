@@ -10,6 +10,7 @@ import { cpSync, rmSync, readdirSync, statSync, writeFileSync, readFileSync, exi
 import { join, relative, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { routesJson } from './src/products.js';
+import { hidePaidFiles } from './src/layout.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const argDocs = process.argv.indexOf('--docs');
@@ -84,6 +85,9 @@ for (const file of walk(OUT).filter((p) => p.endsWith('/config.json'))) {
   writeFileSync(file, JSON.stringify(cfg, null, 2) + '\n');
 }
 
+// Paid files leave their public paths (see src/layout.js for why).
+const { moved } = hidePaidFiles(OUT, join(HERE, 'src', 'generated'));
+
 writeFileSync(join(OUT, '_routes.json'), JSON.stringify(routesJson(), null, 2) + '\n');
 
 const { problems, count } = check(OUT);
@@ -93,4 +97,4 @@ if (problems.length) {
   process.exit(1);
 }
 mkdirSync(OUT, { recursive: true });
-console.log(`Staged ${count} files in cloud/.deploy (with _routes.json)`);
+console.log(`Staged ${count} files in cloud/.deploy (${moved} paid files hidden, _routes.json written)`);

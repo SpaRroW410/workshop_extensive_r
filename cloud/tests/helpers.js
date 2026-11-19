@@ -1,11 +1,15 @@
 // Test harness: a local Cloudflare Pages server (wrangler pages dev) with its own empty D1 database.
 import { spawn, spawnSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, cpSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { tmpdir } from 'node:os';
 import { createServer } from 'node:net';
 import { fileURLToPath } from 'node:url';
 import { routesJson } from '../src/products.js';
+import { hidePaidFiles } from '../src/layout.js';
+
+/** The hidden folder name in tests (real deploys use a random one per deploy). */
+export const TEST_ROOT = '0123456789abcdef0123456789abcdef';
 
 const CLOUD = join(dirname(fileURLToPath(import.meta.url)), '..');
 const WRANGLER = join(CLOUD, 'node_modules', '.bin', 'wrangler');
@@ -35,6 +39,8 @@ export function fixtureSite() {
     mkdirSync(dirname(join(dir, rel)), { recursive: true });
     writeFileSync(join(dir, rel), body);
   }
+  cpSync(join(CLOUD, 'static'), dir, { recursive: true });
+  hidePaidFiles(dir, join(CLOUD, 'src', 'generated'), TEST_ROOT);
   writeFileSync(join(dir, '_routes.json'), JSON.stringify(routesJson()));
   return dir;
 }

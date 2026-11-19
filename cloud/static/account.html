@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your account · Medical Statistics in R</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { --ink: #2c3e50; --muted: #5f6b76; --line: #e3e8ec; --bg: #f9f9f9; --ok: #27ae60; --warn: #b9770e; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: #333; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.55; }
+  .bar { background: var(--ink); padding: 0.7rem clamp(1rem, 3.5vw, 4rem); }
+  .bar a { color: #fff; text-decoration: none; font-family: Georgia, serif; font-weight: 700; font-size: 1.1rem; }
+  main { max-width: 540px; margin: 2.5rem auto; padding: 0 1rem; }
+  .card { background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,.08); padding: 1.75rem; }
+  h1 { font-family: Georgia, serif; color: var(--ink); font-size: 1.5rem; margin: 0 0 0.75rem; }
+  .lock { display: inline-block; background: #fdf2e9; color: var(--warn); font-size: 0.8rem; font-weight: 700; border-radius: 999px; padding: 0.15rem 0.7rem; margin-bottom: 0.6rem; }
+  p { margin: 0 0 0.9rem; }
+  .muted { color: var(--muted); font-size: 0.9rem; }
+  .btn { display: inline-flex; align-items: center; gap: 0.6rem; border: 1px solid #c8d0d7; background: #fff; color: var(--ink); font: inherit; font-weight: 600; border-radius: 8px; padding: 0.6rem 1.1rem; cursor: pointer; text-decoration: none; }
+  .btn:hover { background: #f2f4f6; }
+  .btn--primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .btn--primary:hover { background: #3d5368; }
+  .who { display: flex; align-items: center; gap: 0.8rem; margin: 0.5rem 0 1rem; }
+  .who img, .who .ini { width: 2.6rem; height: 2.6rem; border-radius: 50%; }
+  .who .ini { background: #4a2c6e; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+  .who b { display: block; color: var(--ink); }
+  ul { padding-left: 1.2rem; margin: 0 0 1rem; }
+  .row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.2rem; }
+  [hidden] { display: none !important; }
+  .err { background: #fdedec; color: #922b21; border-radius: 8px; padding: 0.6rem 0.8rem; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<header class="bar"><a href="/">Medical Statistics in R</a></header>
+<main>
+  <div class="card" id="card">
+    <p class="muted" id="loading">Loading…</p>
+
+    <div id="need-box" hidden>
+      <span class="lock">🔒 <span id="need-name"></span></span>
+    </div>
+
+    <p class="err" id="error" hidden>Sign-in did not complete. Please try again.</p>
+
+    <!-- signed out -->
+    <section id="out" hidden>
+      <h1 id="out-title">Sign in</h1>
+      <p id="out-text">Sign in to save your progress across devices and to open the workshops your account includes.</p>
+      <button class="btn btn--primary" id="google" type="button">
+        <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+        Sign in with Google
+      </button>
+      <p class="muted" style="margin-top:1rem">Signing in is free. The Basic track, Session 1 of every workshop and Region 1 of the game are open to everyone, signed in or not.</p>
+    </section>
+
+    <!-- signed in -->
+    <section id="in" hidden>
+      <h1 id="in-title">Your account</h1>
+      <div class="who"><span id="avatar"></span><div><b id="name"></b><span class="muted" id="email"></span></div></div>
+      <p id="lacks" hidden>Your account does not include <b id="lacks-name"></b> yet. Ask your workshop organiser to add it, and give them the email address above.</p>
+      <p id="has" hidden>Your account includes <b id="has-name"></b>. <a id="has-link" href="/">Continue →</a></p>
+      <div id="products-box">
+        <p class="muted" style="margin-bottom:0.3rem">Included in your account:</p>
+        <ul id="products"></ul>
+      </div>
+      <div class="row">
+        <a class="btn" href="/">Back to the study plan</a>
+        <button class="btn" id="signout" type="button">Sign out</button>
+      </div>
+    </section>
+
+    <section id="down" hidden>
+      <h1>Sign-in is unavailable</h1>
+      <p>The account service could not be reached. Free pages still work: <a href="/">go to the study plan</a>.</p>
+    </section>
+  </div>
+</main>
+<script>
+(function () {
+  var q = new URLSearchParams(location.search);
+  // Only same-site paths are accepted as the place to return to (no open redirect).
+  var next = q.get('next') || '/';
+  if (!/^\/(?!\/)/.test(next) || next.indexOf('\\') >= 0) next = '/';
+  var need = q.get('need');
+  function $(id) { return document.getElementById(id); }
+  function show(id, on) { $(id).hidden = !on; }
+  if (q.get('error')) show('error', true);
+
+  function post(path, body) {
+    return fetch(path, { method: 'POST', credentials: 'same-origin',
+      headers: { 'content-type': 'application/json' }, body: JSON.stringify(body || {}) });
+  }
+
+  $('google').addEventListener('click', function () {
+    $('google').disabled = true;
+    post('/api/auth/sign-in/social', {
+      provider: 'google', callbackURL: next,
+      errorCallbackURL: '/account?error=1&next=' + encodeURIComponent(next) + (need ? '&need=' + encodeURIComponent(need) : '')
+    }).then(function (r) { return r.json(); }).then(function (d) {
+      if (d && d.url) location.href = d.url; else throw new Error('no url');
+    }).catch(function () { $('google').disabled = false; show('error', true); });
+  });
+
+  $('signout').addEventListener('click', function () {
+    post('/api/auth/sign-out').then(function () { location.href = '/'; });
+  });
+
+  fetch('/api/me', { credentials: 'same-origin' }).then(function (r) {
+    if (!r.ok) throw new Error(r.status);
+    return r.json();
+  }).then(function (me) {
+    show('loading', false);
+    var cat = me.catalog || {};
+    var needName = need ? (cat[need] || need) : null;
+    if (needName) { $('need-name').textContent = needName; show('need-box', true); }
+
+    if (!me.user) {
+      if (needName) {
+        $('out-title').textContent = 'Sign in to open this page';
+        $('out-text').textContent = 'This page is part of ' + needName + '. Sign in with the Google account your organiser added.';
+      }
+      show('out', true);
+      return;
+    }
+    show('in', true);
+    $('name').textContent = me.user.name;
+    $('email').textContent = me.user.email;
+    if (me.user.image) {
+      var img = document.createElement('img'); img.src = me.user.image; img.alt = ''; img.referrerPolicy = 'no-referrer';
+      $('avatar').appendChild(img);
+    } else {
+      var p = me.user.name.split(/\s+/).filter(Boolean);
+      var s = document.createElement('span'); s.className = 'ini';
+      s.textContent = p.length ? (p[0][0] + (p.length > 1 ? p[p.length - 1][0] : '')).toUpperCase() : '?';
+      $('avatar').appendChild(s);
+    }
+    var list = $('products');
+    var held = me.products || [];
+    if (!held.length) { var li = document.createElement('li'); li.textContent = 'Free content only, so far'; list.appendChild(li); }
+    held.forEach(function (id) { var li = document.createElement('li'); li.textContent = cat[id] || id; list.appendChild(li); });
+    if (need) {
+      var has = held.indexOf(need) >= 0 || held.indexOf('all-access') >= 0;
+      if (has) { $('has-name').textContent = needName; $('has-link').href = next; show('has', true); }
+      else { $('lacks-name').textContent = needName; show('lacks', true); }
+    }
+  }).catch(function () { show('loading', false); show('down', true); });
+})();
+</script>
+</body>
+</html>

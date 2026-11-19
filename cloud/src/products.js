@@ -140,11 +140,19 @@ export function holds(held, product) {
   return held.includes(product) || held.includes('all-access');
 }
 
+/** The track sites shown on the landing page, and the product each needs (null = free). */
+export const TRACKS = ['basic', 'moderate', 'regression', 'advanced', 'dataviz-base', 'dataviz-complete', 'gis', 'dungeons'];
+export function trackProduct(track) {
+  const hit = PAID.find(([rule]) => rule === `/${track}/*`);
+  if (hit) return hit[1];
+  return null; // basic, and the game (its Region 1 is free; later regions are gated page by page)
+}
+
 /** Cloudflare's _routes.json: Functions run on /api and on paid paths, never on free ones. */
 export function routesJson() {
   return {
     version: 1,
-    include: ['/api/*', ...PAID.map(([rule]) => rule)],
+    include: ['/api/*', '/_p/*', ...PAID.map(([rule]) => rule)],
     exclude: [...new Set(FREE)],
   };
 }
