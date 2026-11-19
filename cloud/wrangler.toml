@@ -1,0 +1,29 @@
+# Cloudflare Pages project for the workshop site. See LAUNCH_PLAN.md and cloud/README.md.
+#
+# Cloudflare never builds this site. Quarto renders docs/ on your machine, `node stage.mjs` copies it
+# to .deploy/, and `bash deploy.sh` uploads that folder (a direct upload). There is no Git connection,
+# so a commit or a push changes nothing on the live site.
+
+name = "medstats"
+pages_build_output_dir = ".deploy"
+compatibility_date = "2026-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+# The public address of the site, used for sign-in redirects. Change it when the custom domain is set.
+BASE_URL = "https://medstats.pages.dev"
+
+# D1 database: users, sessions, entitlements, progress, visits.
+# Create it once with:   npx wrangler d1 create medstats
+# and paste the database_id it prints below (it is not a secret).
+[[d1_databases]]
+binding = "DB"
+database_name = "medstats"
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
+
+# Secrets are NOT kept here. Set them once with:
+#   npx wrangler pages secret put BETTER_AUTH_SECRET     (a long random string: openssl rand -base64 32)
+#   npx wrangler pages secret put GOOGLE_CLIENT_ID
+#   npx wrangler pages secret put GOOGLE_CLIENT_SECRET
+# For local development they go in cloud/.dev.vars (gitignored).

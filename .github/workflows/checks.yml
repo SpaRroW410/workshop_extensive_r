@@ -30,3 +30,20 @@ jobs:
           git diff --exit-code -- '*-workshop/labs'
       - name: Game item bank
         run: node dungeons/tests/lint_bank.js --strict
+  cloud:
+    # Gate, sign-in and progress code in cloud/ (Cloudflare Pages Functions), tested against a local D1.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        working-directory: cloud
+        run: npm ci
+      - name: Facilitator solutions stay out of docs/, file limits
+        working-directory: cloud
+        run: node stage.mjs --check
+      - name: Tests
+        working-directory: cloud
+        run: npm test
