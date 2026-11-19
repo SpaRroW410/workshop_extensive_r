@@ -4,7 +4,7 @@
   "description": "Cloudflare Pages Functions for the workshop site: sign-in, paid-path gate, progress sync. See LAUNCH_PLAN.md.",
   "type": "module",
   "scripts": {
-    "dev": "wrangler pages dev",
+    "dev": "node stage.mjs && wrangler pages dev",
     "db:local": "wrangler d1 migrations apply medstats --local",
     "test": "node --test --test-concurrency=1 tests/*.test.js",
     "deploy": "bash deploy.sh",
