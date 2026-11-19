@@ -107,6 +107,11 @@ format:
         <div><dt>Steps done</dt><dd id="ws-profile-steps">0/4</dd></div>
       </dl>
 
+      <a class="ws-continue" id="ws-continue" href="/" hidden>
+        <span class="ws-continue-label">Continue where you left off</span>
+        <span class="ws-continue-title" id="ws-continue-title"></span>
+      </a>
+
       <h3 class="ws-profile-sub">My workshops</h3>
       <!-- One row per track: study plan ticks, the game's pre/post-test scores for its region,
            and a link that is live when the track is unlocked and greyed out when it is not. -->
@@ -189,7 +194,7 @@ format:
         </li>
       </ul>
 
-      <p class="ws-profile-note">
+      <p class="ws-profile-note" id="ws-profile-note">
         Saved in this browser only. Sign-in and accounts are planned.
         <a href="dungeons/dungeons/campus.html">Skill tree and backup →</a>
       </p>
@@ -514,6 +519,10 @@ async function loadConfig() {
       try {
         const me = await fetch('/api/me', { credentials: 'same-origin' });
         if (me.ok) cloudMe = await me.json();
+        // Progress sync (ws-sync.js, added to every page on Cloudflare) follows the account.
+        if (cloudMe && window.WSSync) {
+          if (cloudMe.user) window.WSSync.signedIn(cloudMe.user.id); else window.WSSync.sessionEnded();
+        }
       } catch (e) {
         console.warn('Account service unavailable; showing free tracks only.');
       }
@@ -679,6 +688,16 @@ document.addEventListener('keydown', e => {
       }
     });
     if (serverGate()) {
+      var last = cloudMe && cloudMe.lastVisit;
+      $('ws-continue').hidden = !last;
+      if (last) {
+        $('ws-continue').setAttribute('href', last.path);
+        $('ws-continue-title').textContent = last.title || last.path;
+      }
+      var note = $('ws-profile-note');
+      if (note && note.firstChild) note.firstChild.textContent = user
+        ? 'Saved to your account: it follows you to any device you sign in on. '
+        : 'Saved in this browser only. Sign in to keep it on any device. ';
       $('ws-profile-edit').textContent = user ? 'Account' : 'Sign in';
       document.querySelector('.ws-bar-profile').setAttribute('href', user ? '/account' : '/account?next=%2F');
     } else {

@@ -586,3 +586,18 @@ a.ws-pt-link[href]:hover { text-decoration: underline; color: #1e8449; }
 /* Google profile picture inside the avatar circle (signed in on Cloudflare) */
 .ws-avatar { overflow: hidden; }
 .ws-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* "Continue where you left off" (signed in on Cloudflare) */
+.ws-continue {
+  display: block;
+  background: #eafaf1;
+  border: 1px solid #a9dfbf;
+  border-radius: 10px;
+  padding: 0.6rem 0.85rem;
+  text-decoration: none;
+  color: #1e8449;
+}
+.ws-continue:hover { background: #d5f5e3; text-decoration: none; color: #1e8449; }
+.ws-continue-label { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+.ws-continue-title { display: block; font-size: 0.9rem; font-weight: 600; color: #2c3e50; overflow-wrap: anywhere; }
+.ws-continue-title::after { content: " →"; }

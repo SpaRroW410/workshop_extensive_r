@@ -94,8 +94,10 @@
 
   $('google').addEventListener('click', function () {
     $('google').disabled = true;
+    // Google returns here first (after=signin), so this page can switch on progress sync,
+    // then it forwards to `next`.
     post('/api/auth/sign-in/social', {
-      provider: 'google', callbackURL: next,
+      provider: 'google', callbackURL: '/account?after=signin&next=' + encodeURIComponent(next) + (need ? '&need=' + encodeURIComponent(need) : ''),
       errorCallbackURL: '/account?error=1&next=' + encodeURIComponent(next) + (need ? '&need=' + encodeURIComponent(need) : '')
     }).then(function (r) { return r.json(); }).then(function (d) {
       if (d && d.url) location.href = d.url; else throw new Error('no url');
@@ -103,7 +105,10 @@
   });
 
   $('signout').addEventListener('click', function () {
-    post('/api/auth/sign-out').then(function () { location.href = '/'; });
+    $('signout').disabled = true;
+    // Save anything not yet sent, then clear this browser's copy (it is in the account).
+    var done = window.WSSync ? window.WSSync.signOut() : Promise.resolve();
+    done.then(function () { return post('/api/auth/sign-out'); }).then(function () { location.href = '/'; });
   });
 
   fetch('/api/me', { credentials: 'same-origin' }).then(function (r) {
@@ -116,12 +121,19 @@
     if (needName) { $('need-name').textContent = needName; show('need-box', true); }
 
     if (!me.user) {
+      if (window.WSSync) window.WSSync.sessionEnded();
       if (needName) {
         $('out-title').textContent = 'Sign in to open this page';
         $('out-text').textContent = 'This page is part of ' + needName + '. Sign in with the Google account your organiser added.';
       }
       show('out', true);
       return;
+    }
+    if (window.WSSync) window.WSSync.signedIn(me.user.id);
+    if (q.get('after') === 'signin') {
+      // Just back from Google: go where the learner was heading (if the account includes it).
+      var ok = !need || (me.products || []).indexOf(need) >= 0 || (me.products || []).indexOf('all-access') >= 0;
+      if (ok) { location.replace(next); return; }
     }
     show('in', true);
     $('name').textContent = me.user.name;

@@ -9,8 +9,10 @@ export async function onRequestGet({ request, env }) {
   const open = Object.fromEntries(TRACKS.map((t) => [t, holds(products, trackProduct(t))]));
   const tracks = Object.fromEntries(TRACKS.map((t) => [t, trackProduct(t)]));
   if (!user) return json({ user: null, products, open, tracks, catalog: PRODUCTS });
+  const visit = await env.DB.prepare('select "path", "title", "seenAt" from "visit" where "userId" = ?').bind(user.id).first();
   return json({
     user: { id: user.id, name: user.name, email: user.email, image: user.image || null },
+    lastVisit: visit || null,
     products,
     open,
     tracks,

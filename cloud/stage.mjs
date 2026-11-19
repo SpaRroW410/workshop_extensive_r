@@ -87,6 +87,16 @@ for (const file of walk(OUT).filter((p) => p.endsWith('/config.json'))) {
   writeFileSync(file, JSON.stringify(cfg, null, 2) + '\n');
 }
 
+// Progress sync for signed-in learners: one script on every page (only on Cloudflare).
+let injected = 0;
+for (const file of walk(OUT).filter((p) => p.endsWith('.html'))) {
+  const html = readFileSync(file, 'utf8');
+  const at = html.lastIndexOf('</body>');
+  if (at < 0 || html.includes('/ws-sync.js')) continue;
+  writeFileSync(file, html.slice(0, at) + '<script src="/ws-sync.js" defer></script>\n' + html.slice(at));
+  injected++;
+}
+
 // Paid files leave their public paths (see src/layout.js for why).
 const { moved } = hidePaidFiles(OUT, join(HERE, 'src', 'generated'));
 
@@ -99,4 +109,4 @@ if (problems.length) {
   process.exit(1);
 }
 mkdirSync(OUT, { recursive: true });
-console.log(`Staged ${count} files in cloud/.deploy (${moved} paid files hidden, _routes.json written)`);
+console.log(`Staged ${count} files in cloud/.deploy (${moved} paid files hidden, sync script on ${injected} pages, _routes.json written)`);

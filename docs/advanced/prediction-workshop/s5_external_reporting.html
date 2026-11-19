@@ -2862,15 +2862,35 @@ window.QuartoSupport = function () {
   // "Save score" downloads a small text file a participant can keep or
   // hand in; "Reset" clears the saved result for this deck.
   var deckName = (location.pathname.split('/').pop() || 'deck').replace(/\.html?$/, '');
-  var STORE = 'quiz-score:' + deckName;
+  // Kept per workshop folder and deck: deck file names repeat across workshops
+  // (s5_choose_check_report is in three). Older versions used the deck name alone; that copy
+  // is read once, for this deck's questions only, so no saved score is lost.
+  var folder = location.pathname.split('/').slice(-2, -1)[0] || '';
+  var STORE = 'quiz-score:' + (folder ? folder + '/' : '') + deckName;
+  var LEGACY = 'quiz-score:' + deckName;
   function persist() { try { localStorage.setItem(STORE, JSON.stringify(state.scored)); } catch (e) {} }
   function restore() {
     try {
-      var saved = JSON.parse(localStorage.getItem(STORE)) || {};
+      var saved = JSON.parse(localStorage.getItem(STORE));
+      var migrate = !saved && STORE !== LEGACY;
+      if (!saved) saved = JSON.parse(localStorage.getItem(LEGACY)) || {};
       var qs = document.querySelectorAll('.quiz-q');
       for (var i = 0; i < qs.length; i++) {
         var id = qs[i].getAttribute('data-qid');
         if (saved.hasOwnProperty(id)) { state.scored[id] = !!saved[id]; if (saved[id]) state.correct++; }
+      }
+      if (migrate && Object.keys(state.scored).length) persist();
+    } catch (e) {}
+  }
+  // Reset: forget this deck's answers, also in the old shared copy (other decks keep theirs there).
+  function forget() {
+    try {
+      localStorage.removeItem(STORE);
+      var old = JSON.parse(localStorage.getItem(LEGACY));
+      if (old && STORE !== LEGACY) {
+        var qs = document.querySelectorAll('.quiz-q');
+        for (var i = 0; i < qs.length; i++) delete old[qs[i].getAttribute('data-qid')];
+        if (Object.keys(old).length) localStorage.setItem(LEGACY, JSON.stringify(old)); else localStorage.removeItem(LEGACY);
       }
     } catch (e) {}
   }
@@ -2899,7 +2919,7 @@ window.QuartoSupport = function () {
       var sv = document.createElement('button'); sv.type = 'button'; sv.className = 'quiz-btn quiz-btn-ghost quiz-save'; sv.textContent = 'Save score';
       sv.addEventListener('click', download);
       var rs = document.createElement('button'); rs.type = 'button'; rs.className = 'quiz-btn quiz-btn-ghost quiz-reset'; rs.textContent = 'Reset';
-      rs.addEventListener('click', function () { try { localStorage.removeItem(STORE); } catch (e) {} location.reload(); });
+      rs.addEventListener('click', function () { forget(); location.reload(); });
       box.appendChild(sv); box.appendChild(rs);
       els[i].parentNode.insertBefore(box, els[i].nextSibling);
     }
