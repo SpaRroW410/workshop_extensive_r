@@ -1,0 +1,7 @@
+# Copy to .dev.vars for `npm run dev` (local only; .dev.vars is gitignored).
+BASE_URL=http://localhost:8788
+BETTER_AUTH_SECRET=replace-with-output-of-openssl-rand-base64-32
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+# 1 = allow email + password sign-in, for local testing only. Ignored unless BASE_URL is localhost.
+AUTH_TEST_MODE=1
