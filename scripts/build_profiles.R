@@ -54,14 +54,32 @@ menu_paths <- function(p) {
 extra_globs <- function(p) as.character(unlist(p$`project-extra`$render))
 glob <- function(g) if (length(g)) Sys.glob(g) else character()
 sorted <- function(x) sort(unique(x), method = "radix")
-pages_of <- function(p) sorted(c(SHARED, menu_paths(p), glob(extra_globs(p))))
+# Sub-decks: .qmd files that a menu page links to but that are not themselves listed in curriculum.yml
+# (the plot-gallery hubs link to 18 decks). A track renders the sub-decks of its own menu pages, so the
+# hub's links work. Before 2026-11-20 they were rendered nowhere and every gallery link was dead.
+sub_pages <- function(paths) {
+  out <- character()
+  for (p in paths) {
+    if (!file.exists(p)) next
+    txt <- paste(readLines(p, warn = FALSE, encoding = "UTF-8"), collapse = "\n")
+    links <- regmatches(txt, gregexpr("\\]\\(([^)#[:space:]]+\\.qmd)", txt))[[1]]
+    links <- sub("^\\]\\(", "", links)
+    for (l in links) {
+      tgt <- normalizePath(file.path(dirname(p), l), mustWork = FALSE)
+      tgt <- sub(paste0("^", normalizePath("."), "/"), "", tgt)
+      if (file.exists(tgt) && !tgt %in% names(cur$pages) && !tgt %in% SHARED) out <- c(out, tgt)
+    }
+  }
+  sorted(out)
+}
+pages_of <- function(p) sorted(c(SHARED, menu_paths(p), sub_pages(menu_paths(p)), glob(extra_globs(p))))
 
 build <- function(prof) {
   p <- cur$profiles[[prof]]
   # as.list(): keep one-element render/resources lists as YAML sequences (Quarto rejects a bare string there)
   extra <- p$`project-extra`
   globbed <- glob(extra_globs(p))
-  extra$render <- c(extra_globs(p), sorted(setdiff(menu_paths(p), c(SHARED, globbed))))
+  extra$render <- c(extra_globs(p), sorted(setdiff(c(menu_paths(p), sub_pages(menu_paths(p))), c(SHARED, globbed))))
   proj <- c(list(`output-dir` = p$`output-dir`), lapply(extra, as.list))
   list(
     project = proj,
