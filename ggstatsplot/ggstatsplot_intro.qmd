@@ -1,11 +1,20 @@
 ---
 title: "ggstatsplot — Introduction"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
     toc: true
     lightbox: auto
 ---
+
+```{r}
+#| include: false
+library(ggstatsplot)
+ncd <- read.csv("../data/ncd_survey.csv")   # the NCD survey used across the Basic track
+ncd$phys_act <- factor(ncd$phys_act, levels = c("low", "moderate", "high"))
+```
 
 ## What is ggstatsplot?
 
@@ -43,15 +52,14 @@ library(ggstatsplot)
 Use this when you want to compare a continuous variable across two or more independent groups.
 
 ```{r}
-#| eval: false
 library(ggstatsplot)
 
-# Compare systolic BP across fuel type groups
+# Compare systolic BP across physical-activity groups
 ggbetweenstats(
-  data  = overall_up,
-  x     = fuel_type,         # grouping variable (categorical)
-  y     = sbp_0m,            # outcome variable (continuous)
-  title = "Systolic BP by Fuel Type"
+  data  = ncd,
+  x     = phys_act,         # grouping variable (categorical)
+  y     = sbp,            # outcome variable (continuous)
+  title = "Systolic BP by Physical Activity"
 )
 ```
 
@@ -65,12 +73,11 @@ ggbetweenstats(
 **Choosing parametric vs non-parametric:**
 
 ```{r}
-#| eval: false
 # Force non-parametric (Kruskal-Wallis)
 ggbetweenstats(
-  data  = overall_up,
-  x     = fuel_type,
-  y     = sbp_0m,
+  data  = ncd,
+  x     = phys_act,
+  y     = sbp,
   type  = "nonparametric"   # "parametric", "nonparametric", "robust", "bayes"
 )
 ```
@@ -82,11 +89,10 @@ ggbetweenstats(
 Use this when you want to examine the relationship between two continuous variables.
 
 ```{r}
-#| eval: false
 ggscatterstats(
-  data  = overall_up,
-  x     = current_age,
-  y     = sbp_0m,
+  data  = ncd,
+  x     = age,
+  y     = sbp,
   title = "Age vs Systolic BP at Baseline"
 )
 ```
@@ -101,11 +107,10 @@ ggscatterstats(
 **Using Spearman instead of Pearson:**
 
 ```{r}
-#| eval: false
 ggscatterstats(
-  data = overall_up,
-  x    = current_age,
-  y    = sbp_0m,
+  data = ncd,
+  x    = age,
+  y    = sbp,
   type = "nonparametric"   # uses Spearman's rho
 )
 ```
@@ -117,11 +122,10 @@ ggscatterstats(
 Use this when you want to visualise the distribution of a single continuous variable with a one-sample test.
 
 ```{r}
-#| eval: false
 gghistostats(
-  data     = overall_up,
-  x        = current_age,
-  title    = "Distribution of Age at Enrolment",
+  data     = ncd,
+  x        = age,
+  title    = "Distribution of Age",
   test.value = 40          # hypothesised population mean
 )
 ```
@@ -180,3 +184,36 @@ gghistostats(data = df, x = continuous_var, test.value = 0)
 
 - [ggstatsplot documentation](https://indrajeetpatil.github.io/ggstatsplot/)
 - Patil, I. (2021). Visualizations with statistical details. *JOSS*, 6(61), 3167.
+
+## Practise in R
+
+Download the lab **[Which test?](../labs/basic/b5_which_test.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gi1", "What does `ggbetweenstats()` add to a plot of a continuous variable by group?",
+         c("A box plot alone, without any statistics", "The test result, effect size and confidence interval", "A regression line for each of the groups in the data", "A table of the raw data printed under the plot"), answer = 2,
+         explain = "ggbetweenstats() draws violins, boxes and points and prints the test, the p-value and an effect size with its CI in the subtitle.")
+quiz_mcq("gi2", "Your outcome is very skewed and the groups are small. Which argument should you set in ggbetweenstats()?",
+         c("type = \"parametric\"", "results.subtitle = FALSE", "type = \"nonparametric\"", "pairwise.display = \"none\""), answer = 3,
+         explain = "type = \"nonparametric\" switches to Kruskal-Wallis (or Mann-Whitney for two groups).")
+quiz_mcq("gi3", "Why is it still useful that ggstatsplot output is a ggplot2 object?",
+         c("You can add layers, labels and themes as usual", "It makes the statistical test more accurate than base R", "It removes the need to check assumptions", "It saves the plot automatically as a PDF"), answer = 1,
+         explain = "Because the result is a ggplot, labs(), themes and other layers can be added in the usual way.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

@@ -1,0 +1,94 @@
+---
+title: "Basic Track Cheat Sheet"
+subtitle: "R, tidy data, joins, first plots, choosing a test, a first report · print on 2 pages (A4)"
+author: "Sparrow"
+date: "2026-11-20"
+format:
+  html:
+    toc: false
+    page-layout: full
+    css: cheatsheet.css
+execute:
+  echo: false
+---
+
+::: {.sheet}
+
+## 1 · R in five lines
+
+| Task | Code |
+|---|---|
+| Store a value | `x <- 48` |
+| A vector | `sbp <- c(128, 142, 135)` |
+| Mean, leaving out missing values | `mean(sbp, na.rm = TRUE)` |
+| Read a CSV (inside an RStudio Project) | `ncd <- read.csv("data/ncd_survey.csv")` |
+| Look at it | `dim(ncd)`, `str(ncd)`, `head(ncd)`, `summary(ncd)` |
+| A factor and its reference level | `factor(sex)`, `levels()`, `relevel(x, ref = "Male")` |
+| Install once / load each session | `install.packages("dplyr")` / `library(dplyr)` |
+
+Use an **RStudio Project**, not `setwd("C:/...")`: paths then work on any computer.
+
+## 2 · dplyr verbs (tidy data)
+
+| Verb | Does | Example |
+|---|---|---|
+| `select()` | keep columns | `select(id, age, sbp)` |
+| `filter()` | keep rows | `filter(age >= 40)` |
+| `mutate()` | add / change columns | `mutate(high = sbp >= 140)` |
+| `arrange()` | sort rows | `arrange(desc(sbp))` |
+| `group_by()` + `summarise()` | one row per group | `group_by(sex) |> summarise(m = mean(sbp))` |
+| `count()` | counts per value | `count(tobacco)` |
+
+**Tidy** = one row per observation, one column per variable, one value per cell. `NA` spreads: add `na.rm = TRUE`.
+
+## 3 · Joins and reshaping
+
+| Need | Function |
+|---|---|
+| Same columns, more people | `bind_rows(a, b)` |
+| Add columns by a key, keep every row of `a` | `left_join(a, b, by = "id")` |
+| Only matching rows / all rows of both | `inner_join()` / `full_join()` |
+| Wide → long (one row per measurement) | `pivot_longer(cols = c(sbp, dbp), names_to = "measure", values_to = "mmHg")` |
+| Long → wide | `pivot_wider(names_from = measure, values_from = mmHg)` |
+
+**Check every join:** `count(b, id) |> filter(n > 1)` (duplicate keys multiply rows); compare `nrow()` before and after. Never `cbind()` tables about the same people.
+
+## 4 · First plots (ggplot2)
+
+`ggplot(data, aes(x = ..., y = ...)) + geom_...() + labs(title = , x = , y = )`
+
+| Data | Plot | geom |
+|---|---|---|
+| One continuous | histogram | `geom_histogram(binwidth = 5)` |
+| Continuous by group | box plot | `geom_boxplot()` |
+| Counts of categories | bar chart (axis from 0) | `geom_bar()` |
+| Two continuous | scatter + line | `geom_point()` + `geom_smooth(method = "lm")` |
+| Over time | line | `geom_line()` |
+
+Always label axes **with units**.
+
+## 5 · Which test?
+
+| Outcome | Comparison | Test | R |
+|---|---|---|---|
+| Continuous | 2 independent groups | Welch t-test | `t.test(y ~ group)` |
+| Continuous | same people twice | paired t-test | `t.test(after, before, paired = TRUE)` |
+| Continuous, skewed | 2 groups / 3+ groups | Wilcoxon / Kruskal-Wallis | `wilcox.test()`, `kruskal.test()` |
+| Continuous | 3+ groups | one-way ANOVA | `aov(y ~ group)` |
+| Categorical | categorical | chi-square (Fisher if counts small) | `chisq.test(table(a, b))` |
+| Two continuous | association | correlation | `cor.test(x, y)` |
+
+**p-value:** how surprising the data would be if there were no difference. Not the chance the null is true; says nothing about size. **Report the estimate and its 95% CI.**
+
+## 6 · A first report (Quarto)
+
+| Need | Write |
+|---|---|
+| Run code silently (setup) | ```` ```{r} ```` with `#| include: false` |
+| A number in the text that updates | `` `r round(mean(age, na.rm = TRUE), 1)` `` |
+| A numbered figure you can cite | `#| label: fig-age` and `#| fig-cap:`, then `@fig-age` |
+| Simple regression | `lm(sbp ~ bmi, data = ncd)`, `confint()` |
+
+Slope = average difference in the outcome **per one unit** of the predictor; association, **not causation**.
+
+:::

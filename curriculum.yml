@@ -18,6 +18,7 @@ pages:
   ggstatsplot/ggstatsplot_intro.qmd: {title: "ggstatsplot — Intro"}
   quarto_repro_w/reproducible_writing.qmd: {title: "Quarto Basics"}
   contact.qmd: {title: "Contact Us"}
+  cheatsheets/basic.qmd: {title: "Basic Track Cheat Sheet"}
   references.qmd: {title: "References"}
   downloads.qmd: {title: "Downloads"}
   data-visualization/best_practices.qmd: {title: "Best Practices"}
@@ -177,6 +178,8 @@ profiles:
       - text: "Reference"
         icon: book
         items:
+          - cheatsheets/basic.qmd
+          - "---"
           - contact.qmd
           - references.qmd
           - downloads.qmd

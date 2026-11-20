@@ -7,6 +7,7 @@
 project:
   output-dir: docs/basic
   render:
+    - cheatsheets/basic.qmd
     - data-visualization/ggplot_grammar.qmd
     - ggstatsplot/ggstatsplot_intro.qmd
     - plot-gallery/basic.qmd
@@ -22,6 +23,17 @@ project:
     - r-foundations/merging_dataset.qmd
     - statistical-analysis/regression.qmd
     - statistical-analysis/statistical_tests.qmd
+  resources:
+    - data/ncd_round1.csv
+    - data/ncd_round2.csv
+    - data/ncd_survey.csv
+    - data/villages.csv
+    - labs/basic/b1_first_script.R
+    - labs/basic/b2_tidy_data.R
+    - labs/basic/b3_joining.R
+    - labs/basic/b4_first_plots.R
+    - labs/basic/b5_which_test.R
+    - labs/basic/b6_first_report.R
 website:
   title: Medical Statistics in R — Basic
   site-url: '.'
@@ -61,6 +73,9 @@ website:
       - text: Reference
         icon: book
         menu:
+          - text: Basic Track Cheat Sheet
+            href: cheatsheets/basic.qmd
+          - text: '---'
           - text: Contact Us
             href: contact.qmd
           - text: References

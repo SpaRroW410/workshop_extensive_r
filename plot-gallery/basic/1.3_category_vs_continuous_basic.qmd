@@ -18,7 +18,7 @@ format:
 
 # Category vs. Continuous {.center}
 
-## What is Category vs. Continuous Data?
+## What is Category vs. Continuous Data? {.smaller .scrollable}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -42,7 +42,7 @@ Combining **categorical variables** (groups) with **continuous variables** (nume
 :::
 :::
 
-## Analytical Goals
+## Analytical Goals {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 **What questions can we answer?**
@@ -61,7 +61,7 @@ Combining **categorical variables** (groups) with **continuous variables** (nume
 3. Stacked Bar Chart
 :::
 
-## Setup: Load Data
+## Setup: Load Data {.smaller}
 
 ```{r}
 #| echo: true
@@ -109,7 +109,7 @@ data_clean %>%
 
 # Box Plot
 
-## Box Plot - Code
+## Box Plot - Code {.smaller .scrollable}
 
 🟡 **Goal:** Compare distributions across groups
 
@@ -161,7 +161,7 @@ ggplot(data_clean, aes(x = TreatmentGroup, y = BMI, fill = TreatmentGroup)) +
 
 # Interpreting Box Plots
 
-## How to Read Box Plots
+## How to Read Box Plots {.smaller}
 
 **Using the previous plot:**
 
@@ -195,7 +195,7 @@ ggplot(data_clean, aes(x = TreatmentGroup, y = BMI, fill = TreatmentGroup)) +
 
 # Box Plot - Multiple Groups
 
-## Box Plot with Multiple Categories - Code
+## Box Plot with Multiple Categories - Code {.smaller .scrollable}
 
 🟡 **Goal:** Compare distributions across many groups
 
@@ -248,7 +248,7 @@ ggplot(data_clean, aes(x = reorder(Region, Cholesterol, FUN = median),
 
 # Grouped Bar Chart
 
-## Grouped Bar Chart - Code
+## Grouped Bar Chart - Code {.smaller .scrollable}
 
 🟢 **Goal:** Compare means across categories and groups
 
@@ -311,7 +311,7 @@ ggplot(bp_summary, aes(x = Region, y = Mean_SysBP, fill = TreatmentGroup)) +
 
 # Stacked Bar Chart
 
-## Stacked Bar Chart - Code
+## Stacked Bar Chart - Code {.smaller .scrollable}
 
 🔴 **Goal:** Part of Whole + Comparison
 
@@ -375,7 +375,7 @@ ggplot(region_gender, aes(x = Region, y = n, fill = Gender)) +
 
 # Quick Reference
 
-## Category vs. Continuous - Summary
+## Category vs. Continuous - Summary {.smaller .scrollable}
 
 | Chart Type | Goal | When to Use | Code Complexity |
 |------------|------|-------------|-----------------|
@@ -415,7 +415,7 @@ ggplot(region_gender, aes(x = Region, y = n, fill = Gender)) +
 :::
 :::
 
-## Key Takeaways
+## Key Takeaways {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 ::: {.incremental}

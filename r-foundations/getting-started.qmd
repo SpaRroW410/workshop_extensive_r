@@ -1,6 +1,8 @@
 ---
 title: "Introduction to R"
-subtitle: "Gateway to Statistical Compuing"
+author: "Sparrow"
+date: "2026-11-20"
+subtitle: "Gateway to Statistical Computing"
 format: 
   revealjs:
     theme: serif
@@ -272,7 +274,7 @@ m <- matrix(1:9, nrow = 3)
 
 ------------------------------------------------------------------------
 
-## Data Structures
+## Data Structures {.smaller}
 
 - Data frames are the most common table structure in R
 - They combine columns of equal length and can contain different types
@@ -356,3 +358,71 @@ pacman::p_load(tidyverse, ggplot2, readxl, gtsummary, ggstatsplot, flextable)
 
 - `pacman::p_load()` installs missing packages and loads them in one command.
 
+## 🔧 Practise in R {.smaller}
+
+Download the lab **[Your first script](../labs/basic/b1_first_script.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gs1", "You type `x <- c(4, 8, NA)` and then `mean(x)`. What does R return?",
+         c("It returns NA", "It returns 6", "It returns 4", "It stops with an error"), answer = 1,
+         explain = "A missing value makes the mean unknown, so R returns NA. `mean(x, na.rm = TRUE)` leaves the missing value out and gives 6.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gs2", "Why does the deck recommend an RStudio Project rather than `setwd()`?",
+         c("setwd() is slower when the dataset loaded is large", "Paths start at the project folder, so it runs anywhere", "Projects install every package that the script needs to run", "setwd() works on Windows, but it fails on macOS or Linux"), answer = 2,
+         explain = "A project sets the working directory to its own folder, so relative paths such as data/ncd_survey.csv work on any computer.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gs3", "`sex` is a factor with the levels Female and Male. Which level is the reference in a model, by default?",
+         c("The level with more people in the data", "Male, the last level of the factor", "Female, the first level in alphabetical order", "None: R estimates a coefficient for every level"), answer = 3,
+         explain = "R orders factor levels alphabetically unless told otherwise, and the first level is the reference. `relevel()` or `factor(levels = )` changes it.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gs4", "Which object holds several columns of different types, one row per patient?",
+         c("A numeric vector", "A matrix of numbers", "A single factor", "A data frame"), answer = 4,
+         explain = "A data frame is a list of equal-length columns that may have different types; a matrix holds one type only.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gs5", "What does `install.packages(\"dplyr\")` do that `library(dplyr)` does not?",
+         c("Downloads the package to your computer, once", "Loads the package into the current R session only", "Updates R itself to the newest release", "Checks the package for errors before use"), answer = 1,
+         explain = "install.packages() downloads and installs a package once per computer; library() loads an installed package into each new session.")
+```
+
+## Score {.smaller}
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

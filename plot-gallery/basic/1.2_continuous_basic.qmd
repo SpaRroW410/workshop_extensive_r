@@ -18,7 +18,7 @@ format:
 
 # Continuous Data {.center}
 
-## What is Continuous Data?
+## What is Continuous Data? {.smaller}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -61,7 +61,7 @@ Data that represents **numeric measurements** or **quantities**
 4. Box Plot (covered in Category vs. Continuous)
 :::
 
-## Setup: Load Libraries and Data
+## Setup: Load Libraries and Data {.smaller .scrollable}
 
 ```{r}
 #| echo: true
@@ -84,7 +84,7 @@ summary(data_clean %>%
   select(Age, BMI, Cholesterol, BloodSugar, SysBP_0m, DiaBP_0m))
 ```
 
-## Setup: Load Libraries and Data {.smaller}
+## Setup: Load Libraries and Data {.smaller .scrollable}
 
 ```{r}
 #| echo: false
@@ -105,7 +105,7 @@ summary(data_clean %>% select(Age, BMI, Cholesterol, BloodSugar, SysBP_0m, DiaBP
 
 # Histogram
 
-## Histogram - Code
+## Histogram - Code {.smaller}
 
 🟡 **Goal:** Distribution (show frequency across bins)
 
@@ -151,7 +151,7 @@ ggplot(data_clean, aes(x = Age)) +
 
 # Interpreting Histograms
 
-## How to Read Histograms
+## How to Read Histograms {.smaller}
 
 **Using the previous plot:**
 
@@ -181,7 +181,7 @@ ggplot(data_clean, aes(x = Age)) +
 
 # Histogram - With Statistics
 
-## Histogram with Mean/Median Lines - Code
+## Histogram with Mean/Median Lines - Code {.smaller .scrollable}
 
 🟡 **Goal:** Distribution with central tendency markers
 
@@ -247,7 +247,7 @@ ggplot(data_clean, aes(x = Age)) +
 
 # Density Plot
 
-## Density Plot - Code
+## Density Plot - Code {.smaller}
 
 🟡 **Goal:** Distribution (smooth curve, easier to compare)
 
@@ -292,7 +292,7 @@ ggplot(data_clean, aes(x = BMI)) +
 
 # Scatter Plot
 
-## Scatter Plot - Code
+## Scatter Plot - Code {.smaller}
 
 ⚫ **Goal:** Correlation between two continuous variables
 
@@ -362,7 +362,7 @@ ggplot(data_clean, aes(x = BMI, y = Cholesterol)) +
 
 # Scatter Plot - Colored by Group
 
-## Scatter Plot with Categories - Code
+## Scatter Plot with Categories - Code {.smaller .scrollable}
 
 ⚫ **Goal:** Correlation + Compare groups
 
@@ -413,7 +413,7 @@ ggplot(data_clean, aes(x = Age, y = SysBP_0m, color = TreatmentGroup)) +
 
 # Quick Reference
 
-## Continuous Plots - Summary
+## Continuous Plots - Summary {.smaller}
 
 | Chart Type | Goal | When to Use | Code Complexity |
 |------------|------|-------------|-----------------|
@@ -461,7 +461,7 @@ ggplot(data_clean, aes(x = Age, y = SysBP_0m, color = TreatmentGroup)) +
 :::
 :::
 
-## Key Takeaways
+## Key Takeaways {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 ::: {.incremental}

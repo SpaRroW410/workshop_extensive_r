@@ -2,7 +2,7 @@
 title: "Data Wrangling in R"
 subtitle: "From Import to Transform"
 author: "Sparrow"
-date: "2026-07-07"
+date: "2026-11-20"
 format: 
   revealjs:
     theme: serif
@@ -235,7 +235,7 @@ Work more easily with character strings
 
 ---
 
-## Installation & Loading {.smaller}
+## Installation & Loading {.smaller .scrollable}
 
 ::: {.fragment fragment-index=1}
 ### Install (once)
@@ -655,7 +655,7 @@ str(bp_data)
 
 ---
 
-## The Janitor Package
+## The Janitor Package {.smaller .scrollable}
 
 ![](https://github.com/allisonhorst/stats-illustrations/raw/main/rstats-artwork/janitor_clean_names.png){fig-align="center" width="60%"}
 
@@ -973,7 +973,7 @@ bp_clean |>
 
 ---
 
-## Filter: Single Condition
+## Filter: Single Condition {.smaller}
 
 ::: {.fragment fragment-index=1}
 **Question**: Which patients are in the intervention group?
@@ -1007,7 +1007,7 @@ bp_clean |>
 
 ---
 
-## Filter: Multiple Conditions (AND) {.smaller}
+## Filter: Multiple Conditions (AND) {.smaller .scrollable}
 
 ::: {.fragment fragment-index=1}
 **Question**: Intervention patients over 60?
@@ -1084,7 +1084,7 @@ bp_clean |>
 
 ---
 
-## Filter: Between Values {.smaller}
+## Filter: Between Values {.smaller .scrollable}
 
 ::: {.fragment fragment-index=1}
 **Question**: Patients aged 40-60?
@@ -1250,7 +1250,7 @@ bp_clean |>
 
 ---
 
-## Creating Hypertension Categories
+## Creating Hypertension Categories {.smaller}
 
 ::: {.fragment fragment-index=1}
 **Question**: Classify baseline BP using clinical guidelines
@@ -1749,7 +1749,7 @@ bp_clean |>
 
 ---
 
-## Wide vs Long Data
+## Wide vs Long Data {.smaller}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -1804,7 +1804,7 @@ bp_long <- bp_clean |>
 
 ---
 
-## pivot_longer() Output
+## pivot_longer() Output {.smaller}
 
 ```{r}
 bp_long |> 
@@ -1909,7 +1909,7 @@ bp_both_long |>
 
 ---
 
-## Creating Example Datasets
+## Creating Example Datasets {.smaller .scrollable}
 
 ::: {.fragment fragment-index=1}
 ```{r}
@@ -2015,7 +2015,7 @@ demographics |>
 
 ---
 
-## Joining on Multiple Columns
+## Joining on Multiple Columns {.smaller}
 
 ::: {.fragment fragment-index=1}
 ```{r}
@@ -2157,7 +2157,7 @@ bp_clean |>
 
 ---
 
-## Warning: Factor Conversion
+## Warning: Factor Conversion {.smaller .scrollable}
 
 ::: {.fragment fragment-index=1}
 ```{r, warning=TRUE}
@@ -2251,7 +2251,7 @@ bp_clean |>
 
 ---
 
-## Thank You!
+## Thank You! {.smaller .scrollable}
 
 ::: {.r-fit-text}
 Questions?
@@ -2264,3 +2264,72 @@ Questions?
 ::: {.notes}
 Remember: Data wrangling is a skill that improves with practice!
 :::
+
+## 🔧 Practise in R {.smaller}
+
+Download the lab **[Tidy data with dplyr](../labs/basic/b2_tidy_data.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("dw1", "You want only the patients aged 60 or more. Which verb does that?",
+         c("select()", "filter()", "mutate()", "arrange()"), answer = 2,
+         explain = "filter() keeps the rows that meet a condition; select() chooses columns, mutate() adds columns and arrange() sorts rows.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("dw2", "`df |> group_by(sex) |> summarise(m = mean(sbp))`: how many rows come back when sex has two values and none is missing?",
+         c("One row for each patient", "One row for each column", "Two rows, one per sex", "One row for the whole table"), answer = 3,
+         explain = "summarise() returns one row per group, so two groups give two rows.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("dw3", "BMI has missing values. What does `mean(bmi, na.rm = TRUE)` do?",
+         c("Replaces the missing values by zero, then averages them", "Returns NA if any value is missing", "Removes the bmi column from the data frame", "Leaves out the missing values and averages the rest"), answer = 4,
+         explain = "na.rm = TRUE removes NA values before computing. Without it, any missing value makes the result NA.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("dw4", "Which layout of a dataset is tidy?",
+         c("One row per observation and one column per variable", "One row per variable, with patients across the columns", "One sheet per hospital, with merged cells as headers", "Several values in a cell, separated by commas"), answer = 1,
+         explain = "Tidy data has one observation per row, one variable per column and one value per cell, which is what dplyr and ggplot2 expect.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("dw5", "After `mutate()` adds a new column, what happens to the number of rows?",
+         c("It doubles, with one copy per value", "It falls to one row per group", "It stays the same as before", "It depends on the new column's type"), answer = 3,
+         explain = "mutate() adds or changes columns and keeps every row; summarise() is the verb that reduces rows.")
+```
+
+## Score {.smaller}
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

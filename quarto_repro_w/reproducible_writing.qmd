@@ -1,5 +1,7 @@
 ---
 title: "Reproducible Writing with Quarto"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -27,7 +29,7 @@ data_1 <- readxl::read_excel("../data/PublicHealth_BP_Dataset.xlsx")
 
 ### Inline Code
 
-The mean age is `r mean(gtsummary::trial$age)` years.
+The mean age is `r round(mean(gtsummary::trial$age, na.rm = TRUE), 1)` years.
 
 ### Figures
 
@@ -59,3 +61,36 @@ data_1 %>%
 Quarto supports citations using BibTeX or DOI.
 
 :::
+
+## Practise in R
+
+Download the lab **[A first report](../labs/basic/b6_first_report.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("qr1", "Why write `r mean(age)` inline instead of typing the number into the text?",
+         c("Inline code makes the whole document render more quickly", "The number updates with the data, so text and results agree", "Typed numbers cannot be formatted to a fixed number of decimals", "Quarto refuses to render typed numbers"), answer = 2,
+         explain = "Inline code is re-run on every render, so the text never drifts from the analysis.")
+quiz_mcq("qr2", "What does `#| include: false` do to a setup chunk?",
+         c("Runs the chunk but shows neither code nor output", "Skips the chunk when rendering, so its code is not run", "Shows the code but hides any messages", "Moves the chunk to the end of the document"), answer = 1,
+         explain = "include: false runs the code (so packages and data are loaded) but keeps it and its output out of the document.")
+quiz_mcq("qr3", "A figure chunk has `#| label: fig-age`. What does the fig- prefix allow?",
+         c("Saving the figure to a separate file", "Numbered cross-references such as @fig-age", "Changing the size of the figure on the page", "Hiding the figure in the HTML output"), answer = 2,
+         explain = "Labels starting with fig- (and tbl- for tables) are numbered and can be cross-referenced in the text.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

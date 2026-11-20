@@ -1,5 +1,7 @@
 ---
 title: "Statistical Tests and Analysis"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -21,7 +23,8 @@ This section covers common statistical tests used in medical research, implement
 library(tidyverse)
 library(gtsummary)
 
-# Example data
+# Example data (simulated; the seed makes the numbers the same on every render)
+set.seed(2026)
 data <- data.frame(
   age = rnorm(100, 50, 10),
   blood_pressure = rnorm(100, 120, 15),
@@ -151,3 +154,42 @@ p.adjust(p, method = "fdr")            # controls the proportion of false discov
 A p-value says whether the data are compatible with no difference; it does not say **how big**. Report the **difference (or ratio) with its 95% CI**, for example "mean SBP was 4.4 mmHg higher in users (95% CI 1.6 to 7.1)".
 
 :::
+
+## Practise in R
+
+Download the lab **[Which test?](../labs/basic/b5_which_test.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("st1", "Mean systolic BP is compared between two independent groups of 60 patients each. Which test is the usual first choice?",
+         c("A chi-square test of the two groups", "A paired t-test", "A two-sample (Welch) t-test", "A correlation test"), answer = 3,
+         explain = "A continuous outcome in two independent groups calls for a two-sample t-test; R uses Welch's version by default.")
+quiz_mcq("st2", "The same 30 patients have their BP measured before and after a treatment. Which test fits?",
+         c("A paired t-test", "A two-sample t-test", "A chi-square test", "A one-way ANOVA"), answer = 1,
+         explain = "Measurements on the same people are linked, so the test works on the differences within each person: a paired t-test.")
+quiz_mcq("st3", "A study reports p = 0.03. Which statement is correct?",
+         c("There is a 3% probability that there is no real difference at all", "The difference is large enough to matter clinically", "Such data would be unusual if there were no real difference", "The result has a 97% chance of being repeated"), answer = 3,
+         explain = "A p-value describes the data assuming no true difference. It is not the probability that the null hypothesis is true, and it says nothing about size.")
+quiz_mcq("st4", "A trial finds p = 0.40 for a difference in BP. What can you conclude?",
+         c("The treatments have now been shown to be equal", "The data give weak evidence of a difference", "The trial must contain a calculation error", "The difference is 40% of the control mean"), answer = 2,
+         explain = "A large p-value is weak evidence against 'no difference'; it is not proof of no difference. Look at the confidence interval for the size.")
+quiz_mcq("st5", "Two categorical variables (smoker yes/no, hypertension yes/no) are compared. Which test fits, with large expected counts?",
+         c("A two-sample t-test", "A Wilcoxon rank-sum test", "A one-way ANOVA", "A chi-square test"), answer = 4,
+         explain = "A chi-square test compares counts in a contingency table; with small expected counts, Fisher's exact test is used instead.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

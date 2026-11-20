@@ -1,5 +1,7 @@
 ---
 title: "Basic Plots"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -61,3 +63,39 @@ Includes: Box plot, Grouped Bar, Stacked Bar plot
 
 Includes: Simple Line Chart, Multiple Line Chart (comparing groups), Line Chart with Points
 🔗 [View Slide Deck →](basic/1.4_timeseries_basic.qmd)
+
+## Practise in R
+
+Download the lab **[First plots with ggplot2](../labs/basic/b4_first_plots.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("pg1", "Which plot shows the distribution of one continuous variable, such as age?",
+         c("A histogram", "A pie chart", "A bar chart of counts", "A line chart over time"), answer = 1,
+         explain = "A histogram bins a continuous variable and shows how many values fall in each bin; bar and pie charts are for categories.")
+quiz_mcq("pg2", "You compare systolic BP between three activity groups. Which plot shows the median, the spread and the outliers of each group?",
+         c("A scatter plot of SBP", "A box plot per group", "A histogram of all patients", "A pie chart of the groups"), answer = 2,
+         explain = "A box plot draws the median, the quartiles and the outliers for each group side by side.")
+quiz_mcq("pg3", "In ggplot2, what does `aes(x = bmi, y = sbp)` do?",
+         c("Draws the points in the plotting area", "Sets the colour theme for the whole plot", "Maps variables to positions on the plot", "Sorts the data before the plot is drawn"), answer = 3,
+         explain = "aes() maps variables to visual properties (position, colour, size); a geom such as geom_point() then draws them.")
+quiz_mcq("pg4", "A bar chart of counts starts its y-axis at 50 instead of 0. Why is that misleading?",
+         c("ggplot2 then drops the smallest category from the plot", "The legend then shows the wrong group names", "Bars starting at 50 cannot be coloured by group", "Bar lengths no longer show the counts in proportion"), answer = 4,
+         explain = "Readers compare bar lengths; cutting the axis exaggerates small differences. Bars should start at zero.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

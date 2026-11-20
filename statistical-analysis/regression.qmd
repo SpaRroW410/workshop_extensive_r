@@ -1,5 +1,7 @@
 ---
 title: "Regression Analysis"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -34,6 +36,7 @@ Also: the [interpretation cheat sheet](../regression-workshop/cheatsheet.qmd), t
 ```{r}
 library(tidyverse)
 
+set.seed(2026)   # simulated data: the same numbers on every render
 data <- data.frame(
   age = rnorm(100, 50, 10),
   blood_pressure = rnorm(100, 120, 15),
@@ -181,3 +184,36 @@ check_collinearity(model)
 
 
 :::
+
+## Practise in R
+
+Download the lab **[A first report](../labs/basic/b6_first_report.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("rg1", "In `lm(sbp ~ bmi)`, the BMI coefficient is 1.6. How do you read it?",
+         c("BMI explains 1.6% of the variation in systolic BP", "Each extra BMI unit goes with 1.6 mmHg higher SBP, on average", "Patients with high BMI have 1.6 times the SBP", "SBP rises by 1.6 units for every unit rise in the model residual"), answer = 2,
+         explain = "The slope is the average difference in the outcome for a one-unit difference in the predictor, in the outcome's units.")
+quiz_mcq("rg2", "What does the shaded band around a `geom_smooth(method = \"lm\")` line show?",
+         c("The range that contains 95% of the individual patients", "The confidence interval of the fitted mean line", "The values that count as outliers", "The residuals of each patient"), answer = 2,
+         explain = "The band is the confidence interval for the mean outcome at each predictor value; most individual points fall outside it.")
+quiz_mcq("rg3", "A regression shows that higher BMI goes with higher BP. What can you not conclude from this alone?",
+         c("That the association is positive", "That BMI causes the higher BP", "That the slope is estimated from the data", "That other variables could also matter"), answer = 2,
+         explain = "Observational associations can be confounded; causation needs design or careful adjustment.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

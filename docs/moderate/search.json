@@ -4,14 +4,28 @@
     "href": "statistical-analysis/statistical_tests.html",
     "title": "Statistical Tests and Analysis",
     "section": "",
-    "text": "This section covers common statistical tests used in medical research, implemented in R.\n\n\n\n# Load necessary libraries\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.2.1     ✔ readr     2.2.0\n✔ forcats   1.0.1     ✔ stringr   1.6.0\n✔ ggplot2   4.0.3     ✔ tibble    3.3.1\n✔ lubridate 1.9.5     ✔ tidyr     1.3.2\n✔ purrr     1.2.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(gtsummary)\n\n# Example data\ndata &lt;- data.frame(\n  age = rnorm(100, 50, 10),\n  blood_pressure = rnorm(100, 120, 15),\n  treatment = sample(c(\"A\", \"B\"), 100, replace = TRUE)\n)\n\n# Summary statistics\ndata %&gt;% \n  tbl_summary()\n\n\n\n\n\n\n\n\n\n\n\nCharacteristic\nN = 1001\n\n\n\n\nage\n50 (43, 56)\n\n\nblood_pressure\n121 (111, 132)\n\n\ntreatment\n\n\n\n\n    A\n44 (44%)\n\n\n    B\n56 (56%)\n\n\n\n1 Median (Q1, Q3); n (%)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n# Two-sample t-test\nt.test(blood_pressure ~ treatment, data = data)\n\n\n    Welch Two Sample t-test\n\ndata:  blood_pressure by treatment\nt = -1.3721, df = 94.534, p-value = 0.1733\nalternative hypothesis: true difference in means between group A and group B is not equal to 0\n95 percent confidence interval:\n -10.781784   1.969399\nsample estimates:\nmean in group A mean in group B \n       117.6492        122.0554 \n\n\n\n\n\n\n# Create categorical data\ndata$outcome &lt;- sample(c(\"Improved\", \"Not Improved\"), 100, replace = TRUE)\n\n# Chi-square test\nchisq.test(table(data$treatment, data$outcome))\n\n\n    Pearson's Chi-squared test with Yates' continuity correction\n\ndata:  table(data$treatment, data$outcome)\nX-squared = 0.014758, df = 1, p-value = 0.9033\n\n\n\n\n\n\n\n\n\n\n\n\n\nOutcome\nGroups / predictor\nUsual test\n\n\n\n\nContinuous\n2 independent groups\nTwo-sample (Welch) t-test\n\n\nContinuous\nsame people measured twice (before/after)\nPaired t-test\n\n\nContinuous, skewed or small sample\n2 independent groups\nWilcoxon rank-sum (Mann-Whitney)\n\n\nContinuous\n3 or more groups\nOne-way ANOVA (Kruskal-Wallis if skewed)\n\n\nCategorical (yes/no)\ncategorical\nChi-square test (Fisher’s exact if expected counts are small)\n\n\n\n\n\n\n\nt.test(blood_pressure ~ treatment, data = data)\n\n\n    Welch Two Sample t-test\n\ndata:  blood_pressure by treatment\nt = -1.3721, df = 94.534, p-value = 0.1733\nalternative hypothesis: true difference in means between group A and group B is not equal to 0\n95 percent confidence interval:\n -10.781784   1.969399\nsample estimates:\nmean in group A mean in group B \n       117.6492        122.0554 \n\n\n\nR uses Welch’s t-test by default (does not assume equal variances).\nThe confidence interval is for the first group minus the second (A − B), so the sign follows the order of the groups.\nThe sample estimates show each group’s mean.\n\n\n\n\n\n# paired: the same 30 people before and after\nbefore &lt;- rnorm(30, 140, 12)\nafter  &lt;- before - rnorm(30, 5, 6)\nt.test(before, after, paired = TRUE)\n\n\n    Paired t-test\n\ndata:  before and after\nt = 1.4842, df = 29, p-value = 0.1485\nalternative hypothesis: true mean difference is not equal to 0\n95 percent confidence interval:\n -0.8405802  5.2883927\nsample estimates:\nmean difference \n       2.223906 \n\n# non-parametric alternative for two independent groups\nwilcox.test(blood_pressure ~ treatment, data = data)\n\n\n    Wilcoxon rank sum test with continuity correction\n\ndata:  blood_pressure by treatment\nW = 1027, p-value = 0.1556\nalternative hypothesis: true location shift is not equal to 0\n\n\n\n\n\n\nA p-value says how surprising the data would be if there were no true difference.\nIt is not the probability that the null hypothesis is true, and not the probability the result is “due to chance”.\nIt says nothing about the size or importance of the difference: look at the estimate and its confidence interval.\nA large p-value is weak evidence against “no difference”. It is not proof that there is none.\n\n\n\n\n\nRegression modeling now has its own dedicated module — see Regression Analysis for simple/multiple regression, diagnostics, and logistic regression."
+    "text": "This section covers common statistical tests used in medical research, implemented in R.\n\n\n\n# Load necessary libraries\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.2.1     ✔ readr     2.2.0\n✔ forcats   1.0.1     ✔ stringr   1.6.0\n✔ ggplot2   4.0.4     ✔ tibble    3.3.1\n✔ lubridate 1.9.5     ✔ tidyr     1.3.2\n✔ purrr     1.2.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(gtsummary)\n\n# Example data (simulated; the seed makes the numbers the same on every render)\nset.seed(2026)\ndata &lt;- data.frame(\n  age = rnorm(100, 50, 10),\n  blood_pressure = rnorm(100, 120, 15),\n  treatment = sample(c(\"A\", \"B\"), 100, replace = TRUE)\n)\n\n# Summary statistics\ndata %&gt;% \n  tbl_summary()\n\n\n\n\n\n\n\n\n\n\n\nCharacteristic\nN = 1001\n\n\n\n\nage\n48 (42, 56)\n\n\nblood_pressure\n123 (111, 131)\n\n\ntreatment\n\n\n\n\n    A\n49 (49%)\n\n\n    B\n51 (51%)\n\n\n\n1 Median (Q1, Q3); n (%)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n# Two-sample t-test\nt.test(blood_pressure ~ treatment, data = data)\n\n\n    Welch Two Sample t-test\n\ndata:  blood_pressure by treatment\nt = 1.0107, df = 96.367, p-value = 0.3147\nalternative hypothesis: true difference in means between group A and group B is not equal to 0\n95 percent confidence interval:\n -2.804691  8.624570\nsample estimates:\nmean in group A mean in group B \n       123.3066        120.3966 \n\n\n\n\n\n\n# Create categorical data\ndata$outcome &lt;- sample(c(\"Improved\", \"Not Improved\"), 100, replace = TRUE)\n\n# Chi-square test\nchisq.test(table(data$treatment, data$outcome))\n\n\n    Pearson's Chi-squared test with Yates' continuity correction\n\ndata:  table(data$treatment, data$outcome)\nX-squared = 1.0283, df = 1, p-value = 0.3106\n\n\n\n\n\n\n\n\n\n\n\n\n\nOutcome\nGroups / predictor\nUsual test\n\n\n\n\nContinuous\n2 independent groups\nTwo-sample (Welch) t-test\n\n\nContinuous\nsame people measured twice (before/after)\nPaired t-test\n\n\nContinuous, skewed or small sample\n2 independent groups\nWilcoxon rank-sum (Mann-Whitney)\n\n\nContinuous\n3 or more groups\nOne-way ANOVA (Kruskal-Wallis if skewed)\n\n\nCategorical (yes/no)\ncategorical\nChi-square test (Fisher’s exact if expected counts are small)\n\n\n\n\n\n\n\nt.test(blood_pressure ~ treatment, data = data)\n\n\n    Welch Two Sample t-test\n\ndata:  blood_pressure by treatment\nt = 1.0107, df = 96.367, p-value = 0.3147\nalternative hypothesis: true difference in means between group A and group B is not equal to 0\n95 percent confidence interval:\n -2.804691  8.624570\nsample estimates:\nmean in group A mean in group B \n       123.3066        120.3966 \n\n\n\nR uses Welch’s t-test by default (does not assume equal variances).\nThe confidence interval is for the first group minus the second (A − B), so the sign follows the order of the groups.\nThe sample estimates show each group’s mean.\n\n\n\n\n\n# paired: the same 30 people before and after\nbefore &lt;- rnorm(30, 140, 12)\nafter  &lt;- before - rnorm(30, 5, 6)\nt.test(before, after, paired = TRUE)\n\n\n    Paired t-test\n\ndata:  before and after\nt = 5.3735, df = 29, p-value = 8.985e-06\nalternative hypothesis: true mean difference is not equal to 0\n95 percent confidence interval:\n 3.020140 6.731862\nsample estimates:\nmean difference \n       4.876001 \n\n# non-parametric alternative for two independent groups\nwilcox.test(blood_pressure ~ treatment, data = data)\n\n\n    Wilcoxon rank sum test with continuity correction\n\ndata:  blood_pressure by treatment\nW = 1360, p-value = 0.4482\nalternative hypothesis: true location shift is not equal to 0\n\n\n\n\n\n\nA p-value says how surprising the data would be if there were no true difference.\nIt is not the probability that the null hypothesis is true, and not the probability the result is “due to chance”.\nIt says nothing about the size or importance of the difference: look at the estimate and its confidence interval.\nA large p-value is weak evidence against “no difference”. It is not proof that there is none.\n\n\n\n\n\nRegression modeling now has its own dedicated module — see Regression Analysis for simple/multiple regression, diagnostics, and logistic regression."
   },
   {
     "objectID": "statistical-analysis/statistical_tests.html#statistical-tests-in-r",
     "href": "statistical-analysis/statistical_tests.html#statistical-tests-in-r",
     "title": "Statistical Tests and Analysis",
     "section": "",
-    "text": "This section covers common statistical tests used in medical research, implemented in R.\n\n\n\n# Load necessary libraries\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.2.1     ✔ readr     2.2.0\n✔ forcats   1.0.1     ✔ stringr   1.6.0\n✔ ggplot2   4.0.3     ✔ tibble    3.3.1\n✔ lubridate 1.9.5     ✔ tidyr     1.3.2\n✔ purrr     1.2.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(gtsummary)\n\n# Example data\ndata &lt;- data.frame(\n  age = rnorm(100, 50, 10),\n  blood_pressure = rnorm(100, 120, 15),\n  treatment = sample(c(\"A\", \"B\"), 100, replace = TRUE)\n)\n\n# Summary statistics\ndata %&gt;% \n  tbl_summary()\n\n\n\n\n\n\n\n\n\n\n\nCharacteristic\nN = 1001\n\n\n\n\nage\n50 (43, 56)\n\n\nblood_pressure\n121 (111, 132)\n\n\ntreatment\n\n\n\n\n    A\n44 (44%)\n\n\n    B\n56 (56%)\n\n\n\n1 Median (Q1, Q3); n (%)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n# Two-sample t-test\nt.test(blood_pressure ~ treatment, data = data)\n\n\n    Welch Two Sample t-test\n\ndata:  blood_pressure by treatment\nt = -1.3721, df = 94.534, p-value = 0.1733\nalternative hypothesis: true difference in means between group A and group B is not equal to 0\n95 percent confidence interval:\n -10.781784   1.969399\nsample estimates:\nmean in group A mean in group B \n       117.6492        122.0554 \n\n\n\n\n\n\n# Create categorical data\ndata$outcome &lt;- sample(c(\"Improved\", \"Not Improved\"), 100, replace = TRUE)\n\n# Chi-square test\nchisq.test(table(data$treatment, data$outcome))\n\n\n    Pearson's Chi-squared test with Yates' continuity correction\n\ndata:  table(data$treatment, data$outcome)\nX-squared = 0.014758, df = 1, p-value = 0.9033\n\n\n\n\n\n\n\n\n\n\n\n\n\nOutcome\nGroups / predictor\nUsual test\n\n\n\n\nContinuous\n2 independent groups\nTwo-sample (Welch) t-test\n\n\nContinuous\nsame people measured twice (before/after)\nPaired t-test\n\n\nContinuous, skewed or small sample\n2 independent groups\nWilcoxon rank-sum (Mann-Whitney)\n\n\nContinuous\n3 or more groups\nOne-way ANOVA (Kruskal-Wallis if skewed)\n\n\nCategorical (yes/no)\ncategorical\nChi-square test (Fisher’s exact if expected counts are small)\n\n\n\n\n\n\n\nt.test(blood_pressure ~ treatment, data = data)\n\n\n    Welch Two Sample t-test\n\ndata:  blood_pressure by treatment\nt = -1.3721, df = 94.534, p-value = 0.1733\nalternative hypothesis: true difference in means between group A and group B is not equal to 0\n95 percent confidence interval:\n -10.781784   1.969399\nsample estimates:\nmean in group A mean in group B \n       117.6492        122.0554 \n\n\n\nR uses Welch’s t-test by default (does not assume equal variances).\nThe confidence interval is for the first group minus the second (A − B), so the sign follows the order of the groups.\nThe sample estimates show each group’s mean.\n\n\n\n\n\n# paired: the same 30 people before and after\nbefore &lt;- rnorm(30, 140, 12)\nafter  &lt;- before - rnorm(30, 5, 6)\nt.test(before, after, paired = TRUE)\n\n\n    Paired t-test\n\ndata:  before and after\nt = 1.4842, df = 29, p-value = 0.1485\nalternative hypothesis: true mean difference is not equal to 0\n95 percent confidence interval:\n -0.8405802  5.2883927\nsample estimates:\nmean difference \n       2.223906 \n\n# non-parametric alternative for two independent groups\nwilcox.test(blood_pressure ~ treatment, data = data)\n\n\n    Wilcoxon rank sum test with continuity correction\n\ndata:  blood_pressure by treatment\nW = 1027, p-value = 0.1556\nalternative hypothesis: true location shift is not equal to 0\n\n\n\n\n\n\nA p-value says how surprising the data would be if there were no true difference.\nIt is not the probability that the null hypothesis is true, and not the probability the result is “due to chance”.\nIt says nothing about the size or importance of the difference: look at the estimate and its confidence interval.\nA large p-value is weak evidence against “no difference”. It is not proof that there is none.\n\n\n\n\n\nRegression modeling now has its own dedicated module — see Regression Analysis for simple/multiple regression, diagnostics, and logistic regression."
+    "text": "This section covers common statistical tests used in medical research, implemented in R.\n\n\n\n# Load necessary libraries\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.2.1     ✔ readr     2.2.0\n✔ forcats   1.0.1     ✔ stringr   1.6.0\n✔ ggplot2   4.0.4     ✔ tibble    3.3.1\n✔ lubridate 1.9.5     ✔ tidyr     1.3.2\n✔ purrr     1.2.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(gtsummary)\n\n# Example data (simulated; the seed makes the numbers the same on every render)\nset.seed(2026)\ndata &lt;- data.frame(\n  age = rnorm(100, 50, 10),\n  blood_pressure = rnorm(100, 120, 15),\n  treatment = sample(c(\"A\", \"B\"), 100, replace = TRUE)\n)\n\n# Summary statistics\ndata %&gt;% \n  tbl_summary()\n\n\n\n\n\n\n\n\n\n\n\nCharacteristic\nN = 1001\n\n\n\n\nage\n48 (42, 56)\n\n\nblood_pressure\n123 (111, 131)\n\n\ntreatment\n\n\n\n\n    A\n49 (49%)\n\n\n    B\n51 (51%)\n\n\n\n1 Median (Q1, Q3); n (%)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n# Two-sample t-test\nt.test(blood_pressure ~ treatment, data = data)\n\n\n    Welch Two Sample t-test\n\ndata:  blood_pressure by treatment\nt = 1.0107, df = 96.367, p-value = 0.3147\nalternative hypothesis: true difference in means between group A and group B is not equal to 0\n95 percent confidence interval:\n -2.804691  8.624570\nsample estimates:\nmean in group A mean in group B \n       123.3066        120.3966 \n\n\n\n\n\n\n# Create categorical data\ndata$outcome &lt;- sample(c(\"Improved\", \"Not Improved\"), 100, replace = TRUE)\n\n# Chi-square test\nchisq.test(table(data$treatment, data$outcome))\n\n\n    Pearson's Chi-squared test with Yates' continuity correction\n\ndata:  table(data$treatment, data$outcome)\nX-squared = 1.0283, df = 1, p-value = 0.3106\n\n\n\n\n\n\n\n\n\n\n\n\n\nOutcome\nGroups / predictor\nUsual test\n\n\n\n\nContinuous\n2 independent groups\nTwo-sample (Welch) t-test\n\n\nContinuous\nsame people measured twice (before/after)\nPaired t-test\n\n\nContinuous, skewed or small sample\n2 independent groups\nWilcoxon rank-sum (Mann-Whitney)\n\n\nContinuous\n3 or more groups\nOne-way ANOVA (Kruskal-Wallis if skewed)\n\n\nCategorical (yes/no)\ncategorical\nChi-square test (Fisher’s exact if expected counts are small)\n\n\n\n\n\n\n\nt.test(blood_pressure ~ treatment, data = data)\n\n\n    Welch Two Sample t-test\n\ndata:  blood_pressure by treatment\nt = 1.0107, df = 96.367, p-value = 0.3147\nalternative hypothesis: true difference in means between group A and group B is not equal to 0\n95 percent confidence interval:\n -2.804691  8.624570\nsample estimates:\nmean in group A mean in group B \n       123.3066        120.3966 \n\n\n\nR uses Welch’s t-test by default (does not assume equal variances).\nThe confidence interval is for the first group minus the second (A − B), so the sign follows the order of the groups.\nThe sample estimates show each group’s mean.\n\n\n\n\n\n# paired: the same 30 people before and after\nbefore &lt;- rnorm(30, 140, 12)\nafter  &lt;- before - rnorm(30, 5, 6)\nt.test(before, after, paired = TRUE)\n\n\n    Paired t-test\n\ndata:  before and after\nt = 5.3735, df = 29, p-value = 8.985e-06\nalternative hypothesis: true mean difference is not equal to 0\n95 percent confidence interval:\n 3.020140 6.731862\nsample estimates:\nmean difference \n       4.876001 \n\n# non-parametric alternative for two independent groups\nwilcox.test(blood_pressure ~ treatment, data = data)\n\n\n    Wilcoxon rank sum test with continuity correction\n\ndata:  blood_pressure by treatment\nW = 1360, p-value = 0.4482\nalternative hypothesis: true location shift is not equal to 0\n\n\n\n\n\n\nA p-value says how surprising the data would be if there were no true difference.\nIt is not the probability that the null hypothesis is true, and not the probability the result is “due to chance”.\nIt says nothing about the size or importance of the difference: look at the estimate and its confidence interval.\nA large p-value is weak evidence against “no difference”. It is not proof that there is none.\n\n\n\n\n\nRegression modeling now has its own dedicated module — see Regression Analysis for simple/multiple regression, diagnostics, and logistic regression."
+  },
+  {
+    "objectID": "statistical-analysis/statistical_tests.html#practise-in-r",
+    "href": "statistical-analysis/statistical_tests.html#practise-in-r",
+    "title": "Statistical Tests and Analysis",
+    "section": "Practise in R",
+    "text": "Practise in R\nDownload the lab Which test? and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "statistical-analysis/statistical_tests.html#self-check-quiz",
+    "href": "statistical-analysis/statistical_tests.html#self-check-quiz",
+    "title": "Statistical Tests and Analysis",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\nMean systolic BP is compared between two independent groups of 60 patients each. Which test is the usual first choice?\n\nA chi-square test of the two groups\nA paired t-test\nA two-sample (Welch) t-test\nA correlation test\n\n\n\nThe same 30 patients have their BP measured before and after a treatment. Which test fits?\n\nA paired t-test\nA two-sample t-test\nA chi-square test\nA one-way ANOVA\n\n\n\nA study reports p = 0.03. Which statement is correct?\n\nThere is a 3% probability that there is no real difference at all\nThe difference is large enough to matter clinically\nSuch data would be unusual if there were no real difference\nThe result has a 97% chance of being repeated\n\n\n\nA trial finds p = 0.40 for a difference in BP. What can you conclude?\n\nThe treatments have now been shown to be equal\nThe data give weak evidence of a difference\nThe trial must contain a calculation error\nThe difference is 40% of the control mean\n\n\n\nTwo categorical variables (smoker yes/no, hypertension yes/no) are compared. Which test fits, with large expected counts?\n\nA two-sample t-test\nA Wilcoxon rank-sum test\nA one-way ANOVA\nA chi-square test\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "statistical-analysis/data_analysis.html",
@@ -910,18 +924,81 @@
     "text": "Thank You!\n\nQuestions?\n\n\n\n\n\n\n\n\n\nRemember: Data wrangling is a skill that improves with practice!"
   },
   {
+    "objectID": "r-foundations/data-wrangling.html#practise-in-r",
+    "href": "r-foundations/data-wrangling.html#practise-in-r",
+    "title": "Data Wrangling in R",
+    "section": "🔧 Practise in R",
+    "text": "🔧 Practise in R\nDownload the lab Tidy data with dplyr and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "r-foundations/data-wrangling.html#self-check-quiz-15",
+    "href": "r-foundations/data-wrangling.html#self-check-quiz-15",
+    "title": "Data Wrangling in R",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nYou want only the patients aged 60 or more. Which verb does that?\n\nselect()\nfilter()\nmutate()\narrange()"
+  },
+  {
+    "objectID": "r-foundations/data-wrangling.html#self-check-quiz-25",
+    "href": "r-foundations/data-wrangling.html#self-check-quiz-25",
+    "title": "Data Wrangling in R",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\ndf |&gt; group_by(sex) |&gt; summarise(m = mean(sbp)): how many rows come back when sex has two values and none is missing?\n\nOne row for each patient\nOne row for each column\nTwo rows, one per sex\nOne row for the whole table"
+  },
+  {
+    "objectID": "r-foundations/data-wrangling.html#self-check-quiz-35",
+    "href": "r-foundations/data-wrangling.html#self-check-quiz-35",
+    "title": "Data Wrangling in R",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nBMI has missing values. What does mean(bmi, na.rm = TRUE) do?\n\nReplaces the missing values by zero, then averages them\nReturns NA if any value is missing\nRemoves the bmi column from the data frame\nLeaves out the missing values and averages the rest"
+  },
+  {
+    "objectID": "r-foundations/data-wrangling.html#self-check-quiz-45",
+    "href": "r-foundations/data-wrangling.html#self-check-quiz-45",
+    "title": "Data Wrangling in R",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nWhich layout of a dataset is tidy?\n\nOne row per observation and one column per variable\nOne row per variable, with patients across the columns\nOne sheet per hospital, with merged cells as headers\nSeveral values in a cell, separated by commas"
+  },
+  {
+    "objectID": "r-foundations/data-wrangling.html#self-check-quiz-55",
+    "href": "r-foundations/data-wrangling.html#self-check-quiz-55",
+    "title": "Data Wrangling in R",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nAfter mutate() adds a new column, what happens to the number of rows?\n\nIt doubles, with one copy per value\nIt falls to one row per group\nIt stays the same as before\nIt depends on the new column’s type"
+  },
+  {
+    "objectID": "r-foundations/data-wrangling.html#score",
+    "href": "r-foundations/data-wrangling.html#score",
+    "title": "Data Wrangling in R",
+    "section": "Score",
+    "text": "Score\nYour score:  (first attempt counts)"
+  },
+  {
     "objectID": "quarto_repro_w/reproducible_writing.html",
     "href": "quarto_repro_w/reproducible_writing.html",
     "title": "Reproducible Writing with Quarto",
     "section": "",
-    "text": "Quarto enables reproducible research by combining code, text, and output in a single document.\n\n\n\n\n\nThe mean age is NA years.\n\n\n\n\nggplot(gtsummary::trial, aes(x = age)) +\n  geom_histogram(binwidth = 5, fill = \"blue\", alpha = 0.7) +\n  theme_minimal()\n\nWarning: Removed 11 rows containing non-finite outside the scale range\n(`stat_bin()`).\n\n\n\n\n\n\n\n\nFigure 1: Distribution of Age\n\n\n\n\n\n\n\n\n\ndata_1 %&gt;% \n  summarise(\n    Mean_Age = mean(Age),\n    SD_Age = sd(Age),\n    Mean_SBP = mean(SysBP_0m),\n    SD_SBP = sd(SysBP_0m)\n  ) %&gt;% \n  knitr::kable()\n\n\n\nTable 1: Summary Statistics\n\n\n\n\n\n\nMean_Age\nSD_Age\nMean_SBP\nSD_SBP\n\n\n\n\n49.745\n17.71466\n135.08\n13.58256\n\n\n\n\n\n\n\n\n\n\n\nQuarto supports citations using BibTeX or DOI."
+    "text": "Quarto enables reproducible research by combining code, text, and output in a single document.\n\n\n\n\n\nThe mean age is 47.2 years.\n\n\n\n\nggplot(gtsummary::trial, aes(x = age)) +\n  geom_histogram(binwidth = 5, fill = \"blue\", alpha = 0.7) +\n  theme_minimal()\n\nWarning: Removed 11 rows containing non-finite outside the scale range\n(`stat_bin()`).\n\n\n\n\n\n\n\n\nFigure 1: Distribution of Age\n\n\n\n\n\n\n\n\n\ndata_1 %&gt;% \n  summarise(\n    Mean_Age = mean(Age),\n    SD_Age = sd(Age),\n    Mean_SBP = mean(SysBP_0m),\n    SD_SBP = sd(SysBP_0m)\n  ) %&gt;% \n  knitr::kable()\n\n\n\nTable 1: Summary Statistics\n\n\n\n\n\n\nMean_Age\nSD_Age\nMean_SBP\nSD_SBP\n\n\n\n\n49.745\n17.71466\n135.08\n13.58256\n\n\n\n\n\n\n\n\n\n\n\nQuarto supports citations using BibTeX or DOI."
   },
   {
     "objectID": "quarto_repro_w/reproducible_writing.html#reproducible-research-with-quarto",
     "href": "quarto_repro_w/reproducible_writing.html#reproducible-research-with-quarto",
     "title": "Reproducible Writing with Quarto",
     "section": "",
-    "text": "Quarto enables reproducible research by combining code, text, and output in a single document.\n\n\n\n\n\nThe mean age is NA years.\n\n\n\n\nggplot(gtsummary::trial, aes(x = age)) +\n  geom_histogram(binwidth = 5, fill = \"blue\", alpha = 0.7) +\n  theme_minimal()\n\nWarning: Removed 11 rows containing non-finite outside the scale range\n(`stat_bin()`).\n\n\n\n\n\n\n\n\nFigure 1: Distribution of Age\n\n\n\n\n\n\n\n\n\ndata_1 %&gt;% \n  summarise(\n    Mean_Age = mean(Age),\n    SD_Age = sd(Age),\n    Mean_SBP = mean(SysBP_0m),\n    SD_SBP = sd(SysBP_0m)\n  ) %&gt;% \n  knitr::kable()\n\n\n\nTable 1: Summary Statistics\n\n\n\n\n\n\nMean_Age\nSD_Age\nMean_SBP\nSD_SBP\n\n\n\n\n49.745\n17.71466\n135.08\n13.58256\n\n\n\n\n\n\n\n\n\n\n\nQuarto supports citations using BibTeX or DOI."
+    "text": "Quarto enables reproducible research by combining code, text, and output in a single document.\n\n\n\n\n\nThe mean age is 47.2 years.\n\n\n\n\nggplot(gtsummary::trial, aes(x = age)) +\n  geom_histogram(binwidth = 5, fill = \"blue\", alpha = 0.7) +\n  theme_minimal()\n\nWarning: Removed 11 rows containing non-finite outside the scale range\n(`stat_bin()`).\n\n\n\n\n\n\n\n\nFigure 1: Distribution of Age\n\n\n\n\n\n\n\n\n\ndata_1 %&gt;% \n  summarise(\n    Mean_Age = mean(Age),\n    SD_Age = sd(Age),\n    Mean_SBP = mean(SysBP_0m),\n    SD_SBP = sd(SysBP_0m)\n  ) %&gt;% \n  knitr::kable()\n\n\n\nTable 1: Summary Statistics\n\n\n\n\n\n\nMean_Age\nSD_Age\nMean_SBP\nSD_SBP\n\n\n\n\n49.745\n17.71466\n135.08\n13.58256\n\n\n\n\n\n\n\n\n\n\n\nQuarto supports citations using BibTeX or DOI."
+  },
+  {
+    "objectID": "quarto_repro_w/reproducible_writing.html#practise-in-r",
+    "href": "quarto_repro_w/reproducible_writing.html#practise-in-r",
+    "title": "Reproducible Writing with Quarto",
+    "section": "Practise in R",
+    "text": "Practise in R\nDownload the lab A first report and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "quarto_repro_w/reproducible_writing.html#self-check-quiz",
+    "href": "quarto_repro_w/reproducible_writing.html#self-check-quiz",
+    "title": "Reproducible Writing with Quarto",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\nWhy write r mean(age) inline instead of typing the number into the text?\n\nInline code makes the whole document render more quickly\nThe number updates with the data, so text and results agree\nTyped numbers cannot be formatted to a fixed number of decimals\nQuarto refuses to render typed numbers\n\n\n\nWhat does #| include: false do to a setup chunk?\n\nRuns the chunk but shows neither code nor output\nSkips the chunk when rendering, so its code is not run\nShows the code but hides any messages\nMoves the chunk to the end of the document\n\n\n\nA figure chunk has #| label: fig-age. What does the fig- prefix allow?\n\nSaving the figure to a separate file\nNumbered cross-references such as ?@fig-age\nChanging the size of the figure on the page\nHiding the figure in the HTML output\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "plot-gallery/moderate/2.6_geographic_intermediate.html#what-well-learn---intermediate",
@@ -1663,7 +1740,7 @@
     "href": "plot-gallery/basic.html",
     "title": "Basic Plots",
     "section": "",
-    "text": "Foundations of Plots View Slide Deck →\n\n\nExplore foundational plots grouped by data type and relationship\n\n\n\nIncludes: Bar chart, Pie chart, Donut chart, Stacked bar chart 🔗 View Slide Deck →\n\n\n\n\nIncludes: Histogram, Density plot, Scatter plot\n🔗 View Slide Deck →\n\n\n\n\nIncludes: Box plot, Grouped Bar, Stacked Bar plot 🔗 View Slide Deck →\n\n\n\n\nIncludes: Simple Line Chart, Multiple Line Chart (comparing groups), Line Chart with Points 🔗 View Slide Deck →"
+    "text": "Foundations of Plots View Slide Deck →\n\n\nExplore foundational plots grouped by data type and relationship\n\n\n\nIncludes: Bar chart, Pie chart, Donut chart, Stacked bar chart 🔗 View Slide Deck →\n\n\n\n\nIncludes: Histogram, Density plot, Scatter plot\n🔗 View Slide Deck →\n\n\n\n\nIncludes: Box plot, Grouped Bar, Stacked Bar plot 🔗 View Slide Deck →\n\n\n\n\nIncludes: Simple Line Chart, Multiple Line Chart (comparing groups), Line Chart with Points 🔗 View Slide Deck →\n\n\n\n\nDownload the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n\n\n\n\nWhich plot shows the distribution of one continuous variable, such as age?\n\nA histogram\nA pie chart\nA bar chart of counts\nA line chart over time\n\n\n\nYou compare systolic BP between three activity groups. Which plot shows the median, the spread and the outliers of each group?\n\nA scatter plot of SBP\nA box plot per group\nA histogram of all patients\nA pie chart of the groups\n\n\n\nIn ggplot2, what does aes(x = bmi, y = sbp) do?\n\nDraws the points in the plotting area\nSets the colour theme for the whole plot\nMaps variables to positions on the plot\nSorts the data before the plot is drawn\n\n\n\nA bar chart of counts starts its y-axis at 50 instead of 0. Why is that misleading?\n\nggplot2 then drops the smallest category from the plot\nThe legend then shows the wrong group names\nBars starting at 50 cannot be coloured by group\nBar lengths no longer show the counts in proportion\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "plot-gallery/basic.html#basic-plot",
@@ -1671,6 +1748,20 @@
     "title": "Basic Plots",
     "section": "",
     "text": "Explore foundational plots grouped by data type and relationship\n\n\n\nIncludes: Bar chart, Pie chart, Donut chart, Stacked bar chart 🔗 View Slide Deck →\n\n\n\n\nIncludes: Histogram, Density plot, Scatter plot\n🔗 View Slide Deck →\n\n\n\n\nIncludes: Box plot, Grouped Bar, Stacked Bar plot 🔗 View Slide Deck →\n\n\n\n\nIncludes: Simple Line Chart, Multiple Line Chart (comparing groups), Line Chart with Points 🔗 View Slide Deck →"
+  },
+  {
+    "objectID": "plot-gallery/basic.html#practise-in-r",
+    "href": "plot-gallery/basic.html#practise-in-r",
+    "title": "Basic Plots",
+    "section": "",
+    "text": "Download the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "plot-gallery/basic.html#self-check-quiz",
+    "href": "plot-gallery/basic.html#self-check-quiz",
+    "title": "Basic Plots",
+    "section": "",
+    "text": "Which plot shows the distribution of one continuous variable, such as age?\n\nA histogram\nA pie chart\nA bar chart of counts\nA line chart over time\n\n\n\nYou compare systolic BP between three activity groups. Which plot shows the median, the spread and the outliers of each group?\n\nA scatter plot of SBP\nA box plot per group\nA histogram of all patients\nA pie chart of the groups\n\n\n\nIn ggplot2, what does aes(x = bmi, y = sbp) do?\n\nDraws the points in the plotting area\nSets the colour theme for the whole plot\nMaps variables to positions on the plot\nSorts the data before the plot is drawn\n\n\n\nA bar chart of counts starts its y-axis at 50 instead of 0. Why is that misleading?\n\nggplot2 then drops the smallest category from the plot\nThe legend then shows the wrong group names\nBars starting at 50 cannot be coloured by group\nBar lengths no longer show the counts in proportion\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "ggstatsplot/ggstatsplot_moderate.html",
@@ -2874,7 +2965,14 @@
     "href": "data-visualization/ggplot_grammar.html",
     "title": "Grammar of Graphics",
     "section": "",
-    "text": "▸ Module 1\nIncludes: Foundations & Basic Geoms View Slide Deck →\n\n\n\n▸ Module 2\nIncludes: Aesthetics, Faceting & Themes View Slide Deck →\n\n\n\n▸ Module 3\nIncludes: Colors, Scales & Custom Themes View Slide Deck →\n\n\n\n▸ Module 4\nIncludes: Advanced Topics & Best Practices View Slide Deck →\nBy the end, you’ll master the Grammar of Graphics and create publication-ready visualizations"
+    "text": "Includes: Foundations & Basic Geoms View Slide Deck →"
+  },
+  {
+    "objectID": "data-visualization/ggplot_grammar.html#practise-in-r",
+    "href": "data-visualization/ggplot_grammar.html#practise-in-r",
+    "title": "Grammar of Graphics",
+    "section": "Practise in R",
+    "text": "Practise in R\nDownload the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
   },
   {
     "objectID": "data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html#module-2-overview",
@@ -3175,21 +3273,21 @@
     "href": "ggstatsplot/ggstatsplot_intro.html#ggbetweenstats-group-comparisons",
     "title": "ggstatsplot — Introduction",
     "section": "ggbetweenstats() — Group Comparisons",
-    "text": "ggbetweenstats() — Group Comparisons\nUse this when you want to compare a continuous variable across two or more independent groups.\n\nlibrary(ggstatsplot)\n\n# Compare systolic BP across fuel type groups\nggbetweenstats(\n  data  = overall_up,\n  x     = fuel_type,         # grouping variable (categorical)\n  y     = sbp_0m,            # outcome variable (continuous)\n  title = \"Systolic BP by Fuel Type\"\n)\n\nWhat the output shows:\n\nA violin + boxplot combination with individual data points\nThe statistical test used (Welch’s ANOVA or Kruskal-Wallis, chosen automatically)\nThe p-value, effect size (η² or ε²), and confidence interval\nPairwise comparisons (if more than 2 groups)\n\nChoosing parametric vs non-parametric:\n\n# Force non-parametric (Kruskal-Wallis)\nggbetweenstats(\n  data  = overall_up,\n  x     = fuel_type,\n  y     = sbp_0m,\n  type  = \"nonparametric\"   # \"parametric\", \"nonparametric\", \"robust\", \"bayes\"\n)"
+    "text": "ggbetweenstats() — Group Comparisons\nUse this when you want to compare a continuous variable across two or more independent groups.\n\nlibrary(ggstatsplot)\n\n# Compare systolic BP across physical-activity groups\nggbetweenstats(\n  data  = ncd,\n  x     = phys_act,         # grouping variable (categorical)\n  y     = sbp,            # outcome variable (continuous)\n  title = \"Systolic BP by Physical Activity\"\n)\n\n\n\n\n\n\n\n\nWhat the output shows:\n\nA violin + boxplot combination with individual data points\nThe statistical test used (Welch’s ANOVA or Kruskal-Wallis, chosen automatically)\nThe p-value, effect size (η² or ε²), and confidence interval\nPairwise comparisons (if more than 2 groups)\n\nChoosing parametric vs non-parametric:\n\n# Force non-parametric (Kruskal-Wallis)\nggbetweenstats(\n  data  = ncd,\n  x     = phys_act,\n  y     = sbp,\n  type  = \"nonparametric\"   # \"parametric\", \"nonparametric\", \"robust\", \"bayes\"\n)"
   },
   {
     "objectID": "ggstatsplot/ggstatsplot_intro.html#ggscatterstats-correlation",
     "href": "ggstatsplot/ggstatsplot_intro.html#ggscatterstats-correlation",
     "title": "ggstatsplot — Introduction",
     "section": "ggscatterstats() — Correlation",
-    "text": "ggscatterstats() — Correlation\nUse this when you want to examine the relationship between two continuous variables.\n\nggscatterstats(\n  data  = overall_up,\n  x     = current_age,\n  y     = sbp_0m,\n  title = \"Age vs Systolic BP at Baseline\"\n)\n\nWhat the output shows:\n\nA scatter plot with a linear trend line and confidence band\nPearson (or Spearman) correlation coefficient, r\np-value and 95% confidence interval for r\nMarginal histograms on both axes\n\nUsing Spearman instead of Pearson:\n\nggscatterstats(\n  data = overall_up,\n  x    = current_age,\n  y    = sbp_0m,\n  type = \"nonparametric\"   # uses Spearman's rho\n)"
+    "text": "ggscatterstats() — Correlation\nUse this when you want to examine the relationship between two continuous variables.\n\nggscatterstats(\n  data  = ncd,\n  x     = age,\n  y     = sbp,\n  title = \"Age vs Systolic BP at Baseline\"\n)\n\nRegistered S3 method overwritten by 'ggside':\n  method from   \n  +.gg   ggplot2\n\n\n`stat_xsidebin()` using `bins = 30`. Pick better value `binwidth`.\n`stat_ysidebin()` using `bins = 30`. Pick better value `binwidth`.\n\n\n\n\n\n\n\n\n\nWhat the output shows:\n\nA scatter plot with a linear trend line and confidence band\nPearson (or Spearman) correlation coefficient, r\np-value and 95% confidence interval for r\nMarginal histograms on both axes\n\nUsing Spearman instead of Pearson:\n\nggscatterstats(\n  data = ncd,\n  x    = age,\n  y    = sbp,\n  type = \"nonparametric\"   # uses Spearman's rho\n)\n\n`stat_xsidebin()` using `bins = 30`. Pick better value `binwidth`.\n`stat_ysidebin()` using `bins = 30`. Pick better value `binwidth`."
   },
   {
     "objectID": "ggstatsplot/ggstatsplot_intro.html#gghistostats-distribution",
     "href": "ggstatsplot/ggstatsplot_intro.html#gghistostats-distribution",
     "title": "ggstatsplot — Introduction",
     "section": "gghistostats() — Distribution",
-    "text": "gghistostats() — Distribution\nUse this when you want to visualise the distribution of a single continuous variable with a one-sample test.\n\ngghistostats(\n  data     = overall_up,\n  x        = current_age,\n  title    = \"Distribution of Age at Enrolment\",\n  test.value = 40          # hypothesised population mean\n)\n\nWhat the output shows:\n\nHistogram with overlaid density curve\nOne-sample t-test (or Wilcoxon signed-rank) against the specified test.value\nMean, median, and their confidence intervals"
+    "text": "gghistostats() — Distribution\nUse this when you want to visualise the distribution of a single continuous variable with a one-sample test.\n\ngghistostats(\n  data     = ncd,\n  x        = age,\n  title    = \"Distribution of Age\",\n  test.value = 40          # hypothesised population mean\n)\n\n\n\n\n\n\n\n\nWhat the output shows:\n\nHistogram with overlaid density curve\nOne-sample t-test (or Wilcoxon signed-rank) against the specified test.value\nMean, median, and their confidence intervals"
   },
   {
     "objectID": "ggstatsplot/ggstatsplot_intro.html#reading-the-statistical-annotation",
@@ -3211,6 +3309,20 @@
     "title": "ggstatsplot — Introduction",
     "section": "Further reading",
     "text": "Further reading\n\nggstatsplot documentation\nPatil, I. (2021). Visualizations with statistical details. JOSS, 6(61), 3167."
+  },
+  {
+    "objectID": "ggstatsplot/ggstatsplot_intro.html#practise-in-r",
+    "href": "ggstatsplot/ggstatsplot_intro.html#practise-in-r",
+    "title": "ggstatsplot — Introduction",
+    "section": "Practise in R",
+    "text": "Practise in R\nDownload the lab Which test? and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "ggstatsplot/ggstatsplot_intro.html#self-check-quiz",
+    "href": "ggstatsplot/ggstatsplot_intro.html#self-check-quiz",
+    "title": "ggstatsplot — Introduction",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\nWhat does ggbetweenstats() add to a plot of a continuous variable by group?\n\nA box plot alone, without any statistics\nThe test result, effect size and confidence interval\nA regression line for each of the groups in the data\nA table of the raw data printed under the plot\n\n\n\nYour outcome is very skewed and the groups are small. Which argument should you set in ggbetweenstats()?\n\ntype = “parametric”\nresults.subtitle = FALSE\ntype = “nonparametric”\npairwise.display = “none”\n\n\n\nWhy is it still useful that ggstatsplot output is a ggplot2 object?\n\nYou can add layers, labels and themes as usual\nIt makes the statistical test more accurate than base R\nIt removes the need to check assumptions\nIt saves the plot automatically as a PDF\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "gtsummary/gtsummary_tutorial.html",
@@ -4242,11 +4354,60 @@
     "text": "Installation\n\nInstall a single package:\n\n\n\nShow the code\ninstall.packages(\"dplyr\")\n\n\n\nInstall several packages:\n\n\n\nShow the code\ninstall.packages(c(\"tidyverse\", \"ggplot2\", \"readxl\"))\n\n\n\nUse pacman to install and load packages automatically:\n\n\n\nShow the code\nif (!require(\"pacman\")) install.packages(\"pacman\")\npacman::p_load(tidyverse, ggplot2, readxl, gtsummary, ggstatsplot, flextable)\n\n\n\npacman::p_load() installs missing packages and loads them in one command."
   },
   {
+    "objectID": "r-foundations/getting-started.html#practise-in-r",
+    "href": "r-foundations/getting-started.html#practise-in-r",
+    "title": "Introduction to R",
+    "section": "🔧 Practise in R",
+    "text": "🔧 Practise in R\nDownload the lab Your first script and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#self-check-quiz-15",
+    "href": "r-foundations/getting-started.html#self-check-quiz-15",
+    "title": "Introduction to R",
+    "section": "Self-check quiz (1/5)",
+    "text": "Self-check quiz (1/5)\n\nYou type x &lt;- c(4, 8, NA) and then mean(x). What does R return?\n\nIt returns NA\nIt returns 6\nIt returns 4\nIt stops with an error"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#self-check-quiz-25",
+    "href": "r-foundations/getting-started.html#self-check-quiz-25",
+    "title": "Introduction to R",
+    "section": "Self-check quiz (2/5)",
+    "text": "Self-check quiz (2/5)\n\nWhy does the deck recommend an RStudio Project rather than setwd()?\n\nsetwd() is slower when the dataset loaded is large\nPaths start at the project folder, so it runs anywhere\nProjects install every package that the script needs to run\nsetwd() works on Windows, but it fails on macOS or Linux"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#self-check-quiz-35",
+    "href": "r-foundations/getting-started.html#self-check-quiz-35",
+    "title": "Introduction to R",
+    "section": "Self-check quiz (3/5)",
+    "text": "Self-check quiz (3/5)\n\nsex is a factor with the levels Female and Male. Which level is the reference in a model, by default?\n\nThe level with more people in the data\nMale, the last level of the factor\nFemale, the first level in alphabetical order\nNone: R estimates a coefficient for every level"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#self-check-quiz-45",
+    "href": "r-foundations/getting-started.html#self-check-quiz-45",
+    "title": "Introduction to R",
+    "section": "Self-check quiz (4/5)",
+    "text": "Self-check quiz (4/5)\n\nWhich object holds several columns of different types, one row per patient?\n\nA numeric vector\nA matrix of numbers\nA single factor\nA data frame"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#self-check-quiz-55",
+    "href": "r-foundations/getting-started.html#self-check-quiz-55",
+    "title": "Introduction to R",
+    "section": "Self-check quiz (5/5)",
+    "text": "Self-check quiz (5/5)\n\nWhat does install.packages(\"dplyr\") do that library(dplyr) does not?\n\nDownloads the package to your computer, once\nLoads the package into the current R session only\nUpdates R itself to the newest release\nChecks the package for errors before use"
+  },
+  {
+    "objectID": "r-foundations/getting-started.html#score",
+    "href": "r-foundations/getting-started.html#score",
+    "title": "Introduction to R",
+    "section": "Score",
+    "text": "Score\nYour score:  (first attempt counts)"
+  },
+  {
     "objectID": "r-foundations/merging_dataset.html",
     "href": "r-foundations/merging_dataset.html",
     "title": "Merging Datasets",
     "section": "",
-    "text": "This module explains how to combine datasets by rows, columns, and with joins.\n\n\n\ndata1 &lt;- data.frame(ID = 1:3, Name = c(\"Alice\", \"Bob\", \"Charlie\"), Age = c(23, 35, 28))\ndata2 &lt;- data.frame(ID = 4:6, Name = c(\"David\", \"Eva\", \"Frank\"), Age = c(45, 30, 40))\nmerged_rows &lt;- rbind(data1, data2)\nmerged_rows\n\n  ID    Name Age\n1  1   Alice  23\n2  2     Bob  35\n3  3 Charlie  28\n4  4   David  45\n5  5     Eva  30\n6  6   Frank  40\n\n\n\n\n\n\ndata1 &lt;- data.frame(ID = 1:3, Name = c(\"Alice\", \"Bob\", \"Charlie\"))\ndata2 &lt;- data.frame(Age = c(23, 35, 28), Height = c(165, 180, 175))\nmerged_columns &lt;- cbind(data1, data2)\nmerged_columns\n\n  ID    Name Age Height\n1  1   Alice  23    165\n2  2     Bob  35    180\n3  3 Charlie  28    175\n\n\n\n\n\n\nlibrary(dplyr)\n\n\nAttaching package: 'dplyr'\n\n\nThe following objects are masked from 'package:stats':\n\n    filter, lag\n\n\nThe following objects are masked from 'package:base':\n\n    intersect, setdiff, setequal, union\n\ndata1 &lt;- data.frame(\n  ID = 1:5,\n  Name = c(\"Alice\", \"Bob\", \"Charlie\", \"David\", \"Eva\")\n)\ndata2 &lt;- data.frame(\n  ID = c(2, 3, 5, 6),\n  Score = c(85, 90, 88, 92)\n)\n\ninner_join(data1, data2, by = \"ID\")\n\n  ID    Name Score\n1  2     Bob    85\n2  3 Charlie    90\n3  5     Eva    88\n\nleft_join(data1, data2, by = \"ID\")\n\n  ID    Name Score\n1  1   Alice    NA\n2  2     Bob    85\n3  3 Charlie    90\n4  4   David    NA\n5  5     Eva    88\n\nright_join(data1, data2, by = \"ID\")\n\n  ID    Name Score\n1  2     Bob    85\n2  3 Charlie    90\n3  5     Eva    88\n4  6    &lt;NA&gt;    92\n\nfull_join(data1, data2, by = \"ID\")\n\n  ID    Name Score\n1  1   Alice    NA\n2  2     Bob    85\n3  3 Charlie    90\n4  4   David    NA\n5  5     Eva    88\n6  6    &lt;NA&gt;    92\n\n\nThese join types are useful for combining medical records, survey forms, and measurement datasets.\n\n\n\nbind_rows() (dplyr) does the same job as rbind(): tables with the same columns, different people.\n\nlibrary(dplyr)\nround1 &lt;- data.frame(id = 1:3, sbp = c(120, 135, 142))\nround2 &lt;- data.frame(id = 4:6, sbp = c(128, 150, 118))\nbind_rows(round1, round2)\n\n  id sbp\n1  1 120\n2  2 135\n3  3 142\n4  4 128\n5  5 150\n6  6 118\n\n\n\n\n\ncbind() pastes by position and never checks who is who. If the two tables are sorted differently, the columns are silently mixed up. Join by a key such as id instead.\n\n\n\n\npatients &lt;- data.frame(id = 1:5, name = c(\"Asha\", \"Bina\", \"Chetan\", \"Dev\", \"Esha\"))\nlabs     &lt;- data.frame(id = c(3, 3, 5), hba1c = c(7.1, 6.8, 8.0))   # id 3 was tested twice\nnrow(patients)\n\n[1] 5\n\nnrow(left_join(patients, labs, by = \"id\"))   # 6: patient 3 appears twice\n\n[1] 6\n\ncount(labs, id)                                # check the key before joining\n\n  id n\n1  3 2\n2  5 1\n\n\nA left join keeps every patient, but a patient who matches two lab rows appears twice. Count rows before and after every join, and check that the key is unique in the table you join to."
+    "text": "This module explains how to combine datasets by rows, columns, and with joins.\n\n\n\ndata1 &lt;- data.frame(ID = 1:3, Name = c(\"Alice\", \"Bob\", \"Charlie\"), Age = c(23, 35, 28))\ndata2 &lt;- data.frame(ID = 4:6, Name = c(\"David\", \"Eva\", \"Frank\"), Age = c(45, 30, 40))\nmerged_rows &lt;- rbind(data1, data2)\nmerged_rows\n\n  ID    Name Age\n1  1   Alice  23\n2  2     Bob  35\n3  3 Charlie  28\n4  4   David  45\n5  5     Eva  30\n6  6   Frank  40\n\n\n\n\n\n\ndata1 &lt;- data.frame(ID = 1:3, Name = c(\"Alice\", \"Bob\", \"Charlie\"))\ndata2 &lt;- data.frame(Age = c(23, 35, 28), Height = c(165, 180, 175))\nmerged_columns &lt;- cbind(data1, data2)\nmerged_columns\n\n  ID    Name Age Height\n1  1   Alice  23    165\n2  2     Bob  35    180\n3  3 Charlie  28    175\n\n\n\n\n\n\nlibrary(dplyr)\n\n\nAttaching package: 'dplyr'\n\n\nThe following objects are masked from 'package:stats':\n\n    filter, lag\n\n\nThe following objects are masked from 'package:base':\n\n    intersect, setdiff, setequal, union\n\ndata1 &lt;- data.frame(\n  ID = 1:5,\n  Name = c(\"Alice\", \"Bob\", \"Charlie\", \"David\", \"Eva\")\n)\ndata2 &lt;- data.frame(\n  ID = c(2, 3, 5, 6),\n  Score = c(85, 90, 88, 92)\n)\n\ninner_join(data1, data2, by = \"ID\")\n\n  ID    Name Score\n1  2     Bob    85\n2  3 Charlie    90\n3  5     Eva    88\n\nleft_join(data1, data2, by = \"ID\")\n\n  ID    Name Score\n1  1   Alice    NA\n2  2     Bob    85\n3  3 Charlie    90\n4  4   David    NA\n5  5     Eva    88\n\nright_join(data1, data2, by = \"ID\")\n\n  ID    Name Score\n1  2     Bob    85\n2  3 Charlie    90\n3  5     Eva    88\n4  6    &lt;NA&gt;    92\n\nfull_join(data1, data2, by = \"ID\")\n\n  ID    Name Score\n1  1   Alice    NA\n2  2     Bob    85\n3  3 Charlie    90\n4  4   David    NA\n5  5     Eva    88\n6  6    &lt;NA&gt;    92\n\n\nThese join types are useful for combining medical records, survey forms, and measurement datasets.\n\n\n\nbind_rows() (dplyr) does the same job as rbind(): tables with the same columns, different people.\n\nlibrary(dplyr)\nround1 &lt;- data.frame(id = 1:3, sbp = c(120, 135, 142))\nround2 &lt;- data.frame(id = 4:6, sbp = c(128, 150, 118))\nbind_rows(round1, round2)\n\n  id sbp\n1  1 120\n2  2 135\n3  3 142\n4  4 128\n5  5 150\n6  6 118\n\n\n\n\n\ncbind() pastes by position and never checks who is who. If the two tables are sorted differently, the columns are silently mixed up. Join by a key such as id instead.\n\n\n\n\npatients &lt;- data.frame(id = 1:5, name = c(\"Asha\", \"Bina\", \"Chetan\", \"Dev\", \"Esha\"))\nlabs     &lt;- data.frame(id = c(3, 3, 5), hba1c = c(7.1, 6.8, 8.0))   # id 3 was tested twice\nnrow(patients)\n\n[1] 5\n\nnrow(left_join(patients, labs, by = \"id\"))   # 6: patient 3 appears twice\n\n[1] 6\n\ncount(labs, id)                                # check the key before joining\n\n  id n\n1  3 2\n2  5 1\n\n\nA left join keeps every patient, but a patient who matches two lab rows appears twice. Count rows before and after every join, and check that the key is unique in the table you join to.\n\n\n\nThe same blood pressures can be stored wide (one row per person, one column per measurement) or long (one row per person and measurement). ggplot2 and most models want long data.\n\nlibrary(tidyr)\nwide &lt;- data.frame(id = 1:3, sbp = c(128, 142, 135), dbp = c(82, 90, 85))\nlong &lt;- pivot_longer(wide, cols = c(sbp, dbp), names_to = \"measure\", values_to = \"mmHg\")\nlong\n\n# A tibble: 6 × 3\n     id measure  mmHg\n  &lt;int&gt; &lt;chr&gt;   &lt;dbl&gt;\n1     1 sbp       128\n2     1 dbp        82\n3     2 sbp       142\n4     2 dbp        90\n5     3 sbp       135\n6     3 dbp        85\n\npivot_wider(long, names_from = measure, values_from = mmHg)   # and back again\n\n# A tibble: 3 × 3\n     id   sbp   dbp\n  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;\n1     1   128    82\n2     2   142    90\n3     3   135    85\n\n\npivot_longer() never changes the number of values: 3 people × 2 measurements = 6 rows."
   },
   {
     "objectID": "r-foundations/merging_dataset.html#append-rows-with-rbind",
@@ -4291,6 +4452,27 @@
     "text": "patients &lt;- data.frame(id = 1:5, name = c(\"Asha\", \"Bina\", \"Chetan\", \"Dev\", \"Esha\"))\nlabs     &lt;- data.frame(id = c(3, 3, 5), hba1c = c(7.1, 6.8, 8.0))   # id 3 was tested twice\nnrow(patients)\n\n[1] 5\n\nnrow(left_join(patients, labs, by = \"id\"))   # 6: patient 3 appears twice\n\n[1] 6\n\ncount(labs, id)                                # check the key before joining\n\n  id n\n1  3 2\n2  5 1\n\n\nA left join keeps every patient, but a patient who matches two lab rows appears twice. Count rows before and after every join, and check that the key is unique in the table you join to."
   },
   {
+    "objectID": "r-foundations/merging_dataset.html#reshape-wide-and-long",
+    "href": "r-foundations/merging_dataset.html#reshape-wide-and-long",
+    "title": "Merging Datasets",
+    "section": "",
+    "text": "The same blood pressures can be stored wide (one row per person, one column per measurement) or long (one row per person and measurement). ggplot2 and most models want long data.\n\nlibrary(tidyr)\nwide &lt;- data.frame(id = 1:3, sbp = c(128, 142, 135), dbp = c(82, 90, 85))\nlong &lt;- pivot_longer(wide, cols = c(sbp, dbp), names_to = \"measure\", values_to = \"mmHg\")\nlong\n\n# A tibble: 6 × 3\n     id measure  mmHg\n  &lt;int&gt; &lt;chr&gt;   &lt;dbl&gt;\n1     1 sbp       128\n2     1 dbp        82\n3     2 sbp       142\n4     2 dbp        90\n5     3 sbp       135\n6     3 dbp        85\n\npivot_wider(long, names_from = measure, values_from = mmHg)   # and back again\n\n# A tibble: 3 × 3\n     id   sbp   dbp\n  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;\n1     1   128    82\n2     2   142    90\n3     3   135    85\n\n\npivot_longer() never changes the number of values: 3 people × 2 measurements = 6 rows."
+  },
+  {
+    "objectID": "r-foundations/merging_dataset.html#practise-in-r",
+    "href": "r-foundations/merging_dataset.html#practise-in-r",
+    "title": "Merging Datasets",
+    "section": "Practise in R",
+    "text": "Practise in R\nDownload the lab Joining and reshaping and the data (ncd_round1.csv · ncd_round2.csv · villages.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "r-foundations/merging_dataset.html#self-check-quiz",
+    "href": "r-foundations/merging_dataset.html#self-check-quiz",
+    "title": "Merging Datasets",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\npatients has 5 rows; labs has 3 rows, two of them for patient 3. How many rows does left_join(patients, labs, by = \"id\") return?\n\n5\n3\n6\n8\n\n\n\nWhy is cbind() risky for putting together two tables about the same patients?\n\nIt cannot combine tables with more than two columns\nIt pastes rows by position and never checks the id\nIt drops patients missing from one of the tables\nIt turns numeric columns into character columns\n\n\n\nWhich join keeps every row of both tables, with NA where there is no match?\n\ninner_join()\nleft_join()\nsemi_join()\nfull_join()\n\n\n\nWhat should you check before joining a lab table to a patient table?\n\nWhether the id is unique in the table you join to\nWhether both tables were saved in the same file format\nWhether the two tables have the same number of columns\nWhether the id column is stored as text\n\n\n\nSystolic and diastolic BP are two columns. Which function gives one row per person and measurement?\n\npivot_wider()\npivot_longer()\nbind_rows()\nseparate_wider_delim()\n\n\nYour score:  (first attempt counts)"
+  },
+  {
     "objectID": "specialized/plot_stats.html",
     "href": "specialized/plot_stats.html",
     "title": "Specialized Plots (with statistics)",
@@ -4309,13 +4491,27 @@
     "href": "statistical-analysis/regression.html#simple-linear-regression",
     "title": "Regression Analysis",
     "section": "Simple Linear Regression",
-    "text": "Simple Linear Regression\n\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.2.1     ✔ readr     2.2.0\n✔ forcats   1.0.1     ✔ stringr   1.6.0\n✔ ggplot2   4.0.3     ✔ tibble    3.3.1\n✔ lubridate 1.9.5     ✔ tidyr     1.3.2\n✔ purrr     1.2.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\ndata &lt;- data.frame(\n  age = rnorm(100, 50, 10),\n  blood_pressure = rnorm(100, 120, 15),\n  treatment = sample(c(\"A\", \"B\"), 100, replace = TRUE)\n)\n\nmodel_simple &lt;- lm(blood_pressure ~ age, data = data)\nsummary(model_simple)\n\n\nCall:\nlm(formula = blood_pressure ~ age, data = data)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-41.562  -9.294   1.229   9.768  37.078 \n\nCoefficients:\n             Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) 118.73815    7.39632  16.054   &lt;2e-16 ***\nage           0.02347    0.14249   0.165    0.869    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 15.19 on 98 degrees of freedom\nMultiple R-squared:  0.0002769, Adjusted R-squared:  -0.009924 \nF-statistic: 0.02714 on 1 and 98 DF,  p-value: 0.8695\n\n\n\nggplot(data, aes(x = age, y = blood_pressure)) +\n  geom_point(alpha = 0.6) +\n  geom_smooth(method = \"lm\", se = TRUE) +\n  labs(\n    title = \"Blood Pressure vs Age\",\n    x = \"Age\", y = \"Blood Pressure\"\n  )\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\ngeom_smooth(method = \"lm\") draws the same fitted line as lm(), with a shaded confidence band around it."
+    "text": "Simple Linear Regression\n\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.2.1     ✔ readr     2.2.0\n✔ forcats   1.0.1     ✔ stringr   1.6.0\n✔ ggplot2   4.0.4     ✔ tibble    3.3.1\n✔ lubridate 1.9.5     ✔ tidyr     1.3.2\n✔ purrr     1.2.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nset.seed(2026)   # simulated data: the same numbers on every render\ndata &lt;- data.frame(\n  age = rnorm(100, 50, 10),\n  blood_pressure = rnorm(100, 120, 15),\n  treatment = sample(c(\"A\", \"B\"), 100, replace = TRUE)\n)\n\nmodel_simple &lt;- lm(blood_pressure ~ age, data = data)\nsummary(model_simple)\n\n\nCall:\nlm(formula = blood_pressure ~ age, data = data)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-27.824 -10.002   0.873   8.524  37.982 \n\nCoefficients:\n             Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) 125.96839    7.22612  17.432   &lt;2e-16 ***\nage          -0.08458    0.14445  -0.586     0.56    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 14.42 on 98 degrees of freedom\nMultiple R-squared:  0.003486,  Adjusted R-squared:  -0.006683 \nF-statistic: 0.3428 on 1 and 98 DF,  p-value: 0.5596\n\n\n\nggplot(data, aes(x = age, y = blood_pressure)) +\n  geom_point(alpha = 0.6) +\n  geom_smooth(method = \"lm\", se = TRUE) +\n  labs(\n    title = \"Blood Pressure vs Age\",\n    x = \"Age\", y = \"Blood Pressure\"\n  )\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\ngeom_smooth(method = \"lm\") draws the same fitted line as lm(), with a shaded confidence band around it."
   },
   {
     "objectID": "statistical-analysis/regression.html#multiple-regression",
     "href": "statistical-analysis/regression.html#multiple-regression",
     "title": "Regression Analysis",
     "section": "Multiple Regression",
-    "text": "Multiple Regression\nAdding more predictors lets the model account for other sources of variation at the same time.\n\nlibrary(gtsummary)\n\nmodel &lt;- lm(blood_pressure ~ age + treatment, data = data)\nsummary(model)\n\n\nCall:\nlm(formula = blood_pressure ~ age + treatment, data = data)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-41.450  -9.232   1.240   9.875  36.964 \n\nCoefficients:\n             Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) 118.86733    7.64781  15.543   &lt;2e-16 ***\nage           0.02301    0.14337   0.161    0.873    \ntreatmentB   -0.22012    3.05880  -0.072    0.943    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 15.27 on 97 degrees of freedom\nMultiple R-squared:  0.0003302, Adjusted R-squared:  -0.02028 \nF-statistic: 0.01602 on 2 and 97 DF,  p-value: 0.9841\n\n# Using gtsummary for a publication-ready table\ntbl_regression(model)\n\n\n\n\n\n\n\n\n\n\n\n\n\nCharacteristic\nBeta\n95% CI\np-value\n\n\n\n\nage\n0.02\n-0.26, 0.31\n0.9\n\n\ntreatment\n\n\n\n\n\n\n\n\n    A\n—\n—\n\n\n\n\n    B\n-0.22\n-6.3, 5.9\n&gt;0.9\n\n\n\nAbbreviation: CI = Confidence Interval\n\n\n\n\n\n\n\n\nEach coefficient is now interpreted “holding the other predictors constant” — the treatment effect is adjusted for age, and vice versa."
+    "text": "Multiple Regression\nAdding more predictors lets the model account for other sources of variation at the same time.\n\nlibrary(gtsummary)\n\nmodel &lt;- lm(blood_pressure ~ age + treatment, data = data)\nsummary(model)\n\n\nCall:\nlm(formula = blood_pressure ~ age + treatment, data = data)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-27.345 -10.457   0.460   8.412  36.488 \n\nCoefficients:\n             Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) 127.61138    7.40163  17.241   &lt;2e-16 ***\nage          -0.08746    0.14445  -0.606    0.546    \ntreatmentB   -2.94412    2.88373  -1.021    0.310    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 14.41 on 97 degrees of freedom\nMultiple R-squared:  0.01408,   Adjusted R-squared:  -0.006248 \nF-statistic: 0.6926 on 2 and 97 DF,  p-value: 0.5027\n\n# Using gtsummary for a publication-ready table\ntbl_regression(model)\n\n\n\n\n\n\n\n\n\n\n\n\n\nCharacteristic\nBeta\n95% CI\np-value\n\n\n\n\nage\n-0.09\n-0.37, 0.20\n0.5\n\n\ntreatment\n\n\n\n\n\n\n\n\n    A\n—\n—\n\n\n\n\n    B\n-2.9\n-8.7, 2.8\n0.3\n\n\n\nAbbreviation: CI = Confidence Interval\n\n\n\n\n\n\n\n\nEach coefficient is now interpreted “holding the other predictors constant” — the treatment effect is adjusted for age, and vice versa."
+  },
+  {
+    "objectID": "statistical-analysis/regression.html#practise-in-r",
+    "href": "statistical-analysis/regression.html#practise-in-r",
+    "title": "Regression Analysis",
+    "section": "Practise in R",
+    "text": "Practise in R\nDownload the lab A first report and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "statistical-analysis/regression.html#self-check-quiz",
+    "href": "statistical-analysis/regression.html#self-check-quiz",
+    "title": "Regression Analysis",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\nIn lm(sbp ~ bmi), the BMI coefficient is 1.6. How do you read it?\n\nBMI explains 1.6% of the variation in systolic BP\nEach extra BMI unit goes with 1.6 mmHg higher SBP, on average\nPatients with high BMI have 1.6 times the SBP\nSBP rises by 1.6 units for every unit rise in the model residual\n\n\n\nWhat does the shaded band around a geom_smooth(method = \"lm\") line show?\n\nThe range that contains 95% of the individual patients\nThe confidence interval of the fitted mean line\nThe values that count as outliers\nThe residuals of each patient\n\n\n\nA regression shows that higher BMI goes with higher BP. What can you not conclude from this alone?\n\nThat the association is positive\nThat BMI causes the higher BP\nThat the slope is estimated from the data\nThat other variables could also matter\n\n\nYour score:  (first attempt counts)"
   }
 ]

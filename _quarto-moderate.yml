@@ -42,6 +42,17 @@ project:
     - statistical-analysis/data_analysis.qmd
     - statistical-analysis/regression.qmd
     - statistical-analysis/statistical_tests.qmd
+  resources:
+    - data/ncd_round1.csv
+    - data/ncd_round2.csv
+    - data/ncd_survey.csv
+    - data/villages.csv
+    - labs/basic/b1_first_script.R
+    - labs/basic/b2_tidy_data.R
+    - labs/basic/b3_joining.R
+    - labs/basic/b4_first_plots.R
+    - labs/basic/b5_which_test.R
+    - labs/basic/b6_first_report.R
 website:
   title: Medical Statistics in R — Moderate
   site-url: '.'

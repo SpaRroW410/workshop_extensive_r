@@ -1,5 +1,7 @@
 ---
 title: "Merging Datasets"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -81,4 +83,58 @@ count(labs, id)                                # check the key before joining
 
 A left join keeps every patient, but a patient who matches **two** lab rows appears **twice**. Count rows before and after every join, and check that the key is unique in the table you join *to*.
 
+## Reshape: wide and long
+
+The same blood pressures can be stored **wide** (one row per person, one column per measurement) or **long**
+(one row per person *and* measurement). ggplot2 and most models want long data.
+
+```{r}
+library(tidyr)
+wide <- data.frame(id = 1:3, sbp = c(128, 142, 135), dbp = c(82, 90, 85))
+long <- pivot_longer(wide, cols = c(sbp, dbp), names_to = "measure", values_to = "mmHg")
+long
+pivot_wider(long, names_from = measure, values_from = mmHg)   # and back again
+```
+
+`pivot_longer()` never changes the number of **values**: 3 people × 2 measurements = 6 rows.
+
 :::
+
+## Practise in R
+
+Download the lab **[Joining and reshaping](../labs/basic/b3_joining.R)** and the data ([ncd_round1.csv](../data/ncd_round1.csv) · [ncd_round2.csv](../data/ncd_round2.csv) · [villages.csv](../data/villages.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("mj1", "`patients` has 5 rows; `labs` has 3 rows, two of them for patient 3. How many rows does `left_join(patients, labs, by = \"id\")` return?",
+         c("5", "3", "6", "8"), answer = 3,
+         explain = "A left join keeps all 5 patients, and patient 3 matches two lab rows, so patient 3 appears twice: 6 rows.")
+quiz_mcq("mj2", "Why is `cbind()` risky for putting together two tables about the same patients?",
+         c("It cannot combine tables with more than two columns", "It pastes rows by position and never checks the id", "It drops patients missing from one of the tables", "It turns numeric columns into character columns"), answer = 2,
+         explain = "cbind() matches row 1 with row 1, whatever the ids. If the tables are sorted differently, data are silently mixed up; join by a key instead.")
+quiz_mcq("mj3", "Which join keeps every row of both tables, with NA where there is no match?",
+         c("inner_join()", "left_join()", "semi_join()", "full_join()"), answer = 4,
+         explain = "full_join() keeps all rows of both tables; inner_join() keeps only matches; left_join() keeps all rows of the first table.")
+quiz_mcq("mj4", "What should you check before joining a lab table to a patient table?",
+         c("Whether the id is unique in the table you join to", "Whether both tables were saved in the same file format", "Whether the two tables have the same number of columns", "Whether the id column is stored as text"), answer = 1,
+         explain = "Duplicated keys in the second table multiply rows. Count the key (`count(labs, id)`) and the rows before and after the join.")
+quiz_mcq("mj5", "Systolic and diastolic BP are two columns. Which function gives one row per person and measurement?",
+         c("pivot_wider()", "pivot_longer()", "bind_rows()", "separate_wider_delim()"), answer = 2,
+         explain = "pivot_longer() turns several columns into name-value pairs (long format); pivot_wider() does the reverse.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

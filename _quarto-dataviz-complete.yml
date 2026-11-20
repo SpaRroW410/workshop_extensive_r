@@ -43,6 +43,9 @@ project:
     - specialized/interactive.qmd
     - specialized/merge_visuals.qmd
     - specialized/plot_stats.qmd
+  resources:
+    - data/ncd_survey.csv
+    - labs/basic/b4_first_plots.R
 website:
   title: Data Visualization — Complete
   site-url: '.'

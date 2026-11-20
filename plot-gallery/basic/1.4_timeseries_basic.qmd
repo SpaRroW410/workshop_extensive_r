@@ -61,7 +61,7 @@ Data points indexed by **time** or **ordered sequence**
 3. Line Chart with Points
 :::
 
-## Setup: Load and Prepare Data
+## Setup: Load and Prepare Data {.smaller .scrollable}
 
 ```{r}
 #| echo: true
@@ -121,7 +121,7 @@ head(bp_long, 12)
 
 # Simple Line Chart
 
-## Simple Line Chart - Code
+## Simple Line Chart - Code {.smaller .scrollable}
 
 🔵 **Goal:** Show evolution over time (aggregate)
 
@@ -178,7 +178,7 @@ ggplot(mean_bp, aes(x = Month, y = Mean_SysBP)) +
 
 # Interpreting Line Charts
 
-## How to Read Line Charts
+## How to Read Line Charts {.smaller}
 
 **Using the previous plot:**
 
@@ -207,7 +207,7 @@ ggplot(mean_bp, aes(x = Month, y = Mean_SysBP)) +
 
 # Multiple Line Chart
 
-## Multiple Line Chart - Code
+## Multiple Line Chart - Code {.smaller .scrollable}
 
 🔵 **Goal:** Compare evolution across groups
 
@@ -272,7 +272,7 @@ ggplot(mean_bp_group, aes(x = Month, y = Mean_SysBP,
 
 # Line Chart with Confidence Intervals
 
-## Line Chart with Error Bars - Code
+## Line Chart with Error Bars - Code {.smaller .scrollable}
 
 🔵 **Goal:** Show trend with uncertainty
 
@@ -348,7 +348,7 @@ ggplot(bp_summary, aes(x = Month, y = Mean_SysBP,
 
 # Quick Reference
 
-## Time Series - Summary
+## Time Series - Summary {.smaller}
 
 | Chart Type | Goal | When to Use | Code Complexity |
 |------------|------|-------------|-----------------|
@@ -391,7 +391,7 @@ ggplot(bp_summary, aes(x = Month, y = Mean_SysBP,
 :::
 :::
 
-## Key Takeaways
+## Key Takeaways {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 ::: {.incremental}
@@ -413,7 +413,7 @@ ggplot(bp_summary, aes(x = Month, y = Mean_SysBP,
 :::
 :::
 
-## Practice Exercise
+## Practice Exercise {.smaller}
 
 **Your Turn:**
 

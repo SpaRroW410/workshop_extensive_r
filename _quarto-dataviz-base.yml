@@ -29,6 +29,9 @@ project:
     - plot-gallery/moderate/2.6_geographic_intermediate.qmd
     - specialized/merge_visuals.qmd
     - specialized/plot_stats.qmd
+  resources:
+    - data/ncd_survey.csv
+    - labs/basic/b4_first_plots.R
 website:
   title: Data Visualization — Foundations
   site-url: '.'

@@ -746,7 +746,7 @@
     "href": "plot-gallery/basic.html",
     "title": "Basic Plots",
     "section": "",
-    "text": "Foundations of Plots View Slide Deck →\n\n\nExplore foundational plots grouped by data type and relationship\n\n\n\nIncludes: Bar chart, Pie chart, Donut chart, Stacked bar chart 🔗 View Slide Deck →\n\n\n\n\nIncludes: Histogram, Density plot, Scatter plot\n🔗 View Slide Deck →\n\n\n\n\nIncludes: Box plot, Grouped Bar, Stacked Bar plot 🔗 View Slide Deck →\n\n\n\n\nIncludes: Simple Line Chart, Multiple Line Chart (comparing groups), Line Chart with Points 🔗 View Slide Deck →"
+    "text": "Foundations of Plots View Slide Deck →\n\n\nExplore foundational plots grouped by data type and relationship\n\n\n\nIncludes: Bar chart, Pie chart, Donut chart, Stacked bar chart 🔗 View Slide Deck →\n\n\n\n\nIncludes: Histogram, Density plot, Scatter plot\n🔗 View Slide Deck →\n\n\n\n\nIncludes: Box plot, Grouped Bar, Stacked Bar plot 🔗 View Slide Deck →\n\n\n\n\nIncludes: Simple Line Chart, Multiple Line Chart (comparing groups), Line Chart with Points 🔗 View Slide Deck →\n\n\n\n\nDownload the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n\n\n\n\nWhich plot shows the distribution of one continuous variable, such as age?\n\nA histogram\nA pie chart\nA bar chart of counts\nA line chart over time\n\n\n\nYou compare systolic BP between three activity groups. Which plot shows the median, the spread and the outliers of each group?\n\nA scatter plot of SBP\nA box plot per group\nA histogram of all patients\nA pie chart of the groups\n\n\n\nIn ggplot2, what does aes(x = bmi, y = sbp) do?\n\nDraws the points in the plotting area\nSets the colour theme for the whole plot\nMaps variables to positions on the plot\nSorts the data before the plot is drawn\n\n\n\nA bar chart of counts starts its y-axis at 50 instead of 0. Why is that misleading?\n\nggplot2 then drops the smallest category from the plot\nThe legend then shows the wrong group names\nBars starting at 50 cannot be coloured by group\nBar lengths no longer show the counts in proportion\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "plot-gallery/basic.html#basic-plot",
@@ -754,6 +754,20 @@
     "title": "Basic Plots",
     "section": "",
     "text": "Explore foundational plots grouped by data type and relationship\n\n\n\nIncludes: Bar chart, Pie chart, Donut chart, Stacked bar chart 🔗 View Slide Deck →\n\n\n\n\nIncludes: Histogram, Density plot, Scatter plot\n🔗 View Slide Deck →\n\n\n\n\nIncludes: Box plot, Grouped Bar, Stacked Bar plot 🔗 View Slide Deck →\n\n\n\n\nIncludes: Simple Line Chart, Multiple Line Chart (comparing groups), Line Chart with Points 🔗 View Slide Deck →"
+  },
+  {
+    "objectID": "plot-gallery/basic.html#practise-in-r",
+    "href": "plot-gallery/basic.html#practise-in-r",
+    "title": "Basic Plots",
+    "section": "",
+    "text": "Download the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "plot-gallery/basic.html#self-check-quiz",
+    "href": "plot-gallery/basic.html#self-check-quiz",
+    "title": "Basic Plots",
+    "section": "",
+    "text": "Which plot shows the distribution of one continuous variable, such as age?\n\nA histogram\nA pie chart\nA bar chart of counts\nA line chart over time\n\n\n\nYou compare systolic BP between three activity groups. Which plot shows the median, the spread and the outliers of each group?\n\nA scatter plot of SBP\nA box plot per group\nA histogram of all patients\nA pie chart of the groups\n\n\n\nIn ggplot2, what does aes(x = bmi, y = sbp) do?\n\nDraws the points in the plotting area\nSets the colour theme for the whole plot\nMaps variables to positions on the plot\nSorts the data before the plot is drawn\n\n\n\nA bar chart of counts starts its y-axis at 50 instead of 0. Why is that misleading?\n\nggplot2 then drops the smallest category from the plot\nThe legend then shows the wrong group names\nBars starting at 50 cannot be coloured by group\nBar lengths no longer show the counts in proportion\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "exporting_tools/exporting_plots.html",
@@ -1033,7 +1047,14 @@
     "href": "data-visualization/ggplot_grammar.html",
     "title": "Grammar of Graphics",
     "section": "",
-    "text": "▸ Module 1\nIncludes: Foundations & Basic Geoms View Slide Deck →\n\n\n\n▸ Module 2\nIncludes: Aesthetics, Faceting & Themes View Slide Deck →\n\n\n\n▸ Module 3\nIncludes: Colors, Scales & Custom Themes View Slide Deck →\n\n\n\n▸ Module 4\nIncludes: Advanced Topics & Best Practices View Slide Deck →\nBy the end, you’ll master the Grammar of Graphics and create publication-ready visualizations"
+    "text": "Includes: Foundations & Basic Geoms View Slide Deck →"
+  },
+  {
+    "objectID": "data-visualization/ggplot_grammar.html#practise-in-r",
+    "href": "data-visualization/ggplot_grammar.html#practise-in-r",
+    "title": "Grammar of Graphics",
+    "section": "Practise in R",
+    "text": "Practise in R\nDownload the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
   },
   {
     "objectID": "references.html",

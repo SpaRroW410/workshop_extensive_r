@@ -18,7 +18,7 @@ format:
 
 # Categorical Data {.center}
 
-## What is Categorical Data?
+## What is Categorical Data? {.smaller}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -44,7 +44,7 @@ Data that represents **categories**, **groups**, or **labels**
 :::
 :::
 
-## Analytical Goals for Categorical Data
+## Analytical Goals for Categorical Data {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 **What questions can we answer?**
@@ -63,7 +63,7 @@ Data that represents **categories**, **groups**, or **labels**
 4. Stacked Bar Chart
 :::
 
-## Setup: Load Libraries and Data
+## Setup: Load Libraries and Data {.smaller .scrollable}
 
 ```{r}
 #| echo: true
@@ -86,7 +86,7 @@ head(data_clean %>%
   select(PatientID, TreatmentGroup, Gender, Region, SmokingStatus))
 ```
 
-## Setup: Load Libraries and Data {.smaller}
+## Setup: Load Libraries and Data {.smaller .scrollable}
 
 ```{r}
 #| echo: false
@@ -107,7 +107,7 @@ head(data_clean %>% select(PatientID, TreatmentGroup, Gender, Region, SmokingSta
 
 # Bar Chart - Vertical
 
-## Bar Chart (Vertical) - Code
+## Bar Chart (Vertical) - Code {.smaller}
 
 🟢 **Goal:** Ranking / Distribution
 
@@ -156,7 +156,7 @@ ggplot(data_clean, aes(x = Region)) +
 
 # Bar Chart - Horizontal (Ordered)
 
-## Horizontal Bar Chart - Code
+## Horizontal Bar Chart - Code {.smaller .scrollable}
 
 🟢 **Goal:** Ranking (ordered by value)
 
@@ -212,7 +212,7 @@ ggplot(smoking_counts, aes(x = n, y = reorder(SmokingStatus, n))) +
 
 # Interpreting Bar Charts
 
-## How to Read Bar Charts
+## How to Read Bar Charts {.smaller}
 
 **Using the previous plot as example:**
 
@@ -243,7 +243,7 @@ ggplot(smoking_counts, aes(x = n, y = reorder(SmokingStatus, n))) +
 
 # Pie Chart
 
-## Pie Chart - Code
+## Pie Chart - Code {.smaller .scrollable}
 
 🔴 **Goal:** Part of a Whole
 
@@ -304,7 +304,7 @@ ggplot(treatment_summary, aes(x = "", y = n, fill = TreatmentGroup)) +
 
 # Donut Chart
 
-## Donut Chart - Code
+## Donut Chart - Code {.smaller .scrollable}
 
 🔴 **Goal:** Part of a Whole (modern alternative to pie)
 
@@ -363,7 +363,7 @@ ggplot(gender_summary, aes(x = 2, y = n, fill = Gender)) +
 
 # Stacked Bar Chart
 
-## Stacked Bar Chart - Code
+## Stacked Bar Chart - Code {.smaller .scrollable}
 
 🔴 **Goal:** Part of a Whole + Comparison across groups
 
@@ -421,7 +421,7 @@ ggplot(data_clean, aes(x = Region, fill = SmokingStatus)) +
 
 # Quick Reference
 
-## Categorical Plots - Summary
+## Categorical Plots - Summary {.smaller .scrollable}
 
 | Chart Type | Goal | When to Use | Code Complexity |
 |------------|------|-------------|-----------------|
@@ -431,7 +431,7 @@ ggplot(data_clean, aes(x = Region, fill = SmokingStatus)) +
 | **Donut Chart** | 🔴 Part of Whole | Modern alternative to pie | Medium (8-10 lines) |
 | **Stacked Bar** | 🔴 Part + 🟢 Comparison | Composition across groups | Medium (8-12 lines) |
 
-## Key Takeaways
+## Key Takeaways {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 ::: {.incremental}
@@ -453,7 +453,7 @@ ggplot(data_clean, aes(x = Region, fill = SmokingStatus)) +
 :::
 :::
 
-## Practice Exercise
+## Practice Exercise {.smaller}
 
 **Your Turn:**
 

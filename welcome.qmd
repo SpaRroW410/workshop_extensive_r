@@ -46,24 +46,24 @@ Step 1 of the self-study path. Start here if you are new to R: you will set up R
 
 ## 🗓️ Self-study plan
 
-Work through the steps in order. Tick a step when you have finished it; ticks are saved in this browser.
+Work through the steps in order. Every page ends with a **self-check quiz**, and each step has a **lab** (an R script with blanks to fill in; it reads the [NCD survey](data/ncd_survey.csv)). Keep the [Basic cheat sheet](cheatsheets/basic.qmd) open. Tick a step when you have finished it; ticks are saved in this browser.
 
 ::: {.ws-plan}
 1.  **Set up R and write your first lines**
 
-    [Getting Started](r-foundations/getting-started.qmd): install R and RStudio, objects, vectors and data frames.
+    [Getting Started](r-foundations/getting-started.qmd): install R and RStudio, objects, vectors and data frames. Lab: [b1_first_script.R](labs/basic/b1_first_script.R).
 
 2.  **Wrangle a dataset**
 
-    [Data Wrangling (Tidyverse)](r-foundations/data-wrangling.qmd), then [Merging Datasets](r-foundations/merging_dataset.qmd). Practise with the [Practice Slides](r-foundations/data_wrangling_prac_s.qmd).
+    [Data Wrangling (Tidyverse)](r-foundations/data-wrangling.qmd), then [Merging Datasets](r-foundations/merging_dataset.qmd). Practise with the [Practice Slides](r-foundations/data_wrangling_prac_s.qmd). Labs: [b2_tidy_data.R](labs/basic/b2_tidy_data.R) · [b3_joining.R](labs/basic/b3_joining.R).
 
 3.  **Draw your first plots**
 
-    [Grammar of Graphics](data-visualization/ggplot_grammar.qmd), then copy and adapt examples from the [Basic Plot Gallery](plot-gallery/basic.qmd).
+    [Grammar of Graphics](data-visualization/ggplot_grammar.qmd), then copy and adapt examples from the [Basic Plot Gallery](plot-gallery/basic.qmd). Lab: [b4_first_plots.R](labs/basic/b4_first_plots.R).
 
 4.  **Choose and run a statistical test**
 
-    [Test Selection Guide](statistical-analysis/statistical_tests.qmd), then [ggstatsplot — Intro](ggstatsplot/ggstatsplot_intro.qmd) to plot a test and its result together.
+    [Test Selection Guide](statistical-analysis/statistical_tests.qmd), then [ggstatsplot — Intro](ggstatsplot/ggstatsplot_intro.qmd) to plot a test and its result together. Lab: [b5_which_test.R](labs/basic/b5_which_test.R).
 
 5.  **Meet regression**
 
@@ -71,7 +71,7 @@ Work through the steps in order. Tick a step when you have finished it; ticks ar
 
 6.  **Write it up**
 
-    [Quarto Basics](quarto_repro_w/reproducible_writing.qmd): turn your code and results into a report.
+    [Quarto Basics](quarto_repro_w/reproducible_writing.qmd): turn your code and results into a report. Lab: [b6_first_report.R](labs/basic/b6_first_report.R).
 
 7.  **Check yourself and move on**
 
@@ -87,7 +87,9 @@ Work through the steps in order. Tick a step when you have finished it; ticks ar
 
 ## 📥 Downloads
 
-- Cheat sheets: [RStudio IDE](downloads/cheatsheets/rstudio-ide.pdf) · [Data import](downloads/cheatsheets/data-import.pdf) · [Data transformation](downloads/cheatsheets/data-transformation.pdf) · [Data visualization](downloads/cheatsheets/data-visualization.pdf) · [R Markdown](downloads/cheatsheets/rmarkdown.pdf)
+- Track cheat sheet: [Basic track cheat sheet](cheatsheets/basic.qmd)
+- Labs: [b1](labs/basic/b1_first_script.R) · [b2](labs/basic/b2_tidy_data.R) · [b3](labs/basic/b3_joining.R) · [b4](labs/basic/b4_first_plots.R) · [b5](labs/basic/b5_which_test.R) · [b6](labs/basic/b6_first_report.R); data: [ncd_survey.csv](data/ncd_survey.csv) · [ncd_round1.csv](data/ncd_round1.csv) · [ncd_round2.csv](data/ncd_round2.csv) · [villages.csv](data/villages.csv)
+- Posit cheat sheets: [RStudio IDE](downloads/cheatsheets/rstudio-ide.pdf) · [Data import](downloads/cheatsheets/data-import.pdf) · [Data transformation](downloads/cheatsheets/data-transformation.pdf) · [Data visualization](downloads/cheatsheets/data-visualization.pdf) · [R Markdown](downloads/cheatsheets/rmarkdown.pdf)
 - Example scripts: [Intro](downloads/source-scripts/nctoh/Intro.R) · [Data wrangling](downloads/source-scripts/nctoh/data_wrangle.R) · [Data visualization](downloads/source-scripts/nctoh/data_vis.R)
 - Everything else is on the [Downloads](downloads.qmd) page.
 
