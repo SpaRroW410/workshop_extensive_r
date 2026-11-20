@@ -18,7 +18,7 @@ work list where every page has its own line, so nothing is missed. Tick a box on
 | F8 | **No record of package versions**, so "the lab runs on a fresh machine" cannot be checked (no `renv.lock`) | whole repo | |
 | F9 | **Third-party PDFs** in `downloads/cheatsheets/` (10 files): licence and attribution not recorded | 10 files | `downloads/` |
 | F10 | Open from U0: overlapping downloads lists (item 11), `ggmosaic` in module 4 (item 12), two regression slides overflow (item 7) | 3 items | |
-| F11 | **No workshop has been reviewed by a subject expert** (11 workshops, 278 quiz questions) | 11 | `*-workshop/` |
+| F11 | **No workshop has been reviewed by a subject expert** (11 workshops, 283 quiz questions) | 11 | `*-workshop/` |
 | F12 | Game Region 4 (10 worlds) is "soon"; Regions 1–3 point their "Read first" links at base pages that will change in U1/U2 | 10 worlds | `dungeons/` |
 
 Everything else checked out: all 141 listed pages exist, every rendered page is newer than its source, all 11
