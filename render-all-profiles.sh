@@ -54,7 +54,7 @@ fi
 # True if a project-wide input (affects every page) is newer than the stamp
 global_changed() {
   local profile="$1" stamp="$2" f
-  for f in _quarto.yml "_quarto-$profile.yml" config.json navigation.json navigation.yml; do
+  for f in _quarto.yml "_quarto-$profile.yml" config.json; do
     if [ -f "$f" ] && [ "$f" -nt "$stamp" ]; then return 0; fi
   done
   if [ -n "$(find assets -type f -newer "$stamp" -print -quit 2>/dev/null)" ]; then

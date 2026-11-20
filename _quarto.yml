@@ -16,8 +16,6 @@ project:
     # without this, the bare config.json pattern below copies files from there into docs/.
     - "!cloud/**"
     - config.json
-    - navigation.json
-    - navigation.yml
     - /assets/
   render:
     - "!docs/**"

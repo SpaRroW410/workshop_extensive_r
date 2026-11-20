@@ -43,17 +43,23 @@ Header for every page: fixed date (last content change), authors "Dr. Mukul Mahe
 
 ## 4. U0: consistency fixes (before going live)
 
-1. Six decks dated `today` → fixed dates (renders stop changing them): ggplot modules 1–4, data wrangling, practice slides.
+✅ = done 2026-11-20. Left for you: 2 (whose names), 4 (your reference list), 9 (you may still use those files), 7 and 11 (next).
+
+1. ✅ Six decks dated `today` → fixed dates (renders stop changing them): ggplot modules 1–4, data wrangling, practice slides. **Done 2026-11-20 for five; module 4 left as is** (see item 12).
 2. Authors written "Sparrow", "SpaRroW", "Data Visualization Workshop" → the two authors' names everywhere.
-3. `data-visualization/plot_data.qmd` loads `custom-theme.css`, which does not exist (a 404 on every view).
+3. ✅ `data-visualization/plot_data.qmd` loads `custom-theme.css`, which does not exist (a 404 on every view).
 4. `references.qmd` is an empty page (in every track's menu): fill it (R and package citations, the textbooks the workshops lean on) or take it out of the menus. *Needs your list of references.*
-5. Contact page: the email is shown as `*[ryan00700@gmail.com]*`; make it a link and match the landing page footer.
-6. Empty "Applied Examples" menus in the two Data Viz tracks (`curriculum.yml`) are dropped silently; remove them or fill them.
+5. ✅ Contact page: the email is shown as `*[ryan00700@gmail.com]*`; make it a link and match the landing page footer.
+6. ✅ Empty "Applied Examples" menus in the two Data Viz tracks (`curriculum.yml`) are dropped silently; remove them or fill them.
 7. Two regression slides overflow (s1 slide 5, s5 slide 33).
-8. `navigation.json` / `navigation.yml` are only copied into the site, never used (superseded by `curriculum.yml`): delete.
+8. ✅ `navigation.json` / `navigation.yml` are only copied into the site, never used (superseded by `curriculum.yml`): delete.
 9. Pages no longer rendered by any track (they were orphans before): `gtsummary_teaching_slides`, `quarto_teaching_slides`, `data_analysis_slides`, `data_wrang_tasks`. Either put them in a menu or move them to `archive/`.
-10. README.md: rewrite for the current site (tracks, workshops, game, cloud/), not the old Data Visualization site.
+10. ✅ README.md: rewrite for the current site (tracks, workshops, game, cloud/), not the old Data Visualization site.
 11. `downloads.qmd` and the track homes list overlapping files; make the Downloads page list per track, generated from the same lists.
+12. **ggplot module 4 cannot be re-run on a fresh machine:** it loads `ggmosaic`, which CRAN removed and whose last CRAN release no longer
+    loads with current ggplot2. Its frozen results still render. Either install `ggmosaic` from GitHub yourself
+    (`remotes::install_github("haleyjeppson/ggmosaic")`, as the deck says) or rewrite its two mosaic plots with base
+    `mosaicplot()` / `productplots`. Until then, do not change that file (any edit forces a re-run).
 
 ## 5. Review checklist for U3 (one per workshop)
 
