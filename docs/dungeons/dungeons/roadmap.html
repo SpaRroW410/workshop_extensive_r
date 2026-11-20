@@ -73,7 +73,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script src="assets/fitty-init.js"></script>
 
 
 <link rel="stylesheet" href="../assets/theme_webp.css">
@@ -741,7 +740,7 @@ ul.task-list li input[type="checkbox"] {
 <td>10</td>
 <td><strong>Villages &amp; Clusters</strong></td>
 <td>ICC, design effect; random intercepts (<code>lme4</code>); GEE (<code>geepack</code>); cluster-robust SE; repeated measures</td>
-<td>NCD survey (villages) + repeated BP visits</td>
+<td>Village BP trial (<code>data/bp_trial.csv</code>)</td>
 <td>Compare naive vs mixed vs GEE</td>
 <td>3</td>
 <td>⬜</td>
@@ -750,7 +749,7 @@ ul.task-list li input[type="checkbox"] {
 <td>11</td>
 <td><strong>Survey Science</strong></td>
 <td>Weights, strata, PSUs; <code>survey</code>/<code>srvyr</code>; weighted proportions and regression; NFHS-style design</td>
-<td>NFHS-type synthetic survey</td>
+<td>Adult health survey (<code>data/survey_adults.csv</code>)</td>
 <td>Weighted vs unweighted prevalence ratios</td>
 <td>3</td>
 <td>⬜</td>
@@ -759,8 +758,8 @@ ul.task-list li input[type="checkbox"] {
 <td>12</td>
 <td><strong>Curves &amp; Interactions</strong></td>
 <td>Splines, GAMs, polynomials; effect modification; centred interactions; plotting predictions</td>
-<td>NCD survey</td>
-<td>Is the salt effect different by sex?</td>
+<td>NCD curves survey (<code>data/ncd_curves.csv</code>)</td>
+<td>Is the salt effect different by age?</td>
 <td>4</td>
 <td>⬜</td>
 </tr>
@@ -768,7 +767,7 @@ ul.task-list li input[type="checkbox"] {
 <td>13</td>
 <td><strong>Missing Data</strong></td>
 <td>MCAR/MAR/MNAR; complete-case bias; multiple imputation (<code>mice</code>); sensitivity analysis</td>
-<td>NCD survey with MAR missingness</td>
+<td>NCD cohort with known missingness (<code>data/ncd_missing.csv</code>)</td>
 <td>Imputation report card</td>
 <td>4</td>
 <td>⬜</td>
@@ -777,7 +776,7 @@ ul.task-list li input[type="checkbox"] {
 <td>14</td>
 <td><strong>Prediction Models</strong></td>
 <td>Apparent vs validated performance; bootstrap/CV; calibration; shrinkage; lasso/ridge (<code>glmnet</code>); sample size for prediction; TRIPOD</td>
-<td>Diabetes screening cohort</td>
+<td>Diabetes screening cohorts (<code>data/diabetes_dev.csv</code>, <code>data/diabetes_valid.csv</code>)</td>
 <td>Build, validate and report a risk score</td>
 <td>4</td>
 <td>⬜</td>
@@ -891,53 +890,59 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd">
 <td><strong>NCD survey</strong> (n = 600, 20 villages)</td>
-<td>Worlds 0–6, 10, 12, 13</td>
+<td>Worlds 0–6</td>
 <td>Confounding, collinearity, heteroscedasticity, curvature, clustering, common outcome, 3% missing</td>
 <td>✅ exists (<code>make_data.R</code>)</td>
 </tr>
 <tr class="even">
+<td><strong>NCD curves survey</strong></td>
+<td>World 12</td>
+<td>Bend in age, U-shaped BMI risk, salt × age and smoking × sex interactions</td>
+<td>✅ <code>data/ncd_curves.csv</code> (curves workshop)</td>
+</tr>
+<tr class="odd">
 <td><strong>Dengue ward-month counts</strong></td>
 <td>World 7</td>
 <td>Overdispersion, exposure offset (population), seasonality, zero inflation</td>
-<td>⬜</td>
+<td>✅ <code>data/dengue_wards.csv</code> (counts workshop)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>BP-stage and delivery-site survey</strong></td>
 <td>World 8</td>
 <td>Ordinal (proportional odds holds/fails), nominal outcome</td>
-<td>⬜</td>
+<td>✅ <code>data/maternal_survey.csv</code> (ordinal workshop: anaemia grade, place of delivery)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>DOTS TB cohort</strong></td>
 <td>World 9</td>
 <td>Censoring, non-proportional hazards for one covariate, competing outcome (mention)</td>
-<td>⬜</td>
-</tr>
-<tr class="odd">
-<td><strong>Repeated-visit BP clinic data</strong></td>
-<td>World 10</td>
-<td>Within-person correlation, random slopes, missing visits</td>
-<td>⬜</td>
+<td>✅ <code>data/tb_cohort.csv</code> (survival workshop)</td>
 </tr>
 <tr class="even">
+<td><strong>Village BP trial, repeated visits</strong></td>
+<td>World 10</td>
+<td>Village clustering (ICC, design effect), within-person correlation, missing visits</td>
+<td>✅ <code>data/bp_trial.csv</code> (clustered workshop)</td>
+</tr>
+<tr class="odd">
 <td><strong>NFHS-style complex survey</strong></td>
 <td>World 11</td>
-<td>Stratification, PSUs, unequal weights, design effects</td>
-<td>⬜</td>
-</tr>
-<tr class="odd">
-<td><strong>Missing-data variants of NCD</strong></td>
-<td>World 13</td>
-<td>MCAR vs MAR vs MNAR versions of the same data</td>
-<td>⬜</td>
+<td>Stratification, PSUs, unequal weights, nonresponse, design effects</td>
+<td>✅ <code>data/survey_adults.csv</code> (survey workshop)</td>
 </tr>
 <tr class="even">
-<td><strong>Diabetes screening cohort</strong></td>
-<td>World 14</td>
-<td>Many candidate predictors, low EPV trap, optimism</td>
-<td>⬜</td>
+<td><strong>NCD cohort with missing data</strong></td>
+<td>World 13</td>
+<td>MCAR, MAR and MNAR variables in one file, known truth</td>
+<td>✅ <code>data/ncd_missing.csv</code> (missing data workshop)</td>
 </tr>
 <tr class="odd">
+<td><strong>Diabetes screening cohorts</strong></td>
+<td>World 14</td>
+<td>Noise predictors, low EPV trap, optimism, external cohort with shifted calibration</td>
+<td>✅ <code>data/diabetes_dev.csv</code>, <code>data/diabetes_valid.csv</code> (prediction workshop)</td>
+</tr>
+<tr class="even">
 <td><strong>Programme evaluation (observational)</strong></td>
 <td>World 15</td>
 <td>Known confounding structure and ground-truth causal effect</td>

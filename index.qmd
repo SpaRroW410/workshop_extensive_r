@@ -1,5 +1,6 @@
 ---
 title: ""
+pagetitle: "Medical Statistics in R"
 format:
   html:
     theme: flatly
@@ -11,206 +12,410 @@ format:
 ---
 
 
+<!--
+  index.qmd is rendered twice:
+    1. on its own (no profile) to docs/index.html: the landing page below.
+    2. inside every track site (docs/<track>/index.html), where its relative links would be wrong.
+       There it shows only a redirect to the track home. `ws-track` is set in each _quarto-<track>.yml.
+-->
+
+::: {.content-visible when-meta="ws-track"}
+```{=html}
+<script>
+(function () {
+  var brand = document.querySelector('a.navbar-brand');
+  var home = (brand && brand.getAttribute('href')) || 'welcome.html';
+  if (home === '#' || /^(\.\/)?index\.html$/.test(home)) home = 'welcome.html';
+  location.replace(home);
+})();
+</script>
+<noscript><meta http-equiv="refresh" content="0; url=welcome.html"></noscript>
+<p style="text-align:center;padding:3rem 1rem;">Opening the track home… <a href="welcome.html">continue</a>.</p>
+```
+:::
+
+::: {.content-hidden when-meta="ws-track"}
 ```{=html}
 <!-- ═══════════════════════════════════════════════════════
-     HERO SECTION
+     TOP BAR: site name + profile chip
      ═══════════════════════════════════════════════════════ -->
-<div class="ws-hero">
-  <div class="ws-hero-inner">
-    <div class="ws-logo-row">
-      <span class="ws-logo-icon">📊</span>
-    </div>
-    <h1 class="ws-title">R Data Visualization Workshop</h1>
-    <p class="ws-subtitle">
-      A comprehensive, tiered learning platform for data wrangling,
-      statistical analysis, and visualization in R
-    </p>
-    <p class="ws-authors">
-      Dr. Mukul Maheshwari &nbsp;·&nbsp; Dr. Rudresh Negi<br>
-      <span class="ws-dept">Department of Community Medicine</span>
-    </p>
-  </div>
-</div>
-
-
-<!-- ═══════════════════════════════════════════════════════
-     TRACK SELECTION
-     ═══════════════════════════════════════════════════════ -->
-<div class="ws-tracks-section">
-  <h2 class="ws-section-heading">Choose Your Workshop Track</h2>
-  <p class="ws-section-sub">
-    Select the track that matches your level. Basic is open to everyone.
-    Other tracks require a workshop key provided by the session organiser.
-  </p>
-
-
-  <!-- Top: the game, spanning all three columns -->
-  <a class="ws-game" href="dungeons/dungeons/index.html">
-    <div class="ws-game-icon">🗺️</div>
-    <div class="ws-game-body">
-      <div class="ws-card-badge ws-badge--open">🟢 Open Access · New</div>
-      <h3 class="ws-game-title">Dungeons &amp; Dataframes</h3>
-      <p class="ws-game-sub">Medical statistics in R as a game, from your first script to regression and beyond.
-        Clear worlds, beat bosses, earn XP and grow your skill tree. The workshop tracks below are its library.</p>
-      <ul class="ws-game-regions">
-        <li>Region 1 · Basics</li><li>Region 2 · Moderate</li><li>Region 3 · Regression</li><li>Region 4 · Advanced</li>
-      </ul>
-    </div>
-    <span class="ws-btn ws-btn--game">Start playing →</span>
+<header class="ws-bar">
+  <!-- not an <h1>: Quarto lifts the first h1 into its (hidden) title block -->
+  <div class="ws-bar-name" role="heading" aria-level="1">Medical Statistics in R</div>
+  <a class="ws-bar-profile" href="#ws-profile" title="Your profile">
+    <span class="ws-avatar ws-avatar--sm" data-profile-initials aria-hidden="true">?</span>
+    <span data-profile-name>Set up your profile</span>
   </a>
+</header>
 
 
-  <!-- Row 1: Basic · Moderate · Advanced -->
-  <div class="ws-cards-row" id="cards-row-1">
+<main class="ws-main">
 
+  <!-- ═════════════════════════════════════════════════════
+       1 · THE GAME (always first) + THE LEARNER PROFILE
+       ═════════════════════════════════════════════════════ -->
+  <div class="ws-lead">
 
-    <div class="ws-card ws-card--open" data-profile="basic">
-      <div class="ws-card-badge ws-badge--open">🟢 Open Access</div>
-      <h3 class="ws-card-title">Basic</h3>
-      <ul class="ws-card-list">
-        <li>R Foundations &amp; Data Wrangling</li>
-        <li>Basic Visualization (ggplot2)</li>
-        <li>Statistical Test Selection</li>
-        <li>ggstatsplot — Introduction</li>
-        <li>Quarto Basics</li>
+    <a class="ws-game" href="dungeons/dungeons/index.html">
+      <div class="ws-game-icon" aria-hidden="true">🗺️</div>
+      <div class="ws-game-body">
+        <div class="ws-card-badge ws-badge--open">🟢 Open Access</div>
+        <h2 class="ws-game-title">Dungeons &amp; Dataframes</h2>
+        <p class="ws-game-sub">Medical statistics in R as a game, from your first script to regression.
+          Clear worlds, beat bosses, earn XP and grow your skill tree. Each region of the game
+          matches one step of the study plan below, so you can read a step and then play it.</p>
+        <ul class="ws-game-regions">
+          <li>Region 1 · Basics</li>
+          <li>Region 2 · Moderate</li>
+          <li>Region 3 · Regression</li>
+          <li class="ws-game-soon">Region 4 · Advanced (coming later)</li>
+        </ul>
+        <span class="ws-btn ws-btn--game">Start playing →</span>
+      </div>
+    </a>
+
+    <!-- PROFILE CARD
+         Layout for the planned profile system. Today it is filled from this browser only
+         (see WSProfile in the script below); a real account system only has to replace
+         WSProfile.read() / WSProfile.saveName(). -->
+    <aside class="ws-profile" id="ws-profile" aria-labelledby="ws-profile-heading">
+      <div class="ws-profile-head">
+        <span class="ws-avatar" data-profile-initials aria-hidden="true">?</span>
+        <div class="ws-profile-id">
+          <h2 class="ws-profile-name" id="ws-profile-heading" data-profile-name>Set up your profile</h2>
+          <p class="ws-profile-rank"><span id="ws-profile-rank">Field Volunteer</span></p>
+        </div>
+        <button type="button" class="ws-profile-edit" id="ws-profile-edit">Edit</button>
+      </div>
+
+      <form class="ws-profile-form" id="ws-profile-form" hidden>
+        <label for="ws-profile-input">Display name</label>
+        <div class="ws-profile-form-row">
+          <input type="text" id="ws-profile-input" maxlength="40" autocomplete="nickname" placeholder="Your name">
+          <button type="submit" class="ws-profile-save">Save</button>
+        </div>
+      </form>
+
+      <div class="ws-profile-xp">
+        <div class="ws-progress-bar"><span id="ws-profile-xp-fill"></span></div>
+        <p><b id="ws-profile-xp">0</b> XP · <span id="ws-profile-next">100 XP to Health Worker</span></p>
+      </div>
+
+      <dl class="ws-profile-stats">
+        <div><dt>Day streak</dt><dd id="ws-profile-streak">0</dd></div>
+        <div><dt>Badges</dt><dd id="ws-profile-badges">0</dd></div>
+        <div><dt>Steps done</dt><dd id="ws-profile-steps">0/4</dd></div>
+      </dl>
+
+      <a class="ws-continue" id="ws-continue" href="/" hidden>
+        <span class="ws-continue-label">Continue where you left off</span>
+        <span class="ws-continue-title" id="ws-continue-title"></span>
+      </a>
+
+      <h3 class="ws-profile-sub">My workshops</h3>
+      <!-- One row per track: study plan ticks, the game's pre/post-test scores for its region,
+           and a link that is live when the track is unlocked and greyed out when it is not. -->
+      <ul class="ws-profile-tracks">
+        <li data-track="basic" data-total="7">
+          <div class="ws-pt-top">
+            <span class="ws-pt-name">Basic</span>
+            <a class="ws-pt-link" href="basic/welcome.html">Open →</a>
+          </div>
+          <div class="ws-pt-meta">
+            <div class="ws-progress-bar"><span></span></div>
+            <em>0/7</em>
+            <span class="ws-pt-score">Pre <b data-test="r1pre">–</b></span>
+            <span class="ws-pt-score">Post <b data-test="r1post">–</b></span>
+          </div>
+        </li>
+        <li data-track="moderate" data-total="9">
+          <div class="ws-pt-top">
+            <span class="ws-pt-name">Moderate</span>
+            <a class="ws-pt-link" href="moderate/welcome.html">Open →</a>
+          </div>
+          <div class="ws-pt-meta">
+            <div class="ws-progress-bar"><span></span></div>
+            <em>0/9</em>
+            <span class="ws-pt-score">Pre <b data-test="r2pre">–</b></span>
+            <span class="ws-pt-score">Post <b data-test="r2post">–</b></span>
+          </div>
+        </li>
+        <li data-track="regression" data-total="9">
+          <div class="ws-pt-top">
+            <span class="ws-pt-name">Regression</span>
+            <a class="ws-pt-link" href="regression/welcome.html">Open →</a>
+          </div>
+          <div class="ws-pt-meta">
+            <div class="ws-progress-bar"><span></span></div>
+            <em>0/9</em>
+            <span class="ws-pt-score">Pre <b data-test="pre">–</b></span>
+            <span class="ws-pt-score">Post <b data-test="post">–</b></span>
+          </div>
+          <p class="ws-pt-quiz" data-folders="regression-workshop" data-decks="6"></p>
+        </li>
+        <li data-track="advanced" data-total="11">
+          <div class="ws-pt-top">
+            <span class="ws-pt-name">Advanced</span>
+            <a class="ws-pt-link" href="advanced/welcome.html">Open →</a>
+          </div>
+          <div class="ws-pt-meta">
+            <div class="ws-progress-bar"><span></span></div>
+            <em>0/11</em>
+          </div>
+          <p class="ws-pt-quiz" data-folders="survival-workshop counts-workshop ordinal-workshop clustered-workshop survey-workshop curves-workshop missing-workshop prediction-workshop causal-workshop" data-decks="45"></p>
+        </li>
+        <li data-track="dataviz-base" data-total="7">
+          <div class="ws-pt-top">
+            <span class="ws-pt-name">Data Viz: Foundations</span>
+            <a class="ws-pt-link" href="dataviz-base/welcome.html">Open →</a>
+          </div>
+          <div class="ws-pt-meta">
+            <div class="ws-progress-bar"><span></span></div>
+            <em>0/7</em>
+          </div>
+        </li>
+        <li data-track="dataviz-complete" data-total="9">
+          <div class="ws-pt-top">
+            <span class="ws-pt-name">Data Viz: Complete</span>
+            <a class="ws-pt-link" href="dataviz-complete/welcome.html">Open →</a>
+          </div>
+          <div class="ws-pt-meta">
+            <div class="ws-progress-bar"><span></span></div>
+            <em>0/9</em>
+          </div>
+        </li>
+        <li data-track="gis" data-total="7">
+          <div class="ws-pt-top">
+            <span class="ws-pt-name">GIS &amp; Spatial</span>
+            <a class="ws-pt-link" href="gis/welcome.html">Open →</a>
+          </div>
+          <div class="ws-pt-meta">
+            <div class="ws-progress-bar"><span></span></div>
+            <em>0/7</em>
+          </div>
+          <p class="ws-pt-quiz" data-folders="gis-workshop" data-decks="5"></p>
+        </li>
       </ul>
-      <button class="ws-btn ws-btn--open ws-btn--loading" onclick="enterTrack('basic')" disabled>
-        Enter Track →
-      </button>
-    </div>
 
-
-    <div class="ws-card ws-card--locked" data-profile="moderate">
-      <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
-      <h3 class="ws-card-title">Moderate</h3>
-      <ul class="ws-card-list">
-        <li>Everything in Basic</li>
-        <li>Best Practices &amp; Plot Matching</li>
-        <li>Intermediate Plots + Modules 1–2</li>
-        <li>ggstatsplot — Intermediate</li>
-        <li>Quarto Dynamic Documents</li>
-        <li>gtsummary Tables</li>
-        <li>Applied Healthcare Examples</li>
-      </ul>
-      <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('moderate')" disabled>
-        Enter Key →
-      </button>
-    </div>
-
-
-    <div class="ws-card ws-card--locked" data-profile="advanced">
-      <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
-      <h3 class="ws-card-title">Advanced</h3>
-      <ul class="ws-card-list">
-        <li>Everything in Moderate</li>
-        <li>Advanced &amp; Interactive Plots</li>
-        <li>ggplot2 Modules 3–4</li>
-        <li>ggstatsplot — Advanced</li>
-        <li>Quarto for Publication</li>
-        <li>Deep Statistical Analysis</li>
-      </ul>
-      <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('advanced')" disabled>
-        Enter Key →
-      </button>
-    </div>
-
+      <p class="ws-profile-note" id="ws-profile-note">
+        Saved in this browser only. Sign-in and accounts are planned.
+        <a href="dungeons/dungeons/campus.html">Skill tree and backup →</a>
+      </p>
+    </aside>
 
   </div>
 
 
-  <!-- Row 2: DataViz Foundations · DataViz Complete · Regression -->
-  <h2 class="ws-section-heading ws-section-heading--second">
-    Focused Tracks
-  </h2>
-  <p class="ws-section-sub">
-    Dedicated tracks covering a single area in depth — visualization only, or
-    statistics only. Ideal for focused workshops.
-  </p>
+  <!-- ═════════════════════════════════════════════════════
+       2 · SELF-STUDY PLAN (the four core tracks, in order)
+       ═════════════════════════════════════════════════════ -->
+  <section class="ws-plan-section" aria-labelledby="ws-plan-heading">
+    <h2 class="ws-section-heading" id="ws-plan-heading">Your self-study plan</h2>
+    <p class="ws-section-sub" id="ws-plan-sub">
+      Four steps, in order. Each step is a track with its own day-by-day plan inside.
+      Step 1 is open to everyone; the others need the workshop key from your session organiser.
+    </p>
 
-
-  <div class="ws-cards-row ws-cards-row--4" id="cards-row-2">
-
-
-    <div class="ws-card ws-card--locked ws-card--viz" data-profile="dataviz-base">
-      <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
-      <h3 class="ws-card-title">Data Visualization — Foundations</h3>
-      <ul class="ws-card-list">
-        <li>Grammar of Graphics</li>
-        <li>Best Practices</li>
-        <li>Matching Data to Plots</li>
-        <li>ggplot2 Modules 1–2</li>
-        <li>Basic &amp; Intermediate Gallery</li>
-        <li>Applied Visualization Examples</li>
-      </ul>
-      <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('dataviz-base')" disabled>
-        Enter Key →
-      </button>
+    <div class="ws-progress" aria-live="polite">
+      <div class="ws-progress-bar"><span id="ws-progress-fill"></span></div>
+      <span id="ws-progress-text">0 of 4 steps done</span>
     </div>
 
+    <ol class="ws-path">
 
-    <div class="ws-card ws-card--locked ws-card--viz" data-profile="dataviz-complete">
-      <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
-      <h3 class="ws-card-title">Data Visualization — Complete</h3>
-      <ul class="ws-card-list">
-        <li>Everything in Foundations</li>
-        <li>ggplot2 Modules 3–4</li>
-        <li>Advanced Plot Gallery</li>
-        <li>Interactive Plots</li>
-        <li>Practical Applications</li>
-        <li>Debugging &amp; Advanced Export</li>
-      </ul>
-      <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('dataviz-complete')" disabled>
-        Enter Key →
-      </button>
+      <li class="ws-step">
+        <div class="ws-step-num" aria-hidden="true">1</div>
+        <div class="ws-card ws-step-card ws-card--open" data-profile="basic">
+          <div class="ws-step-main">
+            <div class="ws-card-badge ws-badge--open">🟢 Open Access</div>
+            <h3 class="ws-card-title">Step 1 · Basic</h3>
+            <p class="ws-step-lead">New to R? Start here.</p>
+            <ul class="ws-card-list">
+              <li>R Foundations &amp; Data Wrangling</li>
+              <li>Basic Visualization (ggplot2)</li>
+              <li>Statistical Test Selection</li>
+              <li>ggstatsplot: Introduction</li>
+              <li>Quarto Basics</li>
+            </ul>
+          </div>
+          <div class="ws-step-side">
+            <span class="ws-step-game">🗺️ In the game: Region 1</span>
+            <button class="ws-btn ws-btn--open ws-btn--loading" onclick="enterTrack('basic')" disabled>
+              Enter Track →
+            </button>
+            <label class="ws-step-done"><input type="checkbox" data-step="basic"> I have finished this step</label>
+          </div>
+        </div>
+      </li>
+
+      <li class="ws-step">
+        <div class="ws-step-num" aria-hidden="true">2</div>
+        <div class="ws-card ws-step-card ws-card--locked" data-profile="moderate">
+          <div class="ws-step-main">
+            <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+            <h3 class="ws-card-title">Step 2 · Moderate</h3>
+            <p class="ws-step-lead">Real, messy data and figures and tables fit for a paper.</p>
+            <ul class="ws-card-list">
+              <li>Cleaning Messy Data &amp; Iteration</li>
+              <li>Best Practices &amp; Plot Matching</li>
+              <li>ggplot2 Modules 1–2, Intermediate Plots</li>
+              <li>ggstatsplot: Intermediate</li>
+              <li>gtsummary Tables</li>
+              <li>Quarto Dynamic Documents</li>
+            </ul>
+          </div>
+          <div class="ws-step-side">
+            <span class="ws-step-game">🗺️ In the game: Region 2</span>
+            <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('moderate')" disabled>
+              Enter Key →
+            </button>
+            <label class="ws-step-done"><input type="checkbox" data-step="moderate"> I have finished this step</label>
+          </div>
+        </div>
+      </li>
+
+      <li class="ws-step">
+        <div class="ws-step-num" aria-hidden="true">3</div>
+        <div class="ws-card ws-step-card ws-card--locked" data-profile="regression">
+          <div class="ws-step-main">
+            <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+            <h3 class="ws-card-title">Step 3 · Regression</h3>
+            <p class="ws-step-lead">A full-day workshop: six slide decks, six R labs, quizzes and a cheat sheet.</p>
+            <ul class="ws-card-list">
+              <li>Simple &amp; Multiple Linear Regression</li>
+              <li>Univariate Regression Screening</li>
+              <li>Logistic Regression</li>
+              <li>Cox Proportional Hazards Regression</li>
+              <li>Model Diagnostics with performance</li>
+              <li>Interpreting &amp; Reporting</li>
+            </ul>
+          </div>
+          <div class="ws-step-side">
+            <span class="ws-step-game">🗺️ In the game: Region 3</span>
+            <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('regression')" disabled>
+              Enter Key →
+            </button>
+            <label class="ws-step-done"><input type="checkbox" data-step="regression"> I have finished this step</label>
+          </div>
+        </div>
+      </li>
+
+      <li class="ws-step">
+        <div class="ws-step-num" aria-hidden="true">4</div>
+        <div class="ws-card ws-step-card ws-card--locked" data-profile="advanced">
+          <div class="ws-step-main">
+            <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+            <h3 class="ws-card-title">Step 4 · Advanced</h3>
+            <p class="ws-step-lead">The complete visualization library and nine advanced analysis workshops (A1 to A9).</p>
+            <ul class="ws-card-list">
+              <li>ggplot2 Modules 3–4, Advanced &amp; Interactive Plots</li>
+              <li>ggstatsplot: Advanced, Quarto for Publication</li>
+              <li>Survival · Counts &amp; Rates · Ordinal Outcomes</li>
+              <li>Clustered Data · Survey Weights · Curves</li>
+              <li>Missing Data · Prediction Models</li>
+              <li>Causal Inference</li>
+            </ul>
+          </div>
+          <div class="ws-step-side">
+            <span class="ws-step-game ws-step-game--soon">🗺️ Region 4 is coming later</span>
+            <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('advanced')" disabled>
+              Enter Key →
+            </button>
+            <label class="ws-step-done"><input type="checkbox" data-step="advanced"> I have finished this step</label>
+          </div>
+        </div>
+      </li>
+
+    </ol>
+  </section>
+
+
+  <!-- ═════════════════════════════════════════════════════
+       3 · ELECTIVES (single-topic tracks, outside the main path)
+       ═════════════════════════════════════════════════════ -->
+  <section class="ws-electives" aria-labelledby="ws-electives-heading">
+    <h2 class="ws-section-heading" id="ws-electives-heading">Electives</h2>
+    <p class="ws-section-sub">
+      Single-topic tracks you can add to the plan when you need them.
+    </p>
+
+    <div class="ws-cards-row">
+
+      <div class="ws-card ws-card--locked ws-card--viz" data-profile="dataviz-base">
+        <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+        <h3 class="ws-card-title">Data Visualization: Foundations</h3>
+        <p class="ws-card-when">Take it any time. No statistics needed.</p>
+        <ul class="ws-card-list">
+          <li>Grammar of Graphics</li>
+          <li>Best Practices</li>
+          <li>Matching Data to Plots</li>
+          <li>ggplot2 Modules 1–2</li>
+          <li>Basic &amp; Intermediate Gallery</li>
+        </ul>
+        <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('dataviz-base')" disabled>
+          Enter Key →
+        </button>
+      </div>
+
+      <div class="ws-card ws-card--locked ws-card--viz" data-profile="dataviz-complete">
+        <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+        <h3 class="ws-card-title">Data Visualization: Complete</h3>
+        <p class="ws-card-when">Best after Foundations.</p>
+        <ul class="ws-card-list">
+          <li>Everything in Foundations</li>
+          <li>ggplot2 Modules 3–4</li>
+          <li>Advanced Plot Gallery</li>
+          <li>Interactive Plots</li>
+          <li>Debugging &amp; Advanced Export</li>
+        </ul>
+        <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('dataviz-complete')" disabled>
+          Enter Key →
+        </button>
+      </div>
+
+      <div class="ws-card ws-card--locked ws-card--gis" data-profile="gis">
+        <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+        <h3 class="ws-card-title">GIS &amp; Spatial Statistics</h3>
+        <p class="ws-card-when">Best after Step 3 · Regression.</p>
+        <ul class="ws-card-list">
+          <li>Spatial Data with sf &amp; Maps</li>
+          <li>Neighbours &amp; Spatial Weights</li>
+          <li>Moran's I &amp; Local Moran's I (LISA)</li>
+          <li>Geary's C, Getis-Ord, Scan Statistic</li>
+          <li>Spatial Regression</li>
+        </ul>
+        <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('gis')" disabled>
+          Enter Key →
+        </button>
+      </div>
+
     </div>
+  </section>
 
-
-    <div class="ws-card ws-card--locked ws-card--stats" data-profile="regression">
-      <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
-      <h3 class="ws-card-title">Regression</h3>
-      <ul class="ws-card-list">
-        <li>R Foundations &amp; Data Wrangling</li>
-        <li>Simple &amp; Multiple Linear Regression</li>
-        <li>Univariate Regression Screening</li>
-        <li>Logistic Regression</li>
-        <li>Cox Proportional Hazards Regression</li>
-        <li>Model Diagnostics with performance</li>
-      </ul>
-      <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('regression')" disabled>
-        Enter Key →
-      </button>
-    </div>
-
-
-    <div class="ws-card ws-card--locked ws-card--gis" data-profile="gis">
-      <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
-      <h3 class="ws-card-title">GIS &amp; Spatial Statistics</h3>
-      <ul class="ws-card-list">
-        <li>Spatial Data with sf &amp; Maps</li>
-        <li>Neighbours &amp; Spatial Weights</li>
-        <li>Moran's I &amp; Local Moran's I (LISA)</li>
-        <li>Geary's C, Getis-Ord, Scan Statistic</li>
-        <li>Spatial Regression Diagnostics</li>
-        <li>Advanced Visualization pages</li>
-      </ul>
-      <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('gis')" disabled>
-        Enter Key →
-      </button>
-    </div>
-
-
-  </div>
-</div>
+</main>
 
 
 <!-- ═══════════════════════════════════════════════════════
-     FOOTER LINKS
+     CONTACT (last thing on the page)
      ═══════════════════════════════════════════════════════ -->
-<div class="ws-footer-links">
-  <a href="downloads.qmd">📥 Downloads &amp; Cheatsheets</a>
-  <a href="contact.qmd">✉️ Contact Us</a>
-  <a href="references.qmd">📚 References</a>
-</div>
+<footer class="ws-contact">
+  <div class="ws-contact-inner">
+    <div class="ws-contact-people">
+      <h2 class="ws-contact-heading">Contact</h2>
+      <p><b>Dr. Mukul Maheshwari</b> · <b>Dr. Rudresh Negi</b><br>
+        Assistant Professors, Department of Community Medicine</p>
+      <p>
+        <a href="mailto:ryan00700@gmail.com">✉️ ryan00700@gmail.com</a><br>
+        <a href="https://github.com/SpaRroW410">GitHub: SpaRroW410</a>
+      </p>
+    </div>
+    <nav class="ws-contact-links" aria-label="More">
+      <a href="basic/downloads.html">📥 Downloads &amp; cheat sheets</a>
+      <a href="basic/references.html">📚 References</a>
+      <a href="basic/contact.html">🤝 Feedback &amp; collaboration</a>
+    </nav>
+  </div>
+</footer>
 
 
 <!-- ═══════════════════════════════════════════════════════
@@ -244,6 +449,72 @@ format:
 // can change keys or unlock tiers by editing that one file on GitHub.
 let workshopConfig = null;
 let activeProfile  = null;
+// On Cloudflare (config.json says gate: "server") the account service decides what is open.
+// cloudMe holds its answer from /api/me, or stays null when it cannot be reached.
+// On GitHub Pages there is no account service and the workshop keys work as before.
+let cloudMe = null;
+function serverGate() { return !!(workshopConfig && workshopConfig.gate === 'server'); }
+
+// ── Profile + self-study progress ─────────────────────────
+// Everything a profile shows comes through WSProfile. Today it reads this browser's
+// localStorage (the game's save 'rq:v1', the plan ticks 'ws-plan:<track>', the step ticks
+// 'ws-path-done', the keys entered 'ws-unlocked' and the name 'ws-profile'). A real account system replaces read()/write().
+var WSProfile = (function () {
+  function read(key, fallback) {
+    try { var v = JSON.parse(localStorage.getItem(key)); return v == null ? fallback : v; } catch (e) { return fallback; }
+  }
+  function write(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {} }
+
+  // Same XP rules and ranks as dungeons/assets/quest.js (keep the two in step).
+  var RANKS = [[0, 'Field Volunteer'], [100, 'Health Worker'], [250, 'Medical Officer'], [500, 'Epidemiologist'],
+               [900, 'Senior Epidemiologist'], [1500, 'Chief Biostatistician']];
+  function itemXP(r) {
+    if (!r || !r.solved || r.shown) return 0;
+    var cost = 0, hint = [3, 5, 8];
+    for (var i = 0; i < (r.hints || 0); i++) cost += hint[Math.min(i, 2)];
+    var factor = r.tries <= 1 ? 1 : r.tries === 2 ? 0.5 : 0.25;
+    return Math.max(0, Math.round(({ 1: 10, 2: 20, 3: 30 }[r.diff] || 10) * factor - cost) + (r.boss ? 50 : 0));
+  }
+  function game() {
+    var g = read('rq:v1', null) || {}, xp = 0, k;
+    for (k in (g.items || {})) xp += itemXP(g.items[k]);
+    var rank = RANKS[0], next = null;
+    RANKS.forEach(function (r, i) { if (xp >= r[0]) { rank = r; next = RANKS[i + 1] || null; } });
+    return {
+      xp: xp, rank: rank[1], next: next,
+      pct: next ? Math.round(100 * (xp - rank[0]) / (next[0] - rank[0])) : 100,
+      streak: (g.streak && g.streak.count) || 0,
+      badges: Object.keys(g.badges || {}).length
+    };
+  }
+  return {
+    name: function () { return (read('ws-profile', {}).name || '').trim(); },
+    saveName: function (n) { write('ws-profile', { name: n.trim().slice(0, 40) }); },
+    game: game,
+    steps: function () { return read('ws-path-done', {}); },
+    saveSteps: function (d) { write('ws-path-done', d); },
+    planDone: function (track) { return Object.keys(read('ws-plan:' + track, {})).length; },
+    planTotal: function (track, fallback) { return read('ws-plan-total:' + track, 0) || fallback; },
+    tests: function () { return (read('rq:v1', null) || {}).tests || {}; },
+    // Deck quizzes (quiz.js keeps 'quiz-score:<workshop folder>/<deck>': { questionId: right? }).
+    // Returns { decks: decks with an answer, right, answered } for the given workshop folders.
+    quizzes: function (folders) {
+      var out = { decks: 0, right: 0, answered: 0 };
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i), m = /^quiz-score:([^\/]+)\//.exec(k || '');
+        if (!m || folders.indexOf(m[1]) < 0) continue;
+        var v = read(k, {}), ids = Object.keys(v);
+        if (!ids.length) continue;
+        out.decks++; out.answered += ids.length;
+        ids.forEach(function (id) { if (v[id]) out.right++; });
+      }
+      return out;
+    },
+    unlocked: function () { return read('ws-unlocked', {}); },
+    unlock: function (track) { var u = read('ws-unlocked', {}); u[track] = 1; write('ws-unlocked', u); }
+  };
+})();
+
 
 // ── FIX 1: Loading state helpers ─────────────────────────
 // All buttons start disabled (set in HTML above).
@@ -261,40 +532,75 @@ async function loadConfig() {
   try {
     const res = await fetch('config.json');
     workshopConfig = await res.json();
-    applyLockStates();
+    if (serverGate()) {
+      try {
+        const me = await fetch('/api/me', { credentials: 'same-origin' });
+        if (me.ok) cloudMe = await me.json();
+        // Progress sync (ws-sync.js, added to every page on Cloudflare) follows the account.
+        if (cloudMe && window.WSSync) {
+          if (cloudMe.user) window.WSSync.signedIn(cloudMe.user.id); else window.WSSync.sessionEnded();
+        }
+      } catch (e) {
+        console.warn('Account service unavailable; showing free tracks only.');
+      }
+    }
   } catch (e) {
     // If config.json can't be fetched (e.g. local file:// preview),
     // fall back to locked state for all non-basic profiles.
     console.warn('config.json not available — defaulting to locked state.');
   } finally {
     // ── Always re-enable buttons, whether fetch succeeded or failed
+    applyLockStates();
     removeLoadingState();
   }
 }
 
 
+// A track is unlocked when config.json says so, or when its key was entered in this
+// browser before (remembered through WSProfile).
+function isUnlocked(id) {
+  if (serverGate()) return cloudMe ? !!cloudMe.open[id] : (id === 'basic' || id === 'dungeons');
+  const cfg = workshopConfig && workshopConfig.profiles[id];
+  return (cfg ? !cfg.locked : id === 'basic') || !!WSProfile.unlocked()[id];
+}
+
+// Where a locked track sends you on Cloudflare: the account page, which offers sign-in or says
+// which product to ask the organiser for.
+function accountUrl(id) {
+  const need = cloudMe && cloudMe.tracks ? cloudMe.tracks[id] : '';
+  return '/account?' + (need ? 'need=' + encodeURIComponent(need) + '&' : '') +
+    'next=' + encodeURIComponent('/' + id + '/welcome');
+}
+
 function applyLockStates() {
-  if (!workshopConfig) return;
-  const profiles = workshopConfig.profiles;
-
-  Object.entries(profiles).forEach(([id, cfg]) => {
-    const card = document.querySelector(`[data-profile="${id}"]`);
-    if (!card) return;
-
-    if (!cfg.locked) {
-      // Silently unlock — swap badge and button
-      card.classList.remove('ws-card--locked');
-      card.classList.add('ws-card--open');
-      const badge = card.querySelector('.ws-card-badge');
-      if (badge) { badge.textContent = '🟢 Open Access'; badge.className = 'ws-card-badge ws-badge--open'; }
-      const btn = card.querySelector('.ws-btn');
-      if (btn) {
-        btn.className = 'ws-btn ws-btn--open';
-        btn.textContent = 'Enter Track →';
-        btn.setAttribute('onclick', `enterTrack('${id}')`);
+  document.querySelectorAll('.ws-card[data-profile]').forEach(card => {
+    const id = card.dataset.profile;
+    if (!isUnlocked(id)) {
+      if (serverGate()) {
+        const badge = card.querySelector('.ws-card-badge');
+        if (badge) badge.textContent = cloudMe && cloudMe.user ? '🔒 Not in your account' : '🔒 Sign in';
+        const btn = card.querySelector('.ws-btn');
+        if (btn) btn.textContent = cloudMe && cloudMe.user ? 'How to unlock →' : 'Sign in →';
       }
+      return;
+    }
+    card.classList.remove('ws-card--locked');
+    card.classList.add('ws-card--open');
+    const badge = card.querySelector('.ws-card-badge');
+    if (badge) { badge.textContent = '🟢 Open Access'; badge.className = 'ws-card-badge ws-badge--open'; }
+    const btn = card.querySelector('.ws-btn');
+    if (btn) {
+      btn.className = 'ws-btn ws-btn--open';
+      btn.textContent = 'Enter Track →';
+      btn.setAttribute('onclick', `enterTrack('${id}')`);
     }
   });
+  if (serverGate()) {
+    const sub = document.getElementById('ws-plan-sub');
+    if (sub) sub.textContent = 'Four steps, in order. Each step is a track with its own day-by-day plan inside. ' +
+      'Step 1 is open to everyone; the others open when your account includes them.';
+  }
+  if (window.wsRefreshProfile) window.wsRefreshProfile();
 }
 
 
@@ -310,8 +616,10 @@ function openKeyModal(profileId) {
   activeProfile = profileId;
   const cfg = workshopConfig && workshopConfig.profiles[profileId];
 
-  // If admin silently unlocked, just redirect
-  if (cfg && !cfg.locked) { enterTrack(profileId); return; }
+  // Open track, or key already entered in this browser: go straight in
+  if (isUnlocked(profileId)) { enterTrack(profileId); return; }
+  // Cloudflare: no keys; the account page explains how to get access
+  if (serverGate()) { activeProfile = null; window.location.href = accountUrl(profileId); return; }
 
   document.getElementById('modal-track-name').textContent =
     cfg ? cfg.label : profileId;
@@ -341,6 +649,7 @@ function submitKey() {
 
   if (entered.toUpperCase() === cfg.key.toUpperCase()) {
     const trackToEnter = activeProfile; // 1. Save the track name
+    WSProfile.unlock(trackToEnter);     //    remember it for the profile card
     closeKeyModal();                    // 2. Close modal (sets activeProfile to null)
     enterTrack(trackToEnter);           // 3. Use the saved track name!
   } else {
@@ -358,6 +667,133 @@ document.addEventListener('keydown', e => {
 });
 
 
+(function () {
+  var boxes = document.querySelectorAll('.ws-step-done input[data-step]');
+  var done = WSProfile.steps();
+  function $(id) { return document.getElementById(id); }
+
+  function initials(name) {
+    var p = name.split(/\s+/).filter(Boolean);
+    return p.length ? (p[0][0] + (p.length > 1 ? p[p.length - 1][0] : '')).toUpperCase() : '?';
+  }
+
+  function refresh() {
+    // steps of the plan
+    var n = 0;
+    boxes.forEach(function (box) {
+      var on = !!done[box.dataset.step];
+      box.checked = on;
+      box.closest('.ws-step').classList.toggle('ws-step--done', on);
+      if (on) n++;
+    });
+    $('ws-progress-fill').style.width = (100 * n / boxes.length) + '%';
+    $('ws-progress-text').textContent = n + ' of ' + boxes.length + ' steps done';
+    $('ws-profile-steps').textContent = n + '/' + boxes.length;
+
+    // name and avatar: the Google account when signed in on Cloudflare, else the name typed here
+    var user = cloudMe && cloudMe.user;
+    var name = user ? user.name : WSProfile.name();
+    var empty = serverGate() ? 'Sign in' : 'Set up your profile';
+    document.querySelectorAll('[data-profile-name]').forEach(function (e) { e.textContent = name || empty; });
+    document.querySelectorAll('[data-profile-initials]').forEach(function (e) {
+      e.textContent = initials(name);
+      var old = e.querySelector('img'); if (old) old.remove();
+      if (user && user.image) {
+        var img = document.createElement('img');
+        img.src = user.image; img.alt = ''; img.referrerPolicy = 'no-referrer';
+        e.textContent = ''; e.appendChild(img);
+      }
+    });
+    if (serverGate()) {
+      var last = cloudMe && cloudMe.lastVisit;
+      $('ws-continue').hidden = !last;
+      if (last) {
+        $('ws-continue').setAttribute('href', last.path);
+        $('ws-continue-title').textContent = last.title || last.path;
+      }
+      var note = $('ws-profile-note');
+      if (note && note.firstChild) note.firstChild.textContent = user
+        ? 'Saved to your account: it follows you to any device you sign in on. '
+        : 'Saved in this browser only. Sign in to keep it on any device. ';
+      $('ws-profile-edit').textContent = user ? 'Account' : 'Sign in';
+      document.querySelector('.ws-bar-profile').setAttribute('href', user ? '/account' : '/account?next=%2F');
+    } else {
+      $('ws-profile-edit').textContent = name ? 'Edit' : 'Add name';
+    }
+
+    // game: rank, XP, streak, badges
+    var g = WSProfile.game();
+    $('ws-profile-rank').textContent = g.rank;
+    $('ws-profile-xp').textContent = g.xp;
+    $('ws-profile-xp-fill').style.width = g.pct + '%';
+    $('ws-profile-next').textContent = g.next ? (g.next[0] - g.xp) + ' XP to ' + g.next[1] : 'top rank reached';
+    $('ws-profile-streak').textContent = g.streak;
+    $('ws-profile-badges').textContent = g.badges;
+
+    // one row per workshop: plan ticks, pre/post-test scores, live or greyed-out link
+    var tests = WSProfile.tests();
+    document.querySelectorAll('.ws-profile-tracks li').forEach(function (li) {
+      var id = li.dataset.track;
+      var total = WSProfile.planTotal(id, +li.dataset.total);
+      var d = Math.min(WSProfile.planDone(id), total);
+      li.querySelector('.ws-progress-bar span').style.width = (100 * d / total) + '%';
+      li.querySelector('em').textContent = d + '/' + total;
+      li.querySelectorAll('[data-test]').forEach(function (b) {
+        var t = tests[b.dataset.test];
+        b.textContent = t && typeof t.pct === 'number' ? t.pct + '%' : '–';
+      });
+      var qz = li.querySelector('.ws-pt-quiz');
+      if (qz) {
+        var q = WSProfile.quizzes(qz.dataset.folders.split(' '));
+        qz.textContent = q.decks
+          ? 'Quizzes: ' + q.decks + ' of ' + qz.dataset.decks + ' decks · ' + Math.round(100 * q.right / q.answered) + '% right first time'
+          : 'Quizzes: none answered yet';
+      }
+      var link = li.querySelector('.ws-pt-link'), open = isUnlocked(id);
+      var cfg = workshopConfig && workshopConfig.profiles[id];
+      li.classList.toggle('ws-pt--locked', !open);
+      if (open) {
+        link.setAttribute('href', cfg ? cfg.path : id + '/welcome.html');
+        link.removeAttribute('aria-disabled');
+        link.removeAttribute('tabindex');
+        link.textContent = 'Open →';
+      } else {
+        link.removeAttribute('href');
+        link.setAttribute('aria-disabled', 'true');
+        link.textContent = '🔒 Locked';
+      }
+    });
+  }
+  window.wsRefreshProfile = refresh;
+
+  boxes.forEach(function (box) {
+    box.addEventListener('change', function () {
+      if (box.checked) done[box.dataset.step] = 1; else delete done[box.dataset.step];
+      WSProfile.saveSteps(done);
+      refresh();
+    });
+  });
+
+  var form = $('ws-profile-form'), input = $('ws-profile-input');
+  $('ws-profile-edit').addEventListener('click', function () {
+    if (serverGate()) { window.location.href = cloudMe && cloudMe.user ? '/account' : '/account?next=%2F'; return; }
+    form.hidden = !form.hidden;
+    if (!form.hidden) { input.value = WSProfile.name(); input.focus(); }
+  });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    WSProfile.saveName(input.value);
+    form.hidden = true;
+    refresh();
+  });
+
+  refresh();
+  // progress made in another tab (the game, a track home) shows up when you come back
+  window.addEventListener('pageshow', refresh);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) refresh(); });
+})();
+
 loadConfig();
 </script>
 ```
+:::

@@ -63,6 +63,13 @@ Not re-run for this snapshot: the game end-to-end test (`dungeons/tests/quest_e2
 | Quiz engine copied into ten folders with no guard | `scripts/sync_workshop_assets.sh` copies the master (`regression-workshop/assets/`) to the others; `--check` fails if a copy differs |
 | No automatic checks | `.github/workflows/checks.yml`: profile check, asset check, quiz lint, labs in sync, game bank lint (not yet seen running on GitHub) |
 | Deck quiz scores were lost on reload | fixed: scores are kept in the browser per deck; **Save score** downloads a text file, **Reset** clears it |
+| Every track home showed one track's content (Basic opened the GIS home) | fixed 2026-11-16: `welcome.qmd` built its content in an R chunk from `QUARTO_PROFILE`, and `freeze: auto` keeps one cached result per file for all profiles. The page is now plain markdown with one `when-profile` block per track, so nothing is frozen |
+| Download links on the track homes pointed at files that do not exist (`downloads/basic_r_foundations.R`, `workshop_data.csv`, …) | fixed: each track home links only to files in the repository |
+| `docs/<track>/index.html` was a second copy of the landing page with dead links | fixed: inside a track `index.qmd` renders a redirect to the track home (`ws-track: true` in the generated profile files) |
+| `assets/fitty-init.js` was requested with a wrong path on every nested page (404) and is not used by any HTML page | fixed: include removed from `_quarto.yml` |
+| GIS sources and labs were copied into the other tracks' output | fixed: caused by the frozen GIS welcome page; stale copies removed from `docs/` |
+| Landing page footer links (Downloads, Contact, References) were dead; game card listed Region 4 as playable | fixed |
+| `data-visualization/plot_data.qmd` names `custom-theme.css`, which does not exist | **open**: harmless 404; fixing it means re-running the deck in R |
 | `main` is six modules behind the branches | **open**: needs your merge decision |
 
 ## 5. Still open
@@ -74,9 +81,28 @@ Not re-run for this snapshot: the game end-to-end test (`dungeons/tests/quest_e2
 5. **`build_profiles.R` prints a notice** that sessions 2 to 5 of the advanced modules are in no menu. That is intended: they are reached from the landing page.
 6. **The planned series A1 to A9 is complete.** Next options: Region 4 of the game (after the workshops have been run), or A10 advanced survival.
 
+## 5b. Launch plan (LAUNCH_PLAN.md), 2026-11-19
+
+Phases 0 to 3 are built and tested locally in `cloud/` (see `cloud/README.md` and `NIGHT_NOTES.md`):
+deploy tooling, Google sign-in, the gate on paid paths, progress sync and "continue where you left off".
+Not live: it needs your Cloudflare account, Google OAuth client and a first deploy. Phases 4 (Razorpay)
+and 5 (seat codes, cohorts) are not started. GitHub Pages still serves `docs/` with the workshop keys.
+
+## 5c. Tracks and modules, 2026-11-20
+
+- **Each track now renders only its own pages** (decision "a"): Moderate has 15 pages Basic lacks, Data Viz
+  Foundations 9, Complete 16; links to another track's pages point into that track (`_filters/crosstrack.lua`).
+  A test in `cloud/` fails if a page a paid track sells reappears in `/basic/`.
+- Free tier and product list confirmed as built (`cloud/src/products.js`).
+- `MODULES_PLAN.md`: the plan for bringing every module to one standard. U0 (consistency) done except the items
+  that need you; next are U1 (Basic: quizzes and labs), U2 (Moderate) and U3 (expert review before charging).
+- Full re-render of all eight tracks: no broken internal links; 62 deck quizzes, game e2e, cloud tests and both
+  browser suites pass.
+
 ## 6. How to re-verify
 
 ```sh
+(cd cloud && npm ci && npm test)                   # sign-in, gate and sync, against a local Cloudflare
 Rscript scripts/build_profiles.R --check
 bash scripts/sync_workshop_assets.sh --check
 for w in regression survival counts ordinal gis clustered survey curves missing prediction causal; do

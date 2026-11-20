@@ -6,8 +6,19 @@
 
 project:
   output-dir: docs/basic
+  render:
+    - data-visualization/ggplot_grammar.qmd
+    - ggstatsplot/ggstatsplot_intro.qmd
+    - plot-gallery/basic.qmd
+    - quarto_repro_w/reproducible_writing.qmd
+    - r-foundations/data-wrangling.qmd
+    - r-foundations/data_wrangling_prac_s.qmd
+    - r-foundations/getting-started.qmd
+    - r-foundations/merging_dataset.qmd
+    - statistical-analysis/regression.qmd
+    - statistical-analysis/statistical_tests.qmd
 website:
-  title: Data Visualization Workshop — Basic
+  title: Medical Statistics in R — Basic
   site-url: '.'
   search: true
   navbar:
@@ -51,4 +62,5 @@ website:
             href: references.qmd
           - text: Downloads
             href: downloads.qmd
+ws-track: true
 

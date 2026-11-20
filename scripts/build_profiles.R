@@ -3,10 +3,13 @@
 #   Rscript scripts/build_profiles.R           write the files
 #   Rscript scripts/build_profiles.R --check   only verify they are up to date (exit 1 if not)
 suppressMessages(library(yaml))
+suppressMessages(library(jsonlite))
 
 args  <- commandArgs(trailingOnly = TRUE)
 check <- "--check" %in% args
-cur   <- read_yaml("curriculum.yml")
+# curriculum.yml has non-ASCII titles; in a non-UTF-8 locale R stops reading at the first one.
+if (!l10n_info()$`UTF-8`) invisible(suppressWarnings(Sys.setlocale("LC_CTYPE", "C.UTF-8")))
+cur   <- read_yaml("curriculum.yml", fileEncoding = "UTF-8")
 
 item <- function(i, prof) {
   if (is.character(i) && i == "---") return(list(text = "---"))
@@ -34,10 +37,32 @@ entry <- function(m, prof) {
   e
 }
 
+# ── Which pages each track renders ────────────────────────────────────────────
+# A track renders ONLY: the pages every track has (SHARED), the pages in its own menus, and its
+# project-extra render globs. (Until 2026-11-20 every shared page was rendered into every track, so the
+# free Basic site served all of Moderate's pages too.) A link to a page another track owns is pointed
+# into that track by _filters/crosstrack.lua, using _filters/pages.json written below.
+SHARED <- c("index.qmd", "welcome.qmd", "contact.qmd", "downloads.qmd", "references.qmd")
+# The track a page "belongs to" when several render it: the first one in this order (cheapest first).
+HOME_ORDER <- c("basic", "moderate", "regression", "dataviz-base", "dataviz-complete", "gis", "advanced", "dungeons")
+
+menu_paths <- function(p) {
+  x <- unlist(lapply(c(p$left, p$right), function(m)
+    c(m$href, vapply(m$items, function(i) if (is.character(i)) i else i$path, ""))))
+  unique(setdiff(x, "---"))
+}
+extra_globs <- function(p) as.character(unlist(p$`project-extra`$render))
+glob <- function(g) if (length(g)) Sys.glob(g) else character()
+sorted <- function(x) sort(unique(x), method = "radix")
+pages_of <- function(p) sorted(c(SHARED, menu_paths(p), glob(extra_globs(p))))
+
 build <- function(prof) {
   p <- cur$profiles[[prof]]
   # as.list(): keep one-element render/resources lists as YAML sequences (Quarto rejects a bare string there)
-  proj <- c(list(`output-dir` = p$`output-dir`), lapply(p$`project-extra`, as.list))
+  extra <- p$`project-extra`
+  globbed <- glob(extra_globs(p))
+  extra$render <- c(extra_globs(p), sorted(setdiff(menu_paths(p), c(SHARED, globbed))))
+  proj <- c(list(`output-dir` = p$`output-dir`), lapply(extra, as.list))
   list(
     project = proj,
     website = list(
@@ -47,7 +72,10 @@ build <- function(prof) {
         left  = Filter(Negate(is.null), lapply(p$left,  entry, prof = prof)),
         right = Filter(Negate(is.null), lapply(p$right, entry, prof = prof))
       )
-    )
+    ),
+    # Marks a page as rendered inside a track site. index.qmd uses it (when-meta) to show a
+    # redirect to the track home instead of a second copy of the landing page with dead links.
+    `ws-track` = TRUE
   )
 }
 
@@ -75,6 +103,21 @@ for (prof in names(cur$profiles)) {
     cat(sprintf("%-18s %s\n", prof, if (same) "unchanged" else "written"))
   }
 }
+# Page lists for _filters/crosstrack.lua
+profiles <- setNames(lapply(names(cur$profiles), function(pr) pages_of(cur$profiles[[pr]])), names(cur$profiles))
+home <- list()
+for (pr in intersect(HOME_ORDER, names(profiles))) for (pg in profiles[[pr]]) if (is.null(home[[pg]]) && !pg %in% SHARED) home[[pg]] <- pr
+home <- lapply(home[sorted(names(home))], unbox)   # plain strings, not one-element arrays
+pj <- toJSON(list(profiles = profiles, home = home), auto_unbox = FALSE, pretty = TRUE)
+pj <- sub('"home": \\[\\]', '"home": {}', pj)
+pj_lines <- c(strsplit(as.character(pj), "\n", fixed = TRUE)[[1]])
+pj_file <- "_filters/pages.json"
+pj_same <- file.exists(pj_file) && identical(readLines(pj_file, warn = FALSE), pj_lines)
+if (check) { if (!pj_same) bad <- c(bad, pj_file) } else {
+  if (!pj_same) writeLines(pj_lines, pj_file, useBytes = TRUE)
+  cat(sprintf("%-18s %s\n", pj_file, if (pj_same) "unchanged" else "written"))
+}
+
 if (check) {
   if (length(bad)) { cat("Out of date:", paste(bad, collapse = ", "), "\n"); quit(status = 1) }
   cat("All profile files match curriculum.yml\n")

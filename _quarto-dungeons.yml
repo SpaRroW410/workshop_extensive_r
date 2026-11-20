@@ -9,6 +9,20 @@ project:
   render:
     - regression-workshop/*.qmd
     - dungeons/*.qmd
+    - data-visualization/best_practices.qmd
+    - data-visualization/ggplot_grammar.qmd
+    - data-visualization/plot_data.qmd
+    - gtsummary/gtsummary_tutorial.qmd
+    - plot-gallery/basic.qmd
+    - quarto_repro_w/reproducible_writing.qmd
+    - r-foundations/cleaning_messy_data.qmd
+    - r-foundations/data-wrangling.qmd
+    - r-foundations/getting-started.qmd
+    - r-foundations/iteration.qmd
+    - r-foundations/merging_dataset.qmd
+    - statistical-analysis/data_analysis.qmd
+    - statistical-analysis/regression.qmd
+    - statistical-analysis/statistical_tests.qmd
   resources:
     - data/ncd_survey.csv
     - data/villages.csv
@@ -155,4 +169,5 @@ website:
             href: references.qmd
           - text: Downloads
             href: downloads.qmd
+ws-track: true
 

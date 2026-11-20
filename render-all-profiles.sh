@@ -54,7 +54,7 @@ fi
 # True if a project-wide input (affects every page) is newer than the stamp
 global_changed() {
   local profile="$1" stamp="$2" f
-  for f in _quarto.yml "_quarto-$profile.yml" config.json navigation.json navigation.yml; do
+  for f in _quarto.yml "_quarto-$profile.yml" config.json; do
     if [ -f "$f" ] && [ "$f" -nt "$stamp" ]; then return 0; fi
   done
   if [ -n "$(find assets -type f -newer "$stamp" -print -quit 2>/dev/null)" ]; then
@@ -63,13 +63,16 @@ global_changed() {
   return 1
 }
 
-# .qmd inputs of a profile as project-relative POSIX paths
+# .qmd inputs of a profile as project-relative POSIX paths.
+# quarto inspect prints absolute paths: C:\\... on Windows, /... elsewhere (until 2026-11-20 only the
+# Windows form was matched, so on Linux/macOS the incremental mode never found a changed page).
 profile_inputs() {
   local root
   root="$(pwd -W 2>/dev/null || pwd)"
   quarto inspect --profile "$1" 2>/dev/null \
-    | grep -o '"[A-Za-z]:\\\\[^"]*\.qmd"' \
+    | grep -oE '"([A-Za-z]:\\\\|/)[^"]*\.qmd"' \
     | sed -e 's/^"//' -e 's/"$//' -e 's#\\\\#/#g' \
+    | grep "^$root/" \
     | sed -e "s#^$root/##" \
     | sort -u
 }

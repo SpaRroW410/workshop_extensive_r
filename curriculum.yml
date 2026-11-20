@@ -151,7 +151,7 @@ pages:
 
 profiles:
   basic:
-    title: "Data Visualization Workshop — Basic"
+    title: "Medical Statistics in R — Basic"
     output-dir: docs/basic
     logo-href: welcome.html
     left:
@@ -181,7 +181,7 @@ profiles:
           - references.qmd
           - downloads.qmd
   moderate:
-    title: "Data Visualization Workshop — Moderate"
+    title: "Medical Statistics in R — Moderate"
     output-dir: docs/moderate
     logo-href: welcome.html
     left:
@@ -234,7 +234,7 @@ profiles:
           - references.qmd
           - downloads.qmd
   regression:
-    title: "Data Visualization Workshop — Regression"
+    title: "Medical Statistics in R — Regression"
     output-dir: docs/regression
     logo-href: welcome.html
     # Theory of Regression Analysis workshop (6 reveal.js decks + cheat sheet).
@@ -444,7 +444,7 @@ profiles:
           - references.qmd
           - downloads.qmd
   advanced:
-    title: "Data Visualization Workshop — Advanced"
+    title: "Medical Statistics in R — Advanced"
     output-dir: docs/advanced
     logo-href: welcome.html
     # Advanced Analysis branch (SITE_PLAN 2.6): survival (A1), counts and rates (A2), ordinal/multinomial outcomes (A3) and clustered/repeated data (A4) survey data (A5) curves/interactions (A6) missing data (A7) prediction models (A8) and causal inference (A9) live here.
@@ -586,7 +586,6 @@ profiles:
         items:
           - exporting_tools/exporting_plots.qmd
           - exporting_tools/plotting_tools.qmd
-      - text: "Applied: Viz Examples"
     right:
       - text: "Reference"
         icon: book
@@ -626,8 +625,6 @@ profiles:
           - exporting_tools/plotting_tools.qmd
           - exporting_tools/debugging_plots.qmd
           - exporting_tools/advanced_exporting.qmd
-      - text: "Applied Examples"
-        items:
     right:
       - text: "Reference"
         icon: book

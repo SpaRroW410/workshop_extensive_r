@@ -6,6 +6,18 @@
 
 project:
   output-dir: docs/dataviz-base
+  render:
+    - data-visualization/best_practices.qmd
+    - data-visualization/ggplot_grammar.qmd
+    - data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
+    - data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd
+    - data-visualization/plot_data.qmd
+    - exporting_tools/exporting_plots.qmd
+    - exporting_tools/plotting_tools.qmd
+    - plot-gallery/basic.qmd
+    - plot-gallery/moderate.qmd
+    - specialized/merge_visuals.qmd
+    - specialized/plot_stats.qmd
 website:
   title: Data Visualization — Foundations
   site-url: '.'
@@ -54,4 +66,5 @@ website:
             href: references.qmd
           - text: Downloads
             href: downloads.qmd
+ws-track: true
 

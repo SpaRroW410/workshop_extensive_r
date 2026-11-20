@@ -1,0 +1,20 @@
+{
+  "name": "medstats-cloud",
+  "private": true,
+  "description": "Cloudflare Pages Functions for the workshop site: sign-in, paid-path gate, progress sync. See LAUNCH_PLAN.md.",
+  "type": "module",
+  "scripts": {
+    "dev": "node stage.mjs && wrangler pages dev",
+    "db:local": "wrangler d1 migrations apply medstats --local",
+    "test": "node --test --test-concurrency=1 tests/*.test.js",
+    "deploy": "bash deploy.sh",
+    "test:e2e": "node stage.mjs && node tests/e2e/site.e2e.mjs"
+  },
+  "dependencies": {
+    "better-auth": "1.7.17"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20261104.1",
+    "wrangler": "4.157.0"
+  }
+}

@@ -395,7 +395,7 @@
     var ex = document.getElementById('rq-export'), im = document.getElementById('rq-import'), rs = document.getElementById('rq-reset');
     if (ex) ex.addEventListener('click', function () { var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(state, null, 1)], { type: 'application/json' })); a.download = 'dungeons-progress.json'; a.click(); });
     if (im) im.addEventListener('change', function () { var f = im.files[0]; if (!f) return; var fr = new FileReader(); fr.onload = function () { try { var s = JSON.parse(fr.result); if (s && s.v === 1) { state = s; save(); location.reload(); } else toast('Not a progress file'); } catch (e) { toast('Could not read file'); } }; fr.readAsText(f); });
-    if (rs) rs.addEventListener('click', function () { if (confirm('Erase all progress on this device?')) { state = blank(); save(); location.reload(); } });
+    if (rs) rs.addEventListener('click', function () { if (confirm('Erase all progress on this device?')) { try { localStorage.removeItem(KEY); } catch (e) {} state = blank(); save(); location.reload(); } }); // removeItem first: a signed-in reset also clears the saved copy
   }
 
   /* ── dataset bar: a download button beside every question that needs data ── */

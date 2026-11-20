@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Welcome – Data Visualization Workshop — Advanced</title>
+<title>Welcome – Medical Statistics in R — Advanced</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -73,10 +73,10 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script src="assets/fitty-init.js"></script>
 
 
 <link rel="stylesheet" href="assets/theme_webp.css">
+<link rel="stylesheet" href="assets/welcome.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -87,7 +87,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="welcome.html">
-    <span class="navbar-title">Data Visualization Workshop — Advanced</span>
+    <span class="navbar-title">Medical Statistics in R — Advanced</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -359,10 +359,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul class="collapse">
-  <li><a href="#workshop-goals" id="toc-workshop-goals" class="nav-link active" data-scroll-target="#workshop-goals">🎯 Workshop Goals</a></li>
-  <li><a href="#what-this-track-covers" id="toc-what-this-track-covers" class="nav-link" data-scroll-target="#what-this-track-covers">📚 What This Track Covers</a></li>
-  <li><a href="#find-your-way-around" id="toc-find-your-way-around" class="nav-link" data-scroll-target="#find-your-way-around">🧭 Find Your Way Around</a></li>
-  <li><a href="#downloadable-resources" id="toc-downloadable-resources" class="nav-link" data-scroll-target="#downloadable-resources">📥 Downloadable Resources</a></li>
+  <li><a href="#self-study-plan-3" id="toc-self-study-plan-3" class="nav-link active" data-scroll-target="#self-study-plan-3">🗓️ Self-study plan</a></li>
+  <li><a href="#what-you-will-be-able-to-do-3" id="toc-what-you-will-be-able-to-do-3" class="nav-link" data-scroll-target="#what-you-will-be-able-to-do-3">🎯 What you will be able to do</a></li>
+  <li><a href="#downloads-3" id="toc-downloads-3" class="nav-link" data-scroll-target="#downloads-3">📥 Downloads</a></li>
   </ul>
 </nav>
     </div>
@@ -388,178 +387,181 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div style="background:#fff5f5;border-left:5px solid #b71c1c;border-radius:10px;
-            padding:1.5rem 2rem;margin-bottom:2rem;">
-<span style="display:inline-block;background:#b71c1c;color:white;font-size:0.8rem;
-               font-weight:600;padding:0.2rem 0.75rem;border-radius:999px;
-               margin-bottom:0.75rem;">🔴 Workshop Key Unlocked</span>
-<h2 style="color:#b71c1c;margin-top:0.4rem;margin-bottom:0.6rem;" class="anchored">
-Advanced Track
-</h2>
-<p style="font-size:1.05rem;line-height:1.7;margin:0;">
-Welcome to the <strong>Advanced Track</strong> — the full workshop experience. This track covers all four ggplot2 modules, advanced and interactive plots, ggstatsplot advanced, Quarto for publication, deep statistical analysis, and real-world applied NCTOH healthcare examples.
-</p>
+<!--
+  TRACK HOME PAGE — one block per profile, chosen by Quarto itself (when-profile).
+
+  This page deliberately contains NO R code. It used to build its content in an R chunk from
+  Sys.getenv("QUARTO_PROFILE"), but `freeze: auto` keeps ONE cached result per file for all
+  profiles, so every track ended up showing whichever track was rendered last (Basic opened the
+  GIS home page). Plain markdown is never frozen, so each profile always gets its own block.
+
+  Every block has the same order:  banner → game → self-study plan → goals → downloads → tip.
+  Link only to files that exist in the repository: Quarto copies linked files into the track site.
+-->
+<!-- ═══════════════════════════════════════════════════════════════ BASIC -->
+<!-- ═══════════════════════════════════════════════════════════════ MODERATE -->
+<!-- ═══════════════════════════════════════════════════════════════ REGRESSION -->
+<!-- ═══════════════════════════════════════════════════════════════ ADVANCED -->
+<div class="ws-track-hero ws-track--advanced" data-track="advanced">
+<p><span class="ws-track-badge">🔴 Workshop Key Unlocked</span></p>
+<p><span class="ws-track-title">Advanced Track</span></p>
+<p>Step 4 of the self-study path. The complete visualization library (all four ggplot2 modules, advanced and interactive plots, publication-ready Quarto) and nine advanced analysis workshops, A1 to A9. Each workshop has five slide decks with a quiz, five R labs and a two-page cheat sheet.</p>
 </div>
-<section id="workshop-goals" class="level2">
-<h2 class="anchored" data-anchor-id="workshop-goals">🎯 Workshop Goals</h2>
+<div class="ws-track-game">
+<p>🗺️ <strong>Play as you learn.</strong> Region 4 · Advanced of <em>Dungeons &amp; Dataframes</em> is not built yet. Regions 1 to 3 are a quick way to check the foundations this track assumes. <a href="../dungeons/dungeons/index.html" class="ws-track-game-btn">Open the game →</a></p>
+</div>
+<section id="self-study-plan-3" class="level2">
+<h2 class="anchored" data-anchor-id="self-study-plan-3">🗓️ Self-study plan</h2>
+<p>Steps 1 and 2 finish the visualization library. Steps 3 to 11 are the workshops: do A1 to A3 first, then take the others in the order your own work needs. Every session is listed on <a href="./advanced-workshops.html">Advanced Workshops</a>. Tick a step when you have finished it; ticks are saved in this browser.</p>
+<div class="ws-plan">
+<ol type="1">
+<li><p><strong>Finish ggplot2 and the plot galleries</strong></p>
+<p><a href="./data-visualization/gram_ggplot/module_3_colors_scales_themes.html">Module 3 — Colors, Scales &amp; Themes</a> · <a href="./data-visualization/gram_ggplot/module_4_advanced_best_practices.html">Module 4 — Advanced Best Practices</a> · <a href="./plot-gallery/advanced.html">Advanced Plot Gallery</a> · <a href="./plot-gallery/practical_application.html">Practical Applications</a> · <a href="./specialized/interactive.html">Interactive Plots</a></p></li>
+<li><p><strong>Publication-ready output</strong></p>
+<p><a href="./ggstatsplot/ggstatsplot_advanced.html">ggstatsplot — Advanced</a> · <a href="./quarto_repro_w/quarto_advanced.html">Quarto — Publication</a> · <a href="./exporting_tools/debugging_plots.html">Debugging Plots</a> · <a href="./exporting_tools/advanced_exporting.html">Advanced Exporting</a></p></li>
+<li><p><strong>A1 · Survival analysis</strong></p>
+<p>Time-to-event data, Kaplan-Meier, log-rank, Cox. <a href="./survival-workshop/s1_time_to_event.html">Start at Session 1</a> · <a href="./survival-workshop/cheatsheet.html">Cheat sheet</a></p></li>
+<li><p><strong>A2 · Counts and rates</strong></p>
+<p>Poisson and negative binomial regression, offsets, excess zeros. <a href="./counts-workshop/s1_counts_rates.html">Start at Session 1</a> · <a href="./counts-workshop/cheatsheet.html">Cheat sheet</a></p></li>
+<li><p><strong>A3 · Ordinal and multinomial outcomes</strong></p>
+<p>Ordinal logistic regression, the proportional-odds check, multinomial models. <a href="./ordinal-workshop/s1_categorical_outcomes.html">Start at Session 1</a> · <a href="./ordinal-workshop/cheatsheet.html">Cheat sheet</a></p></li>
+<li><p><strong>A4 · Clustered and repeated data</strong></p>
+<p>ICC, cluster-robust standard errors, GEE, mixed models. <a href="./clustered-workshop/s1_clustered_data.html">Start at Session 1</a> · <a href="./clustered-workshop/cheatsheet.html">Cheat sheet</a></p></li>
+<li><p><strong>A5 · Survey data and weights</strong></p>
+<p>Complex survey design, weights, <code>svyglm</code>, raking. <a href="./survey-workshop/s1_survey_design.html">Start at Session 1</a> · <a href="./survey-workshop/cheatsheet.html">Cheat sheet</a></p></li>
+<li><p><strong>A6 · Curves and interactions</strong></p>
+<p>Splines, GAMs, effect modification, prediction plots. <a href="./curves-workshop/s1_beyond_linear.html">Start at Session 1</a> · <a href="./curves-workshop/cheatsheet.html">Cheat sheet</a></p></li>
+<li><p><strong>A7 · Missing data</strong></p>
+<p>MCAR, MAR and MNAR, multiple imputation with <code>mice</code>, sensitivity analysis. <a href="./missing-workshop/s1_patterns_mechanisms.html">Start at Session 1</a> · <a href="./missing-workshop/cheatsheet.html">Cheat sheet</a></p></li>
+<li><p><strong>A8 · Prediction models</strong></p>
+<p>Risk models, discrimination and calibration, validation, shrinkage, decision curves. <a href="./prediction-workshop/s1_building_model.html">Start at Session 1</a> · <a href="./prediction-workshop/cheatsheet.html">Cheat sheet</a></p></li>
+<li><p><strong>A9 · Causal inference</strong></p>
+<p>DAGs, adjustment, propensity scores, inverse probability weighting, E-values. <a href="./causal-workshop/s1_causal_questions_dags.html">Start at Session 1</a> · <a href="./causal-workshop/cheatsheet.html">Cheat sheet</a></p></li>
+</ol>
+</div>
+</section>
+<section id="what-you-will-be-able-to-do-3" class="level2">
+<h2 class="anchored" data-anchor-id="what-you-will-be-able-to-do-3">🎯 What you will be able to do</h2>
 <ul>
-<li>Master all four ggplot2 modules</li>
-<li>Build interactive and advanced visualizations</li>
-<li>Perform deep statistical analysis with ggstatsplot</li>
-<li>Produce publication-ready documents using Quarto</li>
+<li>Use all four ggplot2 modules and build advanced and interactive figures</li>
+<li>Produce publication-ready documents with Quarto</li>
+<li>Choose and fit the right model for survival, count, ordinal, clustered and survey data</li>
+<li>Handle non-linear effects, interactions and missing data properly</li>
+<li>Build and validate a prediction model, and reason about causal questions</li>
 </ul>
 </section>
-<section id="what-this-track-covers" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-track-covers">📚 What This Track Covers</h2>
-<ul>
-<li>🪜 Ordinal and Multinomial Outcomes Workshop — 5 sessions, 5 labs, quizzes, cheat sheet</li>
-<li>⏳ Survival Analysis Workshop — 5 sessions, 5 labs, quizzes, cheat sheet</li>
-<li>🦟 Counts and Rates Workshop — 5 sessions, 5 labs, quizzes, cheat sheet</li>
-<li>📁 R Foundations &amp; Data Wrangling (+ Applied Examples)</li>
-<li>📊 Best Practices &amp; Plot Matching</li>
-<li>🎨 ggplot2 Modules 1–4 (Complete)</li>
-<li>🖼️ Basic, Intermediate &amp; Advanced Plot Gallery</li>
-<li>🔗 Specialized Plots — Merged, Statistical &amp; Interactive</li>
-<li>🧪 ggstatsplot — Intro, Intermediate &amp; Advanced</li>
-<li>📋 gtsummary Tables &amp; Deep Statistical Analysis</li>
-<li>📝 Quarto — Basics, Dynamic Documents &amp; Publication</li>
-<li>⚙️ Full Exporting, Debugging &amp; Advanced Tools</li>
-<li>🏥 Applied NCTOH Healthcare Examples</li>
-</ul>
-</section>
-<section id="find-your-way-around" class="level2">
-<h2 class="anchored" data-anchor-id="find-your-way-around">🧭 Find Your Way Around</h2>
-<p>Use the navigation bar above to browse all modules. Key starting points:</p>
-<ul>
-<li>🧭 <strong><a href="./causal-workshop/s1_causal_questions_dags.html">Causal Inference Workshop</a></strong> — Slides, labs and quizzes: DAGs, adjustment, propensity scores, IPW, E-values (start at Session 1)</li>
-<li>🎯 <strong><a href="./prediction-workshop/s1_building_model.html">Prediction Models Workshop</a></strong> — Slides, labs and quizzes: risk models, calibration, validation, shrinkage, decision curves (start at Session 1)</li>
-<li>🕳️ <strong><a href="./missing-workshop/s1_patterns_mechanisms.html">Missing Data Workshop</a></strong> — Slides, labs and quizzes: MCAR/MAR/MNAR, multiple imputation with mice, sensitivity analysis (start at Session 1)</li>
-<li>📈 <strong><a href="./curves-workshop/s1_beyond_linear.html">Curves &amp; Interactions Workshop</a></strong> — Slides, labs and quizzes: splines, GAMs, effect modification, prediction plots (start at Session 1)</li>
-<li>📋 <strong><a href="./survey-workshop/s1_survey_design.html">Survey Data Workshop</a></strong> — Slides, labs and quizzes: complex survey design, weights, svyglm, raking (start at Session 1)</li>
-<li>🏘️ <strong><a href="./clustered-workshop/s1_clustered_data.html">Clustered &amp; Repeated Data Workshop</a></strong> — Slides, labs and quizzes: ICC, cluster-robust SEs, GEE, mixed models, repeated measures (start at Session 1)</li>
-<li>🪜 <strong><a href="./ordinal-workshop/s1_categorical_outcomes.html">Ordinal &amp; Multinomial Workshop</a></strong> — Slides, labs and quizzes: ordinal and multinomial logistic regression (start at Session 1)</li>
-<li>⏳ <strong><a href="./survival-workshop/s1_time_to_event.html">Survival Workshop</a></strong> — Slides, labs and quizzes on time-to-event data: Kaplan-Meier, log-rank, Cox (start at Session 1)</li>
-<li>🦟 <strong><a href="./counts-workshop/s1_counts_rates.html">Counts Workshop</a></strong> — Slides, labs and quizzes on counts and rates: Poisson, negative binomial, offsets (start at Session 1)</li>
-<li>📁 <strong><a href="./r-foundations/getting-started.html">R Foundations</a></strong> — R syntax, wrangling, and full NCTOH applied examples</li>
-<li>📊 <strong><a href="./data-visualization/ggplot_grammar.html">Data Visualization</a></strong> — All four ggplot2 modules, advanced and interactive plots</li>
-<li>🧪 <strong><a href="./statistical-analysis/statistical_tests.html">Statistical Analysis</a></strong> — Full ggstatsplot, gtsummary, and deep analysis</li>
-<li>📝 <strong><a href="statistical-analysis/reproducible_writing.qmd">Reproducibility</a></strong> — Quarto basics through publication-ready documents</li>
-</ul>
+<section id="downloads-3" class="level2">
+<h2 class="anchored" data-anchor-id="downloads-3">📥 Downloads</h2>
+<p>Each workshop runs on its own synthetic dataset. <code>make_data.R</code> rebuilds it; the labs have <code>___</code> blanks to fill in.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Workshop</th>
+<th>Data</th>
+<th>Scripts</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A1 Survival</td>
+<td><a href="data/tb_cohort.csv">tb_cohort.csv</a></td>
+<td><a href="survival-workshop/make_data.R">make_data.R</a> · <a href="survival-workshop/labs/lab1_data.R">Lab 1</a> · <a href="survival-workshop/labs/lab2_km.R">Lab 2</a> · <a href="survival-workshop/labs/lab3_logrank.R">Lab 3</a> · <a href="survival-workshop/labs/lab4_cox.R">Lab 4</a> · <a href="survival-workshop/labs/lab5_assumptions.R">Lab 5</a></td>
+</tr>
+<tr class="even">
+<td>A2 Counts and rates</td>
+<td><a href="data/dengue_wards.csv">dengue_wards.csv</a></td>
+<td><a href="counts-workshop/make_data.R">make_data.R</a> · <a href="counts-workshop/labs/lab1_counts.R">Lab 1</a> · <a href="counts-workshop/labs/lab2_poisson.R">Lab 2</a> · <a href="counts-workshop/labs/lab3_overdisp.R">Lab 3</a> · <a href="counts-workshop/labs/lab4_zeros.R">Lab 4</a> · <a href="counts-workshop/labs/lab5_report.R">Lab 5</a></td>
+</tr>
+<tr class="odd">
+<td>A3 Ordinal and multinomial</td>
+<td><a href="data/maternal_survey.csv">maternal_survey.csv</a></td>
+<td><a href="ordinal-workshop/make_data.R">make_data.R</a> · <a href="ordinal-workshop/labs/lab1_outcomes.R">Lab 1</a> · <a href="ordinal-workshop/labs/lab2_ordinal.R">Lab 2</a> · <a href="ordinal-workshop/labs/lab3_po.R">Lab 3</a> · <a href="ordinal-workshop/labs/lab4_multinom.R">Lab 4</a> · <a href="ordinal-workshop/labs/lab5_report.R">Lab 5</a></td>
+</tr>
+<tr class="even">
+<td>A4 Clustered and repeated</td>
+<td><a href="data/bp_trial.csv">bp_trial.csv</a></td>
+<td><a href="clustered-workshop/make_data.R">make_data.R</a> · <a href="clustered-workshop/labs/lab1_clusters.R">Lab 1</a> · <a href="clustered-workshop/labs/lab2_gee.R">Lab 2</a> · <a href="clustered-workshop/labs/lab3_mixed.R">Lab 3</a> · <a href="clustered-workshop/labs/lab4_long.R">Lab 4</a> · <a href="clustered-workshop/labs/lab5_report.R">Lab 5</a></td>
+</tr>
+<tr class="odd">
+<td>A5 Survey data</td>
+<td><a href="data/survey_adults.csv">survey_adults.csv</a> · <a href="data/survey_population.csv">survey_population.csv</a></td>
+<td><a href="survey-workshop/make_data.R">make_data.R</a> · <a href="survey-workshop/labs/lab1_design.R">Lab 1</a> · <a href="survey-workshop/labs/lab2_describe.R">Lab 2</a> · <a href="survey-workshop/labs/lab3_regression.R">Lab 3</a> · <a href="survey-workshop/labs/lab4_weights.R">Lab 4</a> · <a href="survey-workshop/labs/lab5_report.R">Lab 5</a></td>
+</tr>
+<tr class="even">
+<td>A6 Curves and interactions</td>
+<td><a href="data/ncd_curves.csv">ncd_curves.csv</a></td>
+<td><a href="curves-workshop/make_data.R">make_data.R</a> · <a href="curves-workshop/labs/lab1_linear.R">Lab 1</a> · <a href="curves-workshop/labs/lab2_splines.R">Lab 2</a> · <a href="curves-workshop/labs/lab3_gam.R">Lab 3</a> · <a href="curves-workshop/labs/lab4_interaction.R">Lab 4</a> · <a href="curves-workshop/labs/lab5_report.R">Lab 5</a></td>
+</tr>
+<tr class="odd">
+<td>A7 Missing data</td>
+<td><a href="data/ncd_missing.csv">ncd_missing.csv</a></td>
+<td><a href="missing-workshop/make_data.R">make_data.R</a> · <a href="missing-workshop/labs/lab1_pattern.R">Lab 1</a> · <a href="missing-workshop/labs/lab2_simple.R">Lab 2</a> · <a href="missing-workshop/labs/lab3_mice.R">Lab 3</a> · <a href="missing-workshop/labs/lab4_diagnostics.R">Lab 4</a> · <a href="missing-workshop/labs/lab5_mnar.R">Lab 5</a></td>
+</tr>
+<tr class="even">
+<td>A8 Prediction models</td>
+<td><a href="data/diabetes_dev.csv">diabetes_dev.csv</a> · <a href="data/diabetes_valid.csv">diabetes_valid.csv</a></td>
+<td><a href="prediction-workshop/make_data.R">make_data.R</a> · <a href="prediction-workshop/labs/lab1_build.R">Lab 1</a> · <a href="prediction-workshop/labs/lab2_perf.R">Lab 2</a> · <a href="prediction-workshop/labs/lab3_internal.R">Lab 3</a> · <a href="prediction-workshop/labs/lab4_shrink.R">Lab 4</a> · <a href="prediction-workshop/labs/lab5_external.R">Lab 5</a></td>
+</tr>
+<tr class="odd">
+<td>A9 Causal inference</td>
+<td><a href="data/htn_programme.csv">htn_programme.csv</a></td>
+<td><a href="causal-workshop/make_data.R">make_data.R</a> · <a href="causal-workshop/labs/lab1_dag.R">Lab 1</a> · <a href="causal-workshop/labs/lab2_adjust.R">Lab 2</a> · <a href="causal-workshop/labs/lab3_match.R">Lab 3</a> · <a href="causal-workshop/labs/lab4_ipw.R">Lab 4</a> · <a href="causal-workshop/labs/lab5_sens.R">Lab 5</a></td>
+</tr>
+</tbody>
+</table>
+<p>General cheat sheets and example scripts are on the <a href="./downloads.html">Downloads</a> page.</p>
 <blockquote class="blockquote">
-<p>The complete navbar gives full access to all workshop content.</p>
+<p>💡 <strong>Tip:</strong> The workshops assume the Regression track. If odds ratios or residual plots feel shaky, revise them there first.</p>
 </blockquote>
-</section>
-<section id="downloadable-resources" class="level2">
-<h2 class="anchored" data-anchor-id="downloadable-resources">📥 Downloadable Resources</h2>
-<p>All files for this track are available below, grouped by type.</p>
-<section id="r-scripts" class="level3">
-<h3 class="anchored" data-anchor-id="r-scripts">📄 R Scripts</h3>
-<ul>
-<li><a href="causal-workshop/make_data.R">Make Data</a></li>
-<li><a href="causal-workshop/labs/lab1_dag.R">Lab1 Dag</a></li>
-<li><a href="causal-workshop/labs/lab2_adjust.R">Lab2 Adjust</a></li>
-<li><a href="causal-workshop/labs/lab3_match.R">Lab3 Match</a></li>
-<li><a href="causal-workshop/labs/lab4_ipw.R">Lab4 Ipw</a></li>
-<li><a href="causal-workshop/labs/lab5_sens.R">Lab5 Sens</a></li>
-<li><a href="prediction-workshop/make_data.R">Make Data</a></li>
-<li><a href="prediction-workshop/labs/lab1_build.R">Lab1 Build</a></li>
-<li><a href="prediction-workshop/labs/lab2_perf.R">Lab2 Perf</a></li>
-<li><a href="prediction-workshop/labs/lab3_internal.R">Lab3 Internal</a></li>
-<li><a href="prediction-workshop/labs/lab4_shrink.R">Lab4 Shrink</a></li>
-<li><a href="prediction-workshop/labs/lab5_external.R">Lab5 External</a></li>
-<li><a href="missing-workshop/make_data.R">Make Data</a></li>
-<li><a href="missing-workshop/labs/lab1_pattern.R">Lab1 Pattern</a></li>
-<li><a href="missing-workshop/labs/lab2_simple.R">Lab2 Simple</a></li>
-<li><a href="missing-workshop/labs/lab3_mice.R">Lab3 Mice</a></li>
-<li><a href="missing-workshop/labs/lab4_diagnostics.R">Lab4 Diagnostics</a></li>
-<li><a href="missing-workshop/labs/lab5_mnar.R">Lab5 Mnar</a></li>
-<li><a href="curves-workshop/make_data.R">Make Data</a></li>
-<li><a href="curves-workshop/labs/lab1_linear.R">Lab1 Linear</a></li>
-<li><a href="curves-workshop/labs/lab2_splines.R">Lab2 Splines</a></li>
-<li><a href="curves-workshop/labs/lab3_gam.R">Lab3 Gam</a></li>
-<li><a href="curves-workshop/labs/lab4_interaction.R">Lab4 Interaction</a></li>
-<li><a href="curves-workshop/labs/lab5_report.R">Lab5 Report</a></li>
-<li><a href="survey-workshop/make_data.R">Make Data</a></li>
-<li><a href="survey-workshop/labs/lab1_design.R">Lab1 Design</a></li>
-<li><a href="survey-workshop/labs/lab2_describe.R">Lab2 Describe</a></li>
-<li><a href="survey-workshop/labs/lab3_regression.R">Lab3 Regression</a></li>
-<li><a href="survey-workshop/labs/lab4_weights.R">Lab4 Weights</a></li>
-<li><a href="survey-workshop/labs/lab5_report.R">Lab5 Report</a></li>
-<li><a href="clustered-workshop/make_data.R">Make Data</a></li>
-<li><a href="clustered-workshop/labs/lab1_clusters.R">Lab1 Clusters</a></li>
-<li><a href="clustered-workshop/labs/lab2_gee.R">Lab2 Gee</a></li>
-<li><a href="clustered-workshop/labs/lab3_mixed.R">Lab3 Mixed</a></li>
-<li><a href="clustered-workshop/labs/lab4_long.R">Lab4 Long</a></li>
-<li><a href="clustered-workshop/labs/lab5_report.R">Lab5 Report</a></li>
-<li><a href="ordinal-workshop/make_data.R">Make Data</a></li>
-<li><a href="ordinal-workshop/labs/lab1_outcomes.R">Lab1 Outcomes</a></li>
-<li><a href="ordinal-workshop/labs/lab2_ordinal.R">Lab2 Ordinal</a></li>
-<li><a href="ordinal-workshop/labs/lab3_po.R">Lab3 Po</a></li>
-<li><a href="ordinal-workshop/labs/lab4_multinom.R">Lab4 Multinom</a></li>
-<li><a href="ordinal-workshop/labs/lab5_report.R">Lab5 Report</a></li>
-<li><a href="survival-workshop/make_data.R">Make Data</a></li>
-<li><a href="survival-workshop/labs/lab1_data.R">Lab1 Data</a></li>
-<li><a href="survival-workshop/labs/lab2_km.R">Lab2 Km</a></li>
-<li><a href="survival-workshop/labs/lab3_logrank.R">Lab3 Logrank</a></li>
-<li><a href="survival-workshop/labs/lab4_cox.R">Lab4 Cox</a></li>
-<li><a href="survival-workshop/labs/lab5_assumptions.R">Lab5 Assumptions</a></li>
-<li><a href="counts-workshop/make_data.R">Make Data</a></li>
-<li><a href="counts-workshop/labs/lab1_counts.R">Lab1 Counts</a></li>
-<li><a href="counts-workshop/labs/lab2_poisson.R">Lab2 Poisson</a></li>
-<li><a href="counts-workshop/labs/lab3_overdisp.R">Lab3 Overdisp</a></li>
-<li><a href="counts-workshop/labs/lab4_zeros.R">Lab4 Zeros</a></li>
-<li><a href="counts-workshop/labs/lab5_report.R">Lab5 Report</a></li>
-<li><a href="downloads/basic_r_foundations.R">Basic r Foundations</a></li>
-<li><a href="downloads/basic_visualization.R">Basic Visualization</a></li>
-<li><a href="downloads/moderate_visualization.R">Moderate Visualization</a></li>
-<li><a href="downloads/advanced_visualization.R">Advanced Visualization</a></li>
-<li><a href="downloads/gtsummary_examples.R">Gtsummary Examples</a></li>
-<li><a href="downloads/interactive_plots.R">Interactive Plots</a></li>
-</ul>
-</section>
-<section id="datasets" class="level3">
-<h3 class="anchored" data-anchor-id="datasets">🗄️ Datasets</h3>
-<ul>
-<li>📊 <a href="data/htn_programme.csv">Htn Programme</a> <code>.csv</code></li>
-<li>📊 <a href="data/diabetes_dev.csv">Diabetes Dev</a> <code>.csv</code></li>
-<li>📊 <a href="data/diabetes_valid.csv">Diabetes Valid</a> <code>.csv</code></li>
-<li>📊 <a href="data/ncd_missing.csv">Ncd Missing</a> <code>.csv</code></li>
-<li>📊 <a href="data/ncd_curves.csv">Ncd Curves</a> <code>.csv</code></li>
-<li>📊 <a href="data/survey_adults.csv">Survey Adults</a> <code>.csv</code></li>
-<li>📊 <a href="data/survey_population.csv">Survey Population</a> <code>.csv</code></li>
-<li>📊 <a href="data/bp_trial.csv">Bp Trial</a> <code>.csv</code></li>
-<li>📊 <a href="data/maternal_survey.csv">Maternal Survey</a> <code>.csv</code></li>
-<li>📊 <a href="data/tb_cohort.csv">Tb Cohort</a> <code>.csv</code></li>
-<li>📊 <a href="data/dengue_wards.csv">Dengue Wards</a> <code>.csv</code></li>
-<li>📊 <a href="downloads/workshop_data.csv">Workshop Data</a> <code>.csv</code></li>
-<li>📗 <a href="downloads/workshop_data.xlsx">Workshop Data</a> <code>.xlsx</code></li>
-<li>🔵 <a href="downloads/workshop_data.rds">Workshop Data</a> <code>.rds</code></li>
-<li>🔵 <a href="downloads/nctoh_data.rds">Nctoh Data</a> <code>.rds</code></li>
-<li>🔵 <a href="downloads/nctoh_complete.rds">Nctoh Complete</a> <code>.rds</code></li>
-</ul>
-</section>
-<section id="cheatsheets" class="level3">
-<h3 class="anchored" data-anchor-id="cheatsheets">📋 Cheatsheets</h3>
-<ul>
-<li><a href="downloads/ggplot2_cheatsheet.pdf">ggplot2 Cheatsheet</a></li>
-<li><a href="downloads/dplyr_cheatsheet.pdf">Dplyr Cheatsheet</a></li>
-<li><a href="downloads/gtsummary_cheatsheet.pdf">Gtsummary Cheatsheet</a></li>
-<li><a href="downloads/quarto_cheatsheet.pdf">Quarto Cheatsheet</a></li>
-<li><a href="downloads/ggstatsplot_cheatsheet.pdf">Ggstatsplot Cheatsheet</a></li>
-</ul>
-</section>
-<section id="quarto-template" class="level3">
-<h3 class="anchored" data-anchor-id="quarto-template">📝 Quarto Template</h3>
-<ul>
-<li><a href="downloads/quarto_basics.qmd">Quarto Basics</a> — starter <code>.qmd</code> file covering Quarto basics</li>
-</ul>
-<hr>
-<blockquote class="blockquote">
-<p>💡 <strong>Tip:</strong> Explore <strong>Applied Examples</strong> under each section for real-world healthcare data workflows.</p>
-</blockquote>
+<!-- ═══════════════════════════════════════════════════════════════ DATAVIZ FOUNDATIONS -->
+<!-- ═══════════════════════════════════════════════════════════════ DATAVIZ COMPLETE -->
+<!-- ═══════════════════════════════════════════════════════════════ GIS -->
+<!-- ═══════════════════════════════════════════════════════════════ DUNGEONS (the game's own site) -->
+<script>
+// Self-study plan: a tick box on every step, remembered in this browser (per track).
+(function () {
+  var hero = document.querySelector('.ws-track-hero[data-track]');
+  var steps = document.querySelectorAll('.ws-plan > ol > li');
+  if (!hero || !steps.length) return;
+  var key = 'ws-plan:' + hero.getAttribute('data-track');
+  var done = {};
+  try { done = JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch (e) { done = {}; }
+  // the landing page's profile card reads these totals
+  try { localStorage.setItem('ws-plan-total:' + hero.getAttribute('data-track'), String(steps.length)); } catch (e) {}
+
+  var status = document.createElement('p');
+  status.className = 'ws-plan-status';
+  var plan = document.querySelector('.ws-plan');
+  plan.parentNode.insertBefore(status, plan);
+
+  function refresh() {
+    var n = 0;
+    steps.forEach(function (li, i) {
+      var on = !!done[i];
+      li.classList.toggle('ws-plan-done', on);
+      li.querySelector('.ws-plan-tick').checked = on;
+      if (on) n++;
+    });
+    status.textContent = n + ' of ' + steps.length + ' steps done';
+  }
+
+  steps.forEach(function (li, i) {
+    var box = document.createElement('input');
+    box.type = 'checkbox';
+    box.className = 'ws-plan-tick';
+    box.setAttribute('aria-label', 'Mark step ' + (i + 1) + ' as done');
+    box.addEventListener('change', function () {
+      if (box.checked) done[i] = 1; else delete done[i];
+      try { localStorage.setItem(key, JSON.stringify(done)); } catch (e) {}
+      refresh();
+    });
+    li.appendChild(box);
+  });
+  refresh();
+})();
+</script>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
