@@ -1,5 +1,7 @@
 # Module update plan
 
+> **Step-by-step work list:** [`MODULE_UPDATE_STEPS.md`](MODULE_UPDATE_STEPS.md) (every page, in order, with checks). Page inventory: [`MODULE_INVENTORY.md`](MODULE_INVENTORY.md).
+
 Written 2026-11-20, alongside [`LAUNCH_PLAN.md`](LAUNCH_PLAN.md). Goal: every module meets one standard, in an order that
 lets the site go live early (free) and start charging only for modules that are ready.
 
