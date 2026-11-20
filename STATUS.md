@@ -88,6 +88,17 @@ deploy tooling, Google sign-in, the gate on paid paths, progress sync and "conti
 Not live: it needs your Cloudflare account, Google OAuth client and a first deploy. Phases 4 (Razorpay)
 and 5 (seat codes, cohorts) are not started. GitHub Pages still serves `docs/` with the workshop keys.
 
+## 5c. Tracks and modules, 2026-11-20
+
+- **Each track now renders only its own pages** (decision "a"): Moderate has 15 pages Basic lacks, Data Viz
+  Foundations 9, Complete 16; links to another track's pages point into that track (`_filters/crosstrack.lua`).
+  A test in `cloud/` fails if a page a paid track sells reappears in `/basic/`.
+- Free tier and product list confirmed as built (`cloud/src/products.js`).
+- `MODULES_PLAN.md`: the plan for bringing every module to one standard. U0 (consistency) done except the items
+  that need you; next are U1 (Basic: quizzes and labs), U2 (Moderate) and U3 (expert review before charging).
+- Full re-render of all eight tracks: no broken internal links; 62 deck quizzes, game e2e, cloud tests and both
+  browser suites pass.
+
 ## 6. How to re-verify
 
 ```sh

@@ -38,7 +38,7 @@ needs your confirmation.
 ```sh
 cd cloud
 npm ci
-npm test                 # 41 tests: product map, staging checks, sign-in, gate, progress (local Cloudflare + D1)
+npm test                 # 42 tests: product map, staging checks, sign-in, gate, progress (local Cloudflare + D1)
 npm run test:e2e         # stages the real site and drives it in a browser (needs a rendered docs/)
 node tests/e2e/sync.e2e.mjs   # two devices, a reset, a shared computer
 ```
