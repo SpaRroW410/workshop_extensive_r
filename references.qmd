@@ -2,9 +2,175 @@
 title: "References"
 format:
   html:
-    toc: false
+    toc: true
+    toc-depth: 2
     page-layout: full
 ---
 
-# References
+The works the tracks and workshops are built on, grouped by topic. Under each entry: where on the site it is used.
+Journal articles and books with a DOI were checked against their Crossref records; software citations come from each
+package's own `citation()`, for the versions used to build the site (November 2026).
 
+::: {.callout-tip}
+## Citing R and packages in your own work
+Run `citation()` for R and `citation("package")` for each package you used, and report the versions (`sessionInfo()`).
+The Regression workshop, Session 6, shows a methods paragraph that does this.
+:::
+
+<style>.ref-used { color: #5f6b76; font-size: 0.88em; }</style>
+
+
+## Reporting guidelines
+
+- von Elm E, Altman DG, Egger M, Pocock SJ, Gøtzsche PC, Vandenbroucke JP. The Strengthening the Reporting of Observational Studies in Epidemiology (STROBE) statement: guidelines for reporting observational studies. *The Lancet*. 2007;370(9596):1453–1457. [doi:10.1016/S0140-6736(07)61602-X](https://doi.org/10.1016/S0140-6736(07)61602-X)  
+  <span class='ref-used'>Regression workshop, Session 6; A7 Missing data, Session 5</span>
+- Collins GS, Reitsma JB, Altman DG, Moons KGM. Transparent reporting of a multivariable prediction model for individual prognosis or diagnosis (TRIPOD): the TRIPOD statement. *BMJ*. 2015;350:g7594. [doi:10.1136/bmj.g7594](https://doi.org/10.1136/bmj.g7594)  
+  <span class='ref-used'>A8 Prediction models, Sessions 1 and 5; A7 Missing data, Session 5</span>
+- Schulz KF, Altman DG, Moher D. CONSORT 2010 Statement: updated guidelines for reporting parallel group randomised trials. *BMJ*. 2010;340:c332. [doi:10.1136/bmj.c332](https://doi.org/10.1136/bmj.c332)  
+  <span class='ref-used'>A7 Missing data, Session 5</span>
+- Campbell MK, Piaggio G, Elbourne DR, Altman DG. Consort 2010 statement: extension to cluster randomised trials. *BMJ*. 2012;345:e5661. [doi:10.1136/bmj.e5661](https://doi.org/10.1136/bmj.e5661)  
+  <span class='ref-used'>CONSORT for cluster randomised trials: A4 Clustered and repeated data, Session 5</span>
+
+## Data handling, visualization and reproducible documents
+
+- Wickham H, Çetinkaya-Rundel M, Grolemund G. *R for Data Science*. 2nd ed. O'Reilly Media; 2023. Free online: <https://r4ds.hadley.nz>  
+  <span class='ref-used'>Background reading for R Foundations and Data Wrangling</span>
+- Wilke CO. *Fundamentals of Data Visualization*. O'Reilly Media; 2019. Free online: <https://clauswilke.com/dataviz/>  
+  <span class='ref-used'>Matching Data to Plots; ggplot2 module 4</span>
+- Tufte ER. *The Visual Display of Quantitative Information*. 2nd ed. Graphics Press; 2001.  
+  <span class='ref-used'>Data-to-ink ratio: Best Practices; ggplot2 module 2</span>
+- Few S. *Show Me the Numbers: Designing Tables and Graphs to Enlighten*. Analytics Press; 2004.  
+  <span class='ref-used'>`theme_few()`: ggplot2 module 2</span>
+- Cleveland WS, McGill R. Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods. *Journal of the American Statistical Association*. 1984;79(387):531–554. [doi:10.1080/01621459.1984.10478080](https://doi.org/10.1080/01621459.1984.10478080)  
+  <span class='ref-used'>The research behind Cleveland dot plots: Matching Data to Plots; Intermediate Plot Gallery</span>
+
+## Regression, model checking and prediction
+
+- Hosmer DW, Lemeshow S, Sturdivant RX. *Applied Logistic Regression*. 3rd ed. Wiley; 2013. [doi:10.1002/9781118548387](https://doi.org/10.1002/9781118548387)  
+  <span class='ref-used'>Regression workshop, Sessions 3 and 5; A8 Prediction models, Session 2</span>
+- Hosmer DW, Lemeshow S. Goodness of fit tests for the multiple logistic regression model. *Communications in Statistics - Theory and Methods*. 1980;9(10):1043–1069. [doi:10.1080/03610928008827941](https://doi.org/10.1080/03610928008827941)  
+  <span class='ref-used'>The Hosmer–Lemeshow test: Regression workshop, Session 5; A8 Prediction models, Session 2</span>
+- Harrell FE. *Regression Modeling Strategies*. 2nd ed. Springer; 2015. [doi:10.1007/978-3-319-19425-7](https://doi.org/10.1007/978-3-319-19425-7)  
+  <span class='ref-used'>Background reading for A6 Curves and interactions and A8 Prediction models</span>
+- Steyerberg EW. *Clinical Prediction Models*. 2nd ed. Springer; 2019. [doi:10.1007/978-3-030-16399-0](https://doi.org/10.1007/978-3-030-16399-0)  
+  <span class='ref-used'>Background reading for A8 Prediction models</span>
+- Riley RD, Ensor J, Snell KIE, Harrell FE, Martin GP, Reitsma JB, et al. Calculating the sample size required for developing a clinical prediction model. *BMJ*. 2020:m441. [doi:10.1136/bmj.m441](https://doi.org/10.1136/bmj.m441)  
+  <span class='ref-used'>Sample size for prediction models: A8 Prediction models, Session 1</span>
+- Vickers AJ, Elkin EB. Decision Curve Analysis: A Novel Method for Evaluating Prediction Models. *Medical Decision Making*. 2006;26(6):565–574. [doi:10.1177/0272989X06295361](https://doi.org/10.1177/0272989X06295361)  
+  <span class='ref-used'>Decision curves: A8 Prediction models, Sessions 4 and 5</span>
+
+## Survival analysis
+
+- Kaplan EL, Meier P. Nonparametric Estimation from Incomplete Observations. *Journal of the American Statistical Association*. 1958;53(282):457–481. [doi:10.1080/01621459.1958.10501452](https://doi.org/10.1080/01621459.1958.10501452)  
+  <span class='ref-used'>Kaplan–Meier estimator: A1 Survival, Sessions 1–3</span>
+- Cox DR. Regression Models and Life-Tables. *Journal of the Royal Statistical Society Series B: Statistical Methodology*. 1972;34(2):187–202. [doi:10.1111/j.2517-6161.1972.tb00899.x](https://doi.org/10.1111/j.2517-6161.1972.tb00899.x)  
+  <span class='ref-used'>Cox model: A1 Survival, Sessions 4–5; Regression Analysis page</span>
+- Schoenfeld D. Partial residuals for the proportional hazards regression model. *Biometrika*. 1982;69(1):239–241. [doi:10.1093/biomet/69.1.239](https://doi.org/10.1093/biomet/69.1.239)  
+  <span class='ref-used'>Schoenfeld residuals: A1 Survival, Session 5</span>
+- Grambsch PM, Therneau TM. Proportional hazards tests and diagnostics based on weighted residuals. *Biometrika*. 1994;81(3):515–526. [doi:10.1093/biomet/81.3.515](https://doi.org/10.1093/biomet/81.3.515)  
+  <span class='ref-used'>Proportional hazards test (`cox.zph`): A1 Survival, Session 5</span>
+
+## Survey data, missing data and causal inference
+
+- Kish L. *Survey Sampling*. New York: Wiley; 1965.  
+  <span class='ref-used'>Effective sample size: A5 Survey data, Session 4</span>
+- Lumley T. *Complex Surveys*. Wiley; 2010. [doi:10.1002/9780470580066](https://doi.org/10.1002/9780470580066)  
+  <span class='ref-used'>Background reading for A5 Survey data</span>
+- Rubin DB. *Multiple Imputation for Nonresponse in Surveys*. Wiley; 1987. [doi:10.1002/9780470316696](https://doi.org/10.1002/9780470316696)  
+  <span class='ref-used'>Rubin's rules: A7 Missing data, Sessions 3–5</span>
+- van Buuren S. *Flexible Imputation of Missing Data, Second Edition*. 2nd ed. Chapman & Hall/CRC; 2018. [doi:10.1201/9780429492259](https://doi.org/10.1201/9780429492259)  
+  <span class='ref-used'>Background reading for A7 Missing data</span>
+- Hernán MA, Robins JM. *Causal Inference: What If*. Boca Raton: Chapman & Hall/CRC; 2020. Free online: <https://miguelhernan.org/whatifbook>  
+  <span class='ref-used'>Background reading for A9 Causal inference</span>
+- Rosenbaum PR, Rubin DB. The central role of the propensity score in observational studies for causal effects. *Biometrika*. 1983;70(1):41–55. [doi:10.1093/biomet/70.1.41](https://doi.org/10.1093/biomet/70.1.41)  
+  <span class='ref-used'>Propensity scores: A9 Causal inference, Session 3</span>
+- Austin PC. An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies. *Multivariate Behavioral Research*. 2011;46(3):399–424. [doi:10.1080/00273171.2011.568786](https://doi.org/10.1080/00273171.2011.568786)  
+  <span class='ref-used'>Background reading for A9 Causal inference, Sessions 3–4</span>
+- VanderWeele TJ, Ding P. Sensitivity Analysis in Observational Research: Introducing the E-Value. *Annals of Internal Medicine*. 2017;167(4):268–274. [doi:10.7326/M16-2607](https://doi.org/10.7326/M16-2607)  
+  <span class='ref-used'>E-values (`EValue` package): A9 Causal inference, Session 5</span>
+
+## Spatial statistics
+
+- Moran PAP. Notes on continuous stochastic phenomena. *Biometrika*. 1950;37:17–23. [doi:10.1093/biomet/37.1-2.17](https://doi.org/10.1093/biomet/37.1-2.17)  
+  <span class='ref-used'>Moran's I: GIS workshop, Session 3; Global Moran's I page</span>
+- Geary RC. The Contiguity Ratio and Statistical Mapping. *The Incorporated Statistician*. 1954;5(3):115. [doi:10.2307/2986645](https://doi.org/10.2307/2986645)  
+  <span class='ref-used'>Geary's C: GIS workshop, Session 3; Geary's C, Getis-Ord, Join Counts, Scan Statistic page</span>
+- Anselin L. Local Indicators of Spatial Association—LISA. *Geographical Analysis*. 1995;27(2):93–115. [doi:10.1111/j.1538-4632.1995.tb00338.x](https://doi.org/10.1111/j.1538-4632.1995.tb00338.x)  
+  <span class='ref-used'>Local Moran's I (LISA): GIS workshop, Sessions 3–4; Local Moran's I page</span>
+- Getis A, Ord JK. The Analysis of Spatial Association by Use of Distance Statistics. *Geographical Analysis*. 1992;24(3):189–206. [doi:10.1111/j.1538-4632.1992.tb00261.x](https://doi.org/10.1111/j.1538-4632.1992.tb00261.x)  
+  <span class='ref-used'>Getis–Ord statistics: GIS workshop, Session 4; Geary's C, Getis-Ord, … page</span>
+- Ord JK, Getis A. Local Spatial Autocorrelation Statistics: Distributional Issues and an Application. *Geographical Analysis*. 1995;27(4):286–306. [doi:10.1111/j.1538-4632.1995.tb00912.x](https://doi.org/10.1111/j.1538-4632.1995.tb00912.x)  
+  <span class='ref-used'>Getis–Ord Gi* hot spots: GIS workshop, Session 4</span>
+- Kulldorff M. A spatial scan statistic. *Communications in Statistics - Theory and Methods*. 1997;26(6):1481–1496. [doi:10.1080/03610929708831995](https://doi.org/10.1080/03610929708831995)  
+  <span class='ref-used'>Scan statistic: GIS workshop, Session 4; Geary's C, Getis-Ord, … page</span>
+
+## Software
+
+- R Core Team (2024). *R: A Language and Environment for Statistical Computing*. R Foundation for Statistical Computing, Vienna, Austria. <https://www.R-project.org/>.  
+  <span class='ref-used'>Everything on the site (R 4.3.3)</span>
+- Allaire JJ, Teague C, Xie Y, Dervieux C. *Quarto* [computer software]. Zenodo; 2022. [doi:10.5281/zenodo.5960048](https://doi.org/10.5281/zenodo.5960048)  
+  <span class='ref-used'>The site, slides and reports; Quarto pages in every track</span>
+- Xie Y (2026). *knitr: A General-Purpose Package for Dynamic Report Generation in R*. R package version 1.52, <https://yihui.org/knitr/>.  
+  <span class='ref-used'>Running R inside Quarto documents</span>
+- Wickham H, Averick M, Bryan J, Chang W, McGowan LD, François R, Grolemund G, Hayes A, Henry L, Hester J, Kuhn M, Pedersen TL, Miller E, Bache SM, Müller K, Ooms J, Robinson D, Seidel DP, Spinu V, Takahashi K, Vaughan D, Wilke C, Woo K, Yutani H (2019). "Welcome to the tidyverse." *Journal of Open Source Software*, 4(43), 1686. doi:10.21105/joss.01686 <https://doi.org/10.21105/joss.01686>.  
+  <span class='ref-used'>Data wrangling and plots throughout</span>
+- Wickham H (2016). *ggplot2: Elegant Graphics for Data Analysis*. Springer-Verlag New York. ISBN 978-3-319-24277-4, <https://ggplot2.tidyverse.org>.  
+  <span class='ref-used'>Every plot; ggplot2 modules 1–4</span>
+- Sjoberg D, Whiting K, Curry M, Lavery J, Larmarange J (2021). "Reproducible Summary Tables with the gtsummary Package." *The R Journal*, 13, 570-580. doi:10.32614/RJ-2021-053 <https://doi.org/10.32614/RJ-2021-053>, <https://doi.org/10.32614/RJ-2021-053>.  
+  <span class='ref-used'>Table 1 and regression tables: gtsummary page; workshops</span>
+- Patil I. Visualizations with statistical details: the 'ggstatsplot' approach. *Journal of Open Source Software*. 2021;6(61):3167. [doi:10.21105/joss.03167](https://doi.org/10.21105/joss.03167)  
+  <span class='ref-used'>ggstatsplot pages (Intro, Intermediate, Advanced)</span>
+- Lüdecke D, Ben-Shachar M, Patil I, Waggoner P, Makowski D (2021). "performance: An R Package for Assessment, Comparison and Testing of Statistical Models." *Journal of Open Source Software*, 6(60), 3139. doi:10.21105/joss.03139 <https://doi.org/10.21105/joss.03139>.  
+  <span class='ref-used'>Model checks: Regression Analysis page; A4 Clustered data, Session 1</span>
+- Therneau T (2026). *A Package for Survival Analysis in R*. R package version 3.8-12, <https://CRAN.R-project.org/package=survival>.  
+  <span class='ref-used'>A1 Survival analysis</span>
+- Sjoberg D, Sreeram S, Baillie M, Fruechtenicht C, Haesendonckx S, Treis T (2026). *ggsurvfit: Flexible Time-to-Event Figures*. R package version 1.2.1, https://www.danieldsjoberg.com/ggsurvfit/, <https://github.com/pharmaverse/ggsurvfit>.  
+  <span class='ref-used'>Kaplan–Meier plots: A1 Survival, Session 2</span>
+- Venables WN, Ripley BD (2002). *Modern Applied Statistics with S*, Fourth edition. Springer, New York. ISBN 0-387-95457-0, <https://www.stats.ox.ac.uk/pub/MASS4/>.  
+  <span class='ref-used'>`glm.nb`: A2 Counts, Sessions 3–5; `polr`: A3 Ordinal, Sessions 2, 3 and 5</span>
+- Jackman S (2024). *pscl: Classes and Methods for R Developed in the Political Science Computational Laboratory*. University of Sydney, Sydney, Australia. R package version 1.5.9, <https://github.com/atahk/pscl/>.  
+  <span class='ref-used'>Zero-inflated and hurdle models: A2 Counts, Session 4</span>
+- Christensen R (2026). *ordinal-Regression Models for Ordinal Data*. R package version 2026.7-26, <https://CRAN.R-project.org/package=ordinal>.  
+  <span class='ref-used'>Ordinal regression: A3 Ordinal and multinomial</span>
+- Schlegel B, Steenbergen M (2020). *brant: Test for Parallel Regression Assumption*. R package version 0.3-0, <https://benjaminschlegel.ch/r/brant/>.  
+  <span class='ref-used'>Proportional odds check: A3, Sessions 3 and 5</span>
+- Bates D, Mächler M, Bolker B, Walker S (2015). "Fitting Linear Mixed-Effects Models Using lme4." *Journal of Statistical Software*, 67(1), 1-48. doi:10.18637/jss.v067.i01 <https://doi.org/10.18637/jss.v067.i01>.  
+  <span class='ref-used'>Mixed models: A4 Clustered and repeated data</span>
+- Kuznetsova A, Brockhoff PB, Christensen RHB (2017). "lmerTest Package: Tests in Linear Mixed Effects Models." *Journal of Statistical Software*, 82(13), 1-26. doi:10.18637/jss.v082.i13 <https://doi.org/10.18637/jss.v082.i13>.  
+  <span class='ref-used'>P-values for mixed models: A4, Session 3</span>
+- Halekoh U, Højsgaard S, Yan J (2006). "The R Package geepack for Generalized Estimating Equations." *Journal of Statistical Software*, *15/2*, 1-11.  
+  <span class='ref-used'>GEE: A4, Session 2</span>
+- Zeileis A, Köll S, Graham N (2020). "Various Versatile Variances: An Object-Oriented Implementation of Clustered Covariances in R." *Journal of Statistical Software*, 95(1), 1-36. doi:10.18637/jss.v095.i01 <https://doi.org/10.18637/jss.v095.i01>.  
+  <span class='ref-used'>Robust and cluster-robust standard errors: Regression workshop; A2; A4, Session 2; A9, Session 4</span>
+- Pustejovsky JE (2026). *clubSandwich: Cluster-Robust (Sandwich) Variance Estimators with Small-Sample Corrections*. R package version 0.7.0, <http://jepusto.github.io/clubSandwich/>.  
+  <span class='ref-used'>Small-sample cluster-robust standard errors: A4, Session 2</span>
+- Lumley T (2026). "survey: analysis of complex survey samples." R package version 4.5.  
+  <span class='ref-used'>Complex survey analysis: A5 Survey data</span>
+- Freedman Ellis G, Schneider B (2026). *srvyr: 'dplyr'-Like Syntax for Summary Statistics of Survey Data*. R package version 1.3.1, https://github.com/gergness/srvyr/, <http://gdfe.co/srvyr/>.  
+  <span class='ref-used'>Survey analysis with dplyr syntax: A5, Session 2</span>
+- Wood SN (2011). "Fast stable restricted maximum likelihood and marginal likelihood estimation of semiparametric generalized linear models." *Journal of the Royal Statistical Society (B)*, 73(1), 3-36.  
+  <span class='ref-used'>Generalised additive models: A6 Curves, Session 3</span>
+- Lenth R, Piaskowski J (2026). *emmeans: Estimated Marginal Means, aka Least-Squares Means*. R package version 2.0.4, https://github.com/rvlenth/emmeans/, <https://rvlenth.github.io/emmeans/>.  
+  <span class='ref-used'>Marginal means and contrasts: A4, Session 4; A6, Session 4</span>
+- van Buuren S, Groothuis-Oudshoorn K (2011). "mice: Multivariate Imputation by Chained Equations in R." *Journal of Statistical Software*, 45(3), 1-67. doi:10.18637/jss.v045.i03 <https://doi.org/10.18637/jss.v045.i03>.  
+  <span class='ref-used'>Multiple imputation: A7 Missing data</span>
+- Tierney N, Cook D (2023). "Expanding Tidy Data Principles to Facilitate Missing Data Exploration, Visualization and Assessment of Imputations." *Journal of Statistical Software*, 105(7), 1-31. doi:10.18637/jss.v105.i07 <https://doi.org/10.18637/jss.v105.i07>.  
+  <span class='ref-used'>Missing-data patterns: A7 cheat sheet; Debugging Plots page</span>
+- Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J, Müller M (2011). "pROC: an open-source package for R and S+ to analyze and compare ROC curves." *BMC Bioinformatics*, 12, 77.  
+  <span class='ref-used'>ROC curves and AUC: Regression workshop, Session 6; A8 cheat sheet</span>
+- Friedman J, Hastie T, Tibshirani R (2010). "Regularization Paths for Generalized Linear Models via Coordinate Descent." *Journal of Statistical Software*, 33(1), 1-22. doi:10.18637/jss.v033.i01 <https://doi.org/10.18637/jss.v033.i01>.  
+  <span class='ref-used'>Shrinkage (lasso, ridge): A8, Session 4</span>
+- Textor J, van der Zander B, Gilthorpe MS, Liśkiewicz M, Ellison GT (2016). "Robust causal inference using directed acyclic graphs: the R package 'dagitty'." *International Journal of Epidemiology*, 45(6), 1887-1894. doi:10.1093/ije/dyw341 <https://doi.org/10.1093/ije/dyw341>.  
+  <span class='ref-used'>DAGs and adjustment sets: A9, Session 1</span>
+- Ho D, Imai K, King G, Stuart E (2011). "MatchIt: Nonparametric Preprocessing for Parametric Causal Inference." *Journal of Statistical Software*, 42(8), 1-28. doi:10.18637/jss.v042.i08 <https://doi.org/10.18637/jss.v042.i08>.  
+  <span class='ref-used'>Propensity score matching: A9, Session 3</span>
+- Greifer N (2026). *cobalt: Covariate Balance Tables and Plots*. R package version 5.0.0, https://github.com/ngreifer/cobalt, <https://ngreifer.github.io/cobalt/>.  
+  <span class='ref-used'>Balance checks: A9 cheat sheet</span>
+- Pebesma E, Bivand R (2023). *Spatial Data Science: With applications in R*. Chapman and Hall/CRC. doi:10.1201/9780429459016 <https://doi.org/10.1201/9780429459016>, <https://r-spatial.org/book/>.  
+  <span class='ref-used'>Spatial data: GIS track</span>
+- Bivand R, Wong D (2018). "Comparing implementations of global and local indicators of spatial association." *TEST*, 27(3), 716-748. doi:10.1007/s11749-018-0599-x <https://doi.org/10.1007/s11749-018-0599-x>.  
+  <span class='ref-used'>Neighbours, Moran’s I, LISA, Getis–Ord: GIS track</span>
+- Bivand R, Millo G, Piras G (2021). "A Review of Software for Spatial Econometrics in R." *Mathematics*, 9(11). doi:10.3390/math9111276 <https://doi.org/10.3390/math9111276>, <https://www.mdpi.com/2227-7390/9/11/1276>.  
+  <span class='ref-used'>Spatial regression: Spatial Regression and Residual Tests page</span>
+- French J (2026). *smerc: Statistical Methods for Regional Counts*. R package version 1.8.6.  
+  <span class='ref-used'>Scan statistic: GIS cheat sheet; Geary's C, Getis-Ord, … page</span>
