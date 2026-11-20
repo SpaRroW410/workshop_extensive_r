@@ -33,8 +33,8 @@ generating one report per hospital, intervention group, or region.
 ---
 title: "Site Report"
 params:
-  site_name: "Site A"
-  intervention: "Control"
+  region: "North"
+  group: "Control"
 ---
 ```
 
@@ -42,10 +42,11 @@ params:
 
 ```{r}
 #| eval: false
-# params$site_name and params$intervention are available as R objects
-site_data <- overall_up |>
-  filter(site == params$site_name,
-         intervention == params$intervention)
+# params$region and params$group are available as R objects
+bp <- readxl::read_excel("data/PublicHealth_BP_Dataset.xlsx")
+site_data <- bp |>
+  filter(Region == params$region,
+         TreatmentGroup == params$group)
 
 nrow(site_data)
 ```
@@ -57,10 +58,10 @@ nrow(site_data)
 # Render from R for a specific site
 quarto::quarto_render(
   input  = "site_report.qmd",
-  output_file = "site_a_report.html",
+  output_file = "north_report.html",
   execute_params = list(
-    site_name    = "Site A",
-    intervention = "Intervention"
+    region = "North",
+    group  = "Intervention"
   )
 )
 ```
@@ -71,13 +72,13 @@ quarto::quarto_render(
 #| eval: false
 library(purrr)
 
-sites <- c("Site A", "Site B", "Site C")
+regions <- c("North", "South", "East", "West")
 
-walk(sites, \(site) {
+walk(regions, \(r) {
   quarto::quarto_render(
     input          = "site_report.qmd",
-    output_file    = paste0(tolower(gsub(" ", "_", site)), "_report.html"),
-    execute_params = list(site_name = site)
+    output_file    = paste0(tolower(r), "_report.html"),
+    execute_params = list(region = r, group = "Control")
   )
 })
 ```
@@ -94,22 +95,22 @@ your document reproducible.
 `` `r nrow(gtsummary::trial)` ``
 
 ```{r}
-#| eval: false
-# In a code chunk (runs silently):
-n_total  <- nrow(overall_up)
-mean_age <- round(mean(overall_up$current_age, na.rm = TRUE), 1)
+# In a code chunk (put it in a setup chunk with #| include: false in a real report):
+trial    <- gtsummary::trial
+n_total  <- nrow(trial)
+mean_age <- round(mean(trial$age, na.rm = TRUE), 1)    # age has missing values: na.rm = TRUE
+sd_age   <- round(sd(trial$age, na.rm = TRUE), 1)
 ```
 
 **In Quarto prose:**
 
 ```markdown
-The study enrolled `r nrow(gtsummary::trial)` participants with a mean age of
-`r mean(gtsummary::trial$age)` years (SD = `r round(sd(gtsummary::trial$age, na.rm = TRUE), 1)`).
+The study enrolled `r knitr::inline_expr("n_total")` participants with a mean age of `r knitr::inline_expr("mean_age")` years (SD = `r knitr::inline_expr("sd_age")`).
 ```
 
 Rendered output:
 
-> The study enrolled 1 248 participants with a mean age of 38.4 years (SD = 11.2).
+> The study enrolled `r n_total` participants with a mean age of `r mean_age` years (SD = `r sd_age`).
 
 ::: {.callout-tip}
 Compute all summary values in one early code chunk marked `#| include: false`,
@@ -130,7 +131,7 @@ Add a `label` that starts with `fig-` and a `fig-cap`:
 ```{{r}}
 #| label: fig-sbp-hist
 #| fig-cap: "Distribution of baseline systolic blood pressure."
-ggplot(overall_up, aes(x = sbp_0m)) +
+ggplot(bp, aes(x = SysBP_0m)) +
   geom_histogram(bins = 30) +
   labs(x = "Systolic BP (mmHg)", y = "Count")
 ```
@@ -147,8 +148,8 @@ Add a `label` starting with `tbl-` and a `tbl-cap`:
 #| label: tbl-demographics
 #| tbl-cap: "Baseline characteristics of study participants."
 library(gtsummary)
-overall_up |>
-  select(current_age, sex, tobacco_type, fuel_type) |>
+bp |>
+  select(Age, Gender, SmokingStatus, Region) |>
   tbl_summary()
 ```
 ````
@@ -199,19 +200,15 @@ tinytex::install_tinytex()
 default `print()` method for HTML output; use `as_gt()` for PDF.
 
 ```{r}
-#| eval: false
 #| label: tbl-summary
-#| tbl-cap: "Baseline characteristics by intervention group."
+#| tbl-cap: "Baseline characteristics by treatment group (simulated BP trial)."
 library(gtsummary)
+bp <- readxl::read_excel("../data/PublicHealth_BP_Dataset.xlsx")
 
-overall_up |>
-  select(current_age, sex, tobacco_type, fuel_type, sbp_0m, intervention) |>
-  tbl_summary(
-    by      = intervention,
-    missing = "no"
-  ) |>
-  add_p() |>
-  add_overall() |>
+bp |>
+  select(Age, Gender, SmokingStatus, Region, SysBP_0m, TreatmentGroup) |>
+  tbl_summary(by = TreatmentGroup) |>
+  add_overall() |>          # no add_p(): baseline differences in a randomised trial are due to chance
   bold_labels()
 ```
 
@@ -219,8 +216,8 @@ overall_up |>
 
 ```{r}
 #| eval: false
-tbl <- overall_up |>
-  tbl_summary(by = intervention)
+tbl <- bp |>
+  tbl_summary(by = TreatmentGroup)
 
 # HTML output
 tbl

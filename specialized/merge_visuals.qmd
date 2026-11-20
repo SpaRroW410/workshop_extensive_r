@@ -1,5 +1,7 @@
 ---
 title: "Merged Visuals"
+author: "Sparrow"
+date: "2026-11-20"
 sidebar:
   style: "floating"
   contents:
@@ -12,48 +14,183 @@ sidebar:
         - href: interactive.qmd
           text: "Interactive Visualization"
 format: html
+execute:
+  warning: false
+  message: false
 ---
 
--   Overlaying multiple plot types
--   Plotting distributions with statistical overlays
--   Embedding plots within plots (e.g., inset zooms)
+One plot type rarely tells the whole story. **Merged visuals** layer two views of the same data so the reader sees,
+for example, the shape of a distribution *and* every individual value. Three ways to merge:
 
-### Categorical
+-   **Overlay** layers on the same axes (`+ geom_...()` twice).
+-   **Margins** add small plots along the axes (`ggside`).
+-   **Insets and panels** place one plot inside or beside another (`patchwork`).
 
--   Bar chart + annotations
+The rule for every merged plot: **each layer must answer a question the other cannot**. If a layer only decorates, drop it.
 
-### ▸ Continuous
+```{r}
+library(tidyverse); library(patchwork); library(ggridges); library(ggside)
+ncd <- read_csv("../data/ncd_survey.csv", show_col_types = FALSE) |>
+  mutate(phys_act = factor(phys_act, levels = c("low", "moderate", "high")),
+         htn = factor(htn, 0:1, c("No hypertension", "Hypertension")))
+theme_set(theme_minimal(base_size = 13))
+```
 
--   Density + histogram overlay
+## Categorical: bar chart + labels
 
--   Ridgeline + density
+```{r}
+#| fig-alt: "Bar chart of the number of adults in each education group, with the count and percentage printed above each bar."
+edu <- ncd |> count(education) |> mutate(pct = n / sum(n))
+ggplot(edu, aes(x = fct_reorder(education, n), y = n)) +
+  geom_col(fill = "#3498db") +
+  geom_text(aes(label = paste0(n, " (", scales::percent(pct, 1), ")")), vjust = -0.4) +
+  labs(x = "Education", y = "Adults", title = "Education of the 600 adults") +
+  expand_limits(y = max(edu$n) * 1.1)
+```
 
-### ▸ Category vs. Category
+The labels give the exact numbers, the bars the comparison. Missing education (`NA`) stays visible as its own bar.
 
--   Grouped bar chart + facet grid
+## Continuous: histogram + density
 
--   Mosaic + stacked bar hybrid
+```{r}
+#| fig-alt: "Histogram of systolic blood pressure on a density scale with a smooth density curve drawn over it."
+ggplot(ncd, aes(x = sbp)) +
+  geom_histogram(aes(y = after_stat(density)), binwidth = 5, fill = "grey80", colour = "white") +
+  geom_density(colour = "#e74c3c", linewidth = 1) +
+  geom_vline(xintercept = 140, linetype = 2) +
+  labs(x = "Systolic BP (mmHg)", y = "Density", title = "Systolic BP: bins and a smooth curve")
+```
 
-### ▸ Continuous vs. Continuous
+`after_stat(density)` puts the histogram on the density scale, so both layers share the y-axis. The dashed line marks the
+hypertension threshold.
 
--   Scatter + marginal histograms
+## Continuous by group: ridgelines
 
--   Bubble chart + trend line
+```{r}
+#| fig-alt: "Ridgeline plot: one density curve of systolic blood pressure for each level of physical activity, stacked vertically."
+ggplot(ncd, aes(x = sbp, y = phys_act, fill = phys_act)) +
+  geom_density_ridges(alpha = 0.7, quantile_lines = TRUE, quantiles = 2) +
+  scale_fill_brewer(palette = "Set2", guide = "none") +
+  labs(x = "Systolic BP (mmHg)", y = "Physical activity", title = "Distributions side by side, medians marked")
+```
 
-### ▸ Category vs. Continuous
+Ridgelines compare many distributions in little space; `quantile_lines` adds the median of each.
 
--   Boxplot + jittered points
+## Category vs category: grouped bars + facets
 
--   Violin + box overlay
+```{r}
+#| fig-alt: "Grouped bar charts of the percentage with hypertension by tobacco use, in two panels: rural and urban."
+ncd |> count(residence, tobacco, htn) |>
+  group_by(residence, tobacco) |> mutate(pct = n / sum(n)) |> ungroup() |>
+  filter(htn == "Hypertension") |>
+  ggplot(aes(x = tobacco, y = pct, fill = tobacco)) +
+  geom_col() +
+  geom_text(aes(label = scales::percent(pct, 1)), vjust = -0.4) +
+  facet_wrap(~ residence) +
+  scale_y_continuous(labels = scales::percent, limits = c(0, 0.6)) +
+  scale_fill_manual(values = c(No = "grey60", Yes = "#e74c3c"), guide = "none") +
+  labs(x = "Tobacco use", y = "Adults with hypertension", title = "Hypertension by tobacco use, within residence")
+```
 
-### ▸ Time Series
+The facets hold residence fixed, so each panel compares tobacco users with non-users **in the same setting**.
 
--   Line + area chart
+## Continuous vs continuous: scatter + marginal histograms
 
--   Stream graph + annotations
+```{r}
+#| fig-alt: "Scatter plot of systolic blood pressure against BMI with a fitted line, and histograms of each variable along the top and right edges."
+ggplot(ncd, aes(x = bmi, y = sbp)) +
+  geom_point(alpha = 0.35) +
+  geom_smooth(method = "lm", colour = "#e74c3c") +
+  geom_xsidehistogram(binwidth = 1, fill = "grey70") +
+  geom_ysidehistogram(binwidth = 5, fill = "grey70") +
+  theme(ggside.panel.scale = 0.2) +
+  labs(x = "BMI (kg/m²)", y = "Systolic BP (mmHg)", title = "The relationship and each variable's distribution")
+```
 
-### ▸ Map
+The margins show that BMI is roughly symmetric and SBP slightly right-skewed: information the cloud of points hides.
 
--   Choropleth + bubble overlay
+## Bubble chart + trend line
 
--   Map + inset zoom
+```{r}
+#| fig-alt: "Bubble chart: each point is a village, mean BMI on the x-axis, mean systolic BP on the y-axis, bubble size the number of adults, with a weighted trend line."
+villages <- ncd |> group_by(village) |>
+  summarise(bmi = mean(bmi, na.rm = TRUE), sbp = mean(sbp), n = n())
+ggplot(villages, aes(x = bmi, y = sbp)) +
+  geom_point(aes(size = n), alpha = 0.5, colour = "#2c3e50") +
+  geom_smooth(aes(weight = n), method = "lm", se = FALSE, colour = "#e74c3c") +
+  labs(x = "Village mean BMI", y = "Village mean systolic BP", size = "Adults", title = "Villages: means, sizes and a weighted trend")
+```
+
+Each bubble is a **village**, not a person: a trend between village means is an ecological association and need not hold for individuals.
+
+## Category vs continuous: box + points, violin + box
+
+```{r}
+#| fig-alt: "Two panels: on the left, box plots of systolic blood pressure by physical activity with every adult shown as a jittered point; on the right, violins with a narrow box inside."
+p1 <- ggplot(ncd, aes(phys_act, sbp)) +
+  geom_boxplot(outlier.shape = NA, width = 0.5) +
+  geom_jitter(width = 0.15, alpha = 0.25) +
+  labs(x = "Physical activity", y = "Systolic BP (mmHg)", title = "Box + every adult")
+p2 <- ggplot(ncd, aes(phys_act, sbp)) +
+  geom_violin(fill = "grey85") +
+  geom_boxplot(width = 0.12, outlier.shape = NA) +
+  labs(x = "Physical activity", y = NULL, title = "Violin + box")
+p1 + p2
+```
+
+Points show how many people stand behind each box; a violin shows the shape. `outlier.shape = NA` avoids drawing outliers twice.
+
+## Time series: line + area
+
+```{r}
+#| fig-alt: "Monthly total dengue cases as a red line over a light blue area showing monthly rainfall on a second scale, January 2023 to December 2025."
+dengue <- read_csv("../data/dengue_wards.csv", show_col_types = FALSE) |>
+  group_by(year, month) |> summarise(cases = sum(cases), rain = mean(rain_mm), .groups = "drop") |>
+  mutate(date = as.Date(sprintf("%d-%02d-01", year, month)))
+k <- max(dengue$cases) / max(dengue$rain)          # put rain on the cases scale
+ggplot(dengue, aes(date)) +
+  geom_area(aes(y = rain * k), fill = "#3498db", alpha = 0.25) +
+  geom_line(aes(y = cases), colour = "#e74c3c", linewidth = 1) +
+  scale_y_continuous("Dengue cases (all wards)", sec.axis = sec_axis(~ . / k, name = "Mean rainfall (mm)")) +
+  labs(x = NULL, title = "Cases follow the rains by about a month")
+```
+
+A **second axis** is acceptable only when both series are clearly labelled and the scaling is stated; otherwise use two panels.
+
+## Map: choropleth + bubbles, with an inset zoom
+
+```{r}
+#| fig-alt: "Map of district blocks shaded by dengue incidence per 100,000, with circles sized by case count; a rectangle marks the south-east corner, shown enlarged in a second panel."
+#| fig-width: 10
+library(sf)
+blocks <- st_read("../data/gis/district_blocks.geojson", quiet = TRUE)
+centres <- st_centroid(blocks)
+main <- ggplot(blocks) +
+  geom_sf(aes(fill = dengue_per_100k), colour = "white", linewidth = 0.2) +
+  geom_sf(data = centres, aes(size = dengue_cases), shape = 21, fill = NA, colour = "black") +
+  scale_fill_distiller(palette = "OrRd", direction = 1, name = "Per 100,000") +
+  labs(size = "Cases", title = "Rate (colour) and count (circle) together") +
+  theme_void()
+box <- st_bbox(blocks); zoom <- c(xmin = box[["xmax"]] - (box[["xmax"]] - box[["xmin"]]) / 3, ymax = box[["ymin"]] + (box[["ymax"]] - box[["ymin"]]) / 3)
+inset <- ggplot(blocks) + geom_sf(aes(fill = dengue_per_100k), colour = "white", linewidth = 0.2) +
+  scale_fill_distiller(palette = "OrRd", direction = 1, guide = "none") +
+  coord_sf(xlim = c(zoom[["xmin"]], box[["xmax"]]), ylim = c(box[["ymin"]], zoom[["ymax"]])) +
+  theme_void() + theme(panel.border = element_rect(fill = NA))
+main <- main + annotate("rect", xmin = zoom[["xmin"]], xmax = box[["xmax"]], ymin = box[["ymin"]], ymax = zoom[["ymax"]],
+                        fill = NA, colour = "black", linewidth = 0.8)            # where the zoom comes from
+main + (inset + labs(title = "Zoom: south-east")) + plot_layout(widths = c(3, 1))
+```
+
+Colour shows the **rate** (fair comparison between blocks of different size); circles show the **count** (where the work is).
+The second panel enlarges the south-east corner (the rectangle), where the high rates cluster.
+
+## Checklist
+
+| Merge | When it helps | Watch out |
+|---|---|---|
+| Labels on bars | exact values matter | clutter with many bars |
+| Histogram + density | shape and counts | density on the same scale (`after_stat(density)`) |
+| Points over boxes | small groups, show the n | overplotting: jitter, transparency |
+| Marginal histograms | distributions of x and y | keep the margins small |
+| Second y-axis | two series, same time | label both axes; often two panels are clearer |
+| Inset or zoom panel | a detail within the whole | mark where the zoom comes from |

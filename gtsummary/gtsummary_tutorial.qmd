@@ -23,13 +23,14 @@ data <- gtsummary::trial
 # Summary table
 data %>% 
   tbl_summary(by = trt) %>% 
-  add_p()
+  add_overall()     # trial is a randomised trial: no baseline p-values (see "Reading Table 1")
 ```
 
 ### Regression Tables
 
 ```{r}
-# Logistic regression example
+# Logistic regression example (the outcome here is simulated noise, to show the table layout only)
+set.seed(2026)
 data$outcome <- rbinom(200, 1, 0.5)
 
 model_log <- glm(outcome ~ age + trt, data = data, family = binomial)
@@ -48,7 +49,7 @@ data %>%
       all_categorical() ~ "{n} ({p}%)"
     )
   ) %>% 
-  add_p() %>% 
+  add_overall() %>% 
   modify_header(label = "**Variable**") %>% 
   bold_labels()
 ```

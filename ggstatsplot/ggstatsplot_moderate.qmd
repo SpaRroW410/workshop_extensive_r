@@ -12,6 +12,12 @@ This module assumes familiarity with the basics covered in
 [ggstatsplot — Introduction](ggstatsplot_intro.qmd).
 :::
 
+```{r}
+#| include: false
+library(ggstatsplot); library(dplyr); library(tidyr)
+bp <- readxl::read_excel("../data/PublicHealth_BP_Dataset.xlsx")   # simulated trial data (data/README.md)
+```
+
 ## Functions covered in this module
 
 | Function | Use case |
@@ -29,27 +35,26 @@ This module assumes familiarity with the basics covered in
 Use this when the same participants are measured more than once (paired/within-subjects design) — for example, pre-post measurements.
 
 ```{r}
-#| eval: false
 library(ggstatsplot)
 library(tidyr)
 
 # Reshape from wide to long for within-subjects comparison
-overall_long <- overall_up |>
-  select(member_id, sbp_0m, sbp_3m) |>
+overall_long <- bp |>
+  select(PatientID, SysBP_0m, SysBP_3m) |>
   pivot_longer(
-    cols      = c(sbp_0m, sbp_3m),
+    cols      = c(SysBP_0m, SysBP_3m),
     names_to  = "timepoint",
     values_to = "sbp"
   ) |>
   mutate(timepoint = factor(timepoint,
-                            levels = c("sbp_0m", "sbp_3m"),
+                            levels = c("SysBP_0m", "SysBP_3m"),
                             labels = c("Baseline", "3 Months")))
 
 ggwithinstats(
   data    = overall_long,
   x       = timepoint,
   y       = sbp,
-  subject.id = member_id,       # links pairs across timepoints
+  subject.id = PatientID,       # links pairs across timepoints
   title   = "Systolic BP: Baseline vs 3 Months"
 )
 ```
@@ -67,12 +72,11 @@ ggwithinstats(
 Use this when you want to compare proportions of a categorical outcome across groups. The output includes a χ² or Fisher's exact test.
 
 ```{r}
-#| eval: false
 ggbarstats(
-  data  = overall_up,
-  x     = fuel_type,           # grouping variable (x-axis)
-  y     = tobacco_type,        # outcome category (fill)
-  title = "Tobacco Type by Fuel Type"
+  data  = bp,
+  x     = SmokingStatus,    # the categories whose proportions fill each bar
+  y     = Region,           # the groups along the x-axis
+  title = "Smoking Status by Region"
 )
 ```
 
@@ -80,14 +84,13 @@ ggbarstats(
 
 - Stacked bar chart with proportion labels
 - χ² test statistic, degrees of freedom, p-value, and Cramér's V effect size
-- Pairwise comparisons between bars (if > 2 groups)
+- Above each bar, a one-sample χ² test of whether the categories are equally common **within that bar** (not a comparison between bars)
 
 **Swap axes to change orientation:**
 
 ```{r}
-#| eval: false
-# Make tobacco_type the grouping variable
-ggbarstats(data = overall_up, x = tobacco_type, y = fuel_type)
+# Make Region the outcome (fill) and SmokingStatus the groups
+ggbarstats(data = bp, x = Region, y = SmokingStatus)
 ```
 
 ---
@@ -97,23 +100,21 @@ ggbarstats(data = overall_up, x = tobacco_type, y = fuel_type)
 Use this for a single categorical variable, or two categorical variables where a pie chart is appropriate for the audience.
 
 ```{r}
-#| eval: false
-# Single variable — proportions of intervention types
+# Single variable — proportions in each treatment group
 ggpiestats(
-  data  = overall_up,
-  x     = intervention,
-  title = "Distribution of Intervention Groups"
+  data  = bp,
+  x     = TreatmentGroup,
+  title = "Distribution of Treatment Groups"
 )
 ```
 
 ```{r}
-#| eval: false
-# Two variables — tobacco type by intervention
+# Two variables — smoking status by treatment group
 ggpiestats(
-  data  = overall_up,
-  x     = tobacco_type,
-  y     = intervention,       # creates faceted pies
-  title = "Tobacco Type by Intervention"
+  data  = bp,
+  x     = SmokingStatus,
+  y     = TreatmentGroup,       # creates faceted pies
+  title = "Smoking Status by Treatment Group"
 )
 ```
 
@@ -131,13 +132,12 @@ is non-technical. For more categories or detailed comparisons, prefer
 All ggstatsplot functions return a ggplot2 object, so you can extend them normally.
 
 ```{r}
-#| eval: false
 library(ggplot2)
 
 ggbetweenstats(
-  data        = overall_up,
-  x           = fuel_type,
-  y           = sbp_0m,
+  data        = bp,
+  x           = Region,
+  y           = SysBP_0m,
   # Colours for each group
   palette     = "Set2",
   package     = "RColorBrewer",
@@ -145,10 +145,10 @@ ggbetweenstats(
   results.subtitle = TRUE,
   # Change point size and transparency
   point.args  = list(size = 2, alpha = 0.4),
-  title       = "Systolic BP by Fuel Type"
+  title       = "Systolic BP by Region"
 ) +
   theme_minimal(base_size = 13) +
-  labs(caption = "Source: NCTOH Study Dataset")
+  labs(caption = "Source: simulated BP dataset")
 ```
 
 **Common customisation parameters:**
@@ -168,13 +168,12 @@ ggbetweenstats(
 When you set `type = "bayes"`, ggstatsplot reports a **Bayes Factor (BF₁₀)** instead of a p-value.
 
 ```{r}
-#| eval: false
 ggbetweenstats(
-  data  = overall_up,
-  x     = fuel_type,
-  y     = sbp_0m,
+  data  = bp,
+  x     = Region,
+  y     = SysBP_0m,
   type  = "bayes",
-  title = "Systolic BP by Fuel Type (Bayesian)"
+  title = "Systolic BP by Region (Bayesian)"
 )
 ```
 
@@ -190,6 +189,10 @@ ggbetweenstats(
 | ~1 | No evidence either way |
 | 1/3–1 | Anecdotal evidence for H₀ |
 | < 1/10 | Strong–extreme evidence for H₀ |
+
+ggstatsplot prints **log<sub>e</sub>(BF₀₁)** under the plot. Convert: BF₁₀ = 1 / BF₀₁ = exp(−log<sub>e</sub>(BF₀₁)).
+For the Region comparison above, log<sub>e</sub>(BF₀₁) ≈ 3.0 gives BF₀₁ ≈ 20 (BF₁₀ ≈ 0.05): strong evidence for **no**
+difference between regions, consistent with the Welch ANOVA (p = 0.65).
 
 - **BF₁₀ > 3**: reasonably confident that H₁ (an effect exists) is supported
 - **BF₁₀ < 1/3**: reasonably confident that H₀ (no effect) is supported
@@ -210,7 +213,7 @@ Bayesian inference and deeper interpretation of Bayes factors is covered in
 ggwithinstats(data = df, x = timepoint, y = outcome, subject.id = id)
 
 # Proportions (bar)
-ggbarstats(data = df, x = group, y = category)
+ggbarstats(data = df, x = category, y = group)   # x = fill, y = groups
 
 # Proportions (pie)
 ggpiestats(data = df, x = category)

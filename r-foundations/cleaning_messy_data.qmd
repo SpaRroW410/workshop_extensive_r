@@ -88,6 +88,7 @@ d |> filter(age > 120 | sbp < 60 | sbp > 300) |> select(pt_id, age, sbp)
 -   Set them to **`NA`**; do not delete the rows and do not fill in the mean:
 
 ```{r}
+n_bad_sbp <- sum(d$sbp < 60 | d$sbp > 300, na.rm = TRUE)     # count them before they become NA
 d <- d |> mutate(age = na_if(age, 999), sbp = if_else(sbp < 60 | sbp > 300, NA_real_, sbp))
 colSums(is.na(d[c("age", "sbp")]))
 ```
@@ -107,7 +108,7 @@ d |> get_dupes(pt_id) |> select(pt_id, age, sbp, visit_date) |> head(8)
 
 ```{r}
 tibble(step = c("rows in raw file", "after removing exact duplicates", "age placeholders set to NA", "impossible SBP set to NA"),
-       n = c(nrow(raw), nrow(distinct(raw)), sum(raw$`Age (yrs)` == "999", na.rm = TRUE), sum(d$sbp < 60 | d$sbp > 300, na.rm = TRUE)))
+       n = c(nrow(raw), nrow(distinct(raw)), sum(raw$`Age (yrs)` == "999", na.rm = TRUE), n_bad_sbp))
 ```
 
 Report this in the methods: it lets a reader see what was done, and lets you repeat it when a corrected file arrives.

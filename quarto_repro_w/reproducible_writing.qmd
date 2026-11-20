@@ -83,7 +83,7 @@ quiz_mcq("qr2", "What does `#| include: false` do to a setup chunk?",
          c("Runs the chunk but shows neither code nor output", "Skips the chunk when rendering, so its code is not run", "Shows the code but hides any messages", "Moves the chunk to the end of the document"), answer = 1,
          explain = "include: false runs the code (so packages and data are loaded) but keeps it and its output out of the document.")
 quiz_mcq("qr3", "A figure chunk has `#| label: fig-age`. What does the fig- prefix allow?",
-         c("Saving the figure to a separate file", "Numbered cross-references such as @fig-age", "Changing the size of the figure on the page", "Hiding the figure in the HTML output"), answer = 2,
+         c("Saving the figure to a separate file", "Cross-references such as `@fig-age`", "Changing the size of the figure on the page", "Hiding the figure in the HTML output"), answer = 2,
          explain = "Labels starting with fig- (and tbl- for tables) are numbered and can be cross-referenced in the text.")
 ```
 

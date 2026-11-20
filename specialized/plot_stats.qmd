@@ -1,74 +1,198 @@
 ---
-title: "Specialized Plots (with statistics)"
+title: "Statistical Plots"
 author: "Sparrow"
+date: "2026-11-20"
+sidebar:
+  style: "floating"
+  contents:
+    - section: "Specialized Plots"
+      contents:
+        - href: merge_visuals.qmd
+          text: "Merged Visuals"
+        - href: plot_stats.qmd
+          text: "Statistical Visualization"
+        - href: interactive.qmd
+          text: "Interactive Visualization"
 format: html
+execute:
+  warning: false
+  message: false
 ---
 
-Statistical Visualizations
+A **statistical plot** shows an estimate together with its uncertainty, or checks a model, instead of only the raw data.
+Each section below answers one question and names what to read in the plot.
 
--    Regression lines and confidence intervals
+```{r}
+library(tidyverse); library(broom); library(patchwork)
+ncd <- read_csv("../data/ncd_survey.csv", show_col_types = FALSE) |>
+  mutate(phys_act = factor(phys_act, levels = c("low", "moderate", "high")),
+         education = factor(education, levels = c("No schooling", "Primary", "Secondary", "Graduate+")))
+theme_set(theme_minimal(base_size = 13))
+```
 
--   Correlation matrices
+## Categorical: proportions with confidence intervals
 
--   Residual plots
+```{r}
+#| fig-alt: "Points with 95% confidence interval bars showing the percentage with hypertension in each education group."
+prev <- ncd |> filter(!is.na(education)) |> group_by(education) |>
+  summarise(x = sum(htn), n = n()) |>
+  mutate(p = x / n,
+         lo = map2_dbl(x, n, \(x, n) prop.test(x, n)$conf.int[1]),
+         hi = map2_dbl(x, n, \(x, n) prop.test(x, n)$conf.int[2]))
+ggplot(prev, aes(x = education, y = p)) +
+  geom_pointrange(aes(ymin = lo, ymax = hi), colour = "#2c3e50") +
+  geom_text(aes(label = paste0("n = ", n)), y = 0.05, size = 3.5, colour = "grey40") +
+  scale_y_continuous(labels = scales::percent, limits = c(0, 0.6)) +
+  labs(x = "Education", y = "Adults with hypertension (95% CI)", title = "A proportion is an estimate: show its CI")
+```
 
--   Visualizing model outputs
+`prop.test()` gives a confidence interval for each proportion. The smallest group (no schooling) has the widest interval:
+**read the interval, not only the point**.
 
-### Categorical
+## Continuous: density with quantile shading, histogram with a fitted curve
 
--   Bar chart with confidence intervals
+```{r}
+#| fig-alt: "Two panels: a density curve of systolic blood pressure with the area between the 25th and 75th percentile shaded; and a histogram with a normal curve of the same mean and SD drawn over it."
+q <- quantile(ncd$sbp, c(0.25, 0.75))
+d <- density(ncd$sbp); dd <- tibble(x = d$x, y = d$y)
+p1 <- ggplot(dd, aes(x, y)) + geom_line() +
+  geom_area(data = filter(dd, x >= q[1], x <= q[2]), fill = "#3498db", alpha = 0.4) +
+  labs(x = "Systolic BP (mmHg)", y = "Density", title = "Middle 50% shaded")
+p2 <- ggplot(ncd, aes(sbp)) +
+  geom_histogram(aes(y = after_stat(density)), binwidth = 5, fill = "grey80", colour = "white") +
+  stat_function(fun = dnorm, args = list(mean = mean(ncd$sbp), sd = sd(ncd$sbp)), colour = "#e74c3c", linewidth = 1) +
+  labs(x = "Systolic BP (mmHg)", y = NULL, title = "Normal curve (same mean, SD)")
+p1 + p2
+```
 
--   Proportion plots with error bars 
+The shaded band is the **interquartile range** (`r q[1]` to `r q[2]` mmHg). The red curve is what a normal distribution
+with the same mean and SD would look like: here the data follow it closely, with a slightly longer right tail.
 
-### ▸ Continuous
+## Category vs category: chi-square residuals
 
--   Density plots with quantile shading
+```{r}
+#| fig-alt: "Heat map of standardised chi-square residuals for physical activity by tobacco use, with each cell's residual printed."
+tab <- table(ncd$phys_act, ncd$tobacco)
+ct <- chisq.test(tab)
+as.data.frame(ct$stdres) |> setNames(c("phys_act", "tobacco", "residual")) |>
+  ggplot(aes(tobacco, phys_act, fill = residual)) +
+  geom_tile(colour = "white") +
+  geom_text(aes(label = sprintf("%.1f", residual))) +
+  scale_fill_gradient2(low = "#3498db", high = "#e74c3c", limits = c(-3, 3)) +
+  labs(x = "Tobacco use", y = "Physical activity", fill = "Std. residual",
+       title = sprintf("Chi-square p = %.2f: which cells drive it?", ct$p.value))
+```
 
--   Histogram with fitted curve 
+A **standardised residual** compares each cell with what independence predicts: beyond about ±2 the cell contributes
+noticeably. Here no cell comes close, matching the large p-value.
 
-### ▸ Category vs. Category
+## Continuous vs continuous: regression line, correlation matrix, residuals
 
--   Chi-square residual heatmap
--   Proportional stacked bar with significance markers 
+```{r}
+#| fig-alt: "Scatter plot of systolic blood pressure against BMI with a regression line and its 95% confidence band, and the fitted equation printed in the corner."
+m <- lm(sbp ~ bmi, data = ncd)
+ggplot(ncd, aes(bmi, sbp)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", colour = "#e74c3c") +
+  annotate("text", x = 16, y = 185, hjust = 0, size = 4,
+           label = sprintf("SBP = %.0f + %.2f × BMI\nr = %.2f", coef(m)[1], coef(m)[2], cor(ncd$bmi, ncd$sbp, use = "complete.obs"))) +
+  labs(x = "BMI (kg/m²)", y = "Systolic BP (mmHg)", title = "The band is the CI of the mean, not of individuals")
+```
 
-### ▸ Continuous vs. Continuous
+```{r}
+#| fig-alt: "Correlation matrix of age, BMI, waist, salt intake, systolic and diastolic blood pressure, shown as coloured tiles with the correlation printed in each."
+library(ggcorrplot)
+r <- cor(select(ncd, age, bmi, waist, salt_g, sbp, dbp), use = "pairwise.complete.obs")
+ggcorrplot(r, type = "lower", lab = TRUE, lab_size = 3.5, colors = c("#3498db", "white", "#e74c3c"),
+           title = "Pairwise correlations")
+```
 
--   Scatter plot with regression line
+BMI and waist are almost the same measurement (r close to 1): putting both in one model causes **collinearity**.
 
--   Correlation matrix
+```{r}
+#| fig-alt: "Two diagnostic plots for the regression of systolic BP on BMI: residuals against fitted values with a flat smooth line, and a normal Q-Q plot of the residuals close to the line."
+a <- augment(m)
+p1 <- ggplot(a, aes(.fitted, .resid)) + geom_point(alpha = 0.3) + geom_hline(yintercept = 0, linetype = 2) +
+  geom_smooth(se = FALSE, colour = "#e74c3c") + labs(x = "Fitted SBP", y = "Residual", title = "Residuals vs fitted")
+p2 <- ggplot(a, aes(sample = .resid)) + stat_qq(alpha = 0.3) + stat_qq_line(colour = "#e74c3c") +
+  labs(x = "Theoretical quantile", y = "Residual quantile", title = "Normal Q-Q")
+p1 + p2
+```
 
--   Residual plots 
+A flat smooth around zero (no curve, no funnel) and points near the Q-Q line support a straight-line model with roughly normal residuals.
 
-### ▸ Category vs. Continuous
+## Visualising model output: a coefficient plot
 
--   Violin plot with median and IQR
+```{r}
+#| fig-alt: "Coefficient plot: points with 95% confidence intervals for each predictor of systolic blood pressure from a multiple regression, with a vertical line at zero."
+m2 <- lm(sbp ~ age + sex + bmi + salt_g + tobacco + phys_act, data = ncd)
+tidy(m2, conf.int = TRUE) |> filter(term != "(Intercept)") |>
+  ggplot(aes(x = estimate, y = fct_reorder(term, estimate))) +
+  geom_vline(xintercept = 0, linetype = 2) +
+  geom_pointrange(aes(xmin = conf.low, xmax = conf.high), colour = "#2c3e50") +
+  labs(x = "Difference in systolic BP (mmHg), 95% CI", y = NULL, title = "Adjusted coefficients")
+```
 
--   Boxplot with notches or statistical annotations Time Series
+Each row is one coefficient with its 95% CI; intervals crossing the dashed line at 0 are compatible with no difference.
+Note that coefficients for different units (per year, per kg/m², per category) are **not** comparable in size.
 
--   Forecast overlays
+## Category vs continuous: notched box and violin with median and IQR
 
--   Decomposition plots (trend, seasonality, residuals) 
+```{r}
+#| fig-alt: "Two panels: notched box plots of systolic blood pressure by sex with the t-test result in the title; violins by physical activity with the median and interquartile range drawn as a point and a bar."
+tt <- t.test(sbp ~ sex, data = ncd)
+p1 <- ggplot(ncd, aes(sex, sbp)) + geom_boxplot(notch = TRUE, fill = "grey85") +
+  labs(x = NULL, y = "Systolic BP (mmHg)", title = sprintf("Welch t-test p = %.3f", tt$p.value))
+p2 <- ggplot(ncd, aes(phys_act, sbp)) + geom_violin(fill = "grey90") +
+  stat_summary(fun = median, fun.min = \(x) quantile(x, 0.25), fun.max = \(x) quantile(x, 0.75), colour = "#e74c3c") +
+  labs(x = "Physical activity", y = NULL, title = "Median and IQR")
+p1 + p2
+```
 
-### ▸ Map
+The **notch** is a rough 95% interval for the median; notches that do not overlap suggest the medians differ. Print the
+actual test (here in the title) rather than stars.
 
--   Choropleth with statistical bins
+## Time series: decomposition
 
--   Cartogram scaled by statistical variable
+```{r}
+#| fig-alt: "Decomposition of monthly dengue cases into four stacked panels: the observed series, the trend, the yearly seasonal pattern and the remainder."
+dengue <- read_csv("../data/dengue_wards.csv", show_col_types = FALSE) |>
+  group_by(year, month) |> summarise(cases = sum(cases), .groups = "drop")
+s <- stl(ts(dengue$cases, start = c(2023, 1), frequency = 12), s.window = "periodic")
+as_tibble(s$time.series) |> mutate(month = seq(as.Date("2023-01-01"), by = "month", length.out = n()), observed = dengue$cases) |>
+  pivot_longer(-month) |> mutate(name = factor(name, c("observed", "trend", "seasonal", "remainder"))) |>
+  ggplot(aes(month, value)) + geom_line() + facet_wrap(~ name, ncol = 1, scales = "free_y") +
+  labs(x = NULL, y = "Cases", title = "Observed = trend + seasonal + remainder")
+```
 
-Histogram
+`stl()` separates the **seasonal** monsoon peak from the slower **trend**; a large **remainder** points to an outbreak
+that the season alone does not explain.
 
-Density plot
+## Map: a choropleth with statistical class breaks
 
-Box plot
+```{r}
+#| fig-alt: "Map of district blocks shaded by dengue incidence in five classes based on quintiles, with the class limits in the legend."
+library(sf)
+blocks <- st_read("../data/gis/district_blocks.geojson", quiet = TRUE)
+br <- quantile(blocks$dengue_per_100k, probs = seq(0, 1, 0.2))
+blocks$class <- cut(blocks$dengue_per_100k, breaks = br, include.lowest = TRUE, dig.lab = 3)
+ggplot(blocks) + geom_sf(aes(fill = class), colour = "white", linewidth = 0.2) +
+  scale_fill_brewer(palette = "OrRd", name = "Per 100,000\n(quintiles)") +
+  labs(title = "Five classes with the same number of blocks") + theme_void()
+```
 
-Violin plot
+**Quintile** breaks put the same number of areas in each colour; equal-interval breaks would leave most blocks in one
+class. State the method in the caption: the choice of breaks changes the story a map tells.
 
-Correlogram
+## Checklist
 
-Forest plot
-
-Ridge line plot
-
-Heat map (especially for correlations or frequencies)
-
-Scatter plot (when enhanced with regression or stats)
+| Show | With | Read |
+|---|---|---|
+| A proportion or mean | point + 95% CI | the interval, with the n |
+| A distribution | density/histogram + quantiles or a fitted curve | shape, tails, the middle 50% |
+| A table of counts | standardised residuals | cells beyond ±2 |
+| A relationship | scatter + regression line + CI | slope, r, the band is for the mean |
+| A model | residual plots, coefficient plot | patterns in residuals; CIs crossing 0 |
+| Groups | notched box, violin + median/IQR | overlap; the test, not stars |
+| Seasonal counts | decomposition | trend vs season vs remainder |
+| Areas | choropleth with stated breaks | the break method |
