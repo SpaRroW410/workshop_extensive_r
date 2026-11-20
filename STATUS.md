@@ -74,7 +74,7 @@ Not re-run for this snapshot: the game end-to-end test (`dungeons/tests/quest_e2
 
 ## 5. Still open
 
-1. **Merge to `main`.** `causal-workshop` holds A4 to A9 and every change listed above.
+1. ~~Merge to `main`~~ done: PR #6 and #7 are merged.
 2. **Expert review.** No statistical content in A1 to A9 has been reviewed by a subject expert. Region 4 worlds should follow that review.
 3. **Deck generators are not in the repository.** The `.qmd` files are the source of truth; edit them directly.
 4. **Two slides in the older regression decks overflow by 6 to 7 pixels** (`s1_foundations` slide 5, `s5_logistic_regression` slide 33). Not caused by these changes.
