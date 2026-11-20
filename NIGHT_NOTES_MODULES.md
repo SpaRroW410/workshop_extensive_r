@@ -23,6 +23,9 @@ reviewer later.
 | N9 | Link checker skips the navbar brand link | Its href is fixed in the browser by the site-wide script; on disk it is always wrong on nested pages (100 false alarms) |
 | N10 | Base-module labs live in `labs/<track>/` (solutions in `labs/<track>/solutions/`), built by `scripts/build_base_labs.R` | Same `#@` / `#%` markers as the workshops; one place per track |
 | N11 | Gallery slide overflow (155 slides in 15 decks) is fixed in the unit steps (B4, M3, V3), not in F1 | The decks were never rendered before; F1's job was to publish them and make them correct |
+| N13 | `data-wrangling.qmd` (2,266 lines) is **not** split into two decks; it gets one quiz at the end covering both halves | Splitting changes every link to it (game, track homes, other tracks) and its frozen results, for little gain; the plan's split is noted as a later option |
+| N14 | Long slides that still overflow after `.smaller` become `.scrollable` (marked automatically by `scripts/fix_overflow.py`); the shared `tests/overflow.js` lists them as SCROLL, not as failures | Content stays reachable; rewriting 150+ code slides by hand is not worth it. Workshop decks keep their own stricter test |
+| N15 | Base-page quizzes load `quiz.R` in a separate `include: false` chunk | The quiz linter runs every chunk that contains questions from the repository root, where `../assets/quiz.R` does not exist |
 | N12 | R 4.3.3 (Ubuntu) cannot install `ggstatsplot` 1.1.4 (needs R ≥ 4.5): 0.13.0 from a dated snapshot is used | No newer R is available from the system packages here |
 
 ## Progress
@@ -31,3 +34,5 @@ reviewer later.
 |---|---|---|
 | U0 F5 dataset origins, F9 licences | ✅ committed | `data/README.md`, `downloads/cheatsheets/LICENSES.md` |
 | U0 F1 gallery published + correct | ✅ committed (`852193b`) | links 0 `.qmd` / 0 missing; 56 workshop decks quiz test pass; cloud 42/42 |
+| U1 Basic track | ✅ committed (`2df4d14`) | 33 quiz questions lint clean, keys read; 8 pages pass the quiz test; labs run; overflow OK; game e2e pass |
+| U1 left open | alt text on plots (D6) moves to one pass over all base pages (F7); game "Read first" links (U-GAME) | |
