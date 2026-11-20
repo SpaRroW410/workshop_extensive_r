@@ -54,7 +54,6 @@ library(dplyr)
 library(ggplot2)
 library(treemapify)  # For treemaps
 library(sunburstR)   # For sunburst charts
-library(ggmosaic)    # For mosaic plots
 
 # Load dataset
 health_data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")

@@ -73,6 +73,45 @@ sub_pages <- function(paths) {
   sorted(out)
 }
 pages_of <- function(p) sorted(c(SHARED, menu_paths(p), sub_pages(menu_paths(p)), glob(extra_globs(p))))
+# Downloads a rendered page links to (labs, datasets, cheat-sheet PDFs). Quarto copies only what the
+# resources list names, so every track gets exactly the files its own pages offer; a paid lab is
+# never copied into a free track.
+DOWNLOAD_EXT <- "\\.(R|csv|xlsx|geojson|pdf|zip)$"
+# Lines of a page as a given track sees them: blocks shown only in other tracks
+# (::: {.content-visible when-profile="x"} / .content-hidden when-profile="this") are dropped.
+visible_lines <- function(lines, prof) {
+  keep <- logical(length(lines)); stack <- logical(0)   # stack: TRUE = this div is hidden for prof
+  for (i in seq_along(lines)) {
+    l <- lines[i]
+    if (grepl("^:::+\\s*\\{", l)) {
+      who <- regmatches(l, regexpr('when-profile="[^"]+"', l))
+      hide <- FALSE
+      if (length(who)) {
+        tr <- sub('when-profile="([^"]+)"', "\\1", who)
+        hide <- if (grepl("content-hidden", l)) tr == prof else tr != prof
+      }
+      stack <- c(stack, hide); keep[i] <- !any(stack); next
+    }
+    if (grepl("^:::+\\s*$", l) && length(stack)) { keep[i] <- !any(stack); stack <- stack[-length(stack)]; next }
+    keep[i] <- !any(stack)
+  }
+  lines[keep]
+}
+linked_files <- function(paths, prof) {
+  out <- character()
+  for (p in paths) {
+    if (!file.exists(p)) next
+    txt <- paste(visible_lines(readLines(p, warn = FALSE, encoding = "UTF-8"), prof), collapse = "\n")
+    links <- regmatches(txt, gregexpr("\\]\\(([^)#?[:space:]]+)", txt))[[1]]
+    links <- sub("^\\]\\(", "", links)
+    links <- links[grepl(DOWNLOAD_EXT, links) & !grepl("^[a-z]+:", links)]
+    for (l in links) {
+      tgt <- sub(paste0("^", normalizePath("."), "/"), "", normalizePath(file.path(dirname(p), l), mustWork = FALSE))
+      if (file.exists(tgt) && !startsWith(tgt, "docs/")) out <- c(out, tgt)
+    }
+  }
+  sorted(out)
+}
 
 build <- function(prof) {
   p <- cur$profiles[[prof]]
@@ -80,6 +119,11 @@ build <- function(prof) {
   extra <- p$`project-extra`
   globbed <- glob(extra_globs(p))
   extra$render <- c(extra_globs(p), sorted(setdiff(c(menu_paths(p), sub_pages(menu_paths(p))), c(SHARED, globbed))))
+  # SHARED pages are left out: welcome.qmd links every track's downloads in per-track blocks, so scanning
+  # it would copy paid labs into every track. Track homes keep their explicit resources in curriculum.yml.
+  pages <- setdiff(c(menu_paths(p), sub_pages(menu_paths(p)), globbed), SHARED)
+  extra$resources <- sorted(c(as.character(unlist(extra$resources)), linked_files(pages, prof)))
+  if (!length(extra$resources)) extra$resources <- NULL
   proj <- c(list(`output-dir` = p$`output-dir`), lapply(extra, as.list))
   list(
     project = proj,

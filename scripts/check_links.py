@@ -20,6 +20,10 @@ class Links(html.parser.HTMLParser):
         self.found = []
 
     def handle_starttag(self, tag, attrs):
+        # The navbar brand's href is rewritten in the browser (see include-after-body in _quarto.yml):
+        # Quarto writes logo-href unchanged, so it is wrong on disk on every nested page.
+        if tag == 'a' and 'navbar-brand' in (dict(attrs).get('class') or ''):
+            return
         for k, v in attrs:
             if v and ((k == 'href' and tag in ('a', 'link')) or (k == 'src' and tag in ('img', 'script', 'iframe', 'source'))):
                 self.found.append(v)

@@ -33,7 +33,7 @@ Moving beyond simple bar and pie charts to professional-grade categorical visual
 
 **New Packages:**
 - `forcats` for factor manipulation
-- `ggmosaic` for mosaic plots
+- `productplots` for mosaic plots
 - Enhanced `ggplot2` techniques
 :::
 
@@ -48,7 +48,7 @@ Moving beyond simple bar and pie charts to professional-grade categorical visual
 library(ggplot2)
 library(dplyr)
 library(forcats)     # For factor reordering
-library(ggmosaic)    # For mosaic plots
+library(productplots) # For mosaic plots
 
 # Load dataset
 data <- readxl::read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
@@ -68,7 +68,7 @@ data_clean <- data %>%
 library(ggplot2)
 library(dplyr)
 library(forcats)
-library(ggmosaic)
+library(productplots)
 library(readxl)
 
 data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
@@ -146,185 +146,27 @@ ggplot(region_counts, aes(x = n, y = fct_reorder(Region, n))) +
 
 ::: {.incremental style="font-size: 0.85em;"}
 **OBSERVATION:**
-- East region: ~40 patients (lowest)
-- West and South: ~45 patients each (middle tier)
-- North region: ~65 patients (highest, ~60% more than East)
-- Clear ranking from bottom to top
-- Relatively balanced except North dominance
+- North region: widest column (33% of patients); East narrowest (20%)
+- Treatment share differs by region: Intervention 68% in East, 47% in North, 38% in South, 51% in West
+- The horizontal edges do **not** line up across columns
+- Chi-square test of Region × Treatment: p ≈ 0.05 (borderline)
 
 **INTERPRETATION:**
-- North region significantly overrepresented
-- East region undersampled  
-- West and South balanced
-- May reflect population distribution or recruitment success
-- Geographic imbalance could affect generalizability
+- **Width of columns:** regional sample sizes (North > South ≈ West > East)
+- **Height within columns:** treatment allocation within each region
+- **Misaligned edges:** allocation was not the same in every region
+- If this were a trial, region would need to be checked as a possible imbalance
 
 **IMPLICATIONS:**
-- Regional stratification needed in analysis
-- Results may skew toward North region characteristics
-- Consider weighting by region for national estimates
-- Recruitment challenges in East region
-
-**ACTIONS:**
-- Include region as covariate in models
-- Report results stratified by region
-- Consider regional subgroup analyses
-- Investigate reasons for North oversampling
-:::
-:::
-
----
-
-# Cleveland Dot Plot
-
-## Cleveland Dot Plot - Code
-
-🟢 **Goal:** Compare values across two groups
-
-```{r}
-#| echo: true
-#| eval: false
-#| code-line-numbers: "|1-5|7-11|12-14|15-17"
-
-# Calculate mean BMI by smoking status and gender
-bmi_summary <- data_clean %>%
-  filter(Gender %in% c("Male", "Female")) %>%  # Focus on main genders
-  group_by(SmokingStatus, Gender) %>%
-  summarise(Mean_BMI = mean(BMI, na.rm = TRUE), .groups = "drop")
-
-# Create Cleveland dot plot
-ggplot(bmi_summary, aes(x = Mean_BMI, y = fct_reorder(SmokingStatus, Mean_BMI),
-                        color = Gender, group = Gender)) +
-  geom_line(aes(group = SmokingStatus), color = "gray80", size = 1.5) +  # Connect dots
-  geom_point(size = 5) +  # Add colored dots
-  scale_color_manual(values = c("Female" = "#E91E63", "Male" = "#2196F3"),
-                     name = "Gender") +
-  labs(title = "Mean BMI by Smoking Status and Gender",
-       x = "Mean BMI", y = "Smoking Status") +
-  theme_minimal(base_family = "serif") +
-  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
-        axis.title = element_text(size = 12))
-```
-
-## Cleveland Dot Plot - Plot
-
-```{r}
-#| echo: false
-#| fig-width: 10
-#| fig-height: 6
-#| message: false
-
-bmi_summary <- data_clean %>%
-  filter(Gender %in% c("Male", "Female")) %>%
-  group_by(SmokingStatus, Gender) %>%
-  summarise(Mean_BMI = mean(BMI, na.rm = TRUE), .groups = "drop")
-
-ggplot(bmi_summary, aes(x = Mean_BMI, y = fct_reorder(SmokingStatus, Mean_BMI),
-                        color = Gender, group = Gender)) +
-  geom_line(aes(group = SmokingStatus), color = "gray80", size = 1.5) +
-  geom_point(size = 5) +
-  scale_color_manual(values = c("Female" = "#E91E63", "Male" = "#2196F3"),
-                     name = "Gender") +
-  labs(title = "Mean BMI by Smoking Status and Gender",
-       x = "Mean BMI", y = "Smoking Status") +
-  theme_minimal(base_family = "serif") +
-  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10),
-        legend.title = element_text(size = 11, face = "bold"),
-        legend.text = element_text(size = 10))
-```
-
----
-
-# Mosaic Plot
-
-## Mosaic Plot - Code
-
-🔴 **Goal:** Part of Whole + Show categorical associations
-
-```{r}
-#| echo: true
-#| eval: false
-#| code-line-numbers: "|1-2|3-5|6-7|8-10"
-
-# Create mosaic plot showing relationship between Region and Treatment Group
-ggplot(data = data_clean) +
-  geom_mosaic(aes(x = product(TreatmentGroup, Region), 
-                  fill = TreatmentGroup)) +  # Create mosaic tiles
-  scale_fill_manual(values = c("Control" = "#E74C3C", 
-                                "Intervention" = "#3498DB"),
-                    name = "Treatment Group") +
-  labs(title = "Treatment Group Distribution by Region (Mosaic Plot)",
-       x = "Region", y = "Treatment Group Proportion") +
-  theme_mosaic(base_family = "serif") +
-  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
-        axis.title = element_text(size = 12),
-        axis.text.x = element_text(angle = 0))
-```
-
-::: {.notes}
-In mosaic plots, area = proportion. Width = Region proportion, Height = Treatment proportion within region
-:::
-
-## Mosaic Plot - Plot
-
-```{r}
-#| echo: false
-#| fig-width: 10
-#| fig-height: 6
-
-ggplot(data = data_clean) +
-  geom_mosaic(aes(x = product(TreatmentGroup, Region), 
-                  fill = TreatmentGroup)) +
-  scale_fill_manual(values = c("Control" = "#E74C3C", 
-                                "Intervention" = "#3498DB"),
-                    name = "Treatment Group") +
-  labs(title = "Treatment Group Distribution by Region (Mosaic Plot)",
-       x = "Region", y = "Treatment Group Proportion") +
-  theme_mosaic(base_family = "serif") +
-  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10),
-        legend.title = element_text(size = 11, face = "bold"),
-        legend.text = element_text(size = 10))
-```
-
----
-
-# Interpreting Mosaic Plots
-
-## How to Read Mosaic Plots
-
-**Using the previous plot:**
-
-::: {.incremental style="font-size: 0.8em;"}
-**Key Principle:** Area = Proportion (not just height or width!)
-
-**OBSERVATION:**
-- North region: Widest column (~40% of total width) = most patients
-- All regions: Treatment groups roughly 50-50 split (equal heights within columns)
-- Tiles aligned horizontally = no strong association
-- East region: Narrowest column (~20% width) = fewest patients
-
-**INTERPRETATION:**
-- **Width of columns:** Regional sample sizes (North > South ≈ West > East)
-- **Height within columns:** Treatment allocation within each region
-- **Alignment:** Horizontal edges align = random assignment successful
-- **No association:** Treatment group independent of region (good randomization!)
-
-**IMPLICATIONS:**
-- Randomization worked well across all regions
-- No geographic bias in treatment allocation
-- Can analyze regions separately without treatment imbalance concern
-- Balanced design supports causal inference
+- Report allocation by region, not only overall
+- Consider adjusting for region in the analysis
+- A mosaic shows this at a glance; a single overall percentage would hide it
 
 **Reading Mosaic Tips:**
 - Misaligned tiles = association exists
 - Aligned tiles = independence (no association)
 - Area, not just height, represents proportion
 - Compare conditional distributions (within columns)
-:::
 :::
 
 ---
@@ -338,22 +180,33 @@ ggplot(data = data_clean) +
 ```{r}
 #| echo: true
 #| eval: false
-#| code-line-numbers: "|1-3|4-7|8-10"
+#| code-line-numbers: "|3-9|10-12|14-16|17-25"
 
-# Three-way mosaic: Gender × Smoking × Treatment
-ggplot(data = data_clean %>% filter(Gender %in% c("Male", "Female"))) +
-  geom_mosaic(aes(x = product(SmokingStatus, Gender, TreatmentGroup), 
-                  fill = SmokingStatus),
-              divider = ddecker()) +  # Use double-decker layout
+# Three-way mosaic drawn as rectangles (a mosaic is just rectangles):
+# width = patients in each Gender : Treatment column, height = smoking shares
+tiles <- data_clean %>%
+  filter(Gender %in% c("Male", "Female")) %>%
+  count(Gender, TreatmentGroup, SmokingStatus) %>%
+  mutate(column = paste(Gender, TreatmentGroup, sep = " : ")) %>%
+  group_by(column) %>%
+  mutate(ymax = cumsum(n) / sum(n), ymin = ymax - n / sum(n)) %>%
+  ungroup()
+cols <- tiles %>% count(column, wt = n, name = "col_n") %>%
+  mutate(xmax = cumsum(col_n), xmin = xmax - col_n)
+tiles <- left_join(tiles, cols, by = "column")
+
+ggplot(tiles) +
+  geom_rect(aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
+                fill = SmokingStatus), colour = "white", linewidth = 1) +
+  scale_x_continuous(breaks = (cols$xmin + cols$xmax) / 2, labels = cols$column) +
   scale_fill_manual(values = c("Current smoker" = "#E74C3C",
                                 "Former smoker" = "#F39C12",
                                 "Non-smoker" = "#27AE60"),
                     name = "Smoking Status") +
   labs(title = "Smoking Status by Gender and Treatment Group",
-       x = "Gender : Treatment Group") +
-  theme_mosaic(base_family = "serif") +
-  theme(plot.title = element_text(hjust = 0.5, size = 15, face = "bold"),
-        axis.text.x = element_text(angle = 45, hjust = 1, size = 9))
+       x = "Gender : Treatment Group (width = number of patients)", y = "Proportion") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 15, face = "bold"))
 ```
 
 ## Complex Mosaic - Plot
@@ -363,21 +216,29 @@ ggplot(data = data_clean %>% filter(Gender %in% c("Male", "Female"))) +
 #| fig-width: 10
 #| fig-height: 6
 
-ggplot(data = data_clean %>% filter(Gender %in% c("Male", "Female"))) +
-  geom_mosaic(aes(x = product(SmokingStatus, Gender, TreatmentGroup), 
-                  fill = SmokingStatus),
-              divider = ddecker()) +
+tiles <- data_clean %>%
+  filter(Gender %in% c("Male", "Female")) %>%
+  count(Gender, TreatmentGroup, SmokingStatus) %>%
+  mutate(column = paste(Gender, TreatmentGroup, sep = " : ")) %>%
+  group_by(column) %>%
+  mutate(ymax = cumsum(n) / sum(n), ymin = ymax - n / sum(n)) %>%
+  ungroup()
+cols <- tiles %>% count(column, wt = n, name = "col_n") %>%
+  mutate(xmax = cumsum(col_n), xmin = xmax - col_n)
+tiles <- left_join(tiles, cols, by = "column")
+
+ggplot(tiles) +
+  geom_rect(aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
+                fill = SmokingStatus), colour = "white", linewidth = 1) +
+  scale_x_continuous(breaks = (cols$xmin + cols$xmax) / 2, labels = cols$column) +
   scale_fill_manual(values = c("Current smoker" = "#E74C3C",
                                 "Former smoker" = "#F39C12",
                                 "Non-smoker" = "#27AE60"),
                     name = "Smoking Status") +
   labs(title = "Smoking Status by Gender and Treatment Group",
-       x = "Gender : Treatment Group") +
-  theme_mosaic(base_family = "serif") +
-  theme(plot.title = element_text(hjust = 0.5, size = 15, face = "bold"),
-        axis.text.x = element_text(angle = 45, hjust = 1, size = 9),
-        legend.title = element_text(size = 11, face = "bold"),
-        legend.text = element_text(size = 10))
+       x = "Gender : Treatment Group (width = number of patients)", y = "Proportion") +
+  theme_minimal(base_family = "serif") +
+  theme(plot.title = element_text(hjust = 0.5, size = 15, face = "bold"))
 ```
 
 ---

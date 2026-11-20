@@ -33,8 +33,26 @@ project:
     - ggstatsplot/ggstatsplot_moderate.qmd
     - gtsummary/gtsummary_tutorial.qmd
     - plot-gallery/advanced.qmd
+    - plot-gallery/advanced/3.1_categorical_advanced.qmd
+    - plot-gallery/advanced/3.2_continuous_advanced.qmd
+    - plot-gallery/advanced/3.3_category_vs_continuous_advanced.qmd
+    - plot-gallery/advanced/3.4_timeseries_advanced.qmd
+    - plot-gallery/advanced/3.5_network_advanced.qmd
+    - plot-gallery/advanced/3.6_geographic_advanced.qmd
+    - plot-gallery/advanced/3.7_dashboards_advanced.qmd
     - plot-gallery/basic.qmd
+    - plot-gallery/basic/0_foundation.qmd
+    - plot-gallery/basic/1.1_categorical_basic.qmd
+    - plot-gallery/basic/1.2_continuous_basic.qmd
+    - plot-gallery/basic/1.3_category_vs_continuous_basic.qmd
+    - plot-gallery/basic/1.4_timeseries_basic.qmd
     - plot-gallery/moderate.qmd
+    - plot-gallery/moderate/2.1_categorical_intermediate.qmd
+    - plot-gallery/moderate/2.2_continuous_intermediate.qmd
+    - plot-gallery/moderate/2.3_category_vs_continuous_intermediate.qmd
+    - plot-gallery/moderate/2.4_timeseries_intermediate.qmd
+    - plot-gallery/moderate/2.5_relational_flow_intermediate.qmd
+    - plot-gallery/moderate/2.6_geographic_intermediate.qmd
     - plot-gallery/practical_application.qmd
     - quarto_repro_w/quarto_advanced.qmd
     - quarto_repro_w/quarto_moderate.qmd
@@ -51,35 +69,35 @@ project:
     - statistical-analysis/regression.qmd
     - statistical-analysis/statistical_tests.qmd
   resources:
-    - data/tb_cohort.csv
-    - survival-workshop/make_data.R
-    - survival-workshop/labs/*.R
-    - data/dengue_wards.csv
-    - counts-workshop/make_data.R
-    - counts-workshop/labs/*.R
-    - data/maternal_survey.csv
-    - ordinal-workshop/make_data.R
-    - ordinal-workshop/labs/*.R
-    - data/bp_trial.csv
-    - clustered-workshop/make_data.R
+    - causal-workshop/labs/*.R
+    - causal-workshop/make_data.R
     - clustered-workshop/labs/*.R
-    - data/survey_adults.csv
-    - data/survey_population.csv
-    - survey-workshop/make_data.R
-    - survey-workshop/labs/*.R
-    - data/ncd_curves.csv
-    - curves-workshop/make_data.R
+    - clustered-workshop/make_data.R
+    - counts-workshop/labs/*.R
+    - counts-workshop/make_data.R
     - curves-workshop/labs/*.R
-    - data/ncd_missing.csv
-    - missing-workshop/make_data.R
-    - missing-workshop/labs/*.R
+    - curves-workshop/make_data.R
+    - data/bp_trial.csv
+    - data/dengue_wards.csv
     - data/diabetes_dev.csv
     - data/diabetes_valid.csv
-    - prediction-workshop/make_data.R
-    - prediction-workshop/labs/*.R
     - data/htn_programme.csv
-    - causal-workshop/make_data.R
-    - causal-workshop/labs/*.R
+    - data/maternal_survey.csv
+    - data/ncd_curves.csv
+    - data/ncd_missing.csv
+    - data/survey_adults.csv
+    - data/survey_population.csv
+    - data/tb_cohort.csv
+    - missing-workshop/labs/*.R
+    - missing-workshop/make_data.R
+    - ordinal-workshop/labs/*.R
+    - ordinal-workshop/make_data.R
+    - prediction-workshop/labs/*.R
+    - prediction-workshop/make_data.R
+    - survey-workshop/labs/*.R
+    - survey-workshop/make_data.R
+    - survival-workshop/labs/*.R
+    - survival-workshop/make_data.R
 website:
   title: Medical Statistics in R — Advanced
   site-url: '.'

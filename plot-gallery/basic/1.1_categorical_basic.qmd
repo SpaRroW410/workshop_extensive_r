@@ -218,26 +218,25 @@ ggplot(smoking_counts, aes(x = n, y = reorder(SmokingStatus, n))) +
 
 ::: {.incremental style="font-size: 0.9em;"}
 **OBSERVATION:**
-- Non-smokers: ~115 patients (largest group)
-- Former smokers: ~40 patients (middle)
-- Current smokers: ~35 patients (smallest)
-- Clear hierarchy in the data
+- Non-smokers: 118 patients (largest group)
+- Former smokers: 43 patients
+- Current smokers: 37 patients (smallest group)
+- Clear ranking, with no group very small
 
 **INTERPRETATION:**
-- Majority of study participants are non-smokers (>70%)
-- Combined smokers (current + former) represent ~30%
-- Good representation across smoking statuses for analysis
+- 60% of participants are non-smokers
+- Current and former smokers together are 40%
+- Every smoking group has enough patients to describe
 
 **IMPLICATIONS:**
-- Sufficient sample in each group for subgroup analysis
-- Non-smoker group may dominate overall results
+- Subgroups of smokers are still small (37 and 43): estimates within them will be imprecise
+- Non-smokers carry most of the weight of overall results
 - Consider stratified analysis by smoking status
 
 **ACTIONS:**
-- Use smoking status as a key stratification variable
-- Ensure statistical power for smoker subgroups
+- Use smoking status as a stratification variable
+- Check statistical power before testing smoker subgroups
 - Watch for interaction effects with treatment
-:::
 :::
 
 ---

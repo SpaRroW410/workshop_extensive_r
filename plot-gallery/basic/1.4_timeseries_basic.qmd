@@ -184,30 +184,23 @@ ggplot(mean_bp, aes(x = Month, y = Mean_SysBP)) +
 
 ::: {.incremental style="font-size: 0.85em;"}
 **OBSERVATION:**
-- Baseline (Month 0): Mean SysBP ~135 mmHg
-- Month 3: Mean SysBP ~129 mmHg (decrease of ~6 mmHg)
-- Month 6: Mean SysBP ~130 mmHg (slight increase from Month 3)
-- Overall trend: Downward from baseline
-- Small rebound between months 3 and 6
+- Baseline (Month 0): mean systolic BP 135.1 mmHg
+- Month 3: 132.2 mmHg (2.9 mmHg lower)
+- Month 6: 130.4 mmHg (another 1.8 mmHg lower)
+- Steady downward trend, no rebound
 
 **INTERPRETATION:**
-- Blood pressure decreased during first 3 months of study
-- Effect stabilized or slightly reversed by month 6
-- Overall improvement of ~5 mmHg from baseline
-- Intervention may have time-dependent effects
+- Mean blood pressure fell by about 5 mmHg over six months
+- This line mixes both groups: it cannot say whether the intervention caused the fall
 
 **IMPLICATIONS:**
-- Treatment appears effective in short term (3 months)
-- Longer-term effects need investigation
-- 5 mmHg reduction clinically meaningful
-- May need to compare Control vs. Intervention separately
+- Plot the groups separately (next slide): the Control mean stays at about 136 mmHg, the Intervention mean falls from 134 to 125 mmHg
+- An overall mean can hide that only one group changed
+- A change over time is not a treatment effect without a comparison group
 
 **ACTIONS:**
-- Separate analysis by treatment group needed
-- Consider reasons for Month 6 rebound
-- Evaluate if maintenance strategies needed
-- Assess clinical significance (5 mmHg reduction = ~10% stroke risk ↓)
-:::
+- Always show a line per group in a trial
+- Add error bars or confidence intervals before drawing conclusions
 :::
 
 ---

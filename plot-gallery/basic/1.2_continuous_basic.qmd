@@ -157,28 +157,24 @@ ggplot(data_clean, aes(x = Age)) +
 
 ::: {.incremental style="font-size: 0.85em;"}
 **OBSERVATION:**
-- Distribution appears roughly uniform across age range
-- Ages range from ~18 to ~79 years
-- No clear peak (not normally distributed)
-- Relatively even frequency across all age groups
-- No obvious outliers or gaps
+- Ages range from 18 to 79 years (median 50)
+- Patients are spread over the whole range, with somewhat more between 45 and 55
+- No single sharp peak and no long tail
+- No gaps and no impossible values
 
 **INTERPRETATION:**
-- Study successfully recruited across broad age spectrum
+- The study covers the whole adult age range
 - No age group dominates the sample
-- Good representation for age-stratified analysis
-- Uniform distribution suggests deliberate balanced recruitment
+- Age is not normally distributed, but that does not matter for using it as a predictor
 
 **IMPLICATIONS:**
-- Results generalizable across adult age range
-- Can analyze age as continuous variable or create age groups
-- Sufficient sample in all age ranges for subgroup analysis
+- Results can be described across adult ages
+- Age can be used as a continuous variable; groups (e.g. 18–39, 40–59, 60+) are only for description
+- Every age band has enough patients for a description
 
 **ACTIONS:**
-- Consider age as covariate in treatment analysis
-- May want to create age categories (e.g., 18-40, 41-60, 61+)
-- Check if age interacts with treatment effect
-:::
+- Consider age as a covariate in treatment analyses
+- Change `bins` and check the picture does not depend on it
 :::
 
 ---
@@ -347,30 +343,19 @@ ggplot(data_clean, aes(x = BMI, y = Cholesterol)) +
 
 ::: {.incremental style="font-size: 0.85em;"}
 **OBSERVATION:**
-- Points scattered across the plot area
-- No clear linear pattern visible
-- BMI ranges from ~15 to ~37
-- Cholesterol ranges from ~120 to ~290
-- Some clustering but no strong trend
+- Points are scattered over the whole plot
+- No linear pattern (correlation r = 0.00, p = 0.97)
+- BMI ranges from 11.4 to 37.3; cholesterol from 151 to 299 mg/dL
+- A few BMI values below 15 sit far to the left
 
 **INTERPRETATION:**
-- Weak or no correlation between BMI and Cholesterol in this sample
-- Relationship appears to be random/independent
-- Both variables vary independently
-- No obvious outliers or extreme cases
+- No association between BMI and cholesterol in this sample
+- BMI values below 15 are implausible for adults: check them before any analysis
 
 **IMPLICATIONS:**
-- BMI alone may not predict cholesterol levels
-- Other factors likely influence cholesterol (diet, genetics, medication)
-- Cannot use BMI as sole predictor of cholesterol risk
-- Need multivariate analysis for better understanding
-
-**CRITICAL WARNING:**
-- **Correlation ≠ Causation**
-- Even if correlation existed, wouldn't prove causal relationship
-- Always consider confounding variables
-- Use domain knowledge alongside statistical patterns
-:::
+- BMI alone does not predict cholesterol here
+- Other factors (diet, genetics, medication) are likely to matter
+- A scatter plot is the first data-quality check, not only a picture of association
 :::
 
 ---

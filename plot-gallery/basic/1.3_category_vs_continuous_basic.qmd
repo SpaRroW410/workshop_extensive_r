@@ -166,37 +166,29 @@ ggplot(data_clean, aes(x = TreatmentGroup, y = BMI, fill = TreatmentGroup)) +
 **Using the previous plot:**
 
 ::: {.incremental style="font-size: 0.8em;"}
-**Reading the 5-Number Summary:**
-- **Bottom whisker:** Minimum (~12-15)
-- **Bottom of box (Q1):** 25th percentile (~22)
-- **Line in box (Median):** 50th percentile (~25)
-- **Top of box (Q3):** 75th percentile (~28)
-- **Top whisker:** Maximum (~35)
-- **Red dots:** Outliers beyond 1.5 × IQR
+**Reading the 5-Number Summary** (Control / Intervention):
+- **Bottom whisker:** lowest value within 1.5 × IQR of the box
+- **Bottom of box (Q1):** 25th percentile (22.4 / 23.0)
+- **Line in box (Median):** 50th percentile (24.6 / 25.8)
+- **Top of box (Q3):** 75th percentile (27.7 / 29.3)
+- **Top whisker:** highest value within 1.5 × IQR
+- **Red dots:** outliers beyond 1.5 × IQR (1 in Control, 2 in Intervention; the lowest BMI is 11.4)
 
 **OBSERVATION:**
-- Both groups have similar median BMI (~25)
-- Both groups show symmetric distributions
-- Control group: slightly wider box (more variation)
-- Few outliers in both groups
+- Median BMI 24.6 (Control) and 25.8 (Intervention)
+- Intervention box slightly taller (IQR 6.3 vs 5.4): a little more spread
 - Boxes largely overlap
+- A few very low BMI values appear as outliers
 
 **INTERPRETATION:**
-- No substantial difference in BMI between treatment groups at baseline
-- Random assignment appears successful (balanced groups)
-- Similar BMI variability in both groups
-- Treatment groups comparable on this key health metric
+- A difference of about 1 BMI unit between the groups at baseline; small next to the spread within each group
+- The groups look broadly comparable on BMI
+- The very low values (below 15) are implausible and should be checked
 
 **IMPLICATIONS:**
-- BMI unlikely to confound treatment effect
-- Groups well-balanced for analysis
-- Any post-treatment BMI differences likely due to treatment, not baseline
-
-**ACTIONS:**
-- Proceed with treatment comparison without BMI adjustment
-- May still include BMI as covariate for precision
-- Monitor for BMI changes during study
-:::
+- A baseline difference this small is unlikely to confound a treatment comparison, but it can be adjusted for
+- Report the medians and IQRs in Table 1
+- Decide what to do with implausible values before the analysis, and say so in the methods
 :::
 
 ---

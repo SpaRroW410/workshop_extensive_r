@@ -238,6 +238,419 @@
     "text": "Quarto enables reproducible research by combining code, text, and output in a single document.\n\n\n\n\n\nThe mean age is NA years.\n\n\n\n\nggplot(gtsummary::trial, aes(x = age)) +\n  geom_histogram(binwidth = 5, fill = \"blue\", alpha = 0.7) +\n  theme_minimal()\n\nWarning: Removed 11 rows containing non-finite outside the scale range\n(`stat_bin()`).\n\n\n\n\n\n\n\n\nFigure 1: Distribution of Age\n\n\n\n\n\n\n\n\n\ndata_1 %&gt;% \n  summarise(\n    Mean_Age = mean(Age),\n    SD_Age = sd(Age),\n    Mean_SBP = mean(SysBP_0m),\n    SD_SBP = sd(SysBP_0m)\n  ) %&gt;% \n  knitr::kable()\n\n\n\nTable 1: Summary Statistics\n\n\n\n\n\n\nMean_Age\nSD_Age\nMean_SBP\nSD_SBP\n\n\n\n\n49.745\n17.71466\n135.08\n13.58256\n\n\n\n\n\n\n\n\n\n\n\nQuarto supports citations using BibTeX or DOI."
   },
   {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#what-is-category-vs.-continuous-data",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#what-is-category-vs.-continuous-data",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "What is Category vs. Continuous Data?",
+    "text": "What is Category vs. Continuous Data?\n\n\nDefinition:\nCombining categorical variables (groups) with continuous variables (numeric measurements)\n\nCompare numeric values across categories\nShow distributions within groups\nAnalyze differences between segments\n\n\nExamples in Our Dataset:\n\nBMI by Gender\nBlood Pressure by Treatment Group\nCholesterol by Region\nAge by Smoking Status\nBlood Sugar by Exercise Frequency"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#analytical-goals",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#analytical-goals",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "Analytical Goals",
+    "text": "Analytical Goals\n\nWhat questions can we answer?\n\n🟡 Distribution - How do values spread within each category?\n🟢 Ranking - Which group has highest/lowest values?\n🔴 Part of Whole - How do groups contribute to total?\n⚫ Correlation - Do patterns differ across groups?\n\nCharts we’ll learn:\n\nBox Plot\nGrouped Bar Chart\nStacked Bar Chart"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#setup-load-data",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#setup-load-data",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "Setup: Load Data",
+    "text": "Setup: Load Data\n\n\nCode\n# Load required libraries\nlibrary(ggplot2)\nlibrary(dplyr)\n\n# Load the dataset\ndata &lt;- readxl::read_excel(\"../../data/PublicHealth_BP_Dataset.xlsx\")\n\n# Handle missing data for complete case analysis\ndata_clean &lt;- data %&gt;%\n  filter(!is.na(ExerciseFreq), !is.na(ChronicDisease))  # Remove rows with missing values"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#data-preview",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#data-preview",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "Data Preview",
+    "text": "Data Preview\n\n\n# A tibble: 2 × 5\n  TreatmentGroup Count Mean_Age Mean_BMI Mean_SysBP\n  &lt;chr&gt;          &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;\n1 Control           98     47.5     24.5       136.\n2 Intervention      98     52.3     25.9       134."
+  },
+  {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#box-plot---code",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#box-plot---code",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "Box Plot - Code",
+    "text": "Box Plot - Code\n🟡 Goal: Compare distributions across groups\n\n\nCode\n# Create box plot comparing BMI by Treatment Group\nggplot(data_clean, aes(x = TreatmentGroup, y = BMI, fill = TreatmentGroup)) +\n  geom_boxplot(alpha = 0.7, outlier.color = \"red\", outlier.size = 3) +  # Add box plots\n  scale_fill_manual(values = c(\"Control\" = \"#E74C3C\", \n                                \"Intervention\" = \"#3498DB\"),\n                    name = \"Treatment Group\") +  # Custom colors\n  labs(title = \"BMI Distribution by Treatment Group\",\n       x = \"Treatment Group\", y = \"Body Mass Index (BMI)\") +\n  theme_minimal(base_family = \"serif\") +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"),\n        axis.title = element_text(size = 12),\n        legend.position = \"none\")  # Hide legend (redundant with x-axis)\n\n\n\nBox plot shows: minimum, Q1 (25%), median (50%), Q3 (75%), maximum, and outliers"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#box-plot---plot",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#box-plot---plot",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "Box Plot - Plot",
+    "text": "Box Plot - Plot"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#how-to-read-box-plots",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#how-to-read-box-plots",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "How to Read Box Plots",
+    "text": "How to Read Box Plots\nUsing the previous plot:\n\nReading the 5-Number Summary (Control / Intervention): - Bottom whisker: lowest value within 1.5 × IQR of the box - Bottom of box (Q1): 25th percentile (22.4 / 23.0) - Line in box (Median): 50th percentile (24.6 / 25.8) - Top of box (Q3): 75th percentile (27.7 / 29.3) - Top whisker: highest value within 1.5 × IQR - Red dots: outliers beyond 1.5 × IQR (1 in Control, 2 in Intervention; the lowest BMI is 11.4)\nOBSERVATION: - Median BMI 24.6 (Control) and 25.8 (Intervention) - Intervention box slightly taller (IQR 6.3 vs 5.4): a little more spread - Boxes largely overlap - A few very low BMI values appear as outliers\nINTERPRETATION: - A difference of about 1 BMI unit between the groups at baseline; small next to the spread within each group - The groups look broadly comparable on BMI - The very low values (below 15) are implausible and should be checked\nIMPLICATIONS: - A baseline difference this small is unlikely to confound a treatment comparison, but it can be adjusted for - Report the medians and IQRs in Table 1 - Decide what to do with implausible values before the analysis, and say so in the methods"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#box-plot-with-multiple-categories---code",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#box-plot-with-multiple-categories---code",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "Box Plot with Multiple Categories - Code",
+    "text": "Box Plot with Multiple Categories - Code\n🟡 Goal: Compare distributions across many groups\n\n\nCode\n# Compare Cholesterol across all regions\nggplot(data_clean, aes(x = reorder(Region, Cholesterol, FUN = median), \n                       y = Cholesterol, fill = Region)) +\n  geom_boxplot(alpha = 0.7, outlier.shape = 16, outlier.size = 2) +  # Box plots\n  scale_fill_brewer(palette = \"Set2\", name = \"Region\") +  # Use color palette\n  labs(title = \"Cholesterol Levels by Region (Ordered by Median)\",\n       x = \"Region\", \n       y = \"Cholesterol (mg/dL)\") +\n  theme_minimal(base_family = \"serif\") +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"),\n        axis.title = element_text(size = 12),\n        axis.text = element_text(size = 10),\n        legend.position = \"none\")  # X-axis provides category names\n\n\n\nreorder() sorts regions by median cholesterol for easier comparison"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#box-plot---multiple-groups-plot",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#box-plot---multiple-groups-plot",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "Box Plot - Multiple Groups Plot",
+    "text": "Box Plot - Multiple Groups Plot"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#grouped-bar-chart---code",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#grouped-bar-chart---code",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "Grouped Bar Chart - Code",
+    "text": "Grouped Bar Chart - Code\n🟢 Goal: Compare means across categories and groups\n\n\nCode\n# Calculate mean systolic BP by Region and Treatment Group\nbp_summary &lt;- data_clean %&gt;%\n  group_by(Region, TreatmentGroup) %&gt;%\n  summarise(Mean_SysBP = mean(SysBP_0m, na.rm = TRUE),\n            .groups = \"drop\")  # Calculate group means\n\n# Create grouped bar chart\nggplot(bp_summary, aes(x = Region, y = Mean_SysBP, fill = TreatmentGroup)) +\n  geom_col(position = \"dodge\", alpha = 0.8) +  # Bars side-by-side\n  scale_fill_manual(values = c(\"Control\" = \"#E74C3C\", \n                                \"Intervention\" = \"#3498DB\"),\n                    name = \"Treatment Group\") +\n  labs(title = \"Mean Baseline Systolic BP by Region and Treatment Group\",\n       x = \"Region\", \n       y = \"Mean Systolic BP (mmHg)\") +\n  theme_minimal(base_family = \"serif\") +\n  theme(plot.title = element_text(hjust = 0.5, size = 15, face = \"bold\"),\n        axis.title = element_text(size = 12),\n        legend.position = \"right\")"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#grouped-bar-chart---plot",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#grouped-bar-chart---plot",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "Grouped Bar Chart - Plot",
+    "text": "Grouped Bar Chart - Plot"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#stacked-bar-chart---code",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#stacked-bar-chart---code",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "Stacked Bar Chart - Code",
+    "text": "Stacked Bar Chart - Code\n🔴 Goal: Part of Whole + Comparison\n\n\nCode\n# Count patients by Region and Gender\nregion_gender &lt;- data_clean %&gt;%\n  count(Region, Gender) %&gt;%\n  filter(Gender != \"Other\")  # Remove small category for clarity\n\n# Create stacked bar chart\nggplot(region_gender, aes(x = Region, y = n, fill = Gender)) +\n  geom_col(position = \"stack\", alpha = 0.8) +  # Stack bars\n  scale_fill_manual(values = c(\"Female\" = \"#E91E63\", \n                                \"Male\" = \"#2196F3\"),\n                    name = \"Gender\") +\n  geom_text(aes(label = n), position = position_stack(vjust = 0.5),\n            color = \"white\", family = \"serif\", fontface = \"bold\", size = 4) +  # Add counts\n  labs(title = \"Patient Count by Region and Gender\",\n       x = \"Region\", \n       y = \"Number of Patients\") +\n  theme_minimal(base_family = \"serif\") +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"),\n        axis.title = element_text(size = 12),\n        legend.position = \"right\")"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#stacked-bar-chart---plot",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#stacked-bar-chart---plot",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "Stacked Bar Chart - Plot",
+    "text": "Stacked Bar Chart - Plot"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#category-vs.-continuous---summary",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#category-vs.-continuous---summary",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "Category vs. Continuous - Summary",
+    "text": "Category vs. Continuous - Summary\n\n\n\n\n\n\n\n\n\nChart Type\nGoal\nWhen to Use\nCode Complexity\n\n\n\n\nBox Plot\n🟡 Distribution\nCompare distributions across 2-6 groups\nSimple (4-6 lines)\n\n\nBox Plot (Multiple)\n🟡 Distribution\nCompare many groups, show ranking\nMedium (6-8 lines)\n\n\nGrouped Bar\n🟢 Ranking/Comparison\nCompare means across categories\nMedium (8-12 lines)\n\n\nStacked Bar\n🔴 Part of Whole\nShow composition and totals\nMedium (8-12 lines)"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#understanding-box-plots",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#understanding-box-plots",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "Understanding Box Plots",
+    "text": "Understanding Box Plots\n\n\nThe Box: - Bottom edge: Q1 (25th percentile) - Middle line: Median (50th percentile) - Top edge: Q3 (75th percentile) - Box height: IQR (Q3 - Q1)\nThe Whiskers: - Extend to 1.5 × IQR - Show data range (excluding outliers)\n\nOutliers: - Points beyond whiskers - May indicate: - Data entry errors - Natural extreme values - Different population\nComparing Boxes: - Non-overlapping: likely different - Overlapping: may not be different - Check median positions - Compare IQR widths"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#key-takeaways",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#key-takeaways",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "Key Takeaways",
+    "text": "Key Takeaways\n\nRemember:\n\nBox plots show distribution - not just means\nOrder categories - by median or logically\nGrouped vs. Stacked bars - different purposes\nAlways show units - in axis labels\nHandle outliers thoughtfully - investigate but don’t automatically remove\n\nCommon Mistakes:\n\nToo many categories in one plot (&gt;8)\nNot ordering categories logically\nConfusing grouped and stacked bars\nIgnoring outliers without investigation\nComparing means without showing variation"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#practice-exercise",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#practice-exercise",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "Practice Exercise",
+    "text": "Practice Exercise\nYour Turn:\n\nCreate a box plot of Age by SmokingStatus\nOrder the smoking statuses by median age\nCreate a grouped bar chart showing mean Cholesterol by Region and Gender\nAdd error bars (standard error) to the grouped bar chart\n\nBonus: Create a stacked bar showing ExerciseFreq composition by Region"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#next-steps",
+    "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#next-steps",
+    "title": "Category vs. Continuous - BASIC",
+    "section": "Next Steps",
+    "text": "Next Steps\nYou’ve mastered Category vs. Continuous - Basic!\nNext: Time Series - Basic\nLearn to visualize data over time with: - Line charts - Multiple time series - Trend analysis"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#what-is-categorical-data",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#what-is-categorical-data",
+    "title": "Categorical Plots - BASIC",
+    "section": "What is Categorical Data?",
+    "text": "What is Categorical Data?\n\n\nDefinition:\nData that represents categories, groups, or labels\n\nFinite set of discrete values\nNo inherent numerical order (usually)\nQualitative rather than quantitative\n\n\nExamples in Our Dataset:\n\nTreatment Group (Control, Intervention)\nGender (Male, Female, Other)\nRegion (North, South, East, West)\nSmoking Status\nAlcohol Use\nExercise Frequency\nChronic Disease"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#analytical-goals-for-categorical-data",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#analytical-goals-for-categorical-data",
+    "title": "Categorical Plots - BASIC",
+    "section": "Analytical Goals for Categorical Data",
+    "text": "Analytical Goals for Categorical Data\n\nWhat questions can we answer?\n\n🟢 Ranking - Which category is most/least common?\n🟡 Distribution - How are observations spread across categories?\n🔴 Part of Whole - What proportion does each category represent?\n\nCharts we’ll learn:\n\nBar Chart (Vertical & Horizontal)\nPie Chart\nDonut Chart\nStacked Bar Chart"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#setup-load-libraries-and-data",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#setup-load-libraries-and-data",
+    "title": "Categorical Plots - BASIC",
+    "section": "Setup: Load Libraries and Data",
+    "text": "Setup: Load Libraries and Data\n\n\nCode\n# Load required libraries\nlibrary(ggplot2)    # For creating plots\nlibrary(dplyr)      # For data manipulation\n\n# Load the dataset\ndata &lt;- readxl::read_excel(\"PublicHealth_BP_Dataset.xlsx\")\n\n# Handle missing data: filter to complete cases for ExerciseFreq\ndata_clean &lt;- data %&gt;%\n  filter(!is.na(ExerciseFreq))  # Remove rows with missing exercise frequency\n\n# Preview the data\nhead(data_clean %&gt;% \n  select(PatientID, TreatmentGroup, Gender, Region, SmokingStatus))"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#setup-load-libraries-and-data-1",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#setup-load-libraries-and-data-1",
+    "title": "Categorical Plots - BASIC",
+    "section": "Setup: Load Libraries and Data",
+    "text": "Setup: Load Libraries and Data\n\n\n# A tibble: 10 × 5\n   PatientID TreatmentGroup Gender Region SmokingStatus \n       &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;         \n 1         1 Control        Female South  Non-smoker    \n 2         2 Control        Male   South  Former smoker \n 3         3 Control        Male   West   Former smoker \n 4         4 Intervention   Female West   Current smoker\n 5         5 Intervention   Male   West   Current smoker\n 6         6 Intervention   Male   North  Former smoker \n 7         7 Control        Male   East   Current smoker\n 8         8 Intervention   Male   North  Former smoker \n 9         9 Intervention   Female East   Former smoker \n10        10 Control        Male   North  Non-smoker"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#bar-chart-vertical---code",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#bar-chart-vertical---code",
+    "title": "Categorical Plots - BASIC",
+    "section": "Bar Chart (Vertical) - Code",
+    "text": "Bar Chart (Vertical) - Code\n🟢 Goal: Ranking / Distribution\n\n\nCode\n# Create vertical bar chart showing patient count by region\nggplot(data_clean, aes(x = Region)) +\n  geom_bar(fill = \"steelblue\", alpha = 0.8) +  # Add bars with color\n  labs(title = \"Patient Distribution by Region\",\n       x = \"Region\", y = \"Count of Patients\") +  # Add labels\n  theme_minimal(base_family = \"serif\") +  # Apply serif font theme\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"),\n        axis.title = element_text(size = 12),\n        axis.text = element_text(size = 10))\n\n\n\n\nLine 1-2: Set up plot with Region on x-axis, counts automatically calculated\nLine 3: Add bar geometry with steel blue fill and transparency\nLine 4-5: Add descriptive title and axis labels\nLine 6: Apply minimal theme with serif font for professional look\nLine 7-9: Customize title and axis text sizes"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#bar-chart-vertical---plot",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#bar-chart-vertical---plot",
+    "title": "Categorical Plots - BASIC",
+    "section": "Bar Chart (Vertical) - Plot",
+    "text": "Bar Chart (Vertical) - Plot"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#horizontal-bar-chart---code",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#horizontal-bar-chart---code",
+    "title": "Categorical Plots - BASIC",
+    "section": "Horizontal Bar Chart - Code",
+    "text": "Horizontal Bar Chart - Code\n🟢 Goal: Ranking (ordered by value)\n\n\nCode\n# Create horizontal bar chart with categories ordered by count\nsmoking_counts &lt;- data_clean %&gt;%\n  count(SmokingStatus) %&gt;%  # Count observations per smoking status\n  arrange(n)  # Arrange from smallest to largest\n\nggplot(smoking_counts, aes(x = n, y = reorder(SmokingStatus, n))) +\n  geom_col(fill = \"darkgreen\", alpha = 0.7) +  # Use geom_col for pre-counted data\n  labs(title = \"Patient Count by Smoking Status (Ranked)\",\n       x = \"Number of Patients\", y = \"Smoking Status\") +\n  theme_minimal(base_family = \"serif\") +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"),\n        axis.title = element_text(size = 12),\n        axis.text = element_text(size = 10))\n\n\n\n\nLines 1-3: Count patients per smoking status category\nLine 4: Sort ascending so chart displays with largest at top\nLine 5: reorder() arranges y-axis by count value\nLine 6: geom_col() used when you have pre-calculated counts"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#horizontal-bar-chart---plot",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#horizontal-bar-chart---plot",
+    "title": "Categorical Plots - BASIC",
+    "section": "Horizontal Bar Chart - Plot",
+    "text": "Horizontal Bar Chart - Plot"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#how-to-read-bar-charts",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#how-to-read-bar-charts",
+    "title": "Categorical Plots - BASIC",
+    "section": "How to Read Bar Charts",
+    "text": "How to Read Bar Charts\nUsing the previous plot as example:\n\nOBSERVATION: - Non-smokers: 118 patients (largest group) - Former smokers: 43 patients - Current smokers: 37 patients (smallest group) - Clear ranking, with no group very small\nINTERPRETATION: - 60% of participants are non-smokers - Current and former smokers together are 40% - Every smoking group has enough patients to describe\nIMPLICATIONS: - Subgroups of smokers are still small (37 and 43): estimates within them will be imprecise - Non-smokers carry most of the weight of overall results - Consider stratified analysis by smoking status\nACTIONS: - Use smoking status as a stratification variable - Check statistical power before testing smoker subgroups - Watch for interaction effects with treatment"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#pie-chart---code",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#pie-chart---code",
+    "title": "Categorical Plots - BASIC",
+    "section": "Pie Chart - Code",
+    "text": "Pie Chart - Code\n🔴 Goal: Part of a Whole\n\n\nCode\n# Calculate percentages for treatment groups\ntreatment_summary &lt;- data_clean %&gt;%\n  count(TreatmentGroup) %&gt;%\n  mutate(percentage = n / sum(n) * 100)  # Calculate percentages\n\n# Create pie chart using coord_polar transformation\nggplot(treatment_summary, aes(x = \"\", y = n, fill = TreatmentGroup)) +\n  geom_bar(stat = \"identity\", width = 1, color = \"white\") +  # Create stacked bar\n  coord_polar(\"y\", start = 0) +  # Transform to polar coordinates (pie)\n  scale_fill_manual(values = c(\"Control\" = \"#E74C3C\", \"Intervention\" = \"#3498DB\")) +\n  geom_text(aes(label = paste0(round(percentage, 1), \"%\")), \n            position = position_stack(vjust = 0.5),\n            family = \"serif\", size = 5) +  # Add percentage labels\n  labs(title = \"Treatment Group Distribution\",\n       fill = \"Group\") +\n  theme_void(base_family = \"serif\") +  # Remove axes for clean pie\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"))\n\n\n\n⚠️ Warning: Use pie charts only for 2-5 categories!"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#pie-chart---plot",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#pie-chart---plot",
+    "title": "Categorical Plots - BASIC",
+    "section": "Pie Chart - Plot",
+    "text": "Pie Chart - Plot"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#donut-chart---code",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#donut-chart---code",
+    "title": "Categorical Plots - BASIC",
+    "section": "Donut Chart - Code",
+    "text": "Donut Chart - Code\n🔴 Goal: Part of a Whole (modern alternative to pie)\n\n\nCode\n# Calculate percentages for gender distribution\ngender_summary &lt;- data_clean %&gt;%\n  count(Gender) %&gt;%\n  mutate(percentage = n / sum(n) * 100)\n\n# Create donut chart (pie with hole in center)\nggplot(gender_summary, aes(x = 2, y = n, fill = Gender)) +  # x=2 creates the hole\n  geom_bar(stat = \"identity\", width = 1, color = \"white\") +\n  coord_polar(\"y\", start = 0) +\n  xlim(0.5, 2.5) +  # Creates the \"donut hole\" effect\n  scale_fill_brewer(palette = \"Set2\") +  # Use professional color palette\n  geom_text(aes(label = paste0(Gender, \"\\n\", round(percentage, 1), \"%\")),\n            position = position_stack(vjust = 0.5),\n            family = \"serif\", size = 4) +\n  labs(title = \"Patient Gender Distribution\") +\n  theme_void(base_family = \"serif\") +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"),\n        legend.position = \"right\")"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#donut-chart---plot",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#donut-chart---plot",
+    "title": "Categorical Plots - BASIC",
+    "section": "Donut Chart - Plot",
+    "text": "Donut Chart - Plot"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#stacked-bar-chart---code",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#stacked-bar-chart---code",
+    "title": "Categorical Plots - BASIC",
+    "section": "Stacked Bar Chart - Code",
+    "text": "Stacked Bar Chart - Code\n🔴 Goal: Part of a Whole + Comparison across groups\n\n\nCode\n# Create stacked bar showing smoking status by region\nggplot(data_clean, aes(x = Region, fill = SmokingStatus)) +\n  geom_bar(position = \"stack\", alpha = 0.8) +  # Stack bars on top of each other\n  scale_fill_manual(values = c(\"Current smoker\" = \"#E74C3C\",\n                                \"Former smoker\" = \"#F39C12\",\n                                \"Non-smoker\" = \"#27AE60\"),\n                    name = \"Smoking Status\") +  # Custom colors\n  labs(title = \"Smoking Status Distribution by Region\",\n       x = \"Region\",\n       y = \"Number of Patients\") +\n  theme_minimal(base_family = \"serif\") +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"),\n        axis.title = element_text(size = 12),\n        axis.text = element_text(size = 10),\n        legend.position = \"right\")\n\n\n\nStacked bars show both total count AND composition within each category"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#stacked-bar-chart---plot",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#stacked-bar-chart---plot",
+    "title": "Categorical Plots - BASIC",
+    "section": "Stacked Bar Chart - Plot",
+    "text": "Stacked Bar Chart - Plot"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#categorical-plots---summary",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#categorical-plots---summary",
+    "title": "Categorical Plots - BASIC",
+    "section": "Categorical Plots - Summary",
+    "text": "Categorical Plots - Summary\n\n\n\n\n\n\n\n\n\nChart Type\nGoal\nWhen to Use\nCode Complexity\n\n\n\n\nVertical Bar\n🟢 Ranking / 🟡 Distribution\nFew categories (3-7)\nSimple (3-5 lines)\n\n\nHorizontal Bar\n🟢 Ranking (ordered)\nLong category names, many categories\nSimple (5-7 lines)\n\n\nPie Chart\n🔴 Part of Whole\nOnly 2-5 categories!\nMedium (8-10 lines)\n\n\nDonut Chart\n🔴 Part of Whole\nModern alternative to pie\nMedium (8-10 lines)\n\n\nStacked Bar\n🔴 Part + 🟢 Comparison\nComposition across groups\nMedium (8-12 lines)"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#key-takeaways",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#key-takeaways",
+    "title": "Categorical Plots - BASIC",
+    "section": "Key Takeaways",
+    "text": "Key Takeaways\n\nRemember:\n\nBar charts are versatile - use for most categorical data\nOrder matters - arrange by value for rankings\nAvoid pie charts beyond 5 categories\nColor strategically - use consistent, meaningful colors\nHandle missing data - filter or document approach\n\nCommon Mistakes:\n\nUsing 3D effects (distorts perception)\nToo many categories (&gt;10)\nPoor color choices (similar shades)\nMissing labels or titles\nInconsistent formatting"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#practice-exercise",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#practice-exercise",
+    "title": "Categorical Plots - BASIC",
+    "section": "Practice Exercise",
+    "text": "Practice Exercise\nYour Turn:\nUsing the healthcare dataset, create a horizontal bar chart showing:\n\nVariable: AlcoholUse (Yes/No)\nSort by count\nUse appropriate colors\nAdd percentage labels\n\nBonus: Create a stacked bar of AlcoholUse by Gender"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.1_categorical_basic.html#next-steps",
+    "href": "plot-gallery/basic/1.1_categorical_basic.html#next-steps",
+    "title": "Categorical Plots - BASIC",
+    "section": "Next Steps",
+    "text": "Next Steps\nYou’ve mastered Categorical - Basic!\nNext: Continuous Plots - Basic\nLearn to visualize numeric data with: - Histograms - Density plots - Scatter plots - Box plots"
+  },
+  {
+    "objectID": "plot-gallery/basic.html",
+    "href": "plot-gallery/basic.html",
+    "title": "Basic Plots",
+    "section": "",
+    "text": "Foundations of Plots View Slide Deck →\n\n\nExplore foundational plots grouped by data type and relationship\n\n\n\nIncludes: Bar chart, Pie chart, Donut chart, Stacked bar chart 🔗 View Slide Deck →\n\n\n\n\nIncludes: Histogram, Density plot, Scatter plot\n🔗 View Slide Deck →\n\n\n\n\nIncludes: Box plot, Grouped Bar, Stacked Bar plot 🔗 View Slide Deck →\n\n\n\n\nIncludes: Simple Line Chart, Multiple Line Chart (comparing groups), Line Chart with Points 🔗 View Slide Deck →"
+  },
+  {
+    "objectID": "plot-gallery/basic.html#basic-plot",
+    "href": "plot-gallery/basic.html#basic-plot",
+    "title": "Basic Plots",
+    "section": "",
+    "text": "Explore foundational plots grouped by data type and relationship\n\n\n\nIncludes: Bar chart, Pie chart, Donut chart, Stacked bar chart 🔗 View Slide Deck →\n\n\n\n\nIncludes: Histogram, Density plot, Scatter plot\n🔗 View Slide Deck →\n\n\n\n\nIncludes: Box plot, Grouped Bar, Stacked Bar plot 🔗 View Slide Deck →\n\n\n\n\nIncludes: Simple Line Chart, Multiple Line Chart (comparing groups), Line Chart with Points 🔗 View Slide Deck →"
+  },
+  {
+    "objectID": "data-visualization/ggplot_grammar.html",
+    "href": "data-visualization/ggplot_grammar.html",
+    "title": "Grammar of Graphics",
+    "section": "",
+    "text": "▸ Module 1\nIncludes: Foundations & Basic Geoms View Slide Deck →\n\n\n\n▸ Module 2\nIncludes: Aesthetics, Faceting & Themes View Slide Deck →\n\n\n\n▸ Module 3\nIncludes: Colors, Scales & Custom Themes View Slide Deck →\n\n\n\n▸ Module 4\nIncludes: Advanced Topics & Best Practices View Slide Deck →\nBy the end, you’ll master the Grammar of Graphics and create publication-ready visualizations"
+  },
+  {
+    "objectID": "downloads.html",
+    "href": "downloads.html",
+    "title": "Downloads",
+    "section": "",
+    "text": "Below are the workshop downloads for cheat sheets, example scripts, and source files.\n\n\nBy Posit Software, PBC, under CC BY-SA (licences).\n\nData Import\nData Transformation\nData Visualization\nFactors\npurrr\nR Markdown\nRStudio IDE\nStrings\ntidyr\n\n\n\n\n\nNCTOH Intro script\nNCTOH 2026 script\nData Analysis Abridged script\nData Wrangle script\nData Visualization script\n\n\n\n\n\nOpen the cheat sheets for quick reference on importing, transforming, and visualizing data in R.\nUse the workshop scripts as working examples or starting templates for your own analysis.\nSave the files locally and open them in RStudio for editing and practice."
+  },
+  {
+    "objectID": "downloads.html#cheat-sheets",
+    "href": "downloads.html#cheat-sheets",
+    "title": "Downloads",
+    "section": "",
+    "text": "By Posit Software, PBC, under CC BY-SA (licences).\n\nData Import\nData Transformation\nData Visualization\nFactors\npurrr\nR Markdown\nRStudio IDE\nStrings\ntidyr"
+  },
+  {
+    "objectID": "downloads.html#workshop-scripts",
+    "href": "downloads.html#workshop-scripts",
+    "title": "Downloads",
+    "section": "",
+    "text": "NCTOH Intro script\nNCTOH 2026 script\nData Analysis Abridged script\nData Wrangle script\nData Visualization script"
+  },
+  {
+    "objectID": "downloads.html#how-to-use-these-files",
+    "href": "downloads.html#how-to-use-these-files",
+    "title": "Downloads",
+    "section": "",
+    "text": "Open the cheat sheets for quick reference on importing, transforming, and visualizing data in R.\nUse the workshop scripts as working examples or starting templates for your own analysis.\nSave the files locally and open them in RStudio for editing and practice."
+  },
+  {
+    "objectID": "welcome.html",
+    "href": "welcome.html",
+    "title": "Welcome",
+    "section": "",
+    "text": "🟢 Open Access\nBasic Track\nStep 1 of the self-study path. Start here if you are new to R: you will set up R, wrangle a dataset, draw your first plots, choose a statistical test and write a reproducible report."
+  },
+  {
+    "objectID": "welcome.html#self-study-plan",
+    "href": "welcome.html#self-study-plan",
+    "title": "Welcome",
+    "section": "🗓️ Self-study plan",
+    "text": "🗓️ Self-study plan\nWork through the steps in order. Tick a step when you have finished it; ticks are saved in this browser.\n\n\nSet up R and write your first lines\nGetting Started: install R and RStudio, objects, vectors and data frames.\nWrangle a dataset\nData Wrangling (Tidyverse), then Merging Datasets. Practise with the Practice Slides.\nDraw your first plots\nGrammar of Graphics, then copy and adapt examples from the Basic Plot Gallery.\nChoose and run a statistical test\nTest Selection Guide, then ggstatsplot — Intro to plot a test and its result together.\nMeet regression\nRegression Analysis: a first look. The Regression track covers it in depth.\nWrite it up\nQuarto Basics: turn your code and results into a report.\nCheck yourself and move on\nTake the Region 1 post-test in the game. At 70% or more, continue with the Moderate track (Step 2 on the main page)."
+  },
+  {
+    "objectID": "welcome.html#what-you-will-be-able-to-do",
+    "href": "welcome.html#what-you-will-be-able-to-do",
+    "title": "Welcome",
+    "section": "🎯 What you will be able to do",
+    "text": "🎯 What you will be able to do\n\nUse R to import, clean and reshape data\nBuild clear basic plots with ggplot2\nPick a suitable statistical test and read its output\nProduce a reproducible report with Quarto"
+  },
+  {
+    "objectID": "welcome.html#downloads",
+    "href": "welcome.html#downloads",
+    "title": "Welcome",
+    "section": "📥 Downloads",
+    "text": "📥 Downloads\n\nCheat sheets: RStudio IDE · Data import · Data transformation · Data visualization · R Markdown\nExample scripts: Intro · Data wrangling · Data visualization\nEverything else is on the Downloads page.\n\n\n💡 Tip: New to R? Do not skip Step 1. Everything later assumes it."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Medical Statistics in R — Basic",
+    "section": "",
+    "text": "Opening the track home… continue."
+  },
+  {
+    "objectID": "contact.html",
+    "href": "contact.html",
+    "title": "Contact Us",
+    "section": "",
+    "text": "We welcome feedback, collaboration ideas, and questions about the workshop or its materials. Whether you’re an educator, learner, or curious explorer, feel free to reach out.\n\n\nDr. Rudresh Negi Assistant Professor, Community Medicine\nDr. Mukul Maheshwari\nAssistant Professor, Community Medicine\nEmail: ryan00700@gmail.com\nGitHub: github.com/SpaRroW410\n\n\n\n\n\nCompetency-based medical education\nTime trend analysis\nData visualization and analytics in R\nCurriculum design using Quarto\nFinancial modeling for health economics\nStrategic learning tools and gamified pedagogy\n\n\n\n\n\nIf you’re experiencing issues with the site or workshop materials, please include:\n\nYour R version and operating system\nA brief description of the error\nScreenshot or code snippet (if applicable)\n\nWe’ll do our best to respond promptly and help you troubleshoot.\n\n\n\n\nTo receive updates on new modules, public releases, or upcoming workshops, watch the GitHub repo or connect via email."
+  },
+  {
+    "objectID": "contact.html#get-in-touch",
+    "href": "contact.html#get-in-touch",
+    "title": "Contact Us",
+    "section": "",
+    "text": "We welcome feedback, collaboration ideas, and questions about the workshop or its materials. Whether you’re an educator, learner, or curious explorer, feel free to reach out.\n\n\nDr. Rudresh Negi Assistant Professor, Community Medicine\nDr. Mukul Maheshwari\nAssistant Professor, Community Medicine\nEmail: ryan00700@gmail.com\nGitHub: github.com/SpaRroW410\n\n\n\n\n\nCompetency-based medical education\nTime trend analysis\nData visualization and analytics in R\nCurriculum design using Quarto\nFinancial modeling for health economics\nStrategic learning tools and gamified pedagogy\n\n\n\n\n\nIf you’re experiencing issues with the site or workshop materials, please include:\n\nYour R version and operating system\nA brief description of the error\nScreenshot or code snippet (if applicable)\n\nWe’ll do our best to respond promptly and help you troubleshoot.\n\n\n\n\nTo receive updates on new modules, public releases, or upcoming workshops, watch the GitHub repo or connect via email."
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "References",
+    "section": "",
+    "text": "The works the tracks and workshops are built on, grouped by topic. Under each entry: where on the site it is used. Journal articles and books with a DOI were checked against their Crossref records; software citations come from each package’s own citation(), for the versions used to build the site (November 2026)."
+  },
+  {
+    "objectID": "references.html#reporting-guidelines",
+    "href": "references.html#reporting-guidelines",
+    "title": "References",
+    "section": "Reporting guidelines",
+    "text": "Reporting guidelines\n\nvon Elm E, Altman DG, Egger M, Pocock SJ, Gøtzsche PC, Vandenbroucke JP. The Strengthening the Reporting of Observational Studies in Epidemiology (STROBE) statement: guidelines for reporting observational studies. The Lancet. 2007;370(9596):1453–1457. doi:10.1016/S0140-6736(07)61602-X\nRegression workshop, Session 6; A7 Missing data, Session 5\nCollins GS, Reitsma JB, Altman DG, Moons KGM. Transparent reporting of a multivariable prediction model for individual prognosis or diagnosis (TRIPOD): the TRIPOD statement. BMJ. 2015;350:g7594. doi:10.1136/bmj.g7594\nA8 Prediction models, Sessions 1 and 5; A7 Missing data, Session 5\nSchulz KF, Altman DG, Moher D. CONSORT 2010 Statement: updated guidelines for reporting parallel group randomised trials. BMJ. 2010;340:c332. doi:10.1136/bmj.c332\nA7 Missing data, Session 5\nCampbell MK, Piaggio G, Elbourne DR, Altman DG. Consort 2010 statement: extension to cluster randomised trials. BMJ. 2012;345:e5661. doi:10.1136/bmj.e5661\nCONSORT for cluster randomised trials: A4 Clustered and repeated data, Session 5"
+  },
+  {
+    "objectID": "references.html#data-handling-visualization-and-reproducible-documents",
+    "href": "references.html#data-handling-visualization-and-reproducible-documents",
+    "title": "References",
+    "section": "Data handling, visualization and reproducible documents",
+    "text": "Data handling, visualization and reproducible documents\n\nWickham H, Çetinkaya-Rundel M, Grolemund G. R for Data Science. 2nd ed. O’Reilly Media; 2023. Free online: https://r4ds.hadley.nz\nBackground reading for R Foundations and Data Wrangling\nWilke CO. Fundamentals of Data Visualization. O’Reilly Media; 2019. Free online: https://clauswilke.com/dataviz/\nMatching Data to Plots; ggplot2 module 4\nTufte ER. The Visual Display of Quantitative Information. 2nd ed. Graphics Press; 2001.\nData-to-ink ratio: Best Practices; ggplot2 module 2\nFew S. Show Me the Numbers: Designing Tables and Graphs to Enlighten. Analytics Press; 2004.\ntheme_few(): ggplot2 module 2\nCleveland WS, McGill R. Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods. Journal of the American Statistical Association. 1984;79(387):531–554. doi:10.1080/01621459.1984.10478080\nThe research behind Cleveland dot plots: Matching Data to Plots; Intermediate Plot Gallery"
+  },
+  {
+    "objectID": "references.html#regression-model-checking-and-prediction",
+    "href": "references.html#regression-model-checking-and-prediction",
+    "title": "References",
+    "section": "Regression, model checking and prediction",
+    "text": "Regression, model checking and prediction\n\nHosmer DW, Lemeshow S, Sturdivant RX. Applied Logistic Regression. 3rd ed. Wiley; 2013. doi:10.1002/9781118548387\nRegression workshop, Sessions 3 and 5; A8 Prediction models, Session 2\nHosmer DW, Lemeshow S. Goodness of fit tests for the multiple logistic regression model. Communications in Statistics - Theory and Methods. 1980;9(10):1043–1069. doi:10.1080/03610928008827941\nThe Hosmer–Lemeshow test: Regression workshop, Session 5; A8 Prediction models, Session 2\nHarrell FE. Regression Modeling Strategies. 2nd ed. Springer; 2015. doi:10.1007/978-3-319-19425-7\nBackground reading for A6 Curves and interactions and A8 Prediction models\nSteyerberg EW. Clinical Prediction Models. 2nd ed. Springer; 2019. doi:10.1007/978-3-030-16399-0\nBackground reading for A8 Prediction models\nRiley RD, Ensor J, Snell KIE, Harrell FE, Martin GP, Reitsma JB, et al. Calculating the sample size required for developing a clinical prediction model. BMJ. 2020:m441. doi:10.1136/bmj.m441\nSample size for prediction models: A8 Prediction models, Session 1\nVickers AJ, Elkin EB. Decision Curve Analysis: A Novel Method for Evaluating Prediction Models. Medical Decision Making. 2006;26(6):565–574. doi:10.1177/0272989X06295361\nDecision curves: A8 Prediction models, Sessions 4 and 5"
+  },
+  {
+    "objectID": "references.html#survival-analysis",
+    "href": "references.html#survival-analysis",
+    "title": "References",
+    "section": "Survival analysis",
+    "text": "Survival analysis\n\nKaplan EL, Meier P. Nonparametric Estimation from Incomplete Observations. Journal of the American Statistical Association. 1958;53(282):457–481. doi:10.1080/01621459.1958.10501452\nKaplan–Meier estimator: A1 Survival, Sessions 1–3\nCox DR. Regression Models and Life-Tables. Journal of the Royal Statistical Society Series B: Statistical Methodology. 1972;34(2):187–202. doi:10.1111/j.2517-6161.1972.tb00899.x\nCox model: A1 Survival, Sessions 4–5; Regression Analysis page\nSchoenfeld D. Partial residuals for the proportional hazards regression model. Biometrika. 1982;69(1):239–241. doi:10.1093/biomet/69.1.239\nSchoenfeld residuals: A1 Survival, Session 5\nGrambsch PM, Therneau TM. Proportional hazards tests and diagnostics based on weighted residuals. Biometrika. 1994;81(3):515–526. doi:10.1093/biomet/81.3.515\nProportional hazards test (cox.zph): A1 Survival, Session 5"
+  },
+  {
+    "objectID": "references.html#survey-data-missing-data-and-causal-inference",
+    "href": "references.html#survey-data-missing-data-and-causal-inference",
+    "title": "References",
+    "section": "Survey data, missing data and causal inference",
+    "text": "Survey data, missing data and causal inference\n\nKish L. Survey Sampling. New York: Wiley; 1965.\nEffective sample size: A5 Survey data, Session 4\nLumley T. Complex Surveys. Wiley; 2010. doi:10.1002/9780470580066\nBackground reading for A5 Survey data\nRubin DB. Multiple Imputation for Nonresponse in Surveys. Wiley; 1987. doi:10.1002/9780470316696\nRubin’s rules: A7 Missing data, Sessions 3–5\nvan Buuren S. Flexible Imputation of Missing Data, Second Edition. 2nd ed. Chapman & Hall/CRC; 2018. doi:10.1201/9780429492259\nBackground reading for A7 Missing data\nHernán MA, Robins JM. Causal Inference: What If. Boca Raton: Chapman & Hall/CRC; 2020. Free online: https://miguelhernan.org/whatifbook\nBackground reading for A9 Causal inference\nRosenbaum PR, Rubin DB. The central role of the propensity score in observational studies for causal effects. Biometrika. 1983;70(1):41–55. doi:10.1093/biomet/70.1.41\nPropensity scores: A9 Causal inference, Session 3\nAustin PC. An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies. Multivariate Behavioral Research. 2011;46(3):399–424. doi:10.1080/00273171.2011.568786\nBackground reading for A9 Causal inference, Sessions 3–4\nVanderWeele TJ, Ding P. Sensitivity Analysis in Observational Research: Introducing the E-Value. Annals of Internal Medicine. 2017;167(4):268–274. doi:10.7326/M16-2607\nE-values (EValue package): A9 Causal inference, Session 5"
+  },
+  {
+    "objectID": "references.html#spatial-statistics",
+    "href": "references.html#spatial-statistics",
+    "title": "References",
+    "section": "Spatial statistics",
+    "text": "Spatial statistics\n\nMoran PAP. Notes on continuous stochastic phenomena. Biometrika. 1950;37:17–23. doi:10.1093/biomet/37.1-2.17\nMoran’s I: GIS workshop, Session 3; Global Moran’s I page\nGeary RC. The Contiguity Ratio and Statistical Mapping. The Incorporated Statistician. 1954;5(3):115. doi:10.2307/2986645\nGeary’s C: GIS workshop, Session 3; Geary’s C, Getis-Ord, Join Counts, Scan Statistic page\nAnselin L. Local Indicators of Spatial Association—LISA. Geographical Analysis. 1995;27(2):93–115. doi:10.1111/j.1538-4632.1995.tb00338.x\nLocal Moran’s I (LISA): GIS workshop, Sessions 3–4; Local Moran’s I page\nGetis A, Ord JK. The Analysis of Spatial Association by Use of Distance Statistics. Geographical Analysis. 1992;24(3):189–206. doi:10.1111/j.1538-4632.1992.tb00261.x\nGetis–Ord statistics: GIS workshop, Session 4; Geary’s C, Getis-Ord, … page\nOrd JK, Getis A. Local Spatial Autocorrelation Statistics: Distributional Issues and an Application. Geographical Analysis. 1995;27(4):286–306. doi:10.1111/j.1538-4632.1995.tb00912.x\nGetis–Ord Gi* hot spots: GIS workshop, Session 4\nKulldorff M. A spatial scan statistic. Communications in Statistics - Theory and Methods. 1997;26(6):1481–1496. doi:10.1080/03610929708831995\nScan statistic: GIS workshop, Session 4; Geary’s C, Getis-Ord, … page"
+  },
+  {
+    "objectID": "references.html#software",
+    "href": "references.html#software",
+    "title": "References",
+    "section": "Software",
+    "text": "Software\n\nR Core Team (2024). R: A Language and Environment for Statistical Computing. R Foundation for Statistical Computing, Vienna, Austria. https://www.R-project.org/.\nEverything on the site (R 4.3.3)\nAllaire JJ, Teague C, Xie Y, Dervieux C. Quarto [computer software]. Zenodo; 2022. doi:10.5281/zenodo.5960048\nThe site, slides and reports; Quarto pages in every track\nXie Y (2026). knitr: A General-Purpose Package for Dynamic Report Generation in R. R package version 1.52, https://yihui.org/knitr/.\nRunning R inside Quarto documents\nWickham H, Averick M, Bryan J, Chang W, McGowan LD, François R, Grolemund G, Hayes A, Henry L, Hester J, Kuhn M, Pedersen TL, Miller E, Bache SM, Müller K, Ooms J, Robinson D, Seidel DP, Spinu V, Takahashi K, Vaughan D, Wilke C, Woo K, Yutani H (2019). “Welcome to the tidyverse.” Journal of Open Source Software, 4(43), 1686. doi:10.21105/joss.01686 https://doi.org/10.21105/joss.01686.\nData wrangling and plots throughout\nWickham H (2016). ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York. ISBN 978-3-319-24277-4, https://ggplot2.tidyverse.org.\nEvery plot; ggplot2 modules 1–4\nSjoberg D, Whiting K, Curry M, Lavery J, Larmarange J (2021). “Reproducible Summary Tables with the gtsummary Package.” The R Journal, 13, 570-580. doi:10.32614/RJ-2021-053 https://doi.org/10.32614/RJ-2021-053, https://doi.org/10.32614/RJ-2021-053.\nTable 1 and regression tables: gtsummary page; workshops\nPatil I. Visualizations with statistical details: the ‘ggstatsplot’ approach. Journal of Open Source Software. 2021;6(61):3167. doi:10.21105/joss.03167\nggstatsplot pages (Intro, Intermediate, Advanced)\nLüdecke D, Ben-Shachar M, Patil I, Waggoner P, Makowski D (2021). “performance: An R Package for Assessment, Comparison and Testing of Statistical Models.” Journal of Open Source Software, 6(60), 3139. doi:10.21105/joss.03139 https://doi.org/10.21105/joss.03139.\nModel checks: Regression Analysis page; A4 Clustered data, Session 1\nTherneau T (2026). A Package for Survival Analysis in R. R package version 3.8-12, https://CRAN.R-project.org/package=survival.\nA1 Survival analysis\nSjoberg D, Sreeram S, Baillie M, Fruechtenicht C, Haesendonckx S, Treis T (2026). ggsurvfit: Flexible Time-to-Event Figures. R package version 1.2.1, https://www.danieldsjoberg.com/ggsurvfit/, https://github.com/pharmaverse/ggsurvfit.\nKaplan–Meier plots: A1 Survival, Session 2\nVenables WN, Ripley BD (2002). Modern Applied Statistics with S, Fourth edition. Springer, New York. ISBN 0-387-95457-0, https://www.stats.ox.ac.uk/pub/MASS4/.\nglm.nb: A2 Counts, Sessions 3–5; polr: A3 Ordinal, Sessions 2, 3 and 5\nJackman S (2024). pscl: Classes and Methods for R Developed in the Political Science Computational Laboratory. University of Sydney, Sydney, Australia. R package version 1.5.9, https://github.com/atahk/pscl/.\nZero-inflated and hurdle models: A2 Counts, Session 4\nChristensen R (2026). ordinal-Regression Models for Ordinal Data. R package version 2026.7-26, https://CRAN.R-project.org/package=ordinal.\nOrdinal regression: A3 Ordinal and multinomial\nSchlegel B, Steenbergen M (2020). brant: Test for Parallel Regression Assumption. R package version 0.3-0, https://benjaminschlegel.ch/r/brant/.\nProportional odds check: A3, Sessions 3 and 5\nBates D, Mächler M, Bolker B, Walker S (2015). “Fitting Linear Mixed-Effects Models Using lme4.” Journal of Statistical Software, 67(1), 1-48. doi:10.18637/jss.v067.i01 https://doi.org/10.18637/jss.v067.i01.\nMixed models: A4 Clustered and repeated data\nKuznetsova A, Brockhoff PB, Christensen RHB (2017). “lmerTest Package: Tests in Linear Mixed Effects Models.” Journal of Statistical Software, 82(13), 1-26. doi:10.18637/jss.v082.i13 https://doi.org/10.18637/jss.v082.i13.\nP-values for mixed models: A4, Session 3\nHalekoh U, Højsgaard S, Yan J (2006). “The R Package geepack for Generalized Estimating Equations.” Journal of Statistical Software, 15/2, 1-11.\nGEE: A4, Session 2\nZeileis A, Köll S, Graham N (2020). “Various Versatile Variances: An Object-Oriented Implementation of Clustered Covariances in R.” Journal of Statistical Software, 95(1), 1-36. doi:10.18637/jss.v095.i01 https://doi.org/10.18637/jss.v095.i01.\nRobust and cluster-robust standard errors: Regression workshop; A2; A4, Session 2; A9, Session 4\nPustejovsky JE (2026). clubSandwich: Cluster-Robust (Sandwich) Variance Estimators with Small-Sample Corrections. R package version 0.7.0, http://jepusto.github.io/clubSandwich/.\nSmall-sample cluster-robust standard errors: A4, Session 2\nLumley T (2026). “survey: analysis of complex survey samples.” R package version 4.5.\nComplex survey analysis: A5 Survey data\nFreedman Ellis G, Schneider B (2026). srvyr: ‘dplyr’-Like Syntax for Summary Statistics of Survey Data. R package version 1.3.1, https://github.com/gergness/srvyr/, http://gdfe.co/srvyr/.\nSurvey analysis with dplyr syntax: A5, Session 2\nWood SN (2011). “Fast stable restricted maximum likelihood and marginal likelihood estimation of semiparametric generalized linear models.” Journal of the Royal Statistical Society (B), 73(1), 3-36.\nGeneralised additive models: A6 Curves, Session 3\nLenth R, Piaskowski J (2026). emmeans: Estimated Marginal Means, aka Least-Squares Means. R package version 2.0.4, https://github.com/rvlenth/emmeans/, https://rvlenth.github.io/emmeans/.\nMarginal means and contrasts: A4, Session 4; A6, Session 4\nvan Buuren S, Groothuis-Oudshoorn K (2011). “mice: Multivariate Imputation by Chained Equations in R.” Journal of Statistical Software, 45(3), 1-67. doi:10.18637/jss.v045.i03 https://doi.org/10.18637/jss.v045.i03.\nMultiple imputation: A7 Missing data\nTierney N, Cook D (2023). “Expanding Tidy Data Principles to Facilitate Missing Data Exploration, Visualization and Assessment of Imputations.” Journal of Statistical Software, 105(7), 1-31. doi:10.18637/jss.v105.i07 https://doi.org/10.18637/jss.v105.i07.\nMissing-data patterns: A7 cheat sheet; Debugging Plots page\nRobin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J, Müller M (2011). “pROC: an open-source package for R and S+ to analyze and compare ROC curves.” BMC Bioinformatics, 12, 77.\nROC curves and AUC: Regression workshop, Session 6; A8 cheat sheet\nFriedman J, Hastie T, Tibshirani R (2010). “Regularization Paths for Generalized Linear Models via Coordinate Descent.” Journal of Statistical Software, 33(1), 1-22. doi:10.18637/jss.v033.i01 https://doi.org/10.18637/jss.v033.i01.\nShrinkage (lasso, ridge): A8, Session 4\nTextor J, van der Zander B, Gilthorpe MS, Liśkiewicz M, Ellison GT (2016). “Robust causal inference using directed acyclic graphs: the R package ‘dagitty’.” International Journal of Epidemiology, 45(6), 1887-1894. doi:10.1093/ije/dyw341 https://doi.org/10.1093/ije/dyw341.\nDAGs and adjustment sets: A9, Session 1\nHo D, Imai K, King G, Stuart E (2011). “MatchIt: Nonparametric Preprocessing for Parametric Causal Inference.” Journal of Statistical Software, 42(8), 1-28. doi:10.18637/jss.v042.i08 https://doi.org/10.18637/jss.v042.i08.\nPropensity score matching: A9, Session 3\nGreifer N (2026). cobalt: Covariate Balance Tables and Plots. R package version 5.0.0, https://github.com/ngreifer/cobalt, https://ngreifer.github.io/cobalt/.\nBalance checks: A9 cheat sheet\nPebesma E, Bivand R (2023). Spatial Data Science: With applications in R. Chapman and Hall/CRC. doi:10.1201/9780429459016 https://doi.org/10.1201/9780429459016, https://r-spatial.org/book/.\nSpatial data: GIS track\nBivand R, Wong D (2018). “Comparing implementations of global and local indicators of spatial association.” TEST, 27(3), 716-748. doi:10.1007/s11749-018-0599-x https://doi.org/10.1007/s11749-018-0599-x.\nNeighbours, Moran’s I, LISA, Getis–Ord: GIS track\nBivand R, Millo G, Piras G (2021). “A Review of Software for Spatial Econometrics in R.” Mathematics, 9(11). doi:10.3390/math9111276 https://doi.org/10.3390/math9111276, https://www.mdpi.com/2227-7390/9/11/1276.\nSpatial regression: Spatial Regression and Residual Tests page\nFrench J (2026). smerc: Statistical Methods for Regional Counts. R package version 1.8.6.\nScan statistic: GIS cheat sheet; Geary’s C, Getis-Ord, … page"
+  },
+  {
     "objectID": "ggstatsplot/ggstatsplot_intro.html",
     "href": "ggstatsplot/ggstatsplot_intro.html",
     "title": "ggstatsplot — Introduction",
@@ -301,109 +714,312 @@
     "text": "Further reading\n\nggstatsplot documentation\nPatil, I. (2021). Visualizations with statistical details. JOSS, 6(61), 3167."
   },
   {
-    "objectID": "references.html",
-    "href": "references.html",
-    "title": "References",
-    "section": "",
-    "text": "The works the tracks and workshops are built on, grouped by topic. Under each entry: where on the site it is used. Journal articles and books with a DOI were checked against their Crossref records; software citations come from each package’s own citation(), for the versions used to build the site (November 2026)."
+    "objectID": "plot-gallery/basic/0_foundation.html#navigating-the-decision-tree",
+    "href": "plot-gallery/basic/0_foundation.html#navigating-the-decision-tree",
+    "title": "Navigating the Decision Tree with R",
+    "section": "Navigating the Decision Tree",
+    "text": "Navigating the Decision Tree\n\n\nFrom Data to Viz\n\nUnderstand your data type\nDefine your analytical goal\nChoose the right visualization\n\n\nWorkshop Goals\n\nMaster the decision framework\nLearn R visualization techniques\nInterpret complex plots\nApply to real healthcare data"
   },
   {
-    "objectID": "contact.html",
-    "href": "contact.html",
-    "title": "Contact Us",
-    "section": "",
-    "text": "We welcome feedback, collaboration ideas, and questions about the workshop or its materials. Whether you’re an educator, learner, or curious explorer, feel free to reach out.\n\n\nDr. Rudresh Negi Assistant Professor, Community Medicine\nDr. Mukul Maheshwari\nAssistant Professor, Community Medicine\nEmail: ryan00700@gmail.com\nGitHub: github.com/SpaRroW410\n\n\n\n\n\nCompetency-based medical education\nTime trend analysis\nData visualization and analytics in R\nCurriculum design using Quarto\nFinancial modeling for health economics\nStrategic learning tools and gamified pedagogy\n\n\n\n\n\nIf you’re experiencing issues with the site or workshop materials, please include:\n\nYour R version and operating system\nA brief description of the error\nScreenshot or code snippet (if applicable)\n\nWe’ll do our best to respond promptly and help you troubleshoot.\n\n\n\n\nTo receive updates on new modules, public releases, or upcoming workshops, watch the GitHub repo or connect via email."
+    "objectID": "plot-gallery/basic/0_foundation.html#the-3-step-framework",
+    "href": "plot-gallery/basic/0_foundation.html#the-3-step-framework",
+    "title": "Navigating the Decision Tree with R",
+    "section": "The 3-Step Framework",
+    "text": "The 3-Step Framework\n\nIdentify Your Data Type\n\nCategorical\nContinuous (Numeric)\nCategory vs. Continuous\nTime Series\nRelational/Network\nGeographic/Map\n\nDefine Your Analytical Goal\n\nWhat story are you telling?\n\nSelect the Appropriate Chart\n\nMatch data + goal → visualization"
   },
   {
-    "objectID": "contact.html#get-in-touch",
-    "href": "contact.html#get-in-touch",
-    "title": "Contact Us",
-    "section": "",
-    "text": "We welcome feedback, collaboration ideas, and questions about the workshop or its materials. Whether you’re an educator, learner, or curious explorer, feel free to reach out.\n\n\nDr. Rudresh Negi Assistant Professor, Community Medicine\nDr. Mukul Maheshwari\nAssistant Professor, Community Medicine\nEmail: ryan00700@gmail.com\nGitHub: github.com/SpaRroW410\n\n\n\n\n\nCompetency-based medical education\nTime trend analysis\nData visualization and analytics in R\nCurriculum design using Quarto\nFinancial modeling for health economics\nStrategic learning tools and gamified pedagogy\n\n\n\n\n\nIf you’re experiencing issues with the site or workshop materials, please include:\n\nYour R version and operating system\nA brief description of the error\nScreenshot or code snippet (if applicable)\n\nWe’ll do our best to respond promptly and help you troubleshoot.\n\n\n\n\nTo receive updates on new modules, public releases, or upcoming workshops, watch the GitHub repo or connect via email."
+    "objectID": "plot-gallery/basic/0_foundation.html#the-seven-analytical-goals",
+    "href": "plot-gallery/basic/0_foundation.html#the-seven-analytical-goals",
+    "title": "Navigating the Decision Tree with R",
+    "section": "The Seven Analytical Goals",
+    "text": "The Seven Analytical Goals\n\n\n\n\n\n\n\n\n\n\nColor\nGoal\nQuestion\nExamples\n\n\n\n\n🟡\nDistribution\nWhat’s the spread?\nHistogram, Density plot\n\n\n⚫\nCorrelation\nHow do things relate?\nScatter plot, Heatmap\n\n\n🟢\nRanking\nWhat’s the order?\nBar chart, Lollipop\n\n\n🔴\nPart of Whole\nWhat’s the composition?\nPie, Treemap, Mosaic\n\n\n🔵\nEvolution\nHow does it change?\nLine chart, Area chart\n\n\n🟣\nMaps\nWhere is it?\nChoropleth, Bubble map\n\n\n🟤\nFlow\nHow does it move?\nSankey, Network graph"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Medical Statistics in R — Basic",
-    "section": "",
-    "text": "Opening the track home… continue."
+    "objectID": "plot-gallery/basic/0_foundation.html#your-learning-journey",
+    "href": "plot-gallery/basic/0_foundation.html#your-learning-journey",
+    "title": "Navigating the Decision Tree with R",
+    "section": "Your Learning Journey",
+    "text": "Your Learning Journey\n\nThree Progressive Levels:\n\nBASIC (5-10 lines of code)\n\nEssential plots for each data type\nBase R and ggplot2 fundamentals\n\nINTERMEDIATE (10-25 lines)\n\nEnhanced visualizations\nData wrangling integration\nStatistical elements\n\nADVANCED (25-100+ lines)\n\nInteractive visualizations\nAnimations\nDashboards"
   },
   {
-    "objectID": "welcome.html",
-    "href": "welcome.html",
-    "title": "Welcome",
-    "section": "",
-    "text": "🟢 Open Access\nBasic Track\nStep 1 of the self-study path. Start here if you are new to R: you will set up R, wrangle a dataset, draw your first plots, choose a statistical test and write a reproducible report."
+    "objectID": "plot-gallery/basic/0_foundation.html#workshop-structure",
+    "href": "plot-gallery/basic/0_foundation.html#workshop-structure",
+    "title": "Navigating the Decision Tree with R",
+    "section": "Workshop Structure",
+    "text": "Workshop Structure\n\nBy Data Type:\n\nCategorical Plots\nContinuous Plots\n\nCategory vs. Continuous\nTime Series\nRelational/Network\nGeographic/Maps\n\nEach deck includes:\n\nPlot creation with R code\nMultiple variations\nInterpretation guidance\nBest practices"
   },
   {
-    "objectID": "welcome.html#self-study-plan",
-    "href": "welcome.html#self-study-plan",
-    "title": "Welcome",
-    "section": "🗓️ Self-study plan",
-    "text": "🗓️ Self-study plan\nWork through the steps in order. Tick a step when you have finished it; ticks are saved in this browser.\n\n\nSet up R and write your first lines\nGetting Started: install R and RStudio, objects, vectors and data frames.\nWrangle a dataset\nData Wrangling (Tidyverse), then Merging Datasets. Practise with the Practice Slides.\nDraw your first plots\nGrammar of Graphics, then copy and adapt examples from the Basic Plot Gallery.\nChoose and run a statistical test\nTest Selection Guide, then ggstatsplot — Intro to plot a test and its result together.\nMeet regression\nRegression Analysis: a first look. The Regression track covers it in depth.\nWrite it up\nQuarto Basics: turn your code and results into a report.\nCheck yourself and move on\nTake the Region 1 post-test in the game. At 70% or more, continue with the Moderate track (Step 2 on the main page)."
+    "objectID": "plot-gallery/basic/0_foundation.html#dataset-public-health-blood-pressure-study",
+    "href": "plot-gallery/basic/0_foundation.html#dataset-public-health-blood-pressure-study",
+    "title": "Navigating the Decision Tree with R",
+    "section": "Dataset: Public Health Blood Pressure Study",
+    "text": "Dataset: Public Health Blood Pressure Study\n\n\n200 patients tracked over 6 months\nTreatment groups: Control vs. Intervention\nDemographics: Age, Gender, Region\nHealth metrics: BMI, BP, Cholesterol, Blood Sugar\nBehaviors: Smoking, Alcohol, Exercise\nOutcomes: Blood pressure at 0, 3, and 6 months\n\nPerfect for demonstrating:\n\nAll data types (categorical, continuous, time, geographic)\nReal-world missing data handling\nClinical research visualization patterns"
   },
   {
-    "objectID": "welcome.html#what-you-will-be-able-to-do",
-    "href": "welcome.html#what-you-will-be-able-to-do",
-    "title": "Welcome",
-    "section": "🎯 What you will be able to do",
-    "text": "🎯 What you will be able to do\n\nUse R to import, clean and reshape data\nBuild clear basic plots with ggplot2\nPick a suitable statistical test and read its output\nProduce a reproducible report with Quarto"
+    "objectID": "plot-gallery/basic/0_foundation.html#lets-begin",
+    "href": "plot-gallery/basic/0_foundation.html#lets-begin",
+    "title": "Navigating the Decision Tree with R",
+    "section": "Let’s Begin!",
+    "text": "Let’s Begin!\nReady to master data visualization?\nNavigate through the decks by data type and skill level.\nStart with Basic → Categorical Plots when you’re ready."
   },
   {
-    "objectID": "welcome.html#downloads",
-    "href": "welcome.html#downloads",
-    "title": "Welcome",
-    "section": "📥 Downloads",
-    "text": "📥 Downloads\n\nCheat sheets: RStudio IDE · Data import · Data transformation · Data visualization · R Markdown\nExample scripts: Intro · Data wrangling · Data visualization\nEverything else is on the Downloads page.\n\n\n💡 Tip: New to R? Do not skip Step 1. Everything later assumes it."
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#what-is-continuous-data",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#what-is-continuous-data",
+    "title": "Continuous Plots - BASIC",
+    "section": "What is Continuous Data?",
+    "text": "What is Continuous Data?\n\n\nDefinition:\nData that represents numeric measurements or quantities\n\nCan take any value within a range\nQuantitative rather than qualitative\nOften derived from measurements\n\n\nExamples in Our Dataset:\n\nAge (18-79 years)\nBMI (11.4-37.3)\nCholesterol levels\nBlood Sugar levels\nBlood Pressure (Systolic & Diastolic)\nLatitude & Longitude"
   },
   {
-    "objectID": "downloads.html",
-    "href": "downloads.html",
-    "title": "Downloads",
-    "section": "",
-    "text": "Below are the workshop downloads for cheat sheets, example scripts, and source files.\n\n\n\nData Import\nData Transformation\nData Visualization\nFactors\npurrr\nR Markdown\nRStudio IDE\nStrings\ntidyr\nTidyverse Cheat Sheet\n\n\n\n\n\nNCTOH Intro script\nNCTOH 2026 script\nData Analysis Abridged script\nData Wrangle script\nData Visualization script\n\n\n\n\n\nOpen the cheat sheets for quick reference on importing, transforming, and visualizing data in R.\nUse the workshop scripts as working examples or starting templates for your own analysis.\nSave the files locally and open them in RStudio for editing and practice."
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#analytical-goals-for-continuous-data",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#analytical-goals-for-continuous-data",
+    "title": "Continuous Plots - BASIC",
+    "section": "Analytical Goals for Continuous Data",
+    "text": "Analytical Goals for Continuous Data\n\nWhat questions can we answer?\n\n🟡 Distribution - What’s the spread? Shape? Center?\n⚫ Correlation - How do two variables relate to each other?\n\nCharts we’ll learn:\n\nHistogram\nDensity Plot\nScatter Plot\nBox Plot (covered in Category vs. Continuous)"
   },
   {
-    "objectID": "downloads.html#cheat-sheets",
-    "href": "downloads.html#cheat-sheets",
-    "title": "Downloads",
-    "section": "",
-    "text": "Data Import\nData Transformation\nData Visualization\nFactors\npurrr\nR Markdown\nRStudio IDE\nStrings\ntidyr\nTidyverse Cheat Sheet"
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#setup-load-libraries-and-data",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#setup-load-libraries-and-data",
+    "title": "Continuous Plots - BASIC",
+    "section": "Setup: Load Libraries and Data",
+    "text": "Setup: Load Libraries and Data\n\n\nCode\n# Load required libraries\nlibrary(ggplot2)    # For creating plots\nlibrary(dplyr)      # For data manipulation\n\n# Load the dataset\ndata &lt;- readxl::read_excel(\"../../data/PublicHealth_BP_Dataset.xlsx\")\n\n# Handle missing data: select complete cases for key numeric variables\ndata_clean &lt;- data %&gt;%\n  filter(!is.na(BMI), !is.na(Cholesterol), !is.na(Age))  # Remove missing values\n\n# Preview numeric variables\nsummary(data_clean %&gt;% \n  select(Age, BMI, Cholesterol, BloodSugar, SysBP_0m, DiaBP_0m))"
   },
   {
-    "objectID": "downloads.html#workshop-scripts",
-    "href": "downloads.html#workshop-scripts",
-    "title": "Downloads",
-    "section": "",
-    "text": "NCTOH Intro script\nNCTOH 2026 script\nData Analysis Abridged script\nData Wrangle script\nData Visualization script"
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#setup-load-libraries-and-data-1",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#setup-load-libraries-and-data-1",
+    "title": "Continuous Plots - BASIC",
+    "section": "Setup: Load Libraries and Data",
+    "text": "Setup: Load Libraries and Data\n\n\n      Age             BMI         Cholesterol      BloodSugar   \n Min.   :18.00   Min.   :11.40   Min.   :151.0   Min.   : 71.0  \n 1st Qu.:36.00   1st Qu.:22.45   1st Qu.:181.0   1st Qu.:110.8  \n Median :50.00   Median :25.30   Median :235.5   Median :139.0  \n Mean   :49.74   Mean   :25.17   Mean   :228.5   Mean   :137.5  \n 3rd Qu.:65.00   3rd Qu.:28.40   3rd Qu.:270.0   3rd Qu.:169.0  \n Max.   :79.00   Max.   :37.30   Max.   :299.0   Max.   :199.0  \n    SysBP_0m        DiaBP_0m    \n Min.   :110.0   Min.   :70.00  \n 1st Qu.:122.8   1st Qu.:78.00  \n Median :135.0   Median :85.00  \n Mean   :135.1   Mean   :85.02  \n 3rd Qu.:146.0   3rd Qu.:93.00  \n Max.   :159.0   Max.   :99.00"
   },
   {
-    "objectID": "downloads.html#how-to-use-these-files",
-    "href": "downloads.html#how-to-use-these-files",
-    "title": "Downloads",
-    "section": "",
-    "text": "Open the cheat sheets for quick reference on importing, transforming, and visualizing data in R.\nUse the workshop scripts as working examples or starting templates for your own analysis.\nSave the files locally and open them in RStudio for editing and practice."
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#histogram---code",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#histogram---code",
+    "title": "Continuous Plots - BASIC",
+    "section": "Histogram - Code",
+    "text": "Histogram - Code\n🟡 Goal: Distribution (show frequency across bins)\n\n\nCode\n# Create histogram showing age distribution\nggplot(data_clean, aes(x = Age)) +\n  geom_histogram(bins = 30, fill = \"steelblue\", color = \"white\", alpha = 0.8) +  # 30 bins\n  labs(title = \"Distribution of Patient Ages\",\n       x = \"Age (years)\", y = \"Frequency (Number of Patients)\") +\n  theme_minimal(base_family = \"serif\") +  # Serif font for professional look\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"),\n        axis.title = element_text(size = 12),\n        axis.text = element_text(size = 10))\n\n\n\n\nbins = 30 divides the data into 30 equal-width intervals\nAdjust bins to find optimal visualization (too few = loss of detail, too many = noise)"
   },
   {
-    "objectID": "data-visualization/ggplot_grammar.html",
-    "href": "data-visualization/ggplot_grammar.html",
-    "title": "Grammar of Graphics",
-    "section": "",
-    "text": "▸ Module 1\nIncludes: Foundations & Basic Geoms View Slide Deck →\n\n\n\n▸ Module 2\nIncludes: Aesthetics, Faceting & Themes View Slide Deck →\n\n\n\n▸ Module 3\nIncludes: Colors, Scales & Custom Themes View Slide Deck →\n\n\n\n▸ Module 4\nIncludes: Advanced Topics & Best Practices View Slide Deck →\nBy the end, you’ll master the Grammar of Graphics and create publication-ready visualizations"
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#histogram---plot",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#histogram---plot",
+    "title": "Continuous Plots - BASIC",
+    "section": "Histogram - Plot",
+    "text": "Histogram - Plot"
   },
   {
-    "objectID": "plot-gallery/basic.html",
-    "href": "plot-gallery/basic.html",
-    "title": "Basic Plots",
-    "section": "",
-    "text": "Foundations of Plots View Slide Deck →\n\n\nExplore foundational plots grouped by data type and relationship\n\n\n\nIncludes: Bar chart, Pie chart, Donut chart, Stacked bar chart 🔗 View Slide Deck →\n\n\n\n\nIncludes: Histogram, Density plot, Scatter plot\n🔗 View Slide Deck →\n\n\n\n\nIncludes: Box plot, Grouped Bar, Stacked Bar plot 🔗 View Slide Deck →\n\n\n\n\nIncludes: Simple Line Chart, Multiple Line Chart (comparing groups), Line Chart with Points 🔗 View Slide Deck →"
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#how-to-read-histograms",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#how-to-read-histograms",
+    "title": "Continuous Plots - BASIC",
+    "section": "How to Read Histograms",
+    "text": "How to Read Histograms\nUsing the previous plot:\n\nOBSERVATION: - Ages range from 18 to 79 years (median 50) - Patients are spread over the whole range, with somewhat more between 45 and 55 - No single sharp peak and no long tail - No gaps and no impossible values\nINTERPRETATION: - The study covers the whole adult age range - No age group dominates the sample - Age is not normally distributed, but that does not matter for using it as a predictor\nIMPLICATIONS: - Results can be described across adult ages - Age can be used as a continuous variable; groups (e.g. 18–39, 40–59, 60+) are only for description - Every age band has enough patients for a description\nACTIONS: - Consider age as a covariate in treatment analyses - Change bins and check the picture does not depend on it"
   },
   {
-    "objectID": "plot-gallery/basic.html#basic-plot",
-    "href": "plot-gallery/basic.html#basic-plot",
-    "title": "Basic Plots",
-    "section": "",
-    "text": "Explore foundational plots grouped by data type and relationship\n\n\n\nIncludes: Bar chart, Pie chart, Donut chart, Stacked bar chart 🔗 View Slide Deck →\n\n\n\n\nIncludes: Histogram, Density plot, Scatter plot\n🔗 View Slide Deck →\n\n\n\n\nIncludes: Box plot, Grouped Bar, Stacked Bar plot 🔗 View Slide Deck →\n\n\n\n\nIncludes: Simple Line Chart, Multiple Line Chart (comparing groups), Line Chart with Points 🔗 View Slide Deck →"
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#histogram-with-meanmedian-lines---code",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#histogram-with-meanmedian-lines---code",
+    "title": "Continuous Plots - BASIC",
+    "section": "Histogram with Mean/Median Lines - Code",
+    "text": "Histogram with Mean/Median Lines - Code\n🟡 Goal: Distribution with central tendency markers\n\n\nCode\n# Calculate summary statistics\nage_mean &lt;- mean(data_clean$Age, na.rm = TRUE)  # Calculate mean\nage_median &lt;- median(data_clean$Age, na.rm = TRUE)  # Calculate median\n\n# Create histogram with reference lines\nggplot(data_clean, aes(x = Age)) +\n  geom_histogram(bins = 30, fill = \"steelblue\", color = \"white\", alpha = 0.7) +\n  geom_vline(aes(xintercept = age_mean), color = \"red\", \n             linetype = \"dashed\", size = 1) +  # Add mean line\n  geom_vline(aes(xintercept = age_median), color = \"darkgreen\", \n             linetype = \"solid\", size = 1) +  # Add median line\n  annotate(\"text\", x = age_mean + 5, y = 15, \n           label = paste(\"Mean =\", round(age_mean, 1)), \n           color = \"red\", family = \"serif\", size = 4) +  # Label mean\n  annotate(\"text\", x = age_median - 5, y = 15, \n           label = paste(\"Median =\", round(age_median, 1)), \n           color = \"darkgreen\", family = \"serif\", size = 4) +  # Label median\n  labs(title = \"Age Distribution with Mean and Median\",\n       x = \"Age (years)\", y = \"Frequency\") +\n  theme_minimal(base_family = \"serif\") +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"))"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#histogram-with-statistics---plot",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#histogram-with-statistics---plot",
+    "title": "Continuous Plots - BASIC",
+    "section": "Histogram with Statistics - Plot",
+    "text": "Histogram with Statistics - Plot"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#density-plot---code",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#density-plot---code",
+    "title": "Continuous Plots - BASIC",
+    "section": "Density Plot - Code",
+    "text": "Density Plot - Code\n🟡 Goal: Distribution (smooth curve, easier to compare)\n\n\nCode\n# Create smooth density plot for BMI\nggplot(data_clean, aes(x = BMI)) +\n  geom_density(fill = \"coral\", alpha = 0.6, color = \"darkred\", size = 1) +  # Smooth density\n  labs(title = \"Density Distribution of BMI\",\n       x = \"Body Mass Index (BMI)\", y = \"Density\") +\n  theme_minimal(base_family = \"serif\") +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"),\n        axis.title = element_text(size = 12))\n\n\n\nDensity plots smooth out histogram bins, showing underlying distribution shape Area under curve = 1 (100%)"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#density-plot---plot",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#density-plot---plot",
+    "title": "Continuous Plots - BASIC",
+    "section": "Density Plot - Plot",
+    "text": "Density Plot - Plot"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#scatter-plot---code",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#scatter-plot---code",
+    "title": "Continuous Plots - BASIC",
+    "section": "Scatter Plot - Code",
+    "text": "Scatter Plot - Code\n⚫ Goal: Correlation between two continuous variables\n\n\nCode\n# Create scatter plot showing BMI vs. Cholesterol relationship\nggplot(data_clean, aes(x = BMI, y = Cholesterol)) +\n  geom_point(alpha = 0.6, color = \"darkblue\", size = 3) +  # Add semi-transparent points\n  labs(title = \"Relationship between BMI and Cholesterol\",\n       x = \"Body Mass Index (BMI)\", y = \"Cholesterol (mg/dL)\") +\n  theme_minimal(base_family = \"serif\") +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"),\n        axis.title = element_text(size = 12))\n\n\n\n\nalpha = 0.6 makes points semi-transparent to show overlapping\nLook for patterns: positive correlation, negative, or no relationship"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#scatter-plot---plot",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#scatter-plot---plot",
+    "title": "Continuous Plots - BASIC",
+    "section": "Scatter Plot - Plot",
+    "text": "Scatter Plot - Plot"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#how-to-read-scatter-plots",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#how-to-read-scatter-plots",
+    "title": "Continuous Plots - BASIC",
+    "section": "How to Read Scatter Plots",
+    "text": "How to Read Scatter Plots\nUsing the previous plot:\n\nOBSERVATION: - Points are scattered over the whole plot - No linear pattern (correlation r = 0.00, p = 0.97) - BMI ranges from 11.4 to 37.3; cholesterol from 151 to 299 mg/dL - A few BMI values below 15 sit far to the left\nINTERPRETATION: - No association between BMI and cholesterol in this sample - BMI values below 15 are implausible for adults: check them before any analysis\nIMPLICATIONS: - BMI alone does not predict cholesterol here - Other factors (diet, genetics, medication) are likely to matter - A scatter plot is the first data-quality check, not only a picture of association"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#scatter-plot-with-categories---code",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#scatter-plot-with-categories---code",
+    "title": "Continuous Plots - BASIC",
+    "section": "Scatter Plot with Categories - Code",
+    "text": "Scatter Plot with Categories - Code\n⚫ Goal: Correlation + Compare groups\n\n\nCode\n# Scatter plot colored by Treatment Group\nggplot(data_clean, aes(x = Age, y = SysBP_0m, color = TreatmentGroup)) +\n  geom_point(alpha = 0.7, size = 3) +  # Color points by group\n  scale_color_manual(values = c(\"Control\" = \"#E74C3C\", \n                                 \"Intervention\" = \"#3498DB\"),\n                     name = \"Treatment Group\") +  # Custom colors\n  labs(title = \"Baseline Systolic BP by Age and Treatment Group\",\n       x = \"Age (years)\", \n       y = \"Systolic Blood Pressure (mmHg)\") +\n  theme_minimal(base_family = \"serif\") +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"),\n        axis.title = element_text(size = 12),\n        legend.position = \"right\")"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#scatter-plot-with-categories---plot",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#scatter-plot-with-categories---plot",
+    "title": "Continuous Plots - BASIC",
+    "section": "Scatter Plot with Categories - Plot",
+    "text": "Scatter Plot with Categories - Plot"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#continuous-plots---summary",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#continuous-plots---summary",
+    "title": "Continuous Plots - BASIC",
+    "section": "Continuous Plots - Summary",
+    "text": "Continuous Plots - Summary\n\n\n\n\n\n\n\n\n\nChart Type\nGoal\nWhen to Use\nCode Complexity\n\n\n\n\nHistogram\n🟡 Distribution\nShow frequency distribution, find shape\nSimple (3-6 lines)\n\n\nHistogram + Stats\n🟡 Distribution\nAdd mean/median for context\nMedium (8-12 lines)\n\n\nDensity Plot\n🟡 Distribution\nSmooth distribution, compare groups\nSimple (3-6 lines)\n\n\nScatter Plot\n⚫ Correlation\nShow relationship between 2 variables\nSimple (3-6 lines)\n\n\nScatter + Color\n⚫ Correlation + Groups\nCompare correlations across groups\nMedium (6-8 lines)"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#common-distribution-shapes",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#common-distribution-shapes",
+    "title": "Continuous Plots - BASIC",
+    "section": "Common Distribution Shapes",
+    "text": "Common Distribution Shapes\n\n\nNormal (Bell Curve) - Symmetric around mean - Mean ≈ Median - Example: Heights\nRight Skewed - Long tail to the right - Mean &gt; Median\n- Example: Income\nLeft Skewed - Long tail to the left - Mean &lt; Median - Example: Age at retirement\n\nBimodal - Two peaks - Two distinct groups - Example: Customer segments\nUniform - Flat distribution - All values equally likely - Example: Random numbers\nOutliers - Extreme values - Check for data errors - May need special handling"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#key-takeaways",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#key-takeaways",
+    "title": "Continuous Plots - BASIC",
+    "section": "Key Takeaways",
+    "text": "Key Takeaways\n\nRemember:\n\nChoose bins wisely - test different values for histograms\nDensity vs. Histogram - density better for comparing groups\nScatter plots reveal relationships - but don’t assume causation\nAlpha transparency - helps see overlapping points\nAlways handle missing data - document your approach\n\nCommon Mistakes:\n\nToo many/few histogram bins\nNot handling outliers\nAssuming correlation = causation\nIgnoring data transformations when needed\nPoor color choices for scatter plot groups"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#practice-exercise",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#practice-exercise",
+    "title": "Continuous Plots - BASIC",
+    "section": "Practice Exercise",
+    "text": "Practice Exercise\nYour Turn:\n\nCreate a histogram of Cholesterol with 20 bins\nAdd mean and median lines\nCreate a scatter plot of BloodSugar vs. SysBP_0m\nColor the scatter plot by Gender\n\nBonus: Create a density plot comparing BMI between smokers and non-smokers"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.2_continuous_basic.html#next-steps",
+    "href": "plot-gallery/basic/1.2_continuous_basic.html#next-steps",
+    "title": "Continuous Plots - BASIC",
+    "section": "Next Steps",
+    "text": "Next Steps\nYou’ve mastered Continuous - Basic!\nNext: Category vs. Continuous - Basic\nLearn to combine categorical and continuous data with: - Box plots - Grouped bar charts - Violin plots (in Intermediate)"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.4_timeseries_basic.html#what-is-time-series-data",
+    "href": "plot-gallery/basic/1.4_timeseries_basic.html#what-is-time-series-data",
+    "title": "Time Series - BASIC",
+    "section": "What is Time Series Data?",
+    "text": "What is Time Series Data?\n\n\nDefinition:\nData points indexed by time or ordered sequence\n\nObservations at regular intervals\nTemporal ordering matters\nShows change over time\nCan reveal trends and patterns\n\n\nExamples in Our Dataset:\n\nBlood Pressure at 0, 3, 6 months\nPatient measurements over time\nBaseline dates\nTreatment progression\nLongitudinal health outcomes"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.4_timeseries_basic.html#analytical-goals-for-time-series",
+    "href": "plot-gallery/basic/1.4_timeseries_basic.html#analytical-goals-for-time-series",
+    "title": "Time Series - BASIC",
+    "section": "Analytical Goals for Time Series",
+    "text": "Analytical Goals for Time Series\n\nWhat questions can we answer?\n\n🔵 Evolution - How does it change over time?\n🟡 Distribution - What’s the pattern across time periods?\n🟢 Ranking - Which time period is highest/lowest?\n\nCharts we’ll learn:\n\nSimple Line Chart\nMultiple Line Chart (comparing groups)\nLine Chart with Points"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.4_timeseries_basic.html#setup-load-and-prepare-data",
+    "href": "plot-gallery/basic/1.4_timeseries_basic.html#setup-load-and-prepare-data",
+    "title": "Time Series - BASIC",
+    "section": "Setup: Load and Prepare Data",
+    "text": "Setup: Load and Prepare Data\n\n\nCode\n# Load required libraries\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(tidyr)      # For data reshaping\n\n# Load the dataset\ndata &lt;- readxl::read_excel(\"../../data/PublicHealth_BP_Dataset.xlsx\")\n\n# Reshape data from wide to long format for time series plotting\n# Convert columns SysBP_0m, SysBP_3m, SysBP_6m to rows\nbp_long &lt;- data %&gt;%\n  select(PatientID, TreatmentGroup, SysBP_0m, SysBP_3m, SysBP_6m) %&gt;%\n  pivot_longer(cols = starts_with(\"SysBP\"),\n               names_to = \"TimePoint\",\n               values_to = \"SysBP\") %&gt;%  # Convert to long format\n  mutate(Month = case_when(TimePoint == \"SysBP_0m\" ~ 0,\n                           TimePoint == \"SysBP_3m\" ~ 3,\n                           TimePoint == \"SysBP_6m\" ~ 6))  # Extract month number\n\n# Preview the transformed data\nhead(bp_long)"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.4_timeseries_basic.html#data-preview",
+    "href": "plot-gallery/basic/1.4_timeseries_basic.html#data-preview",
+    "title": "Time Series - BASIC",
+    "section": "Data Preview",
+    "text": "Data Preview\n\n\n# A tibble: 12 × 5\n   PatientID TreatmentGroup TimePoint SysBP Month\n       &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;\n 1         1 Control        SysBP_0m    122     0\n 2         1 Control        SysBP_3m    123     3\n 3         1 Control        SysBP_6m    120     6\n 4         2 Control        SysBP_0m    128     0\n 5         2 Control        SysBP_3m    127     3\n 6         2 Control        SysBP_6m    131     6\n 7         3 Control        SysBP_0m    158     0\n 8         3 Control        SysBP_3m    156     3\n 9         3 Control        SysBP_6m    154     6\n10         4 Intervention   SysBP_0m    115     0\n11         4 Intervention   SysBP_3m    110     3\n12         4 Intervention   SysBP_6m    108     6"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.4_timeseries_basic.html#simple-line-chart---code",
+    "href": "plot-gallery/basic/1.4_timeseries_basic.html#simple-line-chart---code",
+    "title": "Time Series - BASIC",
+    "section": "Simple Line Chart - Code",
+    "text": "Simple Line Chart - Code\n🔵 Goal: Show evolution over time (aggregate)\n\n\nCode\n# Calculate mean systolic BP at each time point\nmean_bp &lt;- bp_long %&gt;%\n  group_by(Month) %&gt;%\n  summarise(Mean_SysBP = mean(SysBP, na.rm = TRUE))  # Average across all patients\n\n# Create line chart showing trend over time\nggplot(mean_bp, aes(x = Month, y = Mean_SysBP)) +\n  geom_line(color = \"steelblue\", size = 1.5) +  # Draw line\n  geom_point(color = \"steelblue\", size = 4) +  # Add points at each time point\n  scale_x_continuous(breaks = c(0, 3, 6)) +  # Show all time points on x-axis\n  labs(title = \"Mean Systolic Blood Pressure Over 6 Months\",\n       x = \"Month\", \n       y = \"Mean Systolic BP (mmHg)\") +\n  theme_minimal(base_family = \"serif\") +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"),\n        axis.title = element_text(size = 12),\n        axis.text = element_text(size = 10))"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.4_timeseries_basic.html#simple-line-chart---plot",
+    "href": "plot-gallery/basic/1.4_timeseries_basic.html#simple-line-chart---plot",
+    "title": "Time Series - BASIC",
+    "section": "Simple Line Chart - Plot",
+    "text": "Simple Line Chart - Plot"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.4_timeseries_basic.html#how-to-read-line-charts",
+    "href": "plot-gallery/basic/1.4_timeseries_basic.html#how-to-read-line-charts",
+    "title": "Time Series - BASIC",
+    "section": "How to Read Line Charts",
+    "text": "How to Read Line Charts\nUsing the previous plot:\n\nOBSERVATION: - Baseline (Month 0): mean systolic BP 135.1 mmHg - Month 3: 132.2 mmHg (2.9 mmHg lower) - Month 6: 130.4 mmHg (another 1.8 mmHg lower) - Steady downward trend, no rebound\nINTERPRETATION: - Mean blood pressure fell by about 5 mmHg over six months - This line mixes both groups: it cannot say whether the intervention caused the fall\nIMPLICATIONS: - Plot the groups separately (next slide): the Control mean stays at about 136 mmHg, the Intervention mean falls from 134 to 125 mmHg - An overall mean can hide that only one group changed - A change over time is not a treatment effect without a comparison group\nACTIONS: - Always show a line per group in a trial - Add error bars or confidence intervals before drawing conclusions"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.4_timeseries_basic.html#multiple-line-chart---code",
+    "href": "plot-gallery/basic/1.4_timeseries_basic.html#multiple-line-chart---code",
+    "title": "Time Series - BASIC",
+    "section": "Multiple Line Chart - Code",
+    "text": "Multiple Line Chart - Code\n🔵 Goal: Compare evolution across groups\n\n\nCode\n# Calculate mean BP by treatment group and time\nmean_bp_group &lt;- bp_long %&gt;%\n  group_by(Month, TreatmentGroup) %&gt;%\n  summarise(Mean_SysBP = mean(SysBP, na.rm = TRUE), .groups = \"drop\")\n\n# Create line chart with separate lines for each group\nggplot(mean_bp_group, aes(x = Month, y = Mean_SysBP, \n                          color = TreatmentGroup, group = TreatmentGroup)) +\n  geom_line(size = 1.5) +  # Draw lines\n  geom_point(size = 4) +  # Add points\n  scale_color_manual(values = c(\"Control\" = \"#E74C3C\", \n                                 \"Intervention\" = \"#3498DB\"),\n                     name = \"Treatment Group\") +  # Custom colors\n  scale_x_continuous(breaks = c(0, 3, 6)) +\n  labs(title = \"Systolic BP by Treatment Group Over Time\",\n       x = \"Month\", y = \"Mean Systolic BP (mmHg)\") +\n  theme_minimal(base_family = \"serif\") +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"),\n        axis.title = element_text(size = 12),\n        legend.position = \"right\")"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.4_timeseries_basic.html#multiple-line-chart---plot",
+    "href": "plot-gallery/basic/1.4_timeseries_basic.html#multiple-line-chart---plot",
+    "title": "Time Series - BASIC",
+    "section": "Multiple Line Chart - Plot",
+    "text": "Multiple Line Chart - Plot"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.4_timeseries_basic.html#line-chart-with-error-bars---code",
+    "href": "plot-gallery/basic/1.4_timeseries_basic.html#line-chart-with-error-bars---code",
+    "title": "Time Series - BASIC",
+    "section": "Line Chart with Error Bars - Code",
+    "text": "Line Chart with Error Bars - Code\n🔵 Goal: Show trend with uncertainty\n\n\nCode\n# Calculate mean and standard error by group\nbp_summary &lt;- bp_long %&gt;%\n  group_by(Month, TreatmentGroup) %&gt;%\n  summarise(Mean_SysBP = mean(SysBP, na.rm = TRUE),\n            SE = sd(SysBP, na.rm = TRUE) / sqrt(n()),  # Standard error\n            .groups = \"drop\")\n\n# Create line chart with error ribbons\nggplot(bp_summary, aes(x = Month, y = Mean_SysBP, \n                       color = TreatmentGroup, fill = TreatmentGroup)) +\n  geom_ribbon(aes(ymin = Mean_SysBP - SE, ymax = Mean_SysBP + SE),\n              alpha = 0.2, color = NA) +  # Add confidence bands\n  geom_line(size = 1.5) +  # Draw lines on top\n  geom_point(size = 4) +  # Add points\n  scale_color_manual(values = c(\"Control\" = \"#E74C3C\", \n                                 \"Intervention\" = \"#3498DB\")) +\n  scale_fill_manual(values = c(\"Control\" = \"#E74C3C\", \n                                \"Intervention\" = \"#3498DB\")) +\n  scale_x_continuous(breaks = c(0, 3, 6)) +\n  labs(title = \"Systolic BP Over Time with Standard Error\",\n       x = \"Month\", y = \"Mean Systolic BP (mmHg)\") +\n  theme_minimal(base_family = \"serif\") +\n  theme(plot.title = element_text(hjust = 0.5, size = 16, face = \"bold\"),\n        legend.position = \"right\")"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.4_timeseries_basic.html#line-chart-with-error-bars---plot",
+    "href": "plot-gallery/basic/1.4_timeseries_basic.html#line-chart-with-error-bars---plot",
+    "title": "Time Series - BASIC",
+    "section": "Line Chart with Error Bars - Plot",
+    "text": "Line Chart with Error Bars - Plot"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.4_timeseries_basic.html#time-series---summary",
+    "href": "plot-gallery/basic/1.4_timeseries_basic.html#time-series---summary",
+    "title": "Time Series - BASIC",
+    "section": "Time Series - Summary",
+    "text": "Time Series - Summary\n\n\n\n\n\n\n\n\n\nChart Type\nGoal\nWhen to Use\nCode Complexity\n\n\n\n\nSimple Line\n🔵 Evolution\nSingle metric over time\nSimple (4-8 lines)\n\n\nMultiple Lines\n🔵 Evolution + Compare\nCompare groups over time\nMedium (6-10 lines)\n\n\nLine + Confidence\n🔵 Evolution + Uncertainty\nShow trends with error\nMedium (10-15 lines)"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.4_timeseries_basic.html#key-time-series-concepts",
+    "href": "plot-gallery/basic/1.4_timeseries_basic.html#key-time-series-concepts",
+    "title": "Time Series - BASIC",
+    "section": "Key Time Series Concepts",
+    "text": "Key Time Series Concepts\n\n\nTrend: - Overall direction (up, down, flat) - Long-term pattern - Calculate: moving average, regression\nSeasonality: - Regular periodic fluctuations - Daily, weekly, monthly patterns - Example: Higher BP in winter\nVolatility: - Amount of variation - High = unstable, Low = stable - Measure: standard deviation\n\nData Preparation: - Wide format: One column per time point - Long format: One row per observation - Use pivot_longer() to convert\nBest Practices: - Always show all time points - Use consistent time intervals - Label axes clearly with units - Consider adding reference lines - Show confidence intervals when relevant"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.4_timeseries_basic.html#key-takeaways",
+    "href": "plot-gallery/basic/1.4_timeseries_basic.html#key-takeaways",
+    "title": "Time Series - BASIC",
+    "section": "Key Takeaways",
+    "text": "Key Takeaways\n\nRemember:\n\nConnect the dots - use geom_line() to show continuity\nAdd points - helps identify exact time points\nMultiple lines need legends - make groups clear\nShow uncertainty - confidence intervals add credibility\nWide to long format - essential for time series plotting\n\nCommon Mistakes:\n\nNot connecting points (scatter instead of line)\nToo many lines (&gt;5 becomes cluttered)\nInconsistent time intervals without noting\nMissing baseline comparisons\nNot handling missing time points"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.4_timeseries_basic.html#practice-exercise",
+    "href": "plot-gallery/basic/1.4_timeseries_basic.html#practice-exercise",
+    "title": "Time Series - BASIC",
+    "section": "Practice Exercise",
+    "text": "Practice Exercise\nYour Turn:\n\nCreate a line chart of mean DiaBP (diastolic BP) over 0, 3, 6 months\nAdd separate lines for Control vs. Intervention\nInclude confidence intervals (± SE)\nAdd a horizontal reference line at 80 mmHg (hypertension threshold)\n\nBonus: Create a line chart showing mean BMI changes over time by Gender"
+  },
+  {
+    "objectID": "plot-gallery/basic/1.4_timeseries_basic.html#next-steps",
+    "href": "plot-gallery/basic/1.4_timeseries_basic.html#next-steps",
+    "title": "Time Series - BASIC",
+    "section": "Next Steps",
+    "text": "Next Steps\nYou’ve completed all BASIC level decks!\n🎉 Congratulations!\nNext: Intermediate Level\nMove to Module 2 for enhanced visualizations: - Categorical Intermediate (Lollipop, Mosaic plots) - Continuous Intermediate (Violin, Ridge plots) - Advanced time series - Geographic maps - Network diagrams"
   },
   {
     "objectID": "r-foundations/data-wrangling.html#workshop-overview",
@@ -1384,54 +2000,5 @@
     "title": "Regression Analysis",
     "section": "Simple Linear Regression",
     "text": "Simple Linear Regression\n\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.2.1     ✔ readr     2.2.0\n✔ forcats   1.0.1     ✔ stringr   1.6.0\n✔ ggplot2   4.0.3     ✔ tibble    3.3.1\n✔ lubridate 1.9.5     ✔ tidyr     1.3.2\n✔ purrr     1.2.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\ndata &lt;- data.frame(\n  age = rnorm(100, 50, 10),\n  blood_pressure = rnorm(100, 120, 15),\n  treatment = sample(c(\"A\", \"B\"), 100, replace = TRUE)\n)\n\nmodel_simple &lt;- lm(blood_pressure ~ age, data = data)\nsummary(model_simple)\n\n\nCall:\nlm(formula = blood_pressure ~ age, data = data)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-41.562  -9.294   1.229   9.768  37.078 \n\nCoefficients:\n             Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) 118.73815    7.39632  16.054   &lt;2e-16 ***\nage           0.02347    0.14249   0.165    0.869    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 15.19 on 98 degrees of freedom\nMultiple R-squared:  0.0002769, Adjusted R-squared:  -0.009924 \nF-statistic: 0.02714 on 1 and 98 DF,  p-value: 0.8695\n\n\n\nggplot(data, aes(x = age, y = blood_pressure)) +\n  geom_point(alpha = 0.6) +\n  geom_smooth(method = \"lm\", se = TRUE) +\n  labs(\n    title = \"Blood Pressure vs Age\",\n    x = \"Age\", y = \"Blood Pressure\"\n  )\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\ngeom_smooth(method = \"lm\") draws the same fitted line as lm(), with a shaded confidence band around it."
-  },
-  {
-    "objectID": "references.html#reporting-guidelines",
-    "href": "references.html#reporting-guidelines",
-    "title": "References",
-    "section": "Reporting guidelines",
-    "text": "Reporting guidelines\n\nvon Elm E, Altman DG, Egger M, Pocock SJ, Gøtzsche PC, Vandenbroucke JP. The Strengthening the Reporting of Observational Studies in Epidemiology (STROBE) statement: guidelines for reporting observational studies. The Lancet. 2007;370(9596):1453–1457. doi:10.1016/S0140-6736(07)61602-X\nRegression workshop, Session 6; A7 Missing data, Session 5\nCollins GS, Reitsma JB, Altman DG, Moons KGM. Transparent reporting of a multivariable prediction model for individual prognosis or diagnosis (TRIPOD): the TRIPOD statement. BMJ. 2015;350:g7594. doi:10.1136/bmj.g7594\nA8 Prediction models, Sessions 1 and 5; A7 Missing data, Session 5\nSchulz KF, Altman DG, Moher D. CONSORT 2010 Statement: updated guidelines for reporting parallel group randomised trials. BMJ. 2010;340:c332. doi:10.1136/bmj.c332\nA7 Missing data, Session 5\nCampbell MK, Piaggio G, Elbourne DR, Altman DG. Consort 2010 statement: extension to cluster randomised trials. BMJ. 2012;345:e5661. doi:10.1136/bmj.e5661\nCONSORT for cluster randomised trials: A4 Clustered and repeated data, Session 5"
-  },
-  {
-    "objectID": "references.html#data-handling-visualization-and-reproducible-documents",
-    "href": "references.html#data-handling-visualization-and-reproducible-documents",
-    "title": "References",
-    "section": "Data handling, visualization and reproducible documents",
-    "text": "Data handling, visualization and reproducible documents\n\nWickham H, Çetinkaya-Rundel M, Grolemund G. R for Data Science. 2nd ed. O’Reilly Media; 2023. Free online: https://r4ds.hadley.nz\nBackground reading for R Foundations and Data Wrangling\nWilke CO. Fundamentals of Data Visualization. O’Reilly Media; 2019. Free online: https://clauswilke.com/dataviz/\nMatching Data to Plots; ggplot2 module 4\nTufte ER. The Visual Display of Quantitative Information. 2nd ed. Graphics Press; 2001.\nData-to-ink ratio: Best Practices; ggplot2 module 2\nFew S. Show Me the Numbers: Designing Tables and Graphs to Enlighten. Analytics Press; 2004.\ntheme_few(): ggplot2 module 2\nCleveland WS, McGill R. Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods. Journal of the American Statistical Association. 1984;79(387):531–554. doi:10.1080/01621459.1984.10478080\nThe research behind Cleveland dot plots: Matching Data to Plots; Intermediate Plot Gallery"
-  },
-  {
-    "objectID": "references.html#regression-model-checking-and-prediction",
-    "href": "references.html#regression-model-checking-and-prediction",
-    "title": "References",
-    "section": "Regression, model checking and prediction",
-    "text": "Regression, model checking and prediction\n\nHosmer DW, Lemeshow S, Sturdivant RX. Applied Logistic Regression. 3rd ed. Wiley; 2013. doi:10.1002/9781118548387\nRegression workshop, Sessions 3 and 5; A8 Prediction models, Session 2\nHosmer DW, Lemeshow S. Goodness of fit tests for the multiple logistic regression model. Communications in Statistics - Theory and Methods. 1980;9(10):1043–1069. doi:10.1080/03610928008827941\nThe Hosmer–Lemeshow test: Regression workshop, Session 5; A8 Prediction models, Session 2\nHarrell FE. Regression Modeling Strategies. 2nd ed. Springer; 2015. doi:10.1007/978-3-319-19425-7\nBackground reading for A6 Curves and interactions and A8 Prediction models\nSteyerberg EW. Clinical Prediction Models. 2nd ed. Springer; 2019. doi:10.1007/978-3-030-16399-0\nBackground reading for A8 Prediction models\nRiley RD, Ensor J, Snell KIE, Harrell FE, Martin GP, Reitsma JB, et al. Calculating the sample size required for developing a clinical prediction model. BMJ. 2020:m441. doi:10.1136/bmj.m441\nSample size for prediction models: A8 Prediction models, Session 1\nVickers AJ, Elkin EB. Decision Curve Analysis: A Novel Method for Evaluating Prediction Models. Medical Decision Making. 2006;26(6):565–574. doi:10.1177/0272989X06295361\nDecision curves: A8 Prediction models, Sessions 4 and 5"
-  },
-  {
-    "objectID": "references.html#survival-analysis",
-    "href": "references.html#survival-analysis",
-    "title": "References",
-    "section": "Survival analysis",
-    "text": "Survival analysis\n\nKaplan EL, Meier P. Nonparametric Estimation from Incomplete Observations. Journal of the American Statistical Association. 1958;53(282):457–481. doi:10.1080/01621459.1958.10501452\nKaplan–Meier estimator: A1 Survival, Sessions 1–3\nCox DR. Regression Models and Life-Tables. Journal of the Royal Statistical Society Series B: Statistical Methodology. 1972;34(2):187–202. doi:10.1111/j.2517-6161.1972.tb00899.x\nCox model: A1 Survival, Sessions 4–5; Regression Analysis page\nSchoenfeld D. Partial residuals for the proportional hazards regression model. Biometrika. 1982;69(1):239–241. doi:10.1093/biomet/69.1.239\nSchoenfeld residuals: A1 Survival, Session 5\nGrambsch PM, Therneau TM. Proportional hazards tests and diagnostics based on weighted residuals. Biometrika. 1994;81(3):515–526. doi:10.1093/biomet/81.3.515\nProportional hazards test (cox.zph): A1 Survival, Session 5"
-  },
-  {
-    "objectID": "references.html#survey-data-missing-data-and-causal-inference",
-    "href": "references.html#survey-data-missing-data-and-causal-inference",
-    "title": "References",
-    "section": "Survey data, missing data and causal inference",
-    "text": "Survey data, missing data and causal inference\n\nKish L. Survey Sampling. New York: Wiley; 1965.\nEffective sample size: A5 Survey data, Session 4\nLumley T. Complex Surveys. Wiley; 2010. doi:10.1002/9780470580066\nBackground reading for A5 Survey data\nRubin DB. Multiple Imputation for Nonresponse in Surveys. Wiley; 1987. doi:10.1002/9780470316696\nRubin’s rules: A7 Missing data, Sessions 3–5\nvan Buuren S. Flexible Imputation of Missing Data, Second Edition. 2nd ed. Chapman & Hall/CRC; 2018. doi:10.1201/9780429492259\nBackground reading for A7 Missing data\nHernán MA, Robins JM. Causal Inference: What If. Boca Raton: Chapman & Hall/CRC; 2020. Free online: https://miguelhernan.org/whatifbook\nBackground reading for A9 Causal inference\nRosenbaum PR, Rubin DB. The central role of the propensity score in observational studies for causal effects. Biometrika. 1983;70(1):41–55. doi:10.1093/biomet/70.1.41\nPropensity scores: A9 Causal inference, Session 3\nAustin PC. An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies. Multivariate Behavioral Research. 2011;46(3):399–424. doi:10.1080/00273171.2011.568786\nBackground reading for A9 Causal inference, Sessions 3–4\nVanderWeele TJ, Ding P. Sensitivity Analysis in Observational Research: Introducing the E-Value. Annals of Internal Medicine. 2017;167(4):268–274. doi:10.7326/M16-2607\nE-values (EValue package): A9 Causal inference, Session 5"
-  },
-  {
-    "objectID": "references.html#spatial-statistics",
-    "href": "references.html#spatial-statistics",
-    "title": "References",
-    "section": "Spatial statistics",
-    "text": "Spatial statistics\n\nMoran PAP. Notes on continuous stochastic phenomena. Biometrika. 1950;37:17–23. doi:10.1093/biomet/37.1-2.17\nMoran’s I: GIS workshop, Session 3; Global Moran’s I page\nGeary RC. The Contiguity Ratio and Statistical Mapping. The Incorporated Statistician. 1954;5(3):115. doi:10.2307/2986645\nGeary’s C: GIS workshop, Session 3; Geary’s C, Getis-Ord, Join Counts, Scan Statistic page\nAnselin L. Local Indicators of Spatial Association—LISA. Geographical Analysis. 1995;27(2):93–115. doi:10.1111/j.1538-4632.1995.tb00338.x\nLocal Moran’s I (LISA): GIS workshop, Sessions 3–4; Local Moran’s I page\nGetis A, Ord JK. The Analysis of Spatial Association by Use of Distance Statistics. Geographical Analysis. 1992;24(3):189–206. doi:10.1111/j.1538-4632.1992.tb00261.x\nGetis–Ord statistics: GIS workshop, Session 4; Geary’s C, Getis-Ord, … page\nOrd JK, Getis A. Local Spatial Autocorrelation Statistics: Distributional Issues and an Application. Geographical Analysis. 1995;27(4):286–306. doi:10.1111/j.1538-4632.1995.tb00912.x\nGetis–Ord Gi* hot spots: GIS workshop, Session 4\nKulldorff M. A spatial scan statistic. Communications in Statistics - Theory and Methods. 1997;26(6):1481–1496. doi:10.1080/03610929708831995\nScan statistic: GIS workshop, Session 4; Geary’s C, Getis-Ord, … page"
-  },
-  {
-    "objectID": "references.html#software",
-    "href": "references.html#software",
-    "title": "References",
-    "section": "Software",
-    "text": "Software\n\nR Core Team (2024). R: A Language and Environment for Statistical Computing. R Foundation for Statistical Computing, Vienna, Austria. https://www.R-project.org/.\nEverything on the site (R 4.3.3)\nAllaire JJ, Teague C, Xie Y, Dervieux C. Quarto [computer software]. Zenodo; 2022. doi:10.5281/zenodo.5960048\nThe site, slides and reports; Quarto pages in every track\nXie Y (2026). knitr: A General-Purpose Package for Dynamic Report Generation in R. R package version 1.52, https://yihui.org/knitr/.\nRunning R inside Quarto documents\nWickham H, Averick M, Bryan J, Chang W, McGowan LD, François R, Grolemund G, Hayes A, Henry L, Hester J, Kuhn M, Pedersen TL, Miller E, Bache SM, Müller K, Ooms J, Robinson D, Seidel DP, Spinu V, Takahashi K, Vaughan D, Wilke C, Woo K, Yutani H (2019). “Welcome to the tidyverse.” Journal of Open Source Software, 4(43), 1686. doi:10.21105/joss.01686 https://doi.org/10.21105/joss.01686.\nData wrangling and plots throughout\nWickham H (2016). ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York. ISBN 978-3-319-24277-4, https://ggplot2.tidyverse.org.\nEvery plot; ggplot2 modules 1–4\nSjoberg D, Whiting K, Curry M, Lavery J, Larmarange J (2021). “Reproducible Summary Tables with the gtsummary Package.” The R Journal, 13, 570-580. doi:10.32614/RJ-2021-053 https://doi.org/10.32614/RJ-2021-053, https://doi.org/10.32614/RJ-2021-053.\nTable 1 and regression tables: gtsummary page; workshops\nPatil I. Visualizations with statistical details: the ‘ggstatsplot’ approach. Journal of Open Source Software. 2021;6(61):3167. doi:10.21105/joss.03167\nggstatsplot pages (Intro, Intermediate, Advanced)\nLüdecke D, Ben-Shachar M, Patil I, Waggoner P, Makowski D (2021). “performance: An R Package for Assessment, Comparison and Testing of Statistical Models.” Journal of Open Source Software, 6(60), 3139. doi:10.21105/joss.03139 https://doi.org/10.21105/joss.03139.\nModel checks: Regression Analysis page; A4 Clustered data, Session 1\nTherneau T (2026). A Package for Survival Analysis in R. R package version 3.8-12, https://CRAN.R-project.org/package=survival.\nA1 Survival analysis\nSjoberg D, Sreeram S, Baillie M, Fruechtenicht C, Haesendonckx S, Treis T (2026). ggsurvfit: Flexible Time-to-Event Figures. R package version 1.2.1, https://www.danieldsjoberg.com/ggsurvfit/, https://github.com/pharmaverse/ggsurvfit.\nKaplan–Meier plots: A1 Survival, Session 2\nVenables WN, Ripley BD (2002). Modern Applied Statistics with S, Fourth edition. Springer, New York. ISBN 0-387-95457-0, https://www.stats.ox.ac.uk/pub/MASS4/.\nglm.nb: A2 Counts, Sessions 3–5; polr: A3 Ordinal, Sessions 2, 3 and 5\nJackman S (2024). pscl: Classes and Methods for R Developed in the Political Science Computational Laboratory. University of Sydney, Sydney, Australia. R package version 1.5.9, https://github.com/atahk/pscl/.\nZero-inflated and hurdle models: A2 Counts, Session 4\nChristensen R (2026). ordinal-Regression Models for Ordinal Data. R package version 2026.7-26, https://CRAN.R-project.org/package=ordinal.\nOrdinal regression: A3 Ordinal and multinomial\nSchlegel B, Steenbergen M (2020). brant: Test for Parallel Regression Assumption. R package version 0.3-0, https://benjaminschlegel.ch/r/brant/.\nProportional odds check: A3, Sessions 3 and 5\nBates D, Mächler M, Bolker B, Walker S (2015). “Fitting Linear Mixed-Effects Models Using lme4.” Journal of Statistical Software, 67(1), 1-48. doi:10.18637/jss.v067.i01 https://doi.org/10.18637/jss.v067.i01.\nMixed models: A4 Clustered and repeated data\nKuznetsova A, Brockhoff PB, Christensen RHB (2017). “lmerTest Package: Tests in Linear Mixed Effects Models.” Journal of Statistical Software, 82(13), 1-26. doi:10.18637/jss.v082.i13 https://doi.org/10.18637/jss.v082.i13.\nP-values for mixed models: A4, Session 3\nHalekoh U, Højsgaard S, Yan J (2006). “The R Package geepack for Generalized Estimating Equations.” Journal of Statistical Software, 15/2, 1-11.\nGEE: A4, Session 2\nZeileis A, Köll S, Graham N (2020). “Various Versatile Variances: An Object-Oriented Implementation of Clustered Covariances in R.” Journal of Statistical Software, 95(1), 1-36. doi:10.18637/jss.v095.i01 https://doi.org/10.18637/jss.v095.i01.\nRobust and cluster-robust standard errors: Regression workshop; A2; A4, Session 2; A9, Session 4\nPustejovsky JE (2026). clubSandwich: Cluster-Robust (Sandwich) Variance Estimators with Small-Sample Corrections. R package version 0.7.0, http://jepusto.github.io/clubSandwich/.\nSmall-sample cluster-robust standard errors: A4, Session 2\nLumley T (2026). “survey: analysis of complex survey samples.” R package version 4.5.\nComplex survey analysis: A5 Survey data\nFreedman Ellis G, Schneider B (2026). srvyr: ‘dplyr’-Like Syntax for Summary Statistics of Survey Data. R package version 1.3.1, https://github.com/gergness/srvyr/, http://gdfe.co/srvyr/.\nSurvey analysis with dplyr syntax: A5, Session 2\nWood SN (2011). “Fast stable restricted maximum likelihood and marginal likelihood estimation of semiparametric generalized linear models.” Journal of the Royal Statistical Society (B), 73(1), 3-36.\nGeneralised additive models: A6 Curves, Session 3\nLenth R, Piaskowski J (2026). emmeans: Estimated Marginal Means, aka Least-Squares Means. R package version 2.0.4, https://github.com/rvlenth/emmeans/, https://rvlenth.github.io/emmeans/.\nMarginal means and contrasts: A4, Session 4; A6, Session 4\nvan Buuren S, Groothuis-Oudshoorn K (2011). “mice: Multivariate Imputation by Chained Equations in R.” Journal of Statistical Software, 45(3), 1-67. doi:10.18637/jss.v045.i03 https://doi.org/10.18637/jss.v045.i03.\nMultiple imputation: A7 Missing data\nTierney N, Cook D (2023). “Expanding Tidy Data Principles to Facilitate Missing Data Exploration, Visualization and Assessment of Imputations.” Journal of Statistical Software, 105(7), 1-31. doi:10.18637/jss.v105.i07 https://doi.org/10.18637/jss.v105.i07.\nMissing-data patterns: A7 cheat sheet; Debugging Plots page\nRobin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J, Müller M (2011). “pROC: an open-source package for R and S+ to analyze and compare ROC curves.” BMC Bioinformatics, 12, 77.\nROC curves and AUC: Regression workshop, Session 6; A8 cheat sheet\nFriedman J, Hastie T, Tibshirani R (2010). “Regularization Paths for Generalized Linear Models via Coordinate Descent.” Journal of Statistical Software, 33(1), 1-22. doi:10.18637/jss.v033.i01 https://doi.org/10.18637/jss.v033.i01.\nShrinkage (lasso, ridge): A8, Session 4\nTextor J, van der Zander B, Gilthorpe MS, Liśkiewicz M, Ellison GT (2016). “Robust causal inference using directed acyclic graphs: the R package ‘dagitty’.” International Journal of Epidemiology, 45(6), 1887-1894. doi:10.1093/ije/dyw341 https://doi.org/10.1093/ije/dyw341.\nDAGs and adjustment sets: A9, Session 1\nHo D, Imai K, King G, Stuart E (2011). “MatchIt: Nonparametric Preprocessing for Parametric Causal Inference.” Journal of Statistical Software, 42(8), 1-28. doi:10.18637/jss.v042.i08 https://doi.org/10.18637/jss.v042.i08.\nPropensity score matching: A9, Session 3\nGreifer N (2026). cobalt: Covariate Balance Tables and Plots. R package version 5.0.0, https://github.com/ngreifer/cobalt, https://ngreifer.github.io/cobalt/.\nBalance checks: A9 cheat sheet\nPebesma E, Bivand R (2023). Spatial Data Science: With applications in R. Chapman and Hall/CRC. doi:10.1201/9780429459016 https://doi.org/10.1201/9780429459016, https://r-spatial.org/book/.\nSpatial data: GIS track\nBivand R, Wong D (2018). “Comparing implementations of global and local indicators of spatial association.” TEST, 27(3), 716-748. doi:10.1007/s11749-018-0599-x https://doi.org/10.1007/s11749-018-0599-x.\nNeighbours, Moran’s I, LISA, Getis–Ord: GIS track\nBivand R, Millo G, Piras G (2021). “A Review of Software for Spatial Econometrics in R.” Mathematics, 9(11). doi:10.3390/math9111276 https://doi.org/10.3390/math9111276, https://www.mdpi.com/2227-7390/9/11/1276.\nSpatial regression: Spatial Regression and Residual Tests page\nFrench J (2026). smerc: Statistical Methods for Regional Counts. R package version 1.8.6.\nScan statistic: GIS cheat sheet; Geary’s C, Getis-Ord, … page"
   }
 ]

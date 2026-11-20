@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readdirSync, statSync } from 'node:fs';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { productFor, holds, routesJson, FREE, ruleMatches } from '../src/products.js';
 
@@ -115,11 +115,11 @@ test('no page a paid track sells is also in the free Basic site', () => {
   for (const track of ['moderate', 'dataviz-base', 'dataviz-complete', 'regression', 'gis', 'advanced']) {
     const sold = htmlIn(track).filter((rel) => productFor(`/${track}/${rel}`) !== null);
     const leaked = sold.filter((rel) => basic.has(rel) && !['index.html', 'contact.html', 'references.html', 'downloads.html'].includes(rel));
-    // Pages Basic itself teaches (in its own menu) are free there by design; anything else is a leak.
-    const basicMenu = new Set(['r-foundations/getting-started.html', 'r-foundations/data-wrangling.html', 'r-foundations/merging_dataset.html',
-      'r-foundations/data_wrangling_prac_s.html', 'data-visualization/ggplot_grammar.html', 'plot-gallery/basic.html',
-      'statistical-analysis/statistical_tests.html', 'statistical-analysis/regression.html', 'ggstatsplot/ggstatsplot_intro.html',
-      'quarto_repro_w/reproducible_writing.html']);
+    // Pages Basic itself teaches are free there by design; anything else is a leak. "Teaches" = the pages the
+    // Basic track renders (its menu plus the sub-decks its menu pages link to), as listed by
+    // scripts/build_profiles.R in _filters/pages.json.
+    const basicMenu = new Set(JSON.parse(readFileSync(join(DOCS, '..', '_filters', 'pages.json'), 'utf8')).profiles.basic
+      .map((q) => q.replace(/\.qmd$/, '.html')));
     assert.deepEqual(leaked.filter((rel) => !basicMenu.has(rel)), [], `${track} pages also served free in /basic/`);
   }
 });

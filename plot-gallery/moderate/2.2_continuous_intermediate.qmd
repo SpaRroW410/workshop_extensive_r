@@ -145,30 +145,22 @@ ggplot(data_clean, aes(x = Region, y = BMI, fill = Region)) +
 
 ::: {.incremental style="font-size: 0.85em;"}
 **OBSERVATION:**
-- All regions show symmetric, roughly normal distributions
-- Widest parts (bulges) around BMI 25 for most regions
-- South region: slightly wider violin (more variation)
-- Boxplots inside show median and quartiles
-- No extreme outliers visible
+- Median BMI: East 26.9, West 25.5, North 25.0, South 24.4
+- West has the widest spread (SD 5.1), North the narrowest (SD 4.4)
+- Every region has a thin lower tail: a few BMI values near 11–12
+- The bulk of each violin sits between about 22 and 30
 
 **INTERPRETATION:**
-- BMI distributions similar across all regions
-- Most patients cluster around BMI 25 (normal/overweight boundary)
-- South region has more variability in BMI
-- No regional bias in BMI recruitment
-- Distributions roughly normal (good for parametric tests)
+- BMI is similar across regions; East is about 2 units higher than South
+- The lower tails are implausible BMI values, visible in every region
+- A violin shows the tail that a box plot reduces to a few dots
 
 **IMPLICATIONS:**
-- Regional effects on outcomes unlikely due to BMI differences
-- Can pool regions for BMI-related analyses
-- South's higher variability may need investigation
-- Sample representative across regions for BMI
+- Check the very low BMI values before comparing regions
+- A difference of 2 units may matter clinically; test it, with region sizes of 40 to 65
 
 **ACTIONS:**
-- Proceed with region-pooled analyses for BMI
-- Consider South region variability in sensitivity analyses
-- Use BMI as continuous covariate (not categorized by region)
-:::
+- Use violins when the shape matters (tails, two peaks); keep the inner box for the median and quartiles
 :::
 
 ---
@@ -391,32 +383,19 @@ ggplot(data_clean, aes(x = Age, y = SysBP_0m)) +
 
 ::: {.incremental style="font-size: 0.85em;"}
 **OBSERVATION:**
-- Weak positive correlation (r ≈ 0.2-0.3)
-- Regression line slopes upward slightly
-- Wide confidence interval (uncertainty in relationship)
-- Substantial scatter around the line
-- Age range: 18-79 years, BP range: 100-165 mmHg
+- Correlation between age and baseline systolic BP: r = −0.09 (p = 0.22)
+- The regression line is almost flat (about −0.07 mmHg per year)
+- The confidence band is wide compared with the slope
+- Ages 18–79; systolic BP 110–159 mmHg
 
 **INTERPRETATION:**
-- Age explains only small portion of BP variation (~4-9% via r²)
-- Systolic BP tends to increase slightly with age (expected)
-- Many other factors influence BP beyond age
-- Relationship is linear but weak
-- Individual variation is large
+- No evidence of a linear association between age and baseline BP in this sample
+- This is unusual: in most populations BP rises with age. With simulated data, or a small or selected sample, the expected pattern can be absent
 
 **IMPLICATIONS:**
-- Age alone is poor predictor of BP
-- Need multivariate models (BMI, smoking, etc.)
-- Age adjustment important but not sufficient
-- Biological relationship exists but is noisy
-- Clinical: Don't assume high BP from age alone
-
-**CRITICAL REMINDERS:**
-- **Correlation ≠ Causation** (age doesn't "cause" high BP directly)
-- r < 0.3 = weak, 0.3-0.7 = moderate, >0.7 = strong
-- Always check confidence interval width
-- Look for non-linear patterns
-:::
+- Do not draw a trend from a line that the data do not support: read the CI band and r together
+- Check how the sample was selected before generalising
+- A flat line here is a result, not an error in the plot
 :::
 
 ---

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.19">
+<meta name="generator" content="quarto-1.11.9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -74,14 +74,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="../">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2872a7511705894b565d6ebf33be87ff.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-ed302daf9606b8a8e678ffa1051b6720.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -115,19 +116,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link rel="stylesheet" href="assets/quest.css">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed fullcontent quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="dungeons/index.html">
     <span class="navbar-title">Dungeons &amp; Dataframes</span>
     </a>
   </div>
-            <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -408,6 +408,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
 </div>
+            <div id="quarto-search" class="" title="Search"></div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -417,7 +418,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content" id="quarto-document-content" tabindex="-1">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -454,23 +455,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="at">by =</span> htn, <span class="at">statistic =</span> <span class="fu">list</span>(<span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">"{median} ({p25}, {p75})"</span>), <span class="at">missing_text =</span> <span class="st">"Missing"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overall</span>() <span class="sc">|&gt;</span> <span class="fu">add_p</span>() <span class="sc">|&gt;</span> <span class="fu">bold_labels</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="gbdsqhaubp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#gbdsqhaubp table {
+<div id="ezzpzevwcp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ezzpzevwcp table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#gbdsqhaubp thead, #gbdsqhaubp tbody, #gbdsqhaubp tfoot, #gbdsqhaubp tr, #gbdsqhaubp td, #gbdsqhaubp th {
+#ezzpzevwcp thead, #ezzpzevwcp tbody, #ezzpzevwcp tfoot, #ezzpzevwcp tr, #ezzpzevwcp td, #ezzpzevwcp th {
   border-style: none;
 }
 
-#gbdsqhaubp p {
+#ezzpzevwcp p {
   margin: 0;
   padding: 0;
 }
 
-#gbdsqhaubp .gt_table {
+#ezzpzevwcp .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -496,12 +497,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#gbdsqhaubp .gt_caption {
+#ezzpzevwcp .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#gbdsqhaubp .gt_title {
+#ezzpzevwcp .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -513,7 +514,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#gbdsqhaubp .gt_subtitle {
+#ezzpzevwcp .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -525,7 +526,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#gbdsqhaubp .gt_heading {
+#ezzpzevwcp .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -537,13 +538,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#gbdsqhaubp .gt_bottom_border {
+#ezzpzevwcp .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#gbdsqhaubp .gt_col_headings {
+#ezzpzevwcp .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -558,7 +559,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#gbdsqhaubp .gt_col_heading {
+#ezzpzevwcp .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -578,7 +579,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#gbdsqhaubp .gt_column_spanner_outer {
+#ezzpzevwcp .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -590,15 +591,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#gbdsqhaubp .gt_column_spanner_outer:first-child {
+#ezzpzevwcp .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#gbdsqhaubp .gt_column_spanner_outer:last-child {
+#ezzpzevwcp .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#gbdsqhaubp .gt_column_spanner {
+#ezzpzevwcp .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -610,11 +611,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#gbdsqhaubp .gt_spanner_row {
+#ezzpzevwcp .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#gbdsqhaubp .gt_group_heading {
+#ezzpzevwcp .gt_group_heading {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -640,7 +641,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#gbdsqhaubp .gt_empty_group_heading {
+#ezzpzevwcp .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -655,15 +656,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#gbdsqhaubp .gt_from_md > :first-child {
+#ezzpzevwcp .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#gbdsqhaubp .gt_from_md > :last-child {
+#ezzpzevwcp .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#gbdsqhaubp .gt_row {
+#ezzpzevwcp .gt_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -682,7 +683,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#gbdsqhaubp .gt_stub {
+#ezzpzevwcp .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -695,7 +696,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#gbdsqhaubp .gt_stub_row_group {
+#ezzpzevwcp .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -709,15 +710,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#gbdsqhaubp .gt_row_group_first td {
+#ezzpzevwcp .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#gbdsqhaubp .gt_row_group_first th {
+#ezzpzevwcp .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#gbdsqhaubp .gt_summary_row {
+#ezzpzevwcp .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -727,16 +728,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#gbdsqhaubp .gt_first_summary_row {
+#ezzpzevwcp .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#gbdsqhaubp .gt_first_summary_row.thick {
+#ezzpzevwcp .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#gbdsqhaubp .gt_last_summary_row {
+#ezzpzevwcp .gt_last_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -746,7 +747,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#gbdsqhaubp .gt_grand_summary_row {
+#ezzpzevwcp .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -756,7 +757,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#gbdsqhaubp .gt_first_grand_summary_row {
+#ezzpzevwcp .gt_first_grand_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -766,7 +767,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#gbdsqhaubp .gt_last_grand_summary_row_top {
+#ezzpzevwcp .gt_last_grand_summary_row_top {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -776,11 +777,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#gbdsqhaubp .gt_striped {
+#ezzpzevwcp .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#gbdsqhaubp .gt_table_body {
+#ezzpzevwcp .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -789,7 +790,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#gbdsqhaubp .gt_footnotes {
+#ezzpzevwcp .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -803,7 +804,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#gbdsqhaubp .gt_footnote {
+#ezzpzevwcp .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 1px;
@@ -812,7 +813,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#gbdsqhaubp .gt_sourcenotes {
+#ezzpzevwcp .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -826,7 +827,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#gbdsqhaubp .gt_sourcenote {
+#ezzpzevwcp .gt_sourcenote {
   font-size: 90%;
   padding-top: 1px;
   padding-bottom: 1px;
@@ -834,72 +835,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#gbdsqhaubp .gt_left {
+#ezzpzevwcp .gt_left {
   text-align: left;
 }
 
-#gbdsqhaubp .gt_center {
+#ezzpzevwcp .gt_center {
   text-align: center;
 }
 
-#gbdsqhaubp .gt_right {
+#ezzpzevwcp .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#gbdsqhaubp .gt_font_normal {
+#ezzpzevwcp .gt_font_normal {
   font-weight: normal;
 }
 
-#gbdsqhaubp .gt_font_bold {
+#ezzpzevwcp .gt_font_bold {
   font-weight: bold;
 }
 
-#gbdsqhaubp .gt_font_italic {
+#ezzpzevwcp .gt_font_italic {
   font-style: italic;
 }
 
-#gbdsqhaubp .gt_super {
+#ezzpzevwcp .gt_super {
   font-size: 65%;
 }
 
-#gbdsqhaubp .gt_footnote_marks {
+#ezzpzevwcp .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#gbdsqhaubp .gt_asterisk {
+#ezzpzevwcp .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#gbdsqhaubp .gt_indent_1 {
+#ezzpzevwcp .gt_indent_1 {
   text-indent: 5px;
 }
 
-#gbdsqhaubp .gt_indent_2 {
+#ezzpzevwcp .gt_indent_2 {
   text-indent: 10px;
 }
 
-#gbdsqhaubp .gt_indent_3 {
+#ezzpzevwcp .gt_indent_3 {
   text-indent: 15px;
 }
 
-#gbdsqhaubp .gt_indent_4 {
+#ezzpzevwcp .gt_indent_4 {
   text-indent: 20px;
 }
 
-#gbdsqhaubp .gt_indent_5 {
+#ezzpzevwcp .gt_indent_5 {
   text-indent: 25px;
 }
 
-#gbdsqhaubp .katex-display {
+#ezzpzevwcp .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#gbdsqhaubp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#ezzpzevwcp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1194,7 +1195,8 @@ N = 192<span class="gt_footnote_marks" style="white-space:nowrap;font-style:ital
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -1203,8 +1205,69 @@ N = 192<span class="gt_footnote_marks" style="white-space:nowrap;font-style:ital
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -1218,6 +1281,7 @@ N = 192<span class="gt_footnote_marks" style="white-space:nowrap;font-style:ital
         interactiveBorder: 10,
         theme: 'quarto',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
@@ -1380,44 +1444,54 @@ N = 192<span class="gt_footnote_marks" style="white-space:nowrap;font-style:ital
           const lineIds = lines.map((line) => {
             return targetCell + "-" + line;
           })
-          let top = null;
-          let height = null;
-          let parent = null;
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
             }
+            placeBand(gutterDiv, el, lastEl);
             selectedAnnoteEl = annoteEl;
           }
         };
@@ -1515,6 +1589,9 @@ N = 192<span class="gt_footnote_marks" style="white-space:nowrap;font-style:ital
       }
     }
   });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
   </script>
 </div> <!-- /content -->
 <script>

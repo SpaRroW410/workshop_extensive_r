@@ -13,8 +13,8 @@ project:
     - statistical-analysis/regression.qmd
   resources:
     - data/ncd_survey.csv
-    - regression-workshop/make_data.R
     - regression-workshop/labs/*.R
+    - regression-workshop/make_data.R
 website:
   title: Medical Statistics in R — Regression
   site-url: '.'
