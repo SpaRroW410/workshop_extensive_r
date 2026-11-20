@@ -97,3 +97,29 @@ test('every free rule points at something that exists in docs/', () => {
   const missing = FREE.filter((rule) => ![...urls].some((u) => ruleMatches(u, rule)));
   assert.deepEqual(missing, [], 'free rules that match no published file (renamed page?)');
 });
+
+test('no page a paid track sells is also in the free Basic site', () => {
+  // Since 2026-11-20 each track renders only its own pages (scripts/build_profiles.R). Before that,
+  // every shared page was rendered into every track, so /basic/... served all of Moderate for free.
+  const htmlIn = (track) => {
+    const out = [];
+    (function walk(d) {
+      for (const f of readdirSync(d)) {
+        const p = join(d, f);
+        if (statSync(p).isDirectory()) { if (f !== 'site_libs') walk(p); } else if (f.endsWith('.html')) out.push(relative(join(DOCS, track), p));
+      }
+    })(join(DOCS, track));
+    return out;
+  };
+  const basic = new Set(htmlIn('basic'));
+  for (const track of ['moderate', 'dataviz-base', 'dataviz-complete', 'regression', 'gis', 'advanced']) {
+    const sold = htmlIn(track).filter((rel) => productFor(`/${track}/${rel}`) !== null);
+    const leaked = sold.filter((rel) => basic.has(rel) && !['index.html', 'contact.html', 'references.html', 'downloads.html'].includes(rel));
+    // Pages Basic itself teaches (in its own menu) are free there by design; anything else is a leak.
+    const basicMenu = new Set(['r-foundations/getting-started.html', 'r-foundations/data-wrangling.html', 'r-foundations/merging_dataset.html',
+      'r-foundations/data_wrangling_prac_s.html', 'data-visualization/ggplot_grammar.html', 'plot-gallery/basic.html',
+      'statistical-analysis/statistical_tests.html', 'statistical-analysis/regression.html', 'ggstatsplot/ggstatsplot_intro.html',
+      'quarto_repro_w/reproducible_writing.html']);
+    assert.deepEqual(leaked.filter((rel) => !basicMenu.has(rel)), [], `${track} pages also served free in /basic/`);
+  }
+});

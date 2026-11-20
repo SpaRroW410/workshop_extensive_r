@@ -8,6 +8,9 @@ project:
   output-dir: docs/regression
   render:
     - regression-workshop/*.qmd
+    - r-foundations/data-wrangling.qmd
+    - r-foundations/getting-started.qmd
+    - statistical-analysis/regression.qmd
   resources:
     - data/ncd_survey.csv
     - regression-workshop/make_data.R

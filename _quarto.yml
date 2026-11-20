@@ -28,19 +28,8 @@ project:
     - "contact.qmd"
     - "downloads.qmd"
     - "references.qmd"
-    - "r-foundations/*.qmd"
-    - "data-visualization/*.qmd"
-    - "data-visualization/gram_ggplot/*.qmd"
-    - "plot-gallery/*.qmd"
-    - "specialized/*.qmd"
-    - "statistical-analysis/*.qmd"
-    - "exporting_tools/*.qmd"
-    - "nctoh/*.qmd"
-    - "ggstatsplot/*.qmd"
-    - "gtsummary/gtsummary_tutorial.qmd"
-    - "quarto_repro_w/reproducible_writing.qmd"
-    - "quarto_repro_w/quarto_moderate.qmd"
-    - "quarto_repro_w/quarto_advanced.qmd"
+    # Every other page is rendered only by the tracks whose menus list it: each
+    # _quarto-<track>.yml carries its own render list, generated from curriculum.yml.
 
 execute:
   freeze: auto
@@ -49,6 +38,7 @@ format:
   revealjs:
     filters:
       - _filters/level.lua
+      - _filters/crosstrack.lua
   html:
     theme: flatly
     css: assets/theme_webp.css
@@ -56,6 +46,7 @@ format:
     toc: true
     filters:
       - _filters/level.lua
+      - _filters/crosstrack.lua
     lightbox: auto
     include-after-body:
       text: |
