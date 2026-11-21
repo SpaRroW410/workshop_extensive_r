@@ -213,152 +213,121 @@
 <section id="topics-covered" class="slide level2">
 <h2>Topics Covered</h2>
 <ul>
-<li>Spatial interpolation (kriging)</li>
+<li>Spatial interpolation (IDW; kriging in the GIS track)</li>
 <li>Cartograms (area distortion)</li>
 <li>Spatial autocorrelation</li>
-<li>Hexbin maps</li>
-<li>Isochrone maps</li>
+<li>Hexagon tile maps</li>
+<li>Access: distance bands</li>
 </ul>
 <p>Goal: Advanced spatial analysis</p>
 </section>
 <section id="setup" class="slide level2">
 <h2>Setup</h2>
-</section>
-<section id="spatial-interpolation---code" class="slide level2">
-<h2>Spatial Interpolation - Code</h2>
+<p>Data: a synthetic district of 79 blocks with dengue rates, and 30 health facilities (<code>data/gis/</code>, built by <code>gis/make_gis_data.R</code>; the same data as the GIS track).</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a><span class="fu">library</span>(gstat)</span>
-<span id="cb1-2"><a aria-label="2"></a><span class="fu">library</span>(sp)</span>
-<span id="cb1-3"><a aria-label="3"></a></span>
-<span id="cb1-4"><a aria-label="4"></a><span class="co"># Create spatial points (simulated coordinates)</span></span>
-<span id="cb1-5"><a aria-label="5"></a>coords <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb1-6"><a aria-label="6"></a>  <span class="at">lon =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">120</span>, <span class="sc">-</span><span class="dv">100</span>, <span class="sc">-</span><span class="dv">80</span>, <span class="sc">-</span><span class="dv">110</span>),</span>
-<span id="cb1-7"><a aria-label="7"></a>  <span class="at">lat =</span> <span class="fu">c</span>(<span class="dv">40</span>, <span class="dv">35</span>, <span class="dv">42</span>, <span class="dv">45</span>),</span>
-<span id="cb1-8"><a aria-label="8"></a>  <span class="at">bp =</span> region_summary<span class="sc">$</span>mean_bp</span>
-<span id="cb1-9"><a aria-label="9"></a>)</span>
-<span id="cb1-10"><a aria-label="10"></a><span class="fu">coordinates</span>(coords) <span class="ot">&lt;-</span> <span class="er">~</span>lon <span class="sc">+</span> lat</span>
-<span id="cb1-11"><a aria-label="11"></a></span>
-<span id="cb1-12"><a aria-label="12"></a><span class="co"># Fit variogram and krige</span></span>
-<span id="cb1-13"><a aria-label="13"></a>vgm_model <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">psill =</span> <span class="dv">100</span>, <span class="at">model =</span> <span class="st">"Exp"</span>, <span class="at">range =</span> <span class="dv">500</span>)</span>
-<span id="cb1-14"><a aria-label="14"></a>kriged <span class="ot">&lt;-</span> <span class="fu">krige</span>(bp <span class="sc">~</span> <span class="dv">1</span>, coords, <span class="at">newdata =</span> grid, <span class="at">model =</span> vgm_model)</span>
-<span id="cb1-15"><a aria-label="15"></a></span>
-<span id="cb1-16"><a aria-label="16"></a><span class="co"># Plot interpolated surface</span></span>
-<span id="cb1-17"><a aria-label="17"></a><span class="fu">ggplot</span>(<span class="fu">as.data.frame</span>(kriged), <span class="fu">aes</span>(<span class="at">x =</span> lon, <span class="at">y =</span> lat, <span class="at">fill =</span> var1.pred)) <span class="sc">+</span></span>
-<span id="cb1-18"><a aria-label="18"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
-<span id="cb1-19"><a aria-label="19"></a>  <span class="fu">scale_fill_viridis_c</span>() <span class="sc">+</span></span>
-<span id="cb1-20"><a aria-label="20"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Spatial Interpolation (Kriging)"</span>,</span>
-<span id="cb1-21"><a aria-label="21"></a>       <span class="at">fill =</span> <span class="st">"Predicted BP"</span>) <span class="sc">+</span></span>
-<span id="cb1-22"><a aria-label="22"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a><span class="fu">library</span>(tidyverse); <span class="fu">library</span>(sf)</span>
+<span id="cb1-2"><a aria-label="2"></a>blocks <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"../../data/gis/district_blocks.geojson"</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-3"><a aria-label="3"></a>  <span class="fu">st_transform</span>(<span class="dv">32644</span>)                                   <span class="co"># UTM zone 44N: metres, for distances and areas</span></span>
+<span id="cb1-4"><a aria-label="4"></a>fac <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../../data/gis/facilities.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-5"><a aria-label="5"></a>  <span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"easting_m"</span>, <span class="st">"northing_m"</span>), <span class="at">crs =</span> <span class="dv">32644</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>Estimates values between observations</p>
 </section>
-<section id="cartogram---code" class="slide level2">
-<h2>Cartogram - Code</h2>
+<section id="spatial-interpolation" class="slide level2">
+<h2>Spatial Interpolation</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-label="1"></a><span class="fu">library</span>(cartogram)</span>
-<span id="cb2-2"><a aria-label="2"></a><span class="fu">library</span>(sf)</span>
-<span id="cb2-3"><a aria-label="3"></a></span>
-<span id="cb2-4"><a aria-label="4"></a><span class="co"># Create SF object with regions</span></span>
-<span id="cb2-5"><a aria-label="5"></a>us_regions <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(map_data_full, </span>
-<span id="cb2-6"><a aria-label="6"></a>                       <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"long"</span>, <span class="st">"lat"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-7"><a aria-label="7"></a>  <span class="fu">group_by</span>(region_name) <span class="sc">%&gt;%</span></span>
-<span id="cb2-8"><a aria-label="8"></a>  <span class="fu">summarise</span>(<span class="at">mean_bp =</span> <span class="fu">first</span>(mean_bp))</span>
-<span id="cb2-9"><a aria-label="9"></a></span>
-<span id="cb2-10"><a aria-label="10"></a><span class="co"># Create cartogram (distort by BP)</span></span>
-<span id="cb2-11"><a aria-label="11"></a>cartogram_result <span class="ot">&lt;-</span> <span class="fu">cartogram_cont</span>(us_regions, <span class="st">"mean_bp"</span>)</span>
-<span id="cb2-12"><a aria-label="12"></a></span>
-<span id="cb2-13"><a aria-label="13"></a><span class="fu">ggplot</span>(cartogram_result) <span class="sc">+</span></span>
-<span id="cb2-14"><a aria-label="14"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> mean_bp)) <span class="sc">+</span></span>
-<span id="cb2-15"><a aria-label="15"></a>  <span class="fu">scale_fill_viridis_c</span>() <span class="sc">+</span></span>
-<span id="cb2-16"><a aria-label="16"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Cartogram: Area ∝ Blood Pressure"</span>,</span>
-<span id="cb2-17"><a aria-label="17"></a>       <span class="at">fill =</span> <span class="st">"Mean BP"</span>) <span class="sc">+</span></span>
-<span id="cb2-18"><a aria-label="18"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-label="1"></a><span class="fu">library</span>(gstat)</span>
+<span id="cb2-2"><a aria-label="2"></a>centres <span class="ot">&lt;-</span> <span class="fu">st_centroid</span>(blocks)</span>
+<span id="cb2-3"><a aria-label="3"></a>grid <span class="ot">&lt;-</span> <span class="fu">st_make_grid</span>(blocks, <span class="at">cellsize =</span> <span class="dv">500</span>, <span class="at">what =</span> <span class="st">"centers"</span>) <span class="sc">|&gt;</span> <span class="fu">st_as_sf</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-4"><a aria-label="4"></a>  <span class="fu">st_filter</span>(<span class="fu">st_union</span>(blocks))                            <span class="co"># 500 m grid inside the district</span></span>
+<span id="cb2-5"><a aria-label="5"></a>idw_fit <span class="ot">&lt;-</span> <span class="fu">idw</span>(dengue_per_100k <span class="sc">~</span> <span class="dv">1</span>, centres, <span class="at">newdata =</span> grid, <span class="at">idp =</span> <span class="dv">2</span>, <span class="at">debug.level =</span> <span class="dv">0</span>)</span>
+<span id="cb2-6"><a aria-label="6"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb2-7"><a aria-label="7"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> idw_fit, <span class="fu">aes</span>(<span class="at">colour =</span> var1.pred), <span class="at">size =</span> <span class="fl">0.6</span>, <span class="at">shape =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb2-8"><a aria-label="8"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> blocks, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">colour =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb2-9"><a aria-label="9"></a>  <span class="fu">scale_colour_viridis_c</span>(<span class="at">option =</span> <span class="st">"inferno"</span>, <span class="at">name =</span> <span class="st">"Dengue</span><span class="sc">\n</span><span class="st">per 100k"</span>) <span class="sc">+</span></span>
+<span id="cb2-10"><a aria-label="10"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Inverse distance weighting from block centres"</span>) <span class="sc">+</span></span>
+<span id="cb2-11"><a aria-label="11"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+
 </div>
-<p>Region size represents BP magnitude</p>
+<img data-src="3.6_geographic_advanced_files/figure-revealjs/unnamed-chunk-2-1.png" alt="Smooth surface of dengue incidence per 100,000 estimated by inverse distance weighting from the 79 block centres, with block outlines on top." width="960" class="r-stretch"><p>Estimates values <strong>between</strong> observations. Kriging does the same with a fitted variogram and gives a standard error for each estimate (GIS track).</p>
 </section>
-<section id="spatial-autocorrelation---code" class="slide level2">
-<h2>Spatial Autocorrelation - Code</h2>
+<section id="cartogram" class="slide level2">
+<h2>Cartogram</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a><span class="fu">library</span>(spdep)</span>
-<span id="cb3-2"><a aria-label="2"></a></span>
-<span id="cb3-3"><a aria-label="3"></a><span class="co"># Create neighbors</span></span>
-<span id="cb3-4"><a aria-label="4"></a>neighbors <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(us_regions)</span>
-<span id="cb3-5"><a aria-label="5"></a>weights <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(neighbors)</span>
-<span id="cb3-6"><a aria-label="6"></a></span>
-<span id="cb3-7"><a aria-label="7"></a><span class="co"># Moran's I test</span></span>
-<span id="cb3-8"><a aria-label="8"></a>moran_result <span class="ot">&lt;-</span> <span class="fu">moran.test</span>(us_regions<span class="sc">$</span>mean_bp, weights)</span>
-<span id="cb3-9"><a aria-label="9"></a></span>
-<span id="cb3-10"><a aria-label="10"></a><span class="co"># Plot Moran's I scatter</span></span>
-<span id="cb3-11"><a aria-label="11"></a><span class="fu">moran.plot</span>(us_regions<span class="sc">$</span>mean_bp, weights,</span>
-<span id="cb3-12"><a aria-label="12"></a>          <span class="at">main =</span> <span class="st">"Moran's I Spatial Autocorrelation"</span>,</span>
-<span id="cb3-13"><a aria-label="13"></a>          <span class="at">xlab =</span> <span class="st">"Blood Pressure"</span>,</span>
-<span id="cb3-14"><a aria-label="14"></a>          <span class="at">ylab =</span> <span class="st">"Lagged BP"</span>)</span>
-<span id="cb3-15"><a aria-label="15"></a></span>
-<span id="cb3-16"><a aria-label="16"></a><span class="co"># Add result</span></span>
-<span id="cb3-17"><a aria-label="17"></a><span class="fu">text</span>(<span class="at">x =</span> <span class="fu">min</span>(us_regions<span class="sc">$</span>mean_bp), <span class="at">y =</span> <span class="fu">max</span>(us_regions<span class="sc">$</span>mean_bp),</span>
-<span id="cb3-18"><a aria-label="18"></a>    <span class="at">labels =</span> <span class="fu">paste0</span>(<span class="st">"Moran's I = "</span>, </span>
-<span id="cb3-19"><a aria-label="19"></a>                   <span class="fu">round</span>(moran_result<span class="sc">$</span>estimate[<span class="dv">1</span>], <span class="dv">3</span>),</span>
-<span id="cb3-20"><a aria-label="20"></a>                   <span class="st">"</span><span class="sc">\n</span><span class="st">p = "</span>, <span class="fu">round</span>(moran_result<span class="sc">$</span>p.value, <span class="dv">4</span>)),</span>
-<span id="cb3-21"><a aria-label="21"></a>    <span class="at">adj =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a><span class="fu">library</span>(cartogram)</span>
+<span id="cb3-2"><a aria-label="2"></a>carto <span class="ot">&lt;-</span> <span class="fu">cartogram_cont</span>(blocks, <span class="st">"population"</span>, <span class="at">itermax =</span> <span class="dv">8</span>)</span>
+<span id="cb3-3"><a aria-label="3"></a><span class="fu">ggplot</span>(carto) <span class="sc">+</span></span>
+<span id="cb3-4"><a aria-label="4"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> dengue_per_100k), <span class="at">colour =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb3-5"><a aria-label="5"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"inferno"</span>, <span class="at">name =</span> <span class="st">"Dengue</span><span class="sc">\n</span><span class="st">per 100k"</span>) <span class="sc">+</span></span>
+<span id="cb3-6"><a aria-label="6"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Cartogram: block area proportional to population"</span>) <span class="sc">+</span></span>
+<span id="cb3-7"><a aria-label="7"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+
 </div>
-<p>Tests if similar values cluster spatially</p>
+<img data-src="3.6_geographic_advanced_files/figure-revealjs/unnamed-chunk-3-1.png" alt="Cartogram of the district in which each block's area is distorted to be proportional to its population, shaded by dengue incidence." width="960" class="r-stretch"><p>Large empty blocks shrink and crowded ones grow, so the map shows <strong>where the people are</strong>, not where the land is.</p>
 </section>
-<section id="hexbin-map---code" class="slide level2">
-<h2>Hexbin Map - Code</h2>
+<section id="spatial-autocorrelation" class="slide level2">
+<h2>Spatial Autocorrelation</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-label="1"></a><span class="fu">library</span>(geogrid)</span>
-<span id="cb4-2"><a aria-label="2"></a></span>
-<span id="cb4-3"><a aria-label="3"></a><span class="co"># Create hexagonal grid</span></span>
-<span id="cb4-4"><a aria-label="4"></a>hex_grid <span class="ot">&lt;-</span> <span class="fu">calculate_grid</span>(<span class="at">shape =</span> us_regions, </span>
-<span id="cb4-5"><a aria-label="5"></a>                          <span class="at">grid_type =</span> <span class="st">"hexagonal"</span>,</span>
-<span id="cb4-6"><a aria-label="6"></a>                          <span class="at">seed =</span> <span class="dv">123</span>)</span>
-<span id="cb4-7"><a aria-label="7"></a></span>
-<span id="cb4-8"><a aria-label="8"></a><span class="co"># Assign data</span></span>
-<span id="cb4-9"><a aria-label="9"></a>hex_data <span class="ot">&lt;-</span> <span class="fu">assign_polygons</span>(us_regions, hex_grid)</span>
-<span id="cb4-10"><a aria-label="10"></a></span>
-<span id="cb4-11"><a aria-label="11"></a><span class="fu">ggplot</span>(hex_data) <span class="sc">+</span></span>
-<span id="cb4-12"><a aria-label="12"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> mean_bp), <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
-<span id="cb4-13"><a aria-label="13"></a>  <span class="fu">geom_sf_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> region_name), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb4-14"><a aria-label="14"></a>  <span class="fu">scale_fill_viridis_c</span>() <span class="sc">+</span></span>
-<span id="cb4-15"><a aria-label="15"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Hexbin Map: Equal Area Representation"</span>) <span class="sc">+</span></span>
-<span id="cb4-16"><a aria-label="16"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-label="1"></a><span class="fu">library</span>(spdep)</span>
+<span id="cb4-2"><a aria-label="2"></a>nb <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(blocks)                                   <span class="co"># blocks that share a border</span></span>
+<span id="cb4-3"><a aria-label="3"></a>lw <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(nb, <span class="at">style =</span> <span class="st">"W"</span>)</span>
+<span id="cb4-4"><a aria-label="4"></a>moran_result <span class="ot">&lt;-</span> <span class="fu">moran.test</span>(blocks<span class="sc">$</span>dengue_per_100k, lw)</span>
+<span id="cb4-5"><a aria-label="5"></a><span class="fu">moran.plot</span>(blocks<span class="sc">$</span>dengue_per_100k, lw, <span class="at">labels =</span> <span class="cn">FALSE</span>, <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb4-6"><a aria-label="6"></a>           <span class="at">xlab =</span> <span class="st">"Dengue per 100k"</span>, <span class="at">ylab =</span> <span class="st">"Neighbours' average"</span>,</span>
+<span id="cb4-7"><a aria-label="7"></a>           <span class="at">main =</span> <span class="fu">sprintf</span>(<span class="st">"Moran's I = %.2f, p = %.3g"</span>, moran_result<span class="sc">$</span>estimate[<span class="dv">1</span>], moran_result<span class="sc">$</span>p.value))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+
 </div>
-<p>Each region = same size hexagon</p>
+<img data-src="3.6_geographic_advanced_files/figure-revealjs/unnamed-chunk-4-1.png" alt="Moran scatter plot of dengue incidence in each block against the average incidence of its neighbours, with a positive slope." width="960" class="r-stretch"><p>A positive slope (Moran’s I &gt; 0) means high-incidence blocks sit next to high-incidence blocks.</p>
 </section>
-<section id="isochrone-map-conceptual" class="slide level2">
-<h2>Isochrone Map (Conceptual)</h2>
+<section id="hexagon-tile-map" class="slide level2">
+<h2>Hexagon Tile Map</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-label="1"></a><span class="fu">library</span>(osrm)</span>
-<span id="cb5-2"><a aria-label="2"></a></span>
-<span id="cb5-3"><a aria-label="3"></a><span class="co"># Calculate isochrones (travel time zones)</span></span>
-<span id="cb5-4"><a aria-label="4"></a><span class="co"># From central hospital location</span></span>
-<span id="cb5-5"><a aria-label="5"></a>iso <span class="ot">&lt;-</span> <span class="fu">osrmIsochrone</span>(<span class="at">loc =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">95</span>, <span class="dv">38</span>),  <span class="co"># Center point</span></span>
-<span id="cb5-6"><a aria-label="6"></a>                    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">15</span>, <span class="dv">30</span>, <span class="dv">45</span>, <span class="dv">60</span>),  <span class="co"># Minutes</span></span>
-<span id="cb5-7"><a aria-label="7"></a>                    <span class="at">osrm.profile =</span> <span class="st">"car"</span>)</span>
-<span id="cb5-8"><a aria-label="8"></a></span>
-<span id="cb5-9"><a aria-label="9"></a><span class="fu">ggplot</span>(iso) <span class="sc">+</span></span>
-<span id="cb5-10"><a aria-label="10"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> <span class="fu">factor</span>(isomax)), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb5-11"><a aria-label="11"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"YlOrRd"</span>,</span>
-<span id="cb5-12"><a aria-label="12"></a>                   <span class="at">name =</span> <span class="st">"Travel Time</span><span class="sc">\n</span><span class="st">(minutes)"</span>) <span class="sc">+</span></span>
-<span id="cb5-13"><a aria-label="13"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Hospital Access Isochrones"</span>) <span class="sc">+</span></span>
-<span id="cb5-14"><a aria-label="14"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-label="1"></a><span class="fu">library</span>(geogrid)</span>
+<span id="cb5-2"><a aria-label="2"></a>blocks_wgs <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(blocks, <span class="dv">4326</span>)</span>
+<span id="cb5-3"><a aria-label="3"></a>hex_grid <span class="ot">&lt;-</span> <span class="fu">calculate_grid</span>(<span class="at">shape =</span> blocks_wgs, <span class="at">grid_type =</span> <span class="st">"hexagonal"</span>, <span class="at">seed =</span> <span class="dv">3</span>)</span>
+<span id="cb5-4"><a aria-label="4"></a>hex_data <span class="ot">&lt;-</span> <span class="fu">assign_polygons</span>(blocks_wgs, hex_grid)</span>
+<span id="cb5-5"><a aria-label="5"></a><span class="fu">ggplot</span>(hex_data) <span class="sc">+</span></span>
+<span id="cb5-6"><a aria-label="6"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> dengue_per_100k), <span class="at">colour =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb5-7"><a aria-label="7"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"inferno"</span>, <span class="at">name =</span> <span class="st">"Dengue</span><span class="sc">\n</span><span class="st">per 100k"</span>) <span class="sc">+</span></span>
+<span id="cb5-8"><a aria-label="8"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Every block the same size"</span>) <span class="sc">+</span></span>
+<span id="cb5-9"><a aria-label="9"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+
 </div>
-<p>Shows accessibility zones</p>
+<img data-src="3.6_geographic_advanced_files/figure-revealjs/unnamed-chunk-5-1.png" alt="The 79 blocks redrawn as equal-sized hexagons placed close to their real positions, shaded by dengue incidence." width="960" class="r-stretch"><p>Small blocks are as visible as large ones; the price is distorted positions and shapes.</p>
+</section>
+<section id="access-distance-bands" class="slide level2">
+<h2>Access: Distance Bands</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a aria-label="1"></a>phc <span class="ot">&lt;-</span> fac <span class="sc">|&gt;</span> <span class="fu">filter</span>(type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"PHC"</span>, <span class="st">"CHC"</span>))</span>
+<span id="cb6-2"><a aria-label="2"></a>bands <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">5</span>, <span class="dv">2</span>), \(km) <span class="fu">st_sf</span>(<span class="at">km =</span> km, <span class="at">geometry =</span> <span class="fu">st_union</span>(<span class="fu">st_buffer</span>(phc, km <span class="sc">*</span> <span class="dv">1000</span>)))) <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a aria-label="3"></a>  <span class="fu">st_intersection</span>(<span class="fu">st_union</span>(blocks))</span>
+<span id="cb6-4"><a aria-label="4"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb6-5"><a aria-label="5"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> bands, <span class="fu">aes</span>(<span class="at">fill =</span> <span class="fu">factor</span>(km, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>))), <span class="at">colour =</span> <span class="cn">NA</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb6-6"><a aria-label="6"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> blocks, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">colour =</span> <span class="st">"grey50"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb6-7"><a aria-label="7"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> phc, <span class="fu">aes</span>(<span class="at">shape =</span> type), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb6-8"><a aria-label="8"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"YlGnBu"</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">name =</span> <span class="st">"Within (km)"</span>) <span class="sc">+</span></span>
+<span id="cb6-9"><a aria-label="9"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Straight-line distance to a PHC or CHC"</span>, <span class="at">shape =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb6-10"><a aria-label="10"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+
+</div>
+<img data-src="3.6_geographic_advanced_files/figure-revealjs/unnamed-chunk-6-1.png" alt="District map with shaded bands of 2, 5 and 10 kilometres around the primary and community health centres, and the facilities as points." width="960" class="r-stretch"><p>Straight-line bands are a first look. <strong>Isochrones</strong> (travel time by road, e.g.&nbsp;<code>osrm::osrmIsochrone()</code>) are better, but need a routing server and road data.</p>
 </section>
 <section id="summary" class="slide level2">
 <h2>Summary</h2>
@@ -367,8 +336,8 @@
 <li>Spatial interpolation - estimate unmeasured locations</li>
 <li>Cartograms - size by variable</li>
 <li>Spatial autocorrelation - test clustering</li>
-<li>Hexbin maps - equal area representation</li>
-<li>Isochrones - accessibility analysis</li>
+<li>Hexagon tile maps - equal area representation</li>
+<li>Distance bands - accessibility (isochrones need a routing server)</li>
 </ol>
 <p><strong>Next:</strong> Dashboards Advanced</p>
 

@@ -86,9 +86,79 @@
   {
     "objectID": "specialized/interactive.html",
     "href": "specialized/interactive.html",
-    "title": "Interactive",
+    "title": "Interactive Plots",
     "section": "",
-    "text": "Interactive Visualizations - Using plotly for interactivity - ggiraph and hoverable tooltips - Embedding interactive plots in Quarto or Shiny\n\n▸ Categorical\n\nInteractive bar chart (plotly, ggiraph)\nDropdown-filtered categorical plots\n\n\n\n▸ Continuous\n\nInteractive density or histogram with sliders\nZoomable ridgeline plots\n\n\n\n▸ Category vs. Category\n\nInteractive heatmap\nClickable mosaic plot\n\n\n\n▸ Continuous vs. Continuous\n\nHoverable scatter plot with tooltips\nBrushed selection scatter matrix\n\n\n\n▸ Category vs. Continuous\n\nInteractive violin or boxplot with hover labels\nDynamic filtering by category\n\n\n\n▸ Time Series\n\nScrollable time series\nTooltip-enabled line chart\n\n\n\n▸ Map\n\nInteractive choropleth (leaflet, plotly)\nClickable bubble map with popups\n\nScatter plot\nBubble plot\nHeat map\nTree map\nSankey diagram\nChord diagram\nSpider / radar chart\nWaterfall chart\nForest plot\nWord cloud"
+    "text": "A static figure is right for a paper. An interactive one helps when readers explore: hover for the exact value of one point, zoom into a busy period, switch groups on and off, or click a district on a map. Interactive figures work in HTML output (a Quarto web page, a dashboard, a Shiny app); in PDF or Word they are not available, so keep a static version for the paper.\nThis page uses three packages, each an htmlwidget that Quarto embeds in the page: plotly (charts), DT (tables) and leaflet (maps), plus crosstalk to link them. Data: the NCD survey (data/ncd_survey.csv) and the district blocks of the GIS track.\nlibrary(tidyverse)\nlibrary(plotly)\nncd &lt;- read_csv(c(\"../data/ncd_survey.csv\", \"data/ncd_survey.csv\")[file.exists(c(\"../data/ncd_survey.csv\", \"data/ncd_survey.csv\"))][1],\n                show_col_types = FALSE) |&gt;\n  mutate(phys_act = factor(phys_act, levels = c(\"low\", \"moderate\", \"high\")))"
+  },
+  {
+    "objectID": "specialized/interactive.html#any-ggplot-made-interactive-ggplotly",
+    "href": "specialized/interactive.html#any-ggplot-made-interactive-ggplotly",
+    "title": "Interactive Plots",
+    "section": "1. Any ggplot, made interactive: ggplotly()",
+    "text": "1. Any ggplot, made interactive: ggplotly()\nBuild the plot as usual, then pass it to ggplotly(). The text aesthetic sets what the tooltip shows.\n\np &lt;- ggplot(ncd, aes(age, sbp, colour = sex,\n                     text = paste0(\"id \", id, \"&lt;br&gt;age \", age, \"&lt;br&gt;SBP \", sbp, \" mmHg&lt;br&gt;BMI \", bmi))) +\n  geom_point(alpha = 0.6) +\n  labs(x = \"Age (years)\", y = \"Systolic BP (mmHg)\", colour = NULL)\nggplotly(p, tooltip = \"text\")\n\n\n\n\n\n\nHover a point to read its values; drag to zoom; double-click to reset.\nClick a legend entry to hide that group, double-click to show it alone.\ntooltip = \"text\" limits the tooltip to the text you wrote; the default lists every aesthetic."
+  },
+  {
+    "objectID": "specialized/interactive.html#categories-bars-and-boxes-with-hover-labels",
+    "href": "specialized/interactive.html#categories-bars-and-boxes-with-hover-labels",
+    "title": "Interactive Plots",
+    "section": "2. Categories: bars and boxes with hover labels",
+    "text": "2. Categories: bars and boxes with hover labels\n\nby_act &lt;- ncd |&gt; group_by(phys_act) |&gt;\n  summarise(n = n(), pct = round(100 * mean(htn), 1))\np &lt;- ggplot(by_act, aes(phys_act, pct, text = paste0(pct, \"% of \", n, \" people\"))) +\n  geom_col(fill = \"#2C5F8D\") +\n  labs(x = \"Physical activity\", y = \"Hypertension (%)\")\nggplotly(p, tooltip = \"text\")\n\n\n\n\n\n\nggplotly(ggplot(ncd, aes(phys_act, sbp)) + geom_boxplot(fill = \"grey85\") +\n           labs(x = \"Physical activity\", y = \"Systolic BP (mmHg)\"))\n\n\n\n\n\nThe box tooltip gives the median, quartiles and fences of each group: useful in a meeting, where nobody can read values off a static axis."
+  },
+  {
+    "objectID": "specialized/interactive.html#native-plotly-a-histogram-with-a-group-switch",
+    "href": "specialized/interactive.html#native-plotly-a-histogram-with-a-group-switch",
+    "title": "Interactive Plots",
+    "section": "3. Native plotly: a histogram with a group switch",
+    "text": "3. Native plotly: a histogram with a group switch\nplot_ly() builds charts directly. Here two overlaid histograms; click a legend entry to compare one sex at a time.\n\nplot_ly(ncd, x = ~bmi, color = ~sex, type = \"histogram\", alpha = 0.6, nbinsx = 30) |&gt;\n  layout(barmode = \"overlay\", xaxis = list(title = \"BMI (kg/m²)\"), yaxis = list(title = \"People\"))"
+  },
+  {
+    "objectID": "specialized/interactive.html#time-a-line-with-a-range-slider",
+    "href": "specialized/interactive.html#time-a-line-with-a-range-slider",
+    "title": "Interactive Plots",
+    "section": "4. Time: a line with a range slider",
+    "text": "4. Time: a line with a range slider\n\ndengue &lt;- read_csv(c(\"../data/dengue_wards.csv\", \"data/dengue_wards.csv\")[file.exists(c(\"../data/dengue_wards.csv\", \"data/dengue_wards.csv\"))][1],\n                   show_col_types = FALSE) |&gt;\n  group_by(date) |&gt; summarise(cases = sum(cases), rain_mm = mean(rain_mm))\nplot_ly(dengue, x = ~date, y = ~cases, type = \"scatter\", mode = \"lines\", name = \"Dengue cases\") |&gt;\n  layout(xaxis = list(title = NULL, rangeslider = list(visible = TRUE)), yaxis = list(title = \"Cases per month\"))\n\n\n\n\n\nDrag the ends of the slider to zoom into one season; the y-axis keeps its scale, so seasons stay comparable."
+  },
+  {
+    "objectID": "specialized/interactive.html#a-searchable-table-dt",
+    "href": "specialized/interactive.html#a-searchable-table-dt",
+    "title": "Interactive Plots",
+    "section": "5. A searchable table: DT",
+    "text": "5. A searchable table: DT\n\nlibrary(DT)\nncd |&gt; select(id, village, age, sex, bmi, sbp, dbp, htn) |&gt;\n  datatable(rownames = FALSE, filter = \"top\", options = list(pageLength = 5))\n\n\n\n\n\n\nfilter = \"top\" adds a filter box above each column; sort by clicking a header.\nUse it for lists readers look things up in (facilities, villages); not as a substitute for a summary table."
+  },
+  {
+    "objectID": "specialized/interactive.html#linked-views-crosstalk",
+    "href": "specialized/interactive.html#linked-views-crosstalk",
+    "title": "Interactive Plots",
+    "section": "6. Linked views: crosstalk",
+    "text": "6. Linked views: crosstalk\ncrosstalk::SharedData lets two widgets use the same rows: select points in the scatter plot and the table shows only those people.\n\nlibrary(crosstalk)\nshared &lt;- SharedData$new(ncd |&gt; select(id, age, sex, sbp, dbp, bmi))\nbscols(widths = c(6, 6),\n       plot_ly(shared, x = ~dbp, y = ~sbp, type = \"scatter\", mode = \"markers\", alpha = 0.5) |&gt;\n         layout(xaxis = list(title = \"Diastolic BP\"), yaxis = list(title = \"Systolic BP\")) |&gt;\n         highlight(on = \"plotly_selected\", off = \"plotly_deselect\"),\n       datatable(shared, rownames = FALSE, options = list(pageLength = 6, dom = \"tp\")))\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nChoose the box select tool (top right of the plot), drag over the points with high systolic BP, and the table lists who they are. This works in a static HTML page: no server is needed."
+  },
+  {
+    "objectID": "specialized/interactive.html#maps-leaflet",
+    "href": "specialized/interactive.html#maps-leaflet",
+    "title": "Interactive Plots",
+    "section": "7. Maps: leaflet",
+    "text": "7. Maps: leaflet\n\nlibrary(leaflet); library(sf)\nblocks &lt;- st_read(c(\"../data/gis/district_blocks.geojson\", \"data/gis/district_blocks.geojson\")[file.exists(c(\"../data/gis/district_blocks.geojson\", \"data/gis/district_blocks.geojson\"))][1],\n                  quiet = TRUE)\npal &lt;- colorNumeric(\"YlOrRd\", blocks$dengue_per_100k)\nleaflet(blocks) |&gt;\n  addProviderTiles(providers$CartoDB.Positron) |&gt;\n  addPolygons(fillColor = ~pal(dengue_per_100k), fillOpacity = 0.8, color = \"white\", weight = 1,\n              label = ~block_name,\n              popup = ~paste0(\"&lt;b&gt;\", block_name, \"&lt;/b&gt;&lt;br&gt;Population: \", format(population, big.mark = \",\"),\n                              \"&lt;br&gt;Dengue: \", dengue_per_100k, \" per 100,000\")) |&gt;\n  addLegend(pal = pal, values = ~dengue_per_100k, title = \"Dengue per 100k\")\n\n\n\n\n\n\nHover a block for its name; click it for the popup.\nThe base map tiles load from the internet; the shaded blocks do not need a connection.\nMapping rules (class breaks, rates rather than counts) are in the GIS track."
+  },
+  {
+    "objectID": "specialized/interactive.html#when-to-use-interactivity",
+    "href": "specialized/interactive.html#when-to-use-interactivity",
+    "title": "Interactive Plots",
+    "section": "When to use interactivity",
+    "text": "When to use interactivity\n\n\n\n\n\n\n\nUse it when\nAvoid it when\n\n\n\n\nReaders explore many points or groups\nThe figure has one message: a static plot says it faster\n\n\nExact values matter on hover\nThe output is PDF, Word or print\n\n\nDashboards, teaching, data checking\nHiding information behind a hover that every reader needs\n\n\n\n\n\n\n\n\n\nTipChecklist\n\n\n\n\nKeep a static version for the paper; the interactive one goes in the supplement or a web appendix.\nWrite the tooltip yourself: units, rounding, the n.\nLarge data (more than about 50,000 points) makes the page slow: summarise first, or use toWebGL().\nSave a widget as its own file with htmlwidgets::saveWidget(widget, \"fig.html\").\nOther packages: ggiraph (interactive ggplot2 layers), highcharter, echarts4r; Shiny when a reader should change the analysis, not just the view."
+  },
+  {
+    "objectID": "specialized/interactive.html#practise-in-r",
+    "href": "specialized/interactive.html#practise-in-r",
+    "title": "Interactive Plots",
+    "section": "Practise in R",
+    "text": "Practise in R\nDownload the lab Interactive plots and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "specialized/interactive.html#self-check-quiz",
+    "href": "specialized/interactive.html#self-check-quiz",
+    "title": "Interactive Plots",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\nIn ggplotly(p, tooltip = \"text\"), what does the tooltip argument do?\n\nAdds a text label beside each point\nShows only the text aesthetic on hover\nTurns the axis titles into links\nExports the plot as a text file on disk\n\n\n\nYour paper goes to a journal as a PDF. What about the interactive plotly figure?\n\nIt is converted to an animation in the PDF\nIt needs a static version for the PDF\nIt works if the reader opens the PDF online\nIt is printed with all the tooltips shown\n\n\n\nWhat does crosstalk’s SharedData let you do?\n\nShare a plot on social media from the page\nStore the data on a server for other users\nLink widgets so a selection filters the others\nSpeed up a plot by sharing memory between widgets\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "plot-gallery/moderate/2.6_geographic_intermediate.html#what-well-learn---intermediate",
@@ -872,56 +942,56 @@
     "href": "plot-gallery/advanced/3.6_geographic_advanced.html#topics-covered",
     "title": "Geographic - ADVANCED",
     "section": "Topics Covered",
-    "text": "Topics Covered\n\nSpatial interpolation (kriging)\nCartograms (area distortion)\nSpatial autocorrelation\nHexbin maps\nIsochrone maps\n\nGoal: Advanced spatial analysis"
+    "text": "Topics Covered\n\nSpatial interpolation (IDW; kriging in the GIS track)\nCartograms (area distortion)\nSpatial autocorrelation\nHexagon tile maps\nAccess: distance bands\n\nGoal: Advanced spatial analysis"
   },
   {
     "objectID": "plot-gallery/advanced/3.6_geographic_advanced.html#setup",
     "href": "plot-gallery/advanced/3.6_geographic_advanced.html#setup",
     "title": "Geographic - ADVANCED",
     "section": "Setup",
-    "text": "Setup"
+    "text": "Setup\nData: a synthetic district of 79 blocks with dengue rates, and 30 health facilities (data/gis/, built by gis/make_gis_data.R; the same data as the GIS track).\n\n\nCode\nlibrary(tidyverse); library(sf)\nblocks &lt;- st_read(\"../../data/gis/district_blocks.geojson\", quiet = TRUE) |&gt;\n  st_transform(32644)                                   # UTM zone 44N: metres, for distances and areas\nfac &lt;- read_csv(\"../../data/gis/facilities.csv\", show_col_types = FALSE) |&gt;\n  st_as_sf(coords = c(\"easting_m\", \"northing_m\"), crs = 32644)"
   },
   {
-    "objectID": "plot-gallery/advanced/3.6_geographic_advanced.html#spatial-interpolation---code",
-    "href": "plot-gallery/advanced/3.6_geographic_advanced.html#spatial-interpolation---code",
+    "objectID": "plot-gallery/advanced/3.6_geographic_advanced.html#spatial-interpolation",
+    "href": "plot-gallery/advanced/3.6_geographic_advanced.html#spatial-interpolation",
     "title": "Geographic - ADVANCED",
-    "section": "Spatial Interpolation - Code",
-    "text": "Spatial Interpolation - Code\n\n\nCode\nlibrary(gstat)\nlibrary(sp)\n\n# Create spatial points (simulated coordinates)\ncoords &lt;- data.frame(\n  lon = c(-120, -100, -80, -110),\n  lat = c(40, 35, 42, 45),\n  bp = region_summary$mean_bp\n)\ncoordinates(coords) &lt;- ~lon + lat\n\n# Fit variogram and krige\nvgm_model &lt;- vgm(psill = 100, model = \"Exp\", range = 500)\nkriged &lt;- krige(bp ~ 1, coords, newdata = grid, model = vgm_model)\n\n# Plot interpolated surface\nggplot(as.data.frame(kriged), aes(x = lon, y = lat, fill = var1.pred)) +\n  geom_tile() +\n  scale_fill_viridis_c() +\n  labs(title = \"Spatial Interpolation (Kriging)\",\n       fill = \"Predicted BP\") +\n  theme_minimal()\n\n\nEstimates values between observations"
+    "section": "Spatial Interpolation",
+    "text": "Spatial Interpolation\n\n\nCode\nlibrary(gstat)\ncentres &lt;- st_centroid(blocks)\ngrid &lt;- st_make_grid(blocks, cellsize = 500, what = \"centers\") |&gt; st_as_sf() |&gt;\n  st_filter(st_union(blocks))                            # 500 m grid inside the district\nidw_fit &lt;- idw(dengue_per_100k ~ 1, centres, newdata = grid, idp = 2, debug.level = 0)\nggplot() +\n  geom_sf(data = idw_fit, aes(colour = var1.pred), size = 0.6, shape = 15) +\n  geom_sf(data = blocks, fill = NA, colour = \"white\", linewidth = 0.2) +\n  scale_colour_viridis_c(option = \"inferno\", name = \"Dengue\\nper 100k\") +\n  labs(title = \"Inverse distance weighting from block centres\") +\n  theme_void()\n\n\n\nEstimates values between observations. Kriging does the same with a fitted variogram and gives a standard error for each estimate (GIS track)."
   },
   {
-    "objectID": "plot-gallery/advanced/3.6_geographic_advanced.html#cartogram---code",
-    "href": "plot-gallery/advanced/3.6_geographic_advanced.html#cartogram---code",
+    "objectID": "plot-gallery/advanced/3.6_geographic_advanced.html#cartogram",
+    "href": "plot-gallery/advanced/3.6_geographic_advanced.html#cartogram",
     "title": "Geographic - ADVANCED",
-    "section": "Cartogram - Code",
-    "text": "Cartogram - Code\n\n\nCode\nlibrary(cartogram)\nlibrary(sf)\n\n# Create SF object with regions\nus_regions &lt;- st_as_sf(map_data_full, \n                       coords = c(\"long\", \"lat\")) %&gt;%\n  group_by(region_name) %&gt;%\n  summarise(mean_bp = first(mean_bp))\n\n# Create cartogram (distort by BP)\ncartogram_result &lt;- cartogram_cont(us_regions, \"mean_bp\")\n\nggplot(cartogram_result) +\n  geom_sf(aes(fill = mean_bp)) +\n  scale_fill_viridis_c() +\n  labs(title = \"Cartogram: Area ∝ Blood Pressure\",\n       fill = \"Mean BP\") +\n  theme_void()\n\n\nRegion size represents BP magnitude"
+    "section": "Cartogram",
+    "text": "Cartogram\n\n\nCode\nlibrary(cartogram)\ncarto &lt;- cartogram_cont(blocks, \"population\", itermax = 8)\nggplot(carto) +\n  geom_sf(aes(fill = dengue_per_100k), colour = \"white\", linewidth = 0.2) +\n  scale_fill_viridis_c(option = \"inferno\", name = \"Dengue\\nper 100k\") +\n  labs(title = \"Cartogram: block area proportional to population\") +\n  theme_void()\n\n\n\nLarge empty blocks shrink and crowded ones grow, so the map shows where the people are, not where the land is."
   },
   {
-    "objectID": "plot-gallery/advanced/3.6_geographic_advanced.html#spatial-autocorrelation---code",
-    "href": "plot-gallery/advanced/3.6_geographic_advanced.html#spatial-autocorrelation---code",
+    "objectID": "plot-gallery/advanced/3.6_geographic_advanced.html#spatial-autocorrelation",
+    "href": "plot-gallery/advanced/3.6_geographic_advanced.html#spatial-autocorrelation",
     "title": "Geographic - ADVANCED",
-    "section": "Spatial Autocorrelation - Code",
-    "text": "Spatial Autocorrelation - Code\n\n\nCode\nlibrary(spdep)\n\n# Create neighbors\nneighbors &lt;- poly2nb(us_regions)\nweights &lt;- nb2listw(neighbors)\n\n# Moran's I test\nmoran_result &lt;- moran.test(us_regions$mean_bp, weights)\n\n# Plot Moran's I scatter\nmoran.plot(us_regions$mean_bp, weights,\n          main = \"Moran's I Spatial Autocorrelation\",\n          xlab = \"Blood Pressure\",\n          ylab = \"Lagged BP\")\n\n# Add result\ntext(x = min(us_regions$mean_bp), y = max(us_regions$mean_bp),\n    labels = paste0(\"Moran's I = \", \n                   round(moran_result$estimate[1], 3),\n                   \"\\np = \", round(moran_result$p.value, 4)),\n    adj = c(0,1))\n\n\nTests if similar values cluster spatially"
+    "section": "Spatial Autocorrelation",
+    "text": "Spatial Autocorrelation\n\n\nCode\nlibrary(spdep)\nnb &lt;- poly2nb(blocks)                                   # blocks that share a border\nlw &lt;- nb2listw(nb, style = \"W\")\nmoran_result &lt;- moran.test(blocks$dengue_per_100k, lw)\nmoran.plot(blocks$dengue_per_100k, lw, labels = FALSE, pch = 19,\n           xlab = \"Dengue per 100k\", ylab = \"Neighbours' average\",\n           main = sprintf(\"Moran's I = %.2f, p = %.3g\", moran_result$estimate[1], moran_result$p.value))\n\n\n\nA positive slope (Moran’s I &gt; 0) means high-incidence blocks sit next to high-incidence blocks."
   },
   {
-    "objectID": "plot-gallery/advanced/3.6_geographic_advanced.html#hexbin-map---code",
-    "href": "plot-gallery/advanced/3.6_geographic_advanced.html#hexbin-map---code",
+    "objectID": "plot-gallery/advanced/3.6_geographic_advanced.html#hexagon-tile-map",
+    "href": "plot-gallery/advanced/3.6_geographic_advanced.html#hexagon-tile-map",
     "title": "Geographic - ADVANCED",
-    "section": "Hexbin Map - Code",
-    "text": "Hexbin Map - Code\n\n\nCode\nlibrary(geogrid)\n\n# Create hexagonal grid\nhex_grid &lt;- calculate_grid(shape = us_regions, \n                          grid_type = \"hexagonal\",\n                          seed = 123)\n\n# Assign data\nhex_data &lt;- assign_polygons(us_regions, hex_grid)\n\nggplot(hex_data) +\n  geom_sf(aes(fill = mean_bp), color = \"white\") +\n  geom_sf_text(aes(label = region_name), size = 3) +\n  scale_fill_viridis_c() +\n  labs(title = \"Hexbin Map: Equal Area Representation\") +\n  theme_void()\n\n\nEach region = same size hexagon"
+    "section": "Hexagon Tile Map",
+    "text": "Hexagon Tile Map\n\n\nCode\nlibrary(geogrid)\nblocks_wgs &lt;- st_transform(blocks, 4326)\nhex_grid &lt;- calculate_grid(shape = blocks_wgs, grid_type = \"hexagonal\", seed = 3)\nhex_data &lt;- assign_polygons(blocks_wgs, hex_grid)\nggplot(hex_data) +\n  geom_sf(aes(fill = dengue_per_100k), colour = \"white\") +\n  scale_fill_viridis_c(option = \"inferno\", name = \"Dengue\\nper 100k\") +\n  labs(title = \"Every block the same size\") +\n  theme_void()\n\n\n\nSmall blocks are as visible as large ones; the price is distorted positions and shapes."
   },
   {
-    "objectID": "plot-gallery/advanced/3.6_geographic_advanced.html#isochrone-map-conceptual",
-    "href": "plot-gallery/advanced/3.6_geographic_advanced.html#isochrone-map-conceptual",
+    "objectID": "plot-gallery/advanced/3.6_geographic_advanced.html#access-distance-bands",
+    "href": "plot-gallery/advanced/3.6_geographic_advanced.html#access-distance-bands",
     "title": "Geographic - ADVANCED",
-    "section": "Isochrone Map (Conceptual)",
-    "text": "Isochrone Map (Conceptual)\n\n\nCode\nlibrary(osrm)\n\n# Calculate isochrones (travel time zones)\n# From central hospital location\niso &lt;- osrmIsochrone(loc = c(-95, 38),  # Center point\n                    breaks = c(0, 15, 30, 45, 60),  # Minutes\n                    osrm.profile = \"car\")\n\nggplot(iso) +\n  geom_sf(aes(fill = factor(isomax)), alpha = 0.5) +\n  scale_fill_brewer(palette = \"YlOrRd\",\n                   name = \"Travel Time\\n(minutes)\") +\n  labs(title = \"Hospital Access Isochrones\") +\n  theme_void()\n\n\nShows accessibility zones"
+    "section": "Access: Distance Bands",
+    "text": "Access: Distance Bands\n\n\nCode\nphc &lt;- fac |&gt; filter(type %in% c(\"PHC\", \"CHC\"))\nbands &lt;- map_dfr(c(10, 5, 2), \\(km) st_sf(km = km, geometry = st_union(st_buffer(phc, km * 1000)))) |&gt;\n  st_intersection(st_union(blocks))\nggplot() +\n  geom_sf(data = bands, aes(fill = factor(km, levels = c(2, 5, 10))), colour = NA, alpha = 0.8) +\n  geom_sf(data = blocks, fill = NA, colour = \"grey50\", linewidth = 0.2) +\n  geom_sf(data = phc, aes(shape = type), size = 2) +\n  scale_fill_brewer(palette = \"YlGnBu\", direction = -1, name = \"Within (km)\") +\n  labs(title = \"Straight-line distance to a PHC or CHC\", shape = NULL) +\n  theme_void()\n\n\n\nStraight-line bands are a first look. Isochrones (travel time by road, e.g. osrm::osrmIsochrone()) are better, but need a routing server and road data."
   },
   {
     "objectID": "plot-gallery/advanced/3.6_geographic_advanced.html#summary",
     "href": "plot-gallery/advanced/3.6_geographic_advanced.html#summary",
     "title": "Geographic - ADVANCED",
     "section": "Summary",
-    "text": "Summary\nAdvanced geographic techniques:\n\nSpatial interpolation - estimate unmeasured locations\nCartograms - size by variable\nSpatial autocorrelation - test clustering\nHexbin maps - equal area representation\nIsochrones - accessibility analysis\n\nNext: Dashboards Advanced"
+    "text": "Summary\nAdvanced geographic techniques:\n\nSpatial interpolation - estimate unmeasured locations\nCartograms - size by variable\nSpatial autocorrelation - test clustering\nHexagon tile maps - equal area representation\nDistance bands - accessibility (isochrones need a routing server)\n\nNext: Dashboards Advanced"
   },
   {
     "objectID": "plot-gallery/advanced/3.4_timeseries_advanced.html#topics-covered",
@@ -935,42 +1005,42 @@
     "href": "plot-gallery/advanced/3.4_timeseries_advanced.html#setup",
     "title": "Time Series - ADVANCED",
     "section": "Setup",
-    "text": "Setup"
+    "text": "Setup\nData: monthly dengue cases from 30 city wards, 2023–2025 (data/dengue_wards.csv, simulated; see data/README.md). A trial with three visits is not a time series: these methods need many equally spaced time points.\n\n\nCode\nlibrary(tidyverse); library(forecast)\ndengue &lt;- read_csv(\"../../data/dengue_wards.csv\", show_col_types = FALSE)\nmonthly &lt;- dengue |&gt;\n  group_by(month_index) |&gt;                                   # 36 consecutive months\n  summarise(cases = sum(cases), rain_mm = mean(rain_mm), .groups = \"drop\") |&gt;\n  mutate(date = seq(as.Date(\"2023-01-01\"), by = \"month\", length.out = n()))\ncases_ts &lt;- ts(monthly$cases, start = c(2023, 1), frequency = 12)"
   },
   {
-    "objectID": "plot-gallery/advanced/3.4_timeseries_advanced.html#stl-decomposition---code",
-    "href": "plot-gallery/advanced/3.4_timeseries_advanced.html#stl-decomposition---code",
+    "objectID": "plot-gallery/advanced/3.4_timeseries_advanced.html#stl-decomposition",
+    "href": "plot-gallery/advanced/3.4_timeseries_advanced.html#stl-decomposition",
     "title": "Time Series - ADVANCED",
-    "section": "STL Decomposition - Code",
-    "text": "STL Decomposition - Code\n\n\nCode\n# Create proper time series (conceptual with more timepoints)\nbp_ts &lt;- ts(monthly_bp_data$mean_bp, frequency = 12)\n\n# STL decomposition\nstl_result &lt;- stl(bp_ts, s.window = \"periodic\")\n\n# Plot components\nautoplot(stl_result) +\n  labs(title = \"STL Decomposition of Blood Pressure\",\n       subtitle = \"Trend + Seasonal + Remainder\") +\n  theme_minimal()\n\n\nSeparates trend, seasonality, and noise"
+    "section": "STL Decomposition",
+    "text": "STL Decomposition\n\n\nCode\nstl_result &lt;- stl(log1p(cases_ts), s.window = \"periodic\")\nautoplot(stl_result) +\n  labs(title = \"STL decomposition of monthly dengue cases (log scale)\") +\n  theme_minimal()\n\n\n\nSeparates the trend, the seasonal pattern (a peak every monsoon) and the remainder. The log scale makes the seasonal swing additive."
   },
   {
-    "objectID": "plot-gallery/advanced/3.4_timeseries_advanced.html#forecasting---code",
-    "href": "plot-gallery/advanced/3.4_timeseries_advanced.html#forecasting---code",
+    "objectID": "plot-gallery/advanced/3.4_timeseries_advanced.html#forecasting-with-arima",
+    "href": "plot-gallery/advanced/3.4_timeseries_advanced.html#forecasting-with-arima",
     "title": "Time Series - ADVANCED",
-    "section": "Forecasting - Code",
-    "text": "Forecasting - Code\n\n\nCode\n# Fit ARIMA model\narima_model &lt;- auto.arima(bp_ts)\n\n# Forecast 12 months ahead\nforecast_result &lt;- forecast(arima_model, h = 12)\n\n# Plot\nautoplot(forecast_result) +\n  labs(title = \"12-Month Blood Pressure Forecast\",\n       y = \"Mean Systolic BP\") +\n  theme_minimal()\n\n\nBlue band = 80% CI, gray = 95% CI"
+    "section": "Forecasting with ARIMA",
+    "text": "Forecasting with ARIMA\n\n\nCode\narima_model &lt;- auto.arima(cases_ts, lambda = 0)       # lambda = 0: model the log, forecast on the case scale\nforecast_result &lt;- forecast(arima_model, h = 12)\nautoplot(forecast_result) +\n  labs(title = \"12-month dengue forecast (seasonal ARIMA)\", x = NULL, y = \"Cases per month\") +\n  theme_minimal()\n\n\n\nDark band = 80%, light band = 95% prediction interval. Three seasons are a short history: the bands are wide, and that is the honest message."
   },
   {
     "objectID": "plot-gallery/advanced/3.4_timeseries_advanced.html#prophet-forecasting",
     "href": "plot-gallery/advanced/3.4_timeseries_advanced.html#prophet-forecasting",
     "title": "Time Series - ADVANCED",
     "section": "Prophet Forecasting",
-    "text": "Prophet Forecasting\n\n\nCode\nlibrary(prophet)\n# Prepare data for Prophet\nprophet_data &lt;- data.frame(\n  ds = as.Date(monthly_bp_data$date),\n  y = monthly_bp_data$mean_bp\n)\n\n# Fit and predict\nm &lt;- prophet(prophet_data)\nfuture &lt;- make_future_dataframe(m, periods = 12, freq = \"month\")\nforecast &lt;- predict(m, future)\n\n# Plot\nplot(m, forecast) +\n  labs(title = \"Prophet Forecast with Trend\")\n\n\nHandles holidays, changepoints automatically"
+    "text": "Prophet Forecasting\n\n\nCode\nlibrary(prophet)\nm &lt;- prophet(data.frame(ds = monthly$date, y = log1p(monthly$cases)),\n             yearly.seasonality = TRUE, weekly.seasonality = FALSE, daily.seasonality = FALSE)\nfuture &lt;- make_future_dataframe(m, periods = 12, freq = \"month\")\nfc &lt;- predict(m, future)\nplot(m, fc) + labs(title = \"Prophet forecast (log cases)\", x = NULL, y = \"log(1 + cases)\")\n\n\n\nProphet fits a trend plus yearly seasonality; it is easy to use but, like any model, only as good as the history."
   },
   {
     "objectID": "plot-gallery/advanced/3.4_timeseries_advanced.html#change-point-detection",
     "href": "plot-gallery/advanced/3.4_timeseries_advanced.html#change-point-detection",
     "title": "Time Series - ADVANCED",
     "section": "Change Point Detection",
-    "text": "Change Point Detection\n\n\nCode\nlibrary(changepoint)\n# Detect change points in mean\ncpt_result &lt;- cpt.mean(bp_ts, method = \"PELT\")\n\n# Plot\nplot(cpt_result, cpt.col = \"red\", cpt.width = 3,\n    main = \"Change Point Detection in BP Time Series\")\n\n\nIdentifies when trend shifts significantly"
+    "text": "Change Point Detection\n\n\nCode\nlibrary(changepoint)\ny &lt;- as.numeric(log1p(cases_ts))\nnoise_sd &lt;- mad(diff(y)) / sqrt(2)                   # cpt.mean() assumes a noise SD of 1: rescale first\ncpt_result &lt;- cpt.mean(y / noise_sd, method = \"PELT\")\nplot(cpt_result, cpt.col = \"red\", cpt.width = 3, ylab = \"log(1 + cases) / noise SD\", xlab = \"Month (1 = Jan 2023)\",\n     main = \"Change points in the mean level\")\n\n\n\nCode\ncpts(cpt_result)\n\n\n[1]  4 10 17 22 28 34\n\n\nHere the “changes” are the start and end of each season: a change-point method finds level shifts, so remove the seasonal pattern first if you are looking for a shift in the underlying trend."
   },
   {
     "objectID": "plot-gallery/advanced/3.4_timeseries_advanced.html#rolling-statistics-plot",
     "href": "plot-gallery/advanced/3.4_timeseries_advanced.html#rolling-statistics-plot",
     "title": "Time Series - ADVANCED",
     "section": "Rolling Statistics Plot",
-    "text": "Rolling Statistics Plot\n\n\nCode\nlibrary(zoo)\n# Calculate rolling mean and SD\nrolling_data &lt;- monthly_bp_data %&gt;%\n  mutate(\n    roll_mean = rollmean(mean_bp, k = 3, fill = NA),\n    roll_sd = rollapply(mean_bp, width = 3, FUN = sd,\n                       fill = NA)\n  )\n\nggplot(rolling_data, aes(x = date)) +\n  geom_line(aes(y = mean_bp), color = \"gray70\") +\n  geom_line(aes(y = roll_mean), color = \"blue\", size = 1) +\n  geom_ribbon(aes(ymin = roll_mean - roll_sd,\n                 ymax = roll_mean + roll_sd),\n             alpha = 0.2, fill = \"blue\") +\n  labs(title = \"3-Month Rolling Mean ± SD\") +\n  theme_minimal()"
+    "text": "Rolling Statistics Plot\n\n\nCode\nlibrary(zoo)\nrolling &lt;- monthly |&gt;\n  mutate(roll_mean = rollmean(cases, k = 3, fill = NA),\n         roll_sd = rollapply(cases, width = 3, FUN = sd, fill = NA))\nggplot(rolling, aes(x = date)) +\n  geom_line(aes(y = cases), colour = \"grey70\") +\n  geom_ribbon(aes(ymin = roll_mean - roll_sd, ymax = roll_mean + roll_sd), alpha = 0.2, fill = \"blue\") +\n  geom_line(aes(y = roll_mean), colour = \"blue\", linewidth = 1) +\n  labs(title = \"3-month rolling mean ± SD\", x = NULL, y = \"Cases per month\") +\n  theme_minimal()"
   },
   {
     "objectID": "plot-gallery/advanced/3.4_timeseries_advanced.html#summary",
@@ -984,7 +1054,7 @@
     "href": "plot-gallery/advanced/3.2_continuous_advanced.html#topics-covered",
     "title": "Continuous - ADVANCED",
     "section": "Topics Covered",
-    "text": "Topics Covered\n\nContour plots (2D density)\n3D surface plots\nParallel coordinates\nCorrelation ellipses\nHexbin plots (large data)\n\nGoal: Handle complex continuous relationships"
+    "text": "Topics Covered\n\nContour plots (2D density)\n3D surface plots\nParallel coordinates\nCorrelation matrix\nHexbin plots (large data)\n\nGoal: Handle complex continuous relationships"
   },
   {
     "objectID": "plot-gallery/advanced/3.2_continuous_advanced.html#setup",
@@ -994,60 +1064,67 @@
     "text": "Setup"
   },
   {
-    "objectID": "plot-gallery/advanced/3.2_continuous_advanced.html#contour-plot---code",
-    "href": "plot-gallery/advanced/3.2_continuous_advanced.html#contour-plot---code",
+    "objectID": "plot-gallery/advanced/3.2_continuous_advanced.html#contour-plot",
+    "href": "plot-gallery/advanced/3.2_continuous_advanced.html#contour-plot",
     "title": "Continuous - ADVANCED",
-    "section": "Contour Plot - Code",
-    "text": "Contour Plot - Code\n\n\nCode\nggplot(health_data, aes(x = BMI_0m, y = SysBP_0m)) +\n  geom_density_2d_filled(alpha = 0.7) +\n  geom_point(size = 0.5, alpha = 0.3) +\n  scale_fill_viridis_d(option = \"plasma\") +\n  labs(title = \"2D Density: BMI vs Blood Pressure\",\n       x = \"BMI\", y = \"Systolic BP\") +\n  theme_minimal()\n\n\nShows concentration areas - darker = more patients"
+    "section": "Contour Plot",
+    "text": "Contour Plot\n\n\nCode\nggplot(health_data, aes(x = BMI, y = SysBP_0m)) +\n  geom_density_2d_filled(alpha = 0.7) +\n  geom_point(size = 0.5, alpha = 0.3) +\n  scale_fill_viridis_d(option = \"plasma\") +\n  labs(title = \"2D Density: BMI vs Blood Pressure\",\n       x = \"BMI\", y = \"Systolic BP\") +\n  theme_minimal()\n\n\n\nShows where patients concentrate: brighter bands = more patients. With 200 points the contours are rough; they pay off with thousands."
   },
   {
-    "objectID": "plot-gallery/advanced/3.2_continuous_advanced.html#parallel-coordinates---code",
-    "href": "plot-gallery/advanced/3.2_continuous_advanced.html#parallel-coordinates---code",
+    "objectID": "plot-gallery/advanced/3.2_continuous_advanced.html#parallel-coordinates",
+    "href": "plot-gallery/advanced/3.2_continuous_advanced.html#parallel-coordinates",
     "title": "Continuous - ADVANCED",
-    "section": "Parallel Coordinates - Code",
-    "text": "Parallel Coordinates - Code\n\n\nCode\nlibrary(GGally)\nhealth_subset &lt;- health_data %&gt;%\n  select(Age, BMI_0m, SysBP_0m, Cholesterol_0m, BloodSugar_0m) %&gt;%\n  na.omit() %&gt;% sample_n(200)\n\nggparcoord(health_subset, columns = 1:5,\n           scale = \"uniminmax\",\n           alphaLines = 0.3) +\n  labs(title = \"Parallel Coordinates: Health Metrics\") +\n  theme_minimal()\n\n\nEach line = one patient across multiple variables"
+    "section": "Parallel Coordinates",
+    "text": "Parallel Coordinates\n\n\nCode\nlibrary(GGally)\nhealth_subset &lt;- health_data %&gt;%\n  select(Age, BMI, SysBP_0m, Cholesterol, BloodSugar) %&gt;%\n  na.omit()\n\nggparcoord(health_subset, columns = 1:5,\n           scale = \"uniminmax\",\n           alphaLines = 0.3) +\n  labs(title = \"Parallel Coordinates: Health Metrics\") +\n  theme_minimal()\n\n\n\nEach line = one patient across multiple variables"
   },
   {
-    "objectID": "plot-gallery/advanced/3.2_continuous_advanced.html#d-surface-conceptual",
-    "href": "plot-gallery/advanced/3.2_continuous_advanced.html#d-surface-conceptual",
+    "objectID": "plot-gallery/advanced/3.2_continuous_advanced.html#d-surface",
+    "href": "plot-gallery/advanced/3.2_continuous_advanced.html#d-surface",
     "title": "Continuous - ADVANCED",
-    "section": "3D Surface (Conceptual)",
-    "text": "3D Surface (Conceptual)\n\n\nCode\nlibrary(plotly)\n# Create grid\nx &lt;- seq(20, 40, 0.5)\ny &lt;- seq(100, 180, 2)\n# Simulate density surface\nz &lt;- outer(x, y, function(a,b) \n  dnorm(a, 28, 5) * dnorm(b, 140, 20))\n\nplot_ly(x = ~x, y = ~y, z = ~z) %&gt;%\n  add_surface() %&gt;%\n  layout(title = \"3D Density Surface: BMI × BP\")\n\n\nInteractive 3D exploration of relationships"
+    "section": "3D Surface",
+    "text": "3D Surface\n\n\nCode\nlibrary(plotly)\nd &lt;- health_data %&gt;% filter(!is.na(BMI), !is.na(SysBP_0m))\ndens &lt;- MASS::kde2d(d$BMI, d$SysBP_0m, n = 50)      # 2D kernel density on a 50 x 50 grid\nplot_ly(x = dens$x, y = dens$y, z = t(dens$z)) %&gt;%\n  add_surface() %&gt;%\n  layout(scene = list(xaxis = list(title = \"BMI\"), yaxis = list(title = \"Systolic BP\"),\n                      zaxis = list(title = \"Density\")))\n\n\n\n\n\n\nDrag to rotate. The same density as the contour plot: 3D looks striking, but contours are easier to read exactly."
   },
   {
-    "objectID": "plot-gallery/advanced/3.2_continuous_advanced.html#hexbin-plot---code",
-    "href": "plot-gallery/advanced/3.2_continuous_advanced.html#hexbin-plot---code",
+    "objectID": "plot-gallery/advanced/3.2_continuous_advanced.html#hexbin-plot",
+    "href": "plot-gallery/advanced/3.2_continuous_advanced.html#hexbin-plot",
     "title": "Continuous - ADVANCED",
-    "section": "Hexbin Plot - Code",
-    "text": "Hexbin Plot - Code\n\n\nCode\nggplot(health_data, aes(x = BMI_0m, y = SysBP_0m)) +\n  geom_hex(bins = 30) +\n  scale_fill_viridis_c(option = \"inferno\", trans = \"log10\") +\n  labs(title = \"Hexbin Plot: Large Dataset Visualization\",\n       fill = \"Count (log10)\") +\n  theme_minimal()\n\n\nBetter than scatter for 1000+ points"
+    "section": "Hexbin Plot",
+    "text": "Hexbin Plot\n\n\nCode\nggplot(health_data, aes(x = BMI, y = SysBP_0m)) +\n  geom_hex(bins = 30) +\n  scale_fill_viridis_c(option = \"inferno\", trans = \"log10\") +\n  labs(title = \"Hexbin Plot: Large Dataset Visualization\",\n       fill = \"Count (log10)\") +\n  theme_minimal()\n\n\n\nBetter than a scatter plot for 1000+ points; with 200 patients most bins hold 1 or 2."
   },
   {
-    "objectID": "plot-gallery/advanced/3.2_continuous_advanced.html#correlation-matrix-with-ellipses",
-    "href": "plot-gallery/advanced/3.2_continuous_advanced.html#correlation-matrix-with-ellipses",
+    "objectID": "plot-gallery/advanced/3.2_continuous_advanced.html#correlation-matrix",
+    "href": "plot-gallery/advanced/3.2_continuous_advanced.html#correlation-matrix",
     "title": "Continuous - ADVANCED",
-    "section": "Correlation Matrix with Ellipses",
-    "text": "Correlation Matrix with Ellipses\n\n\nCode\nlibrary(ggcorrplot)\ncor_matrix &lt;- health_data %&gt;%\n  select(Age, BMI_0m, SysBP_0m, DiaBP_0m, \n         Cholesterol_0m, BloodSugar_0m) %&gt;%\n  cor(use = \"complete.obs\")\n\nggcorrplot(cor_matrix, type = \"lower\",\n           lab = TRUE, lab_size = 3,\n           colors = c(\"#DC0000\", \"white\", \"#00A087\"))\n\n\nQuick overview of all correlations"
+    "section": "Correlation Matrix",
+    "text": "Correlation Matrix\n\n\nCode\nlibrary(ggcorrplot)\ncor_matrix &lt;- health_data %&gt;%\n  select(Age, BMI, SysBP_0m, DiaBP_0m, \n         Cholesterol, BloodSugar) %&gt;%\n  cor(use = \"complete.obs\")\n\nggcorrplot(cor_matrix, type = \"lower\",\n           lab = TRUE, lab_size = 3,\n           colors = c(\"#DC0000\", \"white\", \"#00A087\"))\n\n\n\nQuick overview of all pairwise correlations. Here every |r| is below 0.12: in this simulated dataset the variables were generated almost independently, which the scatter plots on the earlier slides also show."
   },
   {
     "objectID": "plot-gallery/advanced/3.2_continuous_advanced.html#summary",
     "href": "plot-gallery/advanced/3.2_continuous_advanced.html#summary",
     "title": "Continuous - ADVANCED",
     "section": "Summary",
-    "text": "Summary\nAdvanced continuous techniques:\n\nContour plots - 2D density\nParallel coordinates - multivariate patterns\n\n3D surfaces - interactive exploration\nHexbin - big data visualization\nCorrelation ellipses - relationship matrices\n\nNext: Category vs Continuous Advanced"
+    "text": "Summary\nAdvanced continuous techniques:\n\nContour plots - 2D density\nParallel coordinates - multivariate patterns\n\n3D surfaces - interactive exploration\nHexbin - big data visualization\nCorrelation matrix - all pairs at once\n\nNext: Category vs Continuous Advanced"
   },
   {
     "objectID": "plot-gallery/advanced.html",
     "href": "plot-gallery/advanced.html",
     "title": "Advanced plots",
     "section": "",
-    "text": "Explore foundational plots grouped by data type and relationship\n\n\n\nIncludes: - Treemaps (hierarchical proportions) - Sunburst charts (circular hierarchies) - Dendrograms (clustering) - Marimekko charts (two-way composition) - Waffle charts (unit visualization) 🔗 View Slide Deck →\n\n\n\n\nIncludes: - Contour plots (2D density) - 3D surface plots - Parallel coordinates - Correlation ellipses - Hexbin plots (large data) 🔗 View Slide Deck →\n\n\n\n\nIncludes: - Effect plots (model-based) - Interaction plots - Marginal effects - Bayesian credible intervals - Mixed effects visualization 🔗 View Slide Deck →\n\n\n\n\nIncludes: - STL decomposition (trend/seasonal) - Forecasting with ARIMA - Prophet models - Change point detection - Spectral analysis (FFT) 🔗 View Slide Deck →\n\n\n\nIncludes: - Community detection algorithms - Centrality measures visualization - Network statistics - Dynamic networks - Bipartite networks 🔗 View Slide Deck →\n\n\n\nIncludes: - Spatial interpolation (kriging) - Cartograms (area distortion) - Spatial autocorrelation - Hexbin maps - Isochrone maps 🔗 View Slide Deck →\n\n\n\nIncludes: - Dashboard layout principles - Shiny app structure - Reactive programming - plotly interactivity - flexdashboard framework 🔗 View Slide Deck →"
+    "text": "Specialised plots grouped by data type: hierarchies, models, forecasts, networks, spatial analysis and dashboards.\n\n\n\nIncludes: - Treemaps (hierarchical proportions) - Sunburst charts (circular hierarchies) - Dendrograms (clustering) - Marimekko charts (two-way composition) - Waffle charts (unit visualization) 🔗 View Slide Deck →\n\n\n\n\nIncludes: - Contour plots (2D density) - 3D surface plots - Parallel coordinates - Correlation matrix - Hexbin plots (large data) 🔗 View Slide Deck →\n\n\n\n\nIncludes: - Effect plots (model-based) - Interaction plots - Marginal effects - Forest plots of model coefficients - Rainclouds for nested groups - Bayesian credible intervals 🔗 View Slide Deck →\n\n\n\n\nIncludes: - STL decomposition (trend/seasonal) - Forecasting with ARIMA - Prophet models - Change point detection - Rolling statistics 🔗 View Slide Deck →\n\n\n\nIncludes: - Community detection algorithms - Centrality measures visualization - Network statistics - Bipartite networks - Networks over time 🔗 View Slide Deck →\n\n\n\nIncludes: - Spatial interpolation (IDW) - Cartograms (area distortion) - Spatial autocorrelation - Hexagon tile maps - Distance bands for access 🔗 View Slide Deck →\n\n\n\nIncludes: - Dashboard layout principles - Shiny app structure - Reactive programming - plotly interactivity - flexdashboard framework 🔗 View Slide Deck →"
   },
   {
-    "objectID": "plot-gallery/advanced.html#intermediate-plot",
-    "href": "plot-gallery/advanced.html#intermediate-plot",
+    "objectID": "plot-gallery/advanced.html#advanced-plots",
+    "href": "plot-gallery/advanced.html#advanced-plots",
     "title": "Advanced plots",
     "section": "",
-    "text": "Explore foundational plots grouped by data type and relationship\n\n\n\nIncludes: - Treemaps (hierarchical proportions) - Sunburst charts (circular hierarchies) - Dendrograms (clustering) - Marimekko charts (two-way composition) - Waffle charts (unit visualization) 🔗 View Slide Deck →\n\n\n\n\nIncludes: - Contour plots (2D density) - 3D surface plots - Parallel coordinates - Correlation ellipses - Hexbin plots (large data) 🔗 View Slide Deck →\n\n\n\n\nIncludes: - Effect plots (model-based) - Interaction plots - Marginal effects - Bayesian credible intervals - Mixed effects visualization 🔗 View Slide Deck →\n\n\n\n\nIncludes: - STL decomposition (trend/seasonal) - Forecasting with ARIMA - Prophet models - Change point detection - Spectral analysis (FFT) 🔗 View Slide Deck →\n\n\n\nIncludes: - Community detection algorithms - Centrality measures visualization - Network statistics - Dynamic networks - Bipartite networks 🔗 View Slide Deck →\n\n\n\nIncludes: - Spatial interpolation (kriging) - Cartograms (area distortion) - Spatial autocorrelation - Hexbin maps - Isochrone maps 🔗 View Slide Deck →\n\n\n\nIncludes: - Dashboard layout principles - Shiny app structure - Reactive programming - plotly interactivity - flexdashboard framework 🔗 View Slide Deck →"
+    "text": "Specialised plots grouped by data type: hierarchies, models, forecasts, networks, spatial analysis and dashboards.\n\n\n\nIncludes: - Treemaps (hierarchical proportions) - Sunburst charts (circular hierarchies) - Dendrograms (clustering) - Marimekko charts (two-way composition) - Waffle charts (unit visualization) 🔗 View Slide Deck →\n\n\n\n\nIncludes: - Contour plots (2D density) - 3D surface plots - Parallel coordinates - Correlation matrix - Hexbin plots (large data) 🔗 View Slide Deck →\n\n\n\n\nIncludes: - Effect plots (model-based) - Interaction plots - Marginal effects - Forest plots of model coefficients - Rainclouds for nested groups - Bayesian credible intervals 🔗 View Slide Deck →\n\n\n\n\nIncludes: - STL decomposition (trend/seasonal) - Forecasting with ARIMA - Prophet models - Change point detection - Rolling statistics 🔗 View Slide Deck →\n\n\n\nIncludes: - Community detection algorithms - Centrality measures visualization - Network statistics - Bipartite networks - Networks over time 🔗 View Slide Deck →\n\n\n\nIncludes: - Spatial interpolation (IDW) - Cartograms (area distortion) - Spatial autocorrelation - Hexagon tile maps - Distance bands for access 🔗 View Slide Deck →\n\n\n\nIncludes: - Dashboard layout principles - Shiny app structure - Reactive programming - plotly interactivity - flexdashboard framework 🔗 View Slide Deck →"
+  },
+  {
+    "objectID": "plot-gallery/advanced.html#self-check-quiz",
+    "href": "plot-gallery/advanced.html#self-check-quiz",
+    "title": "Advanced plots",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\n36 months of dengue counts should be split into trend, season and noise. Which method does that?\n\nA cartogram\nSTL decomposition\nParallel coordinates\nCommunity detection\n\n\n\nWhich plot makes a regression’s coefficients easy to compare with zero?\n\nA 3D density surface\nA hexagon tile map\nA forest (coefficient) plot\nA Sankey diagram of the model terms\n\n\n\nA cartogram resizes each block by its population. What does it show better than a normal map?\n\nThe exact borders of each block\nWhere the people are, not the land\nThe road distance to each of the clinics\nThe shape of each block’s outline\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "exporting_tools/exporting_plots.html",
@@ -1110,7 +1187,7 @@
     "href": "exporting_tools/advanced_exporting.html",
     "title": "Advanced Exporting Techniques",
     "section": "",
-    "text": "This chapter covers advanced techniques for exporting plots, including programmatic generation, batch processing, custom devices, and integration with other tools.\n\n\n\n\nlibrary(ggplot2)\nlibrary(purrr)\n\n# Create plots for each cylinder group\nplots &lt;- mtcars %&gt;%\n  split(.$cyl) %&gt;%\n  map(~ ggplot(.x, aes(x = wt, y = mpg)) + \n        geom_point() + \n        ggtitle(paste(\"Cylinders:\", .x$cyl[1])))\n\n# Save each plot\nwalk2(plots, names(plots), \n      ~ ggsave(filename = paste0(\"plot_cyl_\", .x, \".png\"), \n               plot = .y, \n               width = 6, height = 4))\n\n\n\n# Generate timestamped filenames\ntimestamp &lt;- format(Sys.time(), \"%Y%m%d_%H%M%S\")\n\nggsave(paste0(\"analysis_plot_\", timestamp, \".pdf\"), \n       plot = p, \n       width = 8, height = 6)\n\n\n\n\n\n\nsave_plot_multiple_formats &lt;- function(plot, filename_base, \n                                     formats = c(\"png\", \"pdf\", \"svg\")) {\n  for (fmt in formats) {\n    filename &lt;- paste0(filename_base, \".\", fmt)\n    ggsave(filename, plot, width = 8, height = 6)\n  }\n}\n\n# Usage\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nsave_plot_multiple_formats(p, \"mtcars_scatter\")\n\n\n\ndatasets &lt;- list(\n  mtcars = mtcars,\n  iris = iris,\n  airquality = airquality\n)\n\nfor (name in names(datasets)) {\n  data &lt;- datasets[[name]]\n  # Create appropriate plot based on data\n  if (name == \"mtcars\") {\n    p &lt;- ggplot(data, aes(x = wt, y = mpg)) + geom_point()\n  } else if (name == \"iris\") {\n    p &lt;- ggplot(data, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) + \n      geom_point()\n  }\n  \n  ggsave(paste0(name, \"_plot.png\"), p, width = 6, height = 4)\n}\n\n\n\n\n\n\nlibrary(Cairo)\n\n# High-quality PNG\nCairoPNG(\"high_quality.png\", width = 800, height = 600, \n         bg = \"white\", pointsize = 12)\nplot(mtcars$wt, mtcars$mpg)\ndev.off()\n\n# PDF with embedded fonts\nCairoPDF(\"embedded_fonts.pdf\", width = 8, height = 6, \n         family = \"Arial\")\nplot(mtcars$wt, mtcars$mpg)\ndev.off()\n\n\n\n# Create a custom device wrapper\nsave_high_res &lt;- function(filename, plot_func, ...) {\n  png(filename, width = 1200, height = 800, res = 150, ...)\n  plot_func()\n  dev.off()\n}\n\n# Usage\nmy_plot &lt;- function() {\n  plot(mtcars$wt, mtcars$mpg, \n       xlab = \"Weight\", ylab = \"MPG\",\n       main = \"High Resolution Plot\")\n}\n\nsave_high_res(\"high_res_plot.png\", my_plot)\n\n\n\n\n\n\nlibrary(tikzDevice)\n\n# Export as TikZ for LaTeX\ntikz(\"plot.tex\", width = 4, height = 3)\nggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\ndev.off()\n\n\n\n# Export as HTML with plotly\nlibrary(plotly)\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nhtmlwidgets::saveWidget(ggplotly(p), \"interactive_plot.html\")\n\n\n\n\n\n\n# Create publication-ready theme\npublication_theme &lt;- theme_minimal() +\n  theme(\n    text = element_text(size = 12, family = \"Times\"),\n    axis.title = element_text(size = 14, face = \"bold\"),\n    plot.title = element_text(size = 16, hjust = 0.5),\n    legend.position = \"bottom\"\n  )\n\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +\n  geom_point() +\n  publication_theme +\n  labs(title = \"Publication Quality Plot\")\n\nggsave(\"publication_plot.pdf\", p, \n       width = 6, height = 4, \n       device = cairo_pdf)\n\n\n\nlibrary(cowplot)\n\n# Create individual plots\np1 &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\np2 &lt;- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) + geom_boxplot()\np3 &lt;- ggplot(mtcars, aes(x = hp)) + geom_histogram()\n\n# Combine into single figure\ncombined &lt;- plot_grid(p1, p2, p3, \n                      labels = c(\"A\", \"B\", \"C\"),\n                      ncol = 2)\n\n# Save combined figure\nggsave(\"combined_figure.pdf\", combined, \n       width = 10, height = 8)\n\n\n\n\n\n\n# For large datasets, use sampling or aggregation\nlarge_data &lt;- data.frame(x = rnorm(100000), y = rnorm(100000))\n\n# Option 1: Sample data\nsample_data &lt;- large_data[sample(nrow(large_data), 10000), ]\nggplot(sample_data, aes(x = x, y = y)) + geom_point(alpha = 0.1)\nggsave(\"sampled_plot.png\")\n\n# Option 2: Use density plots\nggplot(large_data, aes(x = x, y = y)) + \n  geom_density2d() +\n  geom_point(data = sample_data, alpha = 0.1)\nggsave(\"density_plot.png\")\n\n\n\n# Clear graphics devices\ngraphics.off()\n\n# Force garbage collection\ngc()\n\n# Monitor memory usage\nlibrary(pryr)\nmem_used()\n\n\n\n\n\n\ncheck_plot_quality &lt;- function(filename) {\n  # Check file exists\n  if (!file.exists(filename)) {\n    stop(\"File was not created\")\n  }\n  \n  # Check file size (basic quality indicator)\n  size &lt;- file.info(filename)$size\n  if (size &lt; 1000) {\n    warning(\"File seems too small, may indicate error\")\n  }\n  \n  # For images, could check dimensions\n  if (grepl(\"\\\\.png$\", filename)) {\n    img &lt;- png::readPNG(filename)\n    message(\"Image dimensions: \", dim(img)[1], \"x\", dim(img)[2])\n  }\n}\n\n# Usage\nggsave(\"test_plot.png\", ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point())\ncheck_plot_quality(\"test_plot.png\")\n\n\n\n\n\nAutomate repetitive tasks: Use functions and loops for batch processing\nStandardize formats: Establish consistent dimensions and resolutions\nQuality control: Implement checks for successful exports\nPerformance awareness: Optimize for large datasets\nVersion control: Track plot versions with timestamps or git\nDocumentation: Comment code for reproducible exports\nCross-platform compatibility: Test exports on target systems\n\n\n\n\n\nggplot2 documentation: ?ggsave\nCairo package: High-quality graphics\ntikzDevice: LaTeX integration\ncowplot: Multi-panel figures\nR Graphics Cookbook: Advanced techniques d:studio_extensive_visualization_tools_exporting.qmd"
+    "text": "This chapter covers advanced techniques for exporting plots, including programmatic generation, batch processing, custom devices, and integration with other tools.\n\n\n\n\nlibrary(ggplot2)\nlibrary(purrr)\n\n# Create plots for each cylinder group\nplots &lt;- mtcars %&gt;%\n  split(.$cyl) %&gt;%\n  map(~ ggplot(.x, aes(x = wt, y = mpg)) + \n        geom_point() + \n        ggtitle(paste(\"Cylinders:\", .x$cyl[1])))\n\n# Save each plot\nwalk2(plots, names(plots), \n      ~ ggsave(filename = paste0(\"plot_cyl_\", .x, \".png\"), \n               plot = .y, \n               width = 6, height = 4))\n\n\n\n# Generate timestamped filenames\ntimestamp &lt;- format(Sys.time(), \"%Y%m%d_%H%M%S\")\n\nggsave(paste0(\"analysis_plot_\", timestamp, \".pdf\"), \n       plot = p, \n       width = 8, height = 6)\n\n\n\n\n\n\nsave_plot_multiple_formats &lt;- function(plot, filename_base, \n                                     formats = c(\"png\", \"pdf\", \"svg\")) {\n  for (fmt in formats) {\n    filename &lt;- paste0(filename_base, \".\", fmt)\n    ggsave(filename, plot, width = 8, height = 6)\n  }\n}\n\n# Usage\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nsave_plot_multiple_formats(p, \"mtcars_scatter\")\n\n\n\ndatasets &lt;- list(\n  mtcars = mtcars,\n  iris = iris,\n  airquality = airquality\n)\n\nfor (name in names(datasets)) {\n  data &lt;- datasets[[name]]\n  # Create appropriate plot based on data\n  if (name == \"mtcars\") {\n    p &lt;- ggplot(data, aes(x = wt, y = mpg)) + geom_point()\n  } else if (name == \"iris\") {\n    p &lt;- ggplot(data, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) + \n      geom_point()\n  }\n  \n  ggsave(paste0(name, \"_plot.png\"), p, width = 6, height = 4)\n}\n\n\n\n\n\n\nlibrary(Cairo)\n\n# High-quality PNG\nCairoPNG(\"high_quality.png\", width = 800, height = 600, \n         bg = \"white\", pointsize = 12)\nplot(mtcars$wt, mtcars$mpg)\ndev.off()\n\n# PDF with embedded fonts\nCairoPDF(\"embedded_fonts.pdf\", width = 8, height = 6, \n         family = \"Arial\")\nplot(mtcars$wt, mtcars$mpg)\ndev.off()\n\n\n\n# Create a custom device wrapper\nsave_high_res &lt;- function(filename, plot_func, ...) {\n  png(filename, width = 1200, height = 800, res = 150, ...)\n  plot_func()\n  dev.off()\n}\n\n# Usage\nmy_plot &lt;- function() {\n  plot(mtcars$wt, mtcars$mpg, \n       xlab = \"Weight\", ylab = \"MPG\",\n       main = \"High Resolution Plot\")\n}\n\nsave_high_res(\"high_res_plot.png\", my_plot)\n\n\n\n\n\n\nlibrary(tikzDevice)\n\n# Export as TikZ for LaTeX\ntikz(\"plot.tex\", width = 4, height = 3)\nggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\ndev.off()\n\n\n\n# Export as HTML with plotly\nlibrary(plotly)\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nhtmlwidgets::saveWidget(ggplotly(p), \"interactive_plot.html\")\n\n\n\n\n\n\n# Create publication-ready theme\npublication_theme &lt;- theme_minimal() +\n  theme(\n    text = element_text(size = 12, family = \"Times\"),\n    axis.title = element_text(size = 14, face = \"bold\"),\n    plot.title = element_text(size = 16, hjust = 0.5),\n    legend.position = \"bottom\"\n  )\n\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +\n  geom_point() +\n  publication_theme +\n  labs(title = \"Publication Quality Plot\")\n\nggsave(\"publication_plot.pdf\", p, \n       width = 6, height = 4, \n       device = cairo_pdf)\n\n\n\nlibrary(cowplot)\n\n# Create individual plots\np1 &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\np2 &lt;- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) + geom_boxplot()\np3 &lt;- ggplot(mtcars, aes(x = hp)) + geom_histogram()\n\n# Combine into single figure\ncombined &lt;- plot_grid(p1, p2, p3, \n                      labels = c(\"A\", \"B\", \"C\"),\n                      ncol = 2)\n\n# Save combined figure\nggsave(\"combined_figure.pdf\", combined, \n       width = 10, height = 8)\n\n\n\n\n\n\n# For large datasets, use sampling or aggregation\nlarge_data &lt;- data.frame(x = rnorm(100000), y = rnorm(100000))\n\n# Option 1: Sample data\nsample_data &lt;- large_data[sample(nrow(large_data), 10000), ]\nggplot(sample_data, aes(x = x, y = y)) + geom_point(alpha = 0.1)\nggsave(\"sampled_plot.png\")\n\n# Option 2: Use density plots\nggplot(large_data, aes(x = x, y = y)) + \n  geom_density2d() +\n  geom_point(data = sample_data, alpha = 0.1)\nggsave(\"density_plot.png\")\n\n\n\n# Clear graphics devices\ngraphics.off()\n\n# Force garbage collection\ngc()\n\n# Monitor memory usage\nlibrary(pryr)\nmem_used()\n\n\n\n\n\n\ncheck_plot_quality &lt;- function(filename) {\n  # Check file exists\n  if (!file.exists(filename)) {\n    stop(\"File was not created\")\n  }\n  \n  # Check file size (basic quality indicator)\n  size &lt;- file.info(filename)$size\n  if (size &lt; 1000) {\n    warning(\"File seems too small, may indicate error\")\n  }\n  \n  # For images, could check dimensions\n  if (grepl(\"\\\\.png$\", filename)) {\n    img &lt;- png::readPNG(filename)\n    message(\"Image dimensions: \", dim(img)[1], \"x\", dim(img)[2])\n  }\n}\n\n# Usage\nggsave(\"test_plot.png\", ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point())\ncheck_plot_quality(\"test_plot.png\")\n\n\n\n\n\nAutomate repetitive tasks: Use functions and loops for batch processing\nStandardize formats: Establish consistent dimensions and resolutions\nQuality control: Implement checks for successful exports\nPerformance awareness: Optimize for large datasets\nVersion control: Track plot versions with timestamps or git\nDocumentation: Comment code for reproducible exports\nCross-platform compatibility: Test exports on target systems\n\n\n\n\n\nggplot2 documentation: ?ggsave\nCairo package: High-quality graphics\ntikzDevice: LaTeX integration\ncowplot: Multi-panel figures\nR Graphics Cookbook: Advanced techniques d:studio_extensive_visualization_tools_exporting.qmd\n\n\n\n\nDownload the lab Debugging and exporting and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n\n\n\n\nYou need the same plot for each of 12 districts. What is the cleanest approach?\n\nCopy the plot code 12 times and edit each copy\nA loop or map() over districts with ggsave()\nFacet the plot and save it 12 times\nSave one PDF and split it by hand later\n\n\n\nWhy use a Cairo (or ragg) device for PNG output?\n\nSmaller vector files for printing\nBetter anti-aliasing and font rendering\nAutomatic alt text for the figure\nHigher statistical precision of the plot\n\n\n\nA journal wants Figure 1 as two panels tagged A and B, 18 cm wide. Which tools fit?\n\nfacet_wrap() and then a screenshot of the plot window\nTwo separate PNGs pasted together in Word\npatchwork with tag_levels, then ggsave(units = “cm”)\npar(mfrow) with the default device size\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "exporting_tools/advanced_exporting.html#programmatic-plot-generation",
@@ -1176,6 +1253,20 @@
     "text": "ggplot2 documentation: ?ggsave\nCairo package: High-quality graphics\ntikzDevice: LaTeX integration\ncowplot: Multi-panel figures\nR Graphics Cookbook: Advanced techniques d:studio_extensive_visualization_tools_exporting.qmd"
   },
   {
+    "objectID": "exporting_tools/advanced_exporting.html#practise-in-r",
+    "href": "exporting_tools/advanced_exporting.html#practise-in-r",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "Download the lab Debugging and exporting and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "exporting_tools/advanced_exporting.html#self-check-quiz",
+    "href": "exporting_tools/advanced_exporting.html#self-check-quiz",
+    "title": "Advanced Exporting Techniques",
+    "section": "",
+    "text": "You need the same plot for each of 12 districts. What is the cleanest approach?\n\nCopy the plot code 12 times and edit each copy\nA loop or map() over districts with ggsave()\nFacet the plot and save it 12 times\nSave one PDF and split it by hand later\n\n\n\nWhy use a Cairo (or ragg) device for PNG output?\n\nSmaller vector files for printing\nBetter anti-aliasing and font rendering\nAutomatic alt text for the figure\nHigher statistical precision of the plot\n\n\n\nA journal wants Figure 1 as two panels tagged A and B, 18 cm wide. Which tools fit?\n\nfacet_wrap() and then a screenshot of the plot window\nTwo separate PNGs pasted together in Word\npatchwork with tag_levels, then ggsave(units = “cm”)\npar(mfrow) with the default device size\n\n\nYour score:  (first attempt counts)"
+  },
+  {
     "objectID": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#module-4-overview",
     "href": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#module-4-overview",
     "title": "Grammar of Graphics: Module 4",
@@ -1187,7 +1278,7 @@
     "href": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#setup",
     "title": "Grammar of Graphics: Module 4",
     "section": "Setup",
-    "text": "Setup\n\n\nCode\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(tidyr)\nlibrary(readxl)\nlibrary(ggthemes)\nlibrary(paletteer)\nlibrary(patchwork)\n# remotes::install_github(\"haleyjeppson/ggmosaic\")\nlibrary(ggmosaic)  # For mosaic plots\n\n# Load data with all transformations\nbp_data &lt;- read_excel(\"../../data/PublicHealth_BP_Dataset.xlsx\") %&gt;%\n  mutate(\n    SysBP_Change = SysBP_6m - SysBP_0m,\n    DiaBP_Change = DiaBP_6m - DiaBP_0m,\n    AgeGroup = cut(Age, breaks = c(0, 30, 50, 65, 100),\n                   labels = c(\"18-30\", \"31-50\", \"51-65\", \"65+\")),\n    Hypertension_Baseline = ifelse(SysBP_0m &gt;= 140 | DiaBP_0m &gt;= 90, \n                                   \"Hypertensive\", \"Normal\"),\n    BMI_Category = cut(BMI, breaks = c(0, 18.5, 25, 30, 100),\n                       labels = c(\"Underweight\", \"Normal\", \"Overweight\", \"Obese\"))\n  )\n\n# Time series\nbp_time &lt;- bp_data %&gt;%\n  select(PatientID, TreatmentGroup, SysBP_0m, SysBP_3m, SysBP_6m) %&gt;%\n  pivot_longer(cols = starts_with(\"SysBP\"),\n               names_to = \"Time\", values_to = \"SysBP\") %&gt;%\n  mutate(Months = as.numeric(gsub(\"SysBP_|m\", \"\", Time)))\n\n# Summary data\nbp_summary &lt;- bp_time %&gt;%\n  group_by(TreatmentGroup, Months) %&gt;%\n  summarise(Mean_SysBP = mean(SysBP, na.rm = TRUE), .groups = \"drop\")\n\nci_data &lt;- bp_time %&gt;%\n  group_by(TreatmentGroup, Months) %&gt;%\n  summarise(Mean = mean(SysBP), SE = sd(SysBP) / sqrt(n()), .groups = \"drop\")\n\n# Custom theme from Module 3\ntheme_clinical_report &lt;- function(base_size = 12, base_family = \"serif\") {\n  theme_bw(base_size = base_size, base_family = base_family) +\n  theme(\n    text = element_text(family = base_family),\n    plot.title = element_text(size = base_size * 1.3, face = \"bold\", \n                              hjust = 0.5, margin = margin(b = 10)),\n    plot.subtitle = element_text(size = base_size * 1.1, hjust = 0.5,\n                                 color = \"gray30\", margin = margin(b = 15)),\n    plot.caption = element_text(size = base_size * 0.9, hjust = 1,\n                                face = \"italic\", color = \"gray50\"),\n    axis.title = element_text(size = base_size * 1.1, face = \"bold\"),\n    axis.text = element_text(size = base_size * 0.9, color = \"gray20\"),\n    axis.line = element_line(color = \"black\", linewidth = 0.5),\n    panel.grid.major = element_line(color = \"gray90\", linewidth = 0.5),\n    panel.grid.minor = element_blank(),\n    panel.border = element_rect(color = \"gray40\", fill = NA, linewidth = 1),\n    panel.background = element_rect(fill = \"white\"),\n    legend.position = \"bottom\",\n    legend.title = element_text(size = base_size, face = \"bold\"),\n    legend.text = element_text(size = base_size * 0.9),\n    legend.background = element_rect(fill = \"white\", color = NA),\n    legend.key = element_rect(fill = \"white\", color = NA),\n    plot.background = element_rect(fill = \"white\", color = NA)\n  )\n}"
+    "text": "Setup\n\n\nCode\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(tidyr)\nlibrary(readxl)\nlibrary(ggthemes)\nlibrary(paletteer)\nlibrary(patchwork)\nlibrary(productplots)  # mosaic plots (ggmosaic does not work with ggplot2 4.x yet)\n\n# Load data with all transformations\nbp_data &lt;- read_excel(\"../../data/PublicHealth_BP_Dataset.xlsx\") %&gt;%\n  mutate(\n    SysBP_Change = SysBP_6m - SysBP_0m,\n    DiaBP_Change = DiaBP_6m - DiaBP_0m,\n    AgeGroup = cut(Age, breaks = c(0, 30, 50, 65, 100),\n                   labels = c(\"18-30\", \"31-50\", \"51-65\", \"65+\")),\n    Hypertension_Baseline = ifelse(SysBP_0m &gt;= 140 | DiaBP_0m &gt;= 90, \n                                   \"Hypertensive\", \"Normal\"),\n    BMI_Category = cut(BMI, breaks = c(0, 18.5, 25, 30, 100),\n                       labels = c(\"Underweight\", \"Normal\", \"Overweight\", \"Obese\"))\n  )\n\n# Time series\nbp_time &lt;- bp_data %&gt;%\n  select(PatientID, TreatmentGroup, SysBP_0m, SysBP_3m, SysBP_6m) %&gt;%\n  pivot_longer(cols = starts_with(\"SysBP\"),\n               names_to = \"Time\", values_to = \"SysBP\") %&gt;%\n  mutate(Months = as.numeric(gsub(\"SysBP_|m\", \"\", Time)))\n\n# Summary data\nbp_summary &lt;- bp_time %&gt;%\n  group_by(TreatmentGroup, Months) %&gt;%\n  summarise(Mean_SysBP = mean(SysBP, na.rm = TRUE), .groups = \"drop\")\n\nci_data &lt;- bp_time %&gt;%\n  group_by(TreatmentGroup, Months) %&gt;%\n  summarise(Mean = mean(SysBP), SE = sd(SysBP) / sqrt(n()), .groups = \"drop\")\n\n# Custom theme from Module 3\ntheme_clinical_report &lt;- function(base_size = 12, base_family = \"serif\") {\n  theme_bw(base_size = base_size, base_family = base_family) +\n  theme(\n    text = element_text(family = base_family),\n    plot.title = element_text(size = base_size * 1.3, face = \"bold\", \n                              hjust = 0.5, margin = margin(b = 10)),\n    plot.subtitle = element_text(size = base_size * 1.1, hjust = 0.5,\n                                 color = \"gray30\", margin = margin(b = 15)),\n    plot.caption = element_text(size = base_size * 0.9, hjust = 1,\n                                face = \"italic\", color = \"gray50\"),\n    axis.title = element_text(size = base_size * 1.1, face = \"bold\"),\n    axis.text = element_text(size = base_size * 0.9, color = \"gray20\"),\n    axis.line = element_line(color = \"black\", linewidth = 0.5),\n    panel.grid.major = element_line(color = \"gray90\", linewidth = 0.5),\n    panel.grid.minor = element_blank(),\n    panel.border = element_rect(color = \"gray40\", fill = NA, linewidth = 1),\n    panel.background = element_rect(fill = \"white\"),\n    legend.position = \"bottom\",\n    legend.title = element_text(size = base_size, face = \"bold\"),\n    legend.text = element_text(size = base_size * 0.9),\n    legend.background = element_rect(fill = \"white\", color = NA),\n    legend.key = element_rect(fill = \"white\", color = NA),\n    plot.background = element_rect(fill = \"white\", color = NA)\n  )\n}"
   },
   {
     "objectID": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#progressive-build-starting-simple",
@@ -1313,28 +1404,28 @@
     "href": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#what-ggplot2-cannot-do-well",
     "title": "Grammar of Graphics: Module 4",
     "section": "What ggplot2 Cannot Do Well",
-    "text": "What ggplot2 Cannot Do Well\nWhile ggplot2 is powerful, it has limitations:\n\nMosaic plots / Marimekko charts - Better with ggmosaic or base R mosaicplot()\n3D plots - Not natively supported, use plotly or rgl\nNetwork graphs - Use ggraph or igraph\nInteractive plots - Limited, need plotly::ggplotly() or ggiraph\nSankey diagrams - Use ggalluvial or networkD3\nCircular plots (beyond polar) - Use circlize\nVery complex statistical diagrams - May need specialized packages"
+    "text": "What ggplot2 Cannot Do Well\nWhile ggplot2 is powerful, it has limitations:\n\nMosaic plots / Marimekko charts - Use productplots, ggmosaic or base R mosaicplot()\n3D plots - Not natively supported, use plotly or rgl\nNetwork graphs - Use ggraph or igraph\nInteractive plots - Limited, need plotly::ggplotly() or ggiraph\nSankey diagrams - Use ggalluvial or networkD3\nCircular plots (beyond polar) - Use circlize\nVery complex statistical diagrams - May need specialized packages"
   },
   {
     "objectID": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#mosaic-plots",
     "href": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#mosaic-plots",
     "title": "Grammar of Graphics: Module 4",
     "section": "Mosaic Plots",
-    "text": "Mosaic Plots\n\n\nggplot2 cannot easily create mosaic plots\n\n\nCode\n# Use ggmosaic package instead\nlibrary(ggmosaic)\n\nggplot(bp_data) +\n  geom_mosaic(\n    aes(x = product(TreatmentGroup, \n                    SmokingStatus),\n        fill = TreatmentGroup))\n\n\n\nOr use base R mosaicplot() for traditional mosaic plots"
+    "text": "Mosaic Plots\n\n\nggplot2 has no mosaic geom\n\n\nCode\n# productplots draws one with ggplot2\nlibrary(productplots)\n\nprodplot(bp_data,\n         ~ TreatmentGroup + SmokingStatus,\n         mosaic()) +\n  aes(fill = TreatmentGroup)\n\n\n\nOr use base R mosaicplot() for traditional mosaic plots"
   },
   {
     "objectID": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#when-to-use-alternatives",
     "href": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#when-to-use-alternatives",
     "title": "Grammar of Graphics: Module 4",
     "section": "When to Use Alternatives",
-    "text": "When to Use Alternatives\n\n\n\nNeed\nggplot2 Solution\nBetter Alternative\n\n\n\n\nMosaic plots\n❌ Not supported\nggmosaic, base mosaicplot()\n\n\n3D visualization\n❌ Not supported\nplotly, rgl, plot3D\n\n\nNetwork graphs\n❌ Not supported\nggraph, igraph, visNetwork\n\n\nInteractive plots\nLimited\nplotly, ggiraph, highcharter\n\n\nAnimated plots\nVia gganimate\ngganimate, plotly\n\n\nSankey diagrams\n❌ Not supported\nggalluvial, networkD3\n\n\nCircular plots\nLimited (coord_polar)\ncirclize\n\n\nGeographic maps\nBasic\nleaflet, tmap, sf"
+    "text": "When to Use Alternatives\n\n\n\n\n\n\n\n\nNeed\nggplot2 Solution\nBetter Alternative\n\n\n\n\nMosaic plots\n❌ Not supported\nproductplots, ggmosaic, base mosaicplot()\n\n\n3D visualization\n❌ Not supported\nplotly, rgl, plot3D\n\n\nNetwork graphs\n❌ Not supported\nggraph, igraph, visNetwork\n\n\nInteractive plots\nLimited\nplotly, ggiraph, highcharter\n\n\nAnimated plots\nVia gganimate\ngganimate, plotly\n\n\nSankey diagrams\n❌ Not supported\nggalluvial, networkD3\n\n\nCircular plots\nLimited (coord_polar)\ncirclize\n\n\nGeographic maps\nBasic\nleaflet, tmap, sf"
   },
   {
     "objectID": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#ggplot2-extensions-ecosystem",
     "href": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#ggplot2-extensions-ecosystem",
     "title": "Grammar of Graphics: Module 4",
     "section": "ggplot2 Extensions Ecosystem",
-    "text": "ggplot2 Extensions Ecosystem\nThe good news: The ggplot2 ecosystem is vast!\n\nggmosaic - Mosaic plots\ngganimate - Animation\nggraph - Network/tree diagrams\nggalluvial - Sankey/alluvial diagrams\nggiraph - Interactive graphics\npatchwork / cowplot - Combining plots\nggridges - Ridge line plots\nggrepel - Smart label placement\nggforce - Additional geoms and stats\nggsci - Scientific journal color palettes\n\n\nSee: https://exts.ggplot2.tidyverse.org/ for comprehensive list"
+    "text": "ggplot2 Extensions Ecosystem\nThe good news: The ggplot2 ecosystem is vast!\n\nproductplots / ggmosaic - Mosaic plots\ngganimate - Animation\nggraph - Network/tree diagrams\nggalluvial - Sankey/alluvial diagrams\nggiraph - Interactive graphics\npatchwork / cowplot - Combining plots\nggridges - Ridge line plots\nggrepel - Smart label placement\nggforce - Additional geoms and stats\nggsci - Scientific journal color palettes\n\n\nSee: https://exts.ggplot2.tidyverse.org/ for comprehensive list"
   },
   {
     "objectID": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#common-pitfalls-to-avoid",
@@ -1407,6 +1498,48 @@
     "text": "Final Practice Exercise\nCreate a comprehensive publication-ready plot that includes:\n\nData from the BP dataset\nMultiple geoms (points + smooth or boxplot + jitter)\nAppropriate color scale (colorblind-friendly)\nCustom theme elements\nProper labels and caption\nLegend management\n\n\n\nCode\n# Your code here - combine everything you've learned!\nggplot(bp_data, ...) +\n  geom_...() +\n  scale_...() +\n  facet_...() +\n  labs(...) +\n  theme_...() +\n  theme(...)"
   },
   {
+    "objectID": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#practise-in-r",
+    "href": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#practise-in-r",
+    "title": "Grammar of Graphics: Module 4",
+    "section": "🔧 Practise in R",
+    "text": "🔧 Practise in R\nDownload the lab A publication figure and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#self-check-quiz-14",
+    "href": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#self-check-quiz-14",
+    "title": "Grammar of Graphics: Module 4",
+    "section": "Self-check quiz (1/4)",
+    "text": "Self-check quiz (1/4)\n\nYou write geom_smooth() before geom_point(). What changes?\n\nThe line is drawn on top of all the points\nThe points are drawn on top of the line\nggplot2 refuses to draw the two layers\nThe points take the colour of the line"
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#self-check-quiz-24",
+    "href": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#self-check-quiz-24",
+    "title": "Grammar of Graphics: Module 4",
+    "section": "Self-check quiz (2/4)",
+    "text": "Self-check quiz (2/4)\n\nWhy read data with read_excel(\"data/bp.xlsx\") rather than \"C:/Users/...\"?\n\nRelative paths load the file faster\nThe code then runs on another computer\nExcel files need a relative path\nAbsolute paths are not allowed in a Quarto file"
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#self-check-quiz-34",
+    "href": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#self-check-quiz-34",
+    "title": "Grammar of Graphics: Module 4",
+    "section": "Self-check quiz (3/4)",
+    "text": "Self-check quiz (3/4)\n\nggplot2 has no mosaic geom. Which of these draws a mosaic plot?\n\ngeom_violin() with a fill\ncoord_flip() on a pie chart\nproductplots::prodplot(..., mosaic())\nfacet_wrap() on a stacked histogram of counts"
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#self-check-quiz-44",
+    "href": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#self-check-quiz-44",
+    "title": "Grammar of Graphics: Module 4",
+    "section": "Self-check quiz (4/4)",
+    "text": "Self-check quiz (4/4)\n\nWhy should a figure not rely on colour alone to separate groups?\n\nColour makes the file too large to share\nSome readers cannot tell the colours apart\nggplot2 limits a plot to three colours\nColour slows down rendering of the plot a lot"
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#score",
+    "href": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#score",
+    "title": "Grammar of Graphics: Module 4",
+    "section": "Score",
+    "text": "Score\nYour score:  (first attempt counts)"
+  },
+  {
     "objectID": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#thank-you",
     "href": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#thank-you",
     "title": "Grammar of Graphics: Module 4",
@@ -1418,7 +1551,7 @@
     "href": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#session-info-for-reproducibility",
     "title": "Grammar of Graphics: Module 4",
     "section": "Session Info for Reproducibility",
-    "text": "Session Info for Reproducibility\n\n\nCode\n# Document your R environment\nsessionInfo()\n\n\nR version 4.6.1 (2026-06-24 ucrt)\nPlatform: aarch64-w64-mingw32\nRunning under: Windows 11 (build 26200)\n\nMatrix products: default\n  LAPACK version 3.12.1\n\nlocale:\n[1] LC_COLLATE=English_India.utf8  LC_CTYPE=English_India.utf8   \n[3] LC_MONETARY=English_India.utf8 LC_NUMERIC=C                  \n[5] LC_TIME=English_India.utf8    \n\ntime zone: Asia/Calcutta\ntzcode source: internal\n\nattached base packages:\n[1] stats     graphics  grDevices utils     datasets  methods   base     \n\nother attached packages:\n[1] ggmosaic_0.4.0  patchwork_1.3.2 paletteer_1.7.0 ggthemes_5.2.0 \n[5] readxl_1.5.0    tidyr_1.3.2     dplyr_1.2.1     ggplot2_4.0.3  \n\nloaded via a namespace (and not attached):\n [1] plotly_4.12.1      generics_0.1.4     productplots_0.1.2 lattice_0.22-9    \n [5] stringi_1.8.9      digest_0.6.39      magrittr_2.0.5     evaluate_1.0.5    \n [9] grid_4.6.1         RColorBrewer_1.1-3 fastmap_1.2.0      Matrix_1.7-5      \n[13] cellranger_1.1.0   plyr_1.8.9         jsonlite_2.0.0     ggrepel_0.9.8     \n[17] rematch2_2.1.2     mgcv_1.9-4         httr_1.4.8         purrr_1.2.2       \n[21] viridisLite_0.4.3  scales_1.4.0       cli_3.6.6          rlang_1.3.0       \n[25] splines_4.6.1      withr_3.0.3        yaml_2.3.12        otel_0.2.0        \n[29] tools_4.6.1        vctrs_0.7.3        R6_2.6.1           lifecycle_1.0.5   \n[33] stringr_1.6.0      htmlwidgets_1.6.4  pkgconfig_2.0.3    pillar_1.11.1     \n[37] gtable_0.3.6       glue_1.8.1         data.table_1.18.4  Rcpp_1.1.2        \n[41] xfun_0.60          tibble_3.3.1       tidyselect_1.2.1   rstudioapi_0.19.0 \n[45] knitr_1.52         farver_2.1.2       nlme_3.1-169       htmltools_0.5.9   \n[49] rmarkdown_2.32     labeling_0.4.3     compiler_4.6.1     S7_0.2.2"
+    "text": "Session Info for Reproducibility\n\n\nCode\n# Document your R environment\nsessionInfo()\n\n\nR version 4.3.3 (2024-02-29)\nPlatform: x86_64-pc-linux-gnu (64-bit)\nRunning under: Ubuntu 24.04.5 LTS\n\nMatrix products: default\nBLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.12.0 \nLAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.12.0\n\nlocale:\n [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       \n [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   \n [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          \n[10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   \n\ntime zone: Etc/UTC\ntzcode source: system (glibc)\n\nattached base packages:\n[1] stats     graphics  grDevices utils     datasets  methods   base     \n\nother attached packages:\n[1] productplots_0.1.2 patchwork_1.3.2    paletteer_1.7.0    ggthemes_7.0.0    \n[5] readxl_1.6.0       tidyr_1.3.2        dplyr_1.2.1        ggplot2_4.0.4     \n\nloaded via a namespace (and not attached):\n [1] Matrix_1.6-5       gtable_0.3.6       jsonlite_2.0.0     compiler_4.3.3    \n [5] rematch2_2.1.2     Rcpp_1.1.2         tidyselect_1.2.1   splines_4.3.3     \n [9] scales_1.4.0       yaml_2.3.12        fastmap_1.2.0      lattice_0.22-5    \n[13] plyr_1.8.9         R6_2.6.1           labeling_0.4.3     generics_0.1.4    \n[17] knitr_1.52         tibble_3.3.1       pillar_1.11.1      RColorBrewer_1.1-3\n[21] rlang_1.3.0        xfun_0.62          S7_1.0.0           otel_0.3.0        \n[25] cli_3.6.6          mgcv_1.9-1         withr_3.0.3        magrittr_2.0.5    \n[29] digest_0.6.39      grid_4.3.3         nlme_3.1-164       lifecycle_1.0.5   \n[33] vctrs_0.7.3        evaluate_1.0.5     glue_1.8.1         farver_2.1.2      \n[37] cellranger_1.1.0   rmarkdown_2.32     purrr_1.2.2        tools_4.3.3       \n[41] pkgconfig_2.0.3    htmltools_0.5.9"
   },
   {
     "objectID": "data-visualization/gram_ggplot/module_4_advanced_best_practices.html#bonus-combining-plots-with-patchwork",
@@ -1824,7 +1957,7 @@
     "href": "welcome.html#downloads-5",
     "title": "Welcome",
     "section": "📥 Downloads",
-    "text": "📥 Downloads\n\nCheat sheets: Data visualization (ggplot2) · Data transformation · Factors\nExample script: Data visualization\nEverything else is on the Downloads page.\n\n\n💡 Tip: Finished Foundations? Start at Step 5, Module 3 — Colors, Scales & Themes."
+    "text": "📥 Downloads\n\nLabs (Steps 5–8): v1 colours and themes · v2 publication figure · v4 interactive · v5 debugging and export; data: ncd_survey.csv. Every page ends with a self-check quiz.\nCheat sheets: Data visualization (ggplot2) · Data transformation · Factors\nExample script: Data visualization\nEverything else is on the Downloads page.\n\n\n💡 Tip: Finished Foundations? Start at Step 5, Module 3 — Colors, Scales & Themes."
   },
   {
     "objectID": "downloads.html",
@@ -2828,6 +2961,48 @@
     "text": "Module 3 Summary\nWhat we covered:\n\nColor theory and accessibility\nColorBrewer, viridis, and paletteer packages\nScale functions: manual, gradient, gradient2, continuous, discrete\nCustom theme creation with theme()\nElement functions: element_text(), element_line(), element_rect(), element_blank()\nSerif fonts and professional styling\nOrganizational theme creation\nLegend management and removal\nGlobal theme settings\n\n\nNext in Module 4: - Complex visualizations - Advanced composition - Exporting and reproducibility - Limitations of ggplot2"
   },
   {
+    "objectID": "data-visualization/gram_ggplot/module_3_colors_scales_themes.html#practise-in-r",
+    "href": "data-visualization/gram_ggplot/module_3_colors_scales_themes.html#practise-in-r",
+    "title": "Grammar of Graphics: Module 3",
+    "section": "🔧 Practise in R",
+    "text": "🔧 Practise in R\nDownload the lab Colours, scales and themes and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_3_colors_scales_themes.html#self-check-quiz-14",
+    "href": "data-visualization/gram_ggplot/module_3_colors_scales_themes.html#self-check-quiz-14",
+    "title": "Grammar of Graphics: Module 3",
+    "section": "Self-check quiz (1/4)",
+    "text": "Self-check quiz (1/4)\n\nWhich scale keeps groups distinguishable for colour-blind readers and in greyscale?\n\nscale_colour_brewer(palette = \"Set1\")\nscale_colour_viridis_d()\nscale_colour_hue()\nscale_colour_manual(values = c(\"red\", \"green\"))"
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_3_colors_scales_themes.html#self-check-quiz-24",
+    "href": "data-visualization/gram_ggplot/module_3_colors_scales_themes.html#self-check-quiz-24",
+    "title": "Grammar of Graphics: Module 3",
+    "section": "Self-check quiz (2/4)",
+    "text": "Self-check quiz (2/4)\n\nSBP change ranges from −20 to +20 mmHg, and 0 means no change. Which colour scale fits?\n\nscale_colour_gradient(low = \"white\")\nscale_colour_viridis_d()\nscale_colour_gradient2(midpoint = 0)\nscale_colour_grey(start = 0.2)"
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_3_colors_scales_themes.html#self-check-quiz-34",
+    "href": "data-visualization/gram_ggplot/module_3_colors_scales_themes.html#self-check-quiz-34",
+    "title": "Grammar of Graphics: Module 3",
+    "section": "Self-check quiz (3/4)",
+    "text": "Self-check quiz (3/4)\n\nWhich theme() setting removes the minor grid lines?\n\npanel.grid.minor = element_line()\npanel.grid.major = element_blank()\nlegend.position = \"none\"\npanel.grid.minor = element_blank()"
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_3_colors_scales_themes.html#self-check-quiz-44",
+    "href": "data-visualization/gram_ggplot/module_3_colors_scales_themes.html#self-check-quiz-44",
+    "title": "Grammar of Graphics: Module 3",
+    "section": "Self-check quiz (4/4)",
+    "text": "Self-check quiz (4/4)\n\nHow do you apply a house theme to every later plot in a report?\n\nAdd the theme to the first plot only\nCall theme_set() once at the start\nSave the theme with ggsave()\nPut the theme inside aes()"
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_3_colors_scales_themes.html#score",
+    "href": "data-visualization/gram_ggplot/module_3_colors_scales_themes.html#score",
+    "title": "Grammar of Graphics: Module 3",
+    "section": "Score",
+    "text": "Score\nYour score:  (first attempt counts)"
+  },
+  {
     "objectID": "data-visualization/plot_data.html#choosing-the-right-visualization-for-your-data",
     "href": "data-visualization/plot_data.html#choosing-the-right-visualization-for-your-data",
     "title": "Navigating the Decision Tree",
@@ -3147,7 +3322,7 @@
     "href": "exporting_tools/debugging_plots.html",
     "title": "Debugging Plots",
     "section": "",
-    "text": "Debugging plots are essential tools for diagnosing issues in data visualization and analysis. They help identify problems such as incorrect data representation, scaling issues, or unexpected patterns in the data. In this guide, we will explore various techniques and tools for creating effective debugging plots.\n\n\n\n\n\nMissing or incorrect data types\n# Check data types\nstr(mtcars)\n\n# Check for missing values\nsum(is.na(mtcars))\n\n# Visualize missing patterns\nlibrary(naniar)\nvis_miss(mtcars)\nOutliers affecting scales\n# Check for outliers\nboxplot(mtcars$mpg)\n\n# Use robust statistics\nlibrary(robustbase)\nsummary(mtcars$mpg)\n\n\n\n\n\nMapping vs Setting Aesthetics\n# Correct: Map color to variable\nggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +\n  geom_point()\n\n# Incorrect: Setting color globally\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point(color = \"red\")  # This sets all points to red\nFactor Level Issues\n# Check factor levels\nlevels(mtcars$cyl)\n\n# Reorder factors if needed\nmtcars$cyl &lt;- factor(mtcars$cyl, levels = c(\"4\", \"6\", \"8\"))\nGeom Conflicts\n# Error: Can't use geom_bar with y aesthetic\n# ggplot(data, aes(x = category, y = value)) + geom_bar()\n\n# Correct: Use stat = \"identity\"\nggplot(data, aes(x = category, y = value)) + \n  geom_bar(stat = \"identity\")\n\n\n\n\n\n\n\n# Check ggplot object structure\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nstr(p)\n\n# View plot data\np$data\np$mapping\n\n\n\n# Build plot incrementally\np1 &lt;- ggplot(mtcars, aes(x = wt, y = mpg))\nprint(p1)  # Should show empty plot\n\np2 &lt;- p1 + geom_point()\nprint(p2)  # Check if points appear\n\np3 &lt;- p2 + theme_minimal()\nprint(p3)  # Check theme application\n\n\n\n# Enable ggplot2 debugging\noptions(ggplot2.debug = TRUE)\n\n# Check for warnings\nggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\n\n\n\n\n\n\n# Problem: Length mismatch\n# ggplot(data, aes(x = x_var, y = y_var, color = short_vector))\n\n# Solution: Ensure vectors are same length or use single values\nggplot(data, aes(x = x_var, y = y_var, color = factor(category)))\n\n\n\n# Problem: Wrong scale type\n# ggplot(data, aes(x = factor_var, y = numeric_var)) + scale_x_continuous()\n\n# Solution: Use appropriate scale\nggplot(data, aes(x = factor_var, y = numeric_var)) + scale_x_discrete()\n\n\n\n# Problem: Typo in parameter name\n# geom_point(size = 3)  # Correct\n# geom_point(siz = 3)   # Incorrect\n\n# Solution: Check documentation\n?geom_point\n\n\n\n\n\n\n# Residual plots for model diagnostics\nmodel &lt;- lm(mpg ~ wt, data = mtcars)\nplot(model)\n\n# QQ plots for normality\nqqnorm(mtcars$mpg)\nqqline(mtcars$mpg)\n\n\n\n# Correlation plots\nlibrary(corrplot)\ncorrplot(cor(mtcars))\n\n# Pairs plots\npairs(mtcars[, c(\"mpg\", \"wt\", \"hp\")])\n\n\n\n# Plot data distributions\nggplot(mtcars, aes(x = mpg)) + \n  geom_histogram() + \n  facet_wrap(~ cyl)\n\n# Check for data issues\nggplot(mtcars, aes(x = wt, y = mpg)) + \n  geom_point() + \n  geom_text(aes(label = rownames(mtcars)), check_overlap = TRUE)\n\n\n\n\n\n\n# When plot fails\ntryCatch({\n  ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\n}, error = function(e) {\n  print(e)\n  traceback()\n})\n\n\n\nlibrary(profvis)\n\n# Profile plotting code\nprofvis({\n  p &lt;- ggplot(large_dataset, aes(x = x, y = y)) + geom_point()\n  print(p)\n})\n\n\n\n# Check memory usage\ngc()\n\n# For large datasets, use sampling\nsample_data &lt;- mtcars[sample(nrow(mtcars), 1000, replace = TRUE), ]\nggplot(sample_data, aes(x = wt, y = mpg)) + geom_point()\n\n\n\n\n\nStart simple: Build plots incrementally\nCheck data first: Validate input data before plotting\nUse reproducible examples: Create minimal examples that reproduce issues\nRead error messages carefully: They often point to the exact problem\nCheck package versions: Ensure compatible versions of ggplot2 and extensions\nUse debugging tools: Leverage R’s debugging functions and ggplot2’s debug options\nDocument fixes: Keep notes on solutions for future reference\n\n\n\n\n\nggplot2 documentation: ?ggplot2\nR Graphics Cookbook by Winston Chang\nggplot2 book by Hadley Wickham\nStack Overflow ggplot2 tag\nRStudio Community forums"
+    "text": "Debugging plots are essential tools for diagnosing issues in data visualization and analysis. They help identify problems such as incorrect data representation, scaling issues, or unexpected patterns in the data. In this guide, we will explore various techniques and tools for creating effective debugging plots.\n\n\n\n\n\nMissing or incorrect data types\n# Check data types\nstr(mtcars)\n\n# Check for missing values\nsum(is.na(mtcars))\n\n# Visualize missing patterns\nlibrary(naniar)\nvis_miss(mtcars)\nOutliers affecting scales\n# Check for outliers\nboxplot(mtcars$mpg)\n\n# Use robust statistics\nlibrary(robustbase)\nsummary(mtcars$mpg)\n\n\n\n\n\nMapping vs Setting Aesthetics\n# Correct: Map color to variable\nggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +\n  geom_point()\n\n# Incorrect: Setting color globally\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point(color = \"red\")  # This sets all points to red\nFactor Level Issues\n# Check factor levels\nlevels(mtcars$cyl)\n\n# Reorder factors if needed\nmtcars$cyl &lt;- factor(mtcars$cyl, levels = c(\"4\", \"6\", \"8\"))\nGeom Conflicts\n# Error: Can't use geom_bar with y aesthetic\n# ggplot(data, aes(x = category, y = value)) + geom_bar()\n\n# Correct: Use stat = \"identity\"\nggplot(data, aes(x = category, y = value)) + \n  geom_bar(stat = \"identity\")\n\n\n\n\n\n\n\n# Check ggplot object structure\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nstr(p)\n\n# View plot data\np$data\np$mapping\n\n\n\n# Build plot incrementally\np1 &lt;- ggplot(mtcars, aes(x = wt, y = mpg))\nprint(p1)  # Should show empty plot\n\np2 &lt;- p1 + geom_point()\nprint(p2)  # Check if points appear\n\np3 &lt;- p2 + theme_minimal()\nprint(p3)  # Check theme application\n\n\n\n# Enable ggplot2 debugging\noptions(ggplot2.debug = TRUE)\n\n# Check for warnings\nggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\n\n\n\n\n\n\n# Problem: Length mismatch\n# ggplot(data, aes(x = x_var, y = y_var, color = short_vector))\n\n# Solution: Ensure vectors are same length or use single values\nggplot(data, aes(x = x_var, y = y_var, color = factor(category)))\n\n\n\n# Problem: Wrong scale type\n# ggplot(data, aes(x = factor_var, y = numeric_var)) + scale_x_continuous()\n\n# Solution: Use appropriate scale\nggplot(data, aes(x = factor_var, y = numeric_var)) + scale_x_discrete()\n\n\n\n# Problem: Typo in parameter name\n# geom_point(size = 3)  # Correct\n# geom_point(siz = 3)   # Incorrect\n\n# Solution: Check documentation\n?geom_point\n\n\n\n\n\n\n# Residual plots for model diagnostics\nmodel &lt;- lm(mpg ~ wt, data = mtcars)\nplot(model)\n\n# QQ plots for normality\nqqnorm(mtcars$mpg)\nqqline(mtcars$mpg)\n\n\n\n# Correlation plots\nlibrary(corrplot)\ncorrplot(cor(mtcars))\n\n# Pairs plots\npairs(mtcars[, c(\"mpg\", \"wt\", \"hp\")])\n\n\n\n# Plot data distributions\nggplot(mtcars, aes(x = mpg)) + \n  geom_histogram() + \n  facet_wrap(~ cyl)\n\n# Check for data issues\nggplot(mtcars, aes(x = wt, y = mpg)) + \n  geom_point() + \n  geom_text(aes(label = rownames(mtcars)), check_overlap = TRUE)\n\n\n\n\n\n\n# When plot fails\ntryCatch({\n  ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\n}, error = function(e) {\n  print(e)\n  traceback()\n})\n\n\n\nlibrary(profvis)\n\n# Profile plotting code\nprofvis({\n  p &lt;- ggplot(large_dataset, aes(x = x, y = y)) + geom_point()\n  print(p)\n})\n\n\n\n# Check memory usage\ngc()\n\n# For large datasets, use sampling\nsample_data &lt;- mtcars[sample(nrow(mtcars), 1000, replace = TRUE), ]\nggplot(sample_data, aes(x = wt, y = mpg)) + geom_point()\n\n\n\n\n\nStart simple: Build plots incrementally\nCheck data first: Validate input data before plotting\nUse reproducible examples: Create minimal examples that reproduce issues\nRead error messages carefully: They often point to the exact problem\nCheck package versions: Ensure compatible versions of ggplot2 and extensions\nUse debugging tools: Leverage R’s debugging functions and ggplot2’s debug options\nDocument fixes: Keep notes on solutions for future reference\n\n\n\n\n\nggplot2 documentation: ?ggplot2\nR Graphics Cookbook by Winston Chang\nggplot2 book by Hadley Wickham\nStack Overflow ggplot2 tag\nRStudio Community forums\n\n\n\n\nDownload the lab Debugging and exporting and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n\n\n\n\n“Aesthetics must be either length 1 or the same as the data”. What usually causes it?\n\nA missing library(ggplot2) call at the top\nA vector in aes() not as long as the data\nA theme that is applied twice to the plot\nToo many rows in the data for ggplot2\n\n\n\nWhat is the first step of layer-by-layer debugging?\n\nRe-install ggplot2 from CRAN and restart the R session\nDraw the base plot, then add one layer at a time\nSave the plot as a PDF and look at it closely\nSwitch every geom to geom_point() first\n\n\n\nA plot of 2 million points takes minutes to draw. Which fix helps most?\n\nAdd a theme with fewer grid lines\nSummarise or bin first (e.g. geom_hex)\nIncrease the dpi of the saved file\nSwitch the colour palette to viridis_c\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "exporting_tools/debugging_plots.html#common-plotting-issues",
@@ -3197,6 +3372,20 @@
     "title": "Debugging Plots",
     "section": "",
     "text": "ggplot2 documentation: ?ggplot2\nR Graphics Cookbook by Winston Chang\nggplot2 book by Hadley Wickham\nStack Overflow ggplot2 tag\nRStudio Community forums"
+  },
+  {
+    "objectID": "exporting_tools/debugging_plots.html#practise-in-r",
+    "href": "exporting_tools/debugging_plots.html#practise-in-r",
+    "title": "Debugging Plots",
+    "section": "",
+    "text": "Download the lab Debugging and exporting and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "exporting_tools/debugging_plots.html#self-check-quiz",
+    "href": "exporting_tools/debugging_plots.html#self-check-quiz",
+    "title": "Debugging Plots",
+    "section": "",
+    "text": "“Aesthetics must be either length 1 or the same as the data”. What usually causes it?\n\nA missing library(ggplot2) call at the top\nA vector in aes() not as long as the data\nA theme that is applied twice to the plot\nToo many rows in the data for ggplot2\n\n\n\nWhat is the first step of layer-by-layer debugging?\n\nRe-install ggplot2 from CRAN and restart the R session\nDraw the base plot, then add one layer at a time\nSave the plot as a PDF and look at it closely\nSwitch every geom to geom_point() first\n\n\n\nA plot of 2 million points takes minutes to draw. Which fix helps most?\n\nAdd a theme with fewer grid lines\nSummarise or bin first (e.g. geom_hex)\nIncrease the dpi of the saved file\nSwitch the colour palette to viridis_c\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "exporting_tools/plotting_tools.html",
@@ -3434,42 +3623,42 @@
     "href": "plot-gallery/advanced/3.3_category_vs_continuous_advanced.html#setup",
     "title": "Category vs Continuous - ADVANCED",
     "section": "Setup",
-    "text": "Setup"
+    "text": "Setup\nData: 200 simulated patients of a blood-pressure trial (data/PublicHealth_BP_Dataset.xlsx, see data/README.md).\n\n\nCode\nlibrary(readxl); library(dplyr); library(ggplot2)\nlibrary(ggeffects); library(interactions); library(broom)\nhealth_data &lt;- read_excel(\"../../data/PublicHealth_BP_Dataset.xlsx\")\nmodel &lt;- lm(SysBP_6m ~ TreatmentGroup * Gender + Age + BMI + SysBP_0m, data = health_data)\n\n\nThe model adjusts the 6-month SBP for baseline SBP, age and BMI, and lets the treatment effect differ by gender."
   },
   {
-    "objectID": "plot-gallery/advanced/3.3_category_vs_continuous_advanced.html#interaction-plot---code",
-    "href": "plot-gallery/advanced/3.3_category_vs_continuous_advanced.html#interaction-plot---code",
+    "objectID": "plot-gallery/advanced/3.3_category_vs_continuous_advanced.html#interaction-plot",
+    "href": "plot-gallery/advanced/3.3_category_vs_continuous_advanced.html#interaction-plot",
     "title": "Category vs Continuous - ADVANCED",
-    "section": "Interaction Plot - Code",
-    "text": "Interaction Plot - Code\n\n\nCode\n# Fit model with interaction\nmodel &lt;- lm(SysBP_6m ~ TreatmentGroup * Gender + Age + BMI_0m,\n           data = health_data)\n\n# Plot interaction\nlibrary(interactions)\ninteract_plot(model, pred = TreatmentGroup, modx = Gender,\n             interval = TRUE, int.width = 0.95) +\n  labs(title = \"Treatment Effect by Gender\",\n       y = \"Predicted Systolic BP at 6 months\") +\n  theme_minimal()\n\n\nShows if treatment effect differs by gender"
+    "section": "Interaction Plot",
+    "text": "Interaction Plot\n\n\nCode\ncat_plot(model, pred = TreatmentGroup, modx = Gender, interval = TRUE, int.width = 0.95,\n         geom = \"point\") +\n  labs(title = \"Treatment effect by gender\", y = \"Predicted systolic BP at 6 months\") +\n  theme_minimal()\n\n\n\nThe intervention lowers SBP by about 9 mmHg in every gender group; the interaction test agrees (anova(model), row TreatmentGroup:Gender: p = 0.67). Test an interaction, do not judge it by eye."
   },
   {
     "objectID": "plot-gallery/advanced/3.3_category_vs_continuous_advanced.html#marginal-effects-plot",
     "href": "plot-gallery/advanced/3.3_category_vs_continuous_advanced.html#marginal-effects-plot",
     "title": "Category vs Continuous - ADVANCED",
     "section": "Marginal Effects Plot",
-    "text": "Marginal Effects Plot\n\n\nCode\nlibrary(ggeffects)\n# Get predicted values\neffects &lt;- ggpredict(model, terms = c(\"Age [all]\", \"TreatmentGroup\"))\n\nplot(effects) +\n  labs(title = \"Age Effect on BP by Treatment Group\",\n       x = \"Age (years)\", y = \"Predicted BP\") +\n  theme_minimal()\n\n\nModel-based predictions with confidence bands"
+    "text": "Marginal Effects Plot\n\n\nCode\neffects &lt;- ggpredict(model, terms = c(\"Age [all]\", \"TreatmentGroup\"))\nplot(effects) +\n  labs(title = \"Age and predicted SBP at 6 months, by treatment group\",\n       x = \"Age (years)\", y = \"Predicted SBP (mmHg)\") +\n  theme_minimal()\n\n\n\nModel-based predictions with confidence bands, other variables held at their mean or reference level."
   },
   {
     "objectID": "plot-gallery/advanced/3.3_category_vs_continuous_advanced.html#forest-plot-effect-sizes",
     "href": "plot-gallery/advanced/3.3_category_vs_continuous_advanced.html#forest-plot-effect-sizes",
     "title": "Category vs Continuous - ADVANCED",
     "section": "Forest Plot (Effect Sizes)",
-    "text": "Forest Plot (Effect Sizes)\n\n\nCode\nlibrary(broom)\n# Get coefficients\ncoef_data &lt;- tidy(model, conf.int = TRUE) %&gt;%\n  filter(term != \"(Intercept)\")\n\nggplot(coef_data, aes(x = estimate, y = term)) +\n  geom_vline(xintercept = 0, linetype = \"dashed\") +\n  geom_point(size = 3) +\n  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high),\n                height = 0.2) +\n  labs(title = \"Regression Coefficients with 95% CI\",\n       x = \"Effect on Systolic BP\") +\n  theme_minimal()\n\n\nStandard in medical research"
+    "text": "Forest Plot (Effect Sizes)\n\n\nCode\ncoef_data &lt;- tidy(model, conf.int = TRUE) |&gt; filter(term != \"(Intercept)\")\nggplot(coef_data, aes(x = estimate, y = reorder(term, estimate))) +\n  geom_vline(xintercept = 0, linetype = \"dashed\") +\n  geom_errorbar(aes(xmin = conf.low, xmax = conf.high), width = 0.2, orientation = \"y\") +\n  geom_point(size = 3) +\n  labs(title = \"Regression coefficients with 95% CI\", x = \"Difference in SBP at 6 months (mmHg)\", y = NULL) +\n  theme_minimal()\n\n\n\nStandard in medical research. Coefficients on different scales (per year of age vs per group) are not comparable in size."
   },
   {
     "objectID": "plot-gallery/advanced/3.3_category_vs_continuous_advanced.html#raincloud-by-multiple-groups",
     "href": "plot-gallery/advanced/3.3_category_vs_continuous_advanced.html#raincloud-by-multiple-groups",
     "title": "Category vs Continuous - ADVANCED",
     "section": "Raincloud by Multiple Groups",
-    "text": "Raincloud by Multiple Groups\n\n\nCode\nlibrary(ggdist)\nhealth_data %&gt;%\n  filter(!is.na(TreatmentGroup), !is.na(Gender)) %&gt;%\n  ggplot(aes(x = Gender, y = SysBP_6m, fill = TreatmentGroup)) +\n  stat_halfeye(position = position_dodge(width = 0.5),\n              adjust = 0.5, width = 0.3) +\n  geom_boxplot(width = 0.1, outlier.shape = NA,\n              position = position_dodge(width = 0.5)) +\n  facet_wrap(~ TreatmentGroup) +\n  theme_minimal()\n\n\nComprehensive view of nested groups"
+    "text": "Raincloud by Multiple Groups\n\n\nCode\nlibrary(ggdist)\nhealth_data |&gt;\n  filter(!is.na(TreatmentGroup), !is.na(Gender)) |&gt;\n  ggplot(aes(x = Gender, y = SysBP_6m, fill = Gender)) +\n  stat_halfeye(adjust = 0.6, width = 0.5, justification = -0.25, .width = 0, point_colour = NA) +\n  geom_boxplot(width = 0.12, outlier.shape = NA) +\n  geom_jitter(width = 0.05, alpha = 0.3, size = 0.8) +\n  facet_wrap(~ TreatmentGroup) +\n  labs(y = \"Systolic BP at 6 months (mmHg)\", x = NULL) +\n  theme_minimal() + theme(legend.position = \"none\")\n\n\n\nDistribution, summary and raw data at once, for nested groups."
   },
   {
     "objectID": "plot-gallery/advanced/3.3_category_vs_continuous_advanced.html#bayesian-credible-intervals",
     "href": "plot-gallery/advanced/3.3_category_vs_continuous_advanced.html#bayesian-credible-intervals",
     "title": "Category vs Continuous - ADVANCED",
     "section": "Bayesian Credible Intervals",
-    "text": "Bayesian Credible Intervals\n\n\nCode\nlibrary(rstanarm)\n# Bayesian model (conceptual)\nbayes_model &lt;- stan_glm(SysBP_6m ~ TreatmentGroup + Age,\n                       data = health_data,\n                       prior = normal(0, 2.5))\n\n# Plot posterior distributions\nplot(bayes_model, prob = 0.95) +\n  labs(title = \"Bayesian Coefficient Estimates\")\n\n\nFull uncertainty quantification"
+    "text": "Bayesian Credible Intervals\n\n\nCode\nlibrary(rstanarm)\nbayes_model &lt;- stan_glm(SysBP_6m ~ TreatmentGroup + Age + SysBP_0m, data = health_data,\n                        chains = 2, iter = 1000, seed = 2026, refresh = 0)\nplot(bayes_model, pars = c(\"TreatmentGroupIntervention\", \"Age\", \"SysBP_0m\"), prob = 0.5, prob_outer = 0.95) +\n  labs(title = \"Posterior estimates (50% and 95% credible intervals)\")\n\n\n\nA 95% credible interval holds the coefficient with 95% probability, given the model and its (weak, default) priors."
   },
   {
     "objectID": "plot-gallery/advanced/3.3_category_vs_continuous_advanced.html#summary",
@@ -3490,42 +3679,42 @@
     "href": "plot-gallery/advanced/3.5_network_advanced.html#setup",
     "title": "Network - ADVANCED",
     "section": "Setup",
-    "text": "Setup"
+    "text": "Setup\nData: 20 providers and 74 referral links between them, January to June (data/Healthcare_Network_Dataset.xlsx, simulated).\n\n\nCode\nlibrary(readxl); library(tidyverse); library(igraph); library(ggraph)\nproviders &lt;- read_excel(\"../../data/Healthcare_Network_Dataset.xlsx\", sheet = \"Providers\")\nreferrals &lt;- read_excel(\"../../data/Healthcare_Network_Dataset.xlsx\", sheet = \"Referrals\")\n\nedges &lt;- referrals |&gt; transmute(from = FromProvider, to = ToProvider, weight = NumReferrals, Month, ReferralType)\nnodes &lt;- providers |&gt; transmute(name = ProviderID, label = sprintf(\"P%02d\", ProviderID), Specialty, Region)\nnet &lt;- graph_from_data_frame(edges, directed = TRUE, vertices = nodes)"
   },
   {
-    "objectID": "plot-gallery/advanced/3.5_network_advanced.html#community-detection---code",
-    "href": "plot-gallery/advanced/3.5_network_advanced.html#community-detection---code",
+    "objectID": "plot-gallery/advanced/3.5_network_advanced.html#community-detection",
+    "href": "plot-gallery/advanced/3.5_network_advanced.html#community-detection",
     "title": "Network - ADVANCED",
-    "section": "Community Detection - Code",
-    "text": "Community Detection - Code\n\n\nCode\n# Detect communities (Louvain algorithm)\ncommunities &lt;- cluster_louvain(as.undirected(net))\n\n# Add to network\nV(net)$community &lt;- membership(communities)\n\n# Visualize\nggraph(net, layout = \"fr\") +\n  geom_edge_link(alpha = 0.3) +\n  geom_node_point(aes(color = factor(community)), size = 5) +\n  geom_node_text(aes(label = name), repel = TRUE, size = 3) +\n  scale_color_brewer(palette = \"Set1\", name = \"Community\") +\n  labs(title = \"Network Communities (Louvain)\") +\n  theme_void()\n\n\nIdentifies provider groups/clusters"
+    "section": "Community Detection",
+    "text": "Community Detection\n\n\nCode\nset.seed(42)\ncommunities &lt;- cluster_louvain(as_undirected(net, edge.attr.comb = list(weight = \"sum\", \"ignore\")))\nV(net)$community &lt;- factor(membership(communities))\nggraph(net, layout = \"fr\") +\n  geom_edge_link(aes(width = weight), alpha = 0.25, colour = \"grey40\") +\n  geom_node_point(aes(colour = community), size = 5) +\n  geom_node_text(aes(label = label), repel = TRUE, size = 3) +\n  scale_edge_width(range = c(0.3, 2), guide = \"none\") +\n  scale_colour_brewer(palette = \"Dark2\", name = \"Community\") +\n  labs(title = \"Provider communities (Louvain)\") +\n  theme_void()\n\n\n\nLouvain groups providers who refer more to each other than to the rest; the groups can change with the random seed, so treat them as a hypothesis, not a fact."
   },
   {
-    "objectID": "plot-gallery/advanced/3.5_network_advanced.html#centrality-measures---code",
-    "href": "plot-gallery/advanced/3.5_network_advanced.html#centrality-measures---code",
+    "objectID": "plot-gallery/advanced/3.5_network_advanced.html#centrality-measures",
+    "href": "plot-gallery/advanced/3.5_network_advanced.html#centrality-measures",
     "title": "Network - ADVANCED",
-    "section": "Centrality Measures - Code",
-    "text": "Centrality Measures - Code\n\n\nCode\n# Calculate multiple centralities\nV(net)$degree &lt;- degree(net)\nV(net)$betweenness &lt;- betweenness(net, normalized = TRUE)\nV(net)$closeness &lt;- closeness(net, normalized = TRUE)\nV(net)$eigenvector &lt;- eigen_centrality(net)$vector\n\n# Plot by importance\nggraph(net, layout = \"kk\") +\n  geom_edge_link(alpha = 0.2) +\n  geom_node_point(aes(size = betweenness, color = degree)) +\n  geom_node_text(aes(label = name, size = betweenness),\n                repel = TRUE) +\n  scale_color_viridis_c() +\n  labs(title = \"Provider Centrality Measures\",\n       subtitle = \"Size = Betweenness | Color = Degree\") +\n  theme_void()"
+    "section": "Centrality Measures",
+    "text": "Centrality Measures\n\n\nCode\nV(net)$degree &lt;- degree(net, mode = \"all\")\nV(net)$betweenness &lt;- betweenness(net, normalized = TRUE, weights = NA)   # weights would be read as distances\nggraph(net, layout = \"kk\") +\n  geom_edge_link(alpha = 0.2) +\n  geom_node_point(aes(size = betweenness, colour = degree)) +\n  geom_node_text(aes(label = label), repel = TRUE, size = 3) +\n  scale_colour_viridis_c() +\n  labs(title = \"Provider centrality\", subtitle = \"Size = betweenness | Colour = degree\") +\n  theme_void()\n\n\n\nDegree = how many links; betweenness = how often a provider sits on the shortest path between two others (a broker: if they are absent, referrals take longer routes)."
   },
   {
     "objectID": "plot-gallery/advanced/3.5_network_advanced.html#network-statistics-table",
     "href": "plot-gallery/advanced/3.5_network_advanced.html#network-statistics-table",
     "title": "Network - ADVANCED",
     "section": "Network Statistics Table",
-    "text": "Network Statistics Table\n\n\nCode\n# Calculate network metrics\nstats &lt;- data.frame(\n  Metric = c(\"Nodes\", \"Edges\", \"Density\", \"Avg Path Length\",\n            \"Clustering Coef\", \"Modularity\"),\n  Value = c(\n    vcount(net),\n    ecount(net),\n    round(edge_density(net), 3),\n    round(mean_distance(net), 2),\n    round(transitivity(net), 3),\n    round(modularity(communities), 3)\n  )\n)\n\nknitr::kable(stats, caption = \"Network Statistics\")\n\n\nQuantitative network description"
+    "text": "Network Statistics Table\n\n\nCode\nstats &lt;- tibble(\n  Metric = c(\"Providers (nodes)\", \"Referral links (edges)\", \"Density\", \"Mean path length\",\n             \"Clustering coefficient\", \"Modularity of the communities\"),\n  Value = c(vcount(net), ecount(net), round(edge_density(net), 3), round(mean_distance(net, weights = NA), 2),\n            round(transitivity(net), 3), round(modularity(communities), 3)))\nknitr::kable(stats)\n\n\n\n\n\nMetric\nValue\n\n\n\n\nProviders (nodes)\n20.000\n\n\nReferral links (edges)\n74.000\n\n\nDensity\n0.195\n\n\nMean path length\n2.310\n\n\nClustering coefficient\n0.355\n\n\nModularity of the communities\n0.289\n\n\n\n\n\nDensity = links present / links possible. A modularity near 0 means the communities are weak."
   },
   {
-    "objectID": "plot-gallery/advanced/3.5_network_advanced.html#bipartite-network---code",
-    "href": "plot-gallery/advanced/3.5_network_advanced.html#bipartite-network---code",
+    "objectID": "plot-gallery/advanced/3.5_network_advanced.html#bipartite-network",
+    "href": "plot-gallery/advanced/3.5_network_advanced.html#bipartite-network",
     "title": "Network - ADVANCED",
-    "section": "Bipartite Network - Code",
-    "text": "Bipartite Network - Code\n\n\nCode\n# Create bipartite: Patients &lt;-&gt; Providers\nbipartite_edges &lt;- network_data %&gt;%\n  select(from = PatientID, to = ReferringProvider) %&gt;%\n  mutate(from = paste0(\"P\", from))  # Prefix patients\n\nbp_net &lt;- graph_from_data_frame(bipartite_edges, directed = FALSE)\nV(bp_net)$type &lt;- grepl(\"^P\", V(bp_net)$name)  # Patient = TRUE\n\nggraph(bp_net, layout = \"bipartite\") +\n  geom_edge_link(alpha = 0.1) +\n  geom_node_point(aes(color = type), size = 3) +\n  scale_color_manual(values = c(\"Provider\" = \"blue\",\n                               \"Patient\" = \"orange\"),\n                    labels = c(\"Provider\", \"Patient\")) +\n  labs(title = \"Patient-Provider Bipartite Network\") +\n  theme_void()"
+    "section": "Bipartite Network",
+    "text": "Bipartite Network\n\n\nCode\nbip &lt;- referrals |&gt; group_by(from = sprintf(\"P%02d\", FromProvider), to = ReferralType) |&gt;\n  summarise(weight = sum(NumReferrals), .groups = \"drop\")\nbp_net &lt;- graph_from_data_frame(bip, directed = FALSE)\nV(bp_net)$type &lt;- V(bp_net)$name %in% bip$to                 # TRUE = referral type\nggraph(bp_net, layout = \"bipartite\") +\n  geom_edge_link(aes(width = weight), alpha = 0.3) +\n  geom_node_point(aes(colour = type), size = 4) +\n  geom_node_text(aes(label = name), size = 2.5, vjust = -1.2) +\n  scale_edge_width(range = c(0.2, 2), guide = \"none\") +\n  scale_colour_manual(values = c(`FALSE` = \"#2C5F8D\", `TRUE` = \"#E67E22\"),\n                      labels = c(\"Provider\", \"Referral type\"), name = NULL) +\n  labs(title = \"Who sends which kind of referral\") +\n  theme_void()\n\n\n\nTwo kinds of node, and links only between kinds: providers and the referral types they send."
   },
   {
     "objectID": "plot-gallery/advanced/3.5_network_advanced.html#dynamic-network-time-based",
     "href": "plot-gallery/advanced/3.5_network_advanced.html#dynamic-network-time-based",
     "title": "Network - ADVANCED",
     "section": "Dynamic Network (Time-based)",
-    "text": "Dynamic Network (Time-based)\n\n\nCode\n# Split network by time periods\nnetwork_t1 &lt;- network_data %&gt;%\n  filter(TimePoint == \"0m\") %&gt;%\n  graph_from_data_frame()\n\nnetwork_t2 &lt;- network_data %&gt;%\n  filter(TimePoint == \"6m\") %&gt;%\n  graph_from_data_frame()\n\n# Compare side-by-side\nlibrary(patchwork)\np1 &lt;- ggraph(network_t1) + geom_edge_link() + \n      geom_node_point() + labs(title = \"Month 0\")\np2 &lt;- ggraph(network_t2) + geom_edge_link() + \n      geom_node_point() + labs(title = \"Month 6\")\n\np1 + p2\n\n\nShows network evolution"
+    "text": "Dynamic Network (Time-based)\n\n\nCode\nlibrary(patchwork)\nset.seed(1)\ncoords &lt;- create_layout(net, layout = \"fr\")[, c(\"x\", \"y\")]        # same positions in both panels\nhalf &lt;- function(months, title) {\n  sub &lt;- subgraph_from_edges(net, E(net)[Month %in% months], delete.vertices = FALSE)\n  ggraph(sub, layout = \"manual\", x = coords$x, y = coords$y) +\n    geom_edge_link(alpha = 0.4) + geom_node_point(colour = \"#2C5F8D\", size = 2.5) +\n    labs(title = title) + theme_void()\n}\nhalf(c(\"Jan\", \"Feb\", \"Mar\"), \"January–March\") + half(c(\"Apr\", \"May\", \"Jun\"), \"April–June\")\n\n\n\nFixing the node positions makes the two periods comparable: only the links change."
   },
   {
     "objectID": "plot-gallery/advanced/3.5_network_advanced.html#summary",
@@ -3553,49 +3742,49 @@
     "href": "plot-gallery/advanced/3.7_dashboards_advanced.html#flexdashboard-structure",
     "title": "Dashboards - ADVANCED",
     "section": "flexdashboard Structure",
-    "text": "flexdashboard Structure\n\n\nCode\n---\ntitle: \"Health Dashboard\"\noutput:\n  flexdashboard::flex_dashboard:\n    orientation: rows\n    vertical_layout: fill\n---\n\n# Page 1 {data-icon=\"fa-chart-bar\"}\n\n## Row 1 {data-height=100}\n\n### KPI 1\nvalueBox(150, caption = \"Total Patients\", icon = \"fa-users\")\n\n### KPI 2  \nvalueBox(85, caption = \"% Adherence\", icon = \"fa-check\", \n        color = ifelse(85 &gt; 80, \"success\", \"warning\"))\n\n## Row 2\n\n### Chart 1\nplot_ly(data, x = ~x, y = ~y, type = \"scatter\")\n\n### Chart 2\nggplotly(ggplot(data, aes(x, y)) + geom_bar())"
+    "text": "flexdashboard Structure\n---\ntitle: \"Health Dashboard\"\noutput:\n  flexdashboard::flex_dashboard:\n    orientation: rows\n    vertical_layout: fill\n---\n\n# Page 1 {data-icon=\"fa-chart-bar\"}\n\n## Row 1 {data-height=100}\n\n### KPI 1\nvalueBox(150, caption = \"Total Patients\", icon = \"fa-users\")\n\n### KPI 2  \nvalueBox(85, caption = \"% Adherence\", icon = \"fa-check\", \n        color = ifelse(85 &gt; 80, \"success\", \"warning\"))\n\n## Row 2\n\n### Chart 1\nplot_ly(data, x = ~x, y = ~y, type = \"scatter\")\n\n### Chart 2\nggplotly(ggplot(data, aes(x, y)) + geom_bar())"
   },
   {
     "objectID": "plot-gallery/advanced/3.7_dashboards_advanced.html#basic-shiny-app-structure",
     "href": "plot-gallery/advanced/3.7_dashboards_advanced.html#basic-shiny-app-structure",
     "title": "Dashboards - ADVANCED",
     "section": "Basic Shiny App Structure",
-    "text": "Basic Shiny App Structure\n\n\nCode\nlibrary(shiny)\n\n# UI\nui &lt;- fluidPage(\n  titlePanel(\"Blood Pressure Dashboard\"),\n  \n  sidebarLayout(\n    sidebarPanel(\n      selectInput(\"region\", \"Region:\",\n                 choices = c(\"North\", \"South\", \"East\", \"West\")),\n      sliderInput(\"age\", \"Age Range:\",\n                 min = 18, max = 80, value = c(18, 80))\n    ),\n    \n    mainPanel(\n      plotOutput(\"bpPlot\"),\n      tableOutput(\"statsTable\")\n    )\n  )\n)\n\n# Server\nserver &lt;- function(input, output) {\n  # Reactive data\n  filtered_data &lt;- reactive({\n    health_data %&gt;%\n      filter(Region == input$region,\n            Age &gt;= input$age[1], Age &lt;= input$age[2])\n  })\n  \n  # Outputs\n  output$bpPlot &lt;- renderPlot({\n    ggplot(filtered_data(), aes(x = Age, y = SysBP_0m)) +\n      geom_point() + geom_smooth()\n  })\n  \n  output$statsTable &lt;- renderTable({\n    filtered_data() %&gt;%\n      summarise(Mean = mean(SysBP_0m),\n               SD = sd(SysBP_0m),\n               N = n())\n  })\n}\n\nshinyApp(ui, server)"
+    "text": "Basic Shiny App Structure\nlibrary(shiny)\n\n# UI\nui &lt;- fluidPage(\n  titlePanel(\"Blood Pressure Dashboard\"),\n  \n  sidebarLayout(\n    sidebarPanel(\n      selectInput(\"region\", \"Region:\",\n                 choices = c(\"North\", \"South\", \"East\", \"West\")),\n      sliderInput(\"age\", \"Age Range:\",\n                 min = 18, max = 80, value = c(18, 80))\n    ),\n    \n    mainPanel(\n      plotOutput(\"bpPlot\"),\n      tableOutput(\"statsTable\")\n    )\n  )\n)\n\n# Server\nserver &lt;- function(input, output) {\n  # Reactive data\n  filtered_data &lt;- reactive({\n    health_data %&gt;%\n      filter(Region == input$region,\n            Age &gt;= input$age[1], Age &lt;= input$age[2])\n  })\n  \n  # Outputs\n  output$bpPlot &lt;- renderPlot({\n    ggplot(filtered_data(), aes(x = Age, y = SysBP_0m)) +\n      geom_point() + geom_smooth()\n  })\n  \n  output$statsTable &lt;- renderTable({\n    filtered_data() %&gt;%\n      summarise(Mean = mean(SysBP_0m),\n               SD = sd(SysBP_0m),\n               N = n())\n  })\n}\n\nshinyApp(ui, server)"
   },
   {
     "objectID": "plot-gallery/advanced/3.7_dashboards_advanced.html#reactive-programming-concepts",
     "href": "plot-gallery/advanced/3.7_dashboards_advanced.html#reactive-programming-concepts",
     "title": "Dashboards - ADVANCED",
     "section": "Reactive Programming Concepts",
-    "text": "Reactive Programming Concepts\nKey Reactive Functions:\n\n\nCode\n# reactive() - creates reactive expression\ndata_filtered &lt;- reactive({\n  req(input$region)  # Require input\n  health_data %&gt;% filter(Region == input$region)\n})\n\n# observe() - side effects (no return value)\nobserve({\n  print(paste(\"Region changed to:\", input$region))\n})\n\n# observeEvent() - respond to specific event\nobserveEvent(input$updateBtn, {\n  # Code runs when button clicked\n  output$plot &lt;- renderPlot({...})\n})\n\n# eventReactive() - reactive value from event\ndata_on_click &lt;- eventReactive(input$loadBtn, {\n  read.csv(input$file$datapath)\n})"
+    "text": "Reactive Programming Concepts\nKey Reactive Functions:\n# reactive() - creates reactive expression\ndata_filtered &lt;- reactive({\n  req(input$region)  # Require input\n  health_data %&gt;% filter(Region == input$region)\n})\n\n# observe() - side effects (no return value)\nobserve({\n  print(paste(\"Region changed to:\", input$region))\n})\n\n# observeEvent() - respond to specific event\nobserveEvent(input$updateBtn, {\n  # Code runs when button clicked\n  output$plot &lt;- renderPlot({...})\n})\n\n# eventReactive() - reactive value from event\ndata_on_click &lt;- eventReactive(input$loadBtn, {\n  read.csv(input$file$datapath)\n})"
   },
   {
     "objectID": "plot-gallery/advanced/3.7_dashboards_advanced.html#plotly-interactivity",
     "href": "plot-gallery/advanced/3.7_dashboards_advanced.html#plotly-interactivity",
     "title": "Dashboards - ADVANCED",
     "section": "plotly Interactivity",
-    "text": "plotly Interactivity\n\n\nCode\nlibrary(plotly)\n\n# Convert ggplot to interactive\np &lt;- ggplot(health_data, aes(x = BMI_0m, y = SysBP_0m, \n                             color = Gender,\n                             text = paste(\"ID:\", PatientID))) +\n  geom_point()\n\nggplotly(p, tooltip = c(\"text\", \"x\", \"y\"))\n\n# Native plotly with custom hover\nplot_ly(health_data, x = ~BMI_0m, y = ~SysBP_0m,\n       color = ~Gender,\n       type = \"scatter\", mode = \"markers\",\n       hovertemplate = paste(\n         \"&lt;b&gt;Patient ID:&lt;/b&gt; %{text}&lt;br&gt;\",\n         \"&lt;b&gt;BMI:&lt;/b&gt; %{x:.1f}&lt;br&gt;\",\n         \"&lt;b&gt;BP:&lt;/b&gt; %{y:.0f}&lt;br&gt;\",\n         \"&lt;extra&gt;&lt;/extra&gt;\"\n       ),\n       text = ~PatientID)\n\n\nHover, zoom, pan, select automatically"
+    "text": "plotly Interactivity\n\n\nCode\nlibrary(plotly); library(readxl); library(ggplot2)\nhealth_data &lt;- read_excel(\"../../data/PublicHealth_BP_Dataset.xlsx\")\n\n# Convert ggplot to interactive\np &lt;- ggplot(health_data, aes(x = BMI, y = SysBP_0m, \n                             color = Gender,\n                             text = paste(\"ID:\", PatientID))) +\n  geom_point()\n\n# ggplotly(p, tooltip = c(\"text\", \"x\", \"y\"))   # the same idea from a ggplot\n\n# Native plotly with custom hover\nplot_ly(health_data, x = ~BMI, y = ~SysBP_0m,\n       color = ~Gender,\n       type = \"scatter\", mode = \"markers\",\n       hovertemplate = paste(\n         \"&lt;b&gt;Patient ID:&lt;/b&gt; %{text}&lt;br&gt;\",\n         \"&lt;b&gt;BMI:&lt;/b&gt; %{x:.1f}&lt;br&gt;\",\n         \"&lt;b&gt;BP:&lt;/b&gt; %{y:.0f}&lt;br&gt;\",\n         \"&lt;extra&gt;&lt;/extra&gt;\"\n       ),\n       text = ~PatientID)\n\n\n\n\n\n\nHover a point; drag to zoom; double-click to reset."
   },
   {
     "objectID": "plot-gallery/advanced/3.7_dashboards_advanced.html#dashboard-with-multiple-pages",
     "href": "plot-gallery/advanced/3.7_dashboards_advanced.html#dashboard-with-multiple-pages",
     "title": "Dashboards - ADVANCED",
     "section": "Dashboard with Multiple Pages",
-    "text": "Dashboard with Multiple Pages\n\n\nCode\n# In flexdashboard\n---\ntitle: \"Multi-Page Dashboard\"\noutput:\n  flexdashboard::flex_dashboard:\n    orientation: rows\n---\n\n# Overview {data-icon=\"fa-dashboard\"}\n## Row\n### Chart 1\n...\n\n# Demographics {data-icon=\"fa-users\"}\n## Row\n### Chart 2\n...\n\n# Outcomes {data-icon=\"fa-heartbeat\"}\n## Row\n### Chart 3\n...\n\n\nTab-based navigation"
+    "text": "Dashboard with Multiple Pages\n# In flexdashboard\n---\ntitle: \"Multi-Page Dashboard\"\noutput:\n  flexdashboard::flex_dashboard:\n    orientation: rows\n---\n\n# Overview {data-icon=\"fa-dashboard\"}\n## Row\n### Chart 1\n...\n\n# Demographics {data-icon=\"fa-users\"}\n## Row\n### Chart 2\n...\n\n# Outcomes {data-icon=\"fa-heartbeat\"}\n## Row\n### Chart 3\n...\nTab-based navigation"
   },
   {
     "objectID": "plot-gallery/advanced/3.7_dashboards_advanced.html#performance-tips",
     "href": "plot-gallery/advanced/3.7_dashboards_advanced.html#performance-tips",
     "title": "Dashboards - ADVANCED",
     "section": "Performance Tips",
-    "text": "Performance Tips\nOptimize Shiny Apps:\n\nCache expensive computations\n\n\n\nCode\ncached_data &lt;- memoise::memoise(function(param) {\n  # Expensive calculation\n  expensive_function(param)\n})\n\n\n\nUse renderCachedPlot for static plots\nLimit reactive dependencies\nUse DT package for large tables\nDeploy efficiently (shinyapps.io, Docker)"
+    "text": "Performance Tips\nOptimize Shiny Apps:\n\nCache expensive computations\n\ncached_data &lt;- memoise::memoise(function(param) {\n  # Expensive calculation\n  expensive_function(param)\n})\n\nUse renderCachedPlot for static plots\nLimit reactive dependencies\nUse DT package for large tables\nDeploy efficiently (shinyapps.io, Docker)"
   },
   {
     "objectID": "plot-gallery/advanced/3.7_dashboards_advanced.html#summary",
     "href": "plot-gallery/advanced/3.7_dashboards_advanced.html#summary",
     "title": "Dashboards - ADVANCED",
     "section": "Summary",
-    "text": "Summary\nDashboard essentials:\n\nLayout follows F-pattern, top-left priority\nflexdashboard for quick R dashboards\nShiny for full interactivity\nReactive programming handles updates\nplotly adds hover/zoom/select\n\nPractice: Build a dashboard for your data!\nResources: - Mastering Shiny (book) - shiny.rstudio.com - flexdashboard.rstudio.com"
+    "text": "Summary\nQuarto dashboards (format: dashboard, Quarto ≥ 1.4) are the newer way to build the same layout from a .qmd file; the rows, cards and value boxes work like flexdashboard’s.\nDashboard essentials:\n\nLayout follows F-pattern, top-left priority\nflexdashboard for quick R dashboards\nShiny for full interactivity\nReactive programming handles updates\nplotly adds hover/zoom/select\n\nPractice: Build a dashboard for your data!\nResources: - Mastering Shiny (book) - shiny.rstudio.com - flexdashboard.rstudio.com"
   },
   {
     "objectID": "plot-gallery/basic/0_foundation.html#navigating-the-decision-tree",
@@ -4344,7 +4533,7 @@
     "href": "plot-gallery/practical_application.html#publication-figure---code",
     "title": "Practical Application",
     "section": "Publication Figure - Code",
-    "text": "Publication Figure - Code\n\n\nCode\n# Treatment effect with confidence intervals\nmodel &lt;- lm(SysBP_12m ~ TreatmentGroup + Age + BMI_0m + SysBP_0m,\n           data = health_data)\n\nlibrary(ggeffects)\neffects &lt;- ggpredict(model, terms = \"TreatmentGroup\")\n\np &lt;- plot(effects) +\n  labs(title = \"Treatment Effect on Systolic Blood Pressure\",\n       subtitle = \"Adjusted for age, BMI, and baseline BP\",\n       x = \"Treatment Group\",\n       y = \"Predicted Systolic BP (mmHg)\",\n       caption = \"Error bars: 95% confidence intervals. n=500 per group.\") +\n  theme_bw(base_size = 12) +\n  theme(\n    plot.title = element_text(face = \"bold\", hjust = 0),\n    panel.grid.minor = element_blank(),\n    legend.position = \"none\"\n  )\n\n# Save high-res\nggsave(\"figure1.tiff\", p, width = 7, height = 5, dpi = 300)\nggsave(\"figure1.eps\", p, width = 7, height = 5, device = cairo_ps)"
+    "text": "Publication Figure - Code\n\n\nCode\nlibrary(readxl); library(ggplot2); library(ggeffects)\nhealth_data &lt;- read_excel(\"../data/PublicHealth_BP_Dataset.xlsx\")    # 200 simulated patients\nmodel &lt;- lm(SysBP_6m ~ TreatmentGroup + Age + BMI + SysBP_0m, data = health_data)\neffects &lt;- ggpredict(model, terms = \"TreatmentGroup\")\n\np &lt;- plot(effects, colors = \"bw\") +\n  labs(title = \"Treatment effect on systolic blood pressure\",\n       subtitle = \"Adjusted for age, BMI and baseline BP\",\n       x = \"Treatment group\", y = \"Predicted systolic BP at 6 months (mmHg)\",\n       caption = \"Error bars: 95% confidence intervals. n = 100 per group.\") +\n  theme_bw(base_size = 12) +\n  theme(plot.title = element_text(face = \"bold\", hjust = 0), panel.grid.minor = element_blank())\np\n\n\n\nCode\n# Save for the journal (in a project: \"output/figures/figure1.tiff\")\nggsave(file.path(tempdir(), \"figure1.tiff\"), p, width = 7, height = 5, dpi = 300, compression = \"lzw\")"
   },
   {
     "objectID": "plot-gallery/practical_application.html#case-study-2-executive-dashboard",
@@ -4358,7 +4547,7 @@
     "href": "plot-gallery/practical_application.html#executive-dashboard-structure",
     "title": "Practical Application",
     "section": "Executive Dashboard Structure",
-    "text": "Executive Dashboard Structure\n\n\nCode\n---\ntitle: \"Q4 2024 Health Outcomes\"\noutput:\n  flexdashboard::flex_dashboard:\n    theme: cosmo\n---\n\n# Executive Summary {data-icon=\"fa-dashboard\"}\n\n## Row {data-height=150}\n\n### Total Patients\nvalueBox(2500, icon = \"fa-users\", color = \"primary\")\n\n### Avg BP Reduction  \nvalueBox(-15.3, caption = \"mmHg\", icon = \"fa-arrow-down\",\n        color = \"success\")\n\n### Target Achievement\ngauge(87, min = 0, max = 100, symbol = \"%\",\n     gaugeSectors(success = c(80, 100), warning = c(60, 80),\n                 danger = c(0, 60)))\n\n## Row\n\n### Trend Over Time\n(plot showing quarterly BP trends)\n\n### Regional Heatmap\n(choropleth of outcomes by region)"
+    "text": "Executive Dashboard Structure\n---\ntitle: \"Q4 2024 Health Outcomes\"\noutput:\n  flexdashboard::flex_dashboard:\n    theme: cosmo\n---\n\n# Executive Summary {data-icon=\"fa-dashboard\"}\n\n## Row {data-height=150}\n\n### Total Patients\nvalueBox(2500, icon = \"fa-users\", color = \"primary\")\n\n### Avg BP Reduction  \nvalueBox(-15.3, caption = \"mmHg\", icon = \"fa-arrow-down\",\n        color = \"success\")\n\n### Target Achievement\ngauge(87, min = 0, max = 100, symbol = \"%\",\n     gaugeSectors(success = c(80, 100), warning = c(60, 80),\n                 danger = c(0, 60)))\n\n## Row\n\n### Trend Over Time\n(plot showing quarterly BP trends)\n\n### Regional Heatmap\n(choropleth of outcomes by region)"
   },
   {
     "objectID": "plot-gallery/practical_application.html#case-study-3-exploratory-analysis-report",
@@ -4372,7 +4561,7 @@
     "href": "plot-gallery/practical_application.html#eda-report-template",
     "title": "Practical Application",
     "section": "EDA Report Template",
-    "text": "EDA Report Template\n\n\nCode\n---\ntitle: \"Exploratory Data Analysis: BP Study\"\noutput:\n  html_document:\n    toc: true\n    toc_float: true\n    code_folding: hide\n---\n\n# Data Overview\n- Summary statistics\n- Missing data patterns\n- Outlier detection\n\n# Univariate Analysis\n- Distribution of each variable\n- Histograms, density plots\n\n# Bivariate Analysis\n- Correlation matrix\n- Key relationships\n\n# Multivariate Patterns\n- PCA or t-SNE\n- Clustering analysis\n\n# Data Quality Issues\n- Missing data by group\n- Potential errors\n- Recommendations"
+    "text": "EDA Report Template\n---\ntitle: \"Exploratory Data Analysis: BP Study\"\noutput:\n  html_document:\n    toc: true\n    toc_float: true\n    code_folding: hide\n---\n\n# Data Overview\n- Summary statistics\n- Missing data patterns\n- Outlier detection\n\n# Univariate Analysis\n- Distribution of each variable\n- Histograms, density plots\n\n# Bivariate Analysis\n- Correlation matrix\n- Key relationships\n\n# Multivariate Patterns\n- PCA or t-SNE\n- Clustering analysis\n\n# Data Quality Issues\n- Missing data by group\n- Potential errors\n- Recommendations"
   },
   {
     "objectID": "plot-gallery/practical_application.html#case-study-4-interactive-web-app",
@@ -4386,7 +4575,7 @@
     "href": "plot-gallery/practical_application.html#clinician-tool---shiny",
     "title": "Practical Application",
     "section": "Clinician Tool - Shiny",
-    "text": "Clinician Tool - Shiny\n\n\nCode\nui &lt;- fluidPage(\n  titlePanel(\"Patient Explorer\"),\n  sidebarLayout(\n    sidebarPanel(\n      textInput(\"patientID\", \"Enter Patient ID:\"),\n      selectInput(\"metric\", \"Compare:\",\n                 choices = c(\"BP\", \"Cholesterol\", \"BMI\")),\n      actionButton(\"find\", \"Find Similar Patients\")\n    ),\n    mainPanel(\n      tabsetPanel(\n        tabPanel(\"Patient Profile\",\n                valueBoxOutput(\"currentBP\"),\n                plotOutput(\"patientTrend\")),\n        tabPanel(\"Similar Patients\",\n                plotOutput(\"similarScatter\"),\n                DTOutput(\"similarTable\")),\n        tabPanel(\"Predictions\",\n                plotOutput(\"forecastPlot\"))\n      )\n    )\n  )\n)\n\nserver &lt;- function(input, output) {\n  # Reactive logic for patient comparison\n  # Machine learning for similarity\n  # Visualization of results\n}"
+    "text": "Clinician Tool - Shiny\nui &lt;- fluidPage(\n  titlePanel(\"Patient Explorer\"),\n  sidebarLayout(\n    sidebarPanel(\n      textInput(\"patientID\", \"Enter Patient ID:\"),\n      selectInput(\"metric\", \"Compare:\",\n                 choices = c(\"BP\", \"Cholesterol\", \"BMI\")),\n      actionButton(\"find\", \"Find Similar Patients\")\n    ),\n    mainPanel(\n      tabsetPanel(\n        tabPanel(\"Patient Profile\",\n                valueBoxOutput(\"currentBP\"),\n                plotOutput(\"patientTrend\")),\n        tabPanel(\"Similar Patients\",\n                plotOutput(\"similarScatter\"),\n                DTOutput(\"similarTable\")),\n        tabPanel(\"Predictions\",\n                plotOutput(\"forecastPlot\"))\n      )\n    )\n  )\n)\n\nserver &lt;- function(input, output) {\n  # Reactive logic for patient comparison\n  # Machine learning for similarity\n  # Visualization of results\n}"
   },
   {
     "objectID": "plot-gallery/practical_application.html#case-study-5-automated-reporting",
@@ -4400,7 +4589,7 @@
     "href": "plot-gallery/practical_application.html#parameterized-reports",
     "title": "Practical Application",
     "section": "Parameterized Reports",
-    "text": "Parameterized Reports\n\n\nCode\n---\ntitle: \"Weekly Report: `r params$site_name`\"\noutput: html_document\nparams:\n  site_name: \"North Clinic\"\n  week_start: \"2024-01-01\"\n  week_end: \"2024-01-07\"\n---\n\n\n# Filter data for this site\nsite_data &lt;- health_data %&gt;%\n  filter(Site == params$site_name,\n        Date &gt;= params$week_start,\n        Date &lt;= params$week_end)\n\n# Generate site-specific visualizations"
+    "text": "Parameterized Reports\nThe template, report.qmd:\n---\ntitle: \"Weekly report: `r params$site_name`\"\nformat: html\nparams:\n  site_name: \"North Clinic\"\n  week_start: \"2024-01-01\"\n---\n\n```{r}\nsite_data &lt;- health_data |&gt;\n  filter(Site == params$site_name, Date &gt;= params$week_start)\n```\nOne report per site, from R:\nfor (site in unique(health_data$Site)) {\n  quarto::quarto_render(\"report.qmd\", execute_params = list(site_name = site),\n                        output_file = paste0(site, \"_report.html\"))\n}"
   },
   {
     "objectID": "plot-gallery/practical_application.html#workflow-best-practices",
@@ -4422,6 +4611,41 @@
     "title": "Practical Application",
     "section": "Summary",
     "text": "Summary\nReal-world skills:\n\nPublication figures - high-quality, standards-compliant\nExecutive dashboards - key metrics, trends\nEDA reports - comprehensive exploration\nInteractive tools - Shiny apps for users\nAutomated reporting - scale insights\n\nRemember: - Know your audience - Tell a clear story - Make it reproducible - Test thoroughly"
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#practise-in-r",
+    "href": "plot-gallery/practical_application.html#practise-in-r",
+    "title": "Practical Application",
+    "section": "🔧 Practise in R",
+    "text": "🔧 Practise in R\nDownload the lab A publication figure and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#self-check-quiz-13",
+    "href": "plot-gallery/practical_application.html#self-check-quiz-13",
+    "title": "Practical Application",
+    "section": "Self-check quiz (1/3)",
+    "text": "Self-check quiz (1/3)\n\nWhy use colors = \"bw\" and theme_bw() for the journal figure?\n\nColour figures cannot be saved as TIFF\nIt stays readable when printed in greyscale\nIt makes the confidence intervals much narrower\nggeffects needs it to compute predictions"
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#self-check-quiz-23",
+    "href": "plot-gallery/practical_application.html#self-check-quiz-23",
+    "title": "Practical Application",
+    "section": "Self-check quiz (2/3)",
+    "text": "Self-check quiz (2/3)\n\nFifty clinics each need the same weekly report. Which approach does the deck use?\n\nFifty copies of the report, edited by hand\nA parameterised template rendered per site\nOne long report with all sites on every page\nA Shiny app that e-mails a screenshot weekly"
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#self-check-quiz-33",
+    "href": "plot-gallery/practical_application.html#self-check-quiz-33",
+    "title": "Practical Application",
+    "section": "Self-check quiz (3/3)",
+    "text": "Self-check quiz (3/3)\n\nClinicians must filter patients and change the view themselves. Which tool fits?\n\nA static PDF report\nA Shiny app\nA TIFF figure at 600 dpi\nA printed Table 1"
+  },
+  {
+    "objectID": "plot-gallery/practical_application.html#score",
+    "href": "plot-gallery/practical_application.html#score",
+    "title": "Practical Application",
+    "section": "Score",
+    "text": "Score\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "plot-gallery/practical_application.html#congratulations",

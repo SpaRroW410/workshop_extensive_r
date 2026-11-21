@@ -22,97 +22,94 @@ Goal: Show complex statistical relationships
 
 ## Setup
 
+Data: 200 simulated patients of a blood-pressure trial (`data/PublicHealth_BP_Dataset.xlsx`, see `data/README.md`).
+
 ```{r}
+#| echo: true
 library(readxl); library(dplyr); library(ggplot2)
-library(ggeffects); library(interactions)
+library(ggeffects); library(interactions); library(broom)
 health_data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
+model <- lm(SysBP_6m ~ TreatmentGroup * Gender + Age + BMI + SysBP_0m, data = health_data)
 ```
 
-## Interaction Plot - Code
+The model adjusts the 6-month SBP for baseline SBP, age and BMI, and lets the treatment effect differ by gender.
 
-```{r eval=FALSE, echo=TRUE}
-# Fit model with interaction
-model <- lm(SysBP_6m ~ TreatmentGroup * Gender + Age + BMI_0m,
-           data = health_data)
+## Interaction Plot
 
-# Plot interaction
-library(interactions)
-interact_plot(model, pred = TreatmentGroup, modx = Gender,
-             interval = TRUE, int.width = 0.95) +
-  labs(title = "Treatment Effect by Gender",
-       y = "Predicted Systolic BP at 6 months") +
+```{r}
+#| echo: true
+#| fig-alt: "Predicted systolic blood pressure at 6 months for each treatment group, with separate points and 95% intervals for each gender category."
+cat_plot(model, pred = TreatmentGroup, modx = Gender, interval = TRUE, int.width = 0.95,
+         geom = "point") +
+  labs(title = "Treatment effect by gender", y = "Predicted systolic BP at 6 months") +
   theme_minimal()
 ```
 
-Shows if treatment effect differs by gender
+The intervention lowers SBP by about 9 mmHg in every gender group; the interaction test agrees
+(`anova(model)`, row `TreatmentGroup:Gender`: p = 0.67). Test an interaction, do not judge it by eye.
 
 ## Marginal Effects Plot
 
-```{r eval=FALSE, echo=TRUE}
-library(ggeffects)
-# Get predicted values
+```{r}
+#| echo: true
+#| fig-alt: "Predicted systolic blood pressure at 6 months against age, one line with a confidence band per treatment group."
 effects <- ggpredict(model, terms = c("Age [all]", "TreatmentGroup"))
-
 plot(effects) +
-  labs(title = "Age Effect on BP by Treatment Group",
-       x = "Age (years)", y = "Predicted BP") +
+  labs(title = "Age and predicted SBP at 6 months, by treatment group",
+       x = "Age (years)", y = "Predicted SBP (mmHg)") +
   theme_minimal()
 ```
 
-Model-based predictions with confidence bands
+Model-based predictions with confidence bands, other variables held at their mean or reference level.
 
 ## Forest Plot (Effect Sizes)
 
-```{r eval=FALSE, echo=TRUE}
-library(broom)
-# Get coefficients
-coef_data <- tidy(model, conf.int = TRUE) %>%
-  filter(term != "(Intercept)")
-
-ggplot(coef_data, aes(x = estimate, y = term)) +
+```{r}
+#| echo: true
+#| fig-alt: "Forest plot of the regression coefficients with 95% confidence intervals and a dashed line at zero."
+coef_data <- tidy(model, conf.int = TRUE) |> filter(term != "(Intercept)")
+ggplot(coef_data, aes(x = estimate, y = reorder(term, estimate))) +
   geom_vline(xintercept = 0, linetype = "dashed") +
+  geom_errorbar(aes(xmin = conf.low, xmax = conf.high), width = 0.2, orientation = "y") +
   geom_point(size = 3) +
-  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high),
-                height = 0.2) +
-  labs(title = "Regression Coefficients with 95% CI",
-       x = "Effect on Systolic BP") +
+  labs(title = "Regression coefficients with 95% CI", x = "Difference in SBP at 6 months (mmHg)", y = NULL) +
   theme_minimal()
 ```
 
-Standard in medical research
+Standard in medical research. Coefficients on different scales (per year of age vs per group) are not comparable in size.
 
 ## Raincloud by Multiple Groups
 
-```{r eval=FALSE, echo=TRUE}
+```{r}
+#| echo: true
+#| fig-alt: "Raincloud plots of systolic blood pressure at 6 months by gender, one panel per treatment group: a half density, a narrow box plot and the raw points."
 library(ggdist)
-health_data %>%
-  filter(!is.na(TreatmentGroup), !is.na(Gender)) %>%
-  ggplot(aes(x = Gender, y = SysBP_6m, fill = TreatmentGroup)) +
-  stat_halfeye(position = position_dodge(width = 0.5),
-              adjust = 0.5, width = 0.3) +
-  geom_boxplot(width = 0.1, outlier.shape = NA,
-              position = position_dodge(width = 0.5)) +
+health_data |>
+  filter(!is.na(TreatmentGroup), !is.na(Gender)) |>
+  ggplot(aes(x = Gender, y = SysBP_6m, fill = Gender)) +
+  stat_halfeye(adjust = 0.6, width = 0.5, justification = -0.25, .width = 0, point_colour = NA) +
+  geom_boxplot(width = 0.12, outlier.shape = NA) +
+  geom_jitter(width = 0.05, alpha = 0.3, size = 0.8) +
   facet_wrap(~ TreatmentGroup) +
-  theme_minimal()
+  labs(y = "Systolic BP at 6 months (mmHg)", x = NULL) +
+  theme_minimal() + theme(legend.position = "none")
 ```
 
-Comprehensive view of nested groups
+Distribution, summary and raw data at once, for nested groups.
 
 ## Bayesian Credible Intervals
 
-```{r eval=FALSE, echo=TRUE}
+```{r}
+#| echo: true
+#| fig-alt: "Posterior medians with 50% and 95% credible intervals for the treatment group and age coefficients of a Bayesian linear model."
 library(rstanarm)
-# Bayesian model (conceptual)
-bayes_model <- stan_glm(SysBP_6m ~ TreatmentGroup + Age,
-                       data = health_data,
-                       prior = normal(0, 2.5))
-
-# Plot posterior distributions
-plot(bayes_model, prob = 0.95) +
-  labs(title = "Bayesian Coefficient Estimates")
+bayes_model <- stan_glm(SysBP_6m ~ TreatmentGroup + Age + SysBP_0m, data = health_data,
+                        chains = 2, iter = 1000, seed = 2026, refresh = 0)
+plot(bayes_model, pars = c("TreatmentGroupIntervention", "Age", "SysBP_0m"), prob = 0.5, prob_outer = 0.95) +
+  labs(title = "Posterior estimates (50% and 95% credible intervals)")
 ```
 
-Full uncertainty quantification
+A 95% **credible** interval holds the coefficient with 95% probability, given the model and its (weak, default) priors.
 
 ## Summary
 

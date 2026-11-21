@@ -2,7 +2,7 @@
 title: "Grammar of Graphics: Module 4"
 subtitle: "Advanced Topics & Best Practices"
 author: "Sparrow"
-date: today
+date: "2026-11-20"
 format: 
   revealjs:
     theme: serif
@@ -47,8 +47,7 @@ library(readxl)
 library(ggthemes)
 library(paletteer)
 library(patchwork)
-# remotes::install_github("haleyjeppson/ggmosaic")
-library(ggmosaic)  # For mosaic plots
+library(productplots)  # mosaic plots (ggmosaic does not work with ggplot2 4.x yet)
 
 # Load data with all transformations
 bp_data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx") %>%
@@ -631,7 +630,7 @@ sessionInfo()
 While ggplot2 is powerful, it has limitations:
 
 ::: {.incremental}
-1. **Mosaic plots / Marimekko charts** - Better with `ggmosaic` or base R `mosaicplot()`
+1. **Mosaic plots / Marimekko charts** - Use `productplots`, `ggmosaic` or base R `mosaicplot()`
 2. **3D plots** - Not natively supported, use `plotly` or `rgl`
 3. **Network graphs** - Use `ggraph` or `igraph`
 4. **Interactive plots** - Limited, need `plotly::ggplotly()` or `ggiraph`
@@ -644,20 +643,19 @@ While ggplot2 is powerful, it has limitations:
 
 :::: {.columns}
 ::: {.column width="60%"}
-**ggplot2 cannot easily create mosaic plots**
+**ggplot2 has no mosaic geom**
 
 ```{r}
 #| echo: true
 #| eval: false
 
-# Use ggmosaic package instead
-library(ggmosaic)
+# productplots draws one with ggplot2
+library(productplots)
 
-ggplot(bp_data) +
-  geom_mosaic(
-    aes(x = product(TreatmentGroup, 
-                    SmokingStatus),
-        fill = TreatmentGroup))
+prodplot(bp_data,
+         ~ TreatmentGroup + SmokingStatus,
+         mosaic()) +
+  aes(fill = TreatmentGroup)
 ```
 
 ::: {.fragment}
@@ -672,10 +670,11 @@ Or use base R `mosaicplot()` for traditional mosaic plots
 #| warning: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Mosaic plot: smoking status splits the width in proportion to its counts, and each column is split by treatment group."
 
-ggplot(bp_data) +
-  geom_mosaic(aes(x = product(TreatmentGroup, SmokingStatus), fill = TreatmentGroup)) +
-  labs(title = "Mosaic Plot with ggmosaic") +
+prodplot(bp_data, ~ TreatmentGroup + SmokingStatus, mosaic()) +
+  aes(fill = TreatmentGroup) +
+  labs(title = "Mosaic plot with productplots", x = "Smoking status", y = NULL, fill = "Treatment") +
   theme_minimal(base_size = 11)
 ```
 :::
@@ -685,7 +684,7 @@ ggplot(bp_data) +
 
 | Need | ggplot2 Solution | Better Alternative |
 |------|-----------------|-------------------|
-| Mosaic plots | ❌ Not supported | `ggmosaic`, base `mosaicplot()` |
+| Mosaic plots | ❌ Not supported | `productplots`, `ggmosaic`, base `mosaicplot()` |
 | 3D visualization | ❌ Not supported | `plotly`, `rgl`, `plot3D` |
 | Network graphs | ❌ Not supported | `ggraph`, `igraph`, `visNetwork` |
 | Interactive plots | Limited | `plotly`, `ggiraph`, `highcharter` |
@@ -699,7 +698,7 @@ ggplot(bp_data) +
 **The good news**: The ggplot2 ecosystem is vast!
 
 ::: {.incremental}
-- **ggmosaic** - Mosaic plots
+- **productplots** / **ggmosaic** - Mosaic plots
 - **gganimate** - Animation
 - **ggraph** - Network/tree diagrams
 - **ggalluvial** - Sankey/alluvial diagrams
@@ -906,6 +905,65 @@ ggplot(bp_data, ...) +
   labs(...) +
   theme_...() +
   theme(...)
+```
+
+## 🔧 Practise in R {.smaller}
+
+Download the lab **[A publication figure](../../labs/dataviz/v2_publication_figure.R)** and the data ([ncd_survey.csv](../../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz (1/4) {.smaller}
+
+```{r}
+#| include: false
+source("../../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gd1", "You write `geom_smooth()` before `geom_point()`. What changes?",
+         c("The line is drawn on top of all the points", "The points are drawn on top of the line", "ggplot2 refuses to draw the two layers", "The points take the colour of the line"), answer = 2,
+         explain = "Layers are drawn in the order they are added: later layers sit on top.")
+```
+
+## Self-check quiz (2/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gd2", "Why read data with `read_excel(\"data/bp.xlsx\")` rather than `\"C:/Users/...\"`?",
+         c("Relative paths load the file faster", "The code then runs on another computer", "Excel files need a relative path", "Absolute paths are not allowed in a Quarto file"), answer = 2,
+         explain = "A path relative to the project folder works wherever the project is copied; an absolute path only works on your machine.")
+```
+
+## Self-check quiz (3/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gd3", "ggplot2 has no mosaic geom. Which of these draws a mosaic plot?",
+         c("`geom_violin()` with a fill", "`coord_flip()` on a pie chart", "`productplots::prodplot(..., mosaic())`", "`facet_wrap()` on a stacked histogram of counts"), answer = 3,
+         explain = "prodplot() with mosaic() draws a mosaic with ggplot2; base R has mosaicplot(), and ggmosaic is another option once it supports ggplot2 4.")
+```
+
+## Self-check quiz (4/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gd4", "Why should a figure not rely on colour alone to separate groups?",
+         c("Colour makes the file too large to share", "Some readers cannot tell the colours apart", "ggplot2 limits a plot to three colours", "Colour slows down rendering of the plot a lot"), answer = 2,
+         explain = "About 1 in 12 men has a colour-vision deficiency, and figures are often printed in greyscale: add shape, labels or line type.")
+```
+
+## Score {.smaller}
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../../assets/quiz-engine.R"); quiz_engine()
 ```
 
 ## Thank You! {.center}

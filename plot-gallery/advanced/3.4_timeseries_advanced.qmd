@@ -22,110 +22,95 @@ Goal: Advanced temporal patterns
 
 ## Setup
 
+Data: monthly dengue cases from 30 city wards, 2023–2025 (`data/dengue_wards.csv`, simulated; see `data/README.md`).
+A trial with three visits is not a time series: these methods need many equally spaced time points.
+
 ```{r}
-library(readxl); library(tidyverse); library(ggplot2)
-library(forecast); library(prophet)
-health_data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
-
-# Create time series
-ts_data <- health_data %>%
-  pivot_longer(c(SysBP_0m, SysBP_3m, SysBP_6m),
-              names_to = "Time", values_to = "BP") %>%
-  group_by(Time, TreatmentGroup) %>%
-  summarise(mean_bp = mean(BP, na.rm = TRUE))
+#| echo: true
+library(tidyverse); library(forecast)
+dengue <- read_csv("../../data/dengue_wards.csv", show_col_types = FALSE)
+monthly <- dengue |>
+  group_by(month_index) |>                                   # 36 consecutive months
+  summarise(cases = sum(cases), rain_mm = mean(rain_mm), .groups = "drop") |>
+  mutate(date = seq(as.Date("2023-01-01"), by = "month", length.out = n()))
+cases_ts <- ts(monthly$cases, start = c(2023, 1), frequency = 12)
 ```
 
-## STL Decomposition - Code
+## STL Decomposition
 
-```{r eval=FALSE, echo=TRUE}
-# Create proper time series (conceptual with more timepoints)
-bp_ts <- ts(monthly_bp_data$mean_bp, frequency = 12)
-
-# STL decomposition
-stl_result <- stl(bp_ts, s.window = "periodic")
-
-# Plot components
+```{r}
+#| echo: true
+#| fig-alt: "STL decomposition of monthly dengue cases into the data, a trend, a seasonal pattern peaking in mid-year, and the remainder."
+stl_result <- stl(log1p(cases_ts), s.window = "periodic")
 autoplot(stl_result) +
-  labs(title = "STL Decomposition of Blood Pressure",
-       subtitle = "Trend + Seasonal + Remainder") +
+  labs(title = "STL decomposition of monthly dengue cases (log scale)") +
   theme_minimal()
 ```
 
-Separates trend, seasonality, and noise
+Separates the **trend**, the **seasonal** pattern (a peak every monsoon) and the **remainder**.
+The log scale makes the seasonal swing additive.
 
-## Forecasting - Code
+## Forecasting with ARIMA
 
-```{r eval=FALSE, echo=TRUE}
-# Fit ARIMA model
-arima_model <- auto.arima(bp_ts)
-
-# Forecast 12 months ahead
+```{r}
+#| echo: true
+#| fig-alt: "Monthly dengue cases 2023 to 2025 with a 12-month seasonal ARIMA forecast for 2026 and its 80% and 95% prediction bands."
+arima_model <- auto.arima(cases_ts, lambda = 0)       # lambda = 0: model the log, forecast on the case scale
 forecast_result <- forecast(arima_model, h = 12)
-
-# Plot
 autoplot(forecast_result) +
-  labs(title = "12-Month Blood Pressure Forecast",
-       y = "Mean Systolic BP") +
+  labs(title = "12-month dengue forecast (seasonal ARIMA)", x = NULL, y = "Cases per month") +
   theme_minimal()
 ```
 
-Blue band = 80% CI, gray = 95% CI
+Dark band = 80%, light band = 95% prediction interval. Three seasons are a short history:
+the bands are wide, and that is the honest message.
 
 ## Prophet Forecasting
 
-```{r eval=FALSE, echo=TRUE}
+```{r}
+#| echo: true
+#| fig-alt: "Prophet fit to monthly dengue cases with points for the data, a line for the fitted values and a shaded uncertainty band extending 12 months ahead."
 library(prophet)
-# Prepare data for Prophet
-prophet_data <- data.frame(
-  ds = as.Date(monthly_bp_data$date),
-  y = monthly_bp_data$mean_bp
-)
-
-# Fit and predict
-m <- prophet(prophet_data)
+m <- prophet(data.frame(ds = monthly$date, y = log1p(monthly$cases)),
+             yearly.seasonality = TRUE, weekly.seasonality = FALSE, daily.seasonality = FALSE)
 future <- make_future_dataframe(m, periods = 12, freq = "month")
-forecast <- predict(m, future)
-
-# Plot
-plot(m, forecast) +
-  labs(title = "Prophet Forecast with Trend")
+fc <- predict(m, future)
+plot(m, fc) + labs(title = "Prophet forecast (log cases)", x = NULL, y = "log(1 + cases)")
 ```
 
-Handles holidays, changepoints automatically
+Prophet fits a trend plus yearly seasonality; it is easy to use but, like any model, only as good as the history.
 
 ## Change Point Detection
 
-```{r eval=FALSE, echo=TRUE}
+```{r}
+#| echo: true
+#| fig-alt: "Monthly dengue cases with red horizontal segments showing the mean level between the change points found by PELT."
 library(changepoint)
-# Detect change points in mean
-cpt_result <- cpt.mean(bp_ts, method = "PELT")
-
-# Plot
-plot(cpt_result, cpt.col = "red", cpt.width = 3,
-    main = "Change Point Detection in BP Time Series")
+y <- as.numeric(log1p(cases_ts))
+noise_sd <- mad(diff(y)) / sqrt(2)                   # cpt.mean() assumes a noise SD of 1: rescale first
+cpt_result <- cpt.mean(y / noise_sd, method = "PELT")
+plot(cpt_result, cpt.col = "red", cpt.width = 3, ylab = "log(1 + cases) / noise SD", xlab = "Month (1 = Jan 2023)",
+     main = "Change points in the mean level")
+cpts(cpt_result)
 ```
 
-Identifies when trend shifts significantly
+Here the "changes" are the start and end of each season: a change-point method finds **level shifts**,
+so remove the seasonal pattern first if you are looking for a shift in the underlying trend.
 
 ## Rolling Statistics Plot
 
-```{r eval=FALSE, echo=TRUE}
+```{r}
+#| echo: true
+#| fig-alt: "Monthly dengue cases in grey with a 3-month rolling mean in blue and a shaded band of plus or minus one rolling standard deviation."
 library(zoo)
-# Calculate rolling mean and SD
-rolling_data <- monthly_bp_data %>%
-  mutate(
-    roll_mean = rollmean(mean_bp, k = 3, fill = NA),
-    roll_sd = rollapply(mean_bp, width = 3, FUN = sd,
-                       fill = NA)
-  )
-
-ggplot(rolling_data, aes(x = date)) +
-  geom_line(aes(y = mean_bp), color = "gray70") +
-  geom_line(aes(y = roll_mean), color = "blue", size = 1) +
-  geom_ribbon(aes(ymin = roll_mean - roll_sd,
-                 ymax = roll_mean + roll_sd),
-             alpha = 0.2, fill = "blue") +
-  labs(title = "3-Month Rolling Mean ± SD") +
+rolling <- monthly |>
+  mutate(roll_mean = rollmean(cases, k = 3, fill = NA),
+         roll_sd = rollapply(cases, width = 3, FUN = sd, fill = NA))
+ggplot(rolling, aes(x = date)) +
+  geom_line(aes(y = cases), colour = "grey70") +
+  geom_ribbon(aes(ymin = roll_mean - roll_sd, ymax = roll_mean + roll_sd), alpha = 0.2, fill = "blue") +
+  geom_line(aes(y = roll_mean), colour = "blue", linewidth = 1) +
+  labs(title = "3-month rolling mean ± SD", x = NULL, y = "Cases per month") +
   theme_minimal()
 ```
 

@@ -22,128 +22,113 @@ Goal: Advanced network insights
 
 ## Setup
 
+Data: 20 providers and 74 referral links between them, January to June (`data/Healthcare_Network_Dataset.xlsx`, simulated).
+
 ```{r}
-library(readxl); library(tidyverse); library(ggplot2)
-library(igraph); library(ggraph)
-network_data <- read_excel("../../data/Healthcare_Network_Dataset.xlsx", sheet = 2)
+#| echo: true
+library(readxl); library(tidyverse); library(igraph); library(ggraph)
+providers <- read_excel("../../data/Healthcare_Network_Dataset.xlsx", sheet = "Providers")
+referrals <- read_excel("../../data/Healthcare_Network_Dataset.xlsx", sheet = "Referrals")
 
-# Create network
-edges <- network_data %>%
-  select(from = FromProvider, to = ToProvider,
-           weight = NumReferrals) %>%
-  filter(!is.na(from), !is.na(to))
-
-net <- graph_from_data_frame(edges, directed = TRUE)
+edges <- referrals |> transmute(from = FromProvider, to = ToProvider, weight = NumReferrals, Month, ReferralType)
+nodes <- providers |> transmute(name = ProviderID, label = sprintf("P%02d", ProviderID), Specialty, Region)
+net <- graph_from_data_frame(edges, directed = TRUE, vertices = nodes)
 ```
 
-## Community Detection - Code
+## Community Detection
 
-```{r eval=FALSE, echo=TRUE}
-# Detect communities (Louvain algorithm)
-communities <- cluster_louvain(as.undirected(net))
-
-# Add to network
-V(net)$community <- membership(communities)
-
-# Visualize
+```{r}
+#| echo: true
+#| fig-alt: "Network of 20 providers drawn with a force-directed layout, each node coloured by the community the Louvain algorithm assigned it to and labelled with its provider code."
+set.seed(42)
+communities <- cluster_louvain(as_undirected(net, edge.attr.comb = list(weight = "sum", "ignore")))
+V(net)$community <- factor(membership(communities))
 ggraph(net, layout = "fr") +
-  geom_edge_link(alpha = 0.3) +
-  geom_node_point(aes(color = factor(community)), size = 5) +
-  geom_node_text(aes(label = name), repel = TRUE, size = 3) +
-  scale_color_brewer(palette = "Set1", name = "Community") +
-  labs(title = "Network Communities (Louvain)") +
+  geom_edge_link(aes(width = weight), alpha = 0.25, colour = "grey40") +
+  geom_node_point(aes(colour = community), size = 5) +
+  geom_node_text(aes(label = label), repel = TRUE, size = 3) +
+  scale_edge_width(range = c(0.3, 2), guide = "none") +
+  scale_colour_brewer(palette = "Dark2", name = "Community") +
+  labs(title = "Provider communities (Louvain)") +
   theme_void()
 ```
 
-Identifies provider groups/clusters
+Louvain groups providers who refer **more to each other than to the rest**; the groups can change with the random
+seed, so treat them as a hypothesis, not a fact.
 
-## Centrality Measures - Code
+## Centrality Measures
 
-```{r eval=FALSE, echo=TRUE}
-# Calculate multiple centralities
-V(net)$degree <- degree(net)
-V(net)$betweenness <- betweenness(net, normalized = TRUE)
-V(net)$closeness <- closeness(net, normalized = TRUE)
-V(net)$eigenvector <- eigen_centrality(net)$vector
-
-# Plot by importance
+```{r}
+#| echo: true
+#| fig-alt: "Provider network in a Kamada-Kawai layout with node size showing betweenness centrality and node colour showing degree."
+V(net)$degree <- degree(net, mode = "all")
+V(net)$betweenness <- betweenness(net, normalized = TRUE, weights = NA)   # weights would be read as distances
 ggraph(net, layout = "kk") +
   geom_edge_link(alpha = 0.2) +
-  geom_node_point(aes(size = betweenness, color = degree)) +
-  geom_node_text(aes(label = name, size = betweenness),
-                repel = TRUE) +
-  scale_color_viridis_c() +
-  labs(title = "Provider Centrality Measures",
-       subtitle = "Size = Betweenness | Color = Degree") +
+  geom_node_point(aes(size = betweenness, colour = degree)) +
+  geom_node_text(aes(label = label), repel = TRUE, size = 3) +
+  scale_colour_viridis_c() +
+  labs(title = "Provider centrality", subtitle = "Size = betweenness | Colour = degree") +
   theme_void()
 ```
+
+**Degree** = how many links; **betweenness** = how often a provider sits on the shortest path between two others
+(a broker: if they are absent, referrals take longer routes).
 
 ## Network Statistics Table
 
-```{r eval=FALSE, echo=TRUE}
-# Calculate network metrics
-stats <- data.frame(
-  Metric = c("Nodes", "Edges", "Density", "Avg Path Length",
-            "Clustering Coef", "Modularity"),
-  Value = c(
-    vcount(net),
-    ecount(net),
-    round(edge_density(net), 3),
-    round(mean_distance(net), 2),
-    round(transitivity(net), 3),
-    round(modularity(communities), 3)
-  )
-)
-
-knitr::kable(stats, caption = "Network Statistics")
+```{r}
+#| echo: true
+stats <- tibble(
+  Metric = c("Providers (nodes)", "Referral links (edges)", "Density", "Mean path length",
+             "Clustering coefficient", "Modularity of the communities"),
+  Value = c(vcount(net), ecount(net), round(edge_density(net), 3), round(mean_distance(net, weights = NA), 2),
+            round(transitivity(net), 3), round(modularity(communities), 3)))
+knitr::kable(stats)
 ```
 
-Quantitative network description
+**Density** = links present / links possible. A **modularity** near 0 means the communities are weak.
 
-## Bipartite Network - Code
+## Bipartite Network
 
-```{r eval=FALSE, echo=TRUE}
-# Create bipartite: Patients <-> Providers
-bipartite_edges <- network_data %>%
-  select(from = PatientID, to = ReferringProvider) %>%
-  mutate(from = paste0("P", from))  # Prefix patients
-
-bp_net <- graph_from_data_frame(bipartite_edges, directed = FALSE)
-V(bp_net)$type <- grepl("^P", V(bp_net)$name)  # Patient = TRUE
-
+```{r}
+#| echo: true
+#| fig-alt: "Two-row bipartite network: the 20 referring providers in one row and the three referral types (routine, follow-up, urgent) in the other, with links weighted by the number of referrals."
+bip <- referrals |> group_by(from = sprintf("P%02d", FromProvider), to = ReferralType) |>
+  summarise(weight = sum(NumReferrals), .groups = "drop")
+bp_net <- graph_from_data_frame(bip, directed = FALSE)
+V(bp_net)$type <- V(bp_net)$name %in% bip$to                 # TRUE = referral type
 ggraph(bp_net, layout = "bipartite") +
-  geom_edge_link(alpha = 0.1) +
-  geom_node_point(aes(color = type), size = 3) +
-  scale_color_manual(values = c("Provider" = "blue",
-                               "Patient" = "orange"),
-                    labels = c("Provider", "Patient")) +
-  labs(title = "Patient-Provider Bipartite Network") +
+  geom_edge_link(aes(width = weight), alpha = 0.3) +
+  geom_node_point(aes(colour = type), size = 4) +
+  geom_node_text(aes(label = name), size = 2.5, vjust = -1.2) +
+  scale_edge_width(range = c(0.2, 2), guide = "none") +
+  scale_colour_manual(values = c(`FALSE` = "#2C5F8D", `TRUE` = "#E67E22"),
+                      labels = c("Provider", "Referral type"), name = NULL) +
+  labs(title = "Who sends which kind of referral") +
   theme_void()
 ```
 
+Two kinds of node, and links only **between** kinds: providers and the referral types they send.
+
 ## Dynamic Network (Time-based)
 
-```{r eval=FALSE, echo=TRUE}
-# Split network by time periods
-network_t1 <- network_data %>%
-  filter(TimePoint == "0m") %>%
-  graph_from_data_frame()
-
-network_t2 <- network_data %>%
-  filter(TimePoint == "6m") %>%
-  graph_from_data_frame()
-
-# Compare side-by-side
+```{r}
+#| echo: true
+#| fig-alt: "Two network panels with the same node positions: referrals in January to March and in April to June."
 library(patchwork)
-p1 <- ggraph(network_t1) + geom_edge_link() + 
-      geom_node_point() + labs(title = "Month 0")
-p2 <- ggraph(network_t2) + geom_edge_link() + 
-      geom_node_point() + labs(title = "Month 6")
-
-p1 + p2
+set.seed(1)
+coords <- create_layout(net, layout = "fr")[, c("x", "y")]        # same positions in both panels
+half <- function(months, title) {
+  sub <- subgraph_from_edges(net, E(net)[Month %in% months], delete.vertices = FALSE)
+  ggraph(sub, layout = "manual", x = coords$x, y = coords$y) +
+    geom_edge_link(alpha = 0.4) + geom_node_point(colour = "#2C5F8D", size = 2.5) +
+    labs(title = title) + theme_void()
+}
+half(c("Jan", "Feb", "Mar"), "January–March") + half(c("Apr", "May", "Jun"), "April–June")
 ```
 
-Shows network evolution
+**Fixing the node positions** makes the two periods comparable: only the links change.
 
 ## Summary
 

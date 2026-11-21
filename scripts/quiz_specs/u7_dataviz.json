@@ -1,0 +1,355 @@
+[
+ {
+  "file": "data-visualization/gram_ggplot/module_3_colors_scales_themes.qmd",
+  "lab": [
+   "labs/dataviz/v1_colours_themes.R",
+   "Colours, scales and themes"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "gc1",
+    "Which scale keeps groups distinguishable for colour-blind readers and in greyscale?",
+    [
+     "`scale_colour_brewer(palette = \"Set1\")`",
+     "`scale_colour_viridis_d()`",
+     "`scale_colour_hue()`",
+     "`scale_colour_manual(values = c(\"red\", \"green\"))`"
+    ],
+    2,
+    "viridis changes lightness as well as hue, so it survives greyscale printing and red-green colour blindness; Set1 and the default hue scale do not."
+   ],
+   [
+    "gc2",
+    "SBP change ranges from −20 to +20 mmHg, and 0 means no change. Which colour scale fits?",
+    [
+     "`scale_colour_gradient(low = \"white\")`",
+     "`scale_colour_viridis_d()`",
+     "`scale_colour_gradient2(midpoint = 0)`",
+     "`scale_colour_grey(start = 0.2)`"
+    ],
+    3,
+    "A diverging scale with its neutral colour at a meaningful midpoint shows the direction and size of change."
+   ],
+   [
+    "gc3",
+    "Which `theme()` setting removes the minor grid lines?",
+    [
+     "`panel.grid.minor = element_line()`",
+     "`panel.background = element_rect()`",
+     "`legend.position = \"none\"`",
+     "`panel.grid.minor = element_blank()`"
+    ],
+    4,
+    "element_blank() removes a theme element; element_line() and element_rect() style it."
+   ],
+   [
+    "gc4",
+    "How do you apply a house theme to every later plot in a report?",
+    [
+     "Add the theme to the first plot only",
+     "Call `theme_set()` once at the start",
+     "Save the theme with `ggsave()`",
+     "Put the theme inside `aes()`"
+    ],
+    2,
+    "theme_set() changes the default theme for the rest of the session or document."
+   ]
+  ]
+ },
+ {
+  "file": "data-visualization/gram_ggplot/module_4_advanced_best_practices.qmd",
+  "lab": [
+   "labs/dataviz/v2_publication_figure.R",
+   "A publication figure"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "gd1",
+    "You write `geom_smooth()` before `geom_point()`. What changes?",
+    [
+     "The line is drawn on top of the points",
+     "The points are drawn on top of the line",
+     "ggplot2 refuses to draw the two layers",
+     "The points take the colour of the line"
+    ],
+    2,
+    "Layers are drawn in the order they are added: later layers sit on top."
+   ],
+   [
+    "gd2",
+    "Why read data with `read_excel(\"data/bp.xlsx\")` rather than `\"C:/Users/...\"`?",
+    [
+     "Relative paths load the file faster",
+     "The code then runs on another computer",
+     "Excel files need a relative path",
+     "Absolute paths are not allowed in a Quarto file"
+    ],
+    2,
+    "A path relative to the project folder works wherever the project is copied; an absolute path only works on your machine."
+   ],
+   [
+    "gd3",
+    "ggplot2 has no mosaic geom. Which of these draws a mosaic plot?",
+    [
+     "`geom_violin()` with a fill",
+     "`coord_flip()` on a pie chart",
+     "`productplots::prodplot(..., mosaic())`",
+     "`facet_wrap()` on a stacked histogram of counts"
+    ],
+    3,
+    "prodplot() with mosaic() draws a mosaic with ggplot2; base R has mosaicplot(), and ggmosaic is another option once it supports ggplot2 4."
+   ],
+   [
+    "gd4",
+    "Why should a figure not rely on colour alone to separate groups?",
+    [
+     "Colour makes the file too large to share",
+     "Some readers cannot tell the colours apart",
+     "ggplot2 limits a plot to three colours",
+     "Colour slows down rendering of the plot a lot"
+    ],
+    2,
+    "About 1 in 12 men has a colour-vision deficiency, and figures are often printed in greyscale: add shape, labels or line type."
+   ]
+  ]
+ },
+ {
+  "file": "plot-gallery/advanced.qmd",
+  "questions": [
+   [
+    "pa1",
+    "36 months of dengue counts should be split into trend, season and noise. Which method does that?",
+    [
+     "A cartogram",
+     "STL decomposition",
+     "Parallel coordinates",
+     "Community detection"
+    ],
+    2,
+    "STL (seasonal-trend decomposition by loess) separates a series into trend, seasonal and remainder components."
+   ],
+   [
+    "pa2",
+    "Which plot makes a regression's coefficients easy to compare with zero?",
+    [
+     "A 3D density surface",
+     "A hexagon tile map",
+     "A forest (coefficient) plot",
+     "A Sankey diagram of terms"
+    ],
+    3,
+    "A forest plot shows each estimate with its confidence interval next to a reference line at 0."
+   ],
+   [
+    "pa3",
+    "A cartogram resizes each block by its population. What does it show better than a normal map?",
+    [
+     "The exact borders of each block",
+     "Where the people are, not the land",
+     "The road distance to each clinic",
+     "The shape of each block's outline"
+    ],
+    2,
+    "Areas proportional to population show where the people (and so most cases) are; large empty blocks no longer dominate."
+   ]
+  ]
+ },
+ {
+  "file": "plot-gallery/practical_application.qmd",
+  "lab": [
+   "labs/dataviz/v2_publication_figure.R",
+   "A publication figure"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "pr1",
+    "Why use `colors = \"bw\"` and `theme_bw()` for the journal figure?",
+    [
+     "Colour figures cannot be saved as TIFF",
+     "It stays readable when printed in greyscale",
+     "It makes the confidence intervals narrower",
+     "ggeffects needs it to compute predictions"
+    ],
+    2,
+    "Many journals print in black and white; a figure that does not depend on colour reads the same in print."
+   ],
+   [
+    "pr2",
+    "Fifty clinics each need the same weekly report. Which approach does the deck use?",
+    [
+     "Fifty copies of the report, edited by hand",
+     "A parameterised template rendered per site",
+     "One long report with all sites on every page",
+     "A Shiny app that e-mails a screenshot weekly"
+    ],
+    2,
+    "One template with a site parameter, rendered in a loop, gives consistent reports and one place to fix mistakes."
+   ],
+   [
+    "pr3",
+    "Clinicians must filter patients and change the view themselves. Which tool fits?",
+    [
+     "A static PDF report",
+     "A Shiny app",
+     "A TIFF figure at 600 dpi",
+     "A printed Table 1"
+    ],
+    2,
+    "Shiny apps run R code in response to the user's inputs, so the reader can change the analysis, not just look at it."
+   ]
+  ]
+ },
+ {
+  "file": "specialized/interactive.qmd",
+  "lab": [
+   "labs/dataviz/v4_interactive.R",
+   "Interactive plots"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "ia1",
+    "In `ggplotly(p, tooltip = \"text\")`, what does the tooltip argument do?",
+    [
+     "Adds a text label beside each point",
+     "Shows only the text aesthetic on hover",
+     "Turns the axis titles into links",
+     "Exports the plot as a text file on disk"
+    ],
+    2,
+    "tooltip = \"text\" limits the hover label to the text aesthetic you built; the default lists every mapped aesthetic."
+   ],
+   [
+    "ia2",
+    "Your paper goes to a journal as a PDF. What about the interactive plotly figure?",
+    [
+     "It is converted to an animation in the PDF",
+     "It needs a static version for the PDF",
+     "It works if the reader opens the PDF online",
+     "It is printed with all the tooltips shown"
+    ],
+    2,
+    "htmlwidgets work in HTML only: put a static figure in the paper and the interactive one in a web supplement."
+   ],
+   [
+    "ia3",
+    "What does crosstalk's `SharedData` let you do?",
+    [
+     "Share a plot on social media from the page",
+     "Store the data on a server for other users",
+     "Link widgets so a selection filters the others",
+     "Speed up a plot by sharing memory between widgets"
+    ],
+    3,
+    "Widgets built on the same SharedData object respond to each other's selections, in a static page without a server."
+   ]
+  ]
+ },
+ {
+  "file": "exporting_tools/debugging_plots.qmd",
+  "lab": [
+   "labs/dataviz/v5_debug_export.R",
+   "Debugging and exporting"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "db1",
+    "\"Aesthetics must be either length 1 or the same as the data\". What usually causes it?",
+    [
+     "A missing library(ggplot2) call at the top",
+     "A vector in aes() not as long as the data",
+     "A theme that is applied twice to the plot",
+     "Too many rows in the data for ggplot2"
+    ],
+    2,
+    "Something mapped in aes() has a different length from the data frame, often a vector from outside the data; put it in the data as a column."
+   ],
+   [
+    "db2",
+    "What is the first step of layer-by-layer debugging?",
+    [
+     "Re-install ggplot2 from CRAN and restart the R session",
+     "Draw the base plot, then add one layer at a time",
+     "Save the plot as a PDF and look at it closely",
+     "Switch every geom to geom_point() first"
+    ],
+    2,
+    "Adding one layer at a time shows exactly which layer breaks the plot."
+   ],
+   [
+    "db3",
+    "A plot of 2 million points takes minutes to draw. Which fix helps most?",
+    [
+     "Add a theme with fewer grid lines",
+     "Summarise or bin first (e.g. geom_hex)",
+     "Increase the dpi of the saved file",
+     "Switch the colour palette to viridis_c"
+    ],
+    2,
+    "Drawing millions of points is slow and hides density anyway; binning or summarising draws far fewer shapes."
+   ]
+  ]
+ },
+ {
+  "file": "exporting_tools/advanced_exporting.qmd",
+  "lab": [
+   "labs/dataviz/v5_debug_export.R",
+   "Debugging and exporting"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "ae1",
+    "You need the same plot for each of 12 districts. What is the cleanest approach?",
+    [
+     "Copy the plot code 12 times and edit each copy",
+     "A loop or map() over districts with ggsave()",
+     "Facet the plot and save it 12 times",
+     "Save one PDF and split it by hand later"
+    ],
+    2,
+    "A loop or map() writes one file per district from one piece of code, with the file name built from the district."
+   ],
+   [
+    "ae2",
+    "Why use a Cairo (or ragg) device for PNG output?",
+    [
+     "Smaller vector files for printing",
+     "Better anti-aliasing and font rendering",
+     "Automatic alt text for the figure",
+     "Higher statistical precision of the plot"
+    ],
+    2,
+    "Cairo and ragg draw smoother lines and text and handle fonts consistently across operating systems."
+   ],
+   [
+    "ae3",
+    "A journal wants Figure 1 as two panels tagged A and B, 18 cm wide. Which tools fit?",
+    [
+     "facet_wrap() and then a screenshot of the window",
+     "Two separate PNGs pasted together in Word",
+     "patchwork with tag_levels, then ggsave(units = \"cm\")",
+     "par(mfrow) with the default device size"
+    ],
+    3,
+    "patchwork combines ggplots and adds panel tags; ggsave() sets the exact size, units and dpi."
+   ]
+  ]
+ }
+]

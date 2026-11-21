@@ -223,127 +223,153 @@
 </section>
 <section id="setup" class="slide level2">
 <h2>Setup</h2>
-</section>
-<section id="community-detection---code" class="slide level2">
-<h2>Community Detection - Code</h2>
+<p>Data: 20 providers and 74 referral links between them, January to June (<code>data/Healthcare_Network_Dataset.xlsx</code>, simulated).</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a><span class="co"># Detect communities (Louvain algorithm)</span></span>
-<span id="cb1-2"><a aria-label="2"></a>communities <span class="ot">&lt;-</span> <span class="fu">cluster_louvain</span>(<span class="fu">as.undirected</span>(net))</span>
-<span id="cb1-3"><a aria-label="3"></a></span>
-<span id="cb1-4"><a aria-label="4"></a><span class="co"># Add to network</span></span>
-<span id="cb1-5"><a aria-label="5"></a><span class="fu">V</span>(net)<span class="sc">$</span>community <span class="ot">&lt;-</span> <span class="fu">membership</span>(communities)</span>
-<span id="cb1-6"><a aria-label="6"></a></span>
-<span id="cb1-7"><a aria-label="7"></a><span class="co"># Visualize</span></span>
-<span id="cb1-8"><a aria-label="8"></a><span class="fu">ggraph</span>(net, <span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span></span>
-<span id="cb1-9"><a aria-label="9"></a>  <span class="fu">geom_edge_link</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb1-10"><a aria-label="10"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(community)), <span class="at">size =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
-<span id="cb1-11"><a aria-label="11"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name), <span class="at">repel =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb1-12"><a aria-label="12"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>, <span class="at">name =</span> <span class="st">"Community"</span>) <span class="sc">+</span></span>
-<span id="cb1-13"><a aria-label="13"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Network Communities (Louvain)"</span>) <span class="sc">+</span></span>
-<span id="cb1-14"><a aria-label="14"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a><span class="fu">library</span>(readxl); <span class="fu">library</span>(tidyverse); <span class="fu">library</span>(igraph); <span class="fu">library</span>(ggraph)</span>
+<span id="cb1-2"><a aria-label="2"></a>providers <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"../../data/Healthcare_Network_Dataset.xlsx"</span>, <span class="at">sheet =</span> <span class="st">"Providers"</span>)</span>
+<span id="cb1-3"><a aria-label="3"></a>referrals <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"../../data/Healthcare_Network_Dataset.xlsx"</span>, <span class="at">sheet =</span> <span class="st">"Referrals"</span>)</span>
+<span id="cb1-4"><a aria-label="4"></a></span>
+<span id="cb1-5"><a aria-label="5"></a>edges <span class="ot">&lt;-</span> referrals <span class="sc">|&gt;</span> <span class="fu">transmute</span>(<span class="at">from =</span> FromProvider, <span class="at">to =</span> ToProvider, <span class="at">weight =</span> NumReferrals, Month, ReferralType)</span>
+<span id="cb1-6"><a aria-label="6"></a>nodes <span class="ot">&lt;-</span> providers <span class="sc">|&gt;</span> <span class="fu">transmute</span>(<span class="at">name =</span> ProviderID, <span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">"P%02d"</span>, ProviderID), Specialty, Region)</span>
+<span id="cb1-7"><a aria-label="7"></a>net <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(edges, <span class="at">directed =</span> <span class="cn">TRUE</span>, <span class="at">vertices =</span> nodes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>Identifies provider groups/clusters</p>
 </section>
-<section id="centrality-measures---code" class="slide level2">
-<h2>Centrality Measures - Code</h2>
+<section id="community-detection" class="slide level2">
+<h2>Community Detection</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-label="1"></a><span class="co"># Calculate multiple centralities</span></span>
-<span id="cb2-2"><a aria-label="2"></a><span class="fu">V</span>(net)<span class="sc">$</span>degree <span class="ot">&lt;-</span> <span class="fu">degree</span>(net)</span>
-<span id="cb2-3"><a aria-label="3"></a><span class="fu">V</span>(net)<span class="sc">$</span>betweenness <span class="ot">&lt;-</span> <span class="fu">betweenness</span>(net, <span class="at">normalized =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-4"><a aria-label="4"></a><span class="fu">V</span>(net)<span class="sc">$</span>closeness <span class="ot">&lt;-</span> <span class="fu">closeness</span>(net, <span class="at">normalized =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-5"><a aria-label="5"></a><span class="fu">V</span>(net)<span class="sc">$</span>eigenvector <span class="ot">&lt;-</span> <span class="fu">eigen_centrality</span>(net)<span class="sc">$</span>vector</span>
-<span id="cb2-6"><a aria-label="6"></a></span>
-<span id="cb2-7"><a aria-label="7"></a><span class="co"># Plot by importance</span></span>
-<span id="cb2-8"><a aria-label="8"></a><span class="fu">ggraph</span>(net, <span class="at">layout =</span> <span class="st">"kk"</span>) <span class="sc">+</span></span>
-<span id="cb2-9"><a aria-label="9"></a>  <span class="fu">geom_edge_link</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb2-10"><a aria-label="10"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> betweenness, <span class="at">color =</span> degree)) <span class="sc">+</span></span>
-<span id="cb2-11"><a aria-label="11"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name, <span class="at">size =</span> betweenness),</span>
-<span id="cb2-12"><a aria-label="12"></a>                <span class="at">repel =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
-<span id="cb2-13"><a aria-label="13"></a>  <span class="fu">scale_color_viridis_c</span>() <span class="sc">+</span></span>
-<span id="cb2-14"><a aria-label="14"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Provider Centrality Measures"</span>,</span>
-<span id="cb2-15"><a aria-label="15"></a>       <span class="at">subtitle =</span> <span class="st">"Size = Betweenness | Color = Degree"</span>) <span class="sc">+</span></span>
-<span id="cb2-16"><a aria-label="16"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-label="1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb2-2"><a aria-label="2"></a>communities <span class="ot">&lt;-</span> <span class="fu">cluster_louvain</span>(<span class="fu">as_undirected</span>(net, <span class="at">edge.attr.comb =</span> <span class="fu">list</span>(<span class="at">weight =</span> <span class="st">"sum"</span>, <span class="st">"ignore"</span>)))</span>
+<span id="cb2-3"><a aria-label="3"></a><span class="fu">V</span>(net)<span class="sc">$</span>community <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">membership</span>(communities))</span>
+<span id="cb2-4"><a aria-label="4"></a><span class="fu">ggraph</span>(net, <span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span></span>
+<span id="cb2-5"><a aria-label="5"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">width =</span> weight), <span class="at">alpha =</span> <span class="fl">0.25</span>, <span class="at">colour =</span> <span class="st">"grey40"</span>) <span class="sc">+</span></span>
+<span id="cb2-6"><a aria-label="6"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> community), <span class="at">size =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb2-7"><a aria-label="7"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> label), <span class="at">repel =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb2-8"><a aria-label="8"></a>  <span class="fu">scale_edge_width</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="fl">0.3</span>, <span class="dv">2</span>), <span class="at">guide =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb2-9"><a aria-label="9"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>, <span class="at">name =</span> <span class="st">"Community"</span>) <span class="sc">+</span></span>
+<span id="cb2-10"><a aria-label="10"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Provider communities (Louvain)"</span>) <span class="sc">+</span></span>
+<span id="cb2-11"><a aria-label="11"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+
 </div>
+<img data-src="3.5_network_advanced_files/figure-revealjs/unnamed-chunk-2-1.png" alt="Network of 20 providers drawn with a force-directed layout, each node coloured by the community the Louvain algorithm assigned it to and labelled with its provider code." width="960" class="r-stretch"><p>Louvain groups providers who refer <strong>more to each other than to the rest</strong>; the groups can change with the random seed, so treat them as a hypothesis, not a fact.</p>
+</section>
+<section id="centrality-measures" class="slide level2">
+<h2>Centrality Measures</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a><span class="fu">V</span>(net)<span class="sc">$</span>degree <span class="ot">&lt;-</span> <span class="fu">degree</span>(net, <span class="at">mode =</span> <span class="st">"all"</span>)</span>
+<span id="cb3-2"><a aria-label="2"></a><span class="fu">V</span>(net)<span class="sc">$</span>betweenness <span class="ot">&lt;-</span> <span class="fu">betweenness</span>(net, <span class="at">normalized =</span> <span class="cn">TRUE</span>, <span class="at">weights =</span> <span class="cn">NA</span>)   <span class="co"># weights would be read as distances</span></span>
+<span id="cb3-3"><a aria-label="3"></a><span class="fu">ggraph</span>(net, <span class="at">layout =</span> <span class="st">"kk"</span>) <span class="sc">+</span></span>
+<span id="cb3-4"><a aria-label="4"></a>  <span class="fu">geom_edge_link</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb3-5"><a aria-label="5"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> betweenness, <span class="at">colour =</span> degree)) <span class="sc">+</span></span>
+<span id="cb3-6"><a aria-label="6"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> label), <span class="at">repel =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb3-7"><a aria-label="7"></a>  <span class="fu">scale_colour_viridis_c</span>() <span class="sc">+</span></span>
+<span id="cb3-8"><a aria-label="8"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Provider centrality"</span>, <span class="at">subtitle =</span> <span class="st">"Size = betweenness | Colour = degree"</span>) <span class="sc">+</span></span>
+<span id="cb3-9"><a aria-label="9"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+
+</div>
+<img data-src="3.5_network_advanced_files/figure-revealjs/unnamed-chunk-3-1.png" alt="Provider network in a Kamada-Kawai layout with node size showing betweenness centrality and node colour showing degree." width="960" class="r-stretch"><p><strong>Degree</strong> = how many links; <strong>betweenness</strong> = how often a provider sits on the shortest path between two others (a broker: if they are absent, referrals take longer routes).</p>
 </section>
 <section id="network-statistics-table" class="slide level2">
 <h2>Network Statistics Table</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a><span class="co"># Calculate network metrics</span></span>
-<span id="cb3-2"><a aria-label="2"></a>stats <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb3-3"><a aria-label="3"></a>  <span class="at">Metric =</span> <span class="fu">c</span>(<span class="st">"Nodes"</span>, <span class="st">"Edges"</span>, <span class="st">"Density"</span>, <span class="st">"Avg Path Length"</span>,</span>
-<span id="cb3-4"><a aria-label="4"></a>            <span class="st">"Clustering Coef"</span>, <span class="st">"Modularity"</span>),</span>
-<span id="cb3-5"><a aria-label="5"></a>  <span class="at">Value =</span> <span class="fu">c</span>(</span>
-<span id="cb3-6"><a aria-label="6"></a>    <span class="fu">vcount</span>(net),</span>
-<span id="cb3-7"><a aria-label="7"></a>    <span class="fu">ecount</span>(net),</span>
-<span id="cb3-8"><a aria-label="8"></a>    <span class="fu">round</span>(<span class="fu">edge_density</span>(net), <span class="dv">3</span>),</span>
-<span id="cb3-9"><a aria-label="9"></a>    <span class="fu">round</span>(<span class="fu">mean_distance</span>(net), <span class="dv">2</span>),</span>
-<span id="cb3-10"><a aria-label="10"></a>    <span class="fu">round</span>(<span class="fu">transitivity</span>(net), <span class="dv">3</span>),</span>
-<span id="cb3-11"><a aria-label="11"></a>    <span class="fu">round</span>(<span class="fu">modularity</span>(communities), <span class="dv">3</span>)</span>
-<span id="cb3-12"><a aria-label="12"></a>  )</span>
-<span id="cb3-13"><a aria-label="13"></a>)</span>
-<span id="cb3-14"><a aria-label="14"></a></span>
-<span id="cb3-15"><a aria-label="15"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(stats, <span class="at">caption =</span> <span class="st">"Network Statistics"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-label="1"></a>stats <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb4-2"><a aria-label="2"></a>  <span class="at">Metric =</span> <span class="fu">c</span>(<span class="st">"Providers (nodes)"</span>, <span class="st">"Referral links (edges)"</span>, <span class="st">"Density"</span>, <span class="st">"Mean path length"</span>,</span>
+<span id="cb4-3"><a aria-label="3"></a>             <span class="st">"Clustering coefficient"</span>, <span class="st">"Modularity of the communities"</span>),</span>
+<span id="cb4-4"><a aria-label="4"></a>  <span class="at">Value =</span> <span class="fu">c</span>(<span class="fu">vcount</span>(net), <span class="fu">ecount</span>(net), <span class="fu">round</span>(<span class="fu">edge_density</span>(net), <span class="dv">3</span>), <span class="fu">round</span>(<span class="fu">mean_distance</span>(net, <span class="at">weights =</span> <span class="cn">NA</span>), <span class="dv">2</span>),</span>
+<span id="cb4-5"><a aria-label="5"></a>            <span class="fu">round</span>(<span class="fu">transitivity</span>(net), <span class="dv">3</span>), <span class="fu">round</span>(<span class="fu">modularity</span>(communities), <span class="dv">3</span>)))</span>
+<span id="cb4-6"><a aria-label="6"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(stats)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output-display">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Metric</th>
+<th style="text-align: right;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Providers (nodes)</td>
+<td style="text-align: right;">20.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Referral links (edges)</td>
+<td style="text-align: right;">74.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Density</td>
+<td style="text-align: right;">0.195</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mean path length</td>
+<td style="text-align: right;">2.310</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Clustering coefficient</td>
+<td style="text-align: right;">0.355</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Modularity of the communities</td>
+<td style="text-align: right;">0.289</td>
+</tr>
+</tbody>
+</table>
 </div>
-<p>Quantitative network description</p>
+</div>
+<p><strong>Density</strong> = links present / links possible. A <strong>modularity</strong> near 0 means the communities are weak.</p>
 </section>
-<section id="bipartite-network---code" class="slide level2">
-<h2>Bipartite Network - Code</h2>
+<section id="bipartite-network" class="slide level2">
+<h2>Bipartite Network</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-label="1"></a><span class="co"># Create bipartite: Patients &lt;-&gt; Providers</span></span>
-<span id="cb4-2"><a aria-label="2"></a>bipartite_edges <span class="ot">&lt;-</span> network_data <span class="sc">%&gt;%</span></span>
-<span id="cb4-3"><a aria-label="3"></a>  <span class="fu">select</span>(<span class="at">from =</span> PatientID, <span class="at">to =</span> ReferringProvider) <span class="sc">%&gt;%</span></span>
-<span id="cb4-4"><a aria-label="4"></a>  <span class="fu">mutate</span>(<span class="at">from =</span> <span class="fu">paste0</span>(<span class="st">"P"</span>, from))  <span class="co"># Prefix patients</span></span>
-<span id="cb4-5"><a aria-label="5"></a></span>
-<span id="cb4-6"><a aria-label="6"></a>bp_net <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(bipartite_edges, <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb4-7"><a aria-label="7"></a><span class="fu">V</span>(bp_net)<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">grepl</span>(<span class="st">"^P"</span>, <span class="fu">V</span>(bp_net)<span class="sc">$</span>name)  <span class="co"># Patient = TRUE</span></span>
-<span id="cb4-8"><a aria-label="8"></a></span>
-<span id="cb4-9"><a aria-label="9"></a><span class="fu">ggraph</span>(bp_net, <span class="at">layout =</span> <span class="st">"bipartite"</span>) <span class="sc">+</span></span>
-<span id="cb4-10"><a aria-label="10"></a>  <span class="fu">geom_edge_link</span>(<span class="at">alpha =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
-<span id="cb4-11"><a aria-label="11"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> type), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb4-12"><a aria-label="12"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Provider"</span> <span class="ot">=</span> <span class="st">"blue"</span>,</span>
-<span id="cb4-13"><a aria-label="13"></a>                               <span class="st">"Patient"</span> <span class="ot">=</span> <span class="st">"orange"</span>),</span>
-<span id="cb4-14"><a aria-label="14"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Provider"</span>, <span class="st">"Patient"</span>)) <span class="sc">+</span></span>
-<span id="cb4-15"><a aria-label="15"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Patient-Provider Bipartite Network"</span>) <span class="sc">+</span></span>
-<span id="cb4-16"><a aria-label="16"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-label="1"></a>bip <span class="ot">&lt;-</span> referrals <span class="sc">|&gt;</span> <span class="fu">group_by</span>(<span class="at">from =</span> <span class="fu">sprintf</span>(<span class="st">"P%02d"</span>, FromProvider), <span class="at">to =</span> ReferralType) <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a aria-label="2"></a>  <span class="fu">summarise</span>(<span class="at">weight =</span> <span class="fu">sum</span>(NumReferrals), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb5-3"><a aria-label="3"></a>bp_net <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(bip, <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-4"><a aria-label="4"></a><span class="fu">V</span>(bp_net)<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">V</span>(bp_net)<span class="sc">$</span>name <span class="sc">%in%</span> bip<span class="sc">$</span>to                 <span class="co"># TRUE = referral type</span></span>
+<span id="cb5-5"><a aria-label="5"></a><span class="fu">ggraph</span>(bp_net, <span class="at">layout =</span> <span class="st">"bipartite"</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a aria-label="6"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">width =</span> weight), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb5-7"><a aria-label="7"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> type), <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb5-8"><a aria-label="8"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name), <span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb5-9"><a aria-label="9"></a>  <span class="fu">scale_edge_width</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="dv">2</span>), <span class="at">guide =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb5-10"><a aria-label="10"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">`</span><span class="at">FALSE</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"#2C5F8D"</span>, <span class="st">`</span><span class="at">TRUE</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"#E67E22"</span>),</span>
+<span id="cb5-11"><a aria-label="11"></a>                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Provider"</span>, <span class="st">"Referral type"</span>), <span class="at">name =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb5-12"><a aria-label="12"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Who sends which kind of referral"</span>) <span class="sc">+</span></span>
+<span id="cb5-13"><a aria-label="13"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+
 </div>
+<img data-src="3.5_network_advanced_files/figure-revealjs/unnamed-chunk-5-1.png" alt="Two-row bipartite network: the 20 referring providers in one row and the three referral types (routine, follow-up, urgent) in the other, with links weighted by the number of referrals." width="960" class="r-stretch"><p>Two kinds of node, and links only <strong>between</strong> kinds: providers and the referral types they send.</p>
 </section>
 <section id="dynamic-network-time-based" class="slide level2">
 <h2>Dynamic Network (Time-based)</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-label="1"></a><span class="co"># Split network by time periods</span></span>
-<span id="cb5-2"><a aria-label="2"></a>network_t1 <span class="ot">&lt;-</span> network_data <span class="sc">%&gt;%</span></span>
-<span id="cb5-3"><a aria-label="3"></a>  <span class="fu">filter</span>(TimePoint <span class="sc">==</span> <span class="st">"0m"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-4"><a aria-label="4"></a>  <span class="fu">graph_from_data_frame</span>()</span>
-<span id="cb5-5"><a aria-label="5"></a></span>
-<span id="cb5-6"><a aria-label="6"></a>network_t2 <span class="ot">&lt;-</span> network_data <span class="sc">%&gt;%</span></span>
-<span id="cb5-7"><a aria-label="7"></a>  <span class="fu">filter</span>(TimePoint <span class="sc">==</span> <span class="st">"6m"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-8"><a aria-label="8"></a>  <span class="fu">graph_from_data_frame</span>()</span>
-<span id="cb5-9"><a aria-label="9"></a></span>
-<span id="cb5-10"><a aria-label="10"></a><span class="co"># Compare side-by-side</span></span>
-<span id="cb5-11"><a aria-label="11"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb5-12"><a aria-label="12"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggraph</span>(network_t1) <span class="sc">+</span> <span class="fu">geom_edge_link</span>() <span class="sc">+</span> </span>
-<span id="cb5-13"><a aria-label="13"></a>      <span class="fu">geom_node_point</span>() <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Month 0"</span>)</span>
-<span id="cb5-14"><a aria-label="14"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggraph</span>(network_t2) <span class="sc">+</span> <span class="fu">geom_edge_link</span>() <span class="sc">+</span> </span>
-<span id="cb5-15"><a aria-label="15"></a>      <span class="fu">geom_node_point</span>() <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Month 6"</span>)</span>
-<span id="cb5-16"><a aria-label="16"></a></span>
-<span id="cb5-17"><a aria-label="17"></a>p1 <span class="sc">+</span> p2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a aria-label="1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb6-2"><a aria-label="2"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb6-3"><a aria-label="3"></a>coords <span class="ot">&lt;-</span> <span class="fu">create_layout</span>(net, <span class="at">layout =</span> <span class="st">"fr"</span>)[, <span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>)]        <span class="co"># same positions in both panels</span></span>
+<span id="cb6-4"><a aria-label="4"></a>half <span class="ot">&lt;-</span> <span class="cf">function</span>(months, title) {</span>
+<span id="cb6-5"><a aria-label="5"></a>  sub <span class="ot">&lt;-</span> <span class="fu">subgraph_from_edges</span>(net, <span class="fu">E</span>(net)[Month <span class="sc">%in%</span> months], <span class="at">delete.vertices =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-6"><a aria-label="6"></a>  <span class="fu">ggraph</span>(sub, <span class="at">layout =</span> <span class="st">"manual"</span>, <span class="at">x =</span> coords<span class="sc">$</span>x, <span class="at">y =</span> coords<span class="sc">$</span>y) <span class="sc">+</span></span>
+<span id="cb6-7"><a aria-label="7"></a>    <span class="fu">geom_edge_link</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span> <span class="fu">geom_node_point</span>(<span class="at">colour =</span> <span class="st">"#2C5F8D"</span>, <span class="at">size =</span> <span class="fl">2.5</span>) <span class="sc">+</span></span>
+<span id="cb6-8"><a aria-label="8"></a>    <span class="fu">labs</span>(<span class="at">title =</span> title) <span class="sc">+</span> <span class="fu">theme_void</span>()</span>
+<span id="cb6-9"><a aria-label="9"></a>}</span>
+<span id="cb6-10"><a aria-label="10"></a><span class="fu">half</span>(<span class="fu">c</span>(<span class="st">"Jan"</span>, <span class="st">"Feb"</span>, <span class="st">"Mar"</span>), <span class="st">"January–March"</span>) <span class="sc">+</span> <span class="fu">half</span>(<span class="fu">c</span>(<span class="st">"Apr"</span>, <span class="st">"May"</span>, <span class="st">"Jun"</span>), <span class="st">"April–June"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+
 </div>
-<p>Shows network evolution</p>
+<img data-src="3.5_network_advanced_files/figure-revealjs/unnamed-chunk-6-1.png" alt="Two network panels with the same node positions: referrals in January to March and in April to June." width="960" class="r-stretch"><p><strong>Fixing the node positions</strong> makes the two periods comparable: only the links change.</p>
 </section>
 <section id="summary" class="slide level2">
 <h2>Summary</h2>

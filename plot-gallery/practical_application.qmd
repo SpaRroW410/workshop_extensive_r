@@ -1,6 +1,8 @@
 ---
 title: "Practical Application"
 subtitle: "Real-World Case Studies"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   revealjs:
     theme: serif
@@ -27,32 +29,26 @@ format:
 - Clear statistical annotations
 - Professional formatting
 
-## Publication Figure - Code
+## Publication Figure - Code {.smaller}
 
-```{r eval=FALSE, echo=TRUE}
-# Treatment effect with confidence intervals
-model <- lm(SysBP_12m ~ TreatmentGroup + Age + BMI_0m + SysBP_0m,
-           data = health_data)
-
-library(ggeffects)
+```{r}
+#| echo: true
+#| fig-alt: "Predicted systolic blood pressure at 6 months for the control and intervention groups with 95% confidence intervals, adjusted for age, BMI and baseline blood pressure, in black and white."
+library(readxl); library(ggplot2); library(ggeffects)
+health_data <- read_excel("../data/PublicHealth_BP_Dataset.xlsx")    # 200 simulated patients
+model <- lm(SysBP_6m ~ TreatmentGroup + Age + BMI + SysBP_0m, data = health_data)
 effects <- ggpredict(model, terms = "TreatmentGroup")
 
-p <- plot(effects) +
-  labs(title = "Treatment Effect on Systolic Blood Pressure",
-       subtitle = "Adjusted for age, BMI, and baseline BP",
-       x = "Treatment Group",
-       y = "Predicted Systolic BP (mmHg)",
-       caption = "Error bars: 95% confidence intervals. n=500 per group.") +
+p <- plot(effects, colors = "bw") +
+  labs(title = "Treatment effect on systolic blood pressure",
+       subtitle = "Adjusted for age, BMI and baseline BP",
+       x = "Treatment group", y = "Predicted systolic BP at 6 months (mmHg)",
+       caption = "Error bars: 95% confidence intervals. n = 100 per group.") +
   theme_bw(base_size = 12) +
-  theme(
-    plot.title = element_text(face = "bold", hjust = 0),
-    panel.grid.minor = element_blank(),
-    legend.position = "none"
-  )
-
-# Save high-res
-ggsave("figure1.tiff", p, width = 7, height = 5, dpi = 300)
-ggsave("figure1.eps", p, width = 7, height = 5, device = cairo_ps)
+  theme(plot.title = element_text(face = "bold", hjust = 0), panel.grid.minor = element_blank())
+p
+# Save for the journal (in a project: "output/figures/figure1.tiff")
+ggsave(file.path(tempdir(), "figure1.tiff"), p, width = 7, height = 5, dpi = 300, compression = "lzw")
 ```
 
 ## Case Study 2: Executive Dashboard
@@ -67,7 +63,7 @@ ggsave("figure1.eps", p, width = 7, height = 5, device = cairo_ps)
 
 ## Executive Dashboard Structure
 
-```{r eval=FALSE, echo=TRUE}
+```markdown
 ---
 title: "Q4 2024 Health Outcomes"
 output:
@@ -112,7 +108,7 @@ gauge(87, min = 0, max = 100, symbol = "%",
 
 ## EDA Report Template
 
-```{r eval=FALSE, echo=TRUE}
+```markdown
 ---
 title: "Exploratory Data Analysis: BP Study"
 output:
@@ -157,7 +153,7 @@ output:
 
 ## Clinician Tool - Shiny
 
-```{r eval=FALSE, echo=TRUE}
+```r
 ui <- fluidPage(
   titlePanel("Patient Explorer"),
   sidebarLayout(
@@ -199,35 +195,31 @@ server <- function(input, output) {
 - Consistent formatting
 - Email distribution
 
-## Parameterized Reports
+## Parameterized Reports {.smaller}
 
-```{r eval=FALSE, echo=TRUE}
+The template, `report.qmd`:
+
+````markdown
 ---
-title: "Weekly Report: `r params$site_name`"
-output: html_document
+title: "Weekly report: `r knitr::inline_expr("params$site_name")`"
+format: html
 params:
   site_name: "North Clinic"
   week_start: "2024-01-01"
-  week_end: "2024-01-07"
 ---
 
-
-# Filter data for this site
-site_data <- health_data %>%
-  filter(Site == params$site_name,
-        Date >= params$week_start,
-        Date <= params$week_end)
-
-# Generate site-specific visualizations
+```{{r}}
+site_data <- health_data |>
+  filter(Site == params$site_name, Date >= params$week_start)
 ```
+````
 
-# Generate for all sites
-```{r eval=FALSE}
-sites <- unique(health_data$Site)
-for (site in sites) {
-  rmarkdown::render("template.Rmd",
-                   params = list(site_name = site),
-                   output_file = paste0(site, "_report.html"))
+One report per site, from R:
+
+```r
+for (site in unique(health_data$Site)) {
+  quarto::quarto_render("report.qmd", execute_params = list(site_name = site),
+                        output_file = paste0(site, "_report.html"))
 }
 ```
 
@@ -284,6 +276,55 @@ project/
 - Tell a clear story
 - Make it reproducible
 - Test thoroughly
+
+## 🔧 Practise in R {.smaller}
+
+Download the lab **[A publication figure](../labs/dataviz/v2_publication_figure.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz (1/3) {.smaller}
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("pr1", "Why use `colors = \"bw\"` and `theme_bw()` for the journal figure?",
+         c("Colour figures cannot be saved as TIFF", "It stays readable when printed in greyscale", "It makes the confidence intervals much narrower", "ggeffects needs it to compute predictions"), answer = 2,
+         explain = "Many journals print in black and white; a figure that does not depend on colour reads the same in print.")
+```
+
+## Self-check quiz (2/3) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("pr2", "Fifty clinics each need the same weekly report. Which approach does the deck use?",
+         c("Fifty copies of the report, edited by hand", "A parameterised template rendered per site", "One long report with all sites on every page", "A Shiny app that e-mails a screenshot weekly"), answer = 2,
+         explain = "One template with a site parameter, rendered in a loop, gives consistent reports and one place to fix mistakes.")
+```
+
+## Self-check quiz (3/3) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("pr3", "Clinicians must filter patients and change the view themselves. Which tool fits?",
+         c("A static PDF report", "A Shiny app", "A TIFF figure at 600 dpi", "A printed Table 1"), answer = 2,
+         explain = "Shiny apps run R code in response to the user's inputs, so the reader can change the analysis, not just look at it.")
+```
+
+## Score {.smaller}
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```
 
 ## Congratulations! 🎉
 

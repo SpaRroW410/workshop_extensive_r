@@ -233,64 +233,63 @@ Sparrow
 <span id="cb1-5"><a aria-label="5"></a><span class="fu">library</span>(ggthemes)</span>
 <span id="cb1-6"><a aria-label="6"></a><span class="fu">library</span>(paletteer)</span>
 <span id="cb1-7"><a aria-label="7"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb1-8"><a aria-label="8"></a><span class="co"># remotes::install_github("haleyjeppson/ggmosaic")</span></span>
-<span id="cb1-9"><a aria-label="9"></a><span class="fu">library</span>(ggmosaic)  <span class="co"># For mosaic plots</span></span>
-<span id="cb1-10"><a aria-label="10"></a></span>
-<span id="cb1-11"><a aria-label="11"></a><span class="co"># Load data with all transformations</span></span>
-<span id="cb1-12"><a aria-label="12"></a>bp_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"../../data/PublicHealth_BP_Dataset.xlsx"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-13"><a aria-label="13"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb1-14"><a aria-label="14"></a>    <span class="at">SysBP_Change =</span> SysBP_6m <span class="sc">-</span> SysBP_0m,</span>
-<span id="cb1-15"><a aria-label="15"></a>    <span class="at">DiaBP_Change =</span> DiaBP_6m <span class="sc">-</span> DiaBP_0m,</span>
-<span id="cb1-16"><a aria-label="16"></a>    <span class="at">AgeGroup =</span> <span class="fu">cut</span>(Age, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">65</span>, <span class="dv">100</span>),</span>
-<span id="cb1-17"><a aria-label="17"></a>                   <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"18-30"</span>, <span class="st">"31-50"</span>, <span class="st">"51-65"</span>, <span class="st">"65+"</span>)),</span>
-<span id="cb1-18"><a aria-label="18"></a>    <span class="at">Hypertension_Baseline =</span> <span class="fu">ifelse</span>(SysBP_0m <span class="sc">&gt;=</span> <span class="dv">140</span> <span class="sc">|</span> DiaBP_0m <span class="sc">&gt;=</span> <span class="dv">90</span>, </span>
-<span id="cb1-19"><a aria-label="19"></a>                                   <span class="st">"Hypertensive"</span>, <span class="st">"Normal"</span>),</span>
-<span id="cb1-20"><a aria-label="20"></a>    <span class="at">BMI_Category =</span> <span class="fu">cut</span>(BMI, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">18.5</span>, <span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">100</span>),</span>
-<span id="cb1-21"><a aria-label="21"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Underweight"</span>, <span class="st">"Normal"</span>, <span class="st">"Overweight"</span>, <span class="st">"Obese"</span>))</span>
-<span id="cb1-22"><a aria-label="22"></a>  )</span>
-<span id="cb1-23"><a aria-label="23"></a></span>
-<span id="cb1-24"><a aria-label="24"></a><span class="co"># Time series</span></span>
-<span id="cb1-25"><a aria-label="25"></a>bp_time <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
-<span id="cb1-26"><a aria-label="26"></a>  <span class="fu">select</span>(PatientID, TreatmentGroup, SysBP_0m, SysBP_3m, SysBP_6m) <span class="sc">%&gt;%</span></span>
-<span id="cb1-27"><a aria-label="27"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"SysBP"</span>),</span>
-<span id="cb1-28"><a aria-label="28"></a>               <span class="at">names_to =</span> <span class="st">"Time"</span>, <span class="at">values_to =</span> <span class="st">"SysBP"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-29"><a aria-label="29"></a>  <span class="fu">mutate</span>(<span class="at">Months =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"SysBP_|m"</span>, <span class="st">""</span>, Time)))</span>
-<span id="cb1-30"><a aria-label="30"></a></span>
-<span id="cb1-31"><a aria-label="31"></a><span class="co"># Summary data</span></span>
-<span id="cb1-32"><a aria-label="32"></a>bp_summary <span class="ot">&lt;-</span> bp_time <span class="sc">%&gt;%</span></span>
-<span id="cb1-33"><a aria-label="33"></a>  <span class="fu">group_by</span>(TreatmentGroup, Months) <span class="sc">%&gt;%</span></span>
-<span id="cb1-34"><a aria-label="34"></a>  <span class="fu">summarise</span>(<span class="at">Mean_SysBP =</span> <span class="fu">mean</span>(SysBP, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb1-35"><a aria-label="35"></a></span>
-<span id="cb1-36"><a aria-label="36"></a>ci_data <span class="ot">&lt;-</span> bp_time <span class="sc">%&gt;%</span></span>
-<span id="cb1-37"><a aria-label="37"></a>  <span class="fu">group_by</span>(TreatmentGroup, Months) <span class="sc">%&gt;%</span></span>
-<span id="cb1-38"><a aria-label="38"></a>  <span class="fu">summarise</span>(<span class="at">Mean =</span> <span class="fu">mean</span>(SysBP), <span class="at">SE =</span> <span class="fu">sd</span>(SysBP) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">n</span>()), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb1-39"><a aria-label="39"></a></span>
-<span id="cb1-40"><a aria-label="40"></a><span class="co"># Custom theme from Module 3</span></span>
-<span id="cb1-41"><a aria-label="41"></a>theme_clinical_report <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">base_size =</span> <span class="dv">12</span>, <span class="at">base_family =</span> <span class="st">"serif"</span>) {</span>
-<span id="cb1-42"><a aria-label="42"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> base_size, <span class="at">base_family =</span> base_family) <span class="sc">+</span></span>
-<span id="cb1-43"><a aria-label="43"></a>  <span class="fu">theme</span>(</span>
-<span id="cb1-44"><a aria-label="44"></a>    <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> base_family),</span>
-<span id="cb1-45"><a aria-label="45"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">1.3</span>, <span class="at">face =</span> <span class="st">"bold"</span>, </span>
-<span id="cb1-46"><a aria-label="46"></a>                              <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">10</span>)),</span>
-<span id="cb1-47"><a aria-label="47"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">1.1</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
-<span id="cb1-48"><a aria-label="48"></a>                                 <span class="at">color =</span> <span class="st">"gray30"</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">15</span>)),</span>
-<span id="cb1-49"><a aria-label="49"></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">0.9</span>, <span class="at">hjust =</span> <span class="dv">1</span>,</span>
-<span id="cb1-50"><a aria-label="50"></a>                                <span class="at">face =</span> <span class="st">"italic"</span>, <span class="at">color =</span> <span class="st">"gray50"</span>),</span>
-<span id="cb1-51"><a aria-label="51"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">1.1</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb1-52"><a aria-label="52"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">0.9</span>, <span class="at">color =</span> <span class="st">"gray20"</span>),</span>
-<span id="cb1-53"><a aria-label="53"></a>    <span class="at">axis.line =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>),</span>
-<span id="cb1-54"><a aria-label="54"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"gray90"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>),</span>
-<span id="cb1-55"><a aria-label="55"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb1-56"><a aria-label="56"></a>    <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"gray40"</span>, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">linewidth =</span> <span class="dv">1</span>),</span>
-<span id="cb1-57"><a aria-label="57"></a>    <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>),</span>
-<span id="cb1-58"><a aria-label="58"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
-<span id="cb1-59"><a aria-label="59"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb1-60"><a aria-label="60"></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">0.9</span>),</span>
-<span id="cb1-61"><a aria-label="61"></a>    <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
-<span id="cb1-62"><a aria-label="62"></a>    <span class="at">legend.key =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
-<span id="cb1-63"><a aria-label="63"></a>    <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>)</span>
-<span id="cb1-64"><a aria-label="64"></a>  )</span>
-<span id="cb1-65"><a aria-label="65"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-8"><a aria-label="8"></a><span class="fu">library</span>(productplots)  <span class="co"># mosaic plots (ggmosaic does not work with ggplot2 4.x yet)</span></span>
+<span id="cb1-9"><a aria-label="9"></a></span>
+<span id="cb1-10"><a aria-label="10"></a><span class="co"># Load data with all transformations</span></span>
+<span id="cb1-11"><a aria-label="11"></a>bp_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"../../data/PublicHealth_BP_Dataset.xlsx"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-12"><a aria-label="12"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-13"><a aria-label="13"></a>    <span class="at">SysBP_Change =</span> SysBP_6m <span class="sc">-</span> SysBP_0m,</span>
+<span id="cb1-14"><a aria-label="14"></a>    <span class="at">DiaBP_Change =</span> DiaBP_6m <span class="sc">-</span> DiaBP_0m,</span>
+<span id="cb1-15"><a aria-label="15"></a>    <span class="at">AgeGroup =</span> <span class="fu">cut</span>(Age, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">65</span>, <span class="dv">100</span>),</span>
+<span id="cb1-16"><a aria-label="16"></a>                   <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"18-30"</span>, <span class="st">"31-50"</span>, <span class="st">"51-65"</span>, <span class="st">"65+"</span>)),</span>
+<span id="cb1-17"><a aria-label="17"></a>    <span class="at">Hypertension_Baseline =</span> <span class="fu">ifelse</span>(SysBP_0m <span class="sc">&gt;=</span> <span class="dv">140</span> <span class="sc">|</span> DiaBP_0m <span class="sc">&gt;=</span> <span class="dv">90</span>, </span>
+<span id="cb1-18"><a aria-label="18"></a>                                   <span class="st">"Hypertensive"</span>, <span class="st">"Normal"</span>),</span>
+<span id="cb1-19"><a aria-label="19"></a>    <span class="at">BMI_Category =</span> <span class="fu">cut</span>(BMI, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">18.5</span>, <span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">100</span>),</span>
+<span id="cb1-20"><a aria-label="20"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Underweight"</span>, <span class="st">"Normal"</span>, <span class="st">"Overweight"</span>, <span class="st">"Obese"</span>))</span>
+<span id="cb1-21"><a aria-label="21"></a>  )</span>
+<span id="cb1-22"><a aria-label="22"></a></span>
+<span id="cb1-23"><a aria-label="23"></a><span class="co"># Time series</span></span>
+<span id="cb1-24"><a aria-label="24"></a>bp_time <span class="ot">&lt;-</span> bp_data <span class="sc">%&gt;%</span></span>
+<span id="cb1-25"><a aria-label="25"></a>  <span class="fu">select</span>(PatientID, TreatmentGroup, SysBP_0m, SysBP_3m, SysBP_6m) <span class="sc">%&gt;%</span></span>
+<span id="cb1-26"><a aria-label="26"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"SysBP"</span>),</span>
+<span id="cb1-27"><a aria-label="27"></a>               <span class="at">names_to =</span> <span class="st">"Time"</span>, <span class="at">values_to =</span> <span class="st">"SysBP"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-28"><a aria-label="28"></a>  <span class="fu">mutate</span>(<span class="at">Months =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"SysBP_|m"</span>, <span class="st">""</span>, Time)))</span>
+<span id="cb1-29"><a aria-label="29"></a></span>
+<span id="cb1-30"><a aria-label="30"></a><span class="co"># Summary data</span></span>
+<span id="cb1-31"><a aria-label="31"></a>bp_summary <span class="ot">&lt;-</span> bp_time <span class="sc">%&gt;%</span></span>
+<span id="cb1-32"><a aria-label="32"></a>  <span class="fu">group_by</span>(TreatmentGroup, Months) <span class="sc">%&gt;%</span></span>
+<span id="cb1-33"><a aria-label="33"></a>  <span class="fu">summarise</span>(<span class="at">Mean_SysBP =</span> <span class="fu">mean</span>(SysBP, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb1-34"><a aria-label="34"></a></span>
+<span id="cb1-35"><a aria-label="35"></a>ci_data <span class="ot">&lt;-</span> bp_time <span class="sc">%&gt;%</span></span>
+<span id="cb1-36"><a aria-label="36"></a>  <span class="fu">group_by</span>(TreatmentGroup, Months) <span class="sc">%&gt;%</span></span>
+<span id="cb1-37"><a aria-label="37"></a>  <span class="fu">summarise</span>(<span class="at">Mean =</span> <span class="fu">mean</span>(SysBP), <span class="at">SE =</span> <span class="fu">sd</span>(SysBP) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">n</span>()), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb1-38"><a aria-label="38"></a></span>
+<span id="cb1-39"><a aria-label="39"></a><span class="co"># Custom theme from Module 3</span></span>
+<span id="cb1-40"><a aria-label="40"></a>theme_clinical_report <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">base_size =</span> <span class="dv">12</span>, <span class="at">base_family =</span> <span class="st">"serif"</span>) {</span>
+<span id="cb1-41"><a aria-label="41"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> base_size, <span class="at">base_family =</span> base_family) <span class="sc">+</span></span>
+<span id="cb1-42"><a aria-label="42"></a>  <span class="fu">theme</span>(</span>
+<span id="cb1-43"><a aria-label="43"></a>    <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> base_family),</span>
+<span id="cb1-44"><a aria-label="44"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">1.3</span>, <span class="at">face =</span> <span class="st">"bold"</span>, </span>
+<span id="cb1-45"><a aria-label="45"></a>                              <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">10</span>)),</span>
+<span id="cb1-46"><a aria-label="46"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">1.1</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb1-47"><a aria-label="47"></a>                                 <span class="at">color =</span> <span class="st">"gray30"</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">15</span>)),</span>
+<span id="cb1-48"><a aria-label="48"></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">0.9</span>, <span class="at">hjust =</span> <span class="dv">1</span>,</span>
+<span id="cb1-49"><a aria-label="49"></a>                                <span class="at">face =</span> <span class="st">"italic"</span>, <span class="at">color =</span> <span class="st">"gray50"</span>),</span>
+<span id="cb1-50"><a aria-label="50"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">1.1</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb1-51"><a aria-label="51"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">0.9</span>, <span class="at">color =</span> <span class="st">"gray20"</span>),</span>
+<span id="cb1-52"><a aria-label="52"></a>    <span class="at">axis.line =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>),</span>
+<span id="cb1-53"><a aria-label="53"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"gray90"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>),</span>
+<span id="cb1-54"><a aria-label="54"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb1-55"><a aria-label="55"></a>    <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"gray40"</span>, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">linewidth =</span> <span class="dv">1</span>),</span>
+<span id="cb1-56"><a aria-label="56"></a>    <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>),</span>
+<span id="cb1-57"><a aria-label="57"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb1-58"><a aria-label="58"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb1-59"><a aria-label="59"></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> base_size <span class="sc">*</span> <span class="fl">0.9</span>),</span>
+<span id="cb1-60"><a aria-label="60"></a>    <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb1-61"><a aria-label="61"></a>    <span class="at">legend.key =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb1-62"><a aria-label="62"></a>    <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>)</span>
+<span id="cb1-63"><a aria-label="63"></a>  )</span>
+<span id="cb1-64"><a aria-label="64"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -746,7 +745,7 @@ Sparrow
 <h2>What ggplot2 Cannot Do Well</h2>
 <p>While ggplot2 is powerful, it has limitations:</p>
 <ol type="1">
-<li class="fragment"><strong>Mosaic plots / Marimekko charts</strong> - Better with <code>ggmosaic</code> or base R <code>mosaicplot()</code></li>
+<li class="fragment"><strong>Mosaic plots / Marimekko charts</strong> - Use <code>productplots</code>, <code>ggmosaic</code> or base R <code>mosaicplot()</code></li>
 <li class="fragment"><strong>3D plots</strong> - Not natively supported, use <code>plotly</code> or <code>rgl</code></li>
 <li class="fragment"><strong>Network graphs</strong> - Use <code>ggraph</code> or <code>igraph</code></li>
 <li class="fragment"><strong>Interactive plots</strong> - Limited, need <code>plotly::ggplotly()</code> or <code>ggiraph</code></li>
@@ -759,18 +758,17 @@ Sparrow
 <h2>Mosaic Plots</h2>
 <div class="columns">
 <div class="column" style="width:60%;">
-<p><strong>ggplot2 cannot easily create mosaic plots</strong></p>
+<p><strong>ggplot2 has no mosaic geom</strong></p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a aria-label="1"></a><span class="co"># Use ggmosaic package instead</span></span>
-<span id="cb18-2"><a aria-label="2"></a><span class="fu">library</span>(ggmosaic)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a aria-label="1"></a><span class="co"># productplots draws one with ggplot2</span></span>
+<span id="cb18-2"><a aria-label="2"></a><span class="fu">library</span>(productplots)</span>
 <span id="cb18-3"><a aria-label="3"></a></span>
-<span id="cb18-4"><a aria-label="4"></a><span class="fu">ggplot</span>(bp_data) <span class="sc">+</span></span>
-<span id="cb18-5"><a aria-label="5"></a>  <span class="fu">geom_mosaic</span>(</span>
-<span id="cb18-6"><a aria-label="6"></a>    <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">product</span>(TreatmentGroup, </span>
-<span id="cb18-7"><a aria-label="7"></a>                    SmokingStatus),</span>
-<span id="cb18-8"><a aria-label="8"></a>        <span class="at">fill =</span> TreatmentGroup))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb18-4"><a aria-label="4"></a><span class="fu">prodplot</span>(bp_data,</span>
+<span id="cb18-5"><a aria-label="5"></a>         <span class="sc">~</span> TreatmentGroup <span class="sc">+</span> SmokingStatus,</span>
+<span id="cb18-6"><a aria-label="6"></a>         <span class="fu">mosaic</span>()) <span class="sc">+</span></span>
+<span id="cb18-7"><a aria-label="7"></a>  <span class="fu">aes</span>(<span class="at">fill =</span> TreatmentGroup)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="fragment">
@@ -781,7 +779,7 @@ Sparrow
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-29-1.png" width="576"></p>
+<p><img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-29-1.png" alt="Mosaic plot: smoking status splits the width in proportion to its counts, and each column is split by treatment group." width="576"></p>
 </figure>
 </div>
 </div>
@@ -791,6 +789,11 @@ Sparrow
 <section id="when-to-use-alternatives" class="slide level2 smaller center">
 <h2>When to Use Alternatives</h2>
 <table class="caption-top">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 40%">
+<col style="width: 45%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Need</th>
@@ -802,7 +805,7 @@ Sparrow
 <tr class="odd">
 <td>Mosaic plots</td>
 <td>❌ Not supported</td>
-<td><code>ggmosaic</code>, base <code>mosaicplot()</code></td>
+<td><code>productplots</code>, <code>ggmosaic</code>, base <code>mosaicplot()</code></td>
 </tr>
 <tr class="even">
 <td>3D visualization</td>
@@ -846,7 +849,7 @@ Sparrow
 <h2>ggplot2 Extensions Ecosystem</h2>
 <p><strong>The good news</strong>: The ggplot2 ecosystem is vast!</p>
 <ul>
-<li class="fragment"><strong>ggmosaic</strong> - Mosaic plots</li>
+<li class="fragment"><strong>productplots</strong> / <strong>ggmosaic</strong> - Mosaic plots</li>
 <li class="fragment"><strong>gganimate</strong> - Animation</li>
 <li class="fragment"><strong>ggraph</strong> - Network/tree diagrams</li>
 <li class="fragment"><strong>ggalluvial</strong> - Sankey/alluvial diagrams</li>
@@ -1030,6 +1033,456 @@ Sparrow
 </details>
 </div>
 </section>
+<section id="practise-in-r" class="slide level2 smaller center">
+<h2>🔧 Practise in R</h2>
+<p>Download the lab <strong><a href="../../labs/dataviz/v2_publication_figure.R">A publication figure</a></strong> and the data (<a href="../../data/ncd_survey.csv">ncd_survey.csv</a>). Fill in the blanks (<code>___</code>); the comments say what each step should do.</p>
+</section>
+<section id="self-check-quiz-14" class="slide level2 smaller center">
+<h2>Self-check quiz (1/4)</h2>
+<div class="quiz-q" data-qid="gd1" data-type="mcq" data-hash="r0elbl.um1g5n" data-show="VGhlIHBvaW50cyBhcmUgZHJhd24gb24gdG9wIG9mIHRoZSBsaW5l" data-explain="TGF5ZXJzIGFyZSBkcmF3biBpbiB0aGUgb3JkZXIgdGhleSBhcmUgYWRkZWQ6IGxhdGVyIGxh eWVycyBzaXQgb24gdG9wLg==">
+<p>You write <code>geom_smooth()</code> before <code>geom_point()</code>. What changes?</p>
+<ul>
+<li>The line is drawn on top of all the points</li>
+<li>The points are drawn on top of the line</li>
+<li>ggplot2 refuses to draw the two layers</li>
+<li>The points take the colour of the line</li>
+</ul>
+</div>
+</section>
+<section id="self-check-quiz-24" class="slide level2 smaller center">
+<h2>Self-check quiz (2/4)</h2>
+<div class="quiz-q" data-qid="gd2" data-type="mcq" data-hash="r0eyka.um1un0" data-show="VGhlIGNvZGUgdGhlbiBydW5zIG9uIGFub3RoZXIgY29tcHV0ZXI=" data-explain="QSBwYXRoIHJlbGF0aXZlIHRvIHRoZSBwcm9qZWN0IGZvbGRlciB3b3JrcyB3aGVyZXZlciB0 aGUgcHJvamVjdCBpcyBjb3BpZWQ7IGFuIGFic29sdXRlIHBhdGggb25seSB3b3JrcyBvbiB5 b3VyIG1hY2hpbmUu">
+<p>Why read data with <code>read_excel("data/bp.xlsx")</code> rather than <code>"C:/Users/..."</code>?</p>
+<ul>
+<li>Relative paths load the file faster</li>
+<li>The code then runs on another computer</li>
+<li>Excel files need a relative path</li>
+<li>Absolute paths are not allowed in a Quarto file</li>
+</ul>
+</div>
+</section>
+<section id="self-check-quiz-34" class="slide level2 smaller center">
+<h2>Self-check quiz (3/4)</h2>
+<div class="quiz-q" data-qid="gd3" data-type="mcq" data-hash="r0fbt0.um294e" data-show="YHByb2R1Y3RwbG90czo6cHJvZHBsb3QoLi4uLCBtb3NhaWMoKSlg" data-explain="cHJvZHBsb3QoKSB3aXRoIG1vc2FpYygpIGRyYXdzIGEgbW9zYWljIHdpdGggZ2dwbG90Mjsg YmFzZSBSIGhhcyBtb3NhaWNwbG90KCksIGFuZCBnZ21vc2FpYyBpcyBhbm90aGVyIG9wdGlv biBvbmNlIGl0IHN1cHBvcnRzIGdncGxvdDIgNC4=">
+<p>ggplot2 has no mosaic geom. Which of these draws a mosaic plot?</p>
+<ul>
+<li><code>geom_violin()</code> with a fill</li>
+<li><code>coord_flip()</code> on a pie chart</li>
+<li><code>productplots::prodplot(..., mosaic())</code></li>
+<li><code>facet_wrap()</code> on a stacked histogram of counts</li>
+</ul>
+</div>
+</section>
+<section id="self-check-quiz-44" class="slide level2 smaller center">
+<h2>Self-check quiz (4/4)</h2>
+<div class="quiz-q" data-qid="gd4" data-type="mcq" data-hash="r0fp1o.um2nlq" data-show="U29tZSByZWFkZXJzIGNhbm5vdCB0ZWxsIHRoZSBjb2xvdXJzIGFwYXJ0" data-explain="QWJvdXQgMSBpbiAxMiBtZW4gaGFzIGEgY29sb3VyLXZpc2lvbiBkZWZpY2llbmN5LCBhbmQg ZmlndXJlcyBhcmUgb2Z0ZW4gcHJpbnRlZCBpbiBncmV5c2NhbGU6IGFkZCBzaGFwZSwgbGFi ZWxzIG9yIGxpbmUgdHlwZS4=">
+<p>Why should a figure not rely on colour alone to separate groups?</p>
+<ul>
+<li>Colour makes the file too large to share</li>
+<li>Some readers cannot tell the colours apart</li>
+<li>ggplot2 limits a plot to three colours</li>
+<li>Colour slows down rendering of the plot a lot</li>
+</ul>
+</div>
+</section>
+<section id="score" class="slide level2 smaller center">
+<h2>Score</h2>
+<p><strong>Your score: <span class="quiz-score"></span></strong> (first attempt counts)</p>
+<!-- GENERATED by scripts/sync_workshop_assets.sh from regression-workshop/assets/quiz.css and quiz.js. Do not edit. -->
+<style>
+/* quiz.css — styles for quiz.js (reveal.js friendly; light theme) */
+.quiz-q {
+  text-align: left;
+  font-size: 0.85em;
+  max-width: 880px;
+  margin: 0 auto;
+}
+.quiz-q > p:first-child { font-size: 1.1em; font-weight: 600; margin-bottom: 0.6em; }
+.quiz-options { display: flex; flex-direction: column; gap: 0.4em; margin-bottom: 0.7em; }
+.quiz-option {
+  display: flex; align-items: center; gap: 0.7em;
+  text-align: left; font: inherit; color: #2c3e50;
+  background: #fff; border: 2px solid #cfd8dc; border-radius: 8px;
+  padding: 0.45em 0.8em; cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.quiz-option:hover:not(:disabled) { border-color: #3498db; background: #f3f9fd; }
+.quiz-option:disabled { cursor: default; }
+.quiz-letter {
+  flex: 0 0 1.6em; height: 1.6em; line-height: 1.6em; text-align: center;
+  border-radius: 50%; background: #ecf0f1; font-weight: 700; font-size: 0.85em;
+}
+.quiz-option.is-correct { border-color: #27ae60; background: #eafaf1; }
+.quiz-option.is-correct .quiz-letter { background: #27ae60; color: #fff; }
+.quiz-option.is-wrong { border-color: #e74c3c; background: #fdedec; }
+.quiz-option.is-wrong .quiz-letter { background: #e74c3c; color: #fff; }
+
+.quiz-fill { display: flex; gap: 0.5em; margin-bottom: 0.6em; }
+.quiz-input {
+  flex: 1; font: inherit; padding: 0.4em 0.7em;
+  border: 2px solid #cfd8dc; border-radius: 8px; color: #2c3e50;
+}
+.quiz-input:focus { outline: none; border-color: #3498db; }
+.quiz-input.is-correct { border-color: #27ae60; background: #eafaf1; }
+.quiz-input.is-wrong { border-color: #e74c3c; background: #fdedec; }
+
+.quiz-btn {
+  font: inherit; cursor: pointer; border: none; border-radius: 8px;
+  padding: 0.4em 1.1em; background: #3498db; color: #fff;
+}
+.quiz-btn:hover { background: #2980b9; }
+.quiz-btn-ghost { background: transparent; color: #7f8c8d; border: 1px solid #cfd8dc; padding: 0.2em 0.8em; font-size: 0.8em; }
+.quiz-btn-ghost:hover { background: #f4f6f7; color: #2c3e50; }
+
+.quiz-feedback { min-height: 1.4em; margin: 0.5em 0; line-height: 1.4; }
+.quiz-feedback.is-correct { color: #1e8449; }
+.quiz-feedback.is-wrong { color: #c0392b; }
+.quiz-feedback.is-info { color: #2c3e50; }
+.quiz-feedback code { background: #eef2f4; color: #c2185b; padding: 0 0.3em; border-radius: 3px; }
+.quiz-score { font-weight: 700; color: #2c3e50; }
+
+/* score tools (Save score / Reset) */
+.quiz-score-tools { margin-left: 0.6em; white-space: nowrap; }
+.quiz-score-tools .quiz-btn { font-size: 0.55em; padding: 0.15em 0.6em; margin-left: 0.3em; vertical-align: middle; }
+</style>
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+ * quiz.js — tiny self-check quiz engine for reveal.js / any HTML page
+ * ---------------------------------------------------------------------
+ * Vanilla JS, zero dependencies, works offline (file://) and inside
+ * Quarto reveal.js decks with embed-resources.
+ *
+ * SYNTAX (what lives in the .qmd — a Pandoc fenced div with data-attrs)
+ * ---------------------------------------------------------------------
+ *   MCQ (single answer)
+ *   ::: {.quiz-q data-qid="s1q1" data-type="mcq" data-hash="<hash>"
+ *         data-show="<base64>" data-explain="<base64>"}
+ *   Which model suits a binary outcome?
+ *
+ *   - Linear regression
+ *   - Logistic regression
+ *   - Cox regression
+ *   :::
+ *
+ *   Fill-in-the-blank
+ *   ::: {.quiz-q data-qid="s1q4" data-type="fill" data-hashes="<h1>,<h2>"
+ *         data-show="<base64>" data-explain="<base64>"}
+ *   Which gtsummary function builds Table 1?
+ *   :::
+ *
+ *   data-qid      unique id (it salts the hashes)
+ *   data-hash     hash of the correct option INDEX (0-based) — mcq
+ *   data-hashes   comma-separated hashes of each accepted answer — fill
+ *   data-show     base64 of the text revealed by "Show answer"
+ *   data-explain  base64 of the short explanation (basic `code` allowed)
+ *
+ * You never write those attributes by hand. Use the R helpers in
+ * assets/quiz.R, which take PLAIN text and emit the fenced div:
+ *
+ *   ```{r}
+ *   #| echo: false
+ *   #| output: asis
+ *   source("assets/quiz.R")
+ *   quiz_mcq("s1q1", "Which model suits a binary outcome?",
+ *            c("Linear", "Logistic", "Cox"), answer = 2,
+ *            explain = "Binary outcome -> logit link -> logistic.")
+ *   quiz_fill("s1q4", "Which gtsummary function builds Table 1?",
+ *             accept = c("tbl_summary", "tbl_summary()"),
+ *             explain = "tbl_summary() summarises variables, optionally by a group.")
+ *   ```
+ *
+ * Optional: <span class="quiz-score"></span> anywhere shows "x / y", followed by
+ *   "Save score" (downloads a text file) and "Reset" buttons. The first-attempt
+ *   results are kept in localStorage per deck, so a reload keeps the score.
+ *
+ * BEHAVIOUR
+ *   - MCQ: options are SHUFFLED at load (hash uses the authored index, so
+ *     data-hash is unaffected; add data-shuffle="0" to keep authored order).
+ *     Click an option -> instant ✔/✘; explanation appears after the
+ *     attempt (or after "Show answer").
+ *   - Fill: type + Enter / "Check". Answers are normalised (case,
+ *     surrounding/duplicate whitespace, backticks, trailing "()") before
+ *     hashing, so "  TBL_Summary() " matches "tbl_summary".
+ *   - Answers are NOT in the page source: only salted hashes are, and the
+ *     explanation / reveal text is base64-encoded. This stops casual
+ *     view-source peeking; it is NOT cryptographic security.
+ *
+ * HASH (must match quiz.R exactly): two polynomial rolling hashes over
+ *   the string  qid + "|" + value , base-36 encoded and concatenated.
+ * ═══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  var M1 = 2147483629, M2 = 2147483587;
+
+  function hash(str) {
+    var a = 5381, b = 52711;
+    for (var i = 0; i < str.length; i++) {
+      var c = str.charCodeAt(i);
+      a = (a * 131 + c) % M1;
+      b = (b * 137 + c) % M2;
+    }
+    return a.toString(36) + '.' + b.toString(36);
+  }
+
+  function normalise(s) {
+    return String(s).toLowerCase()
+      .replace(/`/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/\(\s*\)$/, '')   // "tbl_summary()" == "tbl_summary"
+      .trim();
+  }
+
+  function b64(s) {
+    if (!s) return '';
+    try {
+      var bin = atob(s), bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return new TextDecoder('utf-8').decode(bytes);
+    } catch (e) { return ''; }
+  }
+
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  // escape first, then allow `code` only
+  function lite(s) { return esc(s).replace(/`([^`]+)`/g, '<code>$1</code>'); }
+
+  var state = { total: 0, correct: 0, scored: {} };
+
+  // ── saved score ─────────────────────────────────────────────────────
+  // The first-attempt result of each question is kept in the browser
+  // (localStorage, one entry per deck file), so a reload keeps the score.
+  // "Save score" downloads a small text file a participant can keep or
+  // hand in; "Reset" clears the saved result for this deck.
+  var deckName = (location.pathname.split('/').pop() || 'deck').replace(/\.html?$/, '');
+  // Kept per workshop folder and deck: deck file names repeat across workshops
+  // (s5_choose_check_report is in three). Older versions used the deck name alone; that copy
+  // is read once, for this deck's questions only, so no saved score is lost.
+  var folder = location.pathname.split('/').slice(-2, -1)[0] || '';
+  var STORE = 'quiz-score:' + (folder ? folder + '/' : '') + deckName;
+  var LEGACY = 'quiz-score:' + deckName;
+  function persist() { try { localStorage.setItem(STORE, JSON.stringify(state.scored)); } catch (e) {} }
+  function restore() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORE));
+      var migrate = !saved && STORE !== LEGACY;
+      if (!saved) saved = JSON.parse(localStorage.getItem(LEGACY)) || {};
+      var qs = document.querySelectorAll('.quiz-q');
+      for (var i = 0; i < qs.length; i++) {
+        var id = qs[i].getAttribute('data-qid');
+        if (saved.hasOwnProperty(id)) { state.scored[id] = !!saved[id]; if (saved[id]) state.correct++; }
+      }
+      if (migrate && Object.keys(state.scored).length) persist();
+    } catch (e) {}
+  }
+  // Reset: forget this deck's answers, also in the old shared copy (other decks keep theirs there).
+  function forget() {
+    try {
+      localStorage.removeItem(STORE);
+      var old = JSON.parse(localStorage.getItem(LEGACY));
+      if (old && STORE !== LEGACY) {
+        var qs = document.querySelectorAll('.quiz-q');
+        for (var i = 0; i < qs.length; i++) delete old[qs[i].getAttribute('data-qid')];
+        if (Object.keys(old).length) localStorage.setItem(LEGACY, JSON.stringify(old)); else localStorage.removeItem(LEGACY);
+      }
+    } catch (e) {}
+  }
+  function scoreText() {
+    var lines = ['Quiz score', 'Deck: ' + (document.title || deckName), 'File: ' + deckName, 'Saved: ' + new Date().toLocaleString(),
+                 'Score (first attempt): ' + state.correct + ' / ' + state.total, ''];
+    var qs = document.querySelectorAll('.quiz-q');
+    for (var i = 0; i < qs.length; i++) {
+      var id = qs[i].getAttribute('data-qid');
+      lines.push(id + ': ' + (state.scored.hasOwnProperty(id) ? (state.scored[id] ? 'correct' : 'not correct') : 'not attempted'));
+    }
+    return lines.join('\n') + '\n';
+  }
+  function download() {
+    var a = document.createElement('a');
+    a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(scoreText());
+    a.download = 'quiz_' + deckName + '.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  function addScoreTools() {
+    var els = document.querySelectorAll('.quiz-score');
+    for (var i = 0; i < els.length; i++) {
+      if (els[i].getAttribute('data-tools')) continue;
+      els[i].setAttribute('data-tools', '1');
+      var box = document.createElement('span'); box.className = 'quiz-score-tools';
+      var sv = document.createElement('button'); sv.type = 'button'; sv.className = 'quiz-btn quiz-btn-ghost quiz-save'; sv.textContent = 'Save score';
+      sv.addEventListener('click', download);
+      var rs = document.createElement('button'); rs.type = 'button'; rs.className = 'quiz-btn quiz-btn-ghost quiz-reset'; rs.textContent = 'Reset';
+      rs.addEventListener('click', function () { forget(); location.reload(); });
+      box.appendChild(sv); box.appendChild(rs);
+      els[i].parentNode.insertBefore(box, els[i].nextSibling);
+    }
+  }
+
+  function updateScores() {
+    var els = document.querySelectorAll('.quiz-score');
+    for (var i = 0; i < els.length; i++) {
+      els[i].textContent = state.correct + ' / ' + state.total;
+    }
+  }
+
+  function record(qid, ok) {
+    if (state.scored.hasOwnProperty(qid)) return;      // first attempt only
+    state.scored[qid] = !!ok;
+    if (ok) state.correct++;
+    persist();
+    updateScores();
+  }
+
+  function feedback(q, ok, msg) {
+    var fb = q.querySelector('.quiz-feedback');
+    fb.className = 'quiz-feedback ' + (ok ? 'is-correct' : 'is-wrong');
+    fb.innerHTML = (ok ? '✔ Correct. ' : '✘ Not quite. ') + (msg ? lite(msg) : '');
+  }
+
+  function explanation(q) {
+    var ex = b64(q.getAttribute('data-explain'));
+    return ex;
+  }
+
+  function buildCommon(q) {
+    var fb = document.createElement('div');
+    fb.className = 'quiz-feedback';
+    fb.setAttribute('aria-live', 'polite');
+    q.appendChild(fb);
+
+    var show = document.createElement('button');
+    show.type = 'button';
+    show.className = 'quiz-btn quiz-btn-ghost';
+    show.textContent = 'Show answer';
+    q.appendChild(show);
+    return { fb: fb, show: show };
+  }
+
+  function initMCQ(q) {
+    var qid = q.getAttribute('data-qid');
+    var correctHash = q.getAttribute('data-hash');
+    var list = q.querySelector('ul, ol');
+    if (!list) return;
+    // authored index is what the hash is built on; DISPLAY order is shuffled so the
+    // answer position (and any length/position tell) cannot be learned.
+    var items = Array.prototype.slice.call(list.children).map(function (li, i) { return { li: li, i: i }; });
+    if (q.getAttribute('data-shuffle') !== '0') {
+      for (var k = items.length - 1; k > 0; k--) {
+        var r = Math.floor(Math.random() * (k + 1)), t = items[k]; items[k] = items[r]; items[r] = t;
+      }
+    }
+    var wrap = document.createElement('div');
+    wrap.className = 'quiz-options';
+    var btns = items.map(function (it, pos) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'quiz-option';
+      b.setAttribute('data-i', it.i);
+      b.innerHTML = '<span class="quiz-letter">' + String.fromCharCode(65 + pos) + '</span>' + it.li.innerHTML;
+      wrap.appendChild(b);
+      return b;
+    });
+    list.parentNode.replaceChild(wrap, list);
+    var c = buildCommon(q);
+
+    function isCorrect(i) { return hash(qid + '|' + i) === correctHash; }
+    function orig(b) { return parseInt(b.getAttribute('data-i'), 10); }
+    function reveal() {
+      btns.forEach(function (b) { if (isCorrect(orig(b))) b.classList.add('is-correct'); });
+    }
+
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var ok = isCorrect(orig(b));
+        b.classList.add(ok ? 'is-correct' : 'is-wrong');
+        record(qid, ok);
+        feedback(q, ok, explanation(q));
+        if (ok) btns.forEach(function (x) { x.disabled = true; });
+      });
+    });
+    c.show.addEventListener('click', function () {
+      reveal();
+      record(qid, false);
+      var ans = b64(q.getAttribute('data-show'));
+      var fb = q.querySelector('.quiz-feedback');
+      fb.className = 'quiz-feedback is-info';
+      fb.innerHTML = 'Answer: <strong>' + lite(ans) + '</strong>. ' + lite(explanation(q));
+      btns.forEach(function (x) { x.disabled = true; });
+    });
+  }
+
+  function initFill(q) {
+    var qid = q.getAttribute('data-qid');
+    var accepted = (q.getAttribute('data-hashes') || '').split(',');
+    var row = document.createElement('div');
+    row.className = 'quiz-fill';
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'quiz-input';
+    input.placeholder = 'type your answer…';
+    input.setAttribute('autocomplete', 'off');
+    input.setAttribute('autocapitalize', 'off');
+    input.setAttribute('spellcheck', 'false');
+    var check = document.createElement('button');
+    check.type = 'button';
+    check.className = 'quiz-btn';
+    check.textContent = 'Check';
+    row.appendChild(input);
+    row.appendChild(check);
+    q.appendChild(row);
+    var c = buildCommon(q);
+
+    function submit() {
+      var v = normalise(input.value);
+      if (!v) return;
+      var ok = accepted.indexOf(hash(qid + '|' + v)) !== -1;
+      input.classList.remove('is-correct', 'is-wrong');
+      input.classList.add(ok ? 'is-correct' : 'is-wrong');
+      record(qid, ok);
+      feedback(q, ok, explanation(q));
+    }
+    check.addEventListener('click', submit);
+    // keep reveal.js shortcuts (space, arrows, f, s, …) out of the text box
+    ['keydown', 'keyup', 'keypress'].forEach(function (ev) {
+      input.addEventListener(ev, function (e) {
+        e.stopPropagation();
+        if (ev === 'keydown' && e.key === 'Enter') submit();
+      });
+    });
+    c.show.addEventListener('click', function () {
+      record(qid, false);
+      var fb = q.querySelector('.quiz-feedback');
+      fb.className = 'quiz-feedback is-info';
+      fb.innerHTML = 'Answer: <strong>' + lite(b64(q.getAttribute('data-show'))) + '</strong>. ' + lite(explanation(q));
+    });
+  }
+
+  function init() {
+    var qs = document.querySelectorAll('.quiz-q');
+    state.total = qs.length;
+    for (var i = 0; i < qs.length; i++) {
+      var q = qs[i];
+      if (q.getAttribute('data-quiz-ready')) continue;
+      q.setAttribute('data-quiz-ready', '1');
+      var type = q.getAttribute('data-type');
+      if (type === 'mcq') initMCQ(q);
+      else if (type === 'fill') initFill(q);
+    }
+    restore();
+    addScoreTools();
+    updateScores();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+
+  // exposed for tests / tooling
+  window.Quiz = { hash: hash, normalise: normalise };
+})();
+</script>
+</section>
 <section id="thank-you" class="slide level2 center">
 <h2>Thank You!</h2>
 <p><strong>Congratulations on completing the workshop!</strong></p>
@@ -1058,42 +1511,42 @@ Sparrow
 <span id="cb24-2"><a aria-label="2"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>R version 4.6.1 (2026-06-24 ucrt)
-Platform: aarch64-w64-mingw32
-Running under: Windows 11 (build 26200)
+<pre><code>R version 4.3.3 (2024-02-29)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 24.04.5 LTS
 
 Matrix products: default
-  LAPACK version 3.12.1
+BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.12.0 
+LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.12.0
 
 locale:
-[1] LC_COLLATE=English_India.utf8  LC_CTYPE=English_India.utf8   
-[3] LC_MONETARY=English_India.utf8 LC_NUMERIC=C                  
-[5] LC_TIME=English_India.utf8    
+ [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
+ [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   
+ [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          
+[10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   
 
-time zone: Asia/Calcutta
-tzcode source: internal
+time zone: Etc/UTC
+tzcode source: system (glibc)
 
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] ggmosaic_0.4.0  patchwork_1.3.2 paletteer_1.7.0 ggthemes_5.2.0 
-[5] readxl_1.5.0    tidyr_1.3.2     dplyr_1.2.1     ggplot2_4.0.3  
+[1] productplots_0.1.2 patchwork_1.3.2    paletteer_1.7.0    ggthemes_7.0.0    
+[5] readxl_1.6.0       tidyr_1.3.2        dplyr_1.2.1        ggplot2_4.0.4     
 
 loaded via a namespace (and not attached):
- [1] plotly_4.12.1      generics_0.1.4     productplots_0.1.2 lattice_0.22-9    
- [5] stringi_1.8.9      digest_0.6.39      magrittr_2.0.5     evaluate_1.0.5    
- [9] grid_4.6.1         RColorBrewer_1.1-3 fastmap_1.2.0      Matrix_1.7-5      
-[13] cellranger_1.1.0   plyr_1.8.9         jsonlite_2.0.0     ggrepel_0.9.8     
-[17] rematch2_2.1.2     mgcv_1.9-4         httr_1.4.8         purrr_1.2.2       
-[21] viridisLite_0.4.3  scales_1.4.0       cli_3.6.6          rlang_1.3.0       
-[25] splines_4.6.1      withr_3.0.3        yaml_2.3.12        otel_0.2.0        
-[29] tools_4.6.1        vctrs_0.7.3        R6_2.6.1           lifecycle_1.0.5   
-[33] stringr_1.6.0      htmlwidgets_1.6.4  pkgconfig_2.0.3    pillar_1.11.1     
-[37] gtable_0.3.6       glue_1.8.1         data.table_1.18.4  Rcpp_1.1.2        
-[41] xfun_0.60          tibble_3.3.1       tidyselect_1.2.1   rstudioapi_0.19.0 
-[45] knitr_1.52         farver_2.1.2       nlme_3.1-169       htmltools_0.5.9   
-[49] rmarkdown_2.32     labeling_0.4.3     compiler_4.6.1     S7_0.2.2          </code></pre>
+ [1] Matrix_1.6-5       gtable_0.3.6       jsonlite_2.0.0     compiler_4.3.3    
+ [5] rematch2_2.1.2     Rcpp_1.1.2         tidyselect_1.2.1   splines_4.3.3     
+ [9] scales_1.4.0       yaml_2.3.12        fastmap_1.2.0      lattice_0.22-5    
+[13] plyr_1.8.9         R6_2.6.1           labeling_0.4.3     generics_0.1.4    
+[17] knitr_1.52         tibble_3.3.1       pillar_1.11.1      RColorBrewer_1.1-3
+[21] rlang_1.3.0        xfun_0.62          S7_1.0.0           otel_0.3.0        
+[25] cli_3.6.6          mgcv_1.9-1         withr_3.0.3        magrittr_2.0.5    
+[29] digest_0.6.39      grid_4.3.3         nlme_3.1-164       lifecycle_1.0.5   
+[33] vctrs_0.7.3        evaluate_1.0.5     glue_1.8.1         farver_2.1.2      
+[37] cellranger_1.1.0   rmarkdown_2.32     purrr_1.2.2        tools_4.3.3       
+[41] pkgconfig_2.0.3    htmltools_0.5.9   </code></pre>
 </div>
 </div>
 </section>
@@ -1130,7 +1583,7 @@ loaded via a namespace (and not attached):
 
 
 
-<img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-37-1.png" width="1152" class="r-stretch"></section></section>
+<img data-src="module_4_advanced_best_practices_files/figure-revealjs/unnamed-chunk-43-1.png" width="1152" class="r-stretch"></section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">

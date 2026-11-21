@@ -1,6 +1,7 @@
 ---
 title: "Advanced Exporting Techniques"
 author: "Sparrow"
+date: "2026-11-20"
 editor: 
   markdown: 
     wrap: 72
@@ -272,3 +273,36 @@ check_plot_quality("test_plot.png")
 - cowplot: Multi-panel figures
 - R Graphics Cookbook: Advanced techniques</content>
 <parameter name="filePath">d:\R studio\workshop\workshop_extensive\data_visualization\exporting_tools\advanced_exporting.qmd
+
+## Practise in R
+
+Download the lab **[Debugging and exporting](../labs/dataviz/v5_debug_export.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("ae1", "You need the same plot for each of 12 districts. What is the cleanest approach?",
+         c("Copy the plot code 12 times and edit each copy", "A loop or map() over districts with ggsave()", "Facet the plot and save it 12 times", "Save one PDF and split it by hand later"), answer = 2,
+         explain = "A loop or map() writes one file per district from one piece of code, with the file name built from the district.")
+quiz_mcq("ae2", "Why use a Cairo (or ragg) device for PNG output?",
+         c("Smaller vector files for printing", "Better anti-aliasing and font rendering", "Automatic alt text for the figure", "Higher statistical precision of the plot"), answer = 2,
+         explain = "Cairo and ragg draw smoother lines and text and handle fonts consistently across operating systems.")
+quiz_mcq("ae3", "A journal wants Figure 1 as two panels tagged A and B, 18 cm wide. Which tools fit?",
+         c("facet_wrap() and then a screenshot of the plot window", "Two separate PNGs pasted together in Word", "patchwork with tag_levels, then ggsave(units = \"cm\")", "par(mfrow) with the default device size"), answer = 3,
+         explain = "patchwork combines ggplots and adds panel tags; ggsave() sets the exact size, units and dpi.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

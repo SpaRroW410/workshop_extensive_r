@@ -1,6 +1,7 @@
 ---
 title: "Debugging Plots"
 author: "Sparrow"
+date: "2026-11-20"
 editor: 
   markdown: 
     wrap: 72
@@ -234,3 +235,36 @@ ggplot(sample_data, aes(x = wt, y = mpg)) + geom_point()
 - ggplot2 book by Hadley Wickham
 - Stack Overflow ggplot2 tag
 - RStudio Community forums
+
+## Practise in R
+
+Download the lab **[Debugging and exporting](../labs/dataviz/v5_debug_export.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("db1", "\"Aesthetics must be either length 1 or the same as the data\". What usually causes it?",
+         c("A missing library(ggplot2) call at the top", "A vector in aes() not as long as the data", "A theme that is applied twice to the plot", "Too many rows in the data for ggplot2"), answer = 2,
+         explain = "Something mapped in aes() has a different length from the data frame, often a vector from outside the data; put it in the data as a column.")
+quiz_mcq("db2", "What is the first step of layer-by-layer debugging?",
+         c("Re-install ggplot2 from CRAN and restart the R session", "Draw the base plot, then add one layer at a time", "Save the plot as a PDF and look at it closely", "Switch every geom to geom_point() first"), answer = 2,
+         explain = "Adding one layer at a time shows exactly which layer breaks the plot.")
+quiz_mcq("db3", "A plot of 2 million points takes minutes to draw. Which fix helps most?",
+         c("Add a theme with fewer grid lines", "Summarise or bin first (e.g. geom_hex)", "Increase the dpi of the saved file", "Switch the colour palette to viridis_c"), answer = 2,
+         explain = "Drawing millions of points is slow and hides density anyway; binning or summarising draws far fewer shapes.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

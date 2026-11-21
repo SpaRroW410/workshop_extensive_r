@@ -1,73 +1,193 @@
 ---
-title: "Interactive"
+title: "Interactive Plots"
 author: "Sparrow"
-editor: 
-  markdown: 
-    wrap: 72
-format: html
+date: "2026-11-20"
+format:
+  html:
+    code-copy: true
+    toc: true
+    lightbox: auto
+execute:
+  warning: false
+  message: false
 ---
 
-Interactive Visualizations - Using plotly for interactivity - ggiraph
-and hoverable tooltips - Embedding interactive plots in Quarto or Shiny
+A static figure is right for a paper. An **interactive** one helps when readers explore: hover for the exact value
+of one point, zoom into a busy period, switch groups on and off, or click a district on a map. Interactive figures
+work in **HTML** output (a Quarto web page, a dashboard, a Shiny app); in PDF or Word they are not available, so
+keep a static version for the paper.
 
-### ▸ Categorical
+This page uses three packages, each an `htmlwidget` that Quarto embeds in the page:
+**plotly** (charts), **DT** (tables) and **leaflet** (maps), plus **crosstalk** to link them.
+Data: the NCD survey (`data/ncd_survey.csv`) and the district blocks of the GIS track.
 
--   Interactive bar chart (plotly, ggiraph)
+```{r}
+library(tidyverse)
+library(plotly)
+ncd <- read_csv(c("../data/ncd_survey.csv", "data/ncd_survey.csv")[file.exists(c("../data/ncd_survey.csv", "data/ncd_survey.csv"))][1],
+                show_col_types = FALSE) |>
+  mutate(phys_act = factor(phys_act, levels = c("low", "moderate", "high")))
+```
 
--   Dropdown-filtered categorical plots
+## 1. Any ggplot, made interactive: `ggplotly()`
 
-### ▸ Continuous
+Build the plot as usual, then pass it to `ggplotly()`. The `text` aesthetic sets what the tooltip shows.
 
--   Interactive density or histogram with sliders
+```{r}
+#| fig-alt: "Interactive scatter plot of systolic blood pressure against age, coloured by sex; hovering a point shows its id, age, systolic BP and BMI."
+p <- ggplot(ncd, aes(age, sbp, colour = sex,
+                     text = paste0("id ", id, "<br>age ", age, "<br>SBP ", sbp, " mmHg<br>BMI ", bmi))) +
+  geom_point(alpha = 0.6) +
+  labs(x = "Age (years)", y = "Systolic BP (mmHg)", colour = NULL)
+ggplotly(p, tooltip = "text")
+```
 
--   Zoomable ridgeline plots
+-   **Hover** a point to read its values; **drag** to zoom; **double-click** to reset.
+-   **Click a legend entry** to hide that group, double-click to show it alone.
+-   `tooltip = "text"` limits the tooltip to the text you wrote; the default lists every aesthetic.
 
-### ▸ Category vs. Category
+## 2. Categories: bars and boxes with hover labels
 
--   Interactive heatmap
+```{r}
+#| fig-alt: "Interactive bar chart of the percentage with hypertension in each physical activity group; hovering a bar shows the percentage and the number of people."
+by_act <- ncd |> group_by(phys_act) |>
+  summarise(n = n(), pct = round(100 * mean(htn), 1))
+p <- ggplot(by_act, aes(phys_act, pct, text = paste0(pct, "% of ", n, " people"))) +
+  geom_col(fill = "#2C5F8D") +
+  labs(x = "Physical activity", y = "Hypertension (%)")
+ggplotly(p, tooltip = "text")
+```
 
--   Clickable mosaic plot
+```{r}
+#| fig-alt: "Interactive box plots of systolic blood pressure by physical activity; hovering a box shows its median, quartiles and whiskers."
+ggplotly(ggplot(ncd, aes(phys_act, sbp)) + geom_boxplot(fill = "grey85") +
+           labs(x = "Physical activity", y = "Systolic BP (mmHg)"))
+```
 
-### ▸ Continuous vs. Continuous
+The box tooltip gives the **median, quartiles and fences** of each group: useful in a meeting, where nobody can
+read values off a static axis.
 
--   Hoverable scatter plot with tooltips
+## 3. Native plotly: a histogram with a group switch
 
--   Brushed selection scatter matrix
+`plot_ly()` builds charts directly. Here two overlaid histograms; click a legend entry to compare one sex at a time.
 
-### ▸ Category vs. Continuous
+```{r}
+#| fig-alt: "Interactive overlaid histograms of BMI for women and men; legend entries switch each group on and off."
+plot_ly(ncd, x = ~bmi, color = ~sex, type = "histogram", alpha = 0.6, nbinsx = 30) |>
+  layout(barmode = "overlay", xaxis = list(title = "BMI (kg/m²)"), yaxis = list(title = "People"))
+```
 
--   Interactive violin or boxplot with hover labels
+## 4. Time: a line with a range slider
 
--   Dynamic filtering by category
+```{r}
+#| fig-alt: "Interactive line chart of monthly dengue cases summed over all wards from 2023, with a range slider under the x-axis for zooming into a period."
+dengue <- read_csv(c("../data/dengue_wards.csv", "data/dengue_wards.csv")[file.exists(c("../data/dengue_wards.csv", "data/dengue_wards.csv"))][1],
+                   show_col_types = FALSE) |>
+  group_by(date) |> summarise(cases = sum(cases), rain_mm = mean(rain_mm))
+plot_ly(dengue, x = ~date, y = ~cases, type = "scatter", mode = "lines", name = "Dengue cases") |>
+  layout(xaxis = list(title = NULL, rangeslider = list(visible = TRUE)), yaxis = list(title = "Cases per month"))
+```
 
-### ▸ Time Series
+Drag the ends of the slider to zoom into one season; the y-axis keeps its scale, so seasons stay comparable.
 
--   Scrollable time series
+## 5. A searchable table: DT
 
--   Tooltip-enabled line chart
+```{r}
+library(DT)
+ncd |> select(id, village, age, sex, bmi, sbp, dbp, htn) |>
+  datatable(rownames = FALSE, filter = "top", options = list(pageLength = 5))
+```
 
-### ▸ Map
+-   `filter = "top"` adds a filter box above each column; sort by clicking a header.
+-   Use it for **lists readers look things up in** (facilities, villages); not as a substitute for a summary table.
 
--   Interactive choropleth (leaflet, plotly)
+## 6. Linked views: crosstalk
 
--   Clickable bubble map with popups
+`crosstalk::SharedData` lets two widgets use **the same rows**: select points in the scatter plot and the table
+shows only those people.
 
-Scatter plot
+```{r}
+#| fig-alt: "Interactive scatter plot of systolic against diastolic blood pressure linked to a table: selecting points with the box tool filters the table to those people."
+library(crosstalk)
+shared <- SharedData$new(ncd |> select(id, age, sex, sbp, dbp, bmi))
+bscols(widths = c(6, 6),
+       plot_ly(shared, x = ~dbp, y = ~sbp, type = "scatter", mode = "markers", alpha = 0.5) |>
+         layout(xaxis = list(title = "Diastolic BP"), yaxis = list(title = "Systolic BP")) |>
+         highlight(on = "plotly_selected", off = "plotly_deselect"),
+       datatable(shared, rownames = FALSE, options = list(pageLength = 6, dom = "tp")))
+```
 
-Bubble plot
+Choose the **box select** tool (top right of the plot), drag over the points with high systolic BP, and the table
+lists who they are. This works in a static HTML page: no server is needed.
 
-Heat map
+## 7. Maps: leaflet
 
-Tree map
+```{r}
+#| fig-alt: "Interactive map of the district blocks shaded by dengue cases per 100,000; clicking a block opens a popup with its name, population and rate."
+library(leaflet); library(sf)
+blocks <- st_read(c("../data/gis/district_blocks.geojson", "data/gis/district_blocks.geojson")[file.exists(c("../data/gis/district_blocks.geojson", "data/gis/district_blocks.geojson"))][1],
+                  quiet = TRUE)
+pal <- colorNumeric("YlOrRd", blocks$dengue_per_100k)
+leaflet(blocks) |>
+  addProviderTiles(providers$CartoDB.Positron) |>
+  addPolygons(fillColor = ~pal(dengue_per_100k), fillOpacity = 0.8, color = "white", weight = 1,
+              label = ~block_name,
+              popup = ~paste0("<b>", block_name, "</b><br>Population: ", format(population, big.mark = ","),
+                              "<br>Dengue: ", dengue_per_100k, " per 100,000")) |>
+  addLegend(pal = pal, values = ~dengue_per_100k, title = "Dengue per 100k")
+```
 
-Sankey diagram
+-   Hover a block for its name; **click** it for the popup.
+-   The base map tiles load from the internet; the shaded blocks do not need a connection.
+-   Mapping rules (class breaks, rates rather than counts) are in the [GIS track](../gis/maps_choropleth.qmd).
 
-Chord diagram
+## When to use interactivity
 
-Spider / radar chart
+| Use it when | Avoid it when |
+|---|---|
+| Readers explore many points or groups | The figure has one message: a static plot says it faster |
+| Exact values matter on hover | The output is PDF, Word or print |
+| Dashboards, teaching, data checking | Hiding information behind a hover that every reader needs |
 
-Waterfall chart
+::: callout-tip
+## Checklist
+-   Keep a **static version** for the paper; the interactive one goes in the supplement or a web appendix.
+-   Write the **tooltip** yourself: units, rounding, the n.
+-   Large data (more than about 50,000 points) makes the page slow: summarise first, or use `toWebGL()`.
+-   Save a widget as its own file with `htmlwidgets::saveWidget(widget, "fig.html")`.
+-   Other packages: **ggiraph** (interactive ggplot2 layers), **highcharter**, **echarts4r**; Shiny when a reader
+    should change the analysis, not just the view.
+:::
 
-Forest plot
+## Practise in R
 
-Word cloud
+Download the lab **[Interactive plots](../labs/dataviz/v4_interactive.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("ia1", "In `ggplotly(p, tooltip = \"text\")`, what does the tooltip argument do?",
+         c("Adds a text label beside each point", "Shows only the text aesthetic on hover", "Turns the axis titles into links", "Exports the plot as a text file on disk"), answer = 2,
+         explain = "tooltip = \"text\" limits the hover label to the text aesthetic you built; the default lists every mapped aesthetic.")
+quiz_mcq("ia2", "Your paper goes to a journal as a PDF. What about the interactive plotly figure?",
+         c("It is converted to an animation in the PDF", "It needs a static version for the PDF", "It works if the reader opens the PDF online", "It is printed with all the tooltips shown"), answer = 2,
+         explain = "htmlwidgets work in HTML only: put a static figure in the paper and the interactive one in a web supplement.")
+quiz_mcq("ia3", "What does crosstalk's `SharedData` let you do?",
+         c("Share a plot on social media from the page", "Store the data on a server for other users", "Link widgets so a selection filters the others", "Speed up a plot by sharing memory between widgets"), answer = 3,
+         explain = "Widgets built on the same SharedData object respond to each other's selections, in a static page without a server.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

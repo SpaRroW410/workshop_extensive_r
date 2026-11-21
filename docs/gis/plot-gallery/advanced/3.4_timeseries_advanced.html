@@ -223,112 +223,107 @@
 </section>
 <section id="setup" class="slide level2">
 <h2>Setup</h2>
-</section>
-<section id="stl-decomposition---code" class="slide level2">
-<h2>STL Decomposition - Code</h2>
+<p>Data: monthly dengue cases from 30 city wards, 2023–2025 (<code>data/dengue_wards.csv</code>, simulated; see <code>data/README.md</code>). A trial with three visits is not a time series: these methods need many equally spaced time points.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a><span class="co"># Create proper time series (conceptual with more timepoints)</span></span>
-<span id="cb1-2"><a aria-label="2"></a>bp_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(monthly_bp_data<span class="sc">$</span>mean_bp, <span class="at">frequency =</span> <span class="dv">12</span>)</span>
-<span id="cb1-3"><a aria-label="3"></a></span>
-<span id="cb1-4"><a aria-label="4"></a><span class="co"># STL decomposition</span></span>
-<span id="cb1-5"><a aria-label="5"></a>stl_result <span class="ot">&lt;-</span> <span class="fu">stl</span>(bp_ts, <span class="at">s.window =</span> <span class="st">"periodic"</span>)</span>
-<span id="cb1-6"><a aria-label="6"></a></span>
-<span id="cb1-7"><a aria-label="7"></a><span class="co"># Plot components</span></span>
-<span id="cb1-8"><a aria-label="8"></a><span class="fu">autoplot</span>(stl_result) <span class="sc">+</span></span>
-<span id="cb1-9"><a aria-label="9"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"STL Decomposition of Blood Pressure"</span>,</span>
-<span id="cb1-10"><a aria-label="10"></a>       <span class="at">subtitle =</span> <span class="st">"Trend + Seasonal + Remainder"</span>) <span class="sc">+</span></span>
-<span id="cb1-11"><a aria-label="11"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a><span class="fu">library</span>(tidyverse); <span class="fu">library</span>(forecast)</span>
+<span id="cb1-2"><a aria-label="2"></a>dengue <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../../data/dengue_wards.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-3"><a aria-label="3"></a>monthly <span class="ot">&lt;-</span> dengue <span class="sc">|&gt;</span></span>
+<span id="cb1-4"><a aria-label="4"></a>  <span class="fu">group_by</span>(month_index) <span class="sc">|&gt;</span>                                   <span class="co"># 36 consecutive months</span></span>
+<span id="cb1-5"><a aria-label="5"></a>  <span class="fu">summarise</span>(<span class="at">cases =</span> <span class="fu">sum</span>(cases), <span class="at">rain_mm =</span> <span class="fu">mean</span>(rain_mm), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-6"><a aria-label="6"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">seq</span>(<span class="fu">as.Date</span>(<span class="st">"2023-01-01"</span>), <span class="at">by =</span> <span class="st">"month"</span>, <span class="at">length.out =</span> <span class="fu">n</span>()))</span>
+<span id="cb1-7"><a aria-label="7"></a>cases_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(monthly<span class="sc">$</span>cases, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2023</span>, <span class="dv">1</span>), <span class="at">frequency =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>Separates trend, seasonality, and noise</p>
 </section>
-<section id="forecasting---code" class="slide level2">
-<h2>Forecasting - Code</h2>
+<section id="stl-decomposition" class="slide level2">
+<h2>STL Decomposition</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-label="1"></a><span class="co"># Fit ARIMA model</span></span>
-<span id="cb2-2"><a aria-label="2"></a>arima_model <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(bp_ts)</span>
-<span id="cb2-3"><a aria-label="3"></a></span>
-<span id="cb2-4"><a aria-label="4"></a><span class="co"># Forecast 12 months ahead</span></span>
-<span id="cb2-5"><a aria-label="5"></a>forecast_result <span class="ot">&lt;-</span> <span class="fu">forecast</span>(arima_model, <span class="at">h =</span> <span class="dv">12</span>)</span>
-<span id="cb2-6"><a aria-label="6"></a></span>
-<span id="cb2-7"><a aria-label="7"></a><span class="co"># Plot</span></span>
-<span id="cb2-8"><a aria-label="8"></a><span class="fu">autoplot</span>(forecast_result) <span class="sc">+</span></span>
-<span id="cb2-9"><a aria-label="9"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"12-Month Blood Pressure Forecast"</span>,</span>
-<span id="cb2-10"><a aria-label="10"></a>       <span class="at">y =</span> <span class="st">"Mean Systolic BP"</span>) <span class="sc">+</span></span>
-<span id="cb2-11"><a aria-label="11"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-label="1"></a>stl_result <span class="ot">&lt;-</span> <span class="fu">stl</span>(<span class="fu">log1p</span>(cases_ts), <span class="at">s.window =</span> <span class="st">"periodic"</span>)</span>
+<span id="cb2-2"><a aria-label="2"></a><span class="fu">autoplot</span>(stl_result) <span class="sc">+</span></span>
+<span id="cb2-3"><a aria-label="3"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"STL decomposition of monthly dengue cases (log scale)"</span>) <span class="sc">+</span></span>
+<span id="cb2-4"><a aria-label="4"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+
 </div>
-<p>Blue band = 80% CI, gray = 95% CI</p>
+<img data-src="3.4_timeseries_advanced_files/figure-revealjs/unnamed-chunk-2-1.png" alt="STL decomposition of monthly dengue cases into the data, a trend, a seasonal pattern peaking in mid-year, and the remainder." width="960" class="r-stretch"><p>Separates the <strong>trend</strong>, the <strong>seasonal</strong> pattern (a peak every monsoon) and the <strong>remainder</strong>. The log scale makes the seasonal swing additive.</p>
+</section>
+<section id="forecasting-with-arima" class="slide level2">
+<h2>Forecasting with ARIMA</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a>arima_model <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(cases_ts, <span class="at">lambda =</span> <span class="dv">0</span>)       <span class="co"># lambda = 0: model the log, forecast on the case scale</span></span>
+<span id="cb3-2"><a aria-label="2"></a>forecast_result <span class="ot">&lt;-</span> <span class="fu">forecast</span>(arima_model, <span class="at">h =</span> <span class="dv">12</span>)</span>
+<span id="cb3-3"><a aria-label="3"></a><span class="fu">autoplot</span>(forecast_result) <span class="sc">+</span></span>
+<span id="cb3-4"><a aria-label="4"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"12-month dengue forecast (seasonal ARIMA)"</span>, <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Cases per month"</span>) <span class="sc">+</span></span>
+<span id="cb3-5"><a aria-label="5"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+
+</div>
+<img data-src="3.4_timeseries_advanced_files/figure-revealjs/unnamed-chunk-3-1.png" alt="Monthly dengue cases 2023 to 2025 with a 12-month seasonal ARIMA forecast for 2026 and its 80% and 95% prediction bands." width="960" class="r-stretch"><p>Dark band = 80%, light band = 95% prediction interval. Three seasons are a short history: the bands are wide, and that is the honest message.</p>
 </section>
 <section id="prophet-forecasting" class="slide level2">
 <h2>Prophet Forecasting</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a><span class="fu">library</span>(prophet)</span>
-<span id="cb3-2"><a aria-label="2"></a><span class="co"># Prepare data for Prophet</span></span>
-<span id="cb3-3"><a aria-label="3"></a>prophet_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb3-4"><a aria-label="4"></a>  <span class="at">ds =</span> <span class="fu">as.Date</span>(monthly_bp_data<span class="sc">$</span>date),</span>
-<span id="cb3-5"><a aria-label="5"></a>  <span class="at">y =</span> monthly_bp_data<span class="sc">$</span>mean_bp</span>
-<span id="cb3-6"><a aria-label="6"></a>)</span>
-<span id="cb3-7"><a aria-label="7"></a></span>
-<span id="cb3-8"><a aria-label="8"></a><span class="co"># Fit and predict</span></span>
-<span id="cb3-9"><a aria-label="9"></a>m <span class="ot">&lt;-</span> <span class="fu">prophet</span>(prophet_data)</span>
-<span id="cb3-10"><a aria-label="10"></a>future <span class="ot">&lt;-</span> <span class="fu">make_future_dataframe</span>(m, <span class="at">periods =</span> <span class="dv">12</span>, <span class="at">freq =</span> <span class="st">"month"</span>)</span>
-<span id="cb3-11"><a aria-label="11"></a>forecast <span class="ot">&lt;-</span> <span class="fu">predict</span>(m, future)</span>
-<span id="cb3-12"><a aria-label="12"></a></span>
-<span id="cb3-13"><a aria-label="13"></a><span class="co"># Plot</span></span>
-<span id="cb3-14"><a aria-label="14"></a><span class="fu">plot</span>(m, forecast) <span class="sc">+</span></span>
-<span id="cb3-15"><a aria-label="15"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Prophet Forecast with Trend"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-label="1"></a><span class="fu">library</span>(prophet)</span>
+<span id="cb4-2"><a aria-label="2"></a>m <span class="ot">&lt;-</span> <span class="fu">prophet</span>(<span class="fu">data.frame</span>(<span class="at">ds =</span> monthly<span class="sc">$</span>date, <span class="at">y =</span> <span class="fu">log1p</span>(monthly<span class="sc">$</span>cases)),</span>
+<span id="cb4-3"><a aria-label="3"></a>             <span class="at">yearly.seasonality =</span> <span class="cn">TRUE</span>, <span class="at">weekly.seasonality =</span> <span class="cn">FALSE</span>, <span class="at">daily.seasonality =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-4"><a aria-label="4"></a>future <span class="ot">&lt;-</span> <span class="fu">make_future_dataframe</span>(m, <span class="at">periods =</span> <span class="dv">12</span>, <span class="at">freq =</span> <span class="st">"month"</span>)</span>
+<span id="cb4-5"><a aria-label="5"></a>fc <span class="ot">&lt;-</span> <span class="fu">predict</span>(m, future)</span>
+<span id="cb4-6"><a aria-label="6"></a><span class="fu">plot</span>(m, fc) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Prophet forecast (log cases)"</span>, <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"log(1 + cases)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+
 </div>
-<p>Handles holidays, changepoints automatically</p>
+<img data-src="3.4_timeseries_advanced_files/figure-revealjs/unnamed-chunk-4-1.png" alt="Prophet fit to monthly dengue cases with points for the data, a line for the fitted values and a shaded uncertainty band extending 12 months ahead." width="960" class="r-stretch"><p>Prophet fits a trend plus yearly seasonality; it is easy to use but, like any model, only as good as the history.</p>
 </section>
 <section id="change-point-detection" class="slide level2">
 <h2>Change Point Detection</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-label="1"></a><span class="fu">library</span>(changepoint)</span>
-<span id="cb4-2"><a aria-label="2"></a><span class="co"># Detect change points in mean</span></span>
-<span id="cb4-3"><a aria-label="3"></a>cpt_result <span class="ot">&lt;-</span> <span class="fu">cpt.mean</span>(bp_ts, <span class="at">method =</span> <span class="st">"PELT"</span>)</span>
-<span id="cb4-4"><a aria-label="4"></a></span>
-<span id="cb4-5"><a aria-label="5"></a><span class="co"># Plot</span></span>
-<span id="cb4-6"><a aria-label="6"></a><span class="fu">plot</span>(cpt_result, <span class="at">cpt.col =</span> <span class="st">"red"</span>, <span class="at">cpt.width =</span> <span class="dv">3</span>,</span>
-<span id="cb4-7"><a aria-label="7"></a>    <span class="at">main =</span> <span class="st">"Change Point Detection in BP Time Series"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-label="1"></a><span class="fu">library</span>(changepoint)</span>
+<span id="cb5-2"><a aria-label="2"></a>y <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">log1p</span>(cases_ts))</span>
+<span id="cb5-3"><a aria-label="3"></a>noise_sd <span class="ot">&lt;-</span> <span class="fu">mad</span>(<span class="fu">diff</span>(y)) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="dv">2</span>)                   <span class="co"># cpt.mean() assumes a noise SD of 1: rescale first</span></span>
+<span id="cb5-4"><a aria-label="4"></a>cpt_result <span class="ot">&lt;-</span> <span class="fu">cpt.mean</span>(y <span class="sc">/</span> noise_sd, <span class="at">method =</span> <span class="st">"PELT"</span>)</span>
+<span id="cb5-5"><a aria-label="5"></a><span class="fu">plot</span>(cpt_result, <span class="at">cpt.col =</span> <span class="st">"red"</span>, <span class="at">cpt.width =</span> <span class="dv">3</span>, <span class="at">ylab =</span> <span class="st">"log(1 + cases) / noise SD"</span>, <span class="at">xlab =</span> <span class="st">"Month (1 = Jan 2023)"</span>,</span>
+<span id="cb5-6"><a aria-label="6"></a>     <span class="at">main =</span> <span class="st">"Change points in the mean level"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a aria-label="1"></a><span class="fu">cpts</span>(cpt_result)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  4 10 17 22 28 34</code></pre>
 </div>
-<p>Identifies when trend shifts significantly</p>
+</div>
+<img data-src="3.4_timeseries_advanced_files/figure-revealjs/unnamed-chunk-5-1.png" alt="Monthly dengue cases with red horizontal segments showing the mean level between the change points found by PELT." width="960" class="r-stretch"><p>Here the “changes” are the start and end of each season: a change-point method finds <strong>level shifts</strong>, so remove the seasonal pattern first if you are looking for a shift in the underlying trend.</p>
 </section>
 <section id="rolling-statistics-plot" class="slide level2">
 <h2>Rolling Statistics Plot</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-label="1"></a><span class="fu">library</span>(zoo)</span>
-<span id="cb5-2"><a aria-label="2"></a><span class="co"># Calculate rolling mean and SD</span></span>
-<span id="cb5-3"><a aria-label="3"></a>rolling_data <span class="ot">&lt;-</span> monthly_bp_data <span class="sc">%&gt;%</span></span>
-<span id="cb5-4"><a aria-label="4"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb5-5"><a aria-label="5"></a>    <span class="at">roll_mean =</span> <span class="fu">rollmean</span>(mean_bp, <span class="at">k =</span> <span class="dv">3</span>, <span class="at">fill =</span> <span class="cn">NA</span>),</span>
-<span id="cb5-6"><a aria-label="6"></a>    <span class="at">roll_sd =</span> <span class="fu">rollapply</span>(mean_bp, <span class="at">width =</span> <span class="dv">3</span>, <span class="at">FUN =</span> sd,</span>
-<span id="cb5-7"><a aria-label="7"></a>                       <span class="at">fill =</span> <span class="cn">NA</span>)</span>
-<span id="cb5-8"><a aria-label="8"></a>  )</span>
-<span id="cb5-9"><a aria-label="9"></a></span>
-<span id="cb5-10"><a aria-label="10"></a><span class="fu">ggplot</span>(rolling_data, <span class="fu">aes</span>(<span class="at">x =</span> date)) <span class="sc">+</span></span>
-<span id="cb5-11"><a aria-label="11"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_bp), <span class="at">color =</span> <span class="st">"gray70"</span>) <span class="sc">+</span></span>
-<span id="cb5-12"><a aria-label="12"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> roll_mean), <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb5-13"><a aria-label="13"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> roll_mean <span class="sc">-</span> roll_sd,</span>
-<span id="cb5-14"><a aria-label="14"></a>                 <span class="at">ymax =</span> roll_mean <span class="sc">+</span> roll_sd),</span>
-<span id="cb5-15"><a aria-label="15"></a>             <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">fill =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb5-16"><a aria-label="16"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"3-Month Rolling Mean ± SD"</span>) <span class="sc">+</span></span>
-<span id="cb5-17"><a aria-label="17"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a aria-label="1"></a><span class="fu">library</span>(zoo)</span>
+<span id="cb8-2"><a aria-label="2"></a>rolling <span class="ot">&lt;-</span> monthly <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a aria-label="3"></a>  <span class="fu">mutate</span>(<span class="at">roll_mean =</span> <span class="fu">rollmean</span>(cases, <span class="at">k =</span> <span class="dv">3</span>, <span class="at">fill =</span> <span class="cn">NA</span>),</span>
+<span id="cb8-4"><a aria-label="4"></a>         <span class="at">roll_sd =</span> <span class="fu">rollapply</span>(cases, <span class="at">width =</span> <span class="dv">3</span>, <span class="at">FUN =</span> sd, <span class="at">fill =</span> <span class="cn">NA</span>))</span>
+<span id="cb8-5"><a aria-label="5"></a><span class="fu">ggplot</span>(rolling, <span class="fu">aes</span>(<span class="at">x =</span> date)) <span class="sc">+</span></span>
+<span id="cb8-6"><a aria-label="6"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> cases), <span class="at">colour =</span> <span class="st">"grey70"</span>) <span class="sc">+</span></span>
+<span id="cb8-7"><a aria-label="7"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> roll_mean <span class="sc">-</span> roll_sd, <span class="at">ymax =</span> roll_mean <span class="sc">+</span> roll_sd), <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">fill =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb8-8"><a aria-label="8"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> roll_mean), <span class="at">colour =</span> <span class="st">"blue"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb8-9"><a aria-label="9"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"3-month rolling mean ± SD"</span>, <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Cases per month"</span>) <span class="sc">+</span></span>
+<span id="cb8-10"><a aria-label="10"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+
 </div>
-</section>
+<img data-src="3.4_timeseries_advanced_files/figure-revealjs/unnamed-chunk-6-1.png" alt="Monthly dengue cases in grey with a 3-month rolling mean in blue and a shaded band of plus or minus one rolling standard deviation." width="960" class="r-stretch"></section>
 <section id="summary" class="slide level2">
 <h2>Summary</h2>
 <p><strong>Advanced time series:</strong></p>

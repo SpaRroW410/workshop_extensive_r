@@ -223,102 +223,98 @@
 </section>
 <section id="setup" class="slide level2">
 <h2>Setup</h2>
-</section>
-<section id="interaction-plot---code" class="slide level2">
-<h2>Interaction Plot - Code</h2>
+<p>Data: 200 simulated patients of a blood-pressure trial (<code>data/PublicHealth_BP_Dataset.xlsx</code>, see <code>data/README.md</code>).</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a><span class="co"># Fit model with interaction</span></span>
-<span id="cb1-2"><a aria-label="2"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(SysBP_6m <span class="sc">~</span> TreatmentGroup <span class="sc">*</span> Gender <span class="sc">+</span> Age <span class="sc">+</span> BMI_0m,</span>
-<span id="cb1-3"><a aria-label="3"></a>           <span class="at">data =</span> health_data)</span>
-<span id="cb1-4"><a aria-label="4"></a></span>
-<span id="cb1-5"><a aria-label="5"></a><span class="co"># Plot interaction</span></span>
-<span id="cb1-6"><a aria-label="6"></a><span class="fu">library</span>(interactions)</span>
-<span id="cb1-7"><a aria-label="7"></a><span class="fu">interact_plot</span>(model, <span class="at">pred =</span> TreatmentGroup, <span class="at">modx =</span> Gender,</span>
-<span id="cb1-8"><a aria-label="8"></a>             <span class="at">interval =</span> <span class="cn">TRUE</span>, <span class="at">int.width =</span> <span class="fl">0.95</span>) <span class="sc">+</span></span>
-<span id="cb1-9"><a aria-label="9"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Treatment Effect by Gender"</span>,</span>
-<span id="cb1-10"><a aria-label="10"></a>       <span class="at">y =</span> <span class="st">"Predicted Systolic BP at 6 months"</span>) <span class="sc">+</span></span>
-<span id="cb1-11"><a aria-label="11"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a><span class="fu">library</span>(readxl); <span class="fu">library</span>(dplyr); <span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a aria-label="2"></a><span class="fu">library</span>(ggeffects); <span class="fu">library</span>(interactions); <span class="fu">library</span>(broom)</span>
+<span id="cb1-3"><a aria-label="3"></a>health_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"../../data/PublicHealth_BP_Dataset.xlsx"</span>)</span>
+<span id="cb1-4"><a aria-label="4"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(SysBP_6m <span class="sc">~</span> TreatmentGroup <span class="sc">*</span> Gender <span class="sc">+</span> Age <span class="sc">+</span> BMI <span class="sc">+</span> SysBP_0m, <span class="at">data =</span> health_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>Shows if treatment effect differs by gender</p>
+<p>The model adjusts the 6-month SBP for baseline SBP, age and BMI, and lets the treatment effect differ by gender.</p>
+</section>
+<section id="interaction-plot" class="slide level2">
+<h2>Interaction Plot</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-label="1"></a><span class="fu">cat_plot</span>(model, <span class="at">pred =</span> TreatmentGroup, <span class="at">modx =</span> Gender, <span class="at">interval =</span> <span class="cn">TRUE</span>, <span class="at">int.width =</span> <span class="fl">0.95</span>,</span>
+<span id="cb2-2"><a aria-label="2"></a>         <span class="at">geom =</span> <span class="st">"point"</span>) <span class="sc">+</span></span>
+<span id="cb2-3"><a aria-label="3"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Treatment effect by gender"</span>, <span class="at">y =</span> <span class="st">"Predicted systolic BP at 6 months"</span>) <span class="sc">+</span></span>
+<span id="cb2-4"><a aria-label="4"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+
+</div>
+<img data-src="3.3_category_vs_continuous_advanced_files/figure-revealjs/unnamed-chunk-2-1.png" alt="Predicted systolic blood pressure at 6 months for each treatment group, with separate points and 95% intervals for each gender category." width="960" class="r-stretch"><p>The intervention lowers SBP by about 9 mmHg in every gender group; the interaction test agrees (<code>anova(model)</code>, row <code>TreatmentGroup:Gender</code>: p = 0.67). Test an interaction, do not judge it by eye.</p>
 </section>
 <section id="marginal-effects-plot" class="slide level2">
 <h2>Marginal Effects Plot</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-label="1"></a><span class="fu">library</span>(ggeffects)</span>
-<span id="cb2-2"><a aria-label="2"></a><span class="co"># Get predicted values</span></span>
-<span id="cb2-3"><a aria-label="3"></a>effects <span class="ot">&lt;-</span> <span class="fu">ggpredict</span>(model, <span class="at">terms =</span> <span class="fu">c</span>(<span class="st">"Age [all]"</span>, <span class="st">"TreatmentGroup"</span>))</span>
-<span id="cb2-4"><a aria-label="4"></a></span>
-<span id="cb2-5"><a aria-label="5"></a><span class="fu">plot</span>(effects) <span class="sc">+</span></span>
-<span id="cb2-6"><a aria-label="6"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Age Effect on BP by Treatment Group"</span>,</span>
-<span id="cb2-7"><a aria-label="7"></a>       <span class="at">x =</span> <span class="st">"Age (years)"</span>, <span class="at">y =</span> <span class="st">"Predicted BP"</span>) <span class="sc">+</span></span>
-<span id="cb2-8"><a aria-label="8"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a>effects <span class="ot">&lt;-</span> <span class="fu">ggpredict</span>(model, <span class="at">terms =</span> <span class="fu">c</span>(<span class="st">"Age [all]"</span>, <span class="st">"TreatmentGroup"</span>))</span>
+<span id="cb3-2"><a aria-label="2"></a><span class="fu">plot</span>(effects) <span class="sc">+</span></span>
+<span id="cb3-3"><a aria-label="3"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Age and predicted SBP at 6 months, by treatment group"</span>,</span>
+<span id="cb3-4"><a aria-label="4"></a>       <span class="at">x =</span> <span class="st">"Age (years)"</span>, <span class="at">y =</span> <span class="st">"Predicted SBP (mmHg)"</span>) <span class="sc">+</span></span>
+<span id="cb3-5"><a aria-label="5"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+
 </div>
-<p>Model-based predictions with confidence bands</p>
+<img data-src="3.3_category_vs_continuous_advanced_files/figure-revealjs/unnamed-chunk-3-1.png" alt="Predicted systolic blood pressure at 6 months against age, one line with a confidence band per treatment group." width="960" class="r-stretch"><p>Model-based predictions with confidence bands, other variables held at their mean or reference level.</p>
 </section>
 <section id="forest-plot-effect-sizes" class="slide level2">
 <h2>Forest Plot (Effect Sizes)</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a><span class="fu">library</span>(broom)</span>
-<span id="cb3-2"><a aria-label="2"></a><span class="co"># Get coefficients</span></span>
-<span id="cb3-3"><a aria-label="3"></a>coef_data <span class="ot">&lt;-</span> <span class="fu">tidy</span>(model, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-4"><a aria-label="4"></a>  <span class="fu">filter</span>(term <span class="sc">!=</span> <span class="st">"(Intercept)"</span>)</span>
-<span id="cb3-5"><a aria-label="5"></a></span>
-<span id="cb3-6"><a aria-label="6"></a><span class="fu">ggplot</span>(coef_data, <span class="fu">aes</span>(<span class="at">x =</span> estimate, <span class="at">y =</span> term)) <span class="sc">+</span></span>
-<span id="cb3-7"><a aria-label="7"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb3-8"><a aria-label="8"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb3-9"><a aria-label="9"></a>  <span class="fu">geom_errorbarh</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> conf.low, <span class="at">xmax =</span> conf.high),</span>
-<span id="cb3-10"><a aria-label="10"></a>                <span class="at">height =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb3-11"><a aria-label="11"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Regression Coefficients with 95% CI"</span>,</span>
-<span id="cb3-12"><a aria-label="12"></a>       <span class="at">x =</span> <span class="st">"Effect on Systolic BP"</span>) <span class="sc">+</span></span>
-<span id="cb3-13"><a aria-label="13"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-label="1"></a>coef_data <span class="ot">&lt;-</span> <span class="fu">tidy</span>(model, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">filter</span>(term <span class="sc">!=</span> <span class="st">"(Intercept)"</span>)</span>
+<span id="cb4-2"><a aria-label="2"></a><span class="fu">ggplot</span>(coef_data, <span class="fu">aes</span>(<span class="at">x =</span> estimate, <span class="at">y =</span> <span class="fu">reorder</span>(term, estimate))) <span class="sc">+</span></span>
+<span id="cb4-3"><a aria-label="3"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb4-4"><a aria-label="4"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> conf.low, <span class="at">xmax =</span> conf.high), <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">orientation =</span> <span class="st">"y"</span>) <span class="sc">+</span></span>
+<span id="cb4-5"><a aria-label="5"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb4-6"><a aria-label="6"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Regression coefficients with 95% CI"</span>, <span class="at">x =</span> <span class="st">"Difference in SBP at 6 months (mmHg)"</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb4-7"><a aria-label="7"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+
 </div>
-<p>Standard in medical research</p>
+<img data-src="3.3_category_vs_continuous_advanced_files/figure-revealjs/unnamed-chunk-4-1.png" alt="Forest plot of the regression coefficients with 95% confidence intervals and a dashed line at zero." width="960" class="r-stretch"><p>Standard in medical research. Coefficients on different scales (per year of age vs per group) are not comparable in size.</p>
 </section>
 <section id="raincloud-by-multiple-groups" class="slide level2">
 <h2>Raincloud by Multiple Groups</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-label="1"></a><span class="fu">library</span>(ggdist)</span>
-<span id="cb4-2"><a aria-label="2"></a>health_data <span class="sc">%&gt;%</span></span>
-<span id="cb4-3"><a aria-label="3"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(TreatmentGroup), <span class="sc">!</span><span class="fu">is.na</span>(Gender)) <span class="sc">%&gt;%</span></span>
-<span id="cb4-4"><a aria-label="4"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Gender, <span class="at">y =</span> SysBP_6m, <span class="at">fill =</span> TreatmentGroup)) <span class="sc">+</span></span>
-<span id="cb4-5"><a aria-label="5"></a>  <span class="fu">stat_halfeye</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.5</span>),</span>
-<span id="cb4-6"><a aria-label="6"></a>              <span class="at">adjust =</span> <span class="fl">0.5</span>, <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb4-7"><a aria-label="7"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>,</span>
-<span id="cb4-8"><a aria-label="8"></a>              <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
-<span id="cb4-9"><a aria-label="9"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> TreatmentGroup) <span class="sc">+</span></span>
-<span id="cb4-10"><a aria-label="10"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-label="1"></a><span class="fu">library</span>(ggdist)</span>
+<span id="cb5-2"><a aria-label="2"></a>health_data <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a aria-label="3"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(TreatmentGroup), <span class="sc">!</span><span class="fu">is.na</span>(Gender)) <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a aria-label="4"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Gender, <span class="at">y =</span> SysBP_6m, <span class="at">fill =</span> Gender)) <span class="sc">+</span></span>
+<span id="cb5-5"><a aria-label="5"></a>  <span class="fu">stat_halfeye</span>(<span class="at">adjust =</span> <span class="fl">0.6</span>, <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">justification =</span> <span class="sc">-</span><span class="fl">0.25</span>, <span class="at">.width =</span> <span class="dv">0</span>, <span class="at">point_colour =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a aria-label="6"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.12</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb5-7"><a aria-label="7"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.05</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb5-8"><a aria-label="8"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> TreatmentGroup) <span class="sc">+</span></span>
+<span id="cb5-9"><a aria-label="9"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Systolic BP at 6 months (mmHg)"</span>, <span class="at">x =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb5-10"><a aria-label="10"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+
 </div>
-<p>Comprehensive view of nested groups</p>
+<img data-src="3.3_category_vs_continuous_advanced_files/figure-revealjs/unnamed-chunk-5-1.png" alt="Raincloud plots of systolic blood pressure at 6 months by gender, one panel per treatment group: a half density, a narrow box plot and the raw points." width="960" class="r-stretch"><p>Distribution, summary and raw data at once, for nested groups.</p>
 </section>
 <section id="bayesian-credible-intervals" class="slide level2">
 <h2>Bayesian Credible Intervals</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-label="1"></a><span class="fu">library</span>(rstanarm)</span>
-<span id="cb5-2"><a aria-label="2"></a><span class="co"># Bayesian model (conceptual)</span></span>
-<span id="cb5-3"><a aria-label="3"></a>bayes_model <span class="ot">&lt;-</span> <span class="fu">stan_glm</span>(SysBP_6m <span class="sc">~</span> TreatmentGroup <span class="sc">+</span> Age,</span>
-<span id="cb5-4"><a aria-label="4"></a>                       <span class="at">data =</span> health_data,</span>
-<span id="cb5-5"><a aria-label="5"></a>                       <span class="at">prior =</span> <span class="fu">normal</span>(<span class="dv">0</span>, <span class="fl">2.5</span>))</span>
-<span id="cb5-6"><a aria-label="6"></a></span>
-<span id="cb5-7"><a aria-label="7"></a><span class="co"># Plot posterior distributions</span></span>
-<span id="cb5-8"><a aria-label="8"></a><span class="fu">plot</span>(bayes_model, <span class="at">prob =</span> <span class="fl">0.95</span>) <span class="sc">+</span></span>
-<span id="cb5-9"><a aria-label="9"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Bayesian Coefficient Estimates"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a aria-label="1"></a><span class="fu">library</span>(rstanarm)</span>
+<span id="cb6-2"><a aria-label="2"></a>bayes_model <span class="ot">&lt;-</span> <span class="fu">stan_glm</span>(SysBP_6m <span class="sc">~</span> TreatmentGroup <span class="sc">+</span> Age <span class="sc">+</span> SysBP_0m, <span class="at">data =</span> health_data,</span>
+<span id="cb6-3"><a aria-label="3"></a>                        <span class="at">chains =</span> <span class="dv">2</span>, <span class="at">iter =</span> <span class="dv">1000</span>, <span class="at">seed =</span> <span class="dv">2026</span>, <span class="at">refresh =</span> <span class="dv">0</span>)</span>
+<span id="cb6-4"><a aria-label="4"></a><span class="fu">plot</span>(bayes_model, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"TreatmentGroupIntervention"</span>, <span class="st">"Age"</span>, <span class="st">"SysBP_0m"</span>), <span class="at">prob =</span> <span class="fl">0.5</span>, <span class="at">prob_outer =</span> <span class="fl">0.95</span>) <span class="sc">+</span></span>
+<span id="cb6-5"><a aria-label="5"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Posterior estimates (50% and 95% credible intervals)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+
 </div>
-<p>Full uncertainty quantification</p>
+<img data-src="3.3_category_vs_continuous_advanced_files/figure-revealjs/unnamed-chunk-6-1.png" alt="Posterior medians with 50% and 95% credible intervals for the treatment group and age coefficients of a Bayesian linear model." width="960" class="r-stretch"><p>A 95% <strong>credible</strong> interval holds the coefficient with 95% probability, given the model and its (weak, default) priors.</p>
 </section>
 <section id="summary" class="slide level2">
 <h2>Summary</h2>

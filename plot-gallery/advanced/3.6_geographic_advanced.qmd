@@ -12,153 +12,118 @@ format:
 
 ## Topics Covered
 
-- Spatial interpolation (kriging)
+- Spatial interpolation (IDW; kriging in the GIS track)
 - Cartograms (area distortion)
 - Spatial autocorrelation
-- Hexbin maps
-- Isochrone maps
+- Hexagon tile maps
+- Access: distance bands
 
 Goal: Advanced spatial analysis
 
 ## Setup
 
+Data: a synthetic district of 79 blocks with dengue rates, and 30 health facilities
+(`data/gis/`, built by `gis/make_gis_data.R`; the same data as the GIS track).
+
 ```{r}
-library(readxl); library(dplyr); library(ggplot2)
-library(sf); library(gstat); library(cartogram)
-health_data <- read_excel("../../data/PublicHealth_BP_Dataset.xlsx")
-
-# Aggregate by region
-region_summary <- health_data %>%
-  group_by(Region) %>%
-  summarise(mean_bp = mean(SysBP_0m, na.rm = TRUE),
-           n_patients = n())
+#| echo: true
+library(tidyverse); library(sf)
+blocks <- st_read("../../data/gis/district_blocks.geojson", quiet = TRUE) |>
+  st_transform(32644)                                   # UTM zone 44N: metres, for distances and areas
+fac <- read_csv("../../data/gis/facilities.csv", show_col_types = FALSE) |>
+  st_as_sf(coords = c("easting_m", "northing_m"), crs = 32644)
 ```
 
-## Spatial Interpolation - Code
+## Spatial Interpolation
 
-```{r eval=FALSE, echo=TRUE}
+```{r}
+#| echo: true
+#| fig-alt: "Smooth surface of dengue incidence per 100,000 estimated by inverse distance weighting from the 79 block centres, with block outlines on top."
 library(gstat)
-library(sp)
-
-# Create spatial points (simulated coordinates)
-coords <- data.frame(
-  lon = c(-120, -100, -80, -110),
-  lat = c(40, 35, 42, 45),
-  bp = region_summary$mean_bp
-)
-coordinates(coords) <- ~lon + lat
-
-# Fit variogram and krige
-vgm_model <- vgm(psill = 100, model = "Exp", range = 500)
-kriged <- krige(bp ~ 1, coords, newdata = grid, model = vgm_model)
-
-# Plot interpolated surface
-ggplot(as.data.frame(kriged), aes(x = lon, y = lat, fill = var1.pred)) +
-  geom_tile() +
-  scale_fill_viridis_c() +
-  labs(title = "Spatial Interpolation (Kriging)",
-       fill = "Predicted BP") +
-  theme_minimal()
+centres <- st_centroid(blocks)
+grid <- st_make_grid(blocks, cellsize = 500, what = "centers") |> st_as_sf() |>
+  st_filter(st_union(blocks))                            # 500 m grid inside the district
+idw_fit <- idw(dengue_per_100k ~ 1, centres, newdata = grid, idp = 2, debug.level = 0)
+ggplot() +
+  geom_sf(data = idw_fit, aes(colour = var1.pred), size = 0.6, shape = 15) +
+  geom_sf(data = blocks, fill = NA, colour = "white", linewidth = 0.2) +
+  scale_colour_viridis_c(option = "inferno", name = "Dengue\nper 100k") +
+  labs(title = "Inverse distance weighting from block centres") +
+  theme_void()
 ```
 
-Estimates values between observations
+Estimates values **between** observations. Kriging does the same with a fitted variogram and gives a standard error
+for each estimate (GIS track).
 
-## Cartogram - Code
+## Cartogram
 
-```{r eval=FALSE, echo=TRUE}
+```{r}
+#| echo: true
+#| fig-alt: "Cartogram of the district in which each block's area is distorted to be proportional to its population, shaded by dengue incidence."
 library(cartogram)
-library(sf)
-
-# Create SF object with regions
-us_regions <- st_as_sf(map_data_full, 
-                       coords = c("long", "lat")) %>%
-  group_by(region_name) %>%
-  summarise(mean_bp = first(mean_bp))
-
-# Create cartogram (distort by BP)
-cartogram_result <- cartogram_cont(us_regions, "mean_bp")
-
-ggplot(cartogram_result) +
-  geom_sf(aes(fill = mean_bp)) +
-  scale_fill_viridis_c() +
-  labs(title = "Cartogram: Area ∝ Blood Pressure",
-       fill = "Mean BP") +
+carto <- cartogram_cont(blocks, "population", itermax = 8)
+ggplot(carto) +
+  geom_sf(aes(fill = dengue_per_100k), colour = "white", linewidth = 0.2) +
+  scale_fill_viridis_c(option = "inferno", name = "Dengue\nper 100k") +
+  labs(title = "Cartogram: block area proportional to population") +
   theme_void()
 ```
 
-Region size represents BP magnitude
+Large empty blocks shrink and crowded ones grow, so the map shows **where the people are**, not where the land is.
 
-## Spatial Autocorrelation - Code
+## Spatial Autocorrelation
 
-```{r eval=FALSE, echo=TRUE}
+```{r}
+#| echo: true
+#| fig-alt: "Moran scatter plot of dengue incidence in each block against the average incidence of its neighbours, with a positive slope."
 library(spdep)
-
-# Create neighbors
-neighbors <- poly2nb(us_regions)
-weights <- nb2listw(neighbors)
-
-# Moran's I test
-moran_result <- moran.test(us_regions$mean_bp, weights)
-
-# Plot Moran's I scatter
-moran.plot(us_regions$mean_bp, weights,
-          main = "Moran's I Spatial Autocorrelation",
-          xlab = "Blood Pressure",
-          ylab = "Lagged BP")
-
-# Add result
-text(x = min(us_regions$mean_bp), y = max(us_regions$mean_bp),
-    labels = paste0("Moran's I = ", 
-                   round(moran_result$estimate[1], 3),
-                   "\np = ", round(moran_result$p.value, 4)),
-    adj = c(0,1))
+nb <- poly2nb(blocks)                                   # blocks that share a border
+lw <- nb2listw(nb, style = "W")
+moran_result <- moran.test(blocks$dengue_per_100k, lw)
+moran.plot(blocks$dengue_per_100k, lw, labels = FALSE, pch = 19,
+           xlab = "Dengue per 100k", ylab = "Neighbours' average",
+           main = sprintf("Moran's I = %.2f, p = %.3g", moran_result$estimate[1], moran_result$p.value))
 ```
 
-Tests if similar values cluster spatially
+A positive slope (Moran's I > 0) means high-incidence blocks sit next to high-incidence blocks.
 
-## Hexbin Map - Code
+## Hexagon Tile Map
 
-```{r eval=FALSE, echo=TRUE}
+```{r}
+#| echo: true
+#| fig-alt: "The 79 blocks redrawn as equal-sized hexagons placed close to their real positions, shaded by dengue incidence."
 library(geogrid)
-
-# Create hexagonal grid
-hex_grid <- calculate_grid(shape = us_regions, 
-                          grid_type = "hexagonal",
-                          seed = 123)
-
-# Assign data
-hex_data <- assign_polygons(us_regions, hex_grid)
-
+blocks_wgs <- st_transform(blocks, 4326)
+hex_grid <- calculate_grid(shape = blocks_wgs, grid_type = "hexagonal", seed = 3)
+hex_data <- assign_polygons(blocks_wgs, hex_grid)
 ggplot(hex_data) +
-  geom_sf(aes(fill = mean_bp), color = "white") +
-  geom_sf_text(aes(label = region_name), size = 3) +
-  scale_fill_viridis_c() +
-  labs(title = "Hexbin Map: Equal Area Representation") +
+  geom_sf(aes(fill = dengue_per_100k), colour = "white") +
+  scale_fill_viridis_c(option = "inferno", name = "Dengue\nper 100k") +
+  labs(title = "Every block the same size") +
   theme_void()
 ```
 
-Each region = same size hexagon
+Small blocks are as visible as large ones; the price is distorted positions and shapes.
 
-## Isochrone Map (Conceptual)
+## Access: Distance Bands
 
-```{r eval=FALSE, echo=TRUE}
-library(osrm)
-
-# Calculate isochrones (travel time zones)
-# From central hospital location
-iso <- osrmIsochrone(loc = c(-95, 38),  # Center point
-                    breaks = c(0, 15, 30, 45, 60),  # Minutes
-                    osrm.profile = "car")
-
-ggplot(iso) +
-  geom_sf(aes(fill = factor(isomax)), alpha = 0.5) +
-  scale_fill_brewer(palette = "YlOrRd",
-                   name = "Travel Time\n(minutes)") +
-  labs(title = "Hospital Access Isochrones") +
+```{r}
+#| echo: true
+#| fig-alt: "District map with shaded bands of 2, 5 and 10 kilometres around the primary and community health centres, and the facilities as points."
+phc <- fac |> filter(type %in% c("PHC", "CHC"))
+bands <- map_dfr(c(10, 5, 2), \(km) st_sf(km = km, geometry = st_union(st_buffer(phc, km * 1000)))) |>
+  st_intersection(st_union(blocks))
+ggplot() +
+  geom_sf(data = bands, aes(fill = factor(km, levels = c(2, 5, 10))), colour = NA, alpha = 0.8) +
+  geom_sf(data = blocks, fill = NA, colour = "grey50", linewidth = 0.2) +
+  geom_sf(data = phc, aes(shape = type), size = 2) +
+  scale_fill_brewer(palette = "YlGnBu", direction = -1, name = "Within (km)") +
+  labs(title = "Straight-line distance to a PHC or CHC", shape = NULL) +
   theme_void()
 ```
 
-Shows accessibility zones
+Straight-line bands are a first look. **Isochrones** (travel time by road, e.g. `osrm::osrmIsochrone()`)
+are better, but need a routing server and road data.
 
 ## Summary
 
@@ -167,7 +132,7 @@ Shows accessibility zones
 1. Spatial interpolation - estimate unmeasured locations
 2. Cartograms - size by variable
 3. Spatial autocorrelation - test clustering
-4. Hexbin maps - equal area representation
-5. Isochrones - accessibility analysis
+4. Hexagon tile maps - equal area representation
+5. Distance bands - accessibility (isochrones need a routing server)
 
 **Next:** Dashboards Advanced

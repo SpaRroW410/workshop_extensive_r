@@ -2,7 +2,7 @@
 title: "Grammar of Graphics: Module 3"
 subtitle: "Colors, Scales & Custom Themes"
 author: "Sparrow"
-date: "2025-11-22"
+date: "2026-11-20"
 format: 
   revealjs:
     theme: serif
@@ -1098,3 +1098,62 @@ theme_update(
 **End of Module 3**
 
 *Continue to Module 4: Advanced Topics & Best Practices*
+
+## 🔧 Practise in R {.smaller}
+
+Download the lab **[Colours, scales and themes](../../labs/dataviz/v1_colours_themes.R)** and the data ([ncd_survey.csv](../../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz (1/4) {.smaller}
+
+```{r}
+#| include: false
+source("../../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gc1", "Which scale keeps groups distinguishable for colour-blind readers and in greyscale?",
+         c("`scale_colour_brewer(palette = \"Set1\")`", "`scale_colour_viridis_d()`", "`scale_colour_hue()`", "`scale_colour_manual(values = c(\"red\", \"green\"))`"), answer = 2,
+         explain = "viridis changes lightness as well as hue, so it survives greyscale printing and red-green colour blindness; Set1 and the default hue scale do not.")
+```
+
+## Self-check quiz (2/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gc2", "SBP change ranges from −20 to +20 mmHg, and 0 means no change. Which colour scale fits?",
+         c("`scale_colour_gradient(low = \"white\")`", "`scale_colour_viridis_d()`", "`scale_colour_gradient2(midpoint = 0)`", "`scale_colour_grey(start = 0.2)`"), answer = 3,
+         explain = "A diverging scale with its neutral colour at a meaningful midpoint shows the direction and size of change.")
+```
+
+## Self-check quiz (3/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gc3", "Which `theme()` setting removes the minor grid lines?",
+         c("`panel.grid.minor = element_line()`", "`panel.grid.major = element_blank()`", "`legend.position = \"none\"`", "`panel.grid.minor = element_blank()`"), answer = 4,
+         explain = "element_blank() removes a theme element; element_line() styles it. panel.grid.major is the other set of grid lines.")
+```
+
+## Self-check quiz (4/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gc4", "How do you apply a house theme to every later plot in a report?",
+         c("Add the theme to the first plot only", "Call `theme_set()` once at the start", "Save the theme with `ggsave()`", "Put the theme inside `aes()`"), answer = 2,
+         explain = "theme_set() changes the default theme for the rest of the session or document.")
+```
+
+## Score {.smaller}
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../../assets/quiz-engine.R"); quiz_engine()
+```

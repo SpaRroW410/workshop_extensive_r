@@ -1,5 +1,7 @@
 ---
 title: "Advanced plots"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -13,9 +15,9 @@ editor:
 
 ---
 
-## Intermediate Plot
+## Advanced Plots
 
-Explore foundational plots grouped by data type and relationship
+Specialised plots grouped by data type: hierarchies, models, forecasts, networks, spatial analysis and dashboards.
 
 ---
 
@@ -37,7 +39,7 @@ Includes:
 - Contour plots (2D density)
 - 3D surface plots
 - Parallel coordinates
-- Correlation ellipses
+- Correlation matrix
 - Hexbin plots (large data)
 🔗 [View Slide Deck →](advanced/3.2_continuous_advanced.qmd)
 
@@ -49,8 +51,9 @@ Includes:
 - Effect plots (model-based)
 - Interaction plots
 - Marginal effects
+- Forest plots of model coefficients
+- Rainclouds for nested groups
 - Bayesian credible intervals
-- Mixed effects visualization
 🔗 [View Slide Deck →](advanced/3.3_category_vs_continuous_advanced.qmd)
 
 ---
@@ -62,7 +65,7 @@ Includes:
 - Forecasting with ARIMA
 - Prophet models
 - Change point detection
-- Spectral analysis (FFT)
+- Rolling statistics
 🔗 [View Slide Deck →](advanced/3.4_timeseries_advanced.qmd)
 
 ### ▸ Network flow
@@ -71,18 +74,18 @@ Includes:
 - Community detection algorithms
 - Centrality measures visualization
 - Network statistics
-- Dynamic networks
 - Bipartite networks
+- Networks over time
 🔗 [View Slide Deck →](advanced/3.5_network_advanced.qmd)
 
 ### ▸ Geographical
 
 Includes:
-- Spatial interpolation (kriging)
+- Spatial interpolation (IDW)
 - Cartograms (area distortion)
 - Spatial autocorrelation
-- Hexbin maps
-- Isochrone maps
+- Hexagon tile maps
+- Distance bands for access
 🔗 [View Slide Deck →](advanced/3.6_geographic_advanced.qmd)
 
 ### ▸ Dashboard
@@ -94,3 +97,32 @@ Includes:
 - plotly interactivity
 - flexdashboard framework
 🔗 [View Slide Deck →](advanced/3.7_dashboards_advanced.qmd)
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("pa1", "36 months of dengue counts should be split into trend, season and noise. Which method does that?",
+         c("A cartogram", "STL decomposition", "Parallel coordinates", "Community detection"), answer = 2,
+         explain = "STL (seasonal-trend decomposition by loess) separates a series into trend, seasonal and remainder components.")
+quiz_mcq("pa2", "Which plot makes a regression's coefficients easy to compare with zero?",
+         c("A 3D density surface", "A hexagon tile map", "A forest (coefficient) plot", "A Sankey diagram of the model terms"), answer = 3,
+         explain = "A forest plot shows each estimate with its confidence interval next to a reference line at 0.")
+quiz_mcq("pa3", "A cartogram resizes each block by its population. What does it show better than a normal map?",
+         c("The exact borders of each block", "Where the people are, not the land", "The road distance to each of the clinics", "The shape of each block's outline"), answer = 2,
+         explain = "Areas proportional to population show where the people (and so most cases) are; large empty blocks no longer dominate.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```
