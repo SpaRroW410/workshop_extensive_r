@@ -123,3 +123,14 @@ test('no page a paid track sells is also in the free Basic site', () => {
     assert.deepEqual(leaked.filter((rel) => !basicMenu.has(rel)), [], `${track} pages also served free in /basic/`);
   }
 });
+
+test('Moderate: unit M1 is the free taster, the other units are paid', () => {
+  assert.equal(productFor('/moderate/r-foundations/cleaning_messy_data'), null);
+  assert.equal(productFor('/moderate/r-foundations/cleaning_messy_data_files/figure-html/a.png'), null);
+  assert.equal(productFor('/moderate/labs/moderate/m1_cleaning.R'), null);
+  assert.equal(productFor('/moderate/data/ncd_messy.csv'), null);
+  assert.equal(productFor('/moderate/cheatsheets/moderate'), null);
+  assert.equal(productFor('/moderate/r-foundations/iteration'), 'moderate');
+  assert.equal(productFor('/moderate/labs/moderate/m2_iteration.R'), 'moderate');
+  assert.equal(productFor('/moderate/data/ncd_survey.csv'), 'moderate');
+});

@@ -246,6 +246,11 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-reference">    
         <li>
+    <a class="dropdown-item" href="./cheatsheets/moderate.html">
+ <span class="dropdown-text">Moderate Track Cheat Sheet</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
     <a class="dropdown-item" href="./contact.html">
  <span class="dropdown-text">Contact Us</span></a>
   </li>  
@@ -327,25 +332,25 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <section id="self-study-plan-1" class="level2">
 <h2 class="anchored" data-anchor-id="self-study-plan-1">🗓️ Self-study plan</h2>
-<p>Work through the steps in order. Tick a step when you have finished it; ticks are saved in this browser.</p>
+<p>Work through the steps in order. Every page ends with a <strong>self-check quiz</strong>, and each step has a <strong>lab</strong> (an R script with blanks to fill in). Keep the <a href="./cheatsheets/moderate.html">Moderate cheat sheet</a> open. Tick a step when you have finished it; ticks are saved in this browser.</p>
 <div class="ws-plan">
 <ol type="1">
 <li><p><strong>Refresh the basics</strong> (skip if you finished the Basic track)</p>
 <p><a href="./r-foundations/getting-started.html">Getting Started</a> · <a href="./r-foundations/data-wrangling.html">Data Wrangling (Tidyverse)</a> · <a href="./r-foundations/merging_dataset.html">Merging Datasets</a></p></li>
 <li><p><strong>Clean messy data and stop repeating yourself</strong></p>
-<p><a href="./r-foundations/cleaning_messy_data.html">Cleaning Messy Data</a>, then <a href="./r-foundations/iteration.html">Iteration (across, loops, functions)</a>.</p></li>
+<p><a href="./r-foundations/cleaning_messy_data.html">Cleaning Messy Data</a>, then <a href="./r-foundations/iteration.html">Iteration (across, loops, functions)</a>. Labs: <a href="labs/moderate/m1_cleaning.R">m1_cleaning.R</a> · <a href="labs/moderate/m2_iteration.R">m2_iteration.R</a>.</p></li>
 <li><p><strong>Learn what makes a plot good</strong></p>
 <p><a href="./data-visualization/ggplot_grammar.html">Grammar of Graphics</a> · <a href="./data-visualization/best_practices.html">Best Practices</a> · <a href="./data-visualization/plot_data.html">Matching Data to Plots</a></p></li>
 <li><p><strong>ggplot2 in depth</strong></p>
 <p><a href="./data-visualization/gram_ggplot/module_1_foundations_geoms.html">Module 1 — Foundations &amp; Geoms</a>, then <a href="./data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html">Module 2 — Aesthetics, Faceting &amp; Themes</a>.</p></li>
 <li><p><strong>Widen your plot vocabulary</strong></p>
-<p><a href="./plot-gallery/basic.html">Basic</a> and <a href="./plot-gallery/moderate.html">Intermediate</a> plot galleries, then <a href="./specialized/merge_visuals.html">Merged Visuals</a> and <a href="./specialized/plot_stats.html">Statistical Plots</a>.</p></li>
+<p><a href="./plot-gallery/basic.html">Basic</a> and <a href="./plot-gallery/moderate.html">Intermediate</a> plot galleries, then <a href="./specialized/merge_visuals.html">Merged Visuals</a> and <a href="./specialized/plot_stats.html">Statistical Plots</a>. Lab for steps 3–5: <a href="labs/moderate/m3_explore_plots.R">m3_explore_plots.R</a>.</p></li>
 <li><p><strong>Tests and tables for a paper</strong></p>
-<p><a href="./statistical-analysis/statistical_tests.html">Test Selection Guide</a> · <a href="./ggstatsplot/ggstatsplot_intro.html">ggstatsplot — Intro</a> · <a href="./ggstatsplot/ggstatsplot_moderate.html">ggstatsplot — Intermediate</a> · <a href="./gtsummary/gtsummary_tutorial.html">gtsummary Tables</a> · <a href="./statistical-analysis/data_analysis.html">Data Analysis</a> · <a href="./statistical-analysis/regression.html">Regression Analysis</a></p></li>
+<p><a href="./statistical-analysis/statistical_tests.html">Test Selection Guide</a> · <a href="./ggstatsplot/ggstatsplot_intro.html">ggstatsplot — Intro</a> · <a href="./ggstatsplot/ggstatsplot_moderate.html">ggstatsplot — Intermediate</a> · <a href="./gtsummary/gtsummary_tutorial.html">gtsummary Tables</a> · <a href="./statistical-analysis/data_analysis.html">Data Analysis</a> · <a href="./statistical-analysis/regression.html">Regression Analysis</a>. Labs: <a href="labs/moderate/m4_table1.R">m4_table1.R</a> · <a href="labs/moderate/m5_tests.R">m5_tests.R</a>.</p></li>
 <li><p><strong>Reports that update themselves</strong></p>
 <p><a href="./quarto_repro_w/reproducible_writing.html">Quarto Basics</a>, then <a href="./quarto_repro_w/quarto_moderate.html">Quarto — Dynamic Documents</a>.</p></li>
 <li><p><strong>Export your figures</strong></p>
-<p><a href="./exporting_tools/exporting_plots.html">Exporting Plots</a> · <a href="./exporting_tools/plotting_tools.html">Plotting Tools</a></p></li>
+<p><a href="./exporting_tools/exporting_plots.html">Exporting Plots</a> · <a href="./exporting_tools/plotting_tools.html">Plotting Tools</a>. Lab for steps 7–8: <a href="labs/moderate/m6_report.R">m6_report.R</a>.</p></li>
 <li><p><strong>Check yourself and move on</strong></p>
 <p>Take the Region 2 post-test in the game, then continue with the <strong>Regression</strong> track (Step 3 on the main page).</p></li>
 </ol>
@@ -363,7 +368,9 @@ ul.task-list li input[type="checkbox"] {
 <section id="downloads-1" class="level2">
 <h2 class="anchored" data-anchor-id="downloads-1">📥 Downloads</h2>
 <ul>
-<li>Cheat sheets: <a href="downloads/cheatsheets/data-transformation.pdf">Data transformation</a> · <a href="downloads/cheatsheets/tidyr.pdf">tidyr</a> · <a href="downloads/cheatsheets/factors.pdf">Factors</a> · <a href="downloads/cheatsheets/strings.pdf">Strings</a> · <a href="downloads/cheatsheets/purrr.pdf">purrr</a> · <a href="downloads/cheatsheets/data-visualization.pdf">Data visualization</a></li>
+<li>Track cheat sheet: <a href="./cheatsheets/moderate.html">Moderate track cheat sheet</a></li>
+<li>Labs: <a href="labs/moderate/m1_cleaning.R">m1</a> · <a href="labs/moderate/m2_iteration.R">m2</a> · <a href="labs/moderate/m3_explore_plots.R">m3</a> · <a href="labs/moderate/m4_table1.R">m4</a> · <a href="labs/moderate/m5_tests.R">m5</a> · <a href="labs/moderate/m6_report.R">m6</a>; data: <a href="data/ncd_survey.csv">ncd_survey.csv</a> · <a href="data/ncd_messy.csv">ncd_messy.csv</a> · <a href="data/prac_modded.xlsx">prac_modded.xlsx</a></li>
+<li>Posit cheat sheets: <a href="downloads/cheatsheets/data-transformation.pdf">Data transformation</a> · <a href="downloads/cheatsheets/tidyr.pdf">tidyr</a> · <a href="downloads/cheatsheets/factors.pdf">Factors</a> · <a href="downloads/cheatsheets/strings.pdf">Strings</a> · <a href="downloads/cheatsheets/purrr.pdf">purrr</a> · <a href="downloads/cheatsheets/data-visualization.pdf">Data visualization</a></li>
 <li>Example scripts: <a href="downloads/source-scripts/nctoh/data_wrangle.R">Data wrangling</a> · <a href="downloads/source-scripts/nctoh/data_vis.R">Data visualization</a> · <a href="downloads/source-scripts/nctoh/data_analysis_Abridged_for_Workshop.R">Data analysis (abridged)</a></li>
 <li>Everything else is on the <a href="./downloads.html">Downloads</a> page.</li>
 </ul>

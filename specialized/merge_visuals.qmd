@@ -194,3 +194,36 @@ The second panel enlarges the south-east corner (the rectangle), where the high 
 | Marginal histograms | distributions of x and y | keep the margins small |
 | Second y-axis | two series, same time | label both axes; often two panels are clearer |
 | Inset or zoom panel | a detail within the whole | mark where the zoom comes from |
+
+## Practise in R
+
+Download the lab **[Explore by picture](../labs/moderate/m3_explore_plots.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("mv1", "You add a density curve to a histogram of counts and the curve lies flat near zero. What fixes it?",
+         c("Add `alpha = 0.5` to the histogram layer", "Use `y = after_stat(density)` in the histogram", "Use `geom_col()` in place of `geom_histogram()`", "Set `bins = 100` so the bars are narrower"), answer = 2,
+         explain = "A density integrates to 1 and is tiny next to counts; drawing the histogram on the density scale puts both on the same axis.")
+quiz_mcq("mv2", "When does putting the raw points over a box plot help most?",
+         c("Very large groups of 10,000 or more", "When the outcome is a category", "Small groups, so readers see the n", "When each group has one value"), answer = 3,
+         explain = "With small groups a box hides how few points it summarises; the points show the n (use jitter and transparency).")
+quiz_mcq("mv3", "You add a zoom panel to a map. What should the main map show?",
+         c("A second legend for the same colours", "Where the zoomed area comes from", "The zoom panel's title in large type", "A north arrow inside every region"), answer = 2,
+         explain = "Mark the zoomed area on the main map (a rectangle), so the reader knows what the detail panel shows.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

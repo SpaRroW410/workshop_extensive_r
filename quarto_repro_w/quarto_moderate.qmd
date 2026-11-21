@@ -1,5 +1,7 @@
 ---
 title: "Quarto — Dynamic Documents"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -251,4 +253,40 @@ execute:
   echo: false
   warning: false
   message: false
+```
+
+## Practise in R
+
+Download the lab **[Reports and export](../labs/moderate/m6_report.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("qm1", "A report declares `params: region: \"North\"` in its YAML. How does R code in the document read the value?",
+         c("`get(\"region\")`", "`Sys.getenv(\"region\")`", "`params$region`", "`yaml$region`"), answer = 3,
+         explain = "Parameters are available in the document's code as the list params.")
+quiz_mcq("qm2", "What does `quarto render report.qmd -P region:South` do?",
+         c("Adds a new parameter called South to the YAML", "Renders the report with region set to South", "Renders only the South section of the file", "Prints the value of region to the console"), answer = 2,
+         explain = "-P overrides a parameter for one render, so the same source gives one report per region.")
+quiz_mcq("qm3", "Which chunk option lets you cite a table as `@tbl-baseline`?",
+         c("`#| label: baseline`", "`#| tbl-cap: baseline`", "`#| label: tbl-baseline`", "`#| fig-cap: tbl-baseline`"), answer = 3,
+         explain = "A label starting with tbl- (or fig-) makes the output a numbered, citable cross-reference.")
+quiz_mcq("qm4", "To render a PDF, what does Quarto need besides R?",
+         c("A Microsoft Word licence on the machine", "A LaTeX installation such as TinyTeX", "The pdftools package loaded in R", "An internet connection during render"), answer = 2,
+         explain = "PDF output goes through LaTeX; tinytex::install_tinytex() installs a small distribution.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
 ```

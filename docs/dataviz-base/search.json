@@ -2,9 +2,86 @@
   {
     "objectID": "specialized/plot_stats.html",
     "href": "specialized/plot_stats.html",
-    "title": "Specialized Plots (with statistics)",
+    "title": "Statistical Plots",
     "section": "",
-    "text": "Statistical Visualizations\n\nRegression lines and confidence intervals\nCorrelation matrices\nResidual plots\nVisualizing model outputs\n\n\nCategorical\n\nBar chart with confidence intervals\nProportion plots with error bars\n\n\n\n▸ Continuous\n\nDensity plots with quantile shading\nHistogram with fitted curve\n\n\n\n▸ Category vs. Category\n\nChi-square residual heatmap\nProportional stacked bar with significance markers\n\n\n\n▸ Continuous vs. Continuous\n\nScatter plot with regression line\nCorrelation matrix\nResidual plots\n\n\n\n▸ Category vs. Continuous\n\nViolin plot with median and IQR\nBoxplot with notches or statistical annotations Time Series\nForecast overlays\nDecomposition plots (trend, seasonality, residuals)\n\n\n\n▸ Map\n\nChoropleth with statistical bins\nCartogram scaled by statistical variable\n\nHistogram\nDensity plot\nBox plot\nViolin plot\nCorrelogram\nForest plot\nRidge line plot\nHeat map (especially for correlations or frequencies)\nScatter plot (when enhanced with regression or stats)"
+    "text": "A statistical plot shows an estimate together with its uncertainty, or checks a model, instead of only the raw data. Each section below answers one question and names what to read in the plot.\nlibrary(tidyverse); library(broom); library(patchwork)\nncd &lt;- read_csv(\"../data/ncd_survey.csv\", show_col_types = FALSE) |&gt;\n  mutate(phys_act = factor(phys_act, levels = c(\"low\", \"moderate\", \"high\")),\n         education = factor(education, levels = c(\"No schooling\", \"Primary\", \"Secondary\", \"Graduate+\")))\ntheme_set(theme_minimal(base_size = 13))"
+  },
+  {
+    "objectID": "specialized/plot_stats.html#categorical-proportions-with-confidence-intervals",
+    "href": "specialized/plot_stats.html#categorical-proportions-with-confidence-intervals",
+    "title": "Statistical Plots",
+    "section": "Categorical: proportions with confidence intervals",
+    "text": "Categorical: proportions with confidence intervals\n\nprev &lt;- ncd |&gt; filter(!is.na(education)) |&gt; group_by(education) |&gt;\n  summarise(x = sum(htn), n = n()) |&gt;\n  mutate(p = x / n,\n         lo = map2_dbl(x, n, \\(x, n) prop.test(x, n)$conf.int[1]),\n         hi = map2_dbl(x, n, \\(x, n) prop.test(x, n)$conf.int[2]))\nggplot(prev, aes(x = education, y = p)) +\n  geom_pointrange(aes(ymin = lo, ymax = hi), colour = \"#2c3e50\") +\n  geom_text(aes(label = paste0(\"n = \", n)), y = 0.05, size = 3.5, colour = \"grey40\") +\n  scale_y_continuous(labels = scales::percent, limits = c(0, 0.6)) +\n  labs(x = \"Education\", y = \"Adults with hypertension (95% CI)\", title = \"A proportion is an estimate: show its CI\")\n\n\n\n\n\n\n\n\nprop.test() gives a confidence interval for each proportion. The smallest group (no schooling) has the widest interval: read the interval, not only the point."
+  },
+  {
+    "objectID": "specialized/plot_stats.html#continuous-density-with-quantile-shading-histogram-with-a-fitted-curve",
+    "href": "specialized/plot_stats.html#continuous-density-with-quantile-shading-histogram-with-a-fitted-curve",
+    "title": "Statistical Plots",
+    "section": "Continuous: density with quantile shading, histogram with a fitted curve",
+    "text": "Continuous: density with quantile shading, histogram with a fitted curve\n\nq &lt;- quantile(ncd$sbp, c(0.25, 0.75))\nd &lt;- density(ncd$sbp); dd &lt;- tibble(x = d$x, y = d$y)\np1 &lt;- ggplot(dd, aes(x, y)) + geom_line() +\n  geom_area(data = filter(dd, x &gt;= q[1], x &lt;= q[2]), fill = \"#3498db\", alpha = 0.4) +\n  labs(x = \"Systolic BP (mmHg)\", y = \"Density\", title = \"Middle 50% shaded\")\np2 &lt;- ggplot(ncd, aes(sbp)) +\n  geom_histogram(aes(y = after_stat(density)), binwidth = 5, fill = \"grey80\", colour = \"white\") +\n  stat_function(fun = dnorm, args = list(mean = mean(ncd$sbp), sd = sd(ncd$sbp)), colour = \"#e74c3c\", linewidth = 1) +\n  labs(x = \"Systolic BP (mmHg)\", y = NULL, title = \"Normal curve (same mean, SD)\")\np1 + p2\n\n\n\n\n\n\n\n\nThe shaded band is the interquartile range (120 to 143 mmHg). The red curve is what a normal distribution with the same mean and SD would look like: here the data follow it closely, with a slightly longer right tail."
+  },
+  {
+    "objectID": "specialized/plot_stats.html#category-vs-category-chi-square-residuals",
+    "href": "specialized/plot_stats.html#category-vs-category-chi-square-residuals",
+    "title": "Statistical Plots",
+    "section": "Category vs category: chi-square residuals",
+    "text": "Category vs category: chi-square residuals\n\ntab &lt;- table(ncd$phys_act, ncd$tobacco)\nct &lt;- chisq.test(tab)\nas.data.frame(ct$stdres) |&gt; setNames(c(\"phys_act\", \"tobacco\", \"residual\")) |&gt;\n  ggplot(aes(tobacco, phys_act, fill = residual)) +\n  geom_tile(colour = \"white\") +\n  geom_text(aes(label = sprintf(\"%.1f\", residual))) +\n  scale_fill_gradient2(low = \"#3498db\", high = \"#e74c3c\", limits = c(-3, 3)) +\n  labs(x = \"Tobacco use\", y = \"Physical activity\", fill = \"Std. residual\",\n       title = sprintf(\"Chi-square p = %.2f: which cells drive it?\", ct$p.value))\n\n\n\n\n\n\n\n\nA standardised residual compares each cell with what independence predicts: beyond about ±2 the cell contributes noticeably. Here no cell comes close, matching the large p-value."
+  },
+  {
+    "objectID": "specialized/plot_stats.html#continuous-vs-continuous-regression-line-correlation-matrix-residuals",
+    "href": "specialized/plot_stats.html#continuous-vs-continuous-regression-line-correlation-matrix-residuals",
+    "title": "Statistical Plots",
+    "section": "Continuous vs continuous: regression line, correlation matrix, residuals",
+    "text": "Continuous vs continuous: regression line, correlation matrix, residuals\n\nm &lt;- lm(sbp ~ bmi, data = ncd)\nggplot(ncd, aes(bmi, sbp)) +\n  geom_point(alpha = 0.3) +\n  geom_smooth(method = \"lm\", colour = \"#e74c3c\") +\n  annotate(\"text\", x = 16, y = 185, hjust = 0, size = 4,\n           label = sprintf(\"SBP = %.0f + %.2f × BMI\\nr = %.2f\", coef(m)[1], coef(m)[2], cor(ncd$bmi, ncd$sbp, use = \"complete.obs\"))) +\n  labs(x = \"BMI (kg/m²)\", y = \"Systolic BP (mmHg)\", title = \"The band is the CI of the mean, not of individuals\")\n\n\n\n\n\n\n\n\n\nlibrary(ggcorrplot)\nr &lt;- cor(select(ncd, age, bmi, waist, salt_g, sbp, dbp), use = \"pairwise.complete.obs\")\nggcorrplot(r, type = \"lower\", lab = TRUE, lab_size = 3.5, colors = c(\"#3498db\", \"white\", \"#e74c3c\"),\n           title = \"Pairwise correlations\")\n\n\n\n\n\n\n\n\nBMI and waist are almost the same measurement (r close to 1): putting both in one model causes collinearity.\n\na &lt;- augment(m)\np1 &lt;- ggplot(a, aes(.fitted, .resid)) + geom_point(alpha = 0.3) + geom_hline(yintercept = 0, linetype = 2) +\n  geom_smooth(se = FALSE, colour = \"#e74c3c\") + labs(x = \"Fitted SBP\", y = \"Residual\", title = \"Residuals vs fitted\")\np2 &lt;- ggplot(a, aes(sample = .resid)) + stat_qq(alpha = 0.3) + stat_qq_line(colour = \"#e74c3c\") +\n  labs(x = \"Theoretical quantile\", y = \"Residual quantile\", title = \"Normal Q-Q\")\np1 + p2\n\n\n\n\n\n\n\n\nA flat smooth around zero (no curve, no funnel) and points near the Q-Q line support a straight-line model with roughly normal residuals."
+  },
+  {
+    "objectID": "specialized/plot_stats.html#visualising-model-output-a-coefficient-plot",
+    "href": "specialized/plot_stats.html#visualising-model-output-a-coefficient-plot",
+    "title": "Statistical Plots",
+    "section": "Visualising model output: a coefficient plot",
+    "text": "Visualising model output: a coefficient plot\n\nm2 &lt;- lm(sbp ~ age + sex + bmi + salt_g + tobacco + phys_act, data = ncd)\ntidy(m2, conf.int = TRUE) |&gt; filter(term != \"(Intercept)\") |&gt;\n  ggplot(aes(x = estimate, y = fct_reorder(term, estimate))) +\n  geom_vline(xintercept = 0, linetype = 2) +\n  geom_pointrange(aes(xmin = conf.low, xmax = conf.high), colour = \"#2c3e50\") +\n  labs(x = \"Difference in systolic BP (mmHg), 95% CI\", y = NULL, title = \"Adjusted coefficients\")\n\n\n\n\n\n\n\n\nEach row is one coefficient with its 95% CI; intervals crossing the dashed line at 0 are compatible with no difference. Note that coefficients for different units (per year, per kg/m², per category) are not comparable in size."
+  },
+  {
+    "objectID": "specialized/plot_stats.html#category-vs-continuous-notched-box-and-violin-with-median-and-iqr",
+    "href": "specialized/plot_stats.html#category-vs-continuous-notched-box-and-violin-with-median-and-iqr",
+    "title": "Statistical Plots",
+    "section": "Category vs continuous: notched box and violin with median and IQR",
+    "text": "Category vs continuous: notched box and violin with median and IQR\n\ntt &lt;- t.test(sbp ~ sex, data = ncd)\np1 &lt;- ggplot(ncd, aes(sex, sbp)) + geom_boxplot(notch = TRUE, fill = \"grey85\") +\n  labs(x = NULL, y = \"Systolic BP (mmHg)\", title = sprintf(\"Welch t-test p = %.3f\", tt$p.value))\np2 &lt;- ggplot(ncd, aes(phys_act, sbp)) + geom_violin(fill = \"grey90\") +\n  stat_summary(fun = median, fun.min = \\(x) quantile(x, 0.25), fun.max = \\(x) quantile(x, 0.75), colour = \"#e74c3c\") +\n  labs(x = \"Physical activity\", y = NULL, title = \"Median and IQR\")\np1 + p2\n\n\n\n\n\n\n\n\nThe notch is a rough 95% interval for the median; notches that do not overlap suggest the medians differ. Print the actual test (here in the title) rather than stars."
+  },
+  {
+    "objectID": "specialized/plot_stats.html#time-series-decomposition",
+    "href": "specialized/plot_stats.html#time-series-decomposition",
+    "title": "Statistical Plots",
+    "section": "Time series: decomposition",
+    "text": "Time series: decomposition\n\ndengue &lt;- read_csv(\"../data/dengue_wards.csv\", show_col_types = FALSE) |&gt;\n  group_by(year, month) |&gt; summarise(cases = sum(cases), .groups = \"drop\")\ns &lt;- stl(ts(dengue$cases, start = c(2023, 1), frequency = 12), s.window = \"periodic\")\nas_tibble(s$time.series) |&gt; mutate(month = seq(as.Date(\"2023-01-01\"), by = \"month\", length.out = n()), observed = dengue$cases) |&gt;\n  pivot_longer(-month) |&gt; mutate(name = factor(name, c(\"observed\", \"trend\", \"seasonal\", \"remainder\"))) |&gt;\n  ggplot(aes(month, value)) + geom_line() + facet_wrap(~ name, ncol = 1, scales = \"free_y\") +\n  labs(x = NULL, y = \"Cases\", title = \"Observed = trend + seasonal + remainder\")\n\n\n\n\n\n\n\n\nstl() separates the seasonal monsoon peak from the slower trend; a large remainder points to an outbreak that the season alone does not explain."
+  },
+  {
+    "objectID": "specialized/plot_stats.html#map-a-choropleth-with-statistical-class-breaks",
+    "href": "specialized/plot_stats.html#map-a-choropleth-with-statistical-class-breaks",
+    "title": "Statistical Plots",
+    "section": "Map: a choropleth with statistical class breaks",
+    "text": "Map: a choropleth with statistical class breaks\n\nlibrary(sf)\nblocks &lt;- st_read(\"../data/gis/district_blocks.geojson\", quiet = TRUE)\nbr &lt;- quantile(blocks$dengue_per_100k, probs = seq(0, 1, 0.2))\nblocks$class &lt;- cut(blocks$dengue_per_100k, breaks = br, include.lowest = TRUE, dig.lab = 3)\nggplot(blocks) + geom_sf(aes(fill = class), colour = \"white\", linewidth = 0.2) +\n  scale_fill_brewer(palette = \"OrRd\", name = \"Per 100,000\\n(quintiles)\") +\n  labs(title = \"Five classes with the same number of blocks\") + theme_void()\n\n\n\n\n\n\n\n\nQuintile breaks put the same number of areas in each colour; equal-interval breaks would leave most blocks in one class. State the method in the caption: the choice of breaks changes the story a map tells."
+  },
+  {
+    "objectID": "specialized/plot_stats.html#checklist",
+    "href": "specialized/plot_stats.html#checklist",
+    "title": "Statistical Plots",
+    "section": "Checklist",
+    "text": "Checklist\n\n\n\n\n\n\n\n\nShow\nWith\nRead\n\n\n\n\nA proportion or mean\npoint + 95% CI\nthe interval, with the n\n\n\nA distribution\ndensity/histogram + quantiles or a fitted curve\nshape, tails, the middle 50%\n\n\nA table of counts\nstandardised residuals\ncells beyond ±2\n\n\nA relationship\nscatter + regression line + CI\nslope, r, the band is for the mean\n\n\nA model\nresidual plots, coefficient plot\npatterns in residuals; CIs crossing 0\n\n\nGroups\nnotched box, violin + median/IQR\noverlap; the test, not stars\n\n\nSeasonal counts\ndecomposition\ntrend vs season vs remainder\n\n\nAreas\nchoropleth with stated breaks\nthe break method"
+  },
+  {
+    "objectID": "specialized/plot_stats.html#practise-in-r",
+    "href": "specialized/plot_stats.html#practise-in-r",
+    "title": "Statistical Plots",
+    "section": "Practise in R",
+    "text": "Practise in R\nDownload the lab Explore by picture and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "specialized/plot_stats.html#self-check-quiz",
+    "href": "specialized/plot_stats.html#self-check-quiz",
+    "title": "Statistical Plots",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\nA cell’s standardised chi-square residual is +2.6. What does it suggest?\n\nFewer counts than independence predicts\nThe chi-square test is not valid here\nMore counts than independence predicts\nThe cell has 2.6 times the expected n\n\n\n\nOn a coefficient plot, a 95% CI crosses 0. What does that mean?\n\nThe effect is exactly zero in the population\nThe data are consistent with no effect\nThe model failed to converge for that term\nThe variable should be removed from the data\n\n\n\nThe notches of two box plots do not overlap. What does that roughly indicate?\n\nThe means of the two groups are identical\nBoth of the groups follow a normal distribution\nThe groups have the same sample size\nThe medians likely differ (a rough 95% check)\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "plot-gallery/moderate/2.6_geographic_intermediate.html#what-well-learn---intermediate",
@@ -483,6 +560,20 @@
     "text": "Explore foundational plots grouped by data type and relationship\n\n\n\nIncludes: Lollipop, Cleveland Dot, Mosaic, Radial Bar 🔗 View Slide Deck →\n\n\n\n\nIncludes: Violin plots, Ridgeline plots, 2D density, Hexbin 🔗 View Slide Deck →\n\n\n\n\nIncludes: - Violin plots, - Ridgeline plots, - Bee swarm plots, - Raincloud plots, - Enhanced grouped/stacked bars 🔗 View Slide Deck →\n\n\n\n\nIncludes: - Smoothed trends (LOESS, moving average) - Area charts with confidence bands - Multi-series comparison plots - Annotations and event markers, Seasonal patterns 🔗 View Slide Deck →\n\n\n\nIncludes: - Network diagrams (nodes & edges) - Sankey diagrams (flow) - Chord diagrams (circular relationships) - Alluvial plots (categorical flows) - Correlation networks 🔗 View Slide Deck →\n\n\n\nIncludes: - Choropleth maps (filled regions) - Point/bubble maps - Heat maps (density) - Faceted maps (small multiples) - Interactive maps 🔗 View Slide Deck"
   },
   {
+    "objectID": "plot-gallery/moderate.html#practise-in-r",
+    "href": "plot-gallery/moderate.html#practise-in-r",
+    "title": "Intermediate",
+    "section": "Practise in R",
+    "text": "Practise in R\nDownload the lab Explore by picture and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "plot-gallery/moderate.html#self-check-quiz",
+    "href": "plot-gallery/moderate.html#self-check-quiz",
+    "title": "Intermediate",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\nTwenty hospitals each have one readmission rate. Which plot ranks them clearly with little ink?\n\nA chord diagram of the twenty hospitals\nA Cleveland dot plot or lollipop chart\nA 2D density plot of the twenty rates\nA radial bar chart with stacked layers\n\n\n\nThousands of age–SBP pairs overlap into a solid block. Which plot shows where points are dense?\n\nA pie chart of age groups\nA lollipop chart of each pair\nA hexbin or 2D density plot\nA chord diagram of the pairs\n\n\n\nPatients move from referral stage to treatment outcome. Which plot shows those flows?\n\nA Sankey or alluvial plot\nA ridgeline plot of stages\nA choropleth of the stages\nA hexbin plot of each stage\n\n\nYour score:  (first attempt counts)"
+  },
+  {
     "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#what-is-category-vs.-continuous-data",
     "href": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#what-is-category-vs.-continuous-data",
     "title": "Category vs. Continuous - BASIC",
@@ -812,6 +903,20 @@
     "text": "Common Issues and Solutions\n\nPlot not saving: Ensure dev.off() is called after plotting\nLow quality: Increase DPI or use vector formats\nWrong dimensions: Specify units explicitly (inches, cm, pixels)\nColors not matching: Check color profiles and device settings"
   },
   {
+    "objectID": "exporting_tools/exporting_plots.html#practise-in-r",
+    "href": "exporting_tools/exporting_plots.html#practise-in-r",
+    "title": "Exporting plots",
+    "section": "Practise in R",
+    "text": "Practise in R\nDownload the lab Reports and export and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "exporting_tools/exporting_plots.html#self-check-quiz",
+    "href": "exporting_tools/exporting_plots.html#self-check-quiz",
+    "title": "Exporting plots",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\nA figure for a printed journal page must stay sharp when enlarged. Which format suits it?\n\nPNG at 72 dpi\nPDF or SVG (vector)\nJPEG at low quality\nA screenshot of the plot\n\n\n\nAfter png(\"fig.png\") and plot(x), the file is empty. What is missing?\n\nggsave() to write the file\nprint() around the png() call\ndev.off() to close the device\nlibrary(grDevices) first\n\n\n\nWhat resolution does the page recommend for print?\n\n72 dpi\n96 dpi\n150 dpi\n300 dpi\n\n\nYour score:  (first attempt counts)"
+  },
+  {
     "objectID": "data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html#module-2-overview",
     "href": "data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html#module-2-overview",
     "title": "Grammar of Graphics: Module 2",
@@ -1041,6 +1146,48 @@
     "title": "Grammar of Graphics: Module 2",
     "section": "Module 2 Summary",
     "text": "Module 2 Summary\nWhat we covered:\n\nGlobal vs local aesthetics\nCommon aesthetic mappings (color, fill, size, shape, alpha)\nInside vs outside aes()\nfacet_wrap() and facet_grid()\nFree scales in facets\nBuilt-in themes (gray, bw, minimal, classic, light, dark, void)\nggthemes package (economist, fivethirtyeight, tufte, few)\n\n\nNext in Module 3: - Color palettes and accessibility - Scale functions deep dive - Custom theme creation with theme()"
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html#practise-in-r",
+    "href": "data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html#practise-in-r",
+    "title": "Grammar of Graphics: Module 2",
+    "section": "🔧 Practise in R",
+    "text": "🔧 Practise in R\nDownload the lab Explore by picture and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html#self-check-quiz-14",
+    "href": "data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html#self-check-quiz-14",
+    "title": "Grammar of Graphics: Module 2",
+    "section": "Self-check quiz (1/4)",
+    "text": "Self-check quiz (1/4)\n\naes(color = \"blue\") gives red points and a legend that says ‘blue’. Why?\n\nggplot2 cannot draw blue points by default\n“blue” was mapped as a data value, not set\nThe theme overrides colours set in aes()\nColours must be given as hex codes in R"
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html#self-check-quiz-24",
+    "href": "data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html#self-check-quiz-24",
+    "title": "Grammar of Graphics: Module 2",
+    "section": "Self-check quiz (2/4)",
+    "text": "Self-check quiz (2/4)\n\nIn facet_wrap(~ region, scales = \"free_y\"), what does free_y do?\n\nRemoves the y-axis from every panel\nLets each panel pick its own colour scale\nLets each panel use its own y-axis range\nSorts the panels by their mean y value"
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html#self-check-quiz-34",
+    "href": "data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html#self-check-quiz-34",
+    "title": "Grammar of Graphics: Module 2",
+    "section": "Self-check quiz (3/4)",
+    "text": "Self-check quiz (3/4)\n\nHow does facet_grid(sex ~ region) differ from facet_wrap(~ region)?\n\nfacet_grid() puts one variable in rows, one in columns\nfacet_wrap() needs a numeric variable to split the data on\nfacet_grid() draws all of the groups in one panel\nfacet_wrap() adds a separate legend to each panel"
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html#self-check-quiz-44",
+    "href": "data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html#self-check-quiz-44",
+    "title": "Grammar of Graphics: Module 2",
+    "section": "Self-check quiz (4/4)",
+    "text": "Self-check quiz (4/4)\n\nWhich theme removes axes, grid lines and background, as for a map?\n\ntheme_minimal()\ntheme_classic()\ntheme_bw()\ntheme_void()"
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html#score",
+    "href": "data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html#score",
+    "title": "Grammar of Graphics: Module 2",
+    "section": "Score",
+    "text": "Score\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "data-visualization/ggplot_grammar.html",
@@ -1568,6 +1715,48 @@
     "text": "Resources & Further Learning\n\n\nBooks\n\nStorytelling with Data - Cole Nussbaumer Knaflic\nThe Visual Display of Quantitative Information - Edward Tufte\nGood Charts - Scott Berinato\n\n\nOnline\n\nggplot2 documentation\nR Graph Gallery\nData Visualization Society\nStorytelling with Data blog"
   },
   {
+    "objectID": "data-visualization/best_practices.html#practise-in-r",
+    "href": "data-visualization/best_practices.html#practise-in-r",
+    "title": "Best Practices",
+    "section": "🔧 Practise in R",
+    "text": "🔧 Practise in R\nDownload the lab Explore by picture and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "data-visualization/best_practices.html#self-check-quiz-14",
+    "href": "data-visualization/best_practices.html#self-check-quiz-14",
+    "title": "Best Practices",
+    "section": "Self-check quiz (1/4)",
+    "text": "Self-check quiz (1/4)\n\nA bar chart of mean HbA1c starts its y-axis at 6.5. What is the risk?\n\nSmall differences look larger than they are\nThe bars become too narrow to read on screen\nColour-blind readers cannot see the bars\nThe legend no longer matches the colours"
+  },
+  {
+    "objectID": "data-visualization/best_practices.html#self-check-quiz-24",
+    "href": "data-visualization/best_practices.html#self-check-quiz-24",
+    "title": "Best Practices",
+    "section": "Self-check quiz (2/4)",
+    "text": "Self-check quiz (2/4)\n\nWhat does the ‘gray and bold’ technique do?\n\nPrints each series in a bold black line\nGreys out most data and colours the key series\nUses a grey background behind each panel\nDraws each series with thick, dark lines of equal weight"
+  },
+  {
+    "objectID": "data-visualization/best_practices.html#self-check-quiz-34",
+    "href": "data-visualization/best_practices.html#self-check-quiz-34",
+    "title": "Best Practices",
+    "section": "Self-check quiz (3/4)",
+    "text": "Self-check quiz (3/4)\n\nYou compare readmission rates for 5 hospitals with long names. Which chart reads best?\n\nA pie chart with one slice per hospital\nVertical bars with the names rotated 90°\nA horizontal bar chart sorted by rate\nA line chart joining the five hospitals"
+  },
+  {
+    "objectID": "data-visualization/best_practices.html#self-check-quiz-44",
+    "href": "data-visualization/best_practices.html#self-check-quiz-44",
+    "title": "Best Practices",
+    "section": "Self-check quiz (4/4)",
+    "text": "Self-check quiz (4/4)\n\nWhy choose a colour-blind-safe palette such as viridis?\n\nIt makes the saved plot file much smaller\nPeople with colour blindness can tell groups apart\nIt is needed by ggplot2 for more than 3 groups\nIt keeps colours visible on black-and-white printers"
+  },
+  {
+    "objectID": "data-visualization/best_practices.html#score",
+    "href": "data-visualization/best_practices.html#score",
+    "title": "Best Practices",
+    "section": "Score",
+    "text": "Score\nYour score:  (first attempt counts)"
+  },
+  {
     "objectID": "data-visualization/best_practices.html#thank-you",
     "href": "data-visualization/best_practices.html#thank-you",
     "title": "Best Practices",
@@ -1869,6 +2058,48 @@
     "text": "Practice Solution"
   },
   {
+    "objectID": "data-visualization/gram_ggplot/module_1_foundations_geoms.html#practise-in-r",
+    "href": "data-visualization/gram_ggplot/module_1_foundations_geoms.html#practise-in-r",
+    "title": "Grammar of Graphics: Module 1",
+    "section": "🔧 Practise in R",
+    "text": "🔧 Practise in R\nDownload the lab Explore by picture and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_1_foundations_geoms.html#self-check-quiz-14",
+    "href": "data-visualization/gram_ggplot/module_1_foundations_geoms.html#self-check-quiz-14",
+    "title": "Grammar of Graphics: Module 1",
+    "section": "Self-check quiz (1/4)",
+    "text": "Self-check quiz (1/4)\n\nIn ggplot(ncd, aes(x = age, y = sbp)) + geom_point(), what does aes() do?\n\nSets a fixed colour for every point drawn\nMaps columns of the data to visual properties\nChooses the type of shape to draw, here points\nLoads the data from the file into R first"
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_1_foundations_geoms.html#self-check-quiz-24",
+    "href": "data-visualization/gram_ggplot/module_1_foundations_geoms.html#self-check-quiz-24",
+    "title": "Grammar of Graphics: Module 1",
+    "section": "Self-check quiz (2/4)",
+    "text": "Self-check quiz (2/4)\n\nWhich geom draws bars whose heights are values already in your data?\n\ngeom_bar()\ngeom_histogram()\ngeom_point()\ngeom_col()"
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_1_foundations_geoms.html#self-check-quiz-34",
+    "href": "data-visualization/gram_ggplot/module_1_foundations_geoms.html#self-check-quiz-34",
+    "title": "Grammar of Graphics: Module 1",
+    "section": "Self-check quiz (3/4)",
+    "text": "Self-check quiz (3/4)\n\nWhen does geom_line() suit the data best?\n\nWhen x has unordered categories like region\nWhen x is ordered, such as visit dates\nWhen you want to count the rows per group\nWhen each patient has one single value"
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_1_foundations_geoms.html#self-check-quiz-44",
+    "href": "data-visualization/gram_ggplot/module_1_foundations_geoms.html#self-check-quiz-44",
+    "title": "Grammar of Graphics: Module 1",
+    "section": "Self-check quiz (4/4)",
+    "text": "Self-check quiz (4/4)\n\nExerciseFreq has 44 missing values. Which code keeps them as their own group in a bar chart?\n\nfilter(!is.na(ExerciseFreq))\nreplace_na(ExerciseFreq, \"Unknown\")\nmean(ExerciseFreq, na.rm = TRUE)\nsummarise(n = sum(is.na(ExerciseFreq)))"
+  },
+  {
+    "objectID": "data-visualization/gram_ggplot/module_1_foundations_geoms.html#score",
+    "href": "data-visualization/gram_ggplot/module_1_foundations_geoms.html#score",
+    "title": "Grammar of Graphics: Module 1",
+    "section": "Score",
+    "text": "Score\nYour score:  (first attempt counts)"
+  },
+  {
     "objectID": "data-visualization/plot_data.html#choosing-the-right-visualization-for-your-data",
     "href": "data-visualization/plot_data.html#choosing-the-right-visualization-for-your-data",
     "title": "Navigating the Decision Tree",
@@ -2135,6 +2366,48 @@
     "text": "Resources & Next Steps\nKey Links\n\ndata-to-viz.com - Decision tree flowchart\nR Graph Gallery - Live examples with code\nggplot2 cheat sheet - Quick reference\n\nQuestions?\n\nWhat visualization challenges are YOU facing?\nWhat data type combinations are most common in your work?\n\nNext Steps\n\nApply the 3-step framework to your own data\nPractice with the scenario exercises\nRefer back to the decision matrix when choosing charts"
   },
   {
+    "objectID": "data-visualization/plot_data.html#practise-in-r",
+    "href": "data-visualization/plot_data.html#practise-in-r",
+    "title": "Navigating the Decision Tree",
+    "section": "🔧 Practise in R",
+    "text": "🔧 Practise in R\nDownload the lab Explore by picture and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "data-visualization/plot_data.html#self-check-quiz-14",
+    "href": "data-visualization/plot_data.html#self-check-quiz-14",
+    "title": "Navigating the Decision Tree",
+    "section": "Self-check quiz (1/4)",
+    "text": "Self-check quiz (1/4)\n\nYou want to show how HbA1c changes over 12 months in three treatment arms. Which analytical goal is this?\n\nRanking\nPart of whole\nEvolution\nCorrelation"
+  },
+  {
+    "objectID": "data-visualization/plot_data.html#self-check-quiz-24",
+    "href": "data-visualization/plot_data.html#self-check-quiz-24",
+    "title": "Navigating the Decision Tree",
+    "section": "Self-check quiz (2/4)",
+    "text": "Self-check quiz (2/4)\n\nYou have one numeric variable, age. Which goal and chart fit?\n\nRanking: a sorted bar chart of each age\nDistribution: a histogram or density plot\nPart of whole: a pie chart of the ages\nCorrelation: a scatter plot of age against row number"
+  },
+  {
+    "objectID": "data-visualization/plot_data.html#self-check-quiz-34",
+    "href": "data-visualization/plot_data.html#self-check-quiz-34",
+    "title": "Navigating the Decision Tree",
+    "section": "Self-check quiz (3/4)",
+    "text": "Self-check quiz (3/4)\n\nWhy does the deck warn against dual-axis charts?\n\nThey can mislead through the choice of scales\nThey take too long to render in R\nThey cannot show more than 10 points\nThey need a colour-blind-safe palette to work well"
+  },
+  {
+    "objectID": "data-visualization/plot_data.html#self-check-quiz-44",
+    "href": "data-visualization/plot_data.html#self-check-quiz-44",
+    "title": "Navigating the Decision Tree",
+    "section": "Self-check quiz (4/4)",
+    "text": "Self-check quiz (4/4)\n\nA scatter plot of 20,000 patients is a solid blob. Which fix does the deck suggest?\n\nA pie chart of the patients by age\nTransparency, jitter, hexbin or density\nA 3D scatter plot rotated to a better angle\nA dual-axis chart with two y-scales"
+  },
+  {
+    "objectID": "data-visualization/plot_data.html#score",
+    "href": "data-visualization/plot_data.html#score",
+    "title": "Navigating the Decision Tree",
+    "section": "Score",
+    "text": "Score\nYour score:  (first attempt counts)"
+  },
+  {
     "objectID": "data-visualization/plot_data.html#navigating-the-decision-tree-1",
     "href": "data-visualization/plot_data.html#navigating-the-decision-tree-1",
     "title": "Navigating the Decision Tree",
@@ -2146,7 +2419,7 @@
     "href": "exporting_tools/plotting_tools.html",
     "title": "Plotting Tools",
     "section": "",
-    "text": "This chapter introduces various tools and libraries available in R for creating visualizations. It covers base R plotting functions, as well as popular packages like ggplot2 and lattice, which offer advanced capabilities for creating complex and customizable plots.\n\n\nR’s built-in plotting functions provide a solid foundation for data visualization:\n\n\n# Scatter plot\nplot(x = mtcars$wt, y = mtcars$mpg,\n     xlab = \"Weight\", ylab = \"Miles per Gallon\",\n     main = \"Scatter Plot Example\")\n\n# Line plot\nplot(x = 1:10, y = (1:10)^2, type = \"l\",\n     xlab = \"X\", ylab = \"Y^2\")\n\n# Bar plot\nbarplot(height = c(10, 15, 8, 12),\n        names.arg = c(\"A\", \"B\", \"C\", \"D\"))\n\n# Histogram\nhist(mtcars$mpg, breaks = 10,\n     xlab = \"Miles per Gallon\",\n     main = \"Histogram of MPG\")\n\n\n\n# Multiple plots in one window\npar(mfrow = c(2, 2))  # 2x2 grid\n\nplot(mtcars$wt, mtcars$mpg)\nhist(mtcars$mpg)\nboxplot(mtcars$mpg ~ mtcars$cyl)\nplot(density(mtcars$mpg))\n\npar(mfrow = c(1, 1))  # Reset to single plot\n\n\n\n\nggplot2 is the most popular R package for data visualization, based on the Grammar of Graphics:\n\n\nlibrary(ggplot2)\n\n# Basic scatter plot\nggplot(data = mtcars, aes(x = wt, y = mpg)) +\n  geom_point()\n\n# Adding aesthetics\nggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +\n  geom_point(size = 3) +\n  labs(title = \"MPG vs Weight by Cylinders\",\n       x = \"Weight (1000 lbs)\",\n       y = \"Miles per Gallon\")\n\n\n\n# Points, lines, bars\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg))\n\np + geom_point()           # Scatter plot\np + geom_smooth()          # Smooth line\np + geom_line()            # Line plot\np + geom_bar(stat = \"identity\")  # Bar plot\np + geom_histogram()       # Histogram\np + geom_boxplot()         # Box plot\n\n\n\n# Faceting\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  facet_wrap(~ cyl) +\n  theme_minimal()\n\n# Custom themes\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  theme_bw() +\n  ggtitle(\"Custom Theme Example\")\n\n\n\n\nLattice provides trellis graphics for multivariate data:\nlibrary(lattice)\n\n# Scatter plot matrix\nsplom(mtcars[, c(\"mpg\", \"wt\", \"hp\")])\n\n# Conditional plots\nxyplot(mpg ~ wt | factor(cyl), data = mtcars,\n       layout = c(3, 1))\n\n# 3D plots\ncloud(mpg ~ wt * hp, data = mtcars)\n\n\n\n\n\nlibrary(plotly)\n\n# Convert ggplot to interactive\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nggplotly(p)\n\n# Native plotly\nplot_ly(mtcars, x = ~wt, y = ~mpg, type = \"scatter\", mode = \"markers\")\n\n\n\nlibrary(ggvis)\n\n# Interactive ggplot2-like syntax\nmtcars %&gt;%\n  ggvis(x = ~wt, y = ~mpg) %&gt;%\n  layer_points() %&gt;%\n  add_tooltip(function(df) paste(\"Weight:\", df$wt, \"MPG:\", df$mpg))\n\n\n\n\n\n\nlibrary(ggstatsplot)\n\n# Statistical plots with tests\nggbetweenstats(data = mtcars, x = cyl, y = mpg)\n\n\n\nlibrary(ggplot2)\nlibrary(maps)\n\n# Basic map\nworld &lt;- map_data(\"world\")\nggplot(world, aes(x = long, y = lat, group = group)) +\n  geom_polygon(fill = \"lightblue\", color = \"black\")\n\n\n\nlibrary(igraph)\nlibrary(ggraph)\n\n# Create network\ng &lt;- make_ring(10)\nggraph(g, layout = \"circle\") +\n  geom_edge_link() +\n  geom_node_point(size = 5)\n\n\n\n\n\nBase R: Quick plots, statistical graphics\nggplot2: Publication-quality static plots, complex customizations\nLattice: Multivariate data, trellis displays\nplotly/ggvis: Interactive web-based visualizations\nSpecialized packages: Domain-specific visualizations (maps, networks, etc.)\n\n\n\n\n\nKnow your data: Choose plot types that best represent your data\nKeep it simple: Avoid clutter, focus on the message\nUse color effectively: Consider colorblind-friendly palettes\nLabel clearly: Include informative titles, axis labels, legends\nTest different tools: Experiment with different packages for the best result"
+    "text": "This chapter introduces various tools and libraries available in R for creating visualizations. It covers base R plotting functions, as well as popular packages like ggplot2 and lattice, which offer advanced capabilities for creating complex and customizable plots.\n\n\nR’s built-in plotting functions provide a solid foundation for data visualization:\n\n\n# Scatter plot\nplot(x = mtcars$wt, y = mtcars$mpg,\n     xlab = \"Weight\", ylab = \"Miles per Gallon\",\n     main = \"Scatter Plot Example\")\n\n# Line plot\nplot(x = 1:10, y = (1:10)^2, type = \"l\",\n     xlab = \"X\", ylab = \"Y^2\")\n\n# Bar plot\nbarplot(height = c(10, 15, 8, 12),\n        names.arg = c(\"A\", \"B\", \"C\", \"D\"))\n\n# Histogram\nhist(mtcars$mpg, breaks = 10,\n     xlab = \"Miles per Gallon\",\n     main = \"Histogram of MPG\")\n\n\n\n# Multiple plots in one window\npar(mfrow = c(2, 2))  # 2x2 grid\n\nplot(mtcars$wt, mtcars$mpg)\nhist(mtcars$mpg)\nboxplot(mtcars$mpg ~ mtcars$cyl)\nplot(density(mtcars$mpg))\n\npar(mfrow = c(1, 1))  # Reset to single plot\n\n\n\n\nggplot2 is the most popular R package for data visualization, based on the Grammar of Graphics:\n\n\nlibrary(ggplot2)\n\n# Basic scatter plot\nggplot(data = mtcars, aes(x = wt, y = mpg)) +\n  geom_point()\n\n# Adding aesthetics\nggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +\n  geom_point(size = 3) +\n  labs(title = \"MPG vs Weight by Cylinders\",\n       x = \"Weight (1000 lbs)\",\n       y = \"Miles per Gallon\")\n\n\n\n# Points, lines, bars\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg))\n\np + geom_point()           # Scatter plot\np + geom_smooth()          # Smooth line\np + geom_line()            # Line plot\np + geom_bar(stat = \"identity\")  # Bar plot\np + geom_histogram()       # Histogram\np + geom_boxplot()         # Box plot\n\n\n\n# Faceting\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  facet_wrap(~ cyl) +\n  theme_minimal()\n\n# Custom themes\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  theme_bw() +\n  ggtitle(\"Custom Theme Example\")\n\n\n\n\nLattice provides trellis graphics for multivariate data:\nlibrary(lattice)\n\n# Scatter plot matrix\nsplom(mtcars[, c(\"mpg\", \"wt\", \"hp\")])\n\n# Conditional plots\nxyplot(mpg ~ wt | factor(cyl), data = mtcars,\n       layout = c(3, 1))\n\n# 3D plots\ncloud(mpg ~ wt * hp, data = mtcars)\n\n\n\n\n\nlibrary(plotly)\n\n# Convert ggplot to interactive\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nggplotly(p)\n\n# Native plotly\nplot_ly(mtcars, x = ~wt, y = ~mpg, type = \"scatter\", mode = \"markers\")\n\n\n\nlibrary(ggvis)\n\n# Interactive ggplot2-like syntax\nmtcars %&gt;%\n  ggvis(x = ~wt, y = ~mpg) %&gt;%\n  layer_points() %&gt;%\n  add_tooltip(function(df) paste(\"Weight:\", df$wt, \"MPG:\", df$mpg))\n\n\n\n\n\n\nlibrary(ggstatsplot)\n\n# Statistical plots with tests\nggbetweenstats(data = mtcars, x = cyl, y = mpg)\n\n\n\nlibrary(ggplot2)\nlibrary(maps)\n\n# Basic map\nworld &lt;- map_data(\"world\")\nggplot(world, aes(x = long, y = lat, group = group)) +\n  geom_polygon(fill = \"lightblue\", color = \"black\")\n\n\n\nlibrary(igraph)\nlibrary(ggraph)\n\n# Create network\ng &lt;- make_ring(10)\nggraph(g, layout = \"circle\") +\n  geom_edge_link() +\n  geom_node_point(size = 5)\n\n\n\n\n\nBase R: Quick plots, statistical graphics\nggplot2: Publication-quality static plots, complex customizations\nLattice: Multivariate data, trellis displays\nplotly/ggvis: Interactive web-based visualizations\nSpecialized packages: Domain-specific visualizations (maps, networks, etc.)\n\n\n\n\n\nKnow your data: Choose plot types that best represent your data\nKeep it simple: Avoid clutter, focus on the message\nUse color effectively: Consider colorblind-friendly palettes\nLabel clearly: Include informative titles, axis labels, legends\nTest different tools: Experiment with different packages for the best result\n\n\n\n\nDownload the lab Reports and export and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n\n\n\n\nYou need an interactive version of an existing ggplot p for a web page. Which call does that?\n\nlattice::xyplot(p)\nhtmlwidgets::saveWidget(p)\nggplot2::ggsave(p)\nplotly::ggplotly(p)\n\n\n\nWhat is par(mfrow = c(2, 2)) for in base R?\n\nFour colours for the points of one plot\nA 2 × 2 grid of plots in one window\nA plot with two y-axes on one x\nSaving one plot into four files\n\n\n\nIn xyplot(mpg ~ wt | factor(cyl), data = mtcars), what does | factor(cyl) do?\n\nDraws one panel per number of cylinders\nColours the points by number of cylinders\nRemoves the cars with missing cylinders\nSorts the points by number of cylinders\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "exporting_tools/plotting_tools.html#base-r-plotting",
@@ -2196,6 +2469,20 @@
     "title": "Plotting Tools",
     "section": "",
     "text": "Know your data: Choose plot types that best represent your data\nKeep it simple: Avoid clutter, focus on the message\nUse color effectively: Consider colorblind-friendly palettes\nLabel clearly: Include informative titles, axis labels, legends\nTest different tools: Experiment with different packages for the best result"
+  },
+  {
+    "objectID": "exporting_tools/plotting_tools.html#practise-in-r",
+    "href": "exporting_tools/plotting_tools.html#practise-in-r",
+    "title": "Plotting Tools",
+    "section": "",
+    "text": "Download the lab Reports and export and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "exporting_tools/plotting_tools.html#self-check-quiz",
+    "href": "exporting_tools/plotting_tools.html#self-check-quiz",
+    "title": "Plotting Tools",
+    "section": "",
+    "text": "You need an interactive version of an existing ggplot p for a web page. Which call does that?\n\nlattice::xyplot(p)\nhtmlwidgets::saveWidget(p)\nggplot2::ggsave(p)\nplotly::ggplotly(p)\n\n\n\nWhat is par(mfrow = c(2, 2)) for in base R?\n\nFour colours for the points of one plot\nA 2 × 2 grid of plots in one window\nA plot with two y-axes on one x\nSaving one plot into four files\n\n\n\nIn xyplot(mpg ~ wt | factor(cyl), data = mtcars), what does | factor(cyl) do?\n\nDraws one panel per number of cylinders\nColours the points by number of cylinders\nRemoves the cars with missing cylinders\nSorts the points by number of cylinders\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "plot-gallery/basic/0_foundation.html#navigating-the-decision-tree",
@@ -2937,6 +3224,90 @@
     "href": "specialized/merge_visuals.html",
     "title": "Merged Visuals",
     "section": "",
-    "text": "Overlaying multiple plot types\nPlotting distributions with statistical overlays\nEmbedding plots within plots (e.g., inset zooms)\n\n\nCategorical\n\nBar chart + annotations\n\n\n\n▸ Continuous\n\nDensity + histogram overlay\nRidgeline + density\n\n\n\n▸ Category vs. Category\n\nGrouped bar chart + facet grid\nMosaic + stacked bar hybrid\n\n\n\n▸ Continuous vs. Continuous\n\nScatter + marginal histograms\nBubble chart + trend line\n\n\n\n▸ Category vs. Continuous\n\nBoxplot + jittered points\nViolin + box overlay\n\n\n\n▸ Time Series\n\nLine + area chart\nStream graph + annotations\n\n\n\n▸ Map\n\nChoropleth + bubble overlay\nMap + inset zoom"
+    "text": "One plot type rarely tells the whole story. Merged visuals layer two views of the same data so the reader sees, for example, the shape of a distribution and every individual value. Three ways to merge:\nThe rule for every merged plot: each layer must answer a question the other cannot. If a layer only decorates, drop it.\nlibrary(tidyverse); library(patchwork); library(ggridges); library(ggside)\nncd &lt;- read_csv(\"../data/ncd_survey.csv\", show_col_types = FALSE) |&gt;\n  mutate(phys_act = factor(phys_act, levels = c(\"low\", \"moderate\", \"high\")),\n         htn = factor(htn, 0:1, c(\"No hypertension\", \"Hypertension\")))\ntheme_set(theme_minimal(base_size = 13))"
+  },
+  {
+    "objectID": "specialized/merge_visuals.html#categorical-bar-chart-labels",
+    "href": "specialized/merge_visuals.html#categorical-bar-chart-labels",
+    "title": "Merged Visuals",
+    "section": "Categorical: bar chart + labels",
+    "text": "Categorical: bar chart + labels\n\nedu &lt;- ncd |&gt; count(education) |&gt; mutate(pct = n / sum(n))\nggplot(edu, aes(x = fct_reorder(education, n), y = n)) +\n  geom_col(fill = \"#3498db\") +\n  geom_text(aes(label = paste0(n, \" (\", scales::percent(pct, 1), \")\")), vjust = -0.4) +\n  labs(x = \"Education\", y = \"Adults\", title = \"Education of the 600 adults\") +\n  expand_limits(y = max(edu$n) * 1.1)\n\n\n\n\n\n\n\n\nThe labels give the exact numbers, the bars the comparison. Missing education (NA) stays visible as its own bar."
+  },
+  {
+    "objectID": "specialized/merge_visuals.html#continuous-histogram-density",
+    "href": "specialized/merge_visuals.html#continuous-histogram-density",
+    "title": "Merged Visuals",
+    "section": "Continuous: histogram + density",
+    "text": "Continuous: histogram + density\n\nggplot(ncd, aes(x = sbp)) +\n  geom_histogram(aes(y = after_stat(density)), binwidth = 5, fill = \"grey80\", colour = \"white\") +\n  geom_density(colour = \"#e74c3c\", linewidth = 1) +\n  geom_vline(xintercept = 140, linetype = 2) +\n  labs(x = \"Systolic BP (mmHg)\", y = \"Density\", title = \"Systolic BP: bins and a smooth curve\")\n\n\n\n\n\n\n\n\nafter_stat(density) puts the histogram on the density scale, so both layers share the y-axis. The dashed line marks the hypertension threshold."
+  },
+  {
+    "objectID": "specialized/merge_visuals.html#continuous-by-group-ridgelines",
+    "href": "specialized/merge_visuals.html#continuous-by-group-ridgelines",
+    "title": "Merged Visuals",
+    "section": "Continuous by group: ridgelines",
+    "text": "Continuous by group: ridgelines\n\nggplot(ncd, aes(x = sbp, y = phys_act, fill = phys_act)) +\n  geom_density_ridges(alpha = 0.7, quantile_lines = TRUE, quantiles = 2) +\n  scale_fill_brewer(palette = \"Set2\", guide = \"none\") +\n  labs(x = \"Systolic BP (mmHg)\", y = \"Physical activity\", title = \"Distributions side by side, medians marked\")\n\n\n\n\n\n\n\n\nRidgelines compare many distributions in little space; quantile_lines adds the median of each."
+  },
+  {
+    "objectID": "specialized/merge_visuals.html#category-vs-category-grouped-bars-facets",
+    "href": "specialized/merge_visuals.html#category-vs-category-grouped-bars-facets",
+    "title": "Merged Visuals",
+    "section": "Category vs category: grouped bars + facets",
+    "text": "Category vs category: grouped bars + facets\n\nncd |&gt; count(residence, tobacco, htn) |&gt;\n  group_by(residence, tobacco) |&gt; mutate(pct = n / sum(n)) |&gt; ungroup() |&gt;\n  filter(htn == \"Hypertension\") |&gt;\n  ggplot(aes(x = tobacco, y = pct, fill = tobacco)) +\n  geom_col() +\n  geom_text(aes(label = scales::percent(pct, 1)), vjust = -0.4) +\n  facet_wrap(~ residence) +\n  scale_y_continuous(labels = scales::percent, limits = c(0, 0.6)) +\n  scale_fill_manual(values = c(No = \"grey60\", Yes = \"#e74c3c\"), guide = \"none\") +\n  labs(x = \"Tobacco use\", y = \"Adults with hypertension\", title = \"Hypertension by tobacco use, within residence\")\n\n\n\n\n\n\n\n\nThe facets hold residence fixed, so each panel compares tobacco users with non-users in the same setting."
+  },
+  {
+    "objectID": "specialized/merge_visuals.html#continuous-vs-continuous-scatter-marginal-histograms",
+    "href": "specialized/merge_visuals.html#continuous-vs-continuous-scatter-marginal-histograms",
+    "title": "Merged Visuals",
+    "section": "Continuous vs continuous: scatter + marginal histograms",
+    "text": "Continuous vs continuous: scatter + marginal histograms\n\nggplot(ncd, aes(x = bmi, y = sbp)) +\n  geom_point(alpha = 0.35) +\n  geom_smooth(method = \"lm\", colour = \"#e74c3c\") +\n  geom_xsidehistogram(binwidth = 1, fill = \"grey70\") +\n  geom_ysidehistogram(binwidth = 5, fill = \"grey70\") +\n  theme(ggside.panel.scale = 0.2) +\n  labs(x = \"BMI (kg/m²)\", y = \"Systolic BP (mmHg)\", title = \"The relationship and each variable's distribution\")\n\n\n\n\n\n\n\n\nThe margins show that BMI is roughly symmetric and SBP slightly right-skewed: information the cloud of points hides."
+  },
+  {
+    "objectID": "specialized/merge_visuals.html#bubble-chart-trend-line",
+    "href": "specialized/merge_visuals.html#bubble-chart-trend-line",
+    "title": "Merged Visuals",
+    "section": "Bubble chart + trend line",
+    "text": "Bubble chart + trend line\n\nvillages &lt;- ncd |&gt; group_by(village) |&gt;\n  summarise(bmi = mean(bmi, na.rm = TRUE), sbp = mean(sbp), n = n())\nggplot(villages, aes(x = bmi, y = sbp)) +\n  geom_point(aes(size = n), alpha = 0.5, colour = \"#2c3e50\") +\n  geom_smooth(aes(weight = n), method = \"lm\", se = FALSE, colour = \"#e74c3c\") +\n  labs(x = \"Village mean BMI\", y = \"Village mean systolic BP\", size = \"Adults\", title = \"Villages: means, sizes and a weighted trend\")\n\n\n\n\n\n\n\n\nEach bubble is a village, not a person: a trend between village means is an ecological association and need not hold for individuals."
+  },
+  {
+    "objectID": "specialized/merge_visuals.html#category-vs-continuous-box-points-violin-box",
+    "href": "specialized/merge_visuals.html#category-vs-continuous-box-points-violin-box",
+    "title": "Merged Visuals",
+    "section": "Category vs continuous: box + points, violin + box",
+    "text": "Category vs continuous: box + points, violin + box\n\np1 &lt;- ggplot(ncd, aes(phys_act, sbp)) +\n  geom_boxplot(outlier.shape = NA, width = 0.5) +\n  geom_jitter(width = 0.15, alpha = 0.25) +\n  labs(x = \"Physical activity\", y = \"Systolic BP (mmHg)\", title = \"Box + every adult\")\np2 &lt;- ggplot(ncd, aes(phys_act, sbp)) +\n  geom_violin(fill = \"grey85\") +\n  geom_boxplot(width = 0.12, outlier.shape = NA) +\n  labs(x = \"Physical activity\", y = NULL, title = \"Violin + box\")\np1 + p2\n\n\n\n\n\n\n\n\nPoints show how many people stand behind each box; a violin shows the shape. outlier.shape = NA avoids drawing outliers twice."
+  },
+  {
+    "objectID": "specialized/merge_visuals.html#time-series-line-area",
+    "href": "specialized/merge_visuals.html#time-series-line-area",
+    "title": "Merged Visuals",
+    "section": "Time series: line + area",
+    "text": "Time series: line + area\n\ndengue &lt;- read_csv(\"../data/dengue_wards.csv\", show_col_types = FALSE) |&gt;\n  group_by(year, month) |&gt; summarise(cases = sum(cases), rain = mean(rain_mm), .groups = \"drop\") |&gt;\n  mutate(date = as.Date(sprintf(\"%d-%02d-01\", year, month)))\nk &lt;- max(dengue$cases) / max(dengue$rain)          # put rain on the cases scale\nggplot(dengue, aes(date)) +\n  geom_area(aes(y = rain * k), fill = \"#3498db\", alpha = 0.25) +\n  geom_line(aes(y = cases), colour = \"#e74c3c\", linewidth = 1) +\n  scale_y_continuous(\"Dengue cases (all wards)\", sec.axis = sec_axis(~ . / k, name = \"Mean rainfall (mm)\")) +\n  labs(x = NULL, title = \"Cases follow the rains by about a month\")\n\n\n\n\n\n\n\n\nA second axis is acceptable only when both series are clearly labelled and the scaling is stated; otherwise use two panels."
+  },
+  {
+    "objectID": "specialized/merge_visuals.html#map-choropleth-bubbles-with-an-inset-zoom",
+    "href": "specialized/merge_visuals.html#map-choropleth-bubbles-with-an-inset-zoom",
+    "title": "Merged Visuals",
+    "section": "Map: choropleth + bubbles, with an inset zoom",
+    "text": "Map: choropleth + bubbles, with an inset zoom\n\nlibrary(sf)\nblocks &lt;- st_read(\"../data/gis/district_blocks.geojson\", quiet = TRUE)\ncentres &lt;- st_centroid(blocks)\nmain &lt;- ggplot(blocks) +\n  geom_sf(aes(fill = dengue_per_100k), colour = \"white\", linewidth = 0.2) +\n  geom_sf(data = centres, aes(size = dengue_cases), shape = 21, fill = NA, colour = \"black\") +\n  scale_fill_distiller(palette = \"OrRd\", direction = 1, name = \"Per 100,000\") +\n  labs(size = \"Cases\", title = \"Rate (colour) and count (circle) together\") +\n  theme_void()\nbox &lt;- st_bbox(blocks); zoom &lt;- c(xmin = box[[\"xmax\"]] - (box[[\"xmax\"]] - box[[\"xmin\"]]) / 3, ymax = box[[\"ymin\"]] + (box[[\"ymax\"]] - box[[\"ymin\"]]) / 3)\ninset &lt;- ggplot(blocks) + geom_sf(aes(fill = dengue_per_100k), colour = \"white\", linewidth = 0.2) +\n  scale_fill_distiller(palette = \"OrRd\", direction = 1, guide = \"none\") +\n  coord_sf(xlim = c(zoom[[\"xmin\"]], box[[\"xmax\"]]), ylim = c(box[[\"ymin\"]], zoom[[\"ymax\"]])) +\n  theme_void() + theme(panel.border = element_rect(fill = NA))\nmain &lt;- main + annotate(\"rect\", xmin = zoom[[\"xmin\"]], xmax = box[[\"xmax\"]], ymin = box[[\"ymin\"]], ymax = zoom[[\"ymax\"]],\n                        fill = NA, colour = \"black\", linewidth = 0.8)            # where the zoom comes from\nmain + (inset + labs(title = \"Zoom: south-east\")) + plot_layout(widths = c(3, 1))\n\n\n\n\n\n\n\n\nColour shows the rate (fair comparison between blocks of different size); circles show the count (where the work is). The second panel enlarges the south-east corner (the rectangle), where the high rates cluster."
+  },
+  {
+    "objectID": "specialized/merge_visuals.html#checklist",
+    "href": "specialized/merge_visuals.html#checklist",
+    "title": "Merged Visuals",
+    "section": "Checklist",
+    "text": "Checklist\n\n\n\n\n\n\n\n\nMerge\nWhen it helps\nWatch out\n\n\n\n\nLabels on bars\nexact values matter\nclutter with many bars\n\n\nHistogram + density\nshape and counts\ndensity on the same scale (after_stat(density))\n\n\nPoints over boxes\nsmall groups, show the n\noverplotting: jitter, transparency\n\n\nMarginal histograms\ndistributions of x and y\nkeep the margins small\n\n\nSecond y-axis\ntwo series, same time\nlabel both axes; often two panels are clearer\n\n\nInset or zoom panel\na detail within the whole\nmark where the zoom comes from"
+  },
+  {
+    "objectID": "specialized/merge_visuals.html#practise-in-r",
+    "href": "specialized/merge_visuals.html#practise-in-r",
+    "title": "Merged Visuals",
+    "section": "Practise in R",
+    "text": "Practise in R\nDownload the lab Explore by picture and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+  },
+  {
+    "objectID": "specialized/merge_visuals.html#self-check-quiz",
+    "href": "specialized/merge_visuals.html#self-check-quiz",
+    "title": "Merged Visuals",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\nYou add a density curve to a histogram of counts and the curve lies flat near zero. What fixes it?\n\nAdd alpha = 0.5 to the histogram layer\nUse y = after_stat(density) in the histogram\nUse geom_col() in place of geom_histogram()\nSet bins = 100 so the bars are narrower\n\n\n\nWhen does putting the raw points over a box plot help most?\n\nVery large groups of 10,000 or more\nWhen the outcome is a category\nSmall groups, so readers see the n\nWhen each group has one value\n\n\n\nYou add a zoom panel to a map. What should the main map show?\n\nA second legend for the same colours\nWhere the zoomed area comes from\nThe zoom panel’s title in large type\nA north arrow inside every region\n\n\nYour score:  (first attempt counts)"
   }
 ]

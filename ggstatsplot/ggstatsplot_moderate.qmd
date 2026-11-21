@@ -1,5 +1,7 @@
 ---
 title: "ggstatsplot — Intermediate"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -220,4 +222,37 @@ ggpiestats(data = df, x = category)
 
 # Bayesian version of any function
 ggbetweenstats(data = df, x = group, y = outcome, type = "bayes")
+```
+
+## Practise in R
+
+Download the lab **[Table 1](../labs/moderate/m4_table1.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gm1", "The same 50 patients have SBP measured at baseline, 3 and 6 months. Which function fits?",
+         c("`ggbetweenstats()`", "`ggwithinstats()`", "`ggpiestats()`", "`gghistostats()`"), answer = 2,
+         explain = "Repeated measures on the same people need a within-subjects (paired) comparison: ggwithinstats() with subject.id.")
+quiz_mcq("gm2", "ggstatsplot prints log(BF01) = 3.0 under a plot. What does that mean?",
+         c("Strong evidence that the group means differ a lot", "Strong evidence for no difference between groups", "The p-value is 3.0 on a log scale", "The test failed and returned no estimate"), answer = 2,
+         explain = "BF01 = exp(3.0) ≈ 20: the data are about 20 times more likely under 'no difference' than under 'a difference'.")
+quiz_mcq("gm3", "When is a pie chart from `ggpiestats()` a reasonable choice?",
+         c("Many categories that need exact comparison", "Comparing a continuous outcome across groups", "Few categories and a non-technical audience", "Showing change in one group over time"), answer = 3,
+         explain = "Pies work for a handful of categories and a general audience; for more categories or close comparisons use ggbarstats().")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
 ```

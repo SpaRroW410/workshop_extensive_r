@@ -1,5 +1,7 @@
 ---
 title: "Iteration: Doing the Same Thing Many Times"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -102,3 +104,39 @@ pct_above(ncd$bmi, 30)
 :::
 
 :::
+
+## Practise in R
+
+Download the lab **[Iteration](../labs/moderate/m2_iteration.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("it1", "What does `mutate(across(c(sbp, dbp), \\(x) x / 10))` do?",
+         c("Creates one new column called x", "Divides both columns by 10", "Divides only the first column by 10", "Returns the mean of the two columns"), answer = 2,
+         explain = "across() applies the same function to each listed column; inside mutate() it replaces those columns.")
+quiz_mcq("it2", "`v <- \"sbp\"`. Which code returns the sbp column of `ncd`?",
+         c("`ncd$v`", "`ncd[\"v\"]`", "`ncd$\"v\"`", "`ncd[[v]]`"), answer = 4,
+         explain = "ncd[[v]] uses the value stored in v; ncd$v looks for a column literally called v.")
+quiz_mcq("it3", "Why use `map_dfr()` or `sapply()` rather than growing a vector with `res <- c(res, new)` in a loop?",
+         c("They save every result to a file on the disk", "They return one result per item, collected", "They give each test a smaller p-value", "They remove missing values for you"), answer = 2,
+         explain = "map()/sapply() collect one result per item for you; growing a vector by hand is slow and easy to get wrong.")
+quiz_mcq("it4", "`pct_above <- function(x, cut) mean(x >= cut, na.rm = TRUE) * 100`. What does `pct_above(c(1, 5, 10, 20), 10)` return?",
+         c("25", "75", "50", "2"), answer = 3,
+         explain = "Two of the four values (10 and 20) are at or above 10: 50%. Testing a function on a case with a known answer is a good habit.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

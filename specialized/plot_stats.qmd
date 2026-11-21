@@ -196,3 +196,36 @@ class. State the method in the caption: the choice of breaks changes the story a
 | Groups | notched box, violin + median/IQR | overlap; the test, not stars |
 | Seasonal counts | decomposition | trend vs season vs remainder |
 | Areas | choropleth with stated breaks | the break method |
+
+## Practise in R
+
+Download the lab **[Explore by picture](../labs/moderate/m3_explore_plots.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("ps1", "A cell's standardised chi-square residual is +2.6. What does it suggest?",
+         c("Fewer counts than independence predicts", "The chi-square test is not valid here", "More counts than independence predicts", "The cell has 2.6 times the expected n"), answer = 3,
+         explain = "A positive residual beyond about +2 means noticeably more observations than expected under independence; it is a z-like score, not a ratio.")
+quiz_mcq("ps2", "On a coefficient plot, a 95% CI crosses 0. What does that mean?",
+         c("The effect is exactly zero in the population", "The data are consistent with no effect", "The model failed to converge for that term", "The variable should be removed from the data"), answer = 2,
+         explain = "Zero is among the plausible values, so the data cannot rule out no effect; the width of the interval says how precise the estimate is.")
+quiz_mcq("ps3", "The notches of two box plots do not overlap. What does that roughly indicate?",
+         c("The means of the two groups are identical", "Both of the groups follow a normal distribution", "The groups have the same sample size", "The medians likely differ (a rough 95% check)"), answer = 4,
+         explain = "Notches show an approximate 95% interval for each median; non-overlapping notches suggest the medians differ.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

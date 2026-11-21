@@ -1,6 +1,7 @@
 ---
 title: "Best Practices"
 author: "Sparrow"
+date: "2026-11-20"
 format: 
   revealjs:
     theme: serif
@@ -1727,6 +1728,65 @@ ggplot(temperature_data, aes(x = hour, y = temp)) +
 :::
 
 ---
+
+## 🔧 Practise in R {.smaller}
+
+Download the lab **[Explore by picture](../labs/moderate/m3_explore_plots.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz (1/4) {.smaller}
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("bpr1", "A bar chart of mean HbA1c starts its y-axis at 6.5. What is the risk?",
+         c("Small differences look larger than they are", "The bars become too narrow to read on screen", "Colour-blind readers cannot see the bars", "The legend no longer matches the colours"), answer = 1,
+         explain = "Bars encode values by length, so a cut axis exaggerates differences; bars should start at zero (points or lines need not).")
+```
+
+## Self-check quiz (2/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("bpr2", "What does the 'gray and bold' technique do?",
+         c("Prints each series in a bold black line", "Greys out most data and colours the key series", "Uses a grey background behind each panel", "Draws each series with thick, dark lines of equal weight"), answer = 2,
+         explain = "Most of the data goes grey as context, and one series is highlighted, so the eye goes straight to the message.")
+```
+
+## Self-check quiz (3/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("bpr3", "You compare readmission rates for 5 hospitals with long names. Which chart reads best?",
+         c("A pie chart with one slice per hospital", "Vertical bars with the names rotated 90°", "A horizontal bar chart sorted by rate", "A line chart joining the five hospitals"), answer = 3,
+         explain = "Horizontal bars leave room for long labels, and sorting by value makes the ranking easy to read.")
+```
+
+## Self-check quiz (4/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("bpr4", "Why choose a colour-blind-safe palette such as viridis?",
+         c("It makes the saved plot file much smaller", "People with colour blindness can tell groups apart", "It is needed by ggplot2 for more than 3 groups", "It keeps colours visible on black-and-white printers"), answer = 2,
+         explain = "About 1 in 12 men has a colour vision deficiency; palettes like viridis stay distinguishable for them (and also in greyscale).")
+```
+
+## Score {.smaller}
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```
 
 ## Thank You!
 

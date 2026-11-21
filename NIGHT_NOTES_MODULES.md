@@ -26,6 +26,10 @@ reviewer later.
 | N13 | `data-wrangling.qmd` (2,266 lines) is **not** split into two decks; it gets one quiz at the end covering both halves | Splitting changes every link to it (game, track homes, other tracks) and its frozen results, for little gain; the plan's split is noted as a later option |
 | N14 | Long slides that still overflow after `.smaller` become `.scrollable` (marked automatically by `scripts/fix_overflow.py`); the shared `tests/overflow.js` lists them as SCROLL, not as failures | Content stays reachable; rewriting 150+ code slides by hand is not worth it. Workshop decks keep their own stricter test |
 | N15 | Base-page quizzes load `quiz.R` in a separate `include: false` chunk | The quiz linter runs every chunk that contains questions from the repository root, where `../assets/quiz.R` does not exist |
+| N16 | Moderate: unit M1 (Cleaning Messy Data + its lab, data and the track cheat sheet) is free; M2–M6 are paid | Mirrors "Session 1 free" of the workshops (plan §5 open question). The four rules go in `FREE_VIA_FUNCTION`, because `_routes.json` is near Cloudflare's 100-rule limit. Easy to undo: delete 4 lines in `cloud/src/products.js` |
+| N17 | One Moderate lab per unit (6), not per page; the M3 lab serves the 7 visualization pages | D4 asks for one lab per unit; seven plotting labs would repeat each other |
+| N18 | `data_analysis` keeps `prac_modded.xlsx` (F5 said "replace") | You confirmed the xlsx files are simulated and publishable, so replacing them is no longer needed; origin is in `data/README.md` |
+| N19 | `scripts/add_unit_quiz.py` adds the lab link + quiz from a JSON spec | Same layout on every page, and idempotent; specs are kept in `scripts/quiz_specs/` (first drafts; the pages hold the final, lint-balanced wording) |
 | N12 | R 4.3.3 (Ubuntu) cannot install `ggstatsplot` 1.1.4 (needs R ≥ 4.5): 0.13.0 from a dated snapshot is used | No newer R is available from the system packages here |
 
 ## Progress

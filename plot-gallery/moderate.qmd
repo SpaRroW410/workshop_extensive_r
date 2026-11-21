@@ -1,5 +1,7 @@
 ---
 title: "Intermediate"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -72,3 +74,36 @@ Includes:
 - Faceted maps (small multiples)
 - Interactive maps
 🔗 [View Slide Deck](moderate/2.6_geographic_intermediate.qmd)
+
+## Practise in R
+
+Download the lab **[Explore by picture](../labs/moderate/m3_explore_plots.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("pm1", "Twenty hospitals each have one readmission rate. Which plot ranks them clearly with little ink?",
+         c("A chord diagram of the twenty hospitals", "A Cleveland dot plot or lollipop chart", "A 2D density plot of the twenty rates", "A radial bar chart with stacked layers"), answer = 2,
+         explain = "One value per category, ranked: a sorted dot or lollipop plot uses position, which we read most accurately.")
+quiz_mcq("pm2", "Thousands of age–SBP pairs overlap into a solid block. Which plot shows where points are dense?",
+         c("A pie chart of age groups", "A lollipop chart of each pair", "A hexbin or 2D density plot", "A chord diagram of the pairs"), answer = 3,
+         explain = "Hexbins and 2D densities count points per area, so dense regions stand out instead of hiding under each other.")
+quiz_mcq("pm3", "Patients move from referral stage to treatment outcome. Which plot shows those flows?",
+         c("A Sankey or alluvial plot", "A ridgeline plot of stages", "A choropleth of the stages", "A hexbin plot of each stage"), answer = 1,
+         explain = "Sankey and alluvial plots draw flows between stages with widths proportional to the number of patients.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

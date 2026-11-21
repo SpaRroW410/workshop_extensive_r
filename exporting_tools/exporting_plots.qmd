@@ -1,5 +1,7 @@
 ---
 title: "Exporting plots"
+author: "Sparrow"
+date: "2026-11-20"
 sidebar:
   style: "floating"
   contents:
@@ -148,3 +150,36 @@ ggsave("clipboard", p, device = "png")
 - **Colors not matching**: Check color profiles and device settings
      
      
+
+## Practise in R
+
+Download the lab **[Reports and export](../labs/moderate/m6_report.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("ex1", "A figure for a printed journal page must stay sharp when enlarged. Which format suits it?",
+         c("PNG at 72 dpi", "PDF or SVG (vector)", "JPEG at low quality", "A screenshot of the plot"), answer = 2,
+         explain = "Vector formats store shapes, not pixels, so they stay sharp at any size.")
+quiz_mcq("ex2", "After `png(\"fig.png\")` and `plot(x)`, the file is empty. What is missing?",
+         c("`ggsave()` to write the file", "`print()` around the png() call", "`dev.off()` to close the device", "`library(grDevices)` first"), answer = 3,
+         explain = "Base graphics devices write the file when the device is closed with dev.off().")
+quiz_mcq("ex3", "What resolution does the page recommend for print?",
+         c("72 dpi", "96 dpi", "150 dpi", "300 dpi"), answer = 4,
+         explain = "300 dpi (or more) for print; 72–150 dpi is enough on screen.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

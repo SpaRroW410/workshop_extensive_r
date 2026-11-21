@@ -1,5 +1,7 @@
 ---
 title: "gtsummary for Publication-Ready Tables"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -88,3 +90,39 @@ ncd |>
 -   Export for a paper with `as_flex_table()` (Word) or `as_gt()` (HTML/PDF).
 
 :::
+
+## Practise in R
+
+Download the lab **[Table 1](../labs/moderate/m4_table1.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gt1", "In a randomised trial, why should Table 1 not show p-values for baseline differences?",
+         c("They make the table too wide to print", "Any difference between arms arose by chance", "gtsummary cannot compute them for a trial design", "The groups are too small for any test"), answer = 2,
+         explain = "Randomisation makes the null hypothesis true by design, so a baseline p-value tests nothing useful; look at the size of differences instead.")
+quiz_mcq("gt2", "SBP is right-skewed. Which `statistic =` setting suits it in `tbl_summary()`?",
+         c("`\"{mean} ({sd})\"`", "`\"{n} / {N} ({p}%)\"`", "`\"{median} ({p25}, {p75})\"`", "`\"{mean} ({sd}) [{min}, {max}]\"`"), answer = 3,
+         explain = "For a skewed variable the median and interquartile range describe the middle better than the mean and SD.")
+quiz_mcq("gt3", "What does `add_p()` add to a gtsummary table?",
+         c("A column of p-values, with each test footnoted", "A total column that pools all of the groups", "Confidence intervals for each of the group means", "A row with the number of missing values per group"), answer = 1,
+         explain = "add_p() picks a test per variable (t-test, Wilcoxon, chi-square, Fisher) and names it in a footnote.")
+quiz_mcq("gt4", "`tbl_regression(model_log, exponentiate = TRUE)` shows what for a logistic model?",
+         c("Log-odds with standard errors", "Odds ratios with 95% CIs", "Predicted probabilities per row", "Risk ratios with p-values"), answer = 2,
+         explain = "exponentiate = TRUE turns log-odds coefficients into odds ratios, with their confidence intervals.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

@@ -6,6 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Sparrow">
+<meta name="dcterms.date" content="2026-11-20">
 
 <title>Quarto — Dynamic Documents – Medical Statistics in R — Advanced</title>
 <style>
@@ -411,6 +413,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#multiple-output-formats" id="toc-multiple-output-formats" class="nav-link" data-scroll-target="#multiple-output-formats">Multiple Output Formats</a></li>
   <li><a href="#gtsummary-tables-in-quarto" id="toc-gtsummary-tables-in-quarto" class="nav-link" data-scroll-target="#gtsummary-tables-in-quarto">gtsummary Tables in Quarto</a></li>
   <li><a href="#code-chunk-options-reference" id="toc-code-chunk-options-reference" class="nav-link" data-scroll-target="#code-chunk-options-reference">Code Chunk Options Reference</a></li>
+  <li><a href="#practise-in-r" id="toc-practise-in-r" class="nav-link" data-scroll-target="#practise-in-r">Practise in R</a></li>
+  <li><a href="#self-check-quiz" id="toc-self-check-quiz" class="nav-link" data-scroll-target="#self-check-quiz">Self-check quiz</a></li>
   </ul>
 </nav>
     </div>
@@ -426,7 +430,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Sparrow </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 20, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -468,19 +484,20 @@ Note
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">"Site Report"</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">params</span><span class="kw">:</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">site_name</span><span class="kw">:</span><span class="at"> </span><span class="st">"Site A"</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">intervention</span><span class="kw">:</span><span class="at"> </span><span class="st">"Control"</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">region</span><span class="kw">:</span><span class="at"> </span><span class="st">"North"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">group</span><span class="kw">:</span><span class="at"> </span><span class="st">"Control"</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="use-parameters-in-code" class="level3">
 <h3 class="anchored" data-anchor-id="use-parameters-in-code">2. Use parameters in code</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># params$site_name and params$intervention are available as R objects</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>site_data <span class="ot">&lt;-</span> overall_up <span class="sc">|&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(site <span class="sc">==</span> params<span class="sc">$</span>site_name,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>         intervention <span class="sc">==</span> params<span class="sc">$</span>intervention)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(site_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># params$region and params$group are available as R objects</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>bp <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="st">"data/PublicHealth_BP_Dataset.xlsx"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>site_data <span class="ot">&lt;-</span> bp <span class="sc">|&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Region <span class="sc">==</span> params<span class="sc">$</span>region,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>         TreatmentGroup <span class="sc">==</span> params<span class="sc">$</span>group)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(site_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="render-with-different-parameter-values" class="level3">
@@ -489,10 +506,10 @@ Note
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Render from R for a specific site</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>quarto<span class="sc">::</span><span class="fu">quarto_render</span>(</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">input  =</span> <span class="st">"site_report.qmd"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">output_file =</span> <span class="st">"site_a_report.html"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">output_file =</span> <span class="st">"north_report.html"</span>,</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">execute_params =</span> <span class="fu">list</span>(</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">site_name    =</span> <span class="st">"Site A"</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">intervention =</span> <span class="st">"Intervention"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">region =</span> <span class="st">"North"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">group  =</span> <span class="st">"Intervention"</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -502,13 +519,13 @@ Note
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>sites <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Site A"</span>, <span class="st">"Site B"</span>, <span class="st">"Site C"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>regions <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"North"</span>, <span class="st">"South"</span>, <span class="st">"East"</span>, <span class="st">"West"</span>)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(sites, \(site) {</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(regions, \(r) {</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  quarto<span class="sc">::</span><span class="fu">quarto_render</span>(</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">input          =</span> <span class="st">"site_report.qmd"</span>,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">output_file    =</span> <span class="fu">paste0</span>(<span class="fu">tolower</span>(<span class="fu">gsub</span>(<span class="st">" "</span>, <span class="st">"_"</span>, site)), <span class="st">"_report.html"</span>),</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">execute_params =</span> <span class="fu">list</span>(<span class="at">site_name =</span> site)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">output_file    =</span> <span class="fu">paste0</span>(<span class="fu">tolower</span>(r), <span class="st">"_report.html"</span>),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">execute_params =</span> <span class="fu">list</span>(<span class="at">region =</span> r, <span class="at">group =</span> <span class="st">"Control"</span>)</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -521,16 +538,17 @@ Note
 <p><strong>Syntax:</strong></p>
 <p><code>200</code></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In a code chunk (runs silently):</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>n_total  <span class="ot">&lt;-</span> <span class="fu">nrow</span>(overall_up)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>mean_age <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">mean</span>(overall_up<span class="sc">$</span>current_age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In a code chunk (put it in a setup chunk with #| include: false in a real report):</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>trial    <span class="ot">&lt;-</span> gtsummary<span class="sc">::</span>trial</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>n_total  <span class="ot">&lt;-</span> <span class="fu">nrow</span>(trial)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>mean_age <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">mean</span>(trial<span class="sc">$</span>age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">1</span>)    <span class="co"># age has missing values: na.rm = TRUE</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>sd_age   <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">sd</span>(trial<span class="sc">$</span>age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>In Quarto prose:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>The study enrolled 200 participants with a mean age of</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>NA years (SD = 14.3).</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>The study enrolled <span class="in">`r n_total`</span> participants with a mean age of <span class="in">`r mean_age`</span> years (SD = <span class="in">`r sd_age`</span>).</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Rendered output:</p>
 <blockquote class="blockquote">
-<p>The study enrolled 1 248 participants with a mean age of 38.4 years (SD = 11.2).</p>
+<p>The study enrolled 200 participants with a mean age of 47.2 years (SD = 14.3).</p>
 </blockquote>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -556,7 +574,7 @@ Tip
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-sbp-hist</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Distribution of baseline systolic blood pressure."</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(overall_up, <span class="fu">aes</span>(<span class="at">x =</span> sbp_0m)) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bp, <span class="fu">aes</span>(<span class="at">x =</span> SysBP_0m)) <span class="sc">+</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>) <span class="sc">+</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Systolic BP (mmHg)"</span>, <span class="at">y =</span> <span class="st">"Count"</span>)</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -569,8 +587,8 @@ Tip
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-demographics</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Baseline characteristics of study participants."</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>overall_up <span class="sc">|&gt;</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(current_age, sex, tobacco_type, fuel_type) <span class="sc">|&gt;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>bp <span class="sc">|&gt;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Age, Gender, SmokingStatus, Region) <span class="sc">|&gt;</span></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>()</span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Reference in text: <code>@tbl-demographics</code> → renders as “Table 1”</p>
@@ -614,30 +632,608 @@ Tip
 <section id="gtsummary-tables-in-quarto" class="level2">
 <h2 class="anchored" data-anchor-id="gtsummary-tables-in-quarto">gtsummary Tables in Quarto</h2>
 <p><code>gtsummary</code> integrates naturally with Quarto. Use <code>as_kable_extra()</code> or the default <code>print()</code> method for HTML output; use <code>as_gt()</code> for PDF.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>bp <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="st">"../data/PublicHealth_BP_Dataset.xlsx"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>bp <span class="sc">|&gt;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Age, Gender, SmokingStatus, Region, SysBP_0m, TreatmentGroup) <span class="sc">|&gt;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="at">by =</span> TreatmentGroup) <span class="sc">|&gt;</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overall</span>() <span class="sc">|&gt;</span>          <span class="co"># no add_p(): baseline differences in a randomised trial are due to chance</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bold_labels</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="tbl-summary" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1: Baseline characteristics by intervention group.
+Table&nbsp;1: Baseline characteristics by treatment group (simulated BP trial).
 </figcaption>
 <div aria-describedby="tbl-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>overall_up <span class="sc">|&gt;</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(current_age, sex, tobacco_type, fuel_type, sbp_0m, intervention) <span class="sc">|&gt;</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">by      =</span> intervention,</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">missing =</span> <span class="st">"no"</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_p</span>() <span class="sc">|&gt;</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overall</span>() <span class="sc">|&gt;</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bold_labels</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="odmpzmxhho" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#odmpzmxhho table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#odmpzmxhho thead, #odmpzmxhho tbody, #odmpzmxhho tfoot, #odmpzmxhho tr, #odmpzmxhho td, #odmpzmxhho th {
+  border-style: none;
+}
+
+#odmpzmxhho p {
+  margin: 0;
+  padding: 0;
+}
+
+#odmpzmxhho .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#odmpzmxhho .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#odmpzmxhho .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#odmpzmxhho .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#odmpzmxhho .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#odmpzmxhho .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#odmpzmxhho .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#odmpzmxhho .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#odmpzmxhho .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#odmpzmxhho .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#odmpzmxhho .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#odmpzmxhho .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#odmpzmxhho .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#odmpzmxhho .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#odmpzmxhho .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#odmpzmxhho .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#odmpzmxhho .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#odmpzmxhho .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#odmpzmxhho .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#odmpzmxhho .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#odmpzmxhho .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#odmpzmxhho .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#odmpzmxhho .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#odmpzmxhho .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#odmpzmxhho .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#odmpzmxhho .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#odmpzmxhho .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#odmpzmxhho .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#odmpzmxhho .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#odmpzmxhho .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#odmpzmxhho .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#odmpzmxhho .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#odmpzmxhho .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#odmpzmxhho .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#odmpzmxhho .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#odmpzmxhho .gt_left {
+  text-align: left;
+}
+
+#odmpzmxhho .gt_center {
+  text-align: center;
+}
+
+#odmpzmxhho .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#odmpzmxhho .gt_font_normal {
+  font-weight: normal;
+}
+
+#odmpzmxhho .gt_font_bold {
+  font-weight: bold;
+}
+
+#odmpzmxhho .gt_font_italic {
+  font-style: italic;
+}
+
+#odmpzmxhho .gt_super {
+  font-size: 65%;
+}
+
+#odmpzmxhho .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#odmpzmxhho .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#odmpzmxhho .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#odmpzmxhho .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#odmpzmxhho .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#odmpzmxhho .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#odmpzmxhho .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#odmpzmxhho .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#odmpzmxhho div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table cell caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="gt_col_headings header">
+<th id="label" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="stat_0" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Overall</strong><br>
+N = 200<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
+<th id="stat_1" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Control</strong><br>
+N = 100<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
+<th id="stat_2" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Intervention</strong><br>
+N = 100<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">Age</td>
+<td class="gt_row gt_center" headers="stat_0">50 (36, 65)</td>
+<td class="gt_row gt_center" headers="stat_1">49 (33, 63)</td>
+<td class="gt_row gt_center" headers="stat_2">51 (39, 69)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">Gender</td>
+<td class="gt_row gt_center" headers="stat_0"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_1"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_2"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Female</td>
+<td class="gt_row gt_center" headers="stat_0">93 (47%)</td>
+<td class="gt_row gt_center" headers="stat_1">48 (48%)</td>
+<td class="gt_row gt_center" headers="stat_2">45 (45%)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Male</td>
+<td class="gt_row gt_center" headers="stat_0">99 (50%)</td>
+<td class="gt_row gt_center" headers="stat_1">47 (47%)</td>
+<td class="gt_row gt_center" headers="stat_2">52 (52%)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Other</td>
+<td class="gt_row gt_center" headers="stat_0">8 (4.0%)</td>
+<td class="gt_row gt_center" headers="stat_1">5 (5.0%)</td>
+<td class="gt_row gt_center" headers="stat_2">3 (3.0%)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">SmokingStatus</td>
+<td class="gt_row gt_center" headers="stat_0"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_1"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_2"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Current smoker</td>
+<td class="gt_row gt_center" headers="stat_0">37 (19%)</td>
+<td class="gt_row gt_center" headers="stat_1">13 (13%)</td>
+<td class="gt_row gt_center" headers="stat_2">24 (24%)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Former smoker</td>
+<td class="gt_row gt_center" headers="stat_0">43 (22%)</td>
+<td class="gt_row gt_center" headers="stat_1">22 (22%)</td>
+<td class="gt_row gt_center" headers="stat_2">21 (21%)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Non-smoker</td>
+<td class="gt_row gt_center" headers="stat_0">120 (60%)</td>
+<td class="gt_row gt_center" headers="stat_1">65 (65%)</td>
+<td class="gt_row gt_center" headers="stat_2">55 (55%)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">Region</td>
+<td class="gt_row gt_center" headers="stat_0"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_1"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_2"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;East</td>
+<td class="gt_row gt_center" headers="stat_0">41 (21%)</td>
+<td class="gt_row gt_center" headers="stat_1">14 (14%)</td>
+<td class="gt_row gt_center" headers="stat_2">27 (27%)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;North</td>
+<td class="gt_row gt_center" headers="stat_0">66 (33%)</td>
+<td class="gt_row gt_center" headers="stat_1">35 (35%)</td>
+<td class="gt_row gt_center" headers="stat_2">31 (31%)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;South</td>
+<td class="gt_row gt_center" headers="stat_0">47 (24%)</td>
+<td class="gt_row gt_center" headers="stat_1">29 (29%)</td>
+<td class="gt_row gt_center" headers="stat_2">18 (18%)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;West</td>
+<td class="gt_row gt_center" headers="stat_0">46 (23%)</td>
+<td class="gt_row gt_center" headers="stat_1">22 (22%)</td>
+<td class="gt_row gt_center" headers="stat_2">24 (24%)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label" style="font-weight: bold">SysBP_0m</td>
+<td class="gt_row gt_center" headers="stat_0">135 (123, 146)</td>
+<td class="gt_row gt_center" headers="stat_1">137 (124, 147)</td>
+<td class="gt_row gt_center" headers="stat_2">134 (122, 146)</td>
+</tr>
+</tbody><tfoot>
+<tr class="gt_footnotes odd">
+<td colspan="4" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span> Median (Q1, Q3); n (%)</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
 </div>
 </figure>
 </div>
+</div>
 <p><strong>Adjusting output by format:</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> overall_up <span class="sc">|&gt;</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="at">by =</span> intervention)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> bp <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="at">by =</span> TreatmentGroup)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># HTML output</span></span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>tbl</span>
@@ -699,6 +1295,444 @@ Table&nbsp;1: Baseline characteristics by intervention group.
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">echo</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">warning</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">message</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="practise-in-r" class="level2">
+<h2 class="anchored" data-anchor-id="practise-in-r">Practise in R</h2>
+<p>Download the lab <strong><a href="../labs/moderate/m6_report.R">Reports and export</a></strong> and the data (<a href="../data/ncd_survey.csv">ncd_survey.csv</a>). Fill in the blanks (<code>___</code>); the comments say what each step should do.</p>
+</section>
+<section id="self-check-quiz" class="level2">
+<h2 class="anchored" data-anchor-id="self-check-quiz">Self-check quiz</h2>
+<div class="quiz-q" data-qid="qm1" data-type="mcq" data-hash="50pr1x.i828z5" data-show="YHBhcmFtcyRyZWdpb25g" data-explain="UGFyYW1ldGVycyBhcmUgYXZhaWxhYmxlIGluIHRoZSBkb2N1bWVudCdzIGNvZGUgYXMgdGhl IGxpc3QgcGFyYW1zLg==">
+<p>A report declares <code>params: region: "North"</code> in its YAML. How does R code in the document read the value?</p>
+<ul>
+<li><code>get("region")</code></li>
+<li><code>Sys.getenv("region")</code></li>
+<li><code>params$region</code></li>
+<li><code>yaml$region</code></li>
+</ul>
+</div>
+<div class="quiz-q" data-qid="qm2" data-type="mcq" data-hash="50q4al.i82ngh" data-show="UmVuZGVycyB0aGUgcmVwb3J0IHdpdGggcmVnaW9uIHNldCB0byBTb3V0aA==" data-explain="LVAgb3ZlcnJpZGVzIGEgcGFyYW1ldGVyIGZvciBvbmUgcmVuZGVyLCBzbyB0aGUgc2FtZSBz b3VyY2UgZ2l2ZXMgb25lIHJlcG9ydCBwZXIgcmVnaW9uLg==">
+<p>What does <code>quarto render report.qmd -P region:South</code> do?</p>
+<ul>
+<li>Adds a new parameter called South to the YAML</li>
+<li>Renders the report with region set to South</li>
+<li>Renders only the South section of the file</li>
+<li>Prints the value of region to the console</li>
+</ul>
+</div>
+<div class="quiz-q" data-qid="qm3" data-type="mcq" data-hash="50qhjb.i831xv" data-show="YCN8IGxhYmVsOiB0YmwtYmFzZWxpbmVg" data-explain="QSBsYWJlbCBzdGFydGluZyB3aXRoIHRibC0gKG9yIGZpZy0pIG1ha2VzIHRoZSBvdXRwdXQg YSBudW1iZXJlZCwgY2l0YWJsZSBjcm9zcy1yZWZlcmVuY2Uu">
+<p>Which chunk option lets you cite a table as <code>@tbl-baseline</code>?</p>
+<ul>
+<li><code>#| label: baseline</code></li>
+<li><code>#| tbl-cap: baseline</code></li>
+<li><code>#| label: tbl-baseline</code></li>
+<li><code>#| fig-cap: tbl-baseline</code></li>
+</ul>
+</div>
+<div class="quiz-q" data-qid="qm4" data-type="mcq" data-hash="50qurz.i83gf7" data-show="QSBMYVRlWCBpbnN0YWxsYXRpb24gc3VjaCBhcyBUaW55VGVY" data-explain="UERGIG91dHB1dCBnb2VzIHRocm91Z2ggTGFUZVg7IHRpbnl0ZXg6Omluc3RhbGxfdGlueXRl eCgpIGluc3RhbGxzIGEgc21hbGwgZGlzdHJpYnV0aW9uLg==">
+<p>To render a PDF, what does Quarto need besides R?</p>
+<ul>
+<li>A Microsoft Word licence on the machine</li>
+<li>A LaTeX installation such as TinyTeX</li>
+<li>The pdftools package loaded in R</li>
+<li>An internet connection during render</li>
+</ul>
+</div>
+<p><strong>Your score: <span class="quiz-score"></span></strong> (first attempt counts)</p>
+<!-- GENERATED by scripts/sync_workshop_assets.sh from regression-workshop/assets/quiz.css and quiz.js. Do not edit. -->
+<style>
+/* quiz.css — styles for quiz.js (reveal.js friendly; light theme) */
+.quiz-q {
+  text-align: left;
+  font-size: 0.85em;
+  max-width: 880px;
+  margin: 0 auto;
+}
+.quiz-q > p:first-child { font-size: 1.1em; font-weight: 600; margin-bottom: 0.6em; }
+.quiz-options { display: flex; flex-direction: column; gap: 0.4em; margin-bottom: 0.7em; }
+.quiz-option {
+  display: flex; align-items: center; gap: 0.7em;
+  text-align: left; font: inherit; color: #2c3e50;
+  background: #fff; border: 2px solid #cfd8dc; border-radius: 8px;
+  padding: 0.45em 0.8em; cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.quiz-option:hover:not(:disabled) { border-color: #3498db; background: #f3f9fd; }
+.quiz-option:disabled { cursor: default; }
+.quiz-letter {
+  flex: 0 0 1.6em; height: 1.6em; line-height: 1.6em; text-align: center;
+  border-radius: 50%; background: #ecf0f1; font-weight: 700; font-size: 0.85em;
+}
+.quiz-option.is-correct { border-color: #27ae60; background: #eafaf1; }
+.quiz-option.is-correct .quiz-letter { background: #27ae60; color: #fff; }
+.quiz-option.is-wrong { border-color: #e74c3c; background: #fdedec; }
+.quiz-option.is-wrong .quiz-letter { background: #e74c3c; color: #fff; }
+
+.quiz-fill { display: flex; gap: 0.5em; margin-bottom: 0.6em; }
+.quiz-input {
+  flex: 1; font: inherit; padding: 0.4em 0.7em;
+  border: 2px solid #cfd8dc; border-radius: 8px; color: #2c3e50;
+}
+.quiz-input:focus { outline: none; border-color: #3498db; }
+.quiz-input.is-correct { border-color: #27ae60; background: #eafaf1; }
+.quiz-input.is-wrong { border-color: #e74c3c; background: #fdedec; }
+
+.quiz-btn {
+  font: inherit; cursor: pointer; border: none; border-radius: 8px;
+  padding: 0.4em 1.1em; background: #3498db; color: #fff;
+}
+.quiz-btn:hover { background: #2980b9; }
+.quiz-btn-ghost { background: transparent; color: #7f8c8d; border: 1px solid #cfd8dc; padding: 0.2em 0.8em; font-size: 0.8em; }
+.quiz-btn-ghost:hover { background: #f4f6f7; color: #2c3e50; }
+
+.quiz-feedback { min-height: 1.4em; margin: 0.5em 0; line-height: 1.4; }
+.quiz-feedback.is-correct { color: #1e8449; }
+.quiz-feedback.is-wrong { color: #c0392b; }
+.quiz-feedback.is-info { color: #2c3e50; }
+.quiz-feedback code { background: #eef2f4; color: #c2185b; padding: 0 0.3em; border-radius: 3px; }
+.quiz-score { font-weight: 700; color: #2c3e50; }
+
+/* score tools (Save score / Reset) */
+.quiz-score-tools { margin-left: 0.6em; white-space: nowrap; }
+.quiz-score-tools .quiz-btn { font-size: 0.55em; padding: 0.15em 0.6em; margin-left: 0.3em; vertical-align: middle; }
+</style>
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+ * quiz.js — tiny self-check quiz engine for reveal.js / any HTML page
+ * ---------------------------------------------------------------------
+ * Vanilla JS, zero dependencies, works offline (file://) and inside
+ * Quarto reveal.js decks with embed-resources.
+ *
+ * SYNTAX (what lives in the .qmd — a Pandoc fenced div with data-attrs)
+ * ---------------------------------------------------------------------
+ *   MCQ (single answer)
+ *   ::: {.quiz-q data-qid="s1q1" data-type="mcq" data-hash="<hash>"
+ *         data-show="<base64>" data-explain="<base64>"}
+ *   Which model suits a binary outcome?
+ *
+ *   - Linear regression
+ *   - Logistic regression
+ *   - Cox regression
+ *   :::
+ *
+ *   Fill-in-the-blank
+ *   ::: {.quiz-q data-qid="s1q4" data-type="fill" data-hashes="<h1>,<h2>"
+ *         data-show="<base64>" data-explain="<base64>"}
+ *   Which gtsummary function builds Table 1?
+ *   :::
+ *
+ *   data-qid      unique id (it salts the hashes)
+ *   data-hash     hash of the correct option INDEX (0-based) — mcq
+ *   data-hashes   comma-separated hashes of each accepted answer — fill
+ *   data-show     base64 of the text revealed by "Show answer"
+ *   data-explain  base64 of the short explanation (basic `code` allowed)
+ *
+ * You never write those attributes by hand. Use the R helpers in
+ * assets/quiz.R, which take PLAIN text and emit the fenced div:
+ *
+ *   ```{r}
+ *   #| echo: false
+ *   #| output: asis
+ *   source("assets/quiz.R")
+ *   quiz_mcq("s1q1", "Which model suits a binary outcome?",
+ *            c("Linear", "Logistic", "Cox"), answer = 2,
+ *            explain = "Binary outcome -> logit link -> logistic.")
+ *   quiz_fill("s1q4", "Which gtsummary function builds Table 1?",
+ *             accept = c("tbl_summary", "tbl_summary()"),
+ *             explain = "tbl_summary() summarises variables, optionally by a group.")
+ *   ```
+ *
+ * Optional: <span class="quiz-score"></span> anywhere shows "x / y", followed by
+ *   "Save score" (downloads a text file) and "Reset" buttons. The first-attempt
+ *   results are kept in localStorage per deck, so a reload keeps the score.
+ *
+ * BEHAVIOUR
+ *   - MCQ: options are SHUFFLED at load (hash uses the authored index, so
+ *     data-hash is unaffected; add data-shuffle="0" to keep authored order).
+ *     Click an option -> instant ✔/✘; explanation appears after the
+ *     attempt (or after "Show answer").
+ *   - Fill: type + Enter / "Check". Answers are normalised (case,
+ *     surrounding/duplicate whitespace, backticks, trailing "()") before
+ *     hashing, so "  TBL_Summary() " matches "tbl_summary".
+ *   - Answers are NOT in the page source: only salted hashes are, and the
+ *     explanation / reveal text is base64-encoded. This stops casual
+ *     view-source peeking; it is NOT cryptographic security.
+ *
+ * HASH (must match quiz.R exactly): two polynomial rolling hashes over
+ *   the string  qid + "|" + value , base-36 encoded and concatenated.
+ * ═══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  var M1 = 2147483629, M2 = 2147483587;
+
+  function hash(str) {
+    var a = 5381, b = 52711;
+    for (var i = 0; i < str.length; i++) {
+      var c = str.charCodeAt(i);
+      a = (a * 131 + c) % M1;
+      b = (b * 137 + c) % M2;
+    }
+    return a.toString(36) + '.' + b.toString(36);
+  }
+
+  function normalise(s) {
+    return String(s).toLowerCase()
+      .replace(/`/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/\(\s*\)$/, '')   // "tbl_summary()" == "tbl_summary"
+      .trim();
+  }
+
+  function b64(s) {
+    if (!s) return '';
+    try {
+      var bin = atob(s), bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return new TextDecoder('utf-8').decode(bytes);
+    } catch (e) { return ''; }
+  }
+
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  // escape first, then allow `code` only
+  function lite(s) { return esc(s).replace(/`([^`]+)`/g, '<code>$1</code>'); }
+
+  var state = { total: 0, correct: 0, scored: {} };
+
+  // ── saved score ─────────────────────────────────────────────────────
+  // The first-attempt result of each question is kept in the browser
+  // (localStorage, one entry per deck file), so a reload keeps the score.
+  // "Save score" downloads a small text file a participant can keep or
+  // hand in; "Reset" clears the saved result for this deck.
+  var deckName = (location.pathname.split('/').pop() || 'deck').replace(/\.html?$/, '');
+  // Kept per workshop folder and deck: deck file names repeat across workshops
+  // (s5_choose_check_report is in three). Older versions used the deck name alone; that copy
+  // is read once, for this deck's questions only, so no saved score is lost.
+  var folder = location.pathname.split('/').slice(-2, -1)[0] || '';
+  var STORE = 'quiz-score:' + (folder ? folder + '/' : '') + deckName;
+  var LEGACY = 'quiz-score:' + deckName;
+  function persist() { try { localStorage.setItem(STORE, JSON.stringify(state.scored)); } catch (e) {} }
+  function restore() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORE));
+      var migrate = !saved && STORE !== LEGACY;
+      if (!saved) saved = JSON.parse(localStorage.getItem(LEGACY)) || {};
+      var qs = document.querySelectorAll('.quiz-q');
+      for (var i = 0; i < qs.length; i++) {
+        var id = qs[i].getAttribute('data-qid');
+        if (saved.hasOwnProperty(id)) { state.scored[id] = !!saved[id]; if (saved[id]) state.correct++; }
+      }
+      if (migrate && Object.keys(state.scored).length) persist();
+    } catch (e) {}
+  }
+  // Reset: forget this deck's answers, also in the old shared copy (other decks keep theirs there).
+  function forget() {
+    try {
+      localStorage.removeItem(STORE);
+      var old = JSON.parse(localStorage.getItem(LEGACY));
+      if (old && STORE !== LEGACY) {
+        var qs = document.querySelectorAll('.quiz-q');
+        for (var i = 0; i < qs.length; i++) delete old[qs[i].getAttribute('data-qid')];
+        if (Object.keys(old).length) localStorage.setItem(LEGACY, JSON.stringify(old)); else localStorage.removeItem(LEGACY);
+      }
+    } catch (e) {}
+  }
+  function scoreText() {
+    var lines = ['Quiz score', 'Deck: ' + (document.title || deckName), 'File: ' + deckName, 'Saved: ' + new Date().toLocaleString(),
+                 'Score (first attempt): ' + state.correct + ' / ' + state.total, ''];
+    var qs = document.querySelectorAll('.quiz-q');
+    for (var i = 0; i < qs.length; i++) {
+      var id = qs[i].getAttribute('data-qid');
+      lines.push(id + ': ' + (state.scored.hasOwnProperty(id) ? (state.scored[id] ? 'correct' : 'not correct') : 'not attempted'));
+    }
+    return lines.join('\n') + '\n';
+  }
+  function download() {
+    var a = document.createElement('a');
+    a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(scoreText());
+    a.download = 'quiz_' + deckName + '.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  function addScoreTools() {
+    var els = document.querySelectorAll('.quiz-score');
+    for (var i = 0; i < els.length; i++) {
+      if (els[i].getAttribute('data-tools')) continue;
+      els[i].setAttribute('data-tools', '1');
+      var box = document.createElement('span'); box.className = 'quiz-score-tools';
+      var sv = document.createElement('button'); sv.type = 'button'; sv.className = 'quiz-btn quiz-btn-ghost quiz-save'; sv.textContent = 'Save score';
+      sv.addEventListener('click', download);
+      var rs = document.createElement('button'); rs.type = 'button'; rs.className = 'quiz-btn quiz-btn-ghost quiz-reset'; rs.textContent = 'Reset';
+      rs.addEventListener('click', function () { forget(); location.reload(); });
+      box.appendChild(sv); box.appendChild(rs);
+      els[i].parentNode.insertBefore(box, els[i].nextSibling);
+    }
+  }
+
+  function updateScores() {
+    var els = document.querySelectorAll('.quiz-score');
+    for (var i = 0; i < els.length; i++) {
+      els[i].textContent = state.correct + ' / ' + state.total;
+    }
+  }
+
+  function record(qid, ok) {
+    if (state.scored.hasOwnProperty(qid)) return;      // first attempt only
+    state.scored[qid] = !!ok;
+    if (ok) state.correct++;
+    persist();
+    updateScores();
+  }
+
+  function feedback(q, ok, msg) {
+    var fb = q.querySelector('.quiz-feedback');
+    fb.className = 'quiz-feedback ' + (ok ? 'is-correct' : 'is-wrong');
+    fb.innerHTML = (ok ? '✔ Correct. ' : '✘ Not quite. ') + (msg ? lite(msg) : '');
+  }
+
+  function explanation(q) {
+    var ex = b64(q.getAttribute('data-explain'));
+    return ex;
+  }
+
+  function buildCommon(q) {
+    var fb = document.createElement('div');
+    fb.className = 'quiz-feedback';
+    fb.setAttribute('aria-live', 'polite');
+    q.appendChild(fb);
+
+    var show = document.createElement('button');
+    show.type = 'button';
+    show.className = 'quiz-btn quiz-btn-ghost';
+    show.textContent = 'Show answer';
+    q.appendChild(show);
+    return { fb: fb, show: show };
+  }
+
+  function initMCQ(q) {
+    var qid = q.getAttribute('data-qid');
+    var correctHash = q.getAttribute('data-hash');
+    var list = q.querySelector('ul, ol');
+    if (!list) return;
+    // authored index is what the hash is built on; DISPLAY order is shuffled so the
+    // answer position (and any length/position tell) cannot be learned.
+    var items = Array.prototype.slice.call(list.children).map(function (li, i) { return { li: li, i: i }; });
+    if (q.getAttribute('data-shuffle') !== '0') {
+      for (var k = items.length - 1; k > 0; k--) {
+        var r = Math.floor(Math.random() * (k + 1)), t = items[k]; items[k] = items[r]; items[r] = t;
+      }
+    }
+    var wrap = document.createElement('div');
+    wrap.className = 'quiz-options';
+    var btns = items.map(function (it, pos) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'quiz-option';
+      b.setAttribute('data-i', it.i);
+      b.innerHTML = '<span class="quiz-letter">' + String.fromCharCode(65 + pos) + '</span>' + it.li.innerHTML;
+      wrap.appendChild(b);
+      return b;
+    });
+    list.parentNode.replaceChild(wrap, list);
+    var c = buildCommon(q);
+
+    function isCorrect(i) { return hash(qid + '|' + i) === correctHash; }
+    function orig(b) { return parseInt(b.getAttribute('data-i'), 10); }
+    function reveal() {
+      btns.forEach(function (b) { if (isCorrect(orig(b))) b.classList.add('is-correct'); });
+    }
+
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var ok = isCorrect(orig(b));
+        b.classList.add(ok ? 'is-correct' : 'is-wrong');
+        record(qid, ok);
+        feedback(q, ok, explanation(q));
+        if (ok) btns.forEach(function (x) { x.disabled = true; });
+      });
+    });
+    c.show.addEventListener('click', function () {
+      reveal();
+      record(qid, false);
+      var ans = b64(q.getAttribute('data-show'));
+      var fb = q.querySelector('.quiz-feedback');
+      fb.className = 'quiz-feedback is-info';
+      fb.innerHTML = 'Answer: <strong>' + lite(ans) + '</strong>. ' + lite(explanation(q));
+      btns.forEach(function (x) { x.disabled = true; });
+    });
+  }
+
+  function initFill(q) {
+    var qid = q.getAttribute('data-qid');
+    var accepted = (q.getAttribute('data-hashes') || '').split(',');
+    var row = document.createElement('div');
+    row.className = 'quiz-fill';
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'quiz-input';
+    input.placeholder = 'type your answer…';
+    input.setAttribute('autocomplete', 'off');
+    input.setAttribute('autocapitalize', 'off');
+    input.setAttribute('spellcheck', 'false');
+    var check = document.createElement('button');
+    check.type = 'button';
+    check.className = 'quiz-btn';
+    check.textContent = 'Check';
+    row.appendChild(input);
+    row.appendChild(check);
+    q.appendChild(row);
+    var c = buildCommon(q);
+
+    function submit() {
+      var v = normalise(input.value);
+      if (!v) return;
+      var ok = accepted.indexOf(hash(qid + '|' + v)) !== -1;
+      input.classList.remove('is-correct', 'is-wrong');
+      input.classList.add(ok ? 'is-correct' : 'is-wrong');
+      record(qid, ok);
+      feedback(q, ok, explanation(q));
+    }
+    check.addEventListener('click', submit);
+    // keep reveal.js shortcuts (space, arrows, f, s, …) out of the text box
+    ['keydown', 'keyup', 'keypress'].forEach(function (ev) {
+      input.addEventListener(ev, function (e) {
+        e.stopPropagation();
+        if (ev === 'keydown' && e.key === 'Enter') submit();
+      });
+    });
+    c.show.addEventListener('click', function () {
+      record(qid, false);
+      var fb = q.querySelector('.quiz-feedback');
+      fb.className = 'quiz-feedback is-info';
+      fb.innerHTML = 'Answer: <strong>' + lite(b64(q.getAttribute('data-show'))) + '</strong>. ' + lite(explanation(q));
+    });
+  }
+
+  function init() {
+    var qs = document.querySelectorAll('.quiz-q');
+    state.total = qs.length;
+    for (var i = 0; i < qs.length; i++) {
+      var q = qs[i];
+      if (q.getAttribute('data-quiz-ready')) continue;
+      q.setAttribute('data-quiz-ready', '1');
+      var type = q.getAttribute('data-type');
+      if (type === 'mcq') initMCQ(q);
+      else if (type === 'fill') initFill(q);
+    }
+    restore();
+    addScoreTools();
+    updateScores();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+
+  // exposed for tests / tooling
+  window.Quiz = { hash: hash, normalise: normalise };
+})();
+</script>
 
 
 </section>

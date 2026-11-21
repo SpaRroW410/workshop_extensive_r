@@ -2,7 +2,7 @@
 title: "Grammar of Graphics: Module 1"
 subtitle: "Introduction, Foundations & Basic Geoms"
 author: "Sparrow"
-date: "2025-11-22"
+date: "2026-11-20"
 format: 
   revealjs:
     theme: serif
@@ -884,3 +884,62 @@ ggplot(bp_data, aes(x = Age, y = Cholesterol, color = Gender)) +
 **End of Module 1**
 
 *Continue to Module 2: Aesthetics, Faceting & Themes*
+
+## 🔧 Practise in R {.smaller}
+
+Download the lab **[Explore by picture](../../labs/moderate/m3_explore_plots.R)** and the data ([ncd_survey.csv](../../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz (1/4) {.smaller}
+
+```{r}
+#| include: false
+source("../../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("ga1", "In `ggplot(ncd, aes(x = age, y = sbp)) + geom_point()`, what does `aes()` do?",
+         c("Sets a fixed colour for every point drawn", "Maps columns of the data to visual properties", "Chooses the type of shape to draw, here points", "Loads the data from the file into R first"), answer = 2,
+         explain = "aes() maps variables to aesthetics (x, y, colour, size); the geom decides how they are drawn.")
+```
+
+## Self-check quiz (2/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("ga2", "Which geom draws bars whose heights are values already in your data?",
+         c("`geom_bar()`", "`geom_histogram()`", "`geom_point()`", "`geom_col()`"), answer = 4,
+         explain = "geom_col() uses the y values as given; geom_bar() counts rows for you, and geom_histogram() bins a continuous x.")
+```
+
+## Self-check quiz (3/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("ga3", "When does `geom_line()` suit the data best?",
+         c("When x has unordered categories like region", "When x is ordered, such as visit dates", "When you want to count the rows per group", "When each patient has one single value"), answer = 2,
+         explain = "A line implies a progression from one x to the next, which makes sense for ordered x such as time.")
+```
+
+## Self-check quiz (4/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("ga4", "ExerciseFreq has 44 missing values. Which code keeps them as their own group in a bar chart?",
+         c("`filter(!is.na(ExerciseFreq))`", "`replace_na(ExerciseFreq, \"Unknown\")`", "`mean(ExerciseFreq, na.rm = TRUE)`", "`summarise(n = sum(is.na(ExerciseFreq)))`"), answer = 2,
+         explain = "replace_na() turns NA into an explicit 'Unknown' category, so the missing values stay visible instead of being dropped.")
+```
+
+## Score {.smaller}
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../../assets/quiz-engine.R"); quiz_engine()
+```

@@ -6,6 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Sparrow">
+<meta name="dcterms.date" content="2026-11-20">
 
 <title>Merged Visuals – GIS and Spatial Statistics</title>
 <style>
@@ -25,6 +27,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -47,6 +84,9 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-16b6e5b254f8b2b1abd3f8e69d611555.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -331,13 +371,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#categorical" id="toc-categorical" class="nav-link active" data-scroll-target="#categorical">Categorical</a></li>
-  <li><a href="#continuous" id="toc-continuous" class="nav-link" data-scroll-target="#continuous">▸ Continuous</a></li>
-  <li><a href="#category-vs.-category" id="toc-category-vs.-category" class="nav-link" data-scroll-target="#category-vs.-category">▸ Category vs.&nbsp;Category</a></li>
-  <li><a href="#continuous-vs.-continuous" id="toc-continuous-vs.-continuous" class="nav-link" data-scroll-target="#continuous-vs.-continuous">▸ Continuous vs.&nbsp;Continuous</a></li>
-  <li><a href="#category-vs.-continuous" id="toc-category-vs.-continuous" class="nav-link" data-scroll-target="#category-vs.-continuous">▸ Category vs.&nbsp;Continuous</a></li>
-  <li><a href="#time-series" id="toc-time-series" class="nav-link" data-scroll-target="#time-series">▸ Time Series</a></li>
-  <li><a href="#map" id="toc-map" class="nav-link" data-scroll-target="#map">▸ Map</a></li>
+  <li><a href="#categorical-bar-chart-labels" id="toc-categorical-bar-chart-labels" class="nav-link active" data-scroll-target="#categorical-bar-chart-labels">Categorical: bar chart + labels</a></li>
+  <li><a href="#continuous-histogram-density" id="toc-continuous-histogram-density" class="nav-link" data-scroll-target="#continuous-histogram-density">Continuous: histogram + density</a></li>
+  <li><a href="#continuous-by-group-ridgelines" id="toc-continuous-by-group-ridgelines" class="nav-link" data-scroll-target="#continuous-by-group-ridgelines">Continuous by group: ridgelines</a></li>
+  <li><a href="#category-vs-category-grouped-bars-facets" id="toc-category-vs-category-grouped-bars-facets" class="nav-link" data-scroll-target="#category-vs-category-grouped-bars-facets">Category vs category: grouped bars + facets</a></li>
+  <li><a href="#continuous-vs-continuous-scatter-marginal-histograms" id="toc-continuous-vs-continuous-scatter-marginal-histograms" class="nav-link" data-scroll-target="#continuous-vs-continuous-scatter-marginal-histograms">Continuous vs continuous: scatter + marginal histograms</a></li>
+  <li><a href="#bubble-chart-trend-line" id="toc-bubble-chart-trend-line" class="nav-link" data-scroll-target="#bubble-chart-trend-line">Bubble chart + trend line</a></li>
+  <li><a href="#category-vs-continuous-box-points-violin-box" id="toc-category-vs-continuous-box-points-violin-box" class="nav-link" data-scroll-target="#category-vs-continuous-box-points-violin-box">Category vs continuous: box + points, violin + box</a></li>
+  <li><a href="#time-series-line-area" id="toc-time-series-line-area" class="nav-link" data-scroll-target="#time-series-line-area">Time series: line + area</a></li>
+  <li><a href="#map-choropleth-bubbles-with-an-inset-zoom" id="toc-map-choropleth-bubbles-with-an-inset-zoom" class="nav-link" data-scroll-target="#map-choropleth-bubbles-with-an-inset-zoom">Map: choropleth + bubbles, with an inset zoom</a></li>
+  <li><a href="#checklist" id="toc-checklist" class="nav-link" data-scroll-target="#checklist">Checklist</a></li>
+  <li><a href="#practise-in-r" id="toc-practise-in-r" class="nav-link" data-scroll-target="#practise-in-r">Practise in R</a></li>
+  <li><a href="#self-check-quiz" id="toc-self-check-quiz" class="nav-link" data-scroll-target="#self-check-quiz">Self-check quiz</a></li>
   </ul>
 </nav>
     </div>
@@ -353,7 +398,19 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Sparrow </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 20, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -363,58 +420,687 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>One plot type rarely tells the whole story. <strong>Merged visuals</strong> layer two views of the same data so the reader sees, for example, the shape of a distribution <em>and</em> every individual value. Three ways to merge:</p>
 <ul>
-<li>Overlaying multiple plot types</li>
-<li>Plotting distributions with statistical overlays</li>
-<li>Embedding plots within plots (e.g., inset zooms)</li>
+<li><strong>Overlay</strong> layers on the same axes (<code>+ geom_...()</code> twice).</li>
+<li><strong>Margins</strong> add small plots along the axes (<code>ggside</code>).</li>
+<li><strong>Insets and panels</strong> place one plot inside or beside another (<code>patchwork</code>).</li>
 </ul>
-<section id="categorical" class="level3">
-<h3 class="anchored" data-anchor-id="categorical">Categorical</h3>
-<ul>
-<li>Bar chart + annotations</li>
-</ul>
+<p>The rule for every merged plot: <strong>each layer must answer a question the other cannot</strong>. If a layer only decorates, drop it.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse); <span class="fu">library</span>(patchwork); <span class="fu">library</span>(ggridges); <span class="fu">library</span>(ggside)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>ncd <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../data/ncd_survey.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">phys_act =</span> <span class="fu">factor</span>(phys_act, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"low"</span>, <span class="st">"moderate"</span>, <span class="st">"high"</span>)),</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">htn =</span> <span class="fu">factor</span>(htn, <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="fu">c</span>(<span class="st">"No hypertension"</span>, <span class="st">"Hypertension"</span>)))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="categorical-bar-chart-labels" class="level2">
+<h2 class="anchored" data-anchor-id="categorical-bar-chart-labels">Categorical: bar chart + labels</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>edu <span class="ot">&lt;-</span> ncd <span class="sc">|&gt;</span> <span class="fu">count</span>(education) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">pct =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(edu, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(education, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#3498db"</span>) <span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste0</span>(n, <span class="st">" ("</span>, scales<span class="sc">::</span><span class="fu">percent</span>(pct, <span class="dv">1</span>), <span class="st">")"</span>)), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Education"</span>, <span class="at">y =</span> <span class="st">"Adults"</span>, <span class="at">title =</span> <span class="st">"Education of the 600 adults"</span>) <span class="sc">+</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expand_limits</span>(<span class="at">y =</span> <span class="fu">max</span>(edu<span class="sc">$</span>n) <span class="sc">*</span> <span class="fl">1.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="merge_visuals_files/figure-html/unnamed-chunk-2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="merge_visuals_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" alt="Bar chart of the number of adults in each education group, with the count and percentage printed above each bar." width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The labels give the exact numbers, the bars the comparison. Missing education (<code>NA</code>) stays visible as its own bar.</p>
 </section>
-<section id="continuous" class="level3">
-<h3 class="anchored" data-anchor-id="continuous">▸ Continuous</h3>
-<ul>
-<li><p>Density + histogram overlay</p></li>
-<li><p>Ridgeline + density</p></li>
-</ul>
+<section id="continuous-histogram-density" class="level2">
+<h2 class="anchored" data-anchor-id="continuous-histogram-density">Continuous: histogram + density</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ncd, <span class="fu">aes</span>(<span class="at">x =</span> sbp)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">binwidth =</span> <span class="dv">5</span>, <span class="at">fill =</span> <span class="st">"grey80"</span>, <span class="at">colour =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">colour =</span> <span class="st">"#e74c3c"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">140</span>, <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Systolic BP (mmHg)"</span>, <span class="at">y =</span> <span class="st">"Density"</span>, <span class="at">title =</span> <span class="st">"Systolic BP: bins and a smooth curve"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="merge_visuals_files/figure-html/unnamed-chunk-3-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="merge_visuals_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" alt="Histogram of systolic blood pressure on a density scale with a smooth density curve drawn over it." width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>after_stat(density)</code> puts the histogram on the density scale, so both layers share the y-axis. The dashed line marks the hypertension threshold.</p>
 </section>
-<section id="category-vs.-category" class="level3">
-<h3 class="anchored" data-anchor-id="category-vs.-category">▸ Category vs.&nbsp;Category</h3>
-<ul>
-<li><p>Grouped bar chart + facet grid</p></li>
-<li><p>Mosaic + stacked bar hybrid</p></li>
-</ul>
+<section id="continuous-by-group-ridgelines" class="level2">
+<h2 class="anchored" data-anchor-id="continuous-by-group-ridgelines">Continuous by group: ridgelines</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ncd, <span class="fu">aes</span>(<span class="at">x =</span> sbp, <span class="at">y =</span> phys_act, <span class="at">fill =</span> phys_act)) <span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">quantile_lines =</span> <span class="cn">TRUE</span>, <span class="at">quantiles =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>, <span class="at">guide =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Systolic BP (mmHg)"</span>, <span class="at">y =</span> <span class="st">"Physical activity"</span>, <span class="at">title =</span> <span class="st">"Distributions side by side, medians marked"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="merge_visuals_files/figure-html/unnamed-chunk-4-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="merge_visuals_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" alt="Ridgeline plot: one density curve of systolic blood pressure for each level of physical activity, stacked vertically." width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ridgelines compare many distributions in little space; <code>quantile_lines</code> adds the median of each.</p>
 </section>
-<section id="continuous-vs.-continuous" class="level3">
-<h3 class="anchored" data-anchor-id="continuous-vs.-continuous">▸ Continuous vs.&nbsp;Continuous</h3>
-<ul>
-<li><p>Scatter + marginal histograms</p></li>
-<li><p>Bubble chart + trend line</p></li>
-</ul>
+<section id="category-vs-category-grouped-bars-facets" class="level2">
+<h2 class="anchored" data-anchor-id="category-vs-category-grouped-bars-facets">Category vs category: grouped bars + facets</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ncd <span class="sc">|&gt;</span> <span class="fu">count</span>(residence, tobacco, htn) <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(residence, tobacco) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">pct =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n)) <span class="sc">|&gt;</span> <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(htn <span class="sc">==</span> <span class="st">"Hypertension"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> tobacco, <span class="at">y =</span> pct, <span class="at">fill =</span> tobacco)) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> scales<span class="sc">::</span><span class="fu">percent</span>(pct, <span class="dv">1</span>)), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> residence) <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.6</span>)) <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="at">No =</span> <span class="st">"grey60"</span>, <span class="at">Yes =</span> <span class="st">"#e74c3c"</span>), <span class="at">guide =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Tobacco use"</span>, <span class="at">y =</span> <span class="st">"Adults with hypertension"</span>, <span class="at">title =</span> <span class="st">"Hypertension by tobacco use, within residence"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="merge_visuals_files/figure-html/unnamed-chunk-5-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="merge_visuals_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" alt="Grouped bar charts of the percentage with hypertension by tobacco use, in two panels: rural and urban." width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The facets hold residence fixed, so each panel compares tobacco users with non-users <strong>in the same setting</strong>.</p>
 </section>
-<section id="category-vs.-continuous" class="level3">
-<h3 class="anchored" data-anchor-id="category-vs.-continuous">▸ Category vs.&nbsp;Continuous</h3>
-<ul>
-<li><p>Boxplot + jittered points</p></li>
-<li><p>Violin + box overlay</p></li>
-</ul>
+<section id="continuous-vs-continuous-scatter-marginal-histograms" class="level2">
+<h2 class="anchored" data-anchor-id="continuous-vs-continuous-scatter-marginal-histograms">Continuous vs continuous: scatter + marginal histograms</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ncd, <span class="fu">aes</span>(<span class="at">x =</span> bmi, <span class="at">y =</span> sbp)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.35</span>) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">colour =</span> <span class="st">"#e74c3c"</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_xsidehistogram</span>(<span class="at">binwidth =</span> <span class="dv">1</span>, <span class="at">fill =</span> <span class="st">"grey70"</span>) <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ysidehistogram</span>(<span class="at">binwidth =</span> <span class="dv">5</span>, <span class="at">fill =</span> <span class="st">"grey70"</span>) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">ggside.panel.scale =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"BMI (kg/m²)"</span>, <span class="at">y =</span> <span class="st">"Systolic BP (mmHg)"</span>, <span class="at">title =</span> <span class="st">"The relationship and each variable's distribution"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="merge_visuals_files/figure-html/unnamed-chunk-6-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="merge_visuals_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" alt="Scatter plot of systolic blood pressure against BMI with a fitted line, and histograms of each variable along the top and right edges." width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The margins show that BMI is roughly symmetric and SBP slightly right-skewed: information the cloud of points hides.</p>
 </section>
-<section id="time-series" class="level3">
-<h3 class="anchored" data-anchor-id="time-series">▸ Time Series</h3>
-<ul>
-<li><p>Line + area chart</p></li>
-<li><p>Stream graph + annotations</p></li>
-</ul>
+<section id="bubble-chart-trend-line" class="level2">
+<h2 class="anchored" data-anchor-id="bubble-chart-trend-line">Bubble chart + trend line</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>villages <span class="ot">&lt;-</span> ncd <span class="sc">|&gt;</span> <span class="fu">group_by</span>(village) <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">bmi =</span> <span class="fu">mean</span>(bmi, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">sbp =</span> <span class="fu">mean</span>(sbp), <span class="at">n =</span> <span class="fu">n</span>())</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(villages, <span class="fu">aes</span>(<span class="at">x =</span> bmi, <span class="at">y =</span> sbp)) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> n), <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">colour =</span> <span class="st">"#2c3e50"</span>) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">weight =</span> n), <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">colour =</span> <span class="st">"#e74c3c"</span>) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Village mean BMI"</span>, <span class="at">y =</span> <span class="st">"Village mean systolic BP"</span>, <span class="at">size =</span> <span class="st">"Adults"</span>, <span class="at">title =</span> <span class="st">"Villages: means, sizes and a weighted trend"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="merge_visuals_files/figure-html/unnamed-chunk-7-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="merge_visuals_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" alt="Bubble chart: each point is a village, mean BMI on the x-axis, mean systolic BP on the y-axis, bubble size the number of adults, with a weighted trend line." width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Each bubble is a <strong>village</strong>, not a person: a trend between village means is an ecological association and need not hold for individuals.</p>
 </section>
-<section id="map" class="level3">
-<h3 class="anchored" data-anchor-id="map">▸ Map</h3>
+<section id="category-vs-continuous-box-points-violin-box" class="level2">
+<h2 class="anchored" data-anchor-id="category-vs-continuous-box-points-violin-box">Category vs continuous: box + points, violin + box</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ncd, <span class="fu">aes</span>(phys_act, sbp)) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>, <span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">alpha =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Physical activity"</span>, <span class="at">y =</span> <span class="st">"Systolic BP (mmHg)"</span>, <span class="at">title =</span> <span class="st">"Box + every adult"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ncd, <span class="fu">aes</span>(phys_act, sbp)) <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">fill =</span> <span class="st">"grey85"</span>) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.12</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Physical activity"</span>, <span class="at">y =</span> <span class="cn">NULL</span>, <span class="at">title =</span> <span class="st">"Violin + box"</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="merge_visuals_files/figure-html/unnamed-chunk-8-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="merge_visuals_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" alt="Two panels: on the left, box plots of systolic blood pressure by physical activity with every adult shown as a jittered point; on the right, violins with a narrow box inside." width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Points show how many people stand behind each box; a violin shows the shape. <code>outlier.shape = NA</code> avoids drawing outliers twice.</p>
+</section>
+<section id="time-series-line-area" class="level2">
+<h2 class="anchored" data-anchor-id="time-series-line-area">Time series: line + area</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dengue <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../data/dengue_wards.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, month) <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="at">cases =</span> <span class="fu">sum</span>(cases), <span class="at">rain =</span> <span class="fu">mean</span>(rain_mm), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(<span class="fu">sprintf</span>(<span class="st">"%d-%02d-01"</span>, year, month)))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">max</span>(dengue<span class="sc">$</span>cases) <span class="sc">/</span> <span class="fu">max</span>(dengue<span class="sc">$</span>rain)          <span class="co"># put rain on the cases scale</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dengue, <span class="fu">aes</span>(date)) <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(<span class="fu">aes</span>(<span class="at">y =</span> rain <span class="sc">*</span> k), <span class="at">fill =</span> <span class="st">"#3498db"</span>, <span class="at">alpha =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> cases), <span class="at">colour =</span> <span class="st">"#e74c3c"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="st">"Dengue cases (all wards)"</span>, <span class="at">sec.axis =</span> <span class="fu">sec_axis</span>(<span class="sc">~</span> . <span class="sc">/</span> k, <span class="at">name =</span> <span class="st">"Mean rainfall (mm)"</span>)) <span class="sc">+</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">title =</span> <span class="st">"Cases follow the rains by about a month"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="merge_visuals_files/figure-html/unnamed-chunk-9-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="merge_visuals_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" alt="Monthly total dengue cases as a red line over a light blue area showing monthly rainfall on a second scale, January 2023 to December 2025." width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A <strong>second axis</strong> is acceptable only when both series are clearly labelled and the scaling is stated; otherwise use two panels.</p>
+</section>
+<section id="map-choropleth-bubbles-with-an-inset-zoom" class="level2">
+<h2 class="anchored" data-anchor-id="map-choropleth-bubbles-with-an-inset-zoom">Map: choropleth + bubbles, with an inset zoom</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>blocks <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"../data/gis/district_blocks.geojson"</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>centres <span class="ot">&lt;-</span> <span class="fu">st_centroid</span>(blocks)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>main <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(blocks) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> dengue_per_100k), <span class="at">colour =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> centres, <span class="fu">aes</span>(<span class="at">size =</span> dengue_cases), <span class="at">shape =</span> <span class="dv">21</span>, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">colour =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="at">palette =</span> <span class="st">"OrRd"</span>, <span class="at">direction =</span> <span class="dv">1</span>, <span class="at">name =</span> <span class="st">"Per 100,000"</span>) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">size =</span> <span class="st">"Cases"</span>, <span class="at">title =</span> <span class="st">"Rate (colour) and count (circle) together"</span>) <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>box <span class="ot">&lt;-</span> <span class="fu">st_bbox</span>(blocks); zoom <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">xmin =</span> box[[<span class="st">"xmax"</span>]] <span class="sc">-</span> (box[[<span class="st">"xmax"</span>]] <span class="sc">-</span> box[[<span class="st">"xmin"</span>]]) <span class="sc">/</span> <span class="dv">3</span>, <span class="at">ymax =</span> box[[<span class="st">"ymin"</span>]] <span class="sc">+</span> (box[[<span class="st">"ymax"</span>]] <span class="sc">-</span> box[[<span class="st">"ymin"</span>]]) <span class="sc">/</span> <span class="dv">3</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>inset <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(blocks) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> dengue_per_100k), <span class="at">colour =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="at">palette =</span> <span class="st">"OrRd"</span>, <span class="at">direction =</span> <span class="dv">1</span>, <span class="at">guide =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">xlim =</span> <span class="fu">c</span>(zoom[[<span class="st">"xmin"</span>]], box[[<span class="st">"xmax"</span>]]), <span class="at">ylim =</span> <span class="fu">c</span>(box[[<span class="st">"ymin"</span>]], zoom[[<span class="st">"ymax"</span>]])) <span class="sc">+</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="cn">NA</span>))</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>main <span class="ot">&lt;-</span> main <span class="sc">+</span> <span class="fu">annotate</span>(<span class="st">"rect"</span>, <span class="at">xmin =</span> zoom[[<span class="st">"xmin"</span>]], <span class="at">xmax =</span> box[[<span class="st">"xmax"</span>]], <span class="at">ymin =</span> box[[<span class="st">"ymin"</span>]], <span class="at">ymax =</span> zoom[[<span class="st">"ymax"</span>]],</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span>)            <span class="co"># where the zoom comes from</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>main <span class="sc">+</span> (inset <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Zoom: south-east"</span>)) <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="merge_visuals_files/figure-html/unnamed-chunk-10-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="merge_visuals_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" alt="Map of district blocks shaded by dengue incidence per 100,000, with circles sized by case count; a rectangle marks the south-east corner, shown enlarged in a second panel." width="960"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Colour shows the <strong>rate</strong> (fair comparison between blocks of different size); circles show the <strong>count</strong> (where the work is). The second panel enlarges the south-east corner (the rectangle), where the high rates cluster.</p>
+</section>
+<section id="checklist" class="level2">
+<h2 class="anchored" data-anchor-id="checklist">Checklist</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Merge</th>
+<th>When it helps</th>
+<th>Watch out</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Labels on bars</td>
+<td>exact values matter</td>
+<td>clutter with many bars</td>
+</tr>
+<tr class="even">
+<td>Histogram + density</td>
+<td>shape and counts</td>
+<td>density on the same scale (<code>after_stat(density)</code>)</td>
+</tr>
+<tr class="odd">
+<td>Points over boxes</td>
+<td>small groups, show the n</td>
+<td>overplotting: jitter, transparency</td>
+</tr>
+<tr class="even">
+<td>Marginal histograms</td>
+<td>distributions of x and y</td>
+<td>keep the margins small</td>
+</tr>
+<tr class="odd">
+<td>Second y-axis</td>
+<td>two series, same time</td>
+<td>label both axes; often two panels are clearer</td>
+</tr>
+<tr class="even">
+<td>Inset or zoom panel</td>
+<td>a detail within the whole</td>
+<td>mark where the zoom comes from</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="practise-in-r" class="level2">
+<h2 class="anchored" data-anchor-id="practise-in-r">Practise in R</h2>
+<p>Download the lab <strong><a href="../labs/moderate/m3_explore_plots.R">Explore by picture</a></strong> and the data (<a href="../data/ncd_survey.csv">ncd_survey.csv</a>). Fill in the blanks (<code>___</code>); the comments say what each step should do.</p>
+</section>
+<section id="self-check-quiz" class="level2">
+<h2 class="anchored" data-anchor-id="self-check-quiz">Self-check quiz</h2>
+<div class="quiz-q" data-qid="mv1" data-type="mcq" data-hash="ldyte8.utgcwg" data-show="VXNlIGB5ID0gYWZ0ZXJfc3RhdChkZW5zaXR5KWAgaW4gdGhlIGhpc3RvZ3JhbQ==" data-explain="QSBkZW5zaXR5IGludGVncmF0ZXMgdG8gMSBhbmQgaXMgdGlueSBuZXh0IHRvIGNvdW50czsg ZHJhd2luZyB0aGUgaGlzdG9ncmFtIG9uIHRoZSBkZW5zaXR5IHNjYWxlIHB1dHMgYm90aCBv biB0aGUgc2FtZSBheGlzLg==">
+<p>You add a density curve to a histogram of counts and the curve lies flat near zero. What fixes it?</p>
 <ul>
-<li><p>Choropleth + bubble overlay</p></li>
-<li><p>Map + inset zoom</p></li>
+<li>Add <code>alpha = 0.5</code> to the histogram layer</li>
+<li>Use <code>y = after_stat(density)</code> in the histogram</li>
+<li>Use <code>geom_col()</code> in place of <code>geom_histogram()</code></li>
+<li>Set <code>bins = 100</code> so the bars are narrower</li>
 </ul>
+</div>
+<div class="quiz-q" data-qid="mv2" data-type="mcq" data-hash="ldz6my.utgrdu" data-show="U21hbGwgZ3JvdXBzLCBzbyByZWFkZXJzIHNlZSB0aGUgbg==" data-explain="V2l0aCBzbWFsbCBncm91cHMgYSBib3ggaGlkZXMgaG93IGZldyBwb2ludHMgaXQgc3VtbWFy aXNlczsgdGhlIHBvaW50cyBzaG93IHRoZSBuICh1c2Ugaml0dGVyIGFuZCB0cmFuc3BhcmVu Y3kpLg==">
+<p>When does putting the raw points over a box plot help most?</p>
+<ul>
+<li>Very large groups of 10,000 or more</li>
+<li>When the outcome is a category</li>
+<li>Small groups, so readers see the n</li>
+<li>When each group has one value</li>
+</ul>
+</div>
+<div class="quiz-q" data-qid="mv3" data-type="mcq" data-hash="ldzjvm.uth5v6" data-show="V2hlcmUgdGhlIHpvb21lZCBhcmVhIGNvbWVzIGZyb20=" data-explain="TWFyayB0aGUgem9vbWVkIGFyZWEgb24gdGhlIG1haW4gbWFwIChhIHJlY3RhbmdsZSksIHNv IHRoZSByZWFkZXIga25vd3Mgd2hhdCB0aGUgZGV0YWlsIHBhbmVsIHNob3dzLg==">
+<p>You add a zoom panel to a map. What should the main map show?</p>
+<ul>
+<li>A second legend for the same colours</li>
+<li>Where the zoomed area comes from</li>
+<li>The zoom panel’s title in large type</li>
+<li>A north arrow inside every region</li>
+</ul>
+</div>
+<p><strong>Your score: <span class="quiz-score"></span></strong> (first attempt counts)</p>
+<!-- GENERATED by scripts/sync_workshop_assets.sh from regression-workshop/assets/quiz.css and quiz.js. Do not edit. -->
+<style>
+/* quiz.css — styles for quiz.js (reveal.js friendly; light theme) */
+.quiz-q {
+  text-align: left;
+  font-size: 0.85em;
+  max-width: 880px;
+  margin: 0 auto;
+}
+.quiz-q > p:first-child { font-size: 1.1em; font-weight: 600; margin-bottom: 0.6em; }
+.quiz-options { display: flex; flex-direction: column; gap: 0.4em; margin-bottom: 0.7em; }
+.quiz-option {
+  display: flex; align-items: center; gap: 0.7em;
+  text-align: left; font: inherit; color: #2c3e50;
+  background: #fff; border: 2px solid #cfd8dc; border-radius: 8px;
+  padding: 0.45em 0.8em; cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.quiz-option:hover:not(:disabled) { border-color: #3498db; background: #f3f9fd; }
+.quiz-option:disabled { cursor: default; }
+.quiz-letter {
+  flex: 0 0 1.6em; height: 1.6em; line-height: 1.6em; text-align: center;
+  border-radius: 50%; background: #ecf0f1; font-weight: 700; font-size: 0.85em;
+}
+.quiz-option.is-correct { border-color: #27ae60; background: #eafaf1; }
+.quiz-option.is-correct .quiz-letter { background: #27ae60; color: #fff; }
+.quiz-option.is-wrong { border-color: #e74c3c; background: #fdedec; }
+.quiz-option.is-wrong .quiz-letter { background: #e74c3c; color: #fff; }
+
+.quiz-fill { display: flex; gap: 0.5em; margin-bottom: 0.6em; }
+.quiz-input {
+  flex: 1; font: inherit; padding: 0.4em 0.7em;
+  border: 2px solid #cfd8dc; border-radius: 8px; color: #2c3e50;
+}
+.quiz-input:focus { outline: none; border-color: #3498db; }
+.quiz-input.is-correct { border-color: #27ae60; background: #eafaf1; }
+.quiz-input.is-wrong { border-color: #e74c3c; background: #fdedec; }
+
+.quiz-btn {
+  font: inherit; cursor: pointer; border: none; border-radius: 8px;
+  padding: 0.4em 1.1em; background: #3498db; color: #fff;
+}
+.quiz-btn:hover { background: #2980b9; }
+.quiz-btn-ghost { background: transparent; color: #7f8c8d; border: 1px solid #cfd8dc; padding: 0.2em 0.8em; font-size: 0.8em; }
+.quiz-btn-ghost:hover { background: #f4f6f7; color: #2c3e50; }
+
+.quiz-feedback { min-height: 1.4em; margin: 0.5em 0; line-height: 1.4; }
+.quiz-feedback.is-correct { color: #1e8449; }
+.quiz-feedback.is-wrong { color: #c0392b; }
+.quiz-feedback.is-info { color: #2c3e50; }
+.quiz-feedback code { background: #eef2f4; color: #c2185b; padding: 0 0.3em; border-radius: 3px; }
+.quiz-score { font-weight: 700; color: #2c3e50; }
+
+/* score tools (Save score / Reset) */
+.quiz-score-tools { margin-left: 0.6em; white-space: nowrap; }
+.quiz-score-tools .quiz-btn { font-size: 0.55em; padding: 0.15em 0.6em; margin-left: 0.3em; vertical-align: middle; }
+</style>
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+ * quiz.js — tiny self-check quiz engine for reveal.js / any HTML page
+ * ---------------------------------------------------------------------
+ * Vanilla JS, zero dependencies, works offline (file://) and inside
+ * Quarto reveal.js decks with embed-resources.
+ *
+ * SYNTAX (what lives in the .qmd — a Pandoc fenced div with data-attrs)
+ * ---------------------------------------------------------------------
+ *   MCQ (single answer)
+ *   ::: {.quiz-q data-qid="s1q1" data-type="mcq" data-hash="<hash>"
+ *         data-show="<base64>" data-explain="<base64>"}
+ *   Which model suits a binary outcome?
+ *
+ *   - Linear regression
+ *   - Logistic regression
+ *   - Cox regression
+ *   :::
+ *
+ *   Fill-in-the-blank
+ *   ::: {.quiz-q data-qid="s1q4" data-type="fill" data-hashes="<h1>,<h2>"
+ *         data-show="<base64>" data-explain="<base64>"}
+ *   Which gtsummary function builds Table 1?
+ *   :::
+ *
+ *   data-qid      unique id (it salts the hashes)
+ *   data-hash     hash of the correct option INDEX (0-based) — mcq
+ *   data-hashes   comma-separated hashes of each accepted answer — fill
+ *   data-show     base64 of the text revealed by "Show answer"
+ *   data-explain  base64 of the short explanation (basic `code` allowed)
+ *
+ * You never write those attributes by hand. Use the R helpers in
+ * assets/quiz.R, which take PLAIN text and emit the fenced div:
+ *
+ *   ```{r}
+ *   #| echo: false
+ *   #| output: asis
+ *   source("assets/quiz.R")
+ *   quiz_mcq("s1q1", "Which model suits a binary outcome?",
+ *            c("Linear", "Logistic", "Cox"), answer = 2,
+ *            explain = "Binary outcome -> logit link -> logistic.")
+ *   quiz_fill("s1q4", "Which gtsummary function builds Table 1?",
+ *             accept = c("tbl_summary", "tbl_summary()"),
+ *             explain = "tbl_summary() summarises variables, optionally by a group.")
+ *   ```
+ *
+ * Optional: <span class="quiz-score"></span> anywhere shows "x / y", followed by
+ *   "Save score" (downloads a text file) and "Reset" buttons. The first-attempt
+ *   results are kept in localStorage per deck, so a reload keeps the score.
+ *
+ * BEHAVIOUR
+ *   - MCQ: options are SHUFFLED at load (hash uses the authored index, so
+ *     data-hash is unaffected; add data-shuffle="0" to keep authored order).
+ *     Click an option -> instant ✔/✘; explanation appears after the
+ *     attempt (or after "Show answer").
+ *   - Fill: type + Enter / "Check". Answers are normalised (case,
+ *     surrounding/duplicate whitespace, backticks, trailing "()") before
+ *     hashing, so "  TBL_Summary() " matches "tbl_summary".
+ *   - Answers are NOT in the page source: only salted hashes are, and the
+ *     explanation / reveal text is base64-encoded. This stops casual
+ *     view-source peeking; it is NOT cryptographic security.
+ *
+ * HASH (must match quiz.R exactly): two polynomial rolling hashes over
+ *   the string  qid + "|" + value , base-36 encoded and concatenated.
+ * ═══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  var M1 = 2147483629, M2 = 2147483587;
+
+  function hash(str) {
+    var a = 5381, b = 52711;
+    for (var i = 0; i < str.length; i++) {
+      var c = str.charCodeAt(i);
+      a = (a * 131 + c) % M1;
+      b = (b * 137 + c) % M2;
+    }
+    return a.toString(36) + '.' + b.toString(36);
+  }
+
+  function normalise(s) {
+    return String(s).toLowerCase()
+      .replace(/`/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/\(\s*\)$/, '')   // "tbl_summary()" == "tbl_summary"
+      .trim();
+  }
+
+  function b64(s) {
+    if (!s) return '';
+    try {
+      var bin = atob(s), bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return new TextDecoder('utf-8').decode(bytes);
+    } catch (e) { return ''; }
+  }
+
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  // escape first, then allow `code` only
+  function lite(s) { return esc(s).replace(/`([^`]+)`/g, '<code>$1</code>'); }
+
+  var state = { total: 0, correct: 0, scored: {} };
+
+  // ── saved score ─────────────────────────────────────────────────────
+  // The first-attempt result of each question is kept in the browser
+  // (localStorage, one entry per deck file), so a reload keeps the score.
+  // "Save score" downloads a small text file a participant can keep or
+  // hand in; "Reset" clears the saved result for this deck.
+  var deckName = (location.pathname.split('/').pop() || 'deck').replace(/\.html?$/, '');
+  // Kept per workshop folder and deck: deck file names repeat across workshops
+  // (s5_choose_check_report is in three). Older versions used the deck name alone; that copy
+  // is read once, for this deck's questions only, so no saved score is lost.
+  var folder = location.pathname.split('/').slice(-2, -1)[0] || '';
+  var STORE = 'quiz-score:' + (folder ? folder + '/' : '') + deckName;
+  var LEGACY = 'quiz-score:' + deckName;
+  function persist() { try { localStorage.setItem(STORE, JSON.stringify(state.scored)); } catch (e) {} }
+  function restore() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORE));
+      var migrate = !saved && STORE !== LEGACY;
+      if (!saved) saved = JSON.parse(localStorage.getItem(LEGACY)) || {};
+      var qs = document.querySelectorAll('.quiz-q');
+      for (var i = 0; i < qs.length; i++) {
+        var id = qs[i].getAttribute('data-qid');
+        if (saved.hasOwnProperty(id)) { state.scored[id] = !!saved[id]; if (saved[id]) state.correct++; }
+      }
+      if (migrate && Object.keys(state.scored).length) persist();
+    } catch (e) {}
+  }
+  // Reset: forget this deck's answers, also in the old shared copy (other decks keep theirs there).
+  function forget() {
+    try {
+      localStorage.removeItem(STORE);
+      var old = JSON.parse(localStorage.getItem(LEGACY));
+      if (old && STORE !== LEGACY) {
+        var qs = document.querySelectorAll('.quiz-q');
+        for (var i = 0; i < qs.length; i++) delete old[qs[i].getAttribute('data-qid')];
+        if (Object.keys(old).length) localStorage.setItem(LEGACY, JSON.stringify(old)); else localStorage.removeItem(LEGACY);
+      }
+    } catch (e) {}
+  }
+  function scoreText() {
+    var lines = ['Quiz score', 'Deck: ' + (document.title || deckName), 'File: ' + deckName, 'Saved: ' + new Date().toLocaleString(),
+                 'Score (first attempt): ' + state.correct + ' / ' + state.total, ''];
+    var qs = document.querySelectorAll('.quiz-q');
+    for (var i = 0; i < qs.length; i++) {
+      var id = qs[i].getAttribute('data-qid');
+      lines.push(id + ': ' + (state.scored.hasOwnProperty(id) ? (state.scored[id] ? 'correct' : 'not correct') : 'not attempted'));
+    }
+    return lines.join('\n') + '\n';
+  }
+  function download() {
+    var a = document.createElement('a');
+    a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(scoreText());
+    a.download = 'quiz_' + deckName + '.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  function addScoreTools() {
+    var els = document.querySelectorAll('.quiz-score');
+    for (var i = 0; i < els.length; i++) {
+      if (els[i].getAttribute('data-tools')) continue;
+      els[i].setAttribute('data-tools', '1');
+      var box = document.createElement('span'); box.className = 'quiz-score-tools';
+      var sv = document.createElement('button'); sv.type = 'button'; sv.className = 'quiz-btn quiz-btn-ghost quiz-save'; sv.textContent = 'Save score';
+      sv.addEventListener('click', download);
+      var rs = document.createElement('button'); rs.type = 'button'; rs.className = 'quiz-btn quiz-btn-ghost quiz-reset'; rs.textContent = 'Reset';
+      rs.addEventListener('click', function () { forget(); location.reload(); });
+      box.appendChild(sv); box.appendChild(rs);
+      els[i].parentNode.insertBefore(box, els[i].nextSibling);
+    }
+  }
+
+  function updateScores() {
+    var els = document.querySelectorAll('.quiz-score');
+    for (var i = 0; i < els.length; i++) {
+      els[i].textContent = state.correct + ' / ' + state.total;
+    }
+  }
+
+  function record(qid, ok) {
+    if (state.scored.hasOwnProperty(qid)) return;      // first attempt only
+    state.scored[qid] = !!ok;
+    if (ok) state.correct++;
+    persist();
+    updateScores();
+  }
+
+  function feedback(q, ok, msg) {
+    var fb = q.querySelector('.quiz-feedback');
+    fb.className = 'quiz-feedback ' + (ok ? 'is-correct' : 'is-wrong');
+    fb.innerHTML = (ok ? '✔ Correct. ' : '✘ Not quite. ') + (msg ? lite(msg) : '');
+  }
+
+  function explanation(q) {
+    var ex = b64(q.getAttribute('data-explain'));
+    return ex;
+  }
+
+  function buildCommon(q) {
+    var fb = document.createElement('div');
+    fb.className = 'quiz-feedback';
+    fb.setAttribute('aria-live', 'polite');
+    q.appendChild(fb);
+
+    var show = document.createElement('button');
+    show.type = 'button';
+    show.className = 'quiz-btn quiz-btn-ghost';
+    show.textContent = 'Show answer';
+    q.appendChild(show);
+    return { fb: fb, show: show };
+  }
+
+  function initMCQ(q) {
+    var qid = q.getAttribute('data-qid');
+    var correctHash = q.getAttribute('data-hash');
+    var list = q.querySelector('ul, ol');
+    if (!list) return;
+    // authored index is what the hash is built on; DISPLAY order is shuffled so the
+    // answer position (and any length/position tell) cannot be learned.
+    var items = Array.prototype.slice.call(list.children).map(function (li, i) { return { li: li, i: i }; });
+    if (q.getAttribute('data-shuffle') !== '0') {
+      for (var k = items.length - 1; k > 0; k--) {
+        var r = Math.floor(Math.random() * (k + 1)), t = items[k]; items[k] = items[r]; items[r] = t;
+      }
+    }
+    var wrap = document.createElement('div');
+    wrap.className = 'quiz-options';
+    var btns = items.map(function (it, pos) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'quiz-option';
+      b.setAttribute('data-i', it.i);
+      b.innerHTML = '<span class="quiz-letter">' + String.fromCharCode(65 + pos) + '</span>' + it.li.innerHTML;
+      wrap.appendChild(b);
+      return b;
+    });
+    list.parentNode.replaceChild(wrap, list);
+    var c = buildCommon(q);
+
+    function isCorrect(i) { return hash(qid + '|' + i) === correctHash; }
+    function orig(b) { return parseInt(b.getAttribute('data-i'), 10); }
+    function reveal() {
+      btns.forEach(function (b) { if (isCorrect(orig(b))) b.classList.add('is-correct'); });
+    }
+
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var ok = isCorrect(orig(b));
+        b.classList.add(ok ? 'is-correct' : 'is-wrong');
+        record(qid, ok);
+        feedback(q, ok, explanation(q));
+        if (ok) btns.forEach(function (x) { x.disabled = true; });
+      });
+    });
+    c.show.addEventListener('click', function () {
+      reveal();
+      record(qid, false);
+      var ans = b64(q.getAttribute('data-show'));
+      var fb = q.querySelector('.quiz-feedback');
+      fb.className = 'quiz-feedback is-info';
+      fb.innerHTML = 'Answer: <strong>' + lite(ans) + '</strong>. ' + lite(explanation(q));
+      btns.forEach(function (x) { x.disabled = true; });
+    });
+  }
+
+  function initFill(q) {
+    var qid = q.getAttribute('data-qid');
+    var accepted = (q.getAttribute('data-hashes') || '').split(',');
+    var row = document.createElement('div');
+    row.className = 'quiz-fill';
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'quiz-input';
+    input.placeholder = 'type your answer…';
+    input.setAttribute('autocomplete', 'off');
+    input.setAttribute('autocapitalize', 'off');
+    input.setAttribute('spellcheck', 'false');
+    var check = document.createElement('button');
+    check.type = 'button';
+    check.className = 'quiz-btn';
+    check.textContent = 'Check';
+    row.appendChild(input);
+    row.appendChild(check);
+    q.appendChild(row);
+    var c = buildCommon(q);
+
+    function submit() {
+      var v = normalise(input.value);
+      if (!v) return;
+      var ok = accepted.indexOf(hash(qid + '|' + v)) !== -1;
+      input.classList.remove('is-correct', 'is-wrong');
+      input.classList.add(ok ? 'is-correct' : 'is-wrong');
+      record(qid, ok);
+      feedback(q, ok, explanation(q));
+    }
+    check.addEventListener('click', submit);
+    // keep reveal.js shortcuts (space, arrows, f, s, …) out of the text box
+    ['keydown', 'keyup', 'keypress'].forEach(function (ev) {
+      input.addEventListener(ev, function (e) {
+        e.stopPropagation();
+        if (ev === 'keydown' && e.key === 'Enter') submit();
+      });
+    });
+    c.show.addEventListener('click', function () {
+      record(qid, false);
+      var fb = q.querySelector('.quiz-feedback');
+      fb.className = 'quiz-feedback is-info';
+      fb.innerHTML = 'Answer: <strong>' + lite(b64(q.getAttribute('data-show'))) + '</strong>. ' + lite(explanation(q));
+    });
+  }
+
+  function init() {
+    var qs = document.querySelectorAll('.quiz-q');
+    state.total = qs.length;
+    for (var i = 0; i < qs.length; i++) {
+      var q = qs[i];
+      if (q.getAttribute('data-quiz-ready')) continue;
+      q.setAttribute('data-quiz-ready', '1');
+      var type = q.getAttribute('data-type');
+      if (type === 'mcq') initMCQ(q);
+      else if (type === 'fill') initFill(q);
+    }
+    restore();
+    addScoreTools();
+    updateScores();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+
+  // exposed for tests / tooling
+  window.Quiz = { hash: hash, normalise: normalise };
+})();
+</script>
 
 
 </section>
@@ -970,6 +1656,38 @@ ul.task-list li input[type="checkbox"] {
   }
 })();
 </script>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

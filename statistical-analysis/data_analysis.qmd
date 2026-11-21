@@ -1,5 +1,7 @@
 ---
 title: "Data Analysis"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -167,3 +169,36 @@ map_dbl(p[vars], ~ sd(.x, na.rm = TRUE))
 ```
 
 :::
+
+## Practise in R
+
+Download the lab **[Tests in context](../labs/moderate/m5_tests.R)** and the data ([prac_modded.xlsx](../data/prac_modded.xlsx)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("da1", "Foot pain was recorded before and after an intervention in the same people. Which test compares the two proportions?",
+         c("Chi-square test for association", "McNemar's chi-square test", "Chi-square goodness-of-fit", "Two-sample t-test"), answer = 2,
+         explain = "Paired yes/no answers need McNemar's test, which uses the people who changed; a chi-square test assumes independent groups.")
+quiz_mcq("da2", "`chisq.test(x = observed, p = c(0.5, 0.5))` on screened yes/no tests what?",
+         c("Whether screening is associated with sex", "Whether screening differs from a 50:50 split", "Whether screening changed between two visits", "Whether the screening counts are normal"), answer = 2,
+         explain = "With p = given, chisq.test() is a goodness-of-fit test against those proportions.")
+quiz_mcq("da3", "Points on a Q-Q plot bend away from the line at both ends. What does that suggest?",
+         c("The sample mean has been computed the wrong way", "The two variables are strongly correlated", "The tails differ from a normal distribution", "The data have no missing values in them"), answer = 3,
+         explain = "The ends of a Q-Q plot show the tails: curving away means heavier or lighter tails than a normal distribution.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

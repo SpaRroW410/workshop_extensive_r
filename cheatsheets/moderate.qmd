@@ -1,0 +1,104 @@
+---
+title: "Moderate Track Cheat Sheet"
+subtitle: "Cleaning, iteration, plot design, Table 1, tests in context, reports and export · print on 2 pages (A4)"
+author: "Sparrow"
+date: "2026-11-20"
+format:
+  html:
+    toc: false
+    page-layout: full
+    css: cheatsheet.css
+execute:
+  echo: false
+---
+
+::: {.sheet}
+
+## 1 · Cleaning messy data
+
+| Look at | Fix with |
+|---|---|
+| `names()` | `janitor::clean_names()` |
+| `count(d, sex)` for every category | `case_when()`, `str_trim()`, `str_to_lower()`, `fct_recode()` |
+| `glimpse()`: text in a number column | `parse_number("7.2 g")`; first list what becomes `NA` |
+| Dates in two formats | `coalesce(ymd(x, quiet = TRUE), dmy(x, quiet = TRUE))` |
+| Placeholders (999), impossible values | `na_if(age, 999)`, `if_else(sbp > 300, NA, sbp)`: set to `NA`, keep the row |
+| Duplicates | `distinct()` for exact copies; `get_dupes(id)` and **check the forms** |
+
+Never edit the raw file. Count every change and keep a **cleaning log** for the methods.
+
+## 2 · Iteration
+
+| Need | Code |
+|---|---|
+| Same step on many columns | `summarise(across(c(sbp, dbp), \(x) mean(x, na.rm = TRUE)))` |
+| Columns by type | `across(where(is.numeric), ...)` |
+| Loop over names | `for (v in vars) print(mean(d[[v]], na.rm = TRUE))` |
+| One result per item | `sapply(d[vars], mean, na.rm = TRUE)`, `map_dbl()`, `map_dfr()` |
+| Formula from text | `reformulate("sex", "sbp")` gives `sbp ~ sex` |
+| Your own function | `f <- function(x, cut) mean(x >= cut, na.rm = TRUE)`; test it on a known case |
+
+`d$v` looks for a column called "v"; use `d[[v]]`. Many tests → many p-values: adjust or pre-specify.
+
+## 3 · Plot design and ggplot2
+
+| Goal | Chart |
+|---|---|
+| Distribution | histogram, density, box, violin, ridgeline |
+| Correlation | scatter (+ `geom_smooth()`), hexbin when points overlap |
+| Ranking | sorted horizontal bars, dot or lollipop |
+| Part of whole | stacked bar; pie only for ≤ 5 categories |
+| Evolution | line (ordered x), with a band for uncertainty |
+| Flow | Sankey / alluvial |
+
+| ggplot2 | Rule |
+|---|---|
+| `aes(colour = sex)` | **inside** `aes()` = mapped to data; `geom_point(colour = "blue")` = fixed |
+| `facet_wrap(~ region)` / `facet_grid(sex ~ region)` | one variable wrapped / rows × columns; `scales = "free_y"` loses comparability |
+| `geom_col()` / `geom_bar()` | heights given / rows counted; bars **start at 0** |
+| `geom_histogram(aes(y = after_stat(density)))` | puts a density curve on the same scale |
+| `theme_minimal()`, `theme_void()` | report / map |
+
+Grey most data, colour the message; colour-blind-safe palettes (`scale_colour_viridis_d()`); no 3D, no dual axes.
+
+## 4 · Table 1 (gtsummary) and ggstatsplot
+
+```
+d |> select(age, sex, bmi, htn) |>
+  tbl_summary(by = htn, statistic = list(all_continuous() ~ "{median} ({p25}, {p75})",
+                                         all_categorical() ~ "{n} ({p}%)")) |>
+  add_overall() |> add_p() |> bold_labels()
+tbl_regression(glm(y ~ x, family = binomial), exponentiate = TRUE)   # odds ratios
+```
+
+**Randomised trial: no baseline p-values.** Report missing counts and the n analysed. Word: `as_flex_table()`.
+
+| ggstatsplot | Use |
+|---|---|
+| `ggbetweenstats()` / `ggwithinstats(subject.id = id)` | groups / same people measured again |
+| `ggbarstats()`, `ggpiestats()` | proportions |
+| `type = "bayes"` | prints log(BF01); BF01 = exp(value), > 3 favours no difference |
+
+## 5 · Tests in context
+
+| Data | Test | R |
+|---|---|---|
+| One categorical vs expected proportions | goodness-of-fit | `chisq.test(x = tab, p = c(0.5, 0.5))` |
+| Two categorical, independent people | chi-square | `chisq.test(table(a, b))` |
+| Yes/no **before and after**, same people | McNemar | `mcnemar.test(table(before, after))` |
+| Is it roughly normal? | Q-Q plot | `qqnorm(x); qqline(x)` (look at the tails) |
+
+## 6 · Reports and export
+
+| Need | Write |
+|---|---|
+| A parameter | YAML `params: region: "North"`, code `params$region` |
+| Render one report per site | `quarto render report.qmd -P region:South` |
+| Citable figure / table | `#| label: fig-bp` / `tbl-base`, then `@fig-bp` |
+| PDF output | needs LaTeX: `tinytex::install_tinytex()` |
+| Save a ggplot | `ggsave("f.png", p, width = 7, height = 5, dpi = 300)`; `.pdf` / `.svg` for vector |
+| Base graphics | `png("f.png"); plot(x); dev.off()` |
+
+300 dpi for print, 72–150 for screen. Interactive: `plotly::ggplotly(p)`.
+
+:::

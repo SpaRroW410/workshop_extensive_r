@@ -1,6 +1,7 @@
 ---
 title: "Plotting Tools"
 author: "Sparrow"
+date: "2026-11-20"
 editor: 
   markdown: 
     wrap: 72
@@ -199,4 +200,35 @@ ggraph(g, layout = "circle") +
 4. **Label clearly**: Include informative titles, axis labels, legends
 5. **Test different tools**: Experiment with different packages for the best result
 
+## Practise in R
 
+Download the lab **[Reports and export](../labs/moderate/m6_report.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("pt1", "You need an interactive version of an existing ggplot `p` for a web page. Which call does that?",
+         c("`lattice::xyplot(p)`", "`htmlwidgets::saveWidget(p)`", "`ggplot2::ggsave(p)`", "`plotly::ggplotly(p)`"), answer = 4,
+         explain = "ggplotly() converts a ggplot into an interactive plotly chart with tooltips and zoom.")
+quiz_mcq("pt2", "What is `par(mfrow = c(2, 2))` for in base R?",
+         c("Four colours for the points of one plot", "A 2 × 2 grid of plots in one window", "A plot with two y-axes on one x", "Saving one plot into four files"), answer = 2,
+         explain = "mfrow sets a grid of rows × columns for the next base plots; reset it with par(mfrow = c(1, 1)).")
+quiz_mcq("pt3", "In `xyplot(mpg ~ wt | factor(cyl), data = mtcars)`, what does `| factor(cyl)` do?",
+         c("Draws one panel per number of cylinders", "Colours the points by number of cylinders", "Removes the cars with missing cylinders", "Sorts the points by number of cylinders"), answer = 1,
+         explain = "In lattice, | conditions the plot: one panel per level, like facet_wrap() in ggplot2.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

@@ -116,7 +116,7 @@ Step 2 of the self-study path. It builds on Basic: messy data, iteration, plot d
 
 ## 🗓️ Self-study plan
 
-Work through the steps in order. Tick a step when you have finished it; ticks are saved in this browser.
+Work through the steps in order. Every page ends with a **self-check quiz**, and each step has a **lab** (an R script with blanks to fill in). Keep the [Moderate cheat sheet](cheatsheets/moderate.qmd) open. Tick a step when you have finished it; ticks are saved in this browser.
 
 ::: {.ws-plan}
 1.  **Refresh the basics** (skip if you finished the Basic track)
@@ -125,7 +125,7 @@ Work through the steps in order. Tick a step when you have finished it; ticks ar
 
 2.  **Clean messy data and stop repeating yourself**
 
-    [Cleaning Messy Data](r-foundations/cleaning_messy_data.qmd), then [Iteration (across, loops, functions)](r-foundations/iteration.qmd).
+    [Cleaning Messy Data](r-foundations/cleaning_messy_data.qmd), then [Iteration (across, loops, functions)](r-foundations/iteration.qmd). Labs: [m1_cleaning.R](labs/moderate/m1_cleaning.R) · [m2_iteration.R](labs/moderate/m2_iteration.R).
 
 3.  **Learn what makes a plot good**
 
@@ -137,11 +137,11 @@ Work through the steps in order. Tick a step when you have finished it; ticks ar
 
 5.  **Widen your plot vocabulary**
 
-    [Basic](plot-gallery/basic.qmd) and [Intermediate](plot-gallery/moderate.qmd) plot galleries, then [Merged Visuals](specialized/merge_visuals.qmd) and [Statistical Plots](specialized/plot_stats.qmd).
+    [Basic](plot-gallery/basic.qmd) and [Intermediate](plot-gallery/moderate.qmd) plot galleries, then [Merged Visuals](specialized/merge_visuals.qmd) and [Statistical Plots](specialized/plot_stats.qmd). Lab for steps 3–5: [m3_explore_plots.R](labs/moderate/m3_explore_plots.R).
 
 6.  **Tests and tables for a paper**
 
-    [Test Selection Guide](statistical-analysis/statistical_tests.qmd) · [ggstatsplot — Intro](ggstatsplot/ggstatsplot_intro.qmd) · [ggstatsplot — Intermediate](ggstatsplot/ggstatsplot_moderate.qmd) · [gtsummary Tables](gtsummary/gtsummary_tutorial.qmd) · [Data Analysis](statistical-analysis/data_analysis.qmd) · [Regression Analysis](statistical-analysis/regression.qmd)
+    [Test Selection Guide](statistical-analysis/statistical_tests.qmd) · [ggstatsplot — Intro](ggstatsplot/ggstatsplot_intro.qmd) · [ggstatsplot — Intermediate](ggstatsplot/ggstatsplot_moderate.qmd) · [gtsummary Tables](gtsummary/gtsummary_tutorial.qmd) · [Data Analysis](statistical-analysis/data_analysis.qmd) · [Regression Analysis](statistical-analysis/regression.qmd). Labs: [m4_table1.R](labs/moderate/m4_table1.R) · [m5_tests.R](labs/moderate/m5_tests.R).
 
 7.  **Reports that update themselves**
 
@@ -149,7 +149,7 @@ Work through the steps in order. Tick a step when you have finished it; ticks ar
 
 8.  **Export your figures**
 
-    [Exporting Plots](exporting_tools/exporting_plots.qmd) · [Plotting Tools](exporting_tools/plotting_tools.qmd)
+    [Exporting Plots](exporting_tools/exporting_plots.qmd) · [Plotting Tools](exporting_tools/plotting_tools.qmd). Lab for steps 7–8: [m6_report.R](labs/moderate/m6_report.R).
 
 9.  **Check yourself and move on**
 
@@ -165,7 +165,9 @@ Work through the steps in order. Tick a step when you have finished it; ticks ar
 
 ## 📥 Downloads
 
-- Cheat sheets: [Data transformation](downloads/cheatsheets/data-transformation.pdf) · [tidyr](downloads/cheatsheets/tidyr.pdf) · [Factors](downloads/cheatsheets/factors.pdf) · [Strings](downloads/cheatsheets/strings.pdf) · [purrr](downloads/cheatsheets/purrr.pdf) · [Data visualization](downloads/cheatsheets/data-visualization.pdf)
+- Track cheat sheet: [Moderate track cheat sheet](cheatsheets/moderate.qmd)
+- Labs: [m1](labs/moderate/m1_cleaning.R) · [m2](labs/moderate/m2_iteration.R) · [m3](labs/moderate/m3_explore_plots.R) · [m4](labs/moderate/m4_table1.R) · [m5](labs/moderate/m5_tests.R) · [m6](labs/moderate/m6_report.R); data: [ncd_survey.csv](data/ncd_survey.csv) · [ncd_messy.csv](data/ncd_messy.csv) · [prac_modded.xlsx](data/prac_modded.xlsx)
+- Posit cheat sheets: [Data transformation](downloads/cheatsheets/data-transformation.pdf) · [tidyr](downloads/cheatsheets/tidyr.pdf) · [Factors](downloads/cheatsheets/factors.pdf) · [Strings](downloads/cheatsheets/strings.pdf) · [purrr](downloads/cheatsheets/purrr.pdf) · [Data visualization](downloads/cheatsheets/data-visualization.pdf)
 - Example scripts: [Data wrangling](downloads/source-scripts/nctoh/data_wrangle.R) · [Data visualization](downloads/source-scripts/nctoh/data_vis.R) · [Data analysis (abridged)](downloads/source-scripts/nctoh/data_analysis_Abridged_for_Workshop.R)
 - Everything else is on the [Downloads](downloads.qmd) page.
 

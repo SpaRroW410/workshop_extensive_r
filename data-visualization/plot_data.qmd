@@ -2,6 +2,7 @@
 title: "Navigating the Decision Tree"
 subtitle: "Choosing the Right Visualization for Your Data"
 author: "Sparrow"
+date: "2026-11-20"
 format:
   revealjs:
     theme: serif
@@ -929,6 +930,65 @@ Charts: Grouped bar / Faceted bar / Mosaic / Heatmap
 - Refer back to the decision matrix when choosing charts
 
 ---
+
+## 🔧 Practise in R {.smaller}
+
+Download the lab **[Explore by picture](../labs/moderate/m3_explore_plots.R)** and the data ([ncd_survey.csv](../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz (1/4) {.smaller}
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("pd1", "You want to show how HbA1c changes over 12 months in three treatment arms. Which analytical goal is this?",
+         c("Ranking", "Part of whole", "Evolution", "Correlation"), answer = 3,
+         explain = "Change over time is the Evolution goal: lines (one per arm), with intervals if you have them.")
+```
+
+## Self-check quiz (2/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("pd2", "You have one numeric variable, age. Which goal and chart fit?",
+         c("Ranking: a sorted bar chart of each age", "Distribution: a histogram or density plot", "Part of whole: a pie chart of the ages", "Correlation: a scatter plot of age against row number"), answer = 2,
+         explain = "One numeric variable calls for its distribution: a histogram, density, box or violin plot.")
+```
+
+## Self-check quiz (3/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("pd3", "Why does the deck warn against dual-axis charts?",
+         c("They can mislead through the choice of scales", "They take too long to render in R", "They cannot show more than 10 points", "They need a colour-blind-safe palette to work well"), answer = 1,
+         explain = "Either axis can be stretched to suggest a link between the two series; faceting or two panels is safer.")
+```
+
+## Self-check quiz (4/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("pd4", "A scatter plot of 20,000 patients is a solid blob. Which fix does the deck suggest?",
+         c("A pie chart of the patients by age", "Transparency, jitter, hexbin or density", "A 3D scatter plot rotated to a better angle", "A dual-axis chart with two y-scales"), answer = 2,
+         explain = "Overplotting hides density; alpha, jitter, hexbins or 2D density show where the points are concentrated.")
+```
+
+## Score {.smaller}
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```
 
 # Thank You!
 

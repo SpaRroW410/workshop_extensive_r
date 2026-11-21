@@ -1,0 +1,818 @@
+[
+ {
+  "file": "r-foundations/cleaning_messy_data.qmd",
+  "lab": [
+   "labs/moderate/m1_cleaning.R",
+   "Cleaning messy data"
+  ],
+  "data": [
+   "data/ncd_messy.csv"
+  ],
+  "questions": [
+   [
+    "cm1",
+    "`count(d, sex)` shows \"M\", \"male\", \"Male \" and \"F\". What should you do before you tabulate sex?",
+    [
+     "Drop the rows with the uncommon spellings",
+     "Recode them to two labels, then count again",
+     "Convert sex to a number from 1 to 4",
+     "Leave them; R groups similar labels together"
+    ],
+    2,
+    "Standardise the labels (case_when(), str_trim()) and re-run count(): anything not matched shows up as NA instead of being hidden."
+   ],
+   [
+    "cm2",
+    "`as.numeric(\"7.2 g\")` returns NA. Which call reads the number 7.2?",
+    [
+     "`as.integer(\"7.2 g\")`",
+     "`str_trim(\"7.2 g\")`",
+     "`parse_number(\"7.2 g\")`",
+     "`factor(\"7.2 g\")`"
+    ],
+    3,
+    "parse_number() reads the first number in the text and drops the unit; look at what still becomes NA before accepting it."
+   ],
+   [
+    "cm3",
+    "Some ages are recorded as 999, a code for unknown. What is the right fix?",
+    [
+     "Set them to NA and report how many",
+     "Replace 999 with the mean age",
+     "Delete those rows from the data",
+     "Keep 999; summary() skips it"
+    ],
+    1,
+    "A placeholder is a missing value: set it to NA (na_if()), keep the rest of the row, and count it in the cleaning log."
+   ],
+   [
+    "cm4",
+    "Two rows share pt_id 104 but have different SBP values. What should you do first?",
+    [
+     "Keep the first row and drop the second",
+     "Check the source forms to see why",
+     "Average the two SBP values into one",
+     "Remove both rows from the analysis"
+    ],
+    2,
+    "Rows with the same ID and different values are not exact duplicates: they may be a repeat visit, a re-entry or a wrong ID."
+   ]
+  ]
+ },
+ {
+  "file": "r-foundations/iteration.qmd",
+  "lab": [
+   "labs/moderate/m2_iteration.R",
+   "Iteration"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "it1",
+    "What does `mutate(across(c(sbp, dbp), \\(x) x / 10))` do?",
+    [
+     "Creates one new column called x",
+     "Divides both columns by 10",
+     "Divides only the first column by 10",
+     "Returns the mean of the two columns"
+    ],
+    2,
+    "across() applies the same function to each listed column; inside mutate() it replaces those columns."
+   ],
+   [
+    "it2",
+    "`v <- \"sbp\"`. Which code returns the sbp column of `ncd`?",
+    [
+     "`ncd$v`",
+     "`ncd[\"v\"]`",
+     "`ncd$\"v\"`",
+     "`ncd[[v]]`"
+    ],
+    4,
+    "ncd[[v]] uses the value stored in v; ncd$v looks for a column literally called v."
+   ],
+   [
+    "it3",
+    "Why use `map_dfr()` or `sapply()` rather than growing a vector with `res <- c(res, new)` in a loop?",
+    [
+     "They save the results to a file on disk",
+     "They return one result per item, collected",
+     "They give each test a smaller p-value",
+     "They remove missing values for you"
+    ],
+    2,
+    "map()/sapply() collect one result per item for you; growing a vector by hand is slow and easy to get wrong."
+   ],
+   [
+    "it4",
+    "`pct_above <- function(x, cut) mean(x >= cut, na.rm = TRUE) * 100`. What does `pct_above(c(1, 5, 10, 20), 10)` return?",
+    [
+     "25",
+     "75",
+     "50",
+     "2"
+    ],
+    3,
+    "Two of the four values (10 and 20) are at or above 10: 50%. Testing a function on a case with a known answer is a good habit."
+   ]
+  ]
+ },
+ {
+  "file": "data-visualization/best_practices.qmd",
+  "lab": [
+   "labs/moderate/m3_explore_plots.R",
+   "Explore by picture"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "bpr1",
+    "A bar chart of mean HbA1c starts its y-axis at 6.5. What is the risk?",
+    [
+     "Small differences look larger than they are",
+     "The bars become too narrow to read on screen",
+     "Colour-blind readers cannot see the bars",
+     "The legend no longer matches the colours"
+    ],
+    1,
+    "Bars encode values by length, so a cut axis exaggerates differences; bars should start at zero (points or lines need not)."
+   ],
+   [
+    "bpr2",
+    "What does the 'gray and bold' technique do?",
+    [
+     "Prints every series in a bold black line",
+     "Greys out most data and colours the key series",
+     "Uses a grey background behind every panel",
+     "Draws every series with thick, dark lines of equal weight"
+    ],
+    2,
+    "Most of the data goes grey as context, and one series is highlighted, so the eye goes straight to the message."
+   ],
+   [
+    "bpr3",
+    "You compare readmission rates for 5 hospitals with long names. Which chart reads best?",
+    [
+     "A pie chart with one slice per hospital",
+     "Vertical bars with the names rotated 90°",
+     "A horizontal bar chart sorted by rate",
+     "A line chart joining the five hospitals"
+    ],
+    3,
+    "Horizontal bars leave room for long labels, and sorting by value makes the ranking easy to read."
+   ],
+   [
+    "bpr4",
+    "Why choose a colour-blind-safe palette such as viridis?",
+    [
+     "It makes the saved plot file much smaller",
+     "People with colour blindness can tell groups apart",
+     "It is needed by ggplot2 for more than 3 groups",
+     "It keeps colours visible on black-and-white printers"
+    ],
+    2,
+    "About 1 in 12 men has a colour vision deficiency; palettes like viridis stay distinguishable for them (and also in greyscale)."
+   ]
+  ]
+ },
+ {
+  "file": "data-visualization/plot_data.qmd",
+  "lab": [
+   "labs/moderate/m3_explore_plots.R",
+   "Explore by picture"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "pd1",
+    "You want to show how HbA1c changes over 12 months in three treatment arms. Which analytical goal is this?",
+    [
+     "Ranking",
+     "Part of whole",
+     "Evolution",
+     "Flow"
+    ],
+    3,
+    "Change over time is the Evolution goal: lines (one per arm), with intervals if you have them."
+   ],
+   [
+    "pd2",
+    "You have one numeric variable, age. Which goal and chart fit?",
+    [
+     "Ranking: a sorted bar chart of each age",
+     "Distribution: a histogram or density plot",
+     "Part of whole: a pie chart of the ages",
+     "Correlation: a scatter plot of age against row number"
+    ],
+    2,
+    "One numeric variable calls for its distribution: a histogram, density, box or violin plot."
+   ],
+   [
+    "pd3",
+    "Why does the deck warn against dual-axis charts?",
+    [
+     "They can mislead through the choice of scales",
+     "They take too long to render in R",
+     "They cannot show more than 10 points",
+     "They need a colour-blind-safe palette to work well"
+    ],
+    1,
+    "Either axis can be stretched to suggest a link between the two series; faceting or two panels is safer."
+   ],
+   [
+    "pd4",
+    "A scatter plot of 20,000 patients is a solid blob. Which fix does the deck suggest?",
+    [
+     "A pie chart of the patients by age",
+     "Transparency, jitter, hexbin or density",
+     "A 3D scatter plot rotated to a better angle",
+     "A dual-axis chart with two y-scales"
+    ],
+    2,
+    "Overplotting hides density; alpha, jitter, hexbins or 2D density show where the points are concentrated."
+   ]
+  ]
+ },
+ {
+  "file": "data-visualization/gram_ggplot/module_1_foundations_geoms.qmd",
+  "lab": [
+   "labs/moderate/m3_explore_plots.R",
+   "Explore by picture"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "ga1",
+    "In `ggplot(ncd, aes(x = age, y = sbp)) + geom_point()`, what does `aes()` do?",
+    [
+     "Sets a fixed colour for every point drawn",
+     "Maps columns of the data to visual properties",
+     "Chooses the type of shape to draw, here points",
+     "Loads the data from the file into R first"
+    ],
+    2,
+    "aes() maps variables to aesthetics (x, y, colour, size); the geom decides how they are drawn."
+   ],
+   [
+    "ga2",
+    "Which geom draws bars whose heights are values already in your data?",
+    [
+     "`geom_bar()`",
+     "`geom_histogram()`",
+     "`geom_point()`",
+     "`geom_col()`"
+    ],
+    4,
+    "geom_col() uses the y values as given; geom_bar() counts rows for you, and geom_histogram() bins a continuous x."
+   ],
+   [
+    "ga3",
+    "When does `geom_line()` suit the data best?",
+    [
+     "When x has unordered categories like region",
+     "When x is ordered, such as visit dates",
+     "When you want to count the rows per group",
+     "When each patient has one single value"
+    ],
+    2,
+    "A line implies a progression from one x to the next, which makes sense for ordered x such as time."
+   ],
+   [
+    "ga4",
+    "ExerciseFreq has 44 missing values. Which code keeps them as their own group in a bar chart?",
+    [
+     "`filter(!is.na(ExerciseFreq))`",
+     "`replace_na(ExerciseFreq, \"Unknown\")`",
+     "`mean(ExerciseFreq, na.rm = TRUE)`",
+     "`summarise(n = sum(is.na(ExerciseFreq)))`"
+    ],
+    2,
+    "replace_na() turns NA into an explicit 'Unknown' category, so the missing values stay visible instead of being dropped."
+   ]
+  ]
+ },
+ {
+  "file": "data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd",
+  "lab": [
+   "labs/moderate/m3_explore_plots.R",
+   "Explore by picture"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "gb1",
+    "`aes(color = \"blue\")` gives red points and a legend that says 'blue'. Why?",
+    [
+     "ggplot2 cannot draw blue points by default",
+     "\"blue\" was mapped as a data value, not set",
+     "The theme overrides colours set in aes()",
+     "Colours must be given as hex codes in R"
+    ],
+    2,
+    "Inside aes() a constant is treated as data (one group called 'blue'); set a fixed colour outside aes(): geom_point(color = \"blue\")."
+   ],
+   [
+    "gb2",
+    "In `facet_wrap(~ region, scales = \"free_y\")`, what does `free_y` do?",
+    [
+     "Removes the y-axis from every panel",
+     "Lets each panel pick its own colour scale",
+     "Lets each panel use its own y-axis range",
+     "Sorts the panels by their mean y value"
+    ],
+    3,
+    "Each panel gets its own y range: details show better, but panels can no longer be compared by height at a glance."
+   ],
+   [
+    "gb3",
+    "How does `facet_grid(sex ~ region)` differ from `facet_wrap(~ region)`?",
+    [
+     "facet_grid() puts one variable in rows, one in columns",
+     "facet_wrap() needs a numeric variable to split the data on",
+     "facet_grid() draws all of the groups in one panel",
+     "facet_wrap() adds a separate legend to each panel"
+    ],
+    1,
+    "facet_grid() crosses two variables as a grid of rows and columns; facet_wrap() wraps the panels of one variable."
+   ],
+   [
+    "gb4",
+    "Which theme removes axes, grid lines and background, as for a map?",
+    [
+     "`theme_minimal()`",
+     "`theme_classic()`",
+     "`theme_bw()`",
+     "`theme_void()`"
+    ],
+    4,
+    "theme_void() draws only the data layers; theme_minimal() still keeps grid lines and axis text."
+   ]
+  ]
+ },
+ {
+  "file": "plot-gallery/moderate.qmd",
+  "lab": [
+   "labs/moderate/m3_explore_plots.R",
+   "Explore by picture"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "pm1",
+    "Twenty hospitals each have one readmission rate. Which plot ranks them clearly with little ink?",
+    [
+     "A chord diagram of the twenty hospitals",
+     "A Cleveland dot plot or lollipop chart",
+     "A 2D density plot of the twenty rates",
+     "A radial bar chart with stacked layers"
+    ],
+    2,
+    "One value per category, ranked: a sorted dot or lollipop plot uses position, which we read most accurately."
+   ],
+   [
+    "pm2",
+    "Thousands of age–SBP pairs overlap into a solid block. Which plot shows where points are dense?",
+    [
+     "A pie chart of age groups",
+     "A lollipop chart of each pair",
+     "A hexbin or 2D density plot",
+     "A chord diagram of the pairs"
+    ],
+    3,
+    "Hexbins and 2D densities count points per area, so dense regions stand out instead of hiding under each other."
+   ],
+   [
+    "pm3",
+    "Patients move from referral stage to treatment outcome. Which plot shows those flows?",
+    [
+     "A Sankey or alluvial plot",
+     "A ridgeline plot of stages",
+     "A choropleth of the stages",
+     "A hexbin plot of each stage"
+    ],
+    1,
+    "Sankey and alluvial plots draw flows between stages with widths proportional to the number of patients."
+   ]
+  ]
+ },
+ {
+  "file": "specialized/merge_visuals.qmd",
+  "lab": [
+   "labs/moderate/m3_explore_plots.R",
+   "Explore by picture"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "mv1",
+    "You add a density curve to a histogram of counts and the curve lies flat near zero. What fixes it?",
+    [
+     "Add `alpha = 0.5` to the histogram layer",
+     "Use `y = after_stat(density)` in the histogram",
+     "Use `geom_col()` in place of `geom_histogram()`",
+     "Set `bins = 100` so the bars are narrower"
+    ],
+    2,
+    "A density integrates to 1 and is tiny next to counts; drawing the histogram on the density scale puts both on the same axis."
+   ],
+   [
+    "mv2",
+    "When does putting the raw points over a box plot help most?",
+    [
+     "Very large groups of 10,000 or more",
+     "When the outcome is a category",
+     "Small groups, so readers see the n",
+     "When each group has one value"
+    ],
+    3,
+    "With small groups a box hides how few points it summarises; the points show the n (use jitter and transparency)."
+   ],
+   [
+    "mv3",
+    "You add a zoom panel to a map. What should the main map show?",
+    [
+     "A second legend for the same colours",
+     "Where the zoomed area comes from",
+     "The zoom panel's title in large type",
+     "A north arrow inside every region"
+    ],
+    2,
+    "Mark the zoomed area on the main map (a rectangle), so the reader knows what the detail panel shows."
+   ]
+  ]
+ },
+ {
+  "file": "specialized/plot_stats.qmd",
+  "lab": [
+   "labs/moderate/m3_explore_plots.R",
+   "Explore by picture"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "ps1",
+    "A cell's standardised chi-square residual is +2.6. What does it suggest?",
+    [
+     "Fewer counts than independence predicts",
+     "The chi-square test is not valid here",
+     "More counts than independence predicts",
+     "The cell has 2.6 times the expected n"
+    ],
+    3,
+    "A positive residual beyond about +2 means noticeably more observations than expected under independence; it is a z-like score, not a ratio."
+   ],
+   [
+    "ps2",
+    "On a coefficient plot, a 95% CI crosses 0. What does that mean?",
+    [
+     "The effect is exactly zero in the population",
+     "The data are consistent with no effect",
+     "The model failed to converge for that term",
+     "The variable should be removed from the data"
+    ],
+    2,
+    "Zero is among the plausible values, so the data cannot rule out no effect; the width of the interval says how precise the estimate is."
+   ],
+   [
+    "ps3",
+    "The notches of two box plots do not overlap. What does that roughly indicate?",
+    [
+     "The means of the two groups are identical",
+     "Both groups follow a normal distribution",
+     "The groups have the same sample size",
+     "The medians likely differ (a rough 95% check)"
+    ],
+    4,
+    "Notches show an approximate 95% interval for each median; non-overlapping notches suggest the medians differ."
+   ]
+  ]
+ },
+ {
+  "file": "gtsummary/gtsummary_tutorial.qmd",
+  "lab": [
+   "labs/moderate/m4_table1.R",
+   "Table 1"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "gt1",
+    "In a randomised trial, why should Table 1 not show p-values for baseline differences?",
+    [
+     "They make the table too wide to print",
+     "Any difference between arms arose by chance",
+     "gtsummary cannot compute them for trials",
+     "The groups are too small for any test"
+    ],
+    2,
+    "Randomisation makes the null hypothesis true by design, so a baseline p-value tests nothing useful; look at the size of differences instead."
+   ],
+   [
+    "gt2",
+    "SBP is right-skewed. Which `statistic =` setting suits it in `tbl_summary()`?",
+    [
+     "`\"{mean} ({sd})\"`",
+     "`\"{n} / {N} ({p}%)\"`",
+     "`\"{median} ({p25}, {p75})\"`",
+     "`\"{mean} ({sd}) [{min}, {max}]\"`"
+    ],
+    3,
+    "For a skewed variable the median and interquartile range describe the middle better than the mean and SD."
+   ],
+   [
+    "gt3",
+    "What does `add_p()` add to a gtsummary table?",
+    [
+     "A column of p-values, with each test footnoted",
+     "A total column that pools all of the groups",
+     "Confidence intervals for each of the group means",
+     "A row with the number of missing values per group"
+    ],
+    1,
+    "add_p() picks a test per variable (t-test, Wilcoxon, chi-square, Fisher) and names it in a footnote."
+   ],
+   [
+    "gt4",
+    "`tbl_regression(model_log, exponentiate = TRUE)` shows what for a logistic model?",
+    [
+     "Log-odds with standard errors",
+     "Odds ratios with 95% CIs",
+     "Predicted probabilities per row",
+     "Risk ratios with p-values"
+    ],
+    2,
+    "exponentiate = TRUE turns log-odds coefficients into odds ratios, with their confidence intervals."
+   ]
+  ]
+ },
+ {
+  "file": "ggstatsplot/ggstatsplot_moderate.qmd",
+  "lab": [
+   "labs/moderate/m4_table1.R",
+   "Table 1"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "gm1",
+    "The same 50 patients have SBP measured at baseline, 3 and 6 months. Which function fits?",
+    [
+     "`ggbetweenstats()`",
+     "`ggwithinstats()`",
+     "`ggpiestats()`",
+     "`gghistostats()`"
+    ],
+    2,
+    "Repeated measures on the same people need a within-subjects (paired) comparison: ggwithinstats() with subject.id."
+   ],
+   [
+    "gm2",
+    "ggstatsplot prints log(BF01) = 3.0 under a plot. What does that mean?",
+    [
+     "Strong evidence that the group means differ a lot",
+     "Strong evidence for no difference between groups",
+     "The p-value is 3.0 on a log scale",
+     "The test failed and returned no estimate"
+    ],
+    2,
+    "BF01 = exp(3.0) ≈ 20: the data are about 20 times more likely under 'no difference' than under 'a difference'."
+   ],
+   [
+    "gm3",
+    "When is a pie chart from `ggpiestats()` a reasonable choice?",
+    [
+     "Many categories that need exact comparison",
+     "Comparing a continuous outcome across groups",
+     "Few categories and a non-technical audience",
+     "Showing change in one group over time"
+    ],
+    3,
+    "Pies work for a handful of categories and a general audience; for more categories or close comparisons use ggbarstats()."
+   ]
+  ]
+ },
+ {
+  "file": "statistical-analysis/data_analysis.qmd",
+  "lab": [
+   "labs/moderate/m5_tests.R",
+   "Tests in context"
+  ],
+  "data": [
+   "data/prac_modded.xlsx"
+  ],
+  "questions": [
+   [
+    "da1",
+    "Foot pain was recorded before and after an intervention in the same people. Which test compares the two proportions?",
+    [
+     "Chi-square test for association",
+     "McNemar test",
+     "Chi-square goodness-of-fit",
+     "Two-sample t-test"
+    ],
+    2,
+    "Paired yes/no answers need McNemar's test, which uses the people who changed; a chi-square test assumes independent groups."
+   ],
+   [
+    "da2",
+    "`chisq.test(x = observed, p = c(0.5, 0.5))` on screened yes/no tests what?",
+    [
+     "Whether screening is associated with sex",
+     "Whether screening differs from a 50:50 split",
+     "Whether screening changed between two visits",
+     "Whether the screening counts are normal"
+    ],
+    2,
+    "With p = given, chisq.test() is a goodness-of-fit test against those proportions."
+   ],
+   [
+    "da3",
+    "Points on a Q-Q plot bend away from the line at both ends. What does that suggest?",
+    [
+     "The sample mean has been computed wrongly",
+     "The two variables are strongly correlated",
+     "The tails differ from a normal distribution",
+     "The data have no missing values in them"
+    ],
+    3,
+    "The ends of a Q-Q plot show the tails: curving away means heavier or lighter tails than a normal distribution."
+   ]
+  ]
+ },
+ {
+  "file": "quarto_repro_w/quarto_moderate.qmd",
+  "lab": [
+   "labs/moderate/m6_report.R",
+   "Reports and export"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "qm1",
+    "A report declares `params: region: \"North\"` in its YAML. How does R code in the document read the value?",
+    [
+     "`region`",
+     "`Sys.getenv(\"region\")`",
+     "`params$region`",
+     "`yaml$region`"
+    ],
+    3,
+    "Parameters are available in the document's code as the list params."
+   ],
+   [
+    "qm2",
+    "What does `quarto render report.qmd -P region:South` do?",
+    [
+     "Adds a new parameter called South to the YAML",
+     "Renders the report with region set to South",
+     "Renders only the South section of the file",
+     "Prints the value of region to the console"
+    ],
+    2,
+    "-P overrides a parameter for one render, so the same source gives one report per region."
+   ],
+   [
+    "qm3",
+    "Which chunk option lets you cite a table as `@tbl-baseline`?",
+    [
+     "`#| label: baseline`",
+     "`#| tbl-cap: baseline`",
+     "`#| label: tbl-baseline`",
+     "`#| fig-cap: tbl-baseline`"
+    ],
+    3,
+    "A label starting with tbl- (or fig-) makes the output a numbered, citable cross-reference."
+   ],
+   [
+    "qm4",
+    "To render a PDF, what does Quarto need besides R?",
+    [
+     "A Microsoft Word licence on the machine",
+     "A LaTeX installation such as TinyTeX",
+     "The pdftools package loaded in R",
+     "An internet connection during render"
+    ],
+    2,
+    "PDF output goes through LaTeX; tinytex::install_tinytex() installs a small distribution."
+   ]
+  ]
+ },
+ {
+  "file": "exporting_tools/exporting_plots.qmd",
+  "lab": [
+   "labs/moderate/m6_report.R",
+   "Reports and export"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "ex1",
+    "A figure for a printed journal page must stay sharp when enlarged. Which format suits it?",
+    [
+     "PNG at 72 dpi",
+     "PDF or SVG (vector)",
+     "JPEG at low quality",
+     "A screenshot of the plot"
+    ],
+    2,
+    "Vector formats store shapes, not pixels, so they stay sharp at any size."
+   ],
+   [
+    "ex2",
+    "After `png(\"fig.png\")` and `plot(x)`, the file is empty. What is missing?",
+    [
+     "`ggsave()` to write the file",
+     "`print()` around the png() call",
+     "`dev.off()` to close the device",
+     "`library(grDevices)` first"
+    ],
+    3,
+    "Base graphics devices write the file when the device is closed with dev.off()."
+   ],
+   [
+    "ex3",
+    "What resolution does the page recommend for print?",
+    [
+     "72 dpi",
+     "96 dpi",
+     "150 dpi",
+     "300 dpi"
+    ],
+    4,
+    "300 dpi (or more) for print; 72–150 dpi is enough on screen."
+   ]
+  ]
+ },
+ {
+  "file": "exporting_tools/plotting_tools.qmd",
+  "lab": [
+   "labs/moderate/m6_report.R",
+   "Reports and export"
+  ],
+  "data": [
+   "data/ncd_survey.csv"
+  ],
+  "questions": [
+   [
+    "pt1",
+    "You need an interactive version of an existing ggplot `p` for a web page. Which call does that?",
+    [
+     "`lattice::xyplot(p)`",
+     "`graphics::plot(p)`",
+     "`ggplot2::ggsave(p)`",
+     "`plotly::ggplotly(p)`"
+    ],
+    4,
+    "ggplotly() converts a ggplot into an interactive plotly chart with tooltips and zoom."
+   ],
+   [
+    "pt2",
+    "What is `par(mfrow = c(2, 2))` for in base R?",
+    [
+     "Four colours for the points of one plot",
+     "A 2 × 2 grid of plots in one window",
+     "A plot with two y-axes on one x",
+     "Saving one plot into four files"
+    ],
+    2,
+    "mfrow sets a grid of rows × columns for the next base plots; reset it with par(mfrow = c(1, 1))."
+   ],
+   [
+    "pt3",
+    "In `xyplot(mpg ~ wt | factor(cyl), data = mtcars)`, what does `| factor(cyl)` do?",
+    [
+     "Draws one panel per number of cylinders",
+     "Colours the points by number of cylinders",
+     "Removes the cars with missing cylinders",
+     "Sorts the points by number of cylinders"
+    ],
+    1,
+    "In lattice, | conditions the plot: one panel per level, like facet_wrap() in ggplot2."
+   ]
+  ]
+ }
+]

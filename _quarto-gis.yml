@@ -52,6 +52,7 @@ project:
     - specialized/plot_stats.qmd
   resources:
     - data/gis/*
+    - data/ncd_messy.csv
     - data/ncd_round1.csv
     - data/ncd_round2.csv
     - data/ncd_survey.csv
@@ -62,6 +63,10 @@ project:
     - labs/basic/b2_tidy_data.R
     - labs/basic/b3_joining.R
     - labs/basic/b4_first_plots.R
+    - labs/moderate/m1_cleaning.R
+    - labs/moderate/m2_iteration.R
+    - labs/moderate/m3_explore_plots.R
+    - labs/moderate/m6_report.R
 website:
   title: GIS and Spatial Statistics
   site-url: '.'

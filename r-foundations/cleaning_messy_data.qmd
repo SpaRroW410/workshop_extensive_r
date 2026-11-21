@@ -1,5 +1,7 @@
 ---
 title: "Cleaning Messy Data"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -125,3 +127,39 @@ Report this in the methods: it lets a reader see what was done, and lets you rep
 | Record | counts before and after | a log in the script |
 
 :::
+
+## Practise in R
+
+Download the lab **[Cleaning messy data](../labs/moderate/m1_cleaning.R)** and the data ([ncd_messy.csv](../data/ncd_messy.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("cm1", "`count(d, sex)` shows \"M\", \"male\", \"Male \" and \"F\". What should you do before you tabulate sex?",
+         c("Drop the rows with the uncommon spellings", "Recode them to two labels, then count again", "Convert sex to a number from 1 to 4", "Leave them; R groups similar labels together"), answer = 2,
+         explain = "Standardise the labels (case_when(), str_trim()) and re-run count(): anything not matched shows up as NA instead of being hidden.")
+quiz_mcq("cm2", "`as.numeric(\"7.2 g\")` returns NA. Which call reads the number 7.2?",
+         c("`as.numeric(trimws(\"7.2 g\"))`", "`str_trim(\"7.2 g\")`", "`parse_number(\"7.2 g\")`", "`factor(\"7.2 g\")`"), answer = 3,
+         explain = "parse_number() reads the first number in the text and drops the unit; look at what still becomes NA before accepting it.")
+quiz_mcq("cm3", "Some ages are recorded as 999, a code for unknown. What is the right fix?",
+         c("Set them to NA and report how many", "Replace 999 with the sample's mean age", "Delete those rows from the data", "Keep 999; summary() skips it"), answer = 1,
+         explain = "A placeholder is a missing value: set it to NA (na_if()), keep the rest of the row, and count it in the cleaning log.")
+quiz_mcq("cm4", "Two rows share pt_id 104 but have different SBP values. What should you do first?",
+         c("Keep the first row and drop the second", "Check the source forms to see why", "Average the two SBP values into one", "Remove both rows from the analysis"), answer = 2,
+         explain = "Rows with the same ID and different values are not exact duplicates: they may be a repeat visit, a re-entry or a wrong ID.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

@@ -2,7 +2,7 @@
 title: "Grammar of Graphics: Module 2"
 subtitle: "Aesthetics, Faceting & Themes"
 author: "Sparrow"
-date: "2025-11-22"
+date: "2026-11-20"
 format: 
   revealjs:
     theme: serif
@@ -1180,3 +1180,62 @@ ggplot(bp_data %>% filter(!is.na(BMI_Category)),
 **End of Module 2**
 
 *Continue to Module 3: Colors, Scales & Custom Themes*
+
+## 🔧 Practise in R {.smaller}
+
+Download the lab **[Explore by picture](../../labs/moderate/m3_explore_plots.R)** and the data ([ncd_survey.csv](../../data/ncd_survey.csv)). Fill in the blanks (`___`); the comments say what each step should do.
+
+## Self-check quiz (1/4) {.smaller}
+
+```{r}
+#| include: false
+source("../../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gb1", "`aes(color = \"blue\")` gives red points and a legend that says 'blue'. Why?",
+         c("ggplot2 cannot draw blue points by default", "\"blue\" was mapped as a data value, not set", "The theme overrides colours set in aes()", "Colours must be given as hex codes in R"), answer = 2,
+         explain = "Inside aes() a constant is treated as data (one group called 'blue'); set a fixed colour outside aes(): geom_point(color = \"blue\").")
+```
+
+## Self-check quiz (2/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gb2", "In `facet_wrap(~ region, scales = \"free_y\")`, what does `free_y` do?",
+         c("Removes the y-axis from every panel", "Lets each panel pick its own colour scale", "Lets each panel use its own y-axis range", "Sorts the panels by their mean y value"), answer = 3,
+         explain = "Each panel gets its own y range: details show better, but panels can no longer be compared by height at a glance.")
+```
+
+## Self-check quiz (3/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gb3", "How does `facet_grid(sex ~ region)` differ from `facet_wrap(~ region)`?",
+         c("facet_grid() puts one variable in rows, one in columns", "facet_wrap() needs a numeric variable to split the data on", "facet_grid() draws all of the groups in one panel", "facet_wrap() adds a separate legend to each panel"), answer = 1,
+         explain = "facet_grid() crosses two variables as a grid of rows and columns; facet_wrap() wraps the panels of one variable.")
+```
+
+## Self-check quiz (4/4) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("gb4", "Which theme removes axes, grid lines and background, as for a map?",
+         c("`theme_minimal()`", "`theme_classic()`", "`theme_bw()`", "`theme_void()`"), answer = 4,
+         explain = "theme_void() draws only the data layers; theme_minimal() still keeps grid lines and axis text.")
+```
+
+## Score {.smaller}
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../../assets/quiz-engine.R"); quiz_engine()
+```

@@ -100,6 +100,12 @@ export const FREE_VIA_FUNCTION = [
   '/gis/gis/make_gis_data.R',
   '/dungeons/dungeons/roadmap*',
   '/dungeons/dungeons/site-design*',
+  // Moderate: unit M1 (Cleaning Messy Data) is the free taster, like Session 1 of a workshop:
+  // the page, its lab and dataset, and the track cheat sheet (decision N16, NIGHT_NOTES_MODULES.md).
+  '/moderate/r-foundations/cleaning_messy_data*',
+  '/moderate/labs/moderate/m1_cleaning*',
+  '/moderate/data/ncd_messy*',
+  '/moderate/cheatsheets/*',
 ];
 
 export function ruleMatches(path, rule) {
