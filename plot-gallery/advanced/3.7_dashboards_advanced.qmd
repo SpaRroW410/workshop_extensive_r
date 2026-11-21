@@ -20,7 +20,7 @@ format:
 
 Goal: Create interactive analytical tools
 
-## Dashboard Layout Principles
+## Dashboard Layout Principles {.smaller}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -55,7 +55,7 @@ Goal: Create interactive analytical tools
 :::
 :::
 
-## flexdashboard Structure
+## flexdashboard Structure {.smaller}
 
 ```markdown
 ---
@@ -86,7 +86,7 @@ plot_ly(data, x = ~x, y = ~y, type = "scatter")
 ggplotly(ggplot(data, aes(x, y)) + geom_bar())
 ```
 
-## Basic Shiny App Structure
+## Basic Shiny App Structure {.smaller .scrollable}
 
 ```r
 library(shiny)
@@ -136,7 +136,7 @@ server <- function(input, output) {
 shinyApp(ui, server)
 ```
 
-## Reactive Programming Concepts
+## Reactive Programming Concepts {.smaller}
 
 **Key Reactive Functions:**
 
@@ -164,7 +164,7 @@ data_on_click <- eventReactive(input$loadBtn, {
 })
 ```
 
-## plotly Interactivity
+## plotly Interactivity {.smaller}
 
 ```{r}
 #| echo: true
@@ -195,7 +195,7 @@ plot_ly(health_data, x = ~BMI, y = ~SysBP_0m,
 
 Hover a point; drag to zoom; double-click to reset.
 
-## Dashboard with Multiple Pages
+## Dashboard with Multiple Pages {.smaller}
 
 ```markdown
 # In flexdashboard
@@ -244,7 +244,7 @@ cached_data <- memoise::memoise(function(param) {
 
 5. **Deploy efficiently** (shinyapps.io, Docker)
 
-## Summary
+## Summary {.smaller}
 
 **Quarto dashboards** (`format: dashboard`, Quarto ≥ 1.4) are the newer way to build the same layout from a
 `.qmd` file; the rows, cards and value boxes work like flexdashboard's.

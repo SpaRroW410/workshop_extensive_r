@@ -33,7 +33,7 @@ format:
 - Best practices and common pitfalls
 - Workshop summary
 
-## Setup
+## Setup {.smaller .scrollable}
 
 ```{r}
 #| echo: true
@@ -197,7 +197,7 @@ p_themed <- p_trend +
 p_themed
 ```
 
-## Progressive Build: Final Polish
+## Progressive Build: Final Polish {.smaller}
 
 :::: {.columns}
 ::: {.column width="60%"}
@@ -241,7 +241,7 @@ p_final
 :::
 ::::
 
-## Multi-Geom Plot: Points + Line + Ribbon
+## Multi-Geom Plot: Points + Line + Ribbon {.smaller .scrollable}
 
 :::: {.columns}
 ::: {.column width="60%"}
@@ -291,7 +291,7 @@ ggplot(ci_data, aes(x = Months, y = Mean, color = TreatmentGroup, fill = Treatme
 :::
 ::::
 
-## Combining Geoms Strategically
+## Combining Geoms Strategically {.smaller}
 
 :::: {.columns}
 ::: {.column width="60%"}
@@ -334,7 +334,7 @@ ggplot(bp_data, aes(x = AgeGroup, y = SysBP_Change, fill = TreatmentGroup)) +
 :::
 ::::
 
-## Publication-Ready Plot: All Elements
+## Publication-Ready Plot: All Elements {.smaller .scrollable}
 
 ```{r}
 #| echo: true
@@ -541,7 +541,7 @@ ggsave(
 - **dpi**: Resolution (72 = screen, 300 = print quality, 600 = high-res print)
 :::
 
-## Supported File Formats
+## Supported File Formats {.smaller}
 
 :::: {.columns}
 ::: {.column width="50%"}
@@ -680,7 +680,7 @@ prodplot(bp_data, ~ TreatmentGroup + SmokingStatus, mosaic()) +
 :::
 ::::
 
-## When to Use Alternatives {.smaller}
+## When to Use Alternatives {.smaller .scrollable}
 
 | Need | ggplot2 Solution | Better Alternative |
 |------|-----------------|-------------------|
@@ -693,7 +693,7 @@ prodplot(bp_data, ~ TreatmentGroup + SmokingStatus, mosaic()) +
 | Circular plots | Limited (`coord_polar`) | `circlize` |
 | Geographic maps | Basic | `leaflet`, `tmap`, `sf` |
 
-## ggplot2 Extensions Ecosystem {.smaller}
+## ggplot2 Extensions Ecosystem {.smaller .scrollable}
 
 **The good news**: The ggplot2 ecosystem is vast!
 
@@ -748,7 +748,7 @@ Before finalizing visualizations:
 - ☐ **Font**: Use readable fonts (avoid decorative fonts)
 :::
 
-## The ggplot2 Building Process
+## The ggplot2 Building Process {.smaller}
 
 ```{r}
 #| echo: true
@@ -783,7 +783,7 @@ ggplot(data, aes(x = var1, y = var2)) +           # 1. Data + Aesthetics
 10. Know ggplot2's **limitations** and when to use alternatives
 :::
 
-## What We Covered Across All Modules
+## What We Covered Across All Modules {.smaller}
 
 ::: {.incremental}
 **Module 1**: Foundations & Basic Geoms
@@ -825,7 +825,7 @@ ggplot(data, aes(x = var1, y = var2)) +           # 1. Data + Aesthetics
 - RStudio ggplot2 cheat sheet
 - Data visualization with ggplot2 cheat sheet
 
-## Quick Reference: Essential Geoms {.smaller}
+## Quick Reference: Essential Geoms {.smaller .scrollable}
 
 ```{r}
 #| echo: true
@@ -861,7 +861,7 @@ scale_color_brewer()      # ColorBrewer palettes
 scale_color_gradient2()   # Diverging gradient
 ```
 
-## Quick Reference: Theme Elements {.smaller}
+## Quick Reference: Theme Elements {.smaller .scrollable}
 
 ```{r}
 #| echo: true
@@ -882,7 +882,7 @@ legend.background, legend.key
 legend.position = "top" | "bottom" | "left" | "right" | "none" | c(x,y)
 ```
 
-## Final Practice Exercise {.smaller}
+## Final Practice Exercise {.smaller .scrollable}
 
 Create a comprehensive publication-ready plot that includes:
 
@@ -966,7 +966,7 @@ quiz_mcq("gd4", "Why should a figure not rely on colour alone to separate groups
 source("../../assets/quiz-engine.R"); quiz_engine()
 ```
 
-## Thank You! {.center}
+## Thank You! {.center .smaller}
 
 **Congratulations on completing the workshop!**
 
@@ -1003,7 +1003,7 @@ sessionInfo()
 
 ---
 
-## Bonus: Combining Plots with patchwork {.smaller}
+## Bonus: Combining Plots with patchwork {.smaller .scrollable}
 
 ```{r}
 #| echo: true

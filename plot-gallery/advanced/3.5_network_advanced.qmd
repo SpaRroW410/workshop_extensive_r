@@ -75,7 +75,7 @@ ggraph(net, layout = "kk") +
 **Degree** = how many links; **betweenness** = how often a provider sits on the shortest path between two others
 (a broker: if they are absent, referrals take longer routes).
 
-## Network Statistics Table
+## Network Statistics Table {.smaller}
 
 ```{r}
 #| echo: true

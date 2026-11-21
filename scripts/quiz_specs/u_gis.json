@@ -1,0 +1,296 @@
+[
+ {
+  "file": "gis/spatial_data_sf.qmd",
+  "note": "**Practise it:** this page is the reading for **[GIS workshop, Session 1: Spatial data]({up}gis-workshop/s1_spatial_data.qmd)**, which has the lab.",
+  "questions": [
+   [
+    "sf1",
+    "Before measuring distances in metres between blocks, what should you do?",
+    [
+     "Convert the geometry column to plain text",
+     "Transform to a projected CRS such as EPSG:32644",
+     "Use st_join() to add the facilities first",
+     "Keep WGS 84 (EPSG:4326) and multiply degrees by 1000"
+    ],
+    2,
+    "Longitude/latitude are angles; a projected CRS in metres (here UTM zone 44N) gives correct distances and areas."
+   ],
+   [
+    "sf2",
+    "You need the block each facility lies in. Which function joins by location?",
+    [
+     "`left_join()`",
+     "`st_join()`",
+     "`bind_rows()`",
+     "`st_write()`"
+    ],
+    2,
+    "st_join() matches rows by where the geometries are (st_intersects by default); left_join() matches by a key column."
+   ],
+   [
+    "sf3",
+    "What is an sf object?",
+    [
+     "An image file of a map with its legend",
+     "A data frame plus a geometry column",
+     "A list of coordinates without attributes",
+     "A shapefile that R cannot change in place"
+    ],
+    2,
+    "sf stores each feature as a row of a data frame, with its shape in a geometry column, so dplyr verbs work on it."
+   ]
+  ]
+ },
+ {
+  "file": "gis/maps_choropleth.qmd",
+  "note": "**Practise it:** this page is the reading for **[GIS workshop, Session 1: Spatial data]({up}gis-workshop/s1_spatial_data.qmd)**, which has the lab.",
+  "questions": [
+   [
+    "mc1",
+    "Block A has 40 dengue cases and 40,000 people; block B has 20 cases and 5,000 people. What should the map show?",
+    [
+     "Counts: A has twice the burden of B",
+     "Rates: B has the higher burden per person",
+     "Counts, because rates hide the real cases",
+     "Population, since cases follow population"
+    ],
+    2,
+    "A: 100 per 100,000; B: 400 per 100,000. Counts mostly map where people live; rates show risk."
+   ],
+   [
+    "mc2",
+    "Why report the classification method (quantiles, equal intervals, ...)?",
+    [
+     "Quantile breaks are required by journals",
+     "Different breaks can change the map's story",
+     "ggplot2 cannot draw a map without breaks",
+     "Readers need it to compute the p-value of the map"
+    ],
+    2,
+    "The same rates can look clustered or uniform depending on the breaks; state the method and keep breaks fixed across maps you compare."
+   ],
+   [
+    "mc3",
+    "Which colour scheme suits incidence rates from low to high?",
+    [
+     "A diverging scheme centred on the mean",
+     "A qualitative scheme, one hue per block",
+     "A sequential scheme, light to dark",
+     "A rainbow scheme with many bright hues"
+    ],
+    3,
+    "Rates are ordered magnitudes: a sequential scheme. Diverging only around a meaningful midpoint; qualitative for categories."
+   ]
+  ]
+ },
+ {
+  "file": "gis/spatial_weights.qmd",
+  "note": "**Practise it:** this page is the reading for **[GIS workshop, Session 2: Neighbours and weights]({up}gis-workshop/s2_neighbours_weights.qmd)**, which has the lab.",
+  "questions": [
+   [
+    "sw1",
+    "With row-standardised weights (style W), what is the spatial lag of a block?",
+    [
+     "The sum of all values in the district",
+     "The average of its neighbours' values",
+     "The block's value minus the district mean",
+     "The distance to the nearest neighbour"
+    ],
+    2,
+    "Each row of the weights sums to 1, so the lag is the mean of the neighbours' values."
+   ],
+   [
+    "sw2",
+    "Which neighbour definition suits point data such as facilities?",
+    [
+     "Queen contiguity (shared border or corner)",
+     "Rook contiguity (shared border only)",
+     "k-nearest neighbours or a distance band",
+     "Neighbours by alphabetical block name"
+    ],
+    3,
+    "Points have no borders, so contiguity cannot be used; k-nearest neighbours or a distance threshold define who is near."
+   ],
+   [
+    "sw3",
+    "An island block has no neighbours. Why does that matter?",
+    [
+     "It doubles the weight of every other block",
+     "Its lag is undefined; tests may fail or mislead",
+     "Moran's I then becomes exactly zero",
+     "It must be deleted from the data before any test"
+    ],
+    2,
+    "An isolate has no neighbours to average; look for isolates (zero.policy) and decide how to handle them, then report it."
+   ]
+  ]
+ },
+ {
+  "file": "gis/morans_i.qmd",
+  "note": "**Practise it:** this page is the reading for **[GIS workshop, Session 3: Global autocorrelation]({up}gis-workshop/s3_global_autocorrelation.qmd)**, which has the lab.",
+  "questions": [
+   [
+    "mi1",
+    "Moran's I is 0.45 with a permutation p of 0.001. What does it mean?",
+    [
+     "Blocks with high values are placed at random",
+     "Similar values tend to be neighbours",
+     "45% of blocks belong to one single cluster",
+     "The rate rises by 0.45 per neighbour"
+    ],
+    2,
+    "A positive I well above its expectation (about 0) means positive spatial autocorrelation: like values sit near each other."
+   ],
+   [
+    "mi2",
+    "What can a global Moran's I not tell you?",
+    [
+     "Whether there is clustering",
+     "Where the clusters are",
+     "Whether the pattern is random",
+     "The direction of autocorrelation"
+    ],
+    2,
+    "Global I is one number for the whole map; local statistics (LISA, Gi*) locate clusters."
+   ],
+   [
+    "mi3",
+    "What must you always state when reporting Moran's I?",
+    [
+     "The colour scheme of the map",
+     "The weights used, and the p-value method",
+     "The CRS of the original data file",
+     "The name of the R package that drew the map"
+    ],
+    2,
+    "The result depends on the weights; and say whether the p-value is analytical or from permutations."
+   ]
+  ]
+ },
+ {
+  "file": "gis/local_moran_lisa.qmd",
+  "note": "**Practise it:** this page is the reading for **[GIS workshop, Session 4: Local clusters]({up}gis-workshop/s4_local_clusters.qmd)**, which has the lab.",
+  "questions": [
+   [
+    "lm1",
+    "You ran local Moran's I on 79 blocks. About how many look 'significant' at 5% by chance alone?",
+    [
+     "None",
+     "About 4",
+     "About 40",
+     "All 79"
+    ],
+    2,
+    "5% of 79 is about 4; and neighbouring tests are correlated. Adjust (fdr) or treat the map as exploratory."
+   ],
+   [
+    "lm2",
+    "A block is in the High-Low quadrant. What is it?",
+    [
+     "A low value surrounded by high values",
+     "A high value among other high values",
+     "A high value surrounded by low values",
+     "A block with no neighbours at all"
+    ],
+    3,
+    "The first word is the block, the second its neighbours: High-Low is a high outlier among low neighbours."
+   ],
+   [
+    "lm3",
+    "How should a LISA cluster map be treated?",
+    [
+     "As proof that each marked block is a cluster",
+     "As exploratory: where to look, not proof",
+     "As a replacement for the global Moran's I",
+     "As a map of the raw dengue counts"
+    ],
+    2,
+    "Many correlated tests make individual 'significant' blocks unreliable; use LISA to guide further investigation."
+   ]
+  ]
+ },
+ {
+  "file": "gis/other_spatial_tests.qmd",
+  "note": "**Practise it:** this page is the reading for **[GIS workshop, Session 4: Local clusters]({up}gis-workshop/s4_local_clusters.qmd)**, which has the lab.",
+  "questions": [
+   [
+    "ot1",
+    "The outcome is yes/no per block (any case this year). Which test fits?",
+    [
+     "General G",
+     "Geary's C",
+     "Join counts",
+     "Local Moran"
+    ],
+    3,
+    "Join counts compare how often like and unlike categories are neighbours, for binary or categorical maps."
+   ],
+   [
+    "ot2",
+    "Moran's I shows clustering. Which test says whether HIGH or LOW values cluster?",
+    [
+     "Geary's C contiguity ratio",
+     "Getis-Ord General G",
+     "Join counts for binary data",
+     "Global Moran's I again"
+    ],
+    2,
+    "General G is large when high values cluster and small when low values cluster; Moran's I treats both alike."
+   ],
+   [
+    "ot3",
+    "You have case counts and populations and want the single most likely cluster. Which method?",
+    [
+     "Geary's C with queen weights",
+     "Join counts on a yes/no map",
+     "The spatial scan statistic",
+     "A choropleth with quantiles"
+    ],
+    3,
+    "The scan statistic searches windows of many sizes for the area whose observed cases most exceed the expected."
+   ]
+  ]
+ },
+ {
+  "file": "gis/spatial_regression.qmd",
+  "note": "**Practise it:** this page is the reading for **[GIS workshop, Session 5: Spatial regression]({up}gis-workshop/s5_spatial_regression.qmd)**, which has the lab.",
+  "questions": [
+   [
+    "sr1",
+    "After fitting `lm()` on block rates, what should you always test?",
+    [
+     "The outcome's normality with a Q-Q plot",
+     "The residuals, with `lm.morantest()`",
+     "The CRS of the block boundaries",
+     "Whether the map uses quantile breaks"
+    ],
+    2,
+    "Spatially autocorrelated residuals break the independence assumption: standard errors and p-values are then wrong."
+   ],
+   [
+    "sr2",
+    "In a spatial lag model, why is the coefficient not the total effect?",
+    [
+     "The model drops blocks with no neighbours",
+     "Changes spill over to neighbours and feed back",
+     "The coefficient is on the log scale",
+     "Lag coefficients are standardised by the block area"
+    ],
+    2,
+    "A change in one block affects its neighbours' outcomes, which feed back; impacts() gives direct, indirect and total effects."
+   ],
+   [
+    "sr3",
+    "Robust LM tests favour the error model. How do its coefficients read?",
+    [
+     "As impacts split into direct and indirect",
+     "As in OLS, but with corrected standard errors",
+     "As changes in the neighbours' outcome only",
+     "As elasticities, in percent per percent change"
+    ],
+    2,
+    "The error model puts the spatial dependence in the errors, so coefficients keep their OLS meaning with corrected SEs."
+   ]
+  ]
+ }
+]

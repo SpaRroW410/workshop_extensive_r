@@ -30,6 +30,11 @@ reviewer later.
 | N17 | One Moderate lab per unit (6), not per page; the M3 lab serves the 7 visualization pages | D4 asks for one lab per unit; seven plotting labs would repeat each other |
 | N18 | `data_analysis` keeps `prac_modded.xlsx` (F5 said "replace") | You confirmed the xlsx files are simulated and publishable, so replacing them is no longer needed; origin is in `data/README.md` |
 | N19 | `scripts/add_unit_quiz.py` adds the lab link + quiz from a JSON spec | Same layout on every page, and idempotent; specs are kept in `scripts/quiz_specs/` (first drafts; the pages hold the final, lint-balanced wording) |
+| N20 | Advanced gallery 3.4 (time series) uses the monthly dengue series, not the BP trial | The trial has 3 visits: STL, ARIMA, Prophet and change points need many equally spaced points. 3.5 uses the provider network, 3.6 the GIS blocks |
+| N21 | 3.6: isochrones replaced by straight-line distance bands; kriging by IDW | Isochrones need a routing server (network at render time); kriging stays in the GIS track. Both are named on the slide |
+| N22 | 3.7 and practical_application: flexdashboard/Quarto/Shiny templates shown as `markdown` / `r` display blocks, not `eval: false` R chunks | They are documents and apps, not code that can run inside a slide; the plotly and publication-figure examples do run |
+| N23 | `plot_data` deck: every content slide gets `.smaller .scrollable` | 31 of its slides overflow and their headings contain colour spans the fix script cannot match; deck-level `scrollable:` is not honoured by Quarto |
+| N24 | Workshop quiz ids such as `s1q1` repeat across workshops: left as is | Scores are saved per deck, so they do not collide; renaming belongs to U3 (workshops). New base-module ids are unique |
 | N12 | R 4.3.3 (Ubuntu) cannot install `ggstatsplot` 1.1.4 (needs R ≥ 4.5): 0.13.0 from a dated snapshot is used | No newer R is available from the system packages here |
 
 ## Progress
@@ -40,3 +45,6 @@ reviewer later.
 | U0 F1 gallery published + correct | ✅ committed (`852193b`) | links 0 `.qmd` / 0 missing; 56 workshop decks quiz test pass; cloud 42/42 |
 | U1 Basic track | ✅ committed (`2df4d14`) | 33 quiz questions lint clean, keys read; 8 pages pass the quiz test; labs run; overflow OK; game e2e pass |
 | U1 left open | alt text on plots (D6) moves to one pass over all base pages (F7); game "Read first" links (U-GAME) | |
+| U2 Moderate track | ✅ committed (`3c3bce6`, `a1e2cf7`) | 53 questions on 15 pages, lint clean, keys read; 15 pages pass quiz test; 6 labs run; cheat sheet; M1 free (N16); 6 tracks render; links 0/0; cloud 43/43 |
+| U7 Data Viz electives (full) | ✅ committed (`80b7193`) | 23 questions on 7 pages; 4 labs run; advanced gallery 3.2–3.7 run on real data; interactive page written; ggmosaic replaced (U0 item 12) |
+| Slide overflow, M3 + V decks | ✅ committed | 16 decks OK in overflow.js (only .scrollable slides left); 6 tracks render exit 0 |

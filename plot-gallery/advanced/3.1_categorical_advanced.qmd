@@ -18,8 +18,7 @@ format:
 
 # Advanced Categorical Visualization {.center}
 
-## What We'll Learn - Advanced
-
+## What We'll Learn - Advanced {.smaller .scrollable}
 ::: {.columns}
 ::: {.column width="50%"}
 **Complex Categorical Structures:**
@@ -41,7 +40,7 @@ format:
 :::
 :::
 
-## Setup Code
+## Setup Code {.smaller .scrollable}
 
 ```{r}
 #| echo: true
@@ -75,7 +74,7 @@ theme_custom <- function() {
 }
 ```
 
-## Treemap - Code
+## Treemap - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.8em;"}
 **Purpose:** Show hierarchical part-to-whole relationships
@@ -159,7 +158,7 @@ ggplot(treemap_data, aes(area = count, fill = Region,
   theme(legend.position = "right")
 ```
 
-## Interpreting Treemaps
+## Interpreting Treemaps {.smaller}
 
 ::: {.columns style="font-size: 0.9em;"}
 ::: {.column width="50%"}
@@ -196,7 +195,7 @@ ggplot(treemap_data, aes(area = count, fill = Region,
 :::
 :::
 
-## Sunburst Chart - Code
+## Sunburst Chart - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.75em;"}
 **Purpose:** Radial hierarchical visualization
@@ -236,7 +235,7 @@ sunburst(
 **Static Alternative (next slide):**
 :::
 
-## Sunburst Alternative: Radial Bar - Code
+## Sunburst Alternative: Radial Bar - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.8em;"}
 ```{r}
@@ -304,7 +303,7 @@ ggplot(radial_data, aes(x = Region, y = n, fill = SmokingStatus)) +
   )
 ```
 
-## Marimekko Chart - Code
+## Marimekko Chart - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.8em;"}
 **Purpose:** Two-way composition (varying column widths)
@@ -378,7 +377,7 @@ ggplot(marimekko_data, aes(x = Region, y = pct_in_region,
   theme_custom()
 ```
 
-## Interpreting Marimekko Charts
+## Interpreting Marimekko Charts {.smaller .scrollable}
 
 ::: {style="font-size: 0.9em;"}
 **Unique Features:**
@@ -404,7 +403,7 @@ ggplot(marimekko_data, aes(x = Region, y = pct_in_region,
 :::
 :::
 
-## Waffle Chart - Code
+## Waffle Chart - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.8em;"}
 **Purpose:** Unit-based visualization (each square = fixed count)
@@ -495,7 +494,7 @@ ggplot(waffle_expanded, aes(x = x, y = y, fill = TreatmentGroup)) +
 
 ```
 
-## Interpreting Waffle Charts
+## Interpreting Waffle Charts {.smaller .scrollable}
 
 ::: {style="font-size: 0.9em;"}
 **Why Waffle Charts Work:**
@@ -524,7 +523,7 @@ ggplot(waffle_expanded, aes(x = x, y = y, fill = TreatmentGroup)) +
 :::
 :::
 
-## Dendrogram - Code
+## Dendrogram - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.75em;"}
 **Purpose:** Show hierarchical clustering of categories
@@ -600,7 +599,7 @@ ggdendrogram(hc, rotate = FALSE, theme_dendro = FALSE) +
   theme(axis.text.x = element_text(angle = 0))
 ```
 
-## Interpreting Dendrograms
+## Interpreting Dendrograms {.smaller}
 
 ::: {.columns style="font-size: 0.9em;"}
 ::: {.column width="50%"}
@@ -635,7 +634,7 @@ ggdendrogram(hc, rotate = FALSE, theme_dendro = FALSE) +
 :::
 :::
 
-## Chart Selection Guide
+## Chart Selection Guide {.smaller}
 
 ::: {style="font-size: 0.85em;"}
 | Chart Type | Goal | Best For | Complexity |
@@ -649,7 +648,7 @@ ggdendrogram(hc, rotate = FALSE, theme_dendro = FALSE) +
 **Pro Tip:** Advanced charts require more explanation - include clear legends and labels
 :::
 
-## Common Mistakes
+## Common Mistakes {.smaller}
 
 ::: {.incremental style="font-size: 0.9em;"}
 1. **Too many categories** in treemap/sunburst
@@ -671,7 +670,7 @@ ggdendrogram(hc, rotate = FALSE, theme_dendro = FALSE) +
    - Solution: Provide static alternatives or export images
 :::
 
-## Practice Exercise
+## Practice Exercise {.smaller}
 
 **Your Turn:**
 
@@ -684,7 +683,7 @@ ggdendrogram(hc, rotate = FALSE, theme_dendro = FALSE) +
 
 Create an interactive sunburst chart with 3 levels: Region → TreatmentGroup → Adherence_Status
 
-## Summary
+## Summary {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 **What You've Learned:**

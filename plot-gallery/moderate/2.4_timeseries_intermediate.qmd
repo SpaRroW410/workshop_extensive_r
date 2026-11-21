@@ -18,8 +18,7 @@ format:
 
 # Time Series Analysis {.center}
 
-## What We'll Learn - Intermediate
-
+## What We'll Learn - Intermediate {.smaller .scrollable}
 ::: {.columns}
 ::: {.column width="50%"}
 **Beyond Simple Line Charts:**
@@ -42,7 +41,7 @@ format:
 :::
 :::
 
-## Setup Code
+## Setup Code {.smaller .scrollable}
 
 ```{r}
 #| echo: true
@@ -83,7 +82,7 @@ theme_custom <- function() {
 }
 ```
 
-## Smoothed Trend with LOESS - Code
+## Smoothed Trend with LOESS - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.8em;"}
 **Purpose:** Show underlying trend while reducing noise
@@ -160,7 +159,7 @@ ggplot(trend_data, aes(x = Month, y = mean_bp,
   theme_custom()
 ```
 
-## Interpreting Smoothed Trends
+## Interpreting Smoothed Trends {.smaller}
 
 ::: {.columns style="font-size: 0.9em;"}
 ::: {.column width="50%"}
@@ -197,7 +196,7 @@ ggplot(trend_data, aes(x = Month, y = mean_bp,
 :::
 :::
 
-## Area Chart with Confidence Bands - Code
+## Area Chart with Confidence Bands - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.8em;"}
 **Purpose:** Emphasize magnitude and uncertainty over time
@@ -269,7 +268,7 @@ ggplot(trend_ci, aes(x = Month, y = mean_bp,
   theme_custom()
 ```
 
-## Interpreting Area Charts
+## Interpreting Area Charts {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 **Key Observations:**
@@ -293,7 +292,7 @@ ggplot(trend_ci, aes(x = Month, y = mean_bp,
 :::
 :::
 
-## Annotated Time Series - Code
+## Annotated Time Series - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.75em;"}
 **Purpose:** Highlight important events and changes
@@ -378,7 +377,7 @@ ggplot(treatment_a_data, aes(x = Month, y = mean_bp)) +
   theme_custom()
 ```
 
-## Effective Annotations
+## Effective Annotations {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 **When to Annotate:**
@@ -400,7 +399,7 @@ ggplot(treatment_a_data, aes(x = Month, y = mean_bp)) +
 :::
 :::
 
-## Small Multiples - Code
+## Small Multiples - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.8em;"}
 **Purpose:** Compare many series side-by-side
@@ -474,7 +473,7 @@ ggplot(region_trends, aes(x = Month, y = mean_bp)) +
   )
 ```
 
-## Interpreting Small Multiples
+## Interpreting Small Multiples {.smaller .scrollable}
 
 ::: {style="font-size: 0.9em;"}
 **Power of Small Multiples:**
@@ -499,7 +498,7 @@ ggplot(region_trends, aes(x = Month, y = mean_bp)) +
 :::
 :::
 
-## Percent Change Plot - Code
+## Percent Change Plot - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.8em;"}
 **Purpose:** Show relative changes from baseline
@@ -571,7 +570,7 @@ ggplot(pct_change_data, aes(x = Month, y = pct_change,
   theme_custom()
 ```
 
-## Interpreting Percent Change
+## Interpreting Percent Change {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 **Why Use Percent Change?**
@@ -595,7 +594,7 @@ ggplot(pct_change_data, aes(x = Month, y = pct_change,
 :::
 :::
 
-## Slope Graph - Code
+## Slope Graph - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.8em;"}
 **Purpose:** Highlight individual changes between two time points
@@ -672,7 +671,7 @@ ggplot(slope_data, aes(x = Time, y = SysBP, group = PatientID,
         strip.text = element_text(face = "bold"))
 ```
 
-## Interpreting Slope Graphs
+## Interpreting Slope Graphs {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 **What Slope Graphs Reveal:**
@@ -695,7 +694,7 @@ ggplot(slope_data, aes(x = Time, y = SysBP, group = PatientID,
 :::
 :::
 
-## Chart Selection Guide
+## Chart Selection Guide {.smaller}
 
 ::: {style="font-size: 0.8em;"}
 | Chart Type | Goal | Best For | Complexity |
@@ -710,7 +709,7 @@ ggplot(slope_data, aes(x = Time, y = SysBP, group = PatientID,
 **Pro Tip:** Combine techniques - e.g., small multiples with smoothing
 :::
 
-## Common Mistakes
+## Common Mistakes {.smaller}
 
 ::: {.incremental style="font-size: 0.9em;"}
 1. **Over-smoothing** - Losing important details
@@ -732,7 +731,7 @@ ggplot(slope_data, aes(x = Time, y = SysBP, group = PatientID,
    - Solution: Use clear date formats or labels
 :::
 
-## Practice Exercise
+## Practice Exercise {.smaller}
 
 **Your Turn:**
 
@@ -745,7 +744,7 @@ ggplot(slope_data, aes(x = Time, y = SysBP, group = PatientID,
 
 Create an annotated time series highlighting when Treatment A achieved target BP (<120 mmHg).
 
-## Summary
+## Summary {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 **What You've Learned:**

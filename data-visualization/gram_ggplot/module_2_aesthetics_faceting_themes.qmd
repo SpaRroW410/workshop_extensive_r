@@ -31,7 +31,7 @@ format:
 - Built-in themes
 - ggthemes package
 
-## Setup: Load Data
+## Setup: Load Data {.smaller .scrollable}
 
 ```{r}
 #| echo: true
@@ -642,7 +642,7 @@ ggplot(bp_data, aes(x = Age, y = SysBP_0m)) +
 :::
 ::::
 
-## Complex Faceting Example
+## Complex Faceting Example {.smaller}
 
 :::: {.columns}
 ::: {.column width="60%"}
@@ -1017,7 +1017,7 @@ ggplot(bp_summary, aes(x = Months, y = Mean_SysBP, color = TreatmentGroup)) +
 :::
 ::::
 
-## theme_fivethirtyeight()
+## theme_fivethirtyeight() {.smaller}
 
 :::: {.columns}
 ::: {.column width="60%"}
@@ -1141,7 +1141,7 @@ ggplot(bp_data %>% filter(!is.na(BMI_Category)),
 :::
 ::::
 
-## When to Use Which Theme? {.smaller}
+## When to Use Which Theme? {.smaller .scrollable}
 
 | Theme | Best For | Avoid When |
 |-------|----------|------------|

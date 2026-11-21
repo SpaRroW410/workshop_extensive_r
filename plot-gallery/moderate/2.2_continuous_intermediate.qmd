@@ -38,7 +38,7 @@ Moving beyond simple histograms and scatter plots to sophisticated statistical v
 - Statistical layers in ggplot2
 :::
 
-## Setup
+## Setup {.smaller .scrollable}
 
 ```{r}
 #| echo: true
@@ -89,7 +89,7 @@ data_clean %>%
 
 # Violin Plot
 
-## Violin Plot - Code
+## Violin Plot - Code {.smaller .scrollable}
 
 🟡 **Goal:** Show full distribution shape by group
 
@@ -139,7 +139,7 @@ ggplot(data_clean, aes(x = Region, y = BMI, fill = Region)) +
 
 # Interpreting Violin Plots
 
-## How to Read Violin Plots
+## How to Read Violin Plots {.smaller}
 
 **Using the previous plot:**
 
@@ -167,7 +167,7 @@ ggplot(data_clean, aes(x = Region, y = BMI, fill = Region)) +
 
 # Ridgeline Plot
 
-## Ridgeline Plot - Code
+## Ridgeline Plot - Code {.smaller .scrollable}
 
 🟡 **Goal:** Compare many distributions elegantly
 
@@ -220,7 +220,7 @@ ggplot(data_clean, aes(x = Cholesterol, y = ExerciseFreq, fill = ExerciseFreq)) 
 
 # 2D Density Plot
 
-## 2D Density Plot - Code
+## 2D Density Plot - Code {.smaller .scrollable}
 
 ⚫ **Goal:** Show correlation patterns with density contours
 
@@ -271,7 +271,7 @@ ggplot(data_clean, aes(x = Age, y = Cholesterol)) +
 
 # Hexbin Plot
 
-## Hexbin Plot - Code
+## Hexbin Plot - Code {.smaller .scrollable}
 
 ⚫ **Goal:** Handle overplotting in large scatter plots
 
@@ -320,7 +320,7 @@ ggplot(data_clean, aes(x = BMI, y = BloodSugar)) +
 
 # Scatter with Regression
 
-## Scatter with Regression Line - Code
+## Scatter with Regression Line - Code {.smaller .scrollable}
 
 ⚫ **Goal:** Show correlation with statistical trend
 
@@ -377,7 +377,7 @@ ggplot(data_clean, aes(x = Age, y = SysBP_0m)) +
 
 # Interpreting Density & Regression
 
-## Reading Advanced Continuous Plots
+## Reading Advanced Continuous Plots {.smaller}
 
 **Using the regression plot:**
 
@@ -402,7 +402,7 @@ ggplot(data_clean, aes(x = Age, y = SysBP_0m)) +
 
 # Quick Reference
 
-## Continuous Intermediate - Summary
+## Continuous Intermediate - Summary {.smaller}
 
 | Chart Type | Goal | When to Use | Code Lines |
 |------------|------|-------------|-----------|
@@ -445,7 +445,7 @@ ggplot(data_clean, aes(x = Age, y = SysBP_0m)) +
 :::
 :::
 
-## Key Takeaways
+## Key Takeaways {.smaller}
 
 ::: {style="font-size: 0.85em;"}
 ::: {.incremental}
@@ -472,7 +472,7 @@ ggplot(data_clean, aes(x = Age, y = SysBP_0m)) +
 :::
 :::
 
-## Practice Exercise
+## Practice Exercise {.smaller}
 
 **Your Turn:**
 

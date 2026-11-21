@@ -148,7 +148,7 @@ Data transformations and summaries
 **Usually implicit**: Most geoms automatically apply appropriate statistics
 :::
 
-## 5. Coordinates (coord) {.smaller}
+## 5. Coordinates (coord) {.smaller .scrollable}
 
 Defining the plotting space
 
@@ -171,7 +171,7 @@ ggplot(data, aes(x = category, y = value)) +
   coord_flip()
 ```
 
-## 6. Facets {.smaller}
+## 6. Facets {.smaller .scrollable}
 
 Creating subplots for data subsets
 
@@ -443,7 +443,7 @@ bp_time <- bp_data %>%
 
 ---
 
-## geom_line(): Time Series Code
+## geom_line(): Time Series Code {.smaller}
 
 ```{r}
 #| echo: true
@@ -492,7 +492,7 @@ ggplot(bp_summary, aes(x = Months, y = Mean_SysBP, color = TreatmentGroup)) +
   theme_minimal(base_size = 16)
 ```
 
-## geom_col(): Column/Bar Charts
+## geom_col(): Column/Bar Charts {.smaller}
 
 **Minimum Arguments**: `aes(x, y)`
 
@@ -839,7 +839,7 @@ ggplot(bp_data, aes(x = AgeGroup, y = SysBP_0m, color = TreatmentGroup)) +
 - Built-in themes and ggthemes package
 :::
 :::
-## Practice Exercise {.smaller}
+## Practice Exercise {.smaller .scrollable}
 
 Using the BP dataset, create a plot that:
 

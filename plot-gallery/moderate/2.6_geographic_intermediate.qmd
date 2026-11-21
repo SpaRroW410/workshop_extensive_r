@@ -18,8 +18,7 @@ format:
 
 # Geographic Visualization {.center}
 
-## What We'll Learn - Intermediate
-
+## What We'll Learn - Intermediate {.smaller .scrollable}
 ::: {.columns}
 ::: {.column width="50%"}
 **Spatial Data Visualization:**
@@ -41,7 +40,7 @@ format:
 :::
 :::
 
-## Setup Code
+## Setup Code {.smaller .scrollable}
 
 ```{r}
 #| echo: true
@@ -84,7 +83,7 @@ theme_map <- function() {
 }
 ```
 
-## Choropleth Map - Code
+## Choropleth Map - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.75em;"}
 **Purpose:** Show values across geographic regions using color
@@ -184,7 +183,7 @@ ggplot(map_data_full, aes(x = long, y = lat, group = group, fill = mean_bp)) +
   theme_map()
 ```
 
-## Interpreting Choropleth Maps
+## Interpreting Choropleth Maps {.smaller}
 
 ::: {.columns style="font-size: 0.9em;"}
 ::: {.column width="50%"}
@@ -221,7 +220,7 @@ ggplot(map_data_full, aes(x = long, y = lat, group = group, fill = mean_bp)) +
 :::
 :::
 
-## Point/Bubble Map - Code
+## Point/Bubble Map - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.8em;"}
 **Purpose:** Show individual locations with value-sized markers
@@ -319,7 +318,7 @@ ggplot() +
   theme_map()
 ```
 
-## Interpreting Point/Bubble Maps
+## Interpreting Point/Bubble Maps {.smaller .scrollable}
 
 ::: {style="font-size: 0.9em;"}
 **What Point Maps Show:**
@@ -345,7 +344,7 @@ ggplot() +
 :::
 :::
 
-## Heat Map (Density) - Code
+## Heat Map (Density) - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.8em;"}
 **Purpose:** Show density/concentration of observations
@@ -412,7 +411,7 @@ ggplot() +
   theme_map()
 ```
 
-## Interpreting Heat Maps
+## Interpreting Heat Maps {.smaller}
 
 ::: {.columns style="font-size: 0.9em;"}
 ::: {.column width="50%"}
@@ -450,7 +449,7 @@ ggplot() +
 :::
 :::
 
-## Faceted Maps - Code
+## Faceted Maps - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.8em;"}
 **Purpose:** Compare spatial patterns across categories
@@ -517,7 +516,7 @@ ggplot() +
   )
 ```
 
-## Interpreting Faceted Maps
+## Interpreting Faceted Maps {.smaller .scrollable}
 
 ::: {style="font-size: 0.9em;"}
 **Power of Faceted Maps:**
@@ -543,7 +542,7 @@ ggplot() +
 :::
 :::
 
-## Interactive Maps (Conceptual)
+## Interactive Maps (Conceptual) {.smaller .scrollable}
 
 ::: {style="font-size: 0.9em;"}
 **Using Leaflet for Interactive Maps:**
@@ -580,7 +579,7 @@ leaflet(patient_locations) %>%
 **Features:** Zoom, pan, click for details, layer toggle
 :::
 
-## Chart Selection Guide
+## Chart Selection Guide {.smaller}
 
 ::: {style="font-size: 0.85em;"}
 | Chart Type | Goal | Best For | Data Type |
@@ -594,7 +593,7 @@ leaflet(patient_locations) %>%
 **Pro Tip:** Consider your audience - static for reports, interactive for exploration
 :::
 
-## Common Mistakes
+## Common Mistakes {.smaller}
 
 ::: {.incremental style="font-size: 0.9em;"}
 1. **Wrong projection**
@@ -616,7 +615,7 @@ leaflet(patient_locations) %>%
    - Solution: Show scale bar, use consistent scales across facets
 :::
 
-## Geographic Data Sources
+## Geographic Data Sources {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 **Common Data Sources:**
@@ -651,7 +650,7 @@ leaflet(patient_locations) %>%
 
 Create an interactive leaflet map with popups showing patient details (ID, BP, BMI, Treatment).
 
-## Summary
+## Summary {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 **What You've Learned:**

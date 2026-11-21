@@ -22,7 +22,7 @@ format:
 
 # Navigating the Decision Tree {.title-slide}
 
-## Choosing the Right Visualization for Your Data
+## Choosing the Right Visualization for Your Data {.smaller .scrollable}
 
 **A Practical Framework Based on Analytical Goals**
 
@@ -30,7 +30,7 @@ format:
 
 # The 3-Step Framework
 
-## Your Roadmap for Visualization Selection
+## Your Roadmap for Visualization Selection {.smaller .scrollable}
 
 ::: {.incremental}
 1. **Identify Your Data Type**
@@ -47,7 +47,7 @@ format:
 
 # The Seven Analytical Goals
 
-## Color-Coded Framework
+## Color-Coded Framework {.smaller .scrollable}
 
 | Goal | Symbol | Question | Purpose |
 |------|--------|----------|---------|
@@ -63,7 +63,7 @@ format:
 
 # Color Legend: Chart-to-Goal Mapping
 
-## Quick Reference - What Each Color Means
+## Quick Reference - What Each Color Means {.smaller}
 
 - <span style="color: #FDB462;">**●**</span> **Gold/Yellow = Distribution** - Shows data spread, frequency, shape, outliers
 - <span style="color: #80B1D3;">**●**</span> **Blue = Correlation** - Shows relationships, associations between variables
@@ -79,7 +79,7 @@ format:
 
 # Know Your Data
 
-## The 6 Data Type Categories
+## The 6 Data Type Categories {.smaller}
 
 | Data Type | Definition | Examples |
 |-----------|-----------|----------|
@@ -94,7 +94,7 @@ format:
 
 # The Complete Decision Map
 
-## How Variables Combine
+## How Variables Combine {.smaller .scrollable}
 
 ```
 SINGLE VARIABLE
@@ -125,7 +125,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # SINGLE VARIABLE: Categoric Data
 
-## <span style="color: #FDB462;">●</span> Distribution | <span style="color: #A6D854;">●</span> Ranking | <span style="color: #FB8072;">●</span> Part of Whole
+## <span style="color: #FDB462;">●</span> Distribution | <span style="color: #A6D854;">●</span> Ranking | <span style="color: #FB8072;">●</span> Part of Whole {.smaller .scrollable}
 
 ### Chart Options:
 - **Bar Chart** <span style="color: #FDB462;">●</span> (counts/frequencies)
@@ -150,7 +150,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # SINGLE VARIABLE: Ordinal Data
 
-## <span style="color: #FDB462;">●</span> Distribution | <span style="color: #FB8072;">●</span> Part of Whole (Ordered)
+## <span style="color: #FDB462;">●</span> Distribution | <span style="color: #FB8072;">●</span> Part of Whole (Ordered) {.smaller .scrollable}
 
 ### Chart Options:
 - **Ordered Bar Chart** <span style="color: #FDB462;">●</span> (maintain categorical order)
@@ -174,7 +174,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # SINGLE VARIABLE: Numeric Data
 
-## <span style="color: #FDB462;">●</span> Distribution
+## <span style="color: #FDB462;">●</span> Distribution {.smaller .scrollable}
 
 ### Chart Options:
 - **Histogram** <span style="color: #FDB462;">●</span> (shows bin structure, distribution shape)
@@ -202,7 +202,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # SINGLE VARIABLE: Time Series
 
-## <span style="color: #80B1D3;">●</span> Evolution
+## <span style="color: #80B1D3;">●</span> Evolution {.smaller .scrollable}
 
 ### Chart Options:
 - **Line Chart** <span style="color: #80B1D3;">●</span> (standard for continuous time data)
@@ -225,7 +225,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # SINGLE VARIABLE: Spatial/Map Data
 
-## <span style="color: #BEBADA;">●</span> Maps
+## <span style="color: #BEBADA;">●</span> Maps {.smaller .scrollable}
 
 ### Chart Options:
 - **Choropleth Map** <span style="color: #BEBADA;">●</span> (color-coded by region)
@@ -249,7 +249,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # BIVARIATE: Numeric × Numeric
 
-## <span style="color: #80B1D3;">●</span> Correlation | <span style="color: #FDB462;">●</span> Distribution
+## <span style="color: #80B1D3;">●</span> Correlation | <span style="color: #FDB462;">●</span> Distribution {.smaller .scrollable}
 
 ### Chart Options:
 - **Scatter Plot** <span style="color: #80B1D3;">●</span> (relationship between two continuous variables)
@@ -275,7 +275,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # BIVARIATE: Numeric Outcome × Categoric Predictor
 
-## <span style="color: #FDB462;">●</span> Distribution | <span style="color: #80B1D3;">●</span> Correlation (Comparison)
+## <span style="color: #FDB462;">●</span> Distribution | <span style="color: #80B1D3;">●</span> Correlation (Comparison) {.smaller .scrollable}
 
 ### Chart Options:
 - **Boxplot** <span style="color: #FDB462;">●</span> (median, quartiles, outliers by group)
@@ -303,7 +303,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # BIVARIATE: Categoric Outcome × Numeric Predictor
 
-## <span style="color: #80B1D3;">●</span> Correlation (Probability)
+## <span style="color: #80B1D3;">●</span> Correlation (Probability) {.smaller .scrollable}
 
 ### Chart Options:
 - **Logistic Regression Curve** <span style="color: #80B1D3;">●</span> (smooth probability line)
@@ -325,7 +325,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # BIVARIATE: Categoric × Categoric
 
-## <span style="color: #FDB462;">●</span> Distribution | <span style="color: #A6D854;">●</span> Ranking | <span style="color: #FB8072;">●</span> Part of Whole | <span style="color: #80B1D3;">●</span> Correlation
+## <span style="color: #FDB462;">●</span> Distribution | <span style="color: #A6D854;">●</span> Ranking | <span style="color: #FB8072;">●</span> Part of Whole | <span style="color: #80B1D3;">●</span> Correlation {.smaller .scrollable}
 
 ### Chart Options:
 - **Grouped Bar Chart** <span style="color: #FDB462;">●</span> (side-by-side comparison)
@@ -354,7 +354,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # BIVARIATE: Ordinal × Numeric
 
-## <span style="color: #FDB462;">●</span> Distribution (Ordered)
+## <span style="color: #FDB462;">●</span> Distribution (Ordered) {.smaller .scrollable}
 
 ### Chart Options:
 - **Ordered Boxplot** <span style="color: #FDB462;">●</span> (boxplot by ordinal groups, maintaining order)
@@ -375,7 +375,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # BIVARIATE: Time Series × Numeric
 
-## <span style="color: #80B1D3;">●</span> Evolution | <span style="color: #80B1D3;">●</span> Correlation (Trend)
+## <span style="color: #80B1D3;">●</span> Evolution | <span style="color: #80B1D3;">●</span> Correlation (Trend) {.smaller .scrollable}
 
 ### Chart Options:
 - **Line Chart** <span style="color: #80B1D3;">●</span> (single series over time)
@@ -401,7 +401,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # BIVARIATE: Time Series × Categoric
 
-## <span style="color: #80B1D3;">●</span> Evolution (By Group) | <span style="color: #80B1D3;">●</span> Correlation (Group Comparison)
+## <span style="color: #80B1D3;">●</span> Evolution (By Group) | <span style="color: #80B1D3;">●</span> Correlation (Group Comparison) {.smaller .scrollable}
 
 ### Chart Options:
 - **Grouped Line Chart** <span style="color: #80B1D3;">●</span> (separate lines for each group)
@@ -427,7 +427,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # BIVARIATE: Ordinal × Categoric
 
-## <span style="color: #FDB462;">●</span> Distribution (Ordered) | <span style="color: #FB8072;">●</span> Part of Whole (Ordered)
+## <span style="color: #FDB462;">●</span> Distribution (Ordered) | <span style="color: #FB8072;">●</span> Part of Whole (Ordered) {.smaller .scrollable}
 
 ### Chart Options:
 - **Ordered Grouped Bar Chart** <span style="color: #FDB462;">●</span> (bars by category, groups ordered)
@@ -448,7 +448,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # MULTIVARIATE: Numeric × Numeric × Numeric
 
-## 3+ Continuous Variables | <span style="color: #80B1D3;">●</span> Correlation
+## 3+ Continuous Variables | <span style="color: #80B1D3;">●</span> Correlation {.smaller .scrollable}
 
 ### Chart Options:
 - **Bubble Plot** <span style="color: #80B1D3;">●</span> (x, y, size = 3rd; color/opacity = 4th)
@@ -469,7 +469,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # MULTIVARIATE: Numeric Outcome × Multiple Numeric Predictors
 
-## <span style="color: #80B1D3;">●</span> Correlation Matrix
+## <span style="color: #80B1D3;">●</span> Correlation Matrix {.smaller .scrollable}
 
 ### Chart Options:
 - **Correlation Matrix** <span style="color: #80B1D3;">●</span> (numeric table of coefficients)
@@ -490,7 +490,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # MULTIVARIATE: Numeric Outcome × Multiple Categoric Predictors
 
-## <span style="color: #FDB462;">●</span> Distribution (Faceted) | <span style="color: #80B1D3;">●</span> Correlation (Interaction)
+## <span style="color: #FDB462;">●</span> Distribution (Faceted) | <span style="color: #80B1D3;">●</span> Correlation (Interaction) {.smaller .scrollable}
 
 ### Chart Options:
 - **Faceted Boxplot/Violin** <span style="color: #FDB462;">●</span> (boxplot per group, subplots for 3rd variable)
@@ -511,7 +511,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # MULTIVARIATE: Time Series × Multiple Variables
 
-## <span style="color: #80B1D3;">●</span> Evolution (Advanced) | <span style="color: #FDB462;">●</span> Distribution (Temporal)
+## <span style="color: #80B1D3;">●</span> Evolution (Advanced) | <span style="color: #FDB462;">●</span> Distribution (Temporal) {.smaller .scrollable}
 
 ### Chart Options:
 - **Multi-line Chart with Faceting** <span style="color: #80B1D3;">●</span> (separate subplots per group)
@@ -533,7 +533,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # MULTIVARIATE: Complex Categorical (3+ Categoric)
 
-## <span style="color: #FCCDE5;">●</span> Flow | <span style="color: #FB8072;">●</span> Part of Whole (Hierarchical)
+## <span style="color: #FCCDE5;">●</span> Flow | <span style="color: #FB8072;">●</span> Part of Whole (Hierarchical) {.smaller .scrollable}
 
 ### Chart Options:
 - **Sankey Diagram** <span style="color: #FCCDE5;">●</span> (flow from one category to another)
@@ -555,7 +555,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # MULTIVARIATE: Relational/Network Data
 
-## <span style="color: #FCCDE5;">●</span> Flow | <span style="color: #80B1D3;">●</span> Correlation (Connections)
+## <span style="color: #FCCDE5;">●</span> Flow | <span style="color: #80B1D3;">●</span> Correlation (Connections) {.smaller .scrollable}
 
 ### Chart Options:
 - **Sankey Diagram** <span style="color: #FCCDE5;">●</span> (directional flows between nodes)
@@ -577,7 +577,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # MULTIVARIATE: Hierarchical Data (4+ Levels)
 
-## <span style="color: #FB8072;">●</span> Part of Whole | <span style="color: #FCCDE5;">●</span> Flow
+## <span style="color: #FB8072;">●</span> Part of Whole | <span style="color: #FCCDE5;">●</span> Flow {.smaller .scrollable}
 
 ### Chart Options:
 - **Treemap** <span style="color: #FB8072;">●</span> (nested rectangles, size ∝ value)
@@ -598,7 +598,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # SPECIALIZED: Waterfall & Funnel Charts
 
-## <span style="color: #FCCDE5;">●</span> Flow | <span style="color: #FB8072;">●</span> Part of Whole
+## <span style="color: #FCCDE5;">●</span> Flow | <span style="color: #FB8072;">●</span> Part of Whole {.smaller .scrollable}
 
 ### Waterfall Chart
 - Shows cumulative effect of sequential positive/negative values
@@ -620,7 +620,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # SPECIALIZED: Advanced Temporal Visualizations
 
-## <span style="color: #80B1D3;">●</span> Evolution (Advanced) | <span style="color: #FDB462;">●</span> Distribution (Temporal)
+## <span style="color: #80B1D3;">●</span> Evolution (Advanced) | <span style="color: #FDB462;">●</span> Distribution (Temporal) {.smaller .scrollable}
 
 ### Streamgraph
 - Stacked area with flowing, organic theme
@@ -642,7 +642,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # SPECIALIZED: Text & Network Specialized
 
-## <span style="color: #FDB462;">●</span> Distribution (Text) | <span style="color: #80B1D3;">●</span> Correlation (Networks)
+## <span style="color: #FDB462;">●</span> Distribution (Text) | <span style="color: #80B1D3;">●</span> Correlation (Networks) {.smaller .scrollable}
 
 ### Word Cloud
 - Text frequency visualization, size = occurrence
@@ -661,7 +661,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # CASE STUDY 1: Real-World Application
 
-## Scenario: "Quarterly revenue by product category over 2 years"
+## Scenario: "Quarterly revenue by product category over 2 years" {.smaller .scrollable}
 
 ### Step 1: Identify Data Type
 - **Time component:** Quarterly (Time Series)
@@ -685,7 +685,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # CASE STUDY 2: Healthcare Example
 
-## Scenario: "HbA1c levels across three treatment arms over 12 months"
+## Scenario: "HbA1c levels across three treatment arms over 12 months" {.smaller .scrollable}
 
 ### Step 1: Identify Data Type
 - **Time component:** Baseline, 6mo, 12mo (Time Series - discrete)
@@ -710,7 +710,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # CASE STUDY 3: Multi-Dimensional Complexity
 
-## Scenario: "Top 10 competitors' market share over 5 years by region"
+## Scenario: "Top 10 competitors' market share over 5 years by region" {.smaller .scrollable}
 
 ### Step 1: Identify Data Type
 - **Time:** Years (Time Series)
@@ -741,7 +741,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # Common Pitfalls to Avoid
 
-## ❌ What NOT to Do
+## ❌ What NOT to Do {.smaller .scrollable}
 
 ### ❌ Pie charts with 10+ categories
 - **Why?** Human perception fails with small angles
@@ -775,7 +775,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # Quick Decision Matrix (Cheat Sheet)
 
-## Analytical Goal × Data Type Reference
+## Analytical Goal × Data Type Reference {.smaller .scrollable}
 
 | Goal \ Data Type | Numeric | Categoric | Ordinal | Time Series | Relational | Map |
 |------------------|---------|-----------|---------|-------------|-----------|-----|
@@ -791,7 +791,7 @@ MULTIVARIATE (3+ VARIABLES)
 
 # Your Turn: Practice Exercises
 
-## Apply What You've Learned
+## Apply What You've Learned {.smaller .scrollable}
 
 ### Scenario 1: Employee Satisfaction
 **Question:** Show employee satisfaction scores (Likert 1-5) across hospital departments, comparing before/after intervention
@@ -861,7 +861,7 @@ Charts: Grouped bar / Faceted bar / Mosaic / Heatmap
 
 # Tools & Resources
 
-## Recommended Frameworks & References
+## Recommended Frameworks & References {.smaller .scrollable}
 
 ### Visualization Tools
 - **R:** ggplot2, plotly, ggvis
@@ -885,7 +885,7 @@ Charts: Grouped bar / Faceted bar / Mosaic / Heatmap
 
 # Key Takeaways
 
-## Core Principles for Effective Visualization
+## Core Principles for Effective Visualization {.smaller .scrollable}
 
 ✅ **Always start with your analytical goal**
   - What question are you answering? (distribute, compare, rank, relate, etc.)
@@ -913,7 +913,7 @@ Charts: Grouped bar / Faceted bar / Mosaic / Heatmap
 
 # Q&A / Thank You
 
-## Resources & Next Steps
+## Resources & Next Steps {.smaller .scrollable}
 
 ### Key Links
 - **data-to-viz.com** - Decision tree flowchart
@@ -992,7 +992,7 @@ source("../assets/quiz-engine.R"); quiz_engine()
 
 # Thank You!
 
-## Navigating the Decision Tree
+## Navigating the Decision Tree {.smaller .scrollable}
 
 **Remember:** Good visualization is about clarity, not complexity.
 

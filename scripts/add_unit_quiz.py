@@ -51,6 +51,8 @@ def block(spec, deck, up):
         out = [h, "",
                f"Download the lab **[{title}]({up}{lab})** and the data ({data}). "
                "Fill in the blanks (`___`); the comments say what each step should do.", ""]
+    if spec.get("note"):  # optional: e.g. the workshop session that teaches this page
+        out += [spec["note"].replace("{up}", up), ""]
     setup = ["```{r}", "#| include: false", f'source("{up}assets/quiz.R")', "```", ""]
     qs = spec["questions"]
     asis = ["```{r}", "#| echo: false", "#| output: asis"]

@@ -32,7 +32,7 @@ format:
 - element_text(), element_line(), element_rect(), element_blank()
 - Legend management
 
-## Setup
+## Setup {.smaller .scrollable}
 
 ```{r}
 #| echo: true
@@ -198,7 +198,7 @@ ggplot(bp_data, aes(x = Age, y = SysBP_0m, color = Region)) +
 :::
 ::::
 
-## paletteer Package - Universal Access
+## paletteer Package - Universal Access {.smaller}
 
 ::: {.incremental}
 - **Access to 2500+ color palettes** from various R packages
@@ -579,7 +579,7 @@ ggplot(region_summary, aes(x = Region, y = Mean_SysBP, fill = Region)) +
 
 # Section 3: Custom Themes with theme() {background-color="#2C5F8D"}
 
-## theme() Function Anatomy {.smaller}
+## theme() Function Anatomy {.smaller .scrollable}
 
 The `theme()` function customizes non-data plot elements:
 
@@ -601,7 +601,7 @@ theme(
 )
 ```
 
-## element_text(): Text Customization
+## element_text(): Text Customization {.smaller}
 
 :::: {.columns}
 ::: {.column width="60%"}
@@ -648,7 +648,7 @@ ggplot(bp_data, aes(x = Region, y = SysBP_0m, fill = Region)) +
 :::
 ::::
 
-## Using Serif Fonts
+## Using Serif Fonts {.smaller}
 
 :::: {.columns}
 ::: {.column width="60%"}
@@ -696,7 +696,7 @@ ggplot(bp_data, aes(x = Age, y = SysBP_0m)) +
 :::
 ::::
 
-## element_line(): Line Customization
+## element_line(): Line Customization {.smaller}
 
 :::: {.columns}
 ::: {.column width="60%"}
@@ -740,7 +740,7 @@ ggplot(bp_data, aes(x = BMI, y = Cholesterol)) +
 :::
 ::::
 
-## element_rect(): Background Customization
+## element_rect(): Background Customization {.smaller .scrollable}
 
 :::: {.columns}
 ::: {.column width="60%"}
@@ -786,7 +786,7 @@ ggplot(bp_data, aes(x = Region, y = SysBP_0m)) +
 :::
 ::::
 
-## element_blank(): Removing Elements
+## element_blank(): Removing Elements {.smaller}
 
 :::: {.columns}
 ::: {.column width="60%"}
@@ -833,7 +833,7 @@ ggplot(bp_data, aes(x = Age, y = SysBP_0m)) +
 :::
 ::::
 
-## Creating an Organizational Theme
+## Creating an Organizational Theme {.smaller .scrollable}
 
 ```{r}
 #| echo: true
@@ -1045,7 +1045,7 @@ ggplot(bp_data, aes(x = Age, y = SysBP_0m, color = TreatmentGroup)) +
 :::
 ::::
 
-## Global Theme Settings
+## Global Theme Settings {.smaller}
 
 ```{r}
 #| echo: true
@@ -1069,7 +1069,7 @@ theme_update(
 **Benefit**: Ensures consistency across all plots in a document/report
 :::
 
-## Module 3 Summary {.smaller}
+## Module 3 Summary {.smaller .scrollable}
 
 **What we covered**:
 

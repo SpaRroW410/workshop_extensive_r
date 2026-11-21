@@ -37,7 +37,7 @@ Moving beyond simple bar and pie charts to professional-grade categorical visual
 - Enhanced `ggplot2` techniques
 :::
 
-## Setup
+## Setup {.smaller .scrollable}
 
 ```{r}
 #| echo: true
@@ -83,7 +83,7 @@ data_clean %>%
 
 # Lollipop Chart
 
-## Lollipop Chart - Code
+## Lollipop Chart - Code {.smaller .scrollable}
 
 🟢 **Goal:** Ranking (cleaner alternative to bars)
 
@@ -140,7 +140,7 @@ ggplot(region_counts, aes(x = n, y = fct_reorder(Region, n))) +
 
 # Interpreting Lollipop Charts
 
-## Reading Lollipop and Dot Plots
+## Reading Lollipop and Dot Plots {.smaller}
 
 **Using the previous plot:**
 
@@ -173,7 +173,7 @@ ggplot(region_counts, aes(x = n, y = fct_reorder(Region, n))) +
 
 # Mosaic Plot - Three Variables
 
-## Complex Mosaic - Code
+## Complex Mosaic - Code {.smaller .scrollable}
 
 🔴 **Goal:** Multi-way categorical analysis
 
@@ -245,7 +245,7 @@ ggplot(tiles) +
 
 # Radial Bar Chart
 
-## Radial Bar Chart - Code
+## Radial Bar Chart - Code {.smaller .scrollable}
 
 🟢 **Goal:** Ranking with visual appeal (use sparingly!)
 
@@ -308,7 +308,7 @@ ggplot(exercise_counts, aes(x = ExerciseFreq, y = n, fill = ExerciseFreq)) +
 
 # Quick Reference
 
-## Categorical Intermediate - Summary
+## Categorical Intermediate - Summary {.smaller}
 
 | Chart Type | Goal | When to Use | Code Lines |
 |------------|------|-------------|-----------|
@@ -318,7 +318,7 @@ ggplot(exercise_counts, aes(x = ExerciseFreq, y = n, fill = ExerciseFreq)) +
 | **Mosaic (3-way)** | 🔴 Multi-way | Complex categorical relationships | 15-20 |
 | **Radial Bar** | 🟢 Ranking | Presentations, cyclical data | 12-18 |
 
-## Key Takeaways
+## Key Takeaways {.smaller}
 
 ::: {style="font-size: 0.85em;"}
 ::: {.incremental}

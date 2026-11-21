@@ -18,8 +18,7 @@ format:
 
 # Category vs. Continuous {.center}
 
-## What We'll Learn - Intermediate
-
+## What We'll Learn - Intermediate {.smaller .scrollable}
 ::: {.columns}
 ::: {.column width="50%"}
 **Beyond Basic Box Plots:**
@@ -41,7 +40,7 @@ format:
 :::
 :::
 
-## Setup Code
+## Setup Code {.smaller .scrollable}
 
 ```{r}
 #| echo: true
@@ -70,7 +69,7 @@ theme_custom <- function() {
 }
 ```
 
-## Violin Plot - Code
+## Violin Plot - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.85em;"}
 **Purpose:** Show full distribution shape within each category
@@ -124,7 +123,7 @@ ggplot(health_data, aes(x = Gender, y = BMI, fill = Gender)) +
   theme(legend.position = "none")
 ```
 
-## Interpreting Violin Plots
+## Interpreting Violin Plots {.smaller}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -154,7 +153,7 @@ ggplot(health_data, aes(x = Gender, y = BMI, fill = Gender)) +
 :::
 :::
 
-## Ridgeline Plot - Code
+## Ridgeline Plot - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.85em;"}
 **Purpose:** Compare distributions across many categories
@@ -208,7 +207,7 @@ health_data %>%
   theme(legend.position = "none")
 ```
 
-## Interpreting Ridgeline Plots
+## Interpreting Ridgeline Plots {.smaller}
 
 **Key Observations:**
 
@@ -229,7 +228,7 @@ health_data %>%
 
 **When to use:** Comparing 3+ distributions, especially when order matters
 
-## Bee Swarm Plot - Code
+## Bee Swarm Plot - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.8em;"}
 **Purpose:** Show every individual data point without overlap
@@ -298,7 +297,7 @@ health_data %>%
   theme(legend.position = "none")
 ```
 
-## Interpreting Bee Swarm Plots
+## Interpreting Bee Swarm Plots {.smaller}
 
 ::: {.columns style="font-size: 0.9em;"}
 ::: {.column width="50%"}
@@ -335,7 +334,7 @@ health_data %>%
 :::
 :::
 
-## Raincloud Plot - Code
+## Raincloud Plot - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.75em;"}
 **Purpose:** Comprehensive view - combines violin + points + box
@@ -409,7 +408,7 @@ health_data %>%
   theme(legend.position = "none")
 ```
 
-## Interpreting Raincloud Plots
+## Interpreting Raincloud Plots {.smaller}
 
 ::: {style="font-size: 0.85em;"}
 **Three Components:**
@@ -432,7 +431,7 @@ health_data %>%
 **Advantage:** Most informative single plot for comparing distributions
 :::
 
-## Enhanced Grouped Bar Chart - Code
+## Enhanced Grouped Bar Chart - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.8em;"}
 **Purpose:** Compare means across two categorical variables
@@ -512,7 +511,7 @@ ggplot(summary_data, aes(x = ExerciseFreq, y = mean_bmi, fill = Gender)) +
   theme_custom()
 ```
 
-## Interpreting Enhanced Grouped Bars
+## Interpreting Enhanced Grouped Bars {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 **Key Observations:**
@@ -536,7 +535,7 @@ ggplot(summary_data, aes(x = ExerciseFreq, y = mean_bmi, fill = Gender)) +
 :::
 :::
 
-## Faceted Box Plots - Code
+## Faceted Box Plots - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.85em;"}
 **Purpose:** Compare distributions across multiple dimensions
@@ -592,7 +591,7 @@ health_data %>%
         strip.text = element_text(face = "bold", size = 11))
 ```
 
-## Interpreting Faceted Box Plots
+## Interpreting Faceted Box Plots {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 **Regional Patterns:**
@@ -617,7 +616,7 @@ health_data %>%
 **When to use facets:** When you have 3+ categorical variables to compare
 :::
 
-## Chart Selection Guide
+## Chart Selection Guide {.smaller .scrollable}
 
 ::: {style="font-size: 0.85em;"}
 | Chart Type | Goal | Best When | Sample Size |
@@ -632,7 +631,7 @@ health_data %>%
 **Pro Tip:** Start with violin or raincloud for exploration, then choose based on audience needs
 :::
 
-## Common Mistakes to Avoid
+## Common Mistakes to Avoid {.smaller}
 
 ::: {.incremental style="font-size: 0.9em;"}
 1. **Too many groups** in one plot
@@ -681,7 +680,7 @@ health_data %>%
 4. **Investigate patterns** - Is missingness related to outcome?
 :::
 
-## Practice Exercise
+## Practice Exercise {.smaller}
 
 **Your Turn:**
 
@@ -694,7 +693,7 @@ health_data %>%
 
 Create a faceted violin plot showing `BMI` by `Gender` across all 4 `Regions`, ordered by median BMI.
 
-## Summary
+## Summary {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 **What You've Learned:**

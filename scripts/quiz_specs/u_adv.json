@@ -1,0 +1,22 @@
+[
+{"file":"ggstatsplot/ggstatsplot_advanced.qmd","questions":[
+ ["ga1","BF₁₀ for baseline SBP between the randomised arms is 0.19. What does that mean?",
+  ["Strong evidence that the arms differ at baseline","Moderate evidence for no baseline difference","The test failed because the arms are balanced","The p-value for the difference is 0.19"],2,
+  "BF₁₀ = 0.19 means BF₀₁ ≈ 5.3: the data are about 5 times more likely under 'no difference', moderate evidence for the null."],
+ ["ga2","What do the `grouped_*` functions do?",
+  ["Merge several datasets before plotting them","Repeat the analysis within each level of a variable","Pool all groups into one overall comparison","Fit one mixed model with a random effect for each group"],2,
+  "grouped_ggbetweenstats() and friends run the same plot and test separately in each level of grouping.var and combine the panels."],
+ ["ga3","Your variables have outliers. Which `ggcorrmat()` type suits them?",
+  ["`type = \"parametric\"`","`type = \"robust\"`","`type = \"bayes\"`","`type = \"pearson\"`"],2,
+  "The robust option (percentage bend correlation) limits the influence of outliers."]]},
+{"file":"quarto_repro_w/quarto_advanced.qmd","questions":[
+ ["qa1","Which citation syntax gives (Patil, 2021) in the text?",
+  ["`@patil2021`","`[@patil2021]`","`[-@patil2021]`","`{patil2021}`"],2,
+  "Square brackets put the citation in parentheses; a bare @key gives Patil (2021); -@ hides the author."],
+ ["qa2","What does `shinylive` let you do in a Quarto page?",
+  ["Host a Shiny app on shinyapps.io for free","Run a Shiny app in the browser, with no server","Convert a Shiny app into a static PNG image","Connect the page to a database server automatically"],2,
+  "shinylive compiles the app to WebAssembly, so it runs in the reader's browser from a static page."],
+ ["qa3","Which YAML field sets the reference style, e.g. Vancouver?",
+  ["`bibliography:`","`cite-method:`","`csl:`","`keywords:`"],3,
+  "csl: points to a Citation Style Language file; bibliography: points to the .bib file with the references."]]}
+]

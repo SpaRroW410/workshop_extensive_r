@@ -18,8 +18,7 @@ format:
 
 # Relational & Flow Data {.center}
 
-## What We'll Learn - Intermediate
-
+## What We'll Learn - Intermediate {.smaller .scrollable}
 ::: {.columns}
 ::: {.column width="50%"}
 **Visualizing Relationships:**
@@ -41,7 +40,7 @@ format:
 :::
 :::
 
-## Setup Code
+## Setup Code {.smaller .scrollable}
 
 ```{r}
 #| echo: true
@@ -73,7 +72,7 @@ theme_custom <- function() {
 }
 ```
 
-## Network Diagram Basics - Code
+## Network Diagram Basics - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.8em;"}
 **Purpose:** Show relationships between entities (nodes)
@@ -154,7 +153,7 @@ ggraph(network_graph, layout = "fr") +
   theme_custom()
 ```
 
-## Interpreting Network Diagrams
+## Interpreting Network Diagrams {.smaller}
 
 ::: {.columns style="font-size: 0.9em;"}
 ::: {.column width="50%"}
@@ -191,7 +190,7 @@ ggraph(network_graph, layout = "fr") +
 :::
 :::
 
-## Sankey Diagram - Code
+## Sankey Diagram - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.75em;"}
 **Purpose:** Show flow quantities between stages
@@ -241,7 +240,7 @@ sankeyNetwork(
 **Note:** This creates an interactive HTML widget
 :::
 
-## Sankey Diagram - Interpretation
+## Sankey Diagram - Interpretation {.smaller .scrollable}
 
 ::: {style="font-size: 0.9em;"}
 **Reading Sankey Diagrams:**
@@ -267,7 +266,7 @@ sankeyNetwork(
 :::
 :::
 
-## Alluvial Plot - Code
+## Alluvial Plot - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.8em;"}
 **Purpose:** Show changes in categorical composition over time
@@ -354,7 +353,7 @@ ggplot(alluvial_data,
   )
 ```
 
-## Interpreting Alluvial Plots
+## Interpreting Alluvial Plots {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 **Key Features:**
@@ -437,7 +436,7 @@ circos.trackPlotRegion(
 ```
 :::
 
-## Chord Diagram - Interpretation
+## Chord Diagram - Interpretation {.smaller .scrollable}
 
 ::: {style="font-size: 0.9em;"}
 **Reading Chord Diagrams:**
@@ -464,7 +463,7 @@ circos.trackPlotRegion(
 **When to use:** Many-to-many relationships, limited space
 :::
 
-## Correlation Network - Code
+## Correlation Network - Code {.smaller .scrollable}
 
 ::: {style="font-size: 0.8em;"}
 **Purpose:** Visualize correlation patterns as network
@@ -547,7 +546,7 @@ ggraph(cor_graph, layout = "fr") +
   theme_custom()
 ```
 
-## Interpreting Correlation Networks
+## Interpreting Correlation Networks {.smaller}
 
 ::: {.columns style="font-size: 0.9em;"}
 ::: {.column width="50%"}
@@ -584,7 +583,7 @@ ggraph(cor_graph, layout = "fr") +
 :::
 :::
 
-## Chart Selection Guide
+## Chart Selection Guide {.smaller}
 
 ::: {style="font-size: 0.85em;"}
 | Chart Type | Goal | Best For | Complexity |
@@ -598,7 +597,7 @@ ggraph(cor_graph, layout = "fr") +
 **Pro Tip:** Choose based on data structure and story you want to tell
 :::
 
-## Common Mistakes
+## Common Mistakes {.smaller}
 
 ::: {.incremental style="font-size: 0.9em;"}
 1. **Too many nodes/edges**
@@ -620,7 +619,7 @@ ggraph(cor_graph, layout = "fr") +
    - Solution: Vary width, transparency, or both
 :::
 
-## Interactive Networks
+## Interactive Networks {.smaller .scrollable}
 
 ::: {style="font-size: 0.9em;"}
 **Benefits of Interactive Plots:**
@@ -654,7 +653,7 @@ visNetwork(nodes_df, edges_df) %>%
 **Features:** Hover tooltips, zoom, drag nodes, highlight neighbors
 :::
 
-## Practice Exercise
+## Practice Exercise {.smaller}
 
 **Your Turn:**
 
@@ -666,7 +665,7 @@ visNetwork(nodes_df, edges_df) %>%
 
 Create a chord diagram showing referral patterns between different provider specialties (if you have specialty data).
 
-## Summary
+## Summary {.smaller}
 
 ::: {style="font-size: 0.9em;"}
 **What You've Learned:**

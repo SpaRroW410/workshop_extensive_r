@@ -61,7 +61,7 @@ ggsave(file.path(tempdir(), "figure1.tiff"), p, width = 7, height = 5, dpi = 300
 - Regional breakdown
 - Action items highlighted
 
-## Executive Dashboard Structure
+## Executive Dashboard Structure {.smaller .scrollable}
 
 ```markdown
 ---
@@ -106,7 +106,7 @@ gauge(87, min = 0, max = 100, symbol = "%",
 - Flag data quality issues
 - Generate hypotheses
 
-## EDA Report Template
+## EDA Report Template {.smaller .scrollable}
 
 ```markdown
 ---
@@ -151,7 +151,7 @@ output:
 - Display trends
 - Export reports
 
-## Clinician Tool - Shiny
+## Clinician Tool - Shiny {.smaller .scrollable}
 
 ```r
 ui <- fluidPage(
@@ -195,7 +195,7 @@ server <- function(input, output) {
 - Consistent formatting
 - Email distribution
 
-## Parameterized Reports {.smaller}
+## Parameterized Reports {.smaller .scrollable}
 
 The template, `report.qmd`:
 
@@ -223,7 +223,7 @@ for (site in unique(health_data$Site)) {
 }
 ```
 
-## Workflow Best Practices
+## Workflow Best Practices {.smaller}
 
 **Project Organization:**
 
@@ -326,7 +326,7 @@ quiz_mcq("pr3", "Clinicians must filter patients and change the view themselves.
 source("../assets/quiz-engine.R"); quiz_engine()
 ```
 
-## Congratulations! 🎉
+## Congratulations! 🎉 {.smaller}
 
 **You've completed all levels:**
 
