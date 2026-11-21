@@ -38,6 +38,7 @@ lm.morantest(ols, lw, zero.policy = TRUE)
 A significant, positive Moran's I of the residuals means the model **leaves spatial structure unexplained**: the independence assumption fails, and standard errors are probably too small.
 
 ```{r}
+#| fig-alt: "Map, coloured by res ols, titled 'OLS residuals: neighbouring blocks share the same sign'."
 blocks$res_ols <- residuals(ols)
 ggplot(blocks) + geom_sf(aes(fill = res_ols)) +
   scale_fill_gradient2(low = "#2166ac", mid = "white", high = "#b2182b", name = "Residual") + labs(title = "OLS residuals: neighbouring blocks share the same sign")

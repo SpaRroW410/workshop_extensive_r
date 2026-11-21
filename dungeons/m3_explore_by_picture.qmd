@@ -36,11 +36,13 @@ Read first: [Best Practices](../data-visualization/best_practices.qmd) and [Matc
 ```{r}
 #| fig-width: 9
 #| fig-height: 3.6
+#| fig-alt: "Histogram of sbp, one panel per sex."
 ggplot(ncd, aes(sbp)) + geom_histogram(bins = 30, fill = "grey70", colour = "white") + facet_wrap(~ sex) + labs(x = "Systolic BP (mmHg)")
 ```
 
 ```{r}
 #| fig-height: 3.6
+#| fig-alt: "Scatter plot of sbp against age, with a fitted trend line."
 ggplot(ncd, aes(age, sbp)) + geom_point(alpha = 0.35) + geom_smooth(colour = "red") + labs(x = "Age (years)", y = "SBP (mmHg)")
 ncd |> group_by(residence) |> summarise(pct_bmi_missing = round(100 * mean(is.na(bmi)), 1))
 ```

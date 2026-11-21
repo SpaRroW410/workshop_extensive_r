@@ -379,6 +379,7 @@ ggplot(bp_data, aes(x = Age, y = SysBP_0m)) +
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Scatter plot of SysBP 0m against Age, titled 'Age vs Baseline Systolic Blood Pressure'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m)) +
   geom_point(size = 3, alpha = 0.6) +
@@ -413,6 +414,7 @@ ggplot(bp_data, aes(x = Age, y = SysBP_0m,
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Scatter plot of SysBP 0m against Age, coloured by TreatmentGroup, titled 'Age vs Baseline Systolic BP by Treatment Group'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m, color = TreatmentGroup)) +
   geom_point(size = 3, alpha = 0.6) +
@@ -472,6 +474,7 @@ ggplot(bp_summary, aes(x = Months, y = Mean_SysBP,
 #| message: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Line chart of Mean SysBP against Months, coloured by TreatmentGroup, titled 'Mean Systolic BP Over Time by Treatment Group'."
 
 bp_time <- bp_data %>%
   select(PatientID, TreatmentGroup, SysBP_0m, SysBP_3m, SysBP_6m) %>%
@@ -523,6 +526,7 @@ ggplot(bp_change_summary, aes(x = TreatmentGroup, y = Mean_Change,
 #| message: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Bar chart of Mean Change against TreatmentGroup, titled 'Mean Systolic BP Change by Treatment Group'."
 
 bp_change_summary <- bp_data %>%
   group_by(TreatmentGroup) %>%
@@ -568,6 +572,7 @@ ggplot(bp_data, aes(x = SmokingStatus, fill = SmokingStatus)) +
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Bar chart of SmokingStatus, titled 'Distribution of Smoking Status'."
 
 ggplot(bp_data, aes(x = SmokingStatus, fill = SmokingStatus)) +
   geom_bar() +
@@ -612,6 +617,7 @@ k = 1+\log _2(n)
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Histogram of BMI, titled 'Distribution of Body Mass Index (BMI)'."
 
 ggplot(bp_data, aes(x = BMI)) +
   geom_histogram(bins = 30, fill = "steelblue", color = "white") +
@@ -650,6 +656,7 @@ ggplot(bp_data, aes(x = SmokingStatus, y = SysBP_0m,
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Box plot of SysBP 0m against SmokingStatus, titled 'Baseline Systolic BP by Smoking Status'."
 
 ggplot(bp_data, aes(x = SmokingStatus, y = SysBP_0m, fill = SmokingStatus)) +
   geom_boxplot(alpha = 0.7) +
@@ -690,6 +697,7 @@ ggplot(bp_data, aes(x = Region, y = Cholesterol,
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Violin plot of Cholesterol against Region, titled 'Cholesterol Levels by Region'."
 
 ggplot(bp_data, aes(x = Region, y = Cholesterol, fill = Region)) +
   geom_violin(alpha = 0.7) +
@@ -732,6 +740,7 @@ ggplot(bp_data, aes(x = Age, y = SysBP_0m)) +
 #| message: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Scatter plot of SysBP 0m against Age, with a fitted trend line, titled 'Age vs Systolic BP with LOESS Trend'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m)) +
   geom_point(alpha = 0.4, size = 2) +
@@ -770,6 +779,7 @@ ggplot(bp_data, aes(x = BloodSugar, fill = TreatmentGroup)) +
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Density plot of BloodSugar, coloured by TreatmentGroup, titled 'Blood Sugar Distribution by Treatment Group'."
 
 ggplot(bp_data, aes(x = BloodSugar, fill = TreatmentGroup)) +
   geom_density(alpha = 0.5) +
@@ -809,6 +819,7 @@ ggplot(bp_data, aes(x = AgeGroup, y = SysBP_0m,
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Scatter plot of SysBP 0m against AgeGroup, coloured by TreatmentGroup, titled 'Systolic BP by Age Group and Treatment'."
 
 ggplot(bp_data, aes(x = AgeGroup, y = SysBP_0m, color = TreatmentGroup)) +
   geom_jitter(width = 0.2, alpha = 0.6, size = 2.5) +
@@ -868,6 +879,7 @@ ggplot(bp_data, aes(x = ___, y = ___, color = ___)) +
 #| message: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Scatter plot of Cholesterol against Age, coloured by Gender, with a fitted trend line, titled 'Age vs Cholesterol by Gender'."
 
 ggplot(bp_data, aes(x = Age, y = Cholesterol, color = Gender)) +
   geom_point(size = 2, alpha = 0.6) +

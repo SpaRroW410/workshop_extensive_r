@@ -4,8 +4,28 @@ Branch: `module-update-plan`. Your answers this evening: datasets simulated and 
 quiz + lab on the existing pages, questions must not leak answers; Data Viz electives get the full treatment;
 reviewer later.
 
+## ☕ Morning summary (start here)
+
+**Finished and pushed** (branch `module-update-plan`, every step rendered and tested before its commit):
+
+- **U2 Moderate track**: 53 quiz questions on 15 pages, 6 labs (`labs/moderate/`), a Moderate cheat sheet, the two
+  stub pages written, unit M1 set as the free taster (N16).
+- **U7 Data Viz electives, full treatment**: 23 questions on 7 pages, 4 labs (`labs/dataviz/`), the six advanced
+  gallery decks now run on real data, the Interactive page written, `ggmosaic` replaced.
+- **Slide overflow** fixed on 16 decks. **U-GIS** (7 pages) and **U-ADV** (2 pages) quizzes; `ggstatsplot_advanced` runs.
+- **U-GAME**: each unit page now links to its game world (the worlds already linked back).
+- **F7 alt text**: 199 figures got alt text, generated from each chunk's code (chart type, variables, title).
+- **F8**: `PACKAGES.md`, every package the site uses with its version, per track.
+
+**Broken / not done**: nothing is left broken. Not done: U3 (the 11 workshops: they need your reviewer), the
+final verification V1–V9 as one pass, and the CI step that fails on `stub` / `no-output` pages.
+
+**Where to start (15 minutes)**: open the Moderate home and click through M1 → M2 (a quiz and a lab each), then
+`plot-gallery/advanced/3.4` (the dengue forecasts). Then read decisions **N16** (M1 free) and **N29** (generated
+alt text) below: those are the two calls you may want to change.
+
 ## ❓ Questions for you
-(none yet)
+(none: nothing needed stopping)
 
 ## Decisions taken, and why
 
@@ -39,6 +59,8 @@ reviewer later.
 | N26 | `ggstatsplot_advanced` runs on the simulated BP trial; its Bayes-factor wording uses the real numbers (BF₁₀ ≈ 10⁵ at 6 months, 0.19 at baseline) | The page referred to `overall_up`, a dataset that is not in the repo, and quoted invented BFs |
 | N27 | GIS reading pages get no lab; each links to the GIS workshop session that teaches it | As the plan says: the workshop has the labs |
 | N28 | Game: worlds' "Read first" links already point at the unit pages (paths unchanged), so only the other direction (D8) was added: each unit page's lab paragraph links to its world | `scripts/add_game_links.py`; the link climbs to the site root, so it works from every track |
+| N29 | Alt text (F7) generated from code by `scripts/add_alt_text.py`: it names the chart type, variables and title, never the finding | 207 figures; writing each from the image would take days. Describing structure cannot misstate a result. Worth a human pass on the key figures; workshop decks are left for U3 |
+| N30 | F8 as a versioned package list (`PACKAGES.md`, `scripts/package_versions.R`), not `renv.lock` | renv is not installed here and a lockfile written from this container would pin its odd mix (R 4.3.3, a 2025 snapshot for ggstatsplot). The list gives the same information and can seed `renv::snapshot()` on your machine |
 | N12 | R 4.3.3 (Ubuntu) cannot install `ggstatsplot` 1.1.4 (needs R ≥ 4.5): 0.13.0 from a dated snapshot is used | No newer R is available from the system packages here |
 
 ## Progress
@@ -54,3 +76,6 @@ reviewer later.
 | Slide overflow, M3 + V decks | ✅ committed | 16 decks OK in overflow.js (only .scrollable slides left); 6 tracks render exit 0 |
 | U-GIS (7 pages) + U-ADV (2 pages) | ✅ committed | 27 questions, lint 0 hard failures (1 wording warning), keys read; 9 pages pass quiz test; ggstatsplot_advanced runs |
 | U-GAME D8 page → world links | ✅ committed | 12 unit pages; 7 tracks render exit 0; links 0/0; cloud 43/43; quest e2e and bank lint pass |
+| F7 alt text (base pages) | ✅ committed | 199 figures on 32 pages (N29); 7 tracks render exit 0, no warnings; 39 quiz pages pass; links 0/0; cloud 43/43; quest e2e pass |
+| F8 package list | ✅ committed | `PACKAGES.md`: 104 packages with versions per track (N30) |
+| Left for you | U3 workshops (reviewer), V1–V9 final pass, CI inventory step (U0 item 9) | |

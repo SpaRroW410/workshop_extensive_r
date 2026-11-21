@@ -48,6 +48,7 @@ summary(model_simple)
 ```
 
 ```{r}
+#| fig-alt: "Scatter plot of blood pressure against age, with a fitted trend line, titled 'Blood Pressure vs Age'."
 ggplot(data, aes(x = age, y = blood_pressure)) +
   geom_point(alpha = 0.6) +
   geom_smooth(method = "lm", se = TRUE) +
@@ -87,11 +88,13 @@ Each coefficient is now interpreted "holding the other predictors constant" — 
 A fitted model is only trustworthy once its assumptions have been checked.
 
 ```{r}
+#| fig-alt: "Plot."
 par(mfrow = c(2, 2))
 plot(model)
 ```
 
 ```{r}
+#| fig-alt: "Normal Q-Q plot."
 # Residuals vs fitted, and a normal Q-Q check
 qqnorm(residuals(model))
 qqline(residuals(model), col = "red")
@@ -153,6 +156,7 @@ tbl_regression(cox_model, exponentiate = TRUE)
 `exponentiate = TRUE` reports hazard ratios: above 1 means a faster time-to-event (higher instantaneous risk) as the predictor increases, below 1 means a slower one.
 
 ```{r}
+#| fig-alt: "Plot."
 fit <- survfit(Surv(time, event) ~ treatment, data = data)
 plot(
   fit, col = c("#3498db", "#e74c3c"), lwd = 2,

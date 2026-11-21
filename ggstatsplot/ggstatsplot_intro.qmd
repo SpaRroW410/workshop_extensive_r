@@ -52,6 +52,7 @@ library(ggstatsplot)
 Use this when you want to compare a continuous variable across two or more independent groups.
 
 ```{r}
+#| fig-alt: "Violin and box plots of sbp against phys act, with the test result in the subtitle, titled 'Systolic BP by Physical Activity'."
 library(ggstatsplot)
 
 # Compare systolic BP across physical-activity groups
@@ -73,6 +74,7 @@ ggbetweenstats(
 **Choosing parametric vs non-parametric:**
 
 ```{r}
+#| fig-alt: "Violin and box plots of sbp against phys act, with the test result in the subtitle."
 # Force non-parametric (Kruskal-Wallis)
 ggbetweenstats(
   data  = ncd,
@@ -89,6 +91,7 @@ ggbetweenstats(
 Use this when you want to examine the relationship between two continuous variables.
 
 ```{r}
+#| fig-alt: "Scatter plot of sbp against age, with a regression line, marginal histograms and the correlation test, titled 'Age vs Systolic BP at Baseline'."
 ggscatterstats(
   data  = ncd,
   x     = age,
@@ -107,6 +110,7 @@ ggscatterstats(
 **Using Spearman instead of Pearson:**
 
 ```{r}
+#| fig-alt: "Scatter plot of sbp against age, with a regression line, marginal histograms and the correlation test."
 ggscatterstats(
   data = ncd,
   x    = age,
@@ -122,6 +126,7 @@ ggscatterstats(
 Use this when you want to visualise the distribution of a single continuous variable with a one-sample test.
 
 ```{r}
+#| fig-alt: "Histogram of age, with a one-sample test result, titled 'Distribution of Age'."
 gghistostats(
   data     = ncd,
   x        = age,

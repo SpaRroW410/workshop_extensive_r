@@ -38,6 +38,7 @@ c(queen_links = sum(card(nb_q)), rook_links = sum(card(nb_r)))
 
 ```{r}
 #| fig-height: 5.5
+#| fig-alt: "Plot."
 cen <- st_coordinates(st_centroid(blocks))
 plot(st_geometry(blocks), border = "grey70", main = "Queen contiguity: links between neighbouring blocks")
 plot(nb_q, cen, add = TRUE, col = "red", pch = 19, cex = 0.4)
@@ -52,6 +53,7 @@ When areas are unequal in size, or are points, use distances between **centroids
 ```{r}
 #| fig-width: 10
 #| fig-height: 4.5
+#| fig-alt: "Plot."
 knn5 <- knn2nb(knearneigh(cen, k = 5))                  # always exactly 5 neighbours
 d <- unlist(nbdists(knn2nb(knearneigh(cen, k = 1)), cen))
 nb_d <- dnearneigh(cen, 0, max(d))                      # everyone within the smallest distance that links all areas
@@ -95,6 +97,7 @@ mean(blocks$dengue_per_100k[nb_q[[1]]])
 ```{r}
 #| fig-width: 10
 #| fig-height: 4.5
+#| fig-alt: "Map, coloured by dengue per 100k, titled 'Rate'."
 patchwork::wrap_plots(
   ggplot(blocks) + geom_sf(aes(fill = dengue_per_100k)) + scale_fill_viridis_c(option = "magma", direction = -1, name = "Rate") + labs(title = "Rate"),
   ggplot(blocks) + geom_sf(aes(fill = lag_rate)) + scale_fill_viridis_c(option = "magma", direction = -1, name = "Lag") + labs(title = "Spatial lag (neighbours' average)"))

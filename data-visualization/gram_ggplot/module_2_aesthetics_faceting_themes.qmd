@@ -117,6 +117,7 @@ Both `geom_point()` and `geom_smooth()` use the color mapping
 #| message: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, coloured by TreatmentGroup, with a fitted trend line, titled 'Global Aesthetics'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m, color = TreatmentGroup)) +
   geom_point(size = 2, alpha = 0.6) +
@@ -158,6 +159,7 @@ Points are colored by treatment, but smooth line is black
 #| message: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, with a fitted trend line, titled 'Local Override'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m)) +
   geom_point(aes(color = TreatmentGroup), size = 2, alpha = 0.6) +
@@ -196,6 +198,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Box plot of SysBP 0m against Region, titled 'Fill Aesthetic'."
 
 ggplot(bp_data, aes(x = Region, y = SysBP_0m, fill = Region)) +
   geom_boxplot(alpha = 0.7) +
@@ -233,6 +236,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, coloured by TreatmentGroup, titled 'Size Aesthetic'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m, size = BMI, color = TreatmentGroup)) +
   geom_point(alpha = 0.6) +
@@ -269,6 +273,7 @@ Best for categorical variables with few levels (≤6)
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of Cholesterol against Age, coloured by Gender, titled 'Shape Aesthetic'."
 
 ggplot(bp_data, aes(x = Age, y = Cholesterol, shape = Gender, color = Gender)) +
   geom_point(size = 2.5, alpha = 0.7) +
@@ -304,6 +309,7 @@ Useful for showing density in overplotted data
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against BMI, titled 'Alpha Aesthetic'."
 
 ggplot(bp_data, aes(x = BMI, y = SysBP_0m, alpha = Cholesterol)) +
   geom_point(size = 2.5, color = "darkred") +
@@ -340,6 +346,7 @@ Can combine multiple aesthetics, but be careful not to overwhelm!
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, coloured by TreatmentGroup, titled 'Multiple Aesthetics'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m, color = TreatmentGroup, shape = Gender, size = BMI)) +
   geom_point(alpha = 0.6) +
@@ -380,6 +387,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5.5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, coloured by TreatmentGroup, titled 'Mapped (inside aes)'."
 
 library(patchwork)
 p1 <- ggplot(bp_data, aes(x = Age, y = SysBP_0m, color = TreatmentGroup)) +
@@ -424,6 +432,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5.5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, coloured by 'blue', titled 'Wrong: Mapped constant'."
 
 p1 <- ggplot(bp_data, aes(x = Age, y = SysBP_0m, color = "blue")) +
   geom_point(size = 2) +
@@ -468,6 +477,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, one panel per TreatmentGroup, titled 'Systolic BP by Age'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m)) +
   geom_point(alpha = 0.6, size = 2, color = "steelblue") +
@@ -504,6 +514,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of Cholesterol against BMI, one panel per Region, titled 'BMI vs Cholesterol by Region'."
 
 ggplot(bp_data, aes(x = BMI, y = Cholesterol)) +
   geom_point(alpha = 0.6, size = 1.5, color = "darkred") +
@@ -541,6 +552,7 @@ Formula: `rows ~ columns`
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, one panel per Gender  and  TreatmentGroup, titled 'Systolic BP by Gender & Treatment'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m)) +
   geom_point(alpha = 0.5, size = 1.5, color = "steelblue") +
@@ -583,6 +595,7 @@ ggplot(smoking_bp, aes(x = SmokingStatus, y = Value)) +
 #| message: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Box plot of Value against SmokingStatus, one panel per BP Type, titled 'BP by Smoking Status'."
 
 smoking_bp <- bp_data %>%
   filter(!is.na(SmokingStatus)) %>%
@@ -631,6 +644,7 @@ Each facet gets all layers - points and smooth line
 #| message: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, with a fitted trend line, one panel per TreatmentGroup, titled 'Age vs SysBP with Trend Lines'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m)) +
   geom_point(alpha = 0.4, size = 1.5, color = "gray40") +
@@ -671,6 +685,7 @@ ggplot(bp_complete,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Box plot of SysBP Change against AgeGroup, coloured by TreatmentGroup, one panel per ExerciseFreq, titled 'BP Change by Age, Treatment & Exercise'."
 
 bp_complete <- bp_data %>%
   filter(!is.na(ExerciseFreq))
@@ -730,6 +745,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Box plot of SysBP 0m against Region, titled 'theme_gray()'."
 
 ggplot(bp_data, aes(x = Region, y = SysBP_0m, fill = Region)) +
   geom_boxplot(alpha = 0.7) +
@@ -767,6 +783,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Box plot of SysBP 0m against Region, titled 'theme_bw()'."
 
 ggplot(bp_data, aes(x = Region, y = SysBP_0m, fill = Region)) +
   geom_boxplot(alpha = 0.7) +
@@ -804,6 +821,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Box plot of SysBP 0m against Region, titled 'theme_minimal()'."
 
 ggplot(bp_data, aes(x = Region, y = SysBP_0m, fill = Region)) +
   geom_boxplot(alpha = 0.7) +
@@ -841,6 +859,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Box plot of SysBP 0m against Region, titled 'theme_classic()'."
 
 ggplot(bp_data, aes(x = Region, y = SysBP_0m, fill = Region)) +
   geom_boxplot(alpha = 0.7) +
@@ -870,6 +889,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 5
 #| fig-height: 4
+#| fig-alt: "Scatter plot of SysBP 0m against Age, titled 'theme_light()'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m)) +
   geom_point(color = "steelblue", alpha = 0.6) +
@@ -894,6 +914,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 5
 #| fig-height: 4
+#| fig-alt: "Scatter plot of SysBP 0m against Age, titled 'theme_dark()'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m)) +
   geom_point(color = "cyan", alpha = 0.6) +
@@ -930,6 +951,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of Latitude against Longitude, coloured by Region, titled 'theme_void()'."
 
 ggplot(bp_data, aes(x = Longitude, y = Latitude, color = Region)) +
   geom_point(size = 3, alpha = 0.7) +
@@ -946,6 +968,7 @@ ggplot(bp_data, aes(x = Longitude, y = Latitude, color = Region)) +
 #| message: false
 #| fig-width: 12
 #| fig-height: 8
+#| fig-alt: "Scatter plot of SysBP 0m against Age, coloured by TreatmentGroup, with a fitted trend line, titled 'theme_gray()'."
 
 base_plot <- ggplot(bp_data, aes(x = Age, y = SysBP_0m, color = TreatmentGroup)) +
   geom_point(alpha = 0.6, size = 2) +
@@ -1007,6 +1030,7 @@ ggplot(bp_summary,
 #| message: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Line chart of Mean SysBP against Months, coloured by TreatmentGroup, titled 'Mean Systolic BP Over Time'."
 
 ggplot(bp_summary, aes(x = Months, y = Mean_SysBP, color = TreatmentGroup)) +
   geom_line(linewidth = 1.5) +
@@ -1051,6 +1075,7 @@ ggplot(region_summary,
 #| message: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Bar chart of Mean SysBP against Region, titled 'Mean SysBP by Region'."
 
 region_summary <- bp_data %>%
   group_by(Region) %>%
@@ -1091,6 +1116,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, titled 'theme_tufte()'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m)) +
   geom_point(alpha = 0.5, color = "black") +
@@ -1128,6 +1154,7 @@ ggplot(bp_data %>% filter(!is.na(BMI_Category)),
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Box plot of Cholesterol against BMI Category, titled 'theme_few()'."
 
 ggplot(bp_data %>% filter(!is.na(BMI_Category)), 
        aes(x = BMI_Category, y = Cholesterol, fill = BMI_Category)) +

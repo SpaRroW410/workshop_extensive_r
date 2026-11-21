@@ -133,6 +133,7 @@ ggplot(trend_data, aes(x = Month, y = mean_bp,
 #| fig-height: 6
 #| warning: false
 #| message: false
+#| fig-alt: "Scatter plot of mean bp against Month, coloured by TreatmentGroup, with a fitted trend line, titled 'Blood Pressure Trends by Treatment Group'."
 
 trend_data <- time_data %>%
   filter(!is.na(TreatmentGroup), !is.na(SysBP)) %>%
@@ -243,6 +244,7 @@ ggplot(trend_ci, aes(x = Month, y = mean_bp,
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Line chart of mean bp against Month, coloured by TreatmentGroup, titled 'Blood Pressure Changes with 95% Confidence Intervals'."
 
 trend_ci <- trend_data %>%
   mutate(
@@ -347,6 +349,7 @@ ggplot(treatment_a_data, aes(x = Month, y = mean_bp)) +
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Area chart of mean bp against Month, titled 'Treatment A: Blood Pressure Reduction Over 12 Months'."
 
 treatment_a_data <- trend_ci %>% filter(TreatmentGroup == "Treatment A")
 
@@ -446,6 +449,7 @@ ggplot(region_trends, aes(x = Month, y = mean_bp)) +
 #| fig-width: 10
 #| fig-height: 7
 #| message: false
+#| fig-alt: "Area chart of mean bp against Month, one panel per Region, titled 'Blood Pressure Trends Across Regions'."
 
 region_trends <- time_data %>%
   filter(!is.na(Region), !is.na(SysBP)) %>%
@@ -544,6 +548,7 @@ ggplot(pct_change_data, aes(x = Month, y = pct_change,
 #| fig-width: 10
 #| fig-height: 6
 #| message: false
+#| fig-alt: "Line chart of pct change against Month, coloured by TreatmentGroup, titled 'Percent Change in Blood Pressure from Baseline'."
 
 pct_change_data <- time_data %>%
   filter(!is.na(TreatmentGroup), !is.na(SysBP)) %>%
@@ -642,6 +647,7 @@ ggplot(slope_data, aes(x = Time, y = SysBP, group = PatientID,
 #| fig-width: 11
 #| fig-height: 6
 #| message: false
+#| fig-alt: "Line chart of SysBP against Time, coloured by TreatmentGroup, one panel per TreatmentGroup, titled 'Individual Patient Blood Pressure Changes'."
 
 set.seed(123)
 slope_data <- health_data %>%

@@ -87,6 +87,7 @@ Different types of data require different visualizations:
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Annotated chart."
 
 # Required: ggplot2
 
@@ -145,6 +146,7 @@ grid.draw(table_grob)
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Heat map of Department against Month, coloured by PatientSatisfaction, titled 'Patient Satisfaction by Department'."
 
 # Required: tidyverse
 
@@ -176,6 +178,7 @@ ggplot(hospital_metrics, aes(x = Month, y = Department, fill = PatientSatisfacti
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Bar chart of dept against wait time, titled 'Average Patient Wait Times'."
 
 # Required: ggplot2
 
@@ -207,6 +210,7 @@ ggplot(departments, aes(x = wait_time, y = reorder(dept, wait_time))) +
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Bar chart of condition against adherence, coloured by age group, titled 'Medication Adherence by Age Group'."
 
 # Required: ggplot2
 
@@ -247,6 +251,7 @@ departments_vertical <- data.frame(
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Bar chart of wait time against dept, titled 'Ineffective: Rotated Text Hard to Read'."
 
 # Required: ggplot2
 
@@ -270,6 +275,7 @@ ggplot(departments_vertical, aes(x = dept, y = wait_time)) +
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Line chart of admissions against month, titled 'ICU Admissions Trend'."
 
 # Required: ggplot2
 
@@ -301,6 +307,7 @@ ggplot(icu_admissions, aes(x = month, y = admissions)) +
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Area chart of patients against month, coloured by department, titled 'Patient Volume by Department'."
 
 # Required: tidyverse
 
@@ -336,6 +343,7 @@ ggplot(patient_volume, aes(x = month, y = patients, fill = department)) +
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Line chart of value norm against hour, coloured by metric, titled '24-Hour Vital Signs Pattern (Normalized)'."
 
 # Required: tidyverse
 
@@ -375,6 +383,7 @@ ggplot(vital_signs_scaled, aes(x = hour, y = value_norm, color = metric)) +
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Scatter plot of patient outcomes against nurse ratio, with a fitted trend line, titled 'Nurse-to-Patient Ratio vs Outcomes'."
 
 # Required: ggplot2
 
@@ -407,6 +416,7 @@ ggplot(clinical_data, aes(x = nurse_ratio, y = patient_outcomes)) +
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Scatter plot of improvement against baseline severity, coloured by treatment, with a fitted trend line, titled 'Treatment Effectiveness by Baseline Severity'."
 
 # Required: ggplot2
 
@@ -443,6 +453,7 @@ ggplot(treatment_outcomes, aes(x = baseline_severity, y = improvement, color = t
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Box plot of specialty against length of stay, titled 'Length of Stay Distribution by Specialty'."
 
 # Required: ggplot2
 
@@ -479,6 +490,7 @@ ggplot(los_data, aes(x = length_of_stay, y = reorder(specialty, length_of_stay, 
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Violin plot of specialty against length of stay, titled 'Length of Stay Distribution (Violin Plot)'."
 
 # Required: ggplot2
 
@@ -504,6 +516,7 @@ ggplot(los_data, aes(x = length_of_stay, y = reorder(specialty, length_of_stay, 
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Density plot of days, coloured by treatment, titled 'Recovery Time Distributions'."
 
 # Required: tidyverse
 
@@ -540,6 +553,7 @@ ggplot(recovery_times, aes(x = days, fill = treatment)) +
 #| fig-height: 5
 #| warning: false
 #| message: false
+#| fig-alt: "Ridgeline density plot of condition against age, titled 'Age Distribution by Health Condition'."
 
 # Required: tidyverse, ggridges
 
@@ -578,6 +592,7 @@ ggplot(age_distribution, aes(x = age, y = condition, fill = condition)) +
 #| fig-width: 9
 #| fig-height: 5
 #| warning: false
+#| fig-alt: "Line chart of rate against year, titled 'Hospital A Achieved Largest Infection Rate Reduction'."
 
 # Required: tidyverse
 
@@ -617,6 +632,7 @@ ggplot(infection_long, aes(x = year, y = rate, group = hospital)) +
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Bar chart of patients against quarter, coloured by source, titled 'Emergency Admissions Increasing'."
 
 # Required: ggplot2
 
@@ -658,6 +674,7 @@ vaccination_rates <- data.frame(
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Bar chart of rate against hospital, titled 'Misleading: Exaggerates Small Differences'."
 
 # Required: ggplot2
 
@@ -682,6 +699,7 @@ ggplot(vaccination_rates, aes(x = hospital, y = rate)) +
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Bar chart of rate against hospital, titled 'Honest Representation: All Hospitals Excel'."
 
 # Required: ggplot2
 
@@ -715,6 +733,7 @@ diagnosis_data <- data.frame(
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Bar chart of patients, coloured by diagnosis, titled 'Difficult to Compare Precisely'."
 
 # Required: ggplot2
 
@@ -738,6 +757,7 @@ ggplot(diagnosis_data, aes(x = "", y = patients, fill = diagnosis)) +
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Bar chart of diagnosis against patients, titled 'Primary Diagnoses - Clear Rankings'."
 
 # Required: ggplot2
 
@@ -806,6 +826,7 @@ treatment_response$treatment <- ifelse(treatment_response$treatment == "treatmen
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Line chart of response against quarter, coloured by treatment, titled 'Treatment Response Rates'."
 
 # Required: tidyverse
 
@@ -831,6 +852,7 @@ ggplot(treatment_response, aes(x = quarter, y = response,
 #| fig-width: 9
 #| fig-height: 5
 #| warning: false
+#| fig-alt: "Line chart of response against quarter, coloured by treatment, titled 'Treatment A Shows Q4 Improvement'."
 
 # Required: tidyverse
 
@@ -884,6 +906,7 @@ clinical_quality <- data.frame(
 #| code-fold: true
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Bar chart of metric against score, titled 'Clinical Quality Metrics'."
 
 # Required: ggplot2
 
@@ -905,6 +928,7 @@ ggplot(clinical_quality, aes(x = score, y = reorder(metric, score))) +
 #| code-fold: true
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Bar chart of metric against score, with Infection Control highlighted, titled 'Infection Control Needs Improvement'."
 
 # Required: ggplot2
 
@@ -930,6 +954,7 @@ ggplot(clinical_quality,
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Line chart of events against month, titled 'Adverse Events Timeline'."
 
 # Required: tidyverse
 
@@ -987,6 +1012,7 @@ hospital_los <- data.frame(
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Bar chart of specialty against los, titled 'Length of Stay by Specialty'."
 
 # Required: ggplot2
 
@@ -1011,6 +1037,7 @@ ggplot(hospital_los, aes(x = los, y = reorder(specialty, los), fill = specialty)
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 5
+#| fig-alt: "Bar chart of specialty against los, with Neurology highlighted, titled 'Neurology Exceeds Target Length of Stay'."
 
 # Required: ggplot2
 
@@ -1052,6 +1079,7 @@ ggplot(hospital_los,
 #| code-fold: true
 #| fig-width: 10
 #| fig-height: 5
+#| fig-alt: "Box plot of outcome against treatment, titled 'Not Colorblind Safe'."
 
 # Required: tidyverse
 
@@ -1088,6 +1116,7 @@ p1 + p2
 #| code-fold: true
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Bar chart of hospital against rate, with Hospital B highlighted, titled 'Hospital B Exceeds National Readmission Rate'."
 
 # Required: ggplot2
 
@@ -1127,6 +1156,7 @@ ggplot(readmission_data,
 #| code-fold: true
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Line chart of score against month, titled 'Patient Satisfaction Improved After Communication Protocol'."
 
 # Required: ggplot2
 
@@ -1175,6 +1205,7 @@ dept_performance <- data.frame(
 #| code-fold: true
 #| fig-width: 10
 #| fig-height: 5
+#| fig-alt: "Bar chart of score against department, titled 'Department Performance Scores'."
 
 # Before: Default styling
 p_before <- ggplot(dept_performance, aes(x = department, y = score)) +
@@ -1235,6 +1266,7 @@ mortality_data <- data.frame(
 #| code-fold: true
 #| fig-width: 10
 #| fig-height: 5
+#| fig-alt: "Line chart of rate against year, titled 'Hospital Mortality Rate by Year'."
 
 # Descriptive title
 p1 <- ggplot(mortality_data, aes(x = year, y = rate)) +
@@ -1275,6 +1307,7 @@ p1 + p2
 #| code-fold: true
 #| fig-width: 11
 #| fig-height: 6
+#| fig-alt: "Line chart of outcome against month, one panel per treatment, titled 'Intensive Management Shows Fastest Improvement Rate'."
 
 # Required: tidyverse
 
@@ -1317,6 +1350,7 @@ ggplot(patient_outcomes, aes(x = month, y = outcome)) +
 #| code-fold: true
 #| fig-width: 11
 #| fig-height: 6
+#| fig-alt: "Histogram of days, coloured by procedure, one panel per procedure, titled 'Procedure C Has Shortest, Most Consistent Recovery Times'."
 
 # Required: tidyverse
 
@@ -1360,6 +1394,7 @@ ggplot(recovery_times, aes(x = days, fill = procedure)) +
 #| code-fold: true
 #| fig-width: 11
 #| fig-height: 7
+#| fig-alt: "Line chart of rate against quarter num, coloured by hospital, titled 'Hospital B Readmission Intervention Exceeded Targets'."
 
 # Required: tidyverse, patchwork
 
@@ -1449,6 +1484,7 @@ main_plot / comparison_plot + plot_layout(heights = c(3, 1))
 #| code-fold: true
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Bar chart of mean improvement against treatment, titled 'New Treatment Shows Superior Outcomes with High Confidence'."
 
 # Required: ggplot2
 
@@ -1490,6 +1526,7 @@ ggplot(treatment_comparison, aes(x = treatment, y = mean_improvement)) +
 #| code-fold: true
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Density plot of outcome, coloured by treatment, titled 'New Treatment Consistently Outperforms Current Standard'."
 
 # Required: ggplot2
 
@@ -1530,6 +1567,7 @@ ggplot(simulation_results, aes(x = outcome, fill = treatment)) +
 #| code-fold: true
 #| fig-width: 9
 #| fig-height: 8
+#| fig-alt: "Heat map of var2 against var1, coloured by correlation, titled 'Health Metrics Correlation Analysis'."
 
 # Required: tidyverse
 
@@ -1586,6 +1624,7 @@ ggplot(cor_df, aes(x = var1, y = var2, fill = correlation)) +
 #| code-fold: true
 #| fig-width: 10
 #| fig-height: 5
+#| fig-alt: "Line chart of metric against month, titled 'Misleading: Performance Shows Strong Growth!'."
 
 # Required: ggplot2
 
@@ -1630,6 +1669,7 @@ p1 + p2
 #| code-fold: true
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Line chart of temp against hour, titled 'Patient Body Temperature - 24 Hour Monitoring'."
 
 # Required: ggplot2
 

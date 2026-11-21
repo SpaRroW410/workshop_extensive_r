@@ -36,6 +36,7 @@ The mean age is `r round(mean(gtsummary::trial$age, na.rm = TRUE), 1)` years.
 ```{r}
 #| label: fig-age-dist
 #| fig-cap: "Distribution of Age"
+#| fig-alt: "Histogram of age."
 ggplot(gtsummary::trial, aes(x = age)) +
   geom_histogram(binwidth = 5, fill = "blue", alpha = 0.7) +
   theme_minimal()

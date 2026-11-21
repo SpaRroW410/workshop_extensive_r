@@ -27,6 +27,7 @@ A **choropleth** colours each area by a value. It is the most common map in publ
 ```{r}
 #| fig-width: 10
 #| fig-height: 4.5
+#| fig-alt: "Map, coloured by dengue cases, titled 'Dengue cases (counts)'."
 p1 <- ggplot(blocks) + geom_sf(aes(fill = dengue_cases)) + scale_fill_viridis_c(name = "Cases") + labs(title = "Dengue cases (counts)")
 p2 <- ggplot(blocks) + geom_sf(aes(fill = dengue_per_100k)) + scale_fill_viridis_c(name = "per 100,000", option = "magma", direction = -1) + labs(title = "Dengue per 100,000 (rate)")
 patchwork::wrap_plots(p1, p2)
@@ -46,6 +47,7 @@ Continuous colour hides nothing but is hard to read; **classes** are easier but 
 ```{r}
 #| fig-width: 10
 #| fig-height: 4
+#| fig-alt: "Map, coloured by cls, one panel per scheme."
 library(classInt)
 cls <- function(x, style) cut(x, classIntervals(x, 5, style = style)$brks, include.lowest = TRUE)
 long <- bind_rows(
@@ -68,6 +70,7 @@ State the scheme and the breaks in the caption. For comparing maps, use **the sa
 -   Avoid rainbow palettes; check that the map reads in grey-scale and for colour-blind viewers (`viridis` is safe).
 
 ```{r}
+#| fig-alt: "Map, coloured by rr, titled 'Diverging scale centred on the district rate'."
 blocks$rr <- blocks$dengue_per_100k / (sum(blocks$dengue_cases) / sum(blocks$population) * 1e5)
 ggplot(blocks) + geom_sf(aes(fill = rr)) +
   scale_fill_gradient2(low = "#2166ac", mid = "white", high = "#b2182b", midpoint = 1, name = "Rate ratio\nvs district") +
@@ -77,6 +80,7 @@ ggplot(blocks) + geom_sf(aes(fill = rr)) +
 ## Layers, labels and the finishing touches
 
 ```{r}
+#| fig-alt: "Map, coloured by dengue per 100k, titled 'Dengue incidence and health facilities'."
 fac <- read_csv("../data/gis/facilities.csv", show_col_types = FALSE) |> st_as_sf(coords = c("easting_m", "northing_m"), crs = 32644) |> st_transform(4326)
 ggplot(blocks) + geom_sf(aes(fill = dengue_per_100k), colour = "white", linewidth = 0.15) +
   geom_sf(data = fac, aes(shape = type), size = 2) +
@@ -90,6 +94,7 @@ Good maps carry a **title, a legend with units, the data source, and a north arr
 ## Interactive map
 
 ```{r}
+#| fig-alt: "Interactive map, titled 'Dengue per 100,000'."
 library(leaflet)
 pal <- colorNumeric("YlOrRd", blocks$dengue_per_100k)
 leaflet(blocks) |> addProviderTiles("CartoDB.Positron") |>

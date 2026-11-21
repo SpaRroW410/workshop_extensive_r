@@ -80,6 +80,7 @@ table(blocks$gi_class)
 ```
 
 ```{r}
+#| fig-alt: "Map, coloured by gi class, titled 'Getis-Ord Gi* hot and cold spots'."
 ggplot(blocks) + geom_sf(aes(fill = gi_class), colour = "white", linewidth = 0.2) +
   scale_fill_manual(values = c("Cold 99%" = "#2166ac", "Cold 95%" = "#67a9cf", "Cold 90%" = "#d1e5f0", "Not significant" = "grey92",
                                "Hot 90%" = "#fddbc7", "Hot 95%" = "#ef8a62", "Hot 99%" = "#b2182b"), drop = FALSE, name = NULL) +
@@ -103,6 +104,7 @@ summary(sc)
 ```
 
 ```{r}
+#| fig-alt: "Map, coloured by scan, titled 'Most likely cluster (Kulldorff scan, Poisson model)'."
 cl <- sc$clusters[[1]]
 blocks$scan <- ifelse(seq_len(nrow(blocks)) %in% cl$locids, "Most likely cluster", "Other")
 ggplot(blocks) + geom_sf(aes(fill = scan), colour = "white", linewidth = 0.2) +

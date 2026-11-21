@@ -61,6 +61,7 @@ table(blocks$lisa)
 ```
 
 ```{r}
+#| fig-alt: "Map, coloured by lisa, titled 'LISA cluster map of dengue incidence'."
 cols <- c("High-High (hot spot)" = "#d7191c", "Low-Low (cold spot)" = "#2c7bb6", "High-Low (outlier)" = "#fdae61", "Low-High (outlier)" = "#abd9e9", "Not significant" = "grey90")
 ggplot(blocks) + geom_sf(aes(fill = lisa), colour = "white", linewidth = 0.2) + scale_fill_manual(values = cols, drop = FALSE, name = NULL) +
   labs(title = "LISA cluster map of dengue incidence", subtitle = "p < 0.05, unadjusted, queen weights") + theme(legend.position = "bottom") +

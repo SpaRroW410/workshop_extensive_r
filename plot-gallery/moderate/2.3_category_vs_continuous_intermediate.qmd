@@ -108,6 +108,7 @@ ggplot(health_data, aes(x = Gender, y = BMI, fill = Gender)) +
 #| echo: false
 #| fig-width: 8
 #| fig-height: 5
+#| fig-alt: "Violin plot of BMI against Gender, titled 'BMI Distribution by Gender'."
 
 # Create violin plot
 ggplot(health_data, aes(x = Gender, y = BMI, fill = Gender)) +
@@ -189,6 +190,7 @@ health_data %>%
 #| echo: false
 #| fig-width: 9
 #| fig-height: 6
+#| fig-alt: "Ridgeline density plot of ExerciseFreq against Age, titled 'Age Distribution by Exercise Frequency'."
 
 library(ggridges)
 
@@ -274,6 +276,7 @@ health_data %>%
 #| fig-width: 9
 #| fig-height: 6
 #| warning: false
+#| fig-alt: "Plot of Cholesterol against SmokingStatus, titled 'Cholesterol Levels by Smoking Status'."
 
 library(ggbeeswarm)
 
@@ -384,6 +387,7 @@ health_data %>%
 #| fig-height: 6
 #| warning: false
 #| message: false
+#| fig-alt: "Box plot of SysBP 6m against TreatmentGroup, titled 'Systolic Blood Pressure at 6 Months by Treatment Group'."
 
 library(ggdist)
 
@@ -481,6 +485,7 @@ ggplot(summary_data, aes(x = ExerciseFreq, y = mean_bmi, fill = Gender)) +
 #| fig-width: 10
 #| fig-height: 6
 #| warning: false
+#| fig-alt: "Bar chart of mean bmi against ExerciseFreq, coloured by Gender, titled 'Mean BMI by Exercise Frequency and Gender'."
 
 summary_data <- health_data %>%
   filter(!is.na(Gender), !is.na(ExerciseFreq), !is.na(BMI)) %>%
@@ -572,6 +577,7 @@ health_data %>%
 #| echo: false
 #| fig-width: 10
 #| fig-height: 7
+#| fig-alt: "Box plot of Cholesterol against Gender, one panel per Region, titled 'Cholesterol Levels by Gender Across Regions'."
 
 health_data %>%
   filter(!is.na(Region), !is.na(Gender), !is.na(Cholesterol)) %>%

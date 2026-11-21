@@ -136,6 +136,7 @@ ggplot(data_clean, aes(x = Age)) +
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Histogram of Age, titled 'Distribution of Patient Ages'."
 
 ggplot(data_clean, aes(x = Age)) +
   geom_histogram(bins = 30, fill = "steelblue", color = "white", alpha = 0.8) +
@@ -219,6 +220,7 @@ ggplot(data_clean, aes(x = Age)) +
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Histogram of Age, titled 'Age Distribution with Mean and Median'."
 
 age_mean <- mean(data_clean$Age, na.rm = TRUE)
 age_median <- median(data_clean$Age, na.rm = TRUE)
@@ -277,6 +279,7 @@ Area under curve = 1 (100%)
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Density plot of BMI, titled 'Density Distribution of BMI'."
 
 ggplot(data_clean, aes(x = BMI)) +
   geom_density(fill = "coral", alpha = 0.6, color = "darkred", size = 1) +
@@ -322,6 +325,7 @@ ggplot(data_clean, aes(x = BMI, y = Cholesterol)) +
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Scatter plot of Cholesterol against BMI, titled 'Relationship between BMI and Cholesterol'."
 
 ggplot(data_clean, aes(x = BMI, y = Cholesterol)) +
   geom_point(alpha = 0.6, color = "darkblue", size = 3) +
@@ -392,6 +396,7 @@ ggplot(data_clean, aes(x = Age, y = SysBP_0m, color = TreatmentGroup)) +
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Scatter plot of SysBP 0m against Age, coloured by TreatmentGroup, titled 'Baseline Systolic BP by Age and Treatment Group'."
 
 ggplot(data_clean, aes(x = Age, y = SysBP_0m, color = TreatmentGroup)) +
   geom_point(alpha = 0.7, size = 3) +

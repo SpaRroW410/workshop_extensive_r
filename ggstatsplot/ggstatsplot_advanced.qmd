@@ -38,6 +38,7 @@ The Bayesian approach in ggstatsplot uses the `BayesFactor` package internally. 
 ### Setting priors
 
 ```{r}
+#| fig-alt: "Violin and box plots of SysBP 6m against TreatmentGroup, with the test result in the subtitle, titled 'SBP at 6 months by treatment (Bayesian, default prior)'."
 library(ggstatsplot)
 
 # Default Cauchy prior (r = 0.707) — appropriate for most comparisons
@@ -92,6 +93,7 @@ A p-value cannot show support for "no difference"; a Bayes factor can.
 The `grouped_*` variants run the same comparison separately within each level of a grouping variable and combine the results into a faceted plot.
 
 ```{r}
+#| fig-alt: "Violin and box plots of SysBP 6m against SmokingStatus, with the test result in the subtitle, titled 'SBP at 6 months by smoking status, stratified by arm'."
 # Compare SBP across smoking groups, separately in each treatment arm
 grouped_ggbetweenstats(
   data             = bp,
@@ -104,6 +106,7 @@ grouped_ggbetweenstats(
 ```
 
 ```{r}
+#| fig-alt: "Scatter plot of SysBP 0m against Age, with a regression line, marginal histograms and the correlation test, titled 'Age vs baseline SBP by treatment group'."
 # Correlation stratified by TreatmentGroup group
 grouped_ggscatterstats(
   data         = bp,
@@ -132,6 +135,7 @@ grouped_ggscatterstats(
 Visualises pairwise correlations across multiple continuous variables with significance annotations.
 
 ```{r}
+#| fig-alt: "Correlation matrix heat map, titled 'Correlation Matrix — Baseline Variables'."
 ggcorrmat(
   data   = bp |> select(Age, SysBP_0m, SysBP_3m, SysBP_6m,
                                  BMI, Cholesterol),
@@ -156,6 +160,7 @@ ggcorrmat(
 All ggstatsplot outputs are ggplot2 objects and compose naturally with `patchwork`.
 
 ```{r}
+#| fig-alt: "Violin and box plots of SysBP 0m against TreatmentGroup, with the test result in the subtitle, titled 'Baseline SBP'."
 library(patchwork)
 
 p1 <- ggbetweenstats(
@@ -192,6 +197,7 @@ p3 <- ggscatterstats(
 ## Publication-ready output
 
 ```{r}
+#| fig-alt: "Violin and box plots of SysBP 6m against TreatmentGroup, with the test result in the subtitle, titled 'Systolic blood pressure at 6 months by treatment group'."
 library(ggplot2)
 
 pub_plot <- ggbetweenstats(
@@ -227,6 +233,7 @@ ggsave(file.path(tempdir(), "sbp_by_treatment.png"),   # in a project: "figures/
 A complete example on the simulated BP trial: the change in SBP from baseline to 6 months across treatment groups, overall and by smoking status.
 
 ```{r}
+#| fig-alt: "Violin and box plots of sbp change against TreatmentGroup, with the test result in the subtitle, titled 'Change in SBP at 6 months'."
 library(ggstatsplot)
 library(dplyr)
 library(patchwork)

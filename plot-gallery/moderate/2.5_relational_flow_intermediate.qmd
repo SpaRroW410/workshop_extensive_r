@@ -320,6 +320,7 @@ ggplot(alluvial_data,
 #| fig-height: 7
 #| warning: false
 #| message: false
+#| fig-alt: "Plot of n, titled 'Patient Flow: Treatment → Smoking Status → Gender'."
 
 library(ggalluvial)
 

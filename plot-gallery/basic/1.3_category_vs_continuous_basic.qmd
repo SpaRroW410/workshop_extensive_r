@@ -142,6 +142,7 @@ Box plot shows: minimum, Q1 (25%), median (50%), Q3 (75%), maximum, and outliers
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Box plot of BMI against TreatmentGroup, titled 'BMI Distribution by Treatment Group'."
 
 ggplot(data_clean, aes(x = TreatmentGroup, y = BMI, fill = TreatmentGroup)) +
   geom_boxplot(alpha = 0.7, outlier.color = "red", outlier.size = 3) +
@@ -229,6 +230,7 @@ reorder() sorts regions by median cholesterol for easier comparison
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Box plot of Cholesterol against Region, titled 'Cholesterol Levels by Region (Ordered by Median)'."
 
 ggplot(data_clean, aes(x = reorder(Region, Cholesterol, FUN = median), 
                        y = Cholesterol, fill = Region)) +
@@ -285,6 +287,7 @@ ggplot(bp_summary, aes(x = Region, y = Mean_SysBP, fill = TreatmentGroup)) +
 #| fig-width: 10
 #| fig-height: 6
 #| message: false
+#| fig-alt: "Bar chart of Mean SysBP against Region, coloured by TreatmentGroup, titled 'Mean Baseline Systolic BP by Region and Treatment Group'."
 
 bp_summary <- data_clean %>%
   group_by(Region, TreatmentGroup) %>%
@@ -348,6 +351,7 @@ ggplot(region_gender, aes(x = Region, y = n, fill = Gender)) +
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Bar chart of n against Region, coloured by Gender, titled 'Patient Count by Region and Gender'."
 
 region_gender <- data_clean %>%
   count(Region, Gender) %>%

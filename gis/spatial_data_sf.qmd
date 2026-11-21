@@ -48,6 +48,7 @@ nrow(blocks)
 ```
 
 ```{r}
+#| fig-alt: "Map, titled '79 blocks of a synthetic district'."
 ggplot(blocks) + geom_sf(fill = "grey95", colour = "grey40") + labs(title = "79 blocks of a synthetic district")
 ```
 
@@ -112,6 +113,7 @@ summary(round(blocks_utm$km_to_facility, 1))
 ```
 
 ```{r}
+#| fig-alt: "Map, coloured by km to facility, titled 'Distance to the nearest facility (red points)'."
 ggplot(blocks_utm) + geom_sf(aes(fill = km_to_facility)) + geom_sf(data = fac, size = 1.8, colour = "red") +
   scale_fill_viridis_c(name = "km to nearest\nfacility", direction = -1) +
   labs(title = "Distance to the nearest facility (red points)")

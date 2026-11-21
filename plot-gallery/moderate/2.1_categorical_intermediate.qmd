@@ -117,6 +117,7 @@ ggplot(region_counts, aes(x = n, y = fct_reorder(Region, n))) +
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Scatter plot of Region against n, titled 'Patient Count by Region (Lollipop Chart)'."
 
 region_counts <- data_clean %>%
   count(Region) %>%
@@ -215,6 +216,7 @@ ggplot(tiles) +
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Plot, coloured by SmokingStatus, titled 'Smoking Status by Gender and Treatment Group'."
 
 tiles <- data_clean %>%
   filter(Gender %in% c("Male", "Female")) %>%
@@ -281,6 +283,7 @@ ggplot(exercise_counts, aes(x = ExerciseFreq, y = n, fill = ExerciseFreq)) +
 #| echo: false
 #| fig-width: 9
 #| fig-height: 7
+#| fig-alt: "Bar chart of n against ExerciseFreq, titled 'Exercise Frequency Distribution (Radial)'."
 
 exercise_counts <- data_clean %>%
   count(ExerciseFreq) %>%

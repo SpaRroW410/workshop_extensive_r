@@ -126,6 +126,7 @@ ggplot(treemap_data, aes(area = count, fill = Region,
 #| fig-width: 11
 #| fig-height: 7
 #| warning: false
+#| fig-alt: "Plot, coloured by Region, titled 'Patient Distribution by Region and Treatment'."
 
 treemap_data <- health_data %>%
   filter(!is.na(Region), !is.na(TreatmentGroup)) %>%
@@ -276,6 +277,7 @@ ggplot(radial_data, aes(x = Region, y = n, fill = SmokingStatus)) +
 #| echo: false
 #| fig-width: 9
 #| fig-height: 7
+#| fig-alt: "Bar chart of n against Region, coloured by SmokingStatus, titled 'Smoking Status Distribution by Region (Radial)'."
 
 radial_data <- health_data %>%
   filter(!is.na(Region), !is.na(SmokingStatus)) %>%
@@ -351,6 +353,7 @@ ggplot(marimekko_data, aes(x = Region, y = pct_in_region,
 #| fig-width: 10
 #| fig-height: 6
 #| warning: false
+#| fig-alt: "Bar chart of pct in region against Region, coloured by TreatmentGroup, titled 'Treatment Distribution by Region (Marimekko)'."
 
 marimekko_data <- health_data %>%
   filter(!is.na(Region), !is.na(TreatmentGroup)) %>%
@@ -459,6 +462,7 @@ ggplot(waffle_expanded, aes(x = x, y = y, fill = TreatmentGroup)) +
 #| fig-height: 6
 #| warning: false
 #| message: false
+#| fig-alt: "Heat map of y against x, coloured by TreatmentGroup, titled 'Patient Distribution by Treatment Group'."
 
 waffle_data <- health_data %>%
   filter(!is.na(TreatmentGroup)) %>%

@@ -35,6 +35,7 @@ Read first: [Grammar of Graphics](../data-visualization/ggplot_grammar.qmd) and 
 
 ```{r}
 #| fig-height: 3.5
+#| fig-alt: "Scatter plot of sbp against salt g, coloured by sex, one panel per residence."
 ggplot(ncd, aes(x = salt_g, y = sbp, colour = sex)) +
   geom_point(alpha = 0.6) +
   facet_wrap(~ residence) +

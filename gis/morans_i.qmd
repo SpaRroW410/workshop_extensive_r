@@ -67,6 +67,7 @@ mc
 ```
 
 ```{r}
+#| fig-alt: "Histogram of I, titled 'The observed I (red) against 999 random maps'."
 ggplot(tibble(I = mc$res[-length(mc$res)]), aes(I)) + geom_histogram(bins = 30, fill = "grey75", colour = "white") +
   geom_vline(xintercept = mc$statistic, colour = "red", linewidth = 1) +
   labs(x = "Moran's I of shuffled maps", y = "Count", title = "The observed I (red) against 999 random maps")
@@ -79,6 +80,7 @@ The smallest possible one-sided p-value with 999 shuffles is 1/1000 = 0.001.
 Plot each area's **value** (standardised) against its **spatial lag** (the average of its neighbours, standardised). The slope of the line **is Moran's I**.
 
 ```{r}
+#| fig-alt: "Scatter plot of lag z against z, with a fitted trend line, titled 'Moran scatterplot'."
 blocks$z <- as.numeric(scale(blocks$dengue_per_100k))
 blocks$lag_z <- lag.listw(lw, blocks$z, zero.policy = TRUE)
 ggplot(blocks, aes(z, lag_z)) +

@@ -145,6 +145,7 @@ ggplot(map_data_full, aes(x = long, y = lat, group = group, fill = mean_bp)) +
 #| fig-height: 7
 #| warning: false
 #| message: false
+#| fig-alt: "Plot of lat against long, coloured by mean bp, titled 'Average Blood Pressure by Region'."
 
 us_states <- map_data("state")
 
@@ -280,6 +281,7 @@ ggplot() +
 #| fig-height: 7
 #| warning: false
 #| message: false
+#| fig-alt: "Scatter plot of lat against long, titled 'Patient Locations by Blood Pressure Status'."
 
 set.seed(123)
 patient_locations <- health_data %>%
@@ -389,6 +391,7 @@ ggplot() +
 #| fig-height: 7
 #| warning: false
 #| message: false
+#| fig-alt: "Scatter plot of lat against long, titled 'Patient Density Heat Map'."
 
 ggplot() +
   geom_polygon(data = us_states, 
@@ -492,6 +495,7 @@ ggplot() +
 #| fig-height: 8
 #| warning: false
 #| message: false
+#| fig-alt: "Scatter plot of lat against long, one panel per TreatmentGroup, titled 'Patient Distribution by Treatment Group'."
 
 
 ggplot() +

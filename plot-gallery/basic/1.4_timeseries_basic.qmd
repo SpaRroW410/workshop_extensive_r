@@ -156,6 +156,7 @@ ggplot(mean_bp, aes(x = Month, y = Mean_SysBP)) +
 #| fig-width: 10
 #| fig-height: 6
 #| message: false
+#| fig-alt: "Line chart of Mean SysBP against Month, titled 'Mean Systolic Blood Pressure Over 6 Months'."
 
 mean_bp <- bp_long %>%
   group_by(Month) %>%
@@ -245,6 +246,7 @@ ggplot(mean_bp_group, aes(x = Month, y = Mean_SysBP,
 #| fig-width: 10
 #| fig-height: 6
 #| message: false
+#| fig-alt: "Line chart of Mean SysBP against Month, coloured by TreatmentGroup, titled 'Systolic BP by Treatment Group Over Time'."
 
 mean_bp_group <- bp_long %>%
   group_by(Month, TreatmentGroup) %>%
@@ -314,6 +316,7 @@ ggplot(bp_summary, aes(x = Month, y = Mean_SysBP,
 #| fig-width: 10
 #| fig-height: 6
 #| message: false
+#| fig-alt: "Line chart of Mean SysBP against Month, coloured by TreatmentGroup, titled 'Systolic BP Over Time with Standard Error'."
 
 bp_summary <- bp_long %>%
   group_by(Month, TreatmentGroup) %>%

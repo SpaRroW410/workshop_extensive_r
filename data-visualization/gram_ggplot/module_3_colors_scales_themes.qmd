@@ -111,6 +111,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, coloured by Region, titled 'ColorBrewer: Set2 Palette'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m, color = Region)) +
   geom_point(size = 2, alpha = 0.7) +
@@ -149,6 +150,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of Cholesterol against BMI, coloured by SysBP 0m, titled 'Viridis: Plasma'."
 
 ggplot(bp_data, aes(x = BMI, y = Cholesterol, color = SysBP_0m)) +
   geom_point(size = 2, alpha = 0.7) +
@@ -188,6 +190,7 @@ Always prefer colorblind-friendly palettes!
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, coloured by Region, titled 'Viridis Discrete'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m, color = Region)) +
   geom_point(size = 2, alpha = 0.7) +
@@ -247,6 +250,7 @@ Explore with: `paletteer_d_names`
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Box plot of SysBP 0m against AgeGroup, coloured by TreatmentGroup, titled 'NPG (Nature Publishing) Colors'."
 
 ggplot(bp_data, aes(x = AgeGroup, y = SysBP_0m, fill = TreatmentGroup)) +
   geom_boxplot(alpha = 0.8) +
@@ -287,6 +291,7 @@ Explore with: `paletteer_c_names`
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of BMI against Age, coloured by Cholesterol, titled 'Mako Gradient'."
 
 ggplot(bp_data, aes(x = Age, y = BMI, color = Cholesterol)) +
   geom_point(size = 2.5, alpha = 0.7) +
@@ -362,6 +367,7 @@ Can use named colors or hex codes
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, coloured by TreatmentGroup, titled 'Custom Manual Colors'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m, color = TreatmentGroup)) +
   geom_point(size = 2, alpha = 0.7) +
@@ -400,6 +406,7 @@ ggplot(region_summary,
 #| message: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Bar chart of Mean SysBP against Region, titled 'Custom Fill Colors'."
 
 ggplot(region_summary, aes(x = reorder(Region, Mean_SysBP), y = Mean_SysBP, fill = Region)) +
   geom_col() +
@@ -440,6 +447,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of BMI against Age, coloured by SysBP 0m, titled 'Two-Color Gradient'."
 
 ggplot(bp_data, aes(x = Age, y = BMI, color = SysBP_0m)) +
   geom_point(size = 2.5, alpha = 0.7) +
@@ -481,6 +489,7 @@ Perfect for showing increases vs decreases
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of BMI against Age, coloured by SysBP Change, titled 'Diverging Gradient'."
 
 ggplot(bp_data, aes(x = Age, y = BMI, color = SysBP_Change)) +
   geom_point(size = 2.5, alpha = 0.7) +
@@ -521,6 +530,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, titled 'Custom X-Axis'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m)) +
   geom_point(alpha = 0.5, color = "steelblue") +
@@ -565,6 +575,7 @@ ggplot(region_summary,
 #| message: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Bar chart of Mean SysBP against Region, titled 'Reordered & Relabeled'."
 
 ggplot(region_summary, aes(x = Region, y = Mean_SysBP, fill = Region)) +
   geom_col() +
@@ -633,6 +644,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Box plot of SysBP 0m against Region, titled 'Custom Text Elements'."
 
 ggplot(bp_data, aes(x = Region, y = SysBP_0m, fill = Region)) +
   geom_boxplot(alpha = 0.7) +
@@ -683,6 +695,7 @@ Great for academic publications
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, titled 'Systolic BP by Age'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m)) +
   geom_point(alpha = 0.5, color = "darkred", size = 2) +
@@ -726,6 +739,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of Cholesterol against BMI, titled 'Custom Line Elements'."
 
 ggplot(bp_data, aes(x = BMI, y = Cholesterol)) +
   geom_point(alpha = 0.6, color = "steelblue") +
@@ -772,6 +786,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Box plot of SysBP 0m against Region, titled 'Custom Backgrounds'."
 
 ggplot(bp_data, aes(x = Region, y = SysBP_0m)) +
   geom_boxplot(fill = "lightblue", alpha = 0.7) +
@@ -818,6 +833,7 @@ ggplot(bp_data,
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, titled 'Removed Elements'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m)) +
   geom_point(alpha = 0.5, color = "darkgreen") +
@@ -886,6 +902,7 @@ theme_clinical_report <- function(base_size = 12, base_family = "serif") {
 #| echo: false
 #| fig-width: 11
 #| fig-height: 7
+#| fig-alt: "Box plot of Mean SysBP against Months, coloured by TreatmentGroup, titled 'Mean Systolic BP Over Time'."
 
 bp_time <- bp_data %>%
   select(PatientID, TreatmentGroup, SysBP_0m, SysBP_3m, SysBP_6m) %>%
@@ -955,6 +972,7 @@ Can be overwhelming...
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, coloured by TreatmentGroup, titled 'Multiple Legends'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m, color = TreatmentGroup, 
                     size = BMI, shape = Gender)) +
@@ -995,6 +1013,7 @@ Keep only the most important legend(s)
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, coloured by TreatmentGroup, titled 'Selective Legend Removal'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m, color = TreatmentGroup, 
                     size = BMI, shape = Gender)) +
@@ -1035,6 +1054,7 @@ Or coordinates: `c(x, y)` where 0 ≤ x, y ≤ 1
 #| echo: false
 #| fig-width: 6
 #| fig-height: 5
+#| fig-alt: "Scatter plot of SysBP 0m against Age, coloured by TreatmentGroup, titled 'Legend at Bottom'."
 
 ggplot(bp_data, aes(x = Age, y = SysBP_0m, color = TreatmentGroup)) +
   geom_point(size = 2, alpha = 0.6) +

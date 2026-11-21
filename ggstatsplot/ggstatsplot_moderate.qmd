@@ -37,6 +37,7 @@ bp <- readxl::read_excel("../data/PublicHealth_BP_Dataset.xlsx")   # simulated t
 Use this when the same participants are measured more than once (paired/within-subjects design) — for example, pre-post measurements.
 
 ```{r}
+#| fig-alt: "Paired violin and box plots for repeated measurements of sbp against timepoint, with the test result, titled 'Systolic BP: Baseline vs 3 Months'."
 library(ggstatsplot)
 library(tidyr)
 
@@ -74,6 +75,7 @@ ggwithinstats(
 Use this when you want to compare proportions of a categorical outcome across groups. The output includes a χ² or Fisher's exact test.
 
 ```{r}
+#| fig-alt: "Stacked percentage bar chart of Region against SmokingStatus, with a chi-square test result, titled 'Smoking Status by Region'."
 ggbarstats(
   data  = bp,
   x     = SmokingStatus,    # the categories whose proportions fill each bar
@@ -91,6 +93,7 @@ ggbarstats(
 **Swap axes to change orientation:**
 
 ```{r}
+#| fig-alt: "Stacked percentage bar chart of SmokingStatus against Region, with a chi-square test result."
 # Make Region the outcome (fill) and SmokingStatus the groups
 ggbarstats(data = bp, x = Region, y = SmokingStatus)
 ```
@@ -102,6 +105,7 @@ ggbarstats(data = bp, x = Region, y = SmokingStatus)
 Use this for a single categorical variable, or two categorical variables where a pie chart is appropriate for the audience.
 
 ```{r}
+#| fig-alt: "Pie chart of proportions of TreatmentGroup, with a test result, titled 'Distribution of Treatment Groups'."
 # Single variable — proportions in each treatment group
 ggpiestats(
   data  = bp,
@@ -111,6 +115,7 @@ ggpiestats(
 ```
 
 ```{r}
+#| fig-alt: "Pie chart of proportions of TreatmentGroup against SmokingStatus, with a test result, titled 'Smoking Status by Treatment Group'."
 # Two variables — smoking status by treatment group
 ggpiestats(
   data  = bp,
@@ -134,6 +139,7 @@ is non-technical. For more categories or detailed comparisons, prefer
 All ggstatsplot functions return a ggplot2 object, so you can extend them normally.
 
 ```{r}
+#| fig-alt: "Violin and box plots of SysBP 0m against Region, with the test result in the subtitle, titled 'Systolic BP by Region'."
 library(ggplot2)
 
 ggbetweenstats(
@@ -170,6 +176,7 @@ ggbetweenstats(
 When you set `type = "bayes"`, ggstatsplot reports a **Bayes Factor (BF₁₀)** instead of a p-value.
 
 ```{r}
+#| fig-alt: "Violin and box plots of SysBP 0m against Region, with the test result in the subtitle, titled 'Systolic BP by Region (Bayesian)'."
 ggbetweenstats(
   data  = bp,
   x     = Region,

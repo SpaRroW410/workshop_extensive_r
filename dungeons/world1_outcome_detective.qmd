@@ -35,6 +35,7 @@ source("bank/items.R")
 
 ```{r}
 #| echo: false
+#| fig-alt: "Scatter plot of sbp against salt g, with a fitted trend line."
 ggplot(ncd, aes(salt_g, sbp)) + geom_point(alpha = .3, colour = col_blue) +
   geom_smooth(method = "lm", colour = col_red, formula = y ~ x) +
   labs(x = "Salt intake (g/day)", y = "Systolic BP (mmHg)")

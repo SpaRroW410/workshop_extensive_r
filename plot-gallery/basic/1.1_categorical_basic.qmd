@@ -141,6 +141,7 @@ ggplot(data_clean, aes(x = Region)) +
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Bar chart of Region, titled 'Patient Distribution by Region'."
 
 ggplot(data_clean, aes(x = Region)) +
   geom_bar(fill = "steelblue", alpha = 0.8) +
@@ -193,6 +194,7 @@ ggplot(smoking_counts, aes(x = n, y = reorder(SmokingStatus, n))) +
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Bar chart of SmokingStatus against n, titled 'Patient Count by Smoking Status (Ranked)'."
 
 smoking_counts <- data_clean %>%
   count(SmokingStatus) %>%
@@ -281,6 +283,7 @@ ggplot(treatment_summary, aes(x = "", y = n, fill = TreatmentGroup)) +
 #| echo: false
 #| fig-width: 8
 #| fig-height: 6
+#| fig-alt: "Bar chart of n, coloured by TreatmentGroup, titled 'Treatment Group Distribution'."
 
 treatment_summary <- data_clean %>%
   count(TreatmentGroup) %>%
@@ -339,6 +342,7 @@ ggplot(gender_summary, aes(x = 2, y = n, fill = Gender)) +  # x=2 creates the ho
 #| echo: false
 #| fig-width: 9
 #| fig-height: 6
+#| fig-alt: "Bar chart of n, coloured by Gender, titled 'Patient Gender Distribution'."
 
 gender_summary <- data_clean %>%
   count(Gender) %>%
@@ -399,6 +403,7 @@ Stacked bars show both total count AND composition within each category
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Bar chart of Region, coloured by SmokingStatus, titled 'Smoking Status Distribution by Region'."
 
 ggplot(data_clean, aes(x = Region, fill = SmokingStatus)) +
   geom_bar(position = "stack", alpha = 0.8) +

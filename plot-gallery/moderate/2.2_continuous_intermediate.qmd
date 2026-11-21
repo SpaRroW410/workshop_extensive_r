@@ -121,6 +121,7 @@ Violin plot = rotated density plot on each side. Wider = more data at that value
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Violin plot of BMI against Region, titled 'BMI Distribution by Region (Violin Plot)'."
 
 ggplot(data_clean, aes(x = Region, y = BMI, fill = Region)) +
   geom_violin(alpha = 0.7, trim = FALSE) +
@@ -202,6 +203,7 @@ Ridgeline plots are perfect when comparing 3+ groups. Scale parameter controls o
 #| fig-height: 6
 #| message: false
 #| warning: false
+#| fig-alt: "Ridgeline density plot of ExerciseFreq against Cholesterol, titled 'Cholesterol Distribution by Exercise Frequency'."
 
 ggplot(data_clean, aes(x = Cholesterol, y = ExerciseFreq, fill = ExerciseFreq)) +
   geom_density_ridges(alpha = 0.7, scale = 1.2) +
@@ -252,6 +254,7 @@ ggplot(data_clean, aes(x = Age, y = Cholesterol)) +
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Scatter plot of Cholesterol against Age, titled '2D Density: Age vs. Cholesterol Relationship'."
 
 ggplot(data_clean, aes(x = Age, y = Cholesterol)) +
   geom_density_2d_filled(alpha = 0.8, contour_var = "ndensity") +
@@ -302,6 +305,7 @@ Hexbin divides plot into hexagons and counts points in each. Better than overlap
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Plot of BloodSugar against BMI, titled 'BMI vs. Blood Sugar (Hexbin Plot)'."
 
 ggplot(data_clean, aes(x = BMI, y = BloodSugar)) +
   geom_hex(bins = 30) +
@@ -354,6 +358,7 @@ ggplot(data_clean, aes(x = Age, y = SysBP_0m)) +
 #| echo: false
 #| fig-width: 10
 #| fig-height: 6
+#| fig-alt: "Scatter plot of SysBP 0m against Age, with a fitted trend line, titled 'Age vs. Baseline Systolic BP with Regression Line'."
 
 ggplot(data_clean, aes(x = Age, y = SysBP_0m)) +
   geom_point(alpha = 0.5, color = "steelblue", size = 2.5) +
