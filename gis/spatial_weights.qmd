@@ -1,5 +1,7 @@
 ---
 title: "Neighbours and Spatial Weights"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -119,3 +121,34 @@ The conclusion is similar here because the clustering is strong, but with a weak
 -   Row-standardised weights make the spatial lag the **average of neighbours**.
 -   Look for **isolates** and areas with very many neighbours; report your choice and test the sensitivity.
 -   Next: **[Global Moran's I](morans_i.qmd)**.
+
+**Practise it:** this page is the reading for **[GIS workshop, Session 2: Neighbours and weights](../gis-workshop/s2_neighbours_weights.qmd)**, which has the lab.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("sw1", "With row-standardised weights (style W), what is the spatial lag of a block?",
+         c("The sum of all values in the district", "The average of its neighbours' values", "The block's value minus the district mean", "The distance to the nearest neighbour"), answer = 2,
+         explain = "Each row of the weights sums to 1, so the lag is the mean of the neighbours' values.")
+quiz_mcq("sw2", "Which neighbour definition suits point data such as facilities?",
+         c("Queen contiguity (shared border or corner)", "Rook contiguity (shared border only)", "k-nearest neighbours or a distance band", "Neighbours by alphabetical block name"), answer = 3,
+         explain = "Points have no borders, so contiguity cannot be used; k-nearest neighbours or a distance threshold define who is near.")
+quiz_mcq("sw3", "An island block has no neighbours. Why does that matter?",
+         c("It doubles the weight of every other block", "Its lag is undefined; tests may fail or mislead", "Moran's I then drops to zero", "It must be deleted from the data before any test"), answer = 2,
+         explain = "An isolate has no neighbours to average; look for isolates (zero.policy) and decide how to handle them, then report it.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

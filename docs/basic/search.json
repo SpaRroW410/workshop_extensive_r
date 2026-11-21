@@ -18,7 +18,7 @@
     "href": "statistical-analysis/statistical_tests.html#practise-in-r",
     "title": "Statistical Tests and Analysis",
     "section": "Practise in R",
-    "text": "Practise in R\nDownload the lab Which test? and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+    "text": "Practise in R\nDownload the lab Which test? and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n🗺️ Then play the game world Which Test? and Tests in Context in Dungeons & Dataframes."
   },
   {
     "objectID": "statistical-analysis/statistical_tests.html#self-check-quiz",
@@ -88,7 +88,7 @@
     "href": "r-foundations/merging_dataset.html#practise-in-r",
     "title": "Merging Datasets",
     "section": "Practise in R",
-    "text": "Practise in R\nDownload the lab Joining and reshaping and the data (ncd_round1.csv · ncd_round2.csv · villages.csv). Fill in the blanks (___); the comments say what each step should do."
+    "text": "Practise in R\nDownload the lab Joining and reshaping and the data (ncd_round1.csv · ncd_round2.csv · villages.csv). Fill in the blanks (___); the comments say what each step should do.\n🗺️ Then play the game world Join Junction in Dungeons & Dataframes."
   },
   {
     "objectID": "r-foundations/merging_dataset.html#self-check-quiz",
@@ -291,7 +291,7 @@
     "href": "quarto_repro_w/reproducible_writing.html#self-check-quiz",
     "title": "Reproducible Writing with Quarto",
     "section": "Self-check quiz",
-    "text": "Self-check quiz\n\nWhy write r mean(age) inline instead of typing the number into the text?\n\nInline code makes the whole document render more quickly\nThe number updates with the data, so text and results agree\nTyped numbers cannot be formatted to a fixed number of decimals\nQuarto refuses to render typed numbers\n\n\n\nWhat does #| include: false do to a setup chunk?\n\nRuns the chunk but shows neither code nor output\nSkips the chunk when rendering, so its code is not run\nShows the code but hides any messages\nMoves the chunk to the end of the document\n\n\n\nA figure chunk has #| label: fig-age. What does the fig- prefix allow?\n\nSaving the figure to a separate file\nNumbered cross-references such as ?@fig-age\nChanging the size of the figure on the page\nHiding the figure in the HTML output\n\n\nYour score:  (first attempt counts)"
+    "text": "Self-check quiz\n\nWhy write r mean(age) inline instead of typing the number into the text?\n\nInline code makes the whole document render more quickly\nThe number updates with the data, so text and results agree\nTyped numbers cannot be formatted to a fixed number of decimals\nQuarto refuses to render typed numbers\n\n\n\nWhat does #| include: false do to a setup chunk?\n\nRuns the chunk but shows neither code nor output\nSkips the chunk when rendering, so its code is not run\nShows the code but hides any messages\nMoves the chunk to the end of the document\n\n\n\nA figure chunk has #| label: fig-age. What does the fig- prefix allow?\n\nSaving the figure to a separate file\nCross-references such as @fig-age\nChanging the size of the figure on the page\nHiding the figure in the HTML output\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "plot-gallery/basic/1.3_category_vs_continuous_basic.html#what-is-category-vs.-continuous-data",
@@ -557,7 +557,7 @@
     "href": "plot-gallery/basic.html",
     "title": "Basic Plots",
     "section": "",
-    "text": "Foundations of Plots View Slide Deck →\n\n\nExplore foundational plots grouped by data type and relationship\n\n\n\nIncludes: Bar chart, Pie chart, Donut chart, Stacked bar chart 🔗 View Slide Deck →\n\n\n\n\nIncludes: Histogram, Density plot, Scatter plot\n🔗 View Slide Deck →\n\n\n\n\nIncludes: Box plot, Grouped Bar, Stacked Bar plot 🔗 View Slide Deck →\n\n\n\n\nIncludes: Simple Line Chart, Multiple Line Chart (comparing groups), Line Chart with Points 🔗 View Slide Deck →\n\n\n\n\nDownload the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n\n\n\n\nWhich plot shows the distribution of one continuous variable, such as age?\n\nA histogram\nA pie chart\nA bar chart of counts\nA line chart over time\n\n\n\nYou compare systolic BP between three activity groups. Which plot shows the median, the spread and the outliers of each group?\n\nA scatter plot of SBP\nA box plot per group\nA histogram of all patients\nA pie chart of the groups\n\n\n\nIn ggplot2, what does aes(x = bmi, y = sbp) do?\n\nDraws the points in the plotting area\nSets the colour theme for the whole plot\nMaps variables to positions on the plot\nSorts the data before the plot is drawn\n\n\n\nA bar chart of counts starts its y-axis at 50 instead of 0. Why is that misleading?\n\nggplot2 then drops the smallest category from the plot\nThe legend then shows the wrong group names\nBars starting at 50 cannot be coloured by group\nBar lengths no longer show the counts in proportion\n\n\nYour score:  (first attempt counts)"
+    "text": "Foundations of Plots View Slide Deck →\n\n\nExplore foundational plots grouped by data type and relationship\n\n\n\nIncludes: Bar chart, Pie chart, Donut chart, Stacked bar chart 🔗 View Slide Deck →\n\n\n\n\nIncludes: Histogram, Density plot, Scatter plot\n🔗 View Slide Deck →\n\n\n\n\nIncludes: Box plot, Grouped Bar, Stacked Bar plot 🔗 View Slide Deck →\n\n\n\n\nIncludes: Simple Line Chart, Multiple Line Chart (comparing groups), Line Chart with Points 🔗 View Slide Deck →\n\n\n\n\nDownload the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n🗺️ Then play the game world First Plots in Dungeons & Dataframes.\n\n\n\n\nWhich plot shows the distribution of one continuous variable, such as age?\n\nA histogram\nA pie chart\nA bar chart of counts\nA line chart over time\n\n\n\nYou compare systolic BP between three activity groups. Which plot shows the median, the spread and the outliers of each group?\n\nA scatter plot of SBP\nA box plot per group\nA histogram of all patients\nA pie chart of the groups\n\n\n\nIn ggplot2, what does aes(x = bmi, y = sbp) do?\n\nDraws the points in the plotting area\nSets the colour theme for the whole plot\nMaps variables to positions on the plot\nSorts the data before the plot is drawn\n\n\n\nA bar chart of counts starts its y-axis at 50 instead of 0. Why is that misleading?\n\nggplot2 then drops the smallest category from the plot\nThe legend then shows the wrong group names\nBars starting at 50 cannot be coloured by group\nBar lengths no longer show the counts in proportion\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "plot-gallery/basic.html#basic-plot",
@@ -571,7 +571,7 @@
     "href": "plot-gallery/basic.html#practise-in-r",
     "title": "Basic Plots",
     "section": "",
-    "text": "Download the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+    "text": "Download the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n🗺️ Then play the game world First Plots in Dungeons & Dataframes."
   },
   {
     "objectID": "plot-gallery/basic.html#self-check-quiz",
@@ -592,7 +592,7 @@
     "href": "data-visualization/ggplot_grammar.html#practise-in-r",
     "title": "Grammar of Graphics",
     "section": "Practise in R",
-    "text": "Practise in R\nDownload the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+    "text": "Practise in R\nDownload the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n🗺️ Then play the game world First Plots in Dungeons & Dataframes."
   },
   {
     "objectID": "references.html",
@@ -1677,7 +1677,7 @@
     "href": "r-foundations/data-wrangling.html#calculate-time-intervals",
     "title": "Data Wrangling in R",
     "section": "Calculate Time Intervals",
-    "text": "Calculate Time Intervals\n\nQuestion: How many days since baseline for each patient?\n\n\n\n\nShow the code\nbp_clean |&gt; \n  mutate(\n    today_date = today(),\n    days_since_baseline = today() - baseline_date,\n    weeks_since_baseline = as.numeric(days_since_baseline) / 7\n  ) |&gt; \n  select(patient_id, baseline_date, days_since_baseline, weeks_since_baseline)\n\n\n#&gt; # A tibble: 200 × 4\n#&gt;    patient_id baseline_date       days_since_baseline weeks_since_baseline\n#&gt;         &lt;dbl&gt; &lt;dttm&gt;              &lt;dttm&gt;                             &lt;dbl&gt;\n#&gt;  1          1 2025-05-03 13:06:39 1914-08-31 16:39:38          -249465260.\n#&gt;  2          2 2025-04-15 10:45:27 1914-09-18 19:00:50          -249241879.\n#&gt;  3          3 2025-06-14 07:24:46 1914-07-20 22:21:31          -249980730.\n#&gt;  4          4 2025-02-02 10:10:45 1914-11-29 19:35:32          -248352895.\n#&gt;  5          5 2025-04-17 10:41:06 1914-09-16 19:05:11          -249266527 \n#&gt;  6          6 2025-05-30 10:58:02 1914-08-04 18:48:15          -249797415 \n#&gt;  7          7 2025-06-21 07:35:32 1914-07-13 22:10:45          -250067222.\n#&gt;  8          8 2025-05-11 05:45:48 1914-08-24 00:00:29          -249560224.\n#&gt;  9          9 2025-05-19 08:17:50 1914-08-15 21:28:27          -249660270.\n#&gt; 10         10 2025-03-21 03:56:29 1914-10-14 01:49:48          -248929802.\n#&gt; # ℹ 190 more rows"
+    "text": "Calculate Time Intervals\n\nQuestion: How many days since baseline for each patient?\n\n\n\n\nShow the code\nbp_clean |&gt; \n  mutate(\n    today_date = today(),\n    days_since_baseline = today() - baseline_date,\n    weeks_since_baseline = as.numeric(days_since_baseline) / 7\n  ) |&gt; \n  select(patient_id, baseline_date, days_since_baseline, weeks_since_baseline)\n\n\n#&gt; # A tibble: 200 × 4\n#&gt;    patient_id baseline_date       days_since_baseline weeks_since_baseline\n#&gt;         &lt;dbl&gt; &lt;dttm&gt;              &lt;dttm&gt;                             &lt;dbl&gt;\n#&gt;  1          1 2025-05-03 13:06:39 1914-08-31 16:39:39          -249465260.\n#&gt;  2          2 2025-04-15 10:45:27 1914-09-18 19:00:51          -249241878.\n#&gt;  3          3 2025-06-14 07:24:46 1914-07-20 22:21:32          -249980730.\n#&gt;  4          4 2025-02-02 10:10:45 1914-11-29 19:35:33          -248352895.\n#&gt;  5          5 2025-04-17 10:41:06 1914-09-16 19:05:12          -249266527.\n#&gt;  6          6 2025-05-30 10:58:02 1914-08-04 18:48:16          -249797415.\n#&gt;  7          7 2025-06-21 07:35:32 1914-07-13 22:10:46          -250067222 \n#&gt;  8          8 2025-05-11 05:45:48 1914-08-24 00:00:30          -249560224.\n#&gt;  9          9 2025-05-19 08:17:50 1914-08-15 21:28:28          -249660270.\n#&gt; 10         10 2025-03-21 03:56:29 1914-10-14 01:49:49          -248929802.\n#&gt; # ℹ 190 more rows"
   },
   {
     "objectID": "r-foundations/data-wrangling.html#adding-time-periods",
@@ -1978,7 +1978,7 @@
     "href": "r-foundations/data-wrangling.html#practise-in-r",
     "title": "Data Wrangling in R",
     "section": "🔧 Practise in R",
-    "text": "🔧 Practise in R\nDownload the lab Tidy data with dplyr and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+    "text": "🔧 Practise in R\nDownload the lab Tidy data with dplyr and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n🗺️ Then play the game world Tidy Tavern in Dungeons & Dataframes."
   },
   {
     "objectID": "r-foundations/data-wrangling.html#self-check-quiz-15",
@@ -2181,7 +2181,7 @@
     "href": "r-foundations/getting-started.html#practise-in-r",
     "title": "Introduction to R",
     "section": "🔧 Practise in R",
-    "text": "🔧 Practise in R\nDownload the lab Your first script and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+    "text": "🔧 Practise in R\nDownload the lab Your first script and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n🗺️ Then play the game world Your First Script in Dungeons & Dataframes."
   },
   {
     "objectID": "r-foundations/getting-started.html#self-check-quiz-15",

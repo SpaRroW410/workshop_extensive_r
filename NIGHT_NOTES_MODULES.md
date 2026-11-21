@@ -35,6 +35,10 @@ reviewer later.
 | N22 | 3.7 and practical_application: flexdashboard/Quarto/Shiny templates shown as `markdown` / `r` display blocks, not `eval: false` R chunks | They are documents and apps, not code that can run inside a slide; the plotly and publication-figure examples do run |
 | N23 | `plot_data` deck: every content slide gets `.smaller .scrollable` | 31 of its slides overflow and their headings contain colour spans the fix script cannot match; deck-level `scrollable:` is not honoured by Quarto |
 | N24 | Workshop quiz ids such as `s1q1` repeat across workshops: left as is | Scores are saved per deck, so they do not collide; renaming belongs to U3 (workshops). New base-module ids are unique |
+| N25 | `quarto_advanced` stays in the Advanced track | The plan asked to decide Advanced vs a future Publication track; nothing else would go in that track yet, so moving it now would leave an empty track. Easy to move later |
+| N26 | `ggstatsplot_advanced` runs on the simulated BP trial; its Bayes-factor wording uses the real numbers (BF₁₀ ≈ 10⁵ at 6 months, 0.19 at baseline) | The page referred to `overall_up`, a dataset that is not in the repo, and quoted invented BFs |
+| N27 | GIS reading pages get no lab; each links to the GIS workshop session that teaches it | As the plan says: the workshop has the labs |
+| N28 | Game: worlds' "Read first" links already point at the unit pages (paths unchanged), so only the other direction (D8) was added: each unit page's lab paragraph links to its world | `scripts/add_game_links.py`; the link climbs to the site root, so it works from every track |
 | N12 | R 4.3.3 (Ubuntu) cannot install `ggstatsplot` 1.1.4 (needs R ≥ 4.5): 0.13.0 from a dated snapshot is used | No newer R is available from the system packages here |
 
 ## Progress
@@ -48,3 +52,5 @@ reviewer later.
 | U2 Moderate track | ✅ committed (`3c3bce6`, `a1e2cf7`) | 53 questions on 15 pages, lint clean, keys read; 15 pages pass quiz test; 6 labs run; cheat sheet; M1 free (N16); 6 tracks render; links 0/0; cloud 43/43 |
 | U7 Data Viz electives (full) | ✅ committed (`80b7193`) | 23 questions on 7 pages; 4 labs run; advanced gallery 3.2–3.7 run on real data; interactive page written; ggmosaic replaced (U0 item 12) |
 | Slide overflow, M3 + V decks | ✅ committed | 16 decks OK in overflow.js (only .scrollable slides left); 6 tracks render exit 0 |
+| U-GIS (7 pages) + U-ADV (2 pages) | ✅ committed | 27 questions, lint 0 hard failures (1 wording warning), keys read; 9 pages pass quiz test; ggstatsplot_advanced runs |
+| U-GAME D8 page → world links | ✅ committed | 12 unit pages; 7 tracks render exit 0; links 0/0; cloud 43/43; quest e2e and bank lint pass |

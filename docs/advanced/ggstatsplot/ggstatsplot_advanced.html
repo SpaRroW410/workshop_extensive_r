@@ -6,6 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Sparrow">
+<meta name="dcterms.date" content="2026-11-20">
 
 <title>ggstatsplot — Advanced – Medical Statistics in R — Advanced</title>
 <style>
@@ -82,6 +84,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-16b6e5b254f8b2b1abd3f8e69d611555.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -406,6 +411,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#publication-ready-output" id="toc-publication-ready-output" class="nav-link" data-scroll-target="#publication-ready-output">Publication-ready output</a></li>
   <li><a href="#case-study-healthcare-data" id="toc-case-study-healthcare-data" class="nav-link" data-scroll-target="#case-study-healthcare-data">Case Study: Healthcare Data</a></li>
   <li><a href="#quick-reference" id="toc-quick-reference" class="nav-link" data-scroll-target="#quick-reference">Quick reference</a></li>
+  <li><a href="#self-check-quiz" id="toc-self-check-quiz" class="nav-link" data-scroll-target="#self-check-quiz">Self-check quiz</a></li>
   </ul>
 </nav>
     </div>
@@ -421,7 +427,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Sparrow </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 20, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -466,34 +484,48 @@ Note
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Default Cauchy prior (r = 0.707) — appropriate for most comparisons</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbetweenstats</span>(</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data         =</span> overall_up,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">x            =</span> intervention,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">y            =</span> sbp_0m,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data         =</span> bp,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">x            =</span> TreatmentGroup,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">y            =</span> SysBP_6m,</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">type         =</span> <span class="st">"bayes"</span>,</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">bf.prior     =</span> <span class="fl">0.707</span>,        <span class="co"># scale of Cauchy prior on effect size</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">title        =</span> <span class="st">"SBP by Intervention (Bayesian, default prior)"</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Narrow prior — use if you expect a small effect</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbetweenstats</span>(</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">data         =</span> overall_up,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">x            =</span> intervention,</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">y            =</span> sbp_0m,</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">type         =</span> <span class="st">"bayes"</span>,</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">bf.prior     =</span> <span class="fl">0.5</span>,</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">title        =</span> <span class="st">"SBP by Intervention (narrow prior)"</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">title        =</span> <span class="st">"SBP at 6 months by treatment (Bayesian, default prior)"</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="ggstatsplot_advanced_files/figure-html/unnamed-chunk-2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="ggstatsplot_advanced_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
 </div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Narrow prior — use if you expect a small effect</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbetweenstats</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data         =</span> bp,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x            =</span> TreatmentGroup,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y            =</span> SysBP_6m,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type         =</span> <span class="st">"bayes"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">bf.prior     =</span> <span class="fl">0.5</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">title        =</span> <span class="st">"SBP at 6 months by treatment (narrow prior)"</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="ggstatsplot_advanced_files/figure-html/unnamed-chunk-2-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="ggstatsplot_advanced_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>With this much data the prior hardly matters: BF₁₀ is about 100,000 with r = 0.707 and about 94,000 with r = 0.5 (computed with <code>BayesFactor::ttestBF()</code>). The prior matters most when the evidence is weak; report which one you used.</p>
 </section>
 <section id="reporting-bayes-factors-in-text" class="level3">
 <h3 class="anchored" data-anchor-id="reporting-bayes-factors-in-text">Reporting Bayes factors in text</h3>
-<p>When BF₁₀ = 18.4:</p>
+<p>For SBP <strong>at 6 months</strong> (control 135.7, intervention 125.1 mmHg):</p>
 <blockquote class="blockquote">
-<p>“A Bayesian independent-samples t-test revealed moderate-to-strong evidence for a difference in baseline SBP between intervention groups, BF₁₀ = 18.4, δ = 0.41, 95% credible interval [0.18, 0.65].”</p>
+<p>“A Bayesian independent-samples t-test (Cauchy prior, r = 0.707) gave extreme evidence for a difference in systolic BP at 6 months between the treatment groups, BF₁₀ ≈ 1 × 10⁵.”</p>
 </blockquote>
-<p>When BF₁₀ = 0.21:</p>
+<p>For SBP <strong>at baseline</strong>, where randomisation should leave no difference:</p>
 <blockquote class="blockquote">
-<p>“A Bayesian independent-samples t-test provided moderate evidence in favour of the null hypothesis (no difference in SBP), BF₁₀ = 0.21.”</p>
+<p>“The Bayes factor favoured no baseline difference between the groups, BF₁₀ = 0.19 (BF₀₁ = 5.3, moderate evidence for the null).”</p>
 </blockquote>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -509,7 +541,7 @@ Note
 <li><strong>BF₁₀</strong>: evidence for H₁ over H₀ (use when testing for an effect)</li>
 <li><strong>BF₀₁ = 1/BF₁₀</strong>: evidence for H₀ over H₁ (use when supporting the null)</li>
 </ul>
-<p>ggstatsplot reports BF₁₀ by default. To interpret support for H₀, invert it.</p>
+<p>ggstatsplot prints <strong>log<sub>e</sub>(BF₀₁)</strong> in the subtitle; convert with BF₁₀ = exp(−value). A p-value cannot show support for “no difference”; a Bayes factor can.</p>
 </div>
 </div>
 <hr>
@@ -519,25 +551,50 @@ Note
 <h2 class="anchored" data-anchor-id="grouped_-functions-faceted-comparisons"><code>grouped_*</code> Functions — Faceted Comparisons</h2>
 <p>The <code>grouped_*</code> variants run the same comparison separately within each level of a grouping variable and combine the results into a faceted plot.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare SBP across tobacco types, separately by sex</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grouped_ggbetweenstats</span>(</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data             =</span> overall_up,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x                =</span> tobacco_type,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y                =</span> sbp_0m,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">grouping.var     =</span> sex,           <span class="co"># one panel per sex</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">title            =</span> <span class="st">"SBP by Tobacco Type, stratified by Sex"</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">plotgrid.args    =</span> <span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare SBP across smoking groups, separately in each treatment arm</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grouped_ggbetweenstats</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data             =</span> bp,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x                =</span> SmokingStatus,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y                =</span> SysBP_6m,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">grouping.var     =</span> TreatmentGroup,   <span class="co"># one panel per arm</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">annotation.args  =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"SBP at 6 months by smoking status, stratified by arm"</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">plotgrid.args    =</span> <span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="ggstatsplot_advanced_files/figure-html/unnamed-chunk-3-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="ggstatsplot_advanced_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlation stratified by intervention group</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grouped_ggscatterstats</span>(</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data         =</span> overall_up,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x            =</span> current_age,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y            =</span> sbp_0m,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">grouping.var =</span> intervention,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">title        =</span> <span class="st">"Age vs SBP by Intervention Group"</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlation stratified by TreatmentGroup group</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grouped_ggscatterstats</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data         =</span> bp,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x            =</span> Age,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y            =</span> SysBP_0m,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">grouping.var =</span> TreatmentGroup,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">annotation.args =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Age vs baseline SBP by treatment group"</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'ggside':
+  method from   
+  +.gg   ggplot2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_xsidebin()` using `bins = 30`. Pick better value `binwidth`.
+`stat_ysidebin()` using `bins = 30`. Pick better value `binwidth`.
+`stat_xsidebin()` using `bins = 30`. Pick better value `binwidth`.
+`stat_ysidebin()` using `bins = 30`. Pick better value `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="ggstatsplot_advanced_files/figure-html/unnamed-chunk-4-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="ggstatsplot_advanced_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
 </div>
 <p><strong>Available grouped functions:</strong></p>
 <ul>
@@ -556,12 +613,19 @@ Note
 <h2 class="anchored" data-anchor-id="ggcorrmat-correlation-matrix"><code>ggcorrmat()</code> — Correlation Matrix</h2>
 <p>Visualises pairwise correlations across multiple continuous variables with significance annotations.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcorrmat</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data   =</span> overall_up <span class="sc">|&gt;</span> <span class="fu">select</span>(current_age, sbp_0m, sbp_3m, sbp_6m,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                                 consumption_per_day_0m),</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">title  =</span> <span class="st">"Correlation Matrix — Baseline Variables"</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type   =</span> <span class="st">"parametric"</span>     <span class="co"># "parametric", "nonparametric", "robust", "bayes"</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcorrmat</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data   =</span> bp <span class="sc">|&gt;</span> <span class="fu">select</span>(Age, SysBP_0m, SysBP_3m, SysBP_6m,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                                 BMI, Cholesterol),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">title  =</span> <span class="st">"Correlation Matrix — Baseline Variables"</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type   =</span> <span class="st">"parametric"</span>     <span class="co"># "parametric", "nonparametric", "robust", "bayes"</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="ggstatsplot_advanced_files/figure-html/unnamed-chunk-5-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="ggstatsplot_advanced_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
 </div>
 <p><strong>Choosing the correlation type:</strong></p>
 <table class="caption-top table">
@@ -601,124 +665,574 @@ Note
 <h2 class="anchored" data-anchor-id="combining-with-patchwork">Combining with patchwork</h2>
 <p>All ggstatsplot outputs are ggplot2 objects and compose naturally with <code>patchwork</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggbetweenstats</span>(</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data  =</span> overall_up,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">x     =</span> intervention,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">y     =</span> sbp_0m,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Baseline SBP"</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggbetweenstats</span>(</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data  =</span> overall_up,</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">x     =</span> intervention,</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">y     =</span> sbp_3m,</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"3-Month SBP"</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggscatterstats</span>(</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">data  =</span> overall_up,</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">x     =</span> sbp_0m,</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">y     =</span> sbp_3m,</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Baseline vs 3-Month SBP"</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Compose: two plots on top, one full-width below</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">|</span> p2) <span class="sc">/</span> p3 <span class="sc">+</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">title   =</span> <span class="st">"Blood Pressure Outcomes by Intervention"</span>,</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Source: NCTOH Study Dataset"</span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggbetweenstats</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data  =</span> bp,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">x     =</span> TreatmentGroup,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">y     =</span> SysBP_0m,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Baseline SBP"</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggbetweenstats</span>(</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data  =</span> bp,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">x     =</span> TreatmentGroup,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">y     =</span> SysBP_3m,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"3-Month SBP"</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggscatterstats</span>(</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">data  =</span> bp,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">x     =</span> SysBP_0m,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">y     =</span> SysBP_3m,</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Baseline vs 3-Month SBP"</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Compose: two plots on top, one full-width below</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">|</span> p2) <span class="sc">/</span> p3 <span class="sc">+</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">title   =</span> <span class="st">"Blood pressure outcomes by treatment group"</span>,</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Source: simulated BP trial (data/README.md)"</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_xsidebin()` using `bins = 30`. Pick better value `binwidth`.
+`stat_ysidebin()` using `bins = 30`. Pick better value `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="ggstatsplot_advanced_files/figure-html/unnamed-chunk-6-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="ggstatsplot_advanced_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
 </div>
 <hr>
 </section>
 <section id="publication-ready-output" class="level2">
 <h2 class="anchored" data-anchor-id="publication-ready-output">Publication-ready output</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>pub_plot <span class="ot">&lt;-</span> <span class="fu">ggbetweenstats</span>(</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data             =</span> overall_up,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">x                =</span> intervention,</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">y                =</span> sbp_0m,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">type             =</span> <span class="st">"parametric"</span>,</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pairwise.display =</span> <span class="st">"significant"</span>,    <span class="co"># show only significant comparisons</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">p.adjust.method  =</span> <span class="st">"bonferroni"</span>,</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">title            =</span> <span class="st">"Baseline Systolic Blood Pressure by Intervention Group"</span>,</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab             =</span> <span class="st">"Intervention Group"</span>,</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab             =</span> <span class="st">"Systolic BP (mmHg)"</span>,</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">package          =</span> <span class="st">"RColorBrewer"</span>,</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette          =</span> <span class="st">"Set1"</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title       =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.line        =</span> <span class="fu">element_line</span>(<span class="at">linewidth =</span> <span class="fl">0.5</span>),</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption     =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">colour =</span> <span class="st">"grey50"</span>)</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">"Bonferroni-adjusted pairwise comparisons shown for p &lt; 0.05"</span>)</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Save at print quality</span></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"figures/sbp_by_intervention.png"</span>,</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>       pub_plot, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>pub_plot <span class="ot">&lt;-</span> <span class="fu">ggbetweenstats</span>(</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data             =</span> bp,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">x                =</span> TreatmentGroup,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">y                =</span> SysBP_6m,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">type             =</span> <span class="st">"parametric"</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pairwise.display =</span> <span class="st">"significant"</span>,    <span class="co"># show only significant comparisons</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">p.adjust.method  =</span> <span class="st">"bonferroni"</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">title            =</span> <span class="st">"Systolic blood pressure at 6 months by treatment group"</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab             =</span> <span class="st">"Treatment group"</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab             =</span> <span class="st">"Systolic BP (mmHg)"</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">package          =</span> <span class="st">"RColorBrewer"</span>,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette          =</span> <span class="st">"Set1"</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title       =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.line        =</span> <span class="fu">element_line</span>(<span class="at">linewidth =</span> <span class="fl">0.5</span>),</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption     =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">colour =</span> <span class="st">"grey50"</span>)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">"Bonferroni-adjusted pairwise comparisons shown for p &lt; 0.05"</span>)</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Save at print quality</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">"sbp_by_treatment.png"</span>),   <span class="co"># in a project: "figures/..."</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>       pub_plot, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
 </section>
 <section id="case-study-healthcare-data" class="level2">
 <h2 class="anchored" data-anchor-id="case-study-healthcare-data">Case Study: Healthcare Data</h2>
-<p>A complete example using the NCTOH study dataset — comparing the change in SBP across intervention groups, accounting for tobacco type.</p>
+<p>A complete example on the simulated BP trial: the change in SBP from baseline to 6 months across treatment groups, overall and by smoking status.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggstatsplot)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Derive SBP change variable</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>study_data <span class="ot">&lt;-</span> overall_up <span class="sc">|&gt;</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sbp_change =</span> sbp_3m <span class="sc">-</span> sbp_0m)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Overall change by intervention</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>p_overall <span class="ot">&lt;-</span> <span class="fu">ggbetweenstats</span>(</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data  =</span> study_data,</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">x     =</span> intervention,</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">y     =</span> sbp_change,</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">type  =</span> <span class="st">"parametric"</span>,</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Change in SBP at 3 Months"</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Stratified by tobacco type</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>p_strat <span class="ot">&lt;-</span> <span class="fu">grouped_ggbetweenstats</span>(</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">data         =</span> study_data,</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">x            =</span> intervention,</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">y            =</span> sbp_change,</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">grouping.var =</span> tobacco_type,</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">title        =</span> <span class="st">"SBP Change Stratified by Tobacco Type"</span>,</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">plotgrid.args =</span> <span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">3</span>)</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="co"># View each</span></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>p_overall</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>p_strat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggstatsplot)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Derive SBP change variable</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>study_data <span class="ot">&lt;-</span> bp <span class="sc">|&gt;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sbp_change =</span> SysBP_6m <span class="sc">-</span> SysBP_0m)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Overall change by TreatmentGroup</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>p_overall <span class="ot">&lt;-</span> <span class="fu">ggbetweenstats</span>(</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data  =</span> study_data,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">x     =</span> TreatmentGroup,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">y     =</span> sbp_change,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">type  =</span> <span class="st">"parametric"</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Change in SBP at 6 months"</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Stratified by tobacco type</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>p_strat <span class="ot">&lt;-</span> <span class="fu">grouped_ggbetweenstats</span>(</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">data         =</span> study_data,</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">x            =</span> TreatmentGroup,</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">y            =</span> sbp_change,</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">grouping.var =</span> SmokingStatus,</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">annotation.args =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"SBP change stratified by smoking status"</span>),</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">plotgrid.args =</span> <span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="co"># View each</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>p_overall</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="ggstatsplot_advanced_files/figure-html/unnamed-chunk-8-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="ggstatsplot_advanced_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>p_strat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="ggstatsplot_advanced_files/figure-html/unnamed-chunk-8-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="ggstatsplot_advanced_files/figure-html/unnamed-chunk-8-2.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
 </div>
 <hr>
 </section>
 <section id="quick-reference" class="level2">
 <h2 class="anchored" data-anchor-id="quick-reference">Quick reference</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bayesian comparison</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbetweenstats</span>(<span class="at">data =</span> df, <span class="at">x =</span> group, <span class="at">y =</span> outcome, <span class="at">type =</span> <span class="st">"bayes"</span>,</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">bf.prior =</span> <span class="fl">0.707</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Faceted comparisons</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">grouped_ggbetweenstats</span>(<span class="at">data =</span> df, <span class="at">x =</span> group, <span class="at">y =</span> outcome,</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">grouping.var =</span> stratifier)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlation matrix</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcorrmat</span>(<span class="at">data =</span> df <span class="sc">|&gt;</span> <span class="fu">select</span>(var1, var2, var3, var4))</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Compose with patchwork</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">|</span> p2) <span class="sc">/</span> p3 <span class="sc">+</span> <span class="fu">plot_annotation</span>(<span class="at">title =</span> <span class="st">"Figure 1"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bayesian comparison</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbetweenstats</span>(<span class="at">data =</span> df, <span class="at">x =</span> group, <span class="at">y =</span> outcome, <span class="at">type =</span> <span class="st">"bayes"</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">bf.prior =</span> <span class="fl">0.707</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Faceted comparisons</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">grouped_ggbetweenstats</span>(<span class="at">data =</span> df, <span class="at">x =</span> group, <span class="at">y =</span> outcome,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">grouping.var =</span> stratifier)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlation matrix</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcorrmat</span>(<span class="at">data =</span> df <span class="sc">|&gt;</span> <span class="fu">select</span>(var1, var2, var3, var4))</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Compose with patchwork</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">|</span> p2) <span class="sc">/</span> p3 <span class="sc">+</span> <span class="fu">plot_annotation</span>(<span class="at">title =</span> <span class="st">"Figure 1"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+</section>
+<section id="self-check-quiz" class="level2">
+<h2 class="anchored" data-anchor-id="self-check-quiz">Self-check quiz</h2>
+<div class="quiz-q" data-qid="ga1" data-type="mcq" data-hash="qwe1eo.uhg3y8" data-show="TW9kZXJhdGUgZXZpZGVuY2UgZm9yIG5vIGJhc2VsaW5lIGRpZmZlcmVuY2U=" data-explain="QkbigoHigoAgPSAwLjE5IG1lYW5zIEJG4oKA4oKBIOKJiCA1LjM6IHRoZSBkYXRhIGFyZSBh Ym91dCA1IHRpbWVzIG1vcmUgbGlrZWx5IHVuZGVyICdubyBkaWZmZXJlbmNlJywgbW9kZXJh dGUgZXZpZGVuY2UgZm9yIHRoZSBudWxsLg==">
+<p>BF₁₀ for baseline SBP between the randomised arms is 0.19. What does that mean?</p>
+<ul>
+<li>Strong evidence that the arms differ at baseline</li>
+<li>Moderate evidence for no baseline difference</li>
+<li>The test failed because the arms are balanced</li>
+<li>The p-value for the difference is 0.19</li>
+</ul>
+</div>
+<div class="quiz-q" data-qid="ga2" data-type="mcq" data-hash="qweend.uhgifl" data-show="UmVwZWF0IHRoZSBhbmFseXNpcyB3aXRoaW4gZWFjaCBsZXZlbCBvZiBhIHZhcmlhYmxl" data-explain="Z3JvdXBlZF9nZ2JldHdlZW5zdGF0cygpIGFuZCBmcmllbmRzIHJ1biB0aGUgc2FtZSBwbG90 IGFuZCB0ZXN0IHNlcGFyYXRlbHkgaW4gZWFjaCBsZXZlbCBvZiBncm91cGluZy52YXIgYW5k IGNvbWJpbmUgdGhlIHBhbmVscy4=">
+<p>What do the <code>grouped_*</code> functions do?</p>
+<ul>
+<li>Merge several datasets before plotting them</li>
+<li>Repeat the analysis within each level of a variable</li>
+<li>Pool all groups into one overall comparison</li>
+<li>Fit one mixed model with a random effect for each group</li>
+</ul>
+</div>
+<div class="quiz-q" data-qid="ga3" data-type="mcq" data-hash="qwerw2.uhgwwy" data-show="YHR5cGUgPSAicm9idXN0ImA=" data-explain="VGhlIHJvYnVzdCBvcHRpb24gKHBlcmNlbnRhZ2UgYmVuZCBjb3JyZWxhdGlvbikgbGltaXRz IHRoZSBpbmZsdWVuY2Ugb2Ygb3V0bGllcnMu">
+<p>Your variables have outliers. Which <code>ggcorrmat()</code> type suits them?</p>
+<ul>
+<li><code>type = "parametric"</code></li>
+<li><code>type = "robust"</code></li>
+<li><code>type = "bayes"</code></li>
+<li><code>type = "pearson"</code></li>
+</ul>
+</div>
+<p><strong>Your score: <span class="quiz-score"></span></strong> (first attempt counts)</p>
+<!-- GENERATED by scripts/sync_workshop_assets.sh from regression-workshop/assets/quiz.css and quiz.js. Do not edit. -->
+<style>
+/* quiz.css — styles for quiz.js (reveal.js friendly; light theme) */
+.quiz-q {
+  text-align: left;
+  font-size: 0.85em;
+  max-width: 880px;
+  margin: 0 auto;
+}
+.quiz-q > p:first-child { font-size: 1.1em; font-weight: 600; margin-bottom: 0.6em; }
+.quiz-options { display: flex; flex-direction: column; gap: 0.4em; margin-bottom: 0.7em; }
+.quiz-option {
+  display: flex; align-items: center; gap: 0.7em;
+  text-align: left; font: inherit; color: #2c3e50;
+  background: #fff; border: 2px solid #cfd8dc; border-radius: 8px;
+  padding: 0.45em 0.8em; cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.quiz-option:hover:not(:disabled) { border-color: #3498db; background: #f3f9fd; }
+.quiz-option:disabled { cursor: default; }
+.quiz-letter {
+  flex: 0 0 1.6em; height: 1.6em; line-height: 1.6em; text-align: center;
+  border-radius: 50%; background: #ecf0f1; font-weight: 700; font-size: 0.85em;
+}
+.quiz-option.is-correct { border-color: #27ae60; background: #eafaf1; }
+.quiz-option.is-correct .quiz-letter { background: #27ae60; color: #fff; }
+.quiz-option.is-wrong { border-color: #e74c3c; background: #fdedec; }
+.quiz-option.is-wrong .quiz-letter { background: #e74c3c; color: #fff; }
+
+.quiz-fill { display: flex; gap: 0.5em; margin-bottom: 0.6em; }
+.quiz-input {
+  flex: 1; font: inherit; padding: 0.4em 0.7em;
+  border: 2px solid #cfd8dc; border-radius: 8px; color: #2c3e50;
+}
+.quiz-input:focus { outline: none; border-color: #3498db; }
+.quiz-input.is-correct { border-color: #27ae60; background: #eafaf1; }
+.quiz-input.is-wrong { border-color: #e74c3c; background: #fdedec; }
+
+.quiz-btn {
+  font: inherit; cursor: pointer; border: none; border-radius: 8px;
+  padding: 0.4em 1.1em; background: #3498db; color: #fff;
+}
+.quiz-btn:hover { background: #2980b9; }
+.quiz-btn-ghost { background: transparent; color: #7f8c8d; border: 1px solid #cfd8dc; padding: 0.2em 0.8em; font-size: 0.8em; }
+.quiz-btn-ghost:hover { background: #f4f6f7; color: #2c3e50; }
+
+.quiz-feedback { min-height: 1.4em; margin: 0.5em 0; line-height: 1.4; }
+.quiz-feedback.is-correct { color: #1e8449; }
+.quiz-feedback.is-wrong { color: #c0392b; }
+.quiz-feedback.is-info { color: #2c3e50; }
+.quiz-feedback code { background: #eef2f4; color: #c2185b; padding: 0 0.3em; border-radius: 3px; }
+.quiz-score { font-weight: 700; color: #2c3e50; }
+
+/* score tools (Save score / Reset) */
+.quiz-score-tools { margin-left: 0.6em; white-space: nowrap; }
+.quiz-score-tools .quiz-btn { font-size: 0.55em; padding: 0.15em 0.6em; margin-left: 0.3em; vertical-align: middle; }
+</style>
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+ * quiz.js — tiny self-check quiz engine for reveal.js / any HTML page
+ * ---------------------------------------------------------------------
+ * Vanilla JS, zero dependencies, works offline (file://) and inside
+ * Quarto reveal.js decks with embed-resources.
+ *
+ * SYNTAX (what lives in the .qmd — a Pandoc fenced div with data-attrs)
+ * ---------------------------------------------------------------------
+ *   MCQ (single answer)
+ *   ::: {.quiz-q data-qid="s1q1" data-type="mcq" data-hash="<hash>"
+ *         data-show="<base64>" data-explain="<base64>"}
+ *   Which model suits a binary outcome?
+ *
+ *   - Linear regression
+ *   - Logistic regression
+ *   - Cox regression
+ *   :::
+ *
+ *   Fill-in-the-blank
+ *   ::: {.quiz-q data-qid="s1q4" data-type="fill" data-hashes="<h1>,<h2>"
+ *         data-show="<base64>" data-explain="<base64>"}
+ *   Which gtsummary function builds Table 1?
+ *   :::
+ *
+ *   data-qid      unique id (it salts the hashes)
+ *   data-hash     hash of the correct option INDEX (0-based) — mcq
+ *   data-hashes   comma-separated hashes of each accepted answer — fill
+ *   data-show     base64 of the text revealed by "Show answer"
+ *   data-explain  base64 of the short explanation (basic `code` allowed)
+ *
+ * You never write those attributes by hand. Use the R helpers in
+ * assets/quiz.R, which take PLAIN text and emit the fenced div:
+ *
+ *   ```{r}
+ *   #| echo: false
+ *   #| output: asis
+ *   source("assets/quiz.R")
+ *   quiz_mcq("s1q1", "Which model suits a binary outcome?",
+ *            c("Linear", "Logistic", "Cox"), answer = 2,
+ *            explain = "Binary outcome -> logit link -> logistic.")
+ *   quiz_fill("s1q4", "Which gtsummary function builds Table 1?",
+ *             accept = c("tbl_summary", "tbl_summary()"),
+ *             explain = "tbl_summary() summarises variables, optionally by a group.")
+ *   ```
+ *
+ * Optional: <span class="quiz-score"></span> anywhere shows "x / y", followed by
+ *   "Save score" (downloads a text file) and "Reset" buttons. The first-attempt
+ *   results are kept in localStorage per deck, so a reload keeps the score.
+ *
+ * BEHAVIOUR
+ *   - MCQ: options are SHUFFLED at load (hash uses the authored index, so
+ *     data-hash is unaffected; add data-shuffle="0" to keep authored order).
+ *     Click an option -> instant ✔/✘; explanation appears after the
+ *     attempt (or after "Show answer").
+ *   - Fill: type + Enter / "Check". Answers are normalised (case,
+ *     surrounding/duplicate whitespace, backticks, trailing "()") before
+ *     hashing, so "  TBL_Summary() " matches "tbl_summary".
+ *   - Answers are NOT in the page source: only salted hashes are, and the
+ *     explanation / reveal text is base64-encoded. This stops casual
+ *     view-source peeking; it is NOT cryptographic security.
+ *
+ * HASH (must match quiz.R exactly): two polynomial rolling hashes over
+ *   the string  qid + "|" + value , base-36 encoded and concatenated.
+ * ═══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  var M1 = 2147483629, M2 = 2147483587;
+
+  function hash(str) {
+    var a = 5381, b = 52711;
+    for (var i = 0; i < str.length; i++) {
+      var c = str.charCodeAt(i);
+      a = (a * 131 + c) % M1;
+      b = (b * 137 + c) % M2;
+    }
+    return a.toString(36) + '.' + b.toString(36);
+  }
+
+  function normalise(s) {
+    return String(s).toLowerCase()
+      .replace(/`/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/\(\s*\)$/, '')   // "tbl_summary()" == "tbl_summary"
+      .trim();
+  }
+
+  function b64(s) {
+    if (!s) return '';
+    try {
+      var bin = atob(s), bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return new TextDecoder('utf-8').decode(bytes);
+    } catch (e) { return ''; }
+  }
+
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  // escape first, then allow `code` only
+  function lite(s) { return esc(s).replace(/`([^`]+)`/g, '<code>$1</code>'); }
+
+  var state = { total: 0, correct: 0, scored: {} };
+
+  // ── saved score ─────────────────────────────────────────────────────
+  // The first-attempt result of each question is kept in the browser
+  // (localStorage, one entry per deck file), so a reload keeps the score.
+  // "Save score" downloads a small text file a participant can keep or
+  // hand in; "Reset" clears the saved result for this deck.
+  var deckName = (location.pathname.split('/').pop() || 'deck').replace(/\.html?$/, '');
+  // Kept per workshop folder and deck: deck file names repeat across workshops
+  // (s5_choose_check_report is in three). Older versions used the deck name alone; that copy
+  // is read once, for this deck's questions only, so no saved score is lost.
+  var folder = location.pathname.split('/').slice(-2, -1)[0] || '';
+  var STORE = 'quiz-score:' + (folder ? folder + '/' : '') + deckName;
+  var LEGACY = 'quiz-score:' + deckName;
+  function persist() { try { localStorage.setItem(STORE, JSON.stringify(state.scored)); } catch (e) {} }
+  function restore() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORE));
+      var migrate = !saved && STORE !== LEGACY;
+      if (!saved) saved = JSON.parse(localStorage.getItem(LEGACY)) || {};
+      var qs = document.querySelectorAll('.quiz-q');
+      for (var i = 0; i < qs.length; i++) {
+        var id = qs[i].getAttribute('data-qid');
+        if (saved.hasOwnProperty(id)) { state.scored[id] = !!saved[id]; if (saved[id]) state.correct++; }
+      }
+      if (migrate && Object.keys(state.scored).length) persist();
+    } catch (e) {}
+  }
+  // Reset: forget this deck's answers, also in the old shared copy (other decks keep theirs there).
+  function forget() {
+    try {
+      localStorage.removeItem(STORE);
+      var old = JSON.parse(localStorage.getItem(LEGACY));
+      if (old && STORE !== LEGACY) {
+        var qs = document.querySelectorAll('.quiz-q');
+        for (var i = 0; i < qs.length; i++) delete old[qs[i].getAttribute('data-qid')];
+        if (Object.keys(old).length) localStorage.setItem(LEGACY, JSON.stringify(old)); else localStorage.removeItem(LEGACY);
+      }
+    } catch (e) {}
+  }
+  function scoreText() {
+    var lines = ['Quiz score', 'Deck: ' + (document.title || deckName), 'File: ' + deckName, 'Saved: ' + new Date().toLocaleString(),
+                 'Score (first attempt): ' + state.correct + ' / ' + state.total, ''];
+    var qs = document.querySelectorAll('.quiz-q');
+    for (var i = 0; i < qs.length; i++) {
+      var id = qs[i].getAttribute('data-qid');
+      lines.push(id + ': ' + (state.scored.hasOwnProperty(id) ? (state.scored[id] ? 'correct' : 'not correct') : 'not attempted'));
+    }
+    return lines.join('\n') + '\n';
+  }
+  function download() {
+    var a = document.createElement('a');
+    a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(scoreText());
+    a.download = 'quiz_' + deckName + '.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  function addScoreTools() {
+    var els = document.querySelectorAll('.quiz-score');
+    for (var i = 0; i < els.length; i++) {
+      if (els[i].getAttribute('data-tools')) continue;
+      els[i].setAttribute('data-tools', '1');
+      var box = document.createElement('span'); box.className = 'quiz-score-tools';
+      var sv = document.createElement('button'); sv.type = 'button'; sv.className = 'quiz-btn quiz-btn-ghost quiz-save'; sv.textContent = 'Save score';
+      sv.addEventListener('click', download);
+      var rs = document.createElement('button'); rs.type = 'button'; rs.className = 'quiz-btn quiz-btn-ghost quiz-reset'; rs.textContent = 'Reset';
+      rs.addEventListener('click', function () { forget(); location.reload(); });
+      box.appendChild(sv); box.appendChild(rs);
+      els[i].parentNode.insertBefore(box, els[i].nextSibling);
+    }
+  }
+
+  function updateScores() {
+    var els = document.querySelectorAll('.quiz-score');
+    for (var i = 0; i < els.length; i++) {
+      els[i].textContent = state.correct + ' / ' + state.total;
+    }
+  }
+
+  function record(qid, ok) {
+    if (state.scored.hasOwnProperty(qid)) return;      // first attempt only
+    state.scored[qid] = !!ok;
+    if (ok) state.correct++;
+    persist();
+    updateScores();
+  }
+
+  function feedback(q, ok, msg) {
+    var fb = q.querySelector('.quiz-feedback');
+    fb.className = 'quiz-feedback ' + (ok ? 'is-correct' : 'is-wrong');
+    fb.innerHTML = (ok ? '✔ Correct. ' : '✘ Not quite. ') + (msg ? lite(msg) : '');
+  }
+
+  function explanation(q) {
+    var ex = b64(q.getAttribute('data-explain'));
+    return ex;
+  }
+
+  function buildCommon(q) {
+    var fb = document.createElement('div');
+    fb.className = 'quiz-feedback';
+    fb.setAttribute('aria-live', 'polite');
+    q.appendChild(fb);
+
+    var show = document.createElement('button');
+    show.type = 'button';
+    show.className = 'quiz-btn quiz-btn-ghost';
+    show.textContent = 'Show answer';
+    q.appendChild(show);
+    return { fb: fb, show: show };
+  }
+
+  function initMCQ(q) {
+    var qid = q.getAttribute('data-qid');
+    var correctHash = q.getAttribute('data-hash');
+    var list = q.querySelector('ul, ol');
+    if (!list) return;
+    // authored index is what the hash is built on; DISPLAY order is shuffled so the
+    // answer position (and any length/position tell) cannot be learned.
+    var items = Array.prototype.slice.call(list.children).map(function (li, i) { return { li: li, i: i }; });
+    if (q.getAttribute('data-shuffle') !== '0') {
+      for (var k = items.length - 1; k > 0; k--) {
+        var r = Math.floor(Math.random() * (k + 1)), t = items[k]; items[k] = items[r]; items[r] = t;
+      }
+    }
+    var wrap = document.createElement('div');
+    wrap.className = 'quiz-options';
+    var btns = items.map(function (it, pos) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'quiz-option';
+      b.setAttribute('data-i', it.i);
+      b.innerHTML = '<span class="quiz-letter">' + String.fromCharCode(65 + pos) + '</span>' + it.li.innerHTML;
+      wrap.appendChild(b);
+      return b;
+    });
+    list.parentNode.replaceChild(wrap, list);
+    var c = buildCommon(q);
+
+    function isCorrect(i) { return hash(qid + '|' + i) === correctHash; }
+    function orig(b) { return parseInt(b.getAttribute('data-i'), 10); }
+    function reveal() {
+      btns.forEach(function (b) { if (isCorrect(orig(b))) b.classList.add('is-correct'); });
+    }
+
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var ok = isCorrect(orig(b));
+        b.classList.add(ok ? 'is-correct' : 'is-wrong');
+        record(qid, ok);
+        feedback(q, ok, explanation(q));
+        if (ok) btns.forEach(function (x) { x.disabled = true; });
+      });
+    });
+    c.show.addEventListener('click', function () {
+      reveal();
+      record(qid, false);
+      var ans = b64(q.getAttribute('data-show'));
+      var fb = q.querySelector('.quiz-feedback');
+      fb.className = 'quiz-feedback is-info';
+      fb.innerHTML = 'Answer: <strong>' + lite(ans) + '</strong>. ' + lite(explanation(q));
+      btns.forEach(function (x) { x.disabled = true; });
+    });
+  }
+
+  function initFill(q) {
+    var qid = q.getAttribute('data-qid');
+    var accepted = (q.getAttribute('data-hashes') || '').split(',');
+    var row = document.createElement('div');
+    row.className = 'quiz-fill';
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'quiz-input';
+    input.placeholder = 'type your answer…';
+    input.setAttribute('autocomplete', 'off');
+    input.setAttribute('autocapitalize', 'off');
+    input.setAttribute('spellcheck', 'false');
+    var check = document.createElement('button');
+    check.type = 'button';
+    check.className = 'quiz-btn';
+    check.textContent = 'Check';
+    row.appendChild(input);
+    row.appendChild(check);
+    q.appendChild(row);
+    var c = buildCommon(q);
+
+    function submit() {
+      var v = normalise(input.value);
+      if (!v) return;
+      var ok = accepted.indexOf(hash(qid + '|' + v)) !== -1;
+      input.classList.remove('is-correct', 'is-wrong');
+      input.classList.add(ok ? 'is-correct' : 'is-wrong');
+      record(qid, ok);
+      feedback(q, ok, explanation(q));
+    }
+    check.addEventListener('click', submit);
+    // keep reveal.js shortcuts (space, arrows, f, s, …) out of the text box
+    ['keydown', 'keyup', 'keypress'].forEach(function (ev) {
+      input.addEventListener(ev, function (e) {
+        e.stopPropagation();
+        if (ev === 'keydown' && e.key === 'Enter') submit();
+      });
+    });
+    c.show.addEventListener('click', function () {
+      record(qid, false);
+      var fb = q.querySelector('.quiz-feedback');
+      fb.className = 'quiz-feedback is-info';
+      fb.innerHTML = 'Answer: <strong>' + lite(b64(q.getAttribute('data-show'))) + '</strong>. ' + lite(explanation(q));
+    });
+  }
+
+  function init() {
+    var qs = document.querySelectorAll('.quiz-q');
+    state.total = qs.length;
+    for (var i = 0; i < qs.length; i++) {
+      var q = qs[i];
+      if (q.getAttribute('data-quiz-ready')) continue;
+      q.setAttribute('data-quiz-ready', '1');
+      var type = q.getAttribute('data-type');
+      if (type === 'mcq') initMCQ(q);
+      else if (type === 'fill') initFill(q);
+    }
+    restore();
+    addScoreTools();
+    updateScores();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+
+  // exposed for tests / tooling
+  window.Quiz = { hash: hash, normalise: normalise };
+})();
+</script>
 
 
 </section>
@@ -1274,6 +1788,38 @@ Note
   }
 })();
 </script>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

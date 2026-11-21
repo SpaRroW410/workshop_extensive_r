@@ -1,5 +1,7 @@
 ---
 title: "Geary's C, Getis-Ord, Join Counts and the Scan Statistic"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -132,3 +134,34 @@ flowchart TD
 -   **Join counts** serve binary variables; **Gi\*** gives hot and cold spots; the **scan statistic** finds the **most likely cluster** from counts and population.
 -   Whatever the test, state the **weights**, the **variable** and any **multiple-testing** handling.
 -   Next: **[Spatial Regression and Residual Tests](spatial_regression.qmd)**.
+
+**Practise it:** this page is the reading for **[GIS workshop, Session 4: Local clusters](../gis-workshop/s4_local_clusters.qmd)**, which has the lab.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("ot1", "The outcome is yes/no per block (any case this year). Which test fits?",
+         c("General G", "Geary's C", "Join counts", "Local Moran"), answer = 3,
+         explain = "Join counts compare how often like and unlike categories are neighbours, for binary or categorical maps.")
+quiz_mcq("ot2", "Moran's I shows clustering. Which test says whether HIGH or LOW values cluster?",
+         c("Geary's C contiguity ratio", "Getis-Ord General G", "Join counts for binary data", "Global Moran's I again"), answer = 2,
+         explain = "General G is large when high values cluster and small when low values cluster; Moran's I treats both alike.")
+quiz_mcq("ot3", "You have case counts and populations and want the single most likely cluster. Which method?",
+         c("Geary's C with queen weights", "Join counts on a yes/no map", "The spatial scan statistic", "A choropleth with quantiles"), answer = 3,
+         explain = "The scan statistic searches windows of many sizes for the area whose observed cases most exceed the expected.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

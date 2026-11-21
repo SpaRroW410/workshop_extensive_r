@@ -1,5 +1,7 @@
 ---
 title: "Spatial Regression and Residual Tests"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -108,3 +110,34 @@ summary(imp, zstats = TRUE, short = TRUE)
 -   **LM tests** (and their robust versions) suggest lag or error; theory should agree.
 -   Report the spatial parameter (`rho` or `lambda`), compare AIC with OLS, re-check the residuals, and use **impacts** for the lag model.
 -   For counts and unequal populations, look at Poisson models with spatial random effects.
+
+**Practise it:** this page is the reading for **[GIS workshop, Session 5: Spatial regression](../gis-workshop/s5_spatial_regression.qmd)**, which has the lab.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("sr1", "After fitting `lm()` on block rates, what should you always test?",
+         c("The outcome's normality with a Q-Q plot", "The residuals, with `lm.morantest()`", "The CRS of the block boundaries", "Whether the map uses quantile breaks"), answer = 2,
+         explain = "Spatially autocorrelated residuals break the independence assumption: standard errors and p-values are then wrong.")
+quiz_mcq("sr2", "In a spatial lag model, why is the coefficient not the total effect?",
+         c("The model drops blocks with no neighbours", "Changes spill over to neighbours and feed back", "The coefficient is on the log scale", "Lag coefficients are standardised by the block area"), answer = 2,
+         explain = "A change in one block affects its neighbours' outcomes, which feed back; impacts() gives direct, indirect and total effects.")
+quiz_mcq("sr3", "Robust LM tests favour the error model. How do its coefficients read?",
+         c("As impacts split into direct and indirect", "As in OLS, but with corrected standard errors", "As changes in the neighbours' outcome only", "As elasticities, in percent per percent change"), answer = 2,
+         explain = "The error model puts the spatial dependence in the errors, so coefficients keep their OLS meaning with corrected SEs.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

@@ -207,7 +207,7 @@
     "href": "r-foundations/iteration.html#practise-in-r",
     "title": "Iteration: Doing the Same Thing Many Times",
     "section": "Practise in R",
-    "text": "Practise in R\nDownload the lab Iteration and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+    "text": "Practise in R\nDownload the lab Iteration and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n🗺️ Then play the game world Loop Labyrinth in Dungeons & Dataframes."
   },
   {
     "objectID": "r-foundations/iteration.html#self-check-quiz",
@@ -732,7 +732,7 @@
     "href": "r-foundations/data-wrangling.html#calculate-time-intervals",
     "title": "Data Wrangling in R",
     "section": "Calculate Time Intervals",
-    "text": "Calculate Time Intervals\n\nQuestion: How many days since baseline for each patient?\n\n\n\n\nShow the code\nbp_clean |&gt; \n  mutate(\n    today_date = today(),\n    days_since_baseline = today() - baseline_date,\n    weeks_since_baseline = as.numeric(days_since_baseline) / 7\n  ) |&gt; \n  select(patient_id, baseline_date, days_since_baseline, weeks_since_baseline)\n\n\n#&gt; # A tibble: 200 × 4\n#&gt;    patient_id baseline_date       days_since_baseline weeks_since_baseline\n#&gt;         &lt;dbl&gt; &lt;dttm&gt;              &lt;dttm&gt;                             &lt;dbl&gt;\n#&gt;  1          1 2025-05-03 13:06:39 1914-08-31 16:39:38          -249465260.\n#&gt;  2          2 2025-04-15 10:45:27 1914-09-18 19:00:50          -249241879.\n#&gt;  3          3 2025-06-14 07:24:46 1914-07-20 22:21:31          -249980730.\n#&gt;  4          4 2025-02-02 10:10:45 1914-11-29 19:35:32          -248352895.\n#&gt;  5          5 2025-04-17 10:41:06 1914-09-16 19:05:11          -249266527 \n#&gt;  6          6 2025-05-30 10:58:02 1914-08-04 18:48:15          -249797415 \n#&gt;  7          7 2025-06-21 07:35:32 1914-07-13 22:10:45          -250067222.\n#&gt;  8          8 2025-05-11 05:45:48 1914-08-24 00:00:29          -249560224.\n#&gt;  9          9 2025-05-19 08:17:50 1914-08-15 21:28:27          -249660270.\n#&gt; 10         10 2025-03-21 03:56:29 1914-10-14 01:49:48          -248929802.\n#&gt; # ℹ 190 more rows"
+    "text": "Calculate Time Intervals\n\nQuestion: How many days since baseline for each patient?\n\n\n\n\nShow the code\nbp_clean |&gt; \n  mutate(\n    today_date = today(),\n    days_since_baseline = today() - baseline_date,\n    weeks_since_baseline = as.numeric(days_since_baseline) / 7\n  ) |&gt; \n  select(patient_id, baseline_date, days_since_baseline, weeks_since_baseline)\n\n\n#&gt; # A tibble: 200 × 4\n#&gt;    patient_id baseline_date       days_since_baseline weeks_since_baseline\n#&gt;         &lt;dbl&gt; &lt;dttm&gt;              &lt;dttm&gt;                             &lt;dbl&gt;\n#&gt;  1          1 2025-05-03 13:06:39 1914-08-31 16:39:39          -249465260.\n#&gt;  2          2 2025-04-15 10:45:27 1914-09-18 19:00:51          -249241878.\n#&gt;  3          3 2025-06-14 07:24:46 1914-07-20 22:21:32          -249980730.\n#&gt;  4          4 2025-02-02 10:10:45 1914-11-29 19:35:33          -248352895.\n#&gt;  5          5 2025-04-17 10:41:06 1914-09-16 19:05:12          -249266527.\n#&gt;  6          6 2025-05-30 10:58:02 1914-08-04 18:48:16          -249797415.\n#&gt;  7          7 2025-06-21 07:35:32 1914-07-13 22:10:46          -250067222 \n#&gt;  8          8 2025-05-11 05:45:48 1914-08-24 00:00:30          -249560224.\n#&gt;  9          9 2025-05-19 08:17:50 1914-08-15 21:28:28          -249660270.\n#&gt; 10         10 2025-03-21 03:56:29 1914-10-14 01:49:49          -248929802.\n#&gt; # ℹ 190 more rows"
   },
   {
     "objectID": "r-foundations/data-wrangling.html#adding-time-periods",
@@ -1033,7 +1033,7 @@
     "href": "r-foundations/data-wrangling.html#practise-in-r",
     "title": "Data Wrangling in R",
     "section": "🔧 Practise in R",
-    "text": "🔧 Practise in R\nDownload the lab Tidy data with dplyr and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+    "text": "🔧 Practise in R\nDownload the lab Tidy data with dplyr and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n🗺️ Then play the game world Tidy Tavern in Dungeons & Dataframes."
   },
   {
     "objectID": "r-foundations/data-wrangling.html#self-check-quiz-15",
@@ -2685,7 +2685,7 @@
     "href": "data-visualization/plot_data.html#practise-in-r",
     "title": "Navigating the Decision Tree",
     "section": "🔧 Practise in R",
-    "text": "🔧 Practise in R\nDownload the lab Explore by picture and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+    "text": "🔧 Practise in R\nDownload the lab Explore by picture and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n🗺️ Then play the game world Explore by Picture in Dungeons & Dataframes."
   },
   {
     "objectID": "data-visualization/plot_data.html#self-check-quiz-14",
@@ -3700,7 +3700,7 @@
     "href": "data-visualization/best_practices.html#practise-in-r",
     "title": "Best Practices",
     "section": "🔧 Practise in R",
-    "text": "🔧 Practise in R\nDownload the lab Explore by picture and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+    "text": "🔧 Practise in R\nDownload the lab Explore by picture and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n🗺️ Then play the game world Explore by Picture in Dungeons & Dataframes."
   },
   {
     "objectID": "data-visualization/best_practices.html#self-check-quiz-14",
@@ -4106,7 +4106,14 @@
     "href": "gis/spatial_regression.html#take-home",
     "title": "Spatial Regression and Residual Tests",
     "section": "Take-home",
-    "text": "Take-home\n\nAlways test the residuals of a regression on areas, with lm.morantest().\nLM tests (and their robust versions) suggest lag or error; theory should agree.\nReport the spatial parameter (rho or lambda), compare AIC with OLS, re-check the residuals, and use impacts for the lag model.\nFor counts and unequal populations, look at Poisson models with spatial random effects."
+    "text": "Take-home\n\nAlways test the residuals of a regression on areas, with lm.morantest().\nLM tests (and their robust versions) suggest lag or error; theory should agree.\nReport the spatial parameter (rho or lambda), compare AIC with OLS, re-check the residuals, and use impacts for the lag model.\nFor counts and unequal populations, look at Poisson models with spatial random effects.\n\nPractise it: this page is the reading for GIS workshop, Session 5: Spatial regression, which has the lab."
+  },
+  {
+    "objectID": "gis/spatial_regression.html#self-check-quiz",
+    "href": "gis/spatial_regression.html#self-check-quiz",
+    "title": "Spatial Regression and Residual Tests",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\nAfter fitting lm() on block rates, what should you always test?\n\nThe outcome’s normality with a Q-Q plot\nThe residuals, with lm.morantest()\nThe CRS of the block boundaries\nWhether the map uses quantile breaks\n\n\n\nIn a spatial lag model, why is the coefficient not the total effect?\n\nThe model drops blocks with no neighbours\nChanges spill over to neighbours and feed back\nThe coefficient is on the log scale\nLag coefficients are standardised by the block area\n\n\n\nRobust LM tests favour the error model. How do its coefficients read?\n\nAs impacts split into direct and indirect\nAs in OLS, but with corrected standard errors\nAs changes in the neighbours’ outcome only\nAs elasticities, in percent per percent change\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "gis/other_spatial_tests.html",
@@ -4162,7 +4169,14 @@
     "href": "gis/other_spatial_tests.html#take-home",
     "title": "Geary’s C, Getis-Ord, Join Counts and the Scan Statistic",
     "section": "Take-home",
-    "text": "Take-home\n\nGeary’s C (1 = none, below 1 = clustering) is a global check that reacts to local differences.\nGeneral G separates hot-spot from cold-spot clustering; Moran’s I cannot.\nJoin counts serve binary variables; Gi* gives hot and cold spots; the scan statistic finds the most likely cluster from counts and population.\nWhatever the test, state the weights, the variable and any multiple-testing handling.\nNext: Spatial Regression and Residual Tests."
+    "text": "Take-home\n\nGeary’s C (1 = none, below 1 = clustering) is a global check that reacts to local differences.\nGeneral G separates hot-spot from cold-spot clustering; Moran’s I cannot.\nJoin counts serve binary variables; Gi* gives hot and cold spots; the scan statistic finds the most likely cluster from counts and population.\nWhatever the test, state the weights, the variable and any multiple-testing handling.\nNext: Spatial Regression and Residual Tests.\n\nPractise it: this page is the reading for GIS workshop, Session 4: Local clusters, which has the lab."
+  },
+  {
+    "objectID": "gis/other_spatial_tests.html#self-check-quiz",
+    "href": "gis/other_spatial_tests.html#self-check-quiz",
+    "title": "Geary’s C, Getis-Ord, Join Counts and the Scan Statistic",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\nThe outcome is yes/no per block (any case this year). Which test fits?\n\nGeneral G\nGeary’s C\nJoin counts\nLocal Moran\n\n\n\nMoran’s I shows clustering. Which test says whether HIGH or LOW values cluster?\n\nGeary’s C contiguity ratio\nGetis-Ord General G\nJoin counts for binary data\nGlobal Moran’s I again\n\n\n\nYou have case counts and populations and want the single most likely cluster. Which method?\n\nGeary’s C with queen weights\nJoin counts on a yes/no map\nThe spatial scan statistic\nA choropleth with quantiles\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "gis/maps_choropleth.html",
@@ -4218,7 +4232,14 @@
     "href": "gis/maps_choropleth.html#take-home",
     "title": "Maps and Choropleths",
     "section": "Take-home",
-    "text": "Take-home\n\nMap rates, not counts, unless you mean workload.\nClassification is a choice: report it, and keep breaks fixed when comparing maps.\nUse sequential colour for rates and diverging colour only around a meaningful midpoint.\nA map can look clustered by eye; to test it, go to Neighbours and Spatial Weights and Global Moran’s I."
+    "text": "Take-home\n\nMap rates, not counts, unless you mean workload.\nClassification is a choice: report it, and keep breaks fixed when comparing maps.\nUse sequential colour for rates and diverging colour only around a meaningful midpoint.\nA map can look clustered by eye; to test it, go to Neighbours and Spatial Weights and Global Moran’s I.\n\nPractise it: this page is the reading for GIS workshop, Session 1: Spatial data, which has the lab."
+  },
+  {
+    "objectID": "gis/maps_choropleth.html#self-check-quiz",
+    "href": "gis/maps_choropleth.html#self-check-quiz",
+    "title": "Maps and Choropleths",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\nBlock A has 40 dengue cases and 40,000 people; block B has 20 cases and 5,000 people. What should the map show?\n\nCounts: A has twice the burden of B\nRates: B has the higher burden per person\nCounts, because rates hide the real cases\nPopulation, since cases follow population\n\n\n\nWhy report the classification method (quantiles, equal intervals, …)?\n\nQuantile breaks are required by journals\nDifferent breaks can change the map’s story\nggplot2 cannot draw a map without breaks\nReaders need it to compute the p-value of the map\n\n\n\nWhich colour scheme suits incidence rates from low to high?\n\nA diverging scheme centred on the mean\nA qualitative scheme, one hue per block\nA sequential scheme, light to dark\nA rainbow scheme with many bright hues\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "references.html",
@@ -4400,7 +4421,14 @@
     "href": "gis/local_moran_lisa.html#take-home",
     "title": "Local Moran’s I (LISA)",
     "section": "Take-home",
-    "text": "Take-home\n\nLocal Moran’s I gives a statistic and p-value per area; the quadrant tells the cluster type (HH, LL, HL, LH).\nYou ran many tests: adjust (\"fdr\") or treat the result as exploratory, and consider permutation p-values.\nPair the global test with the local map, and always report variable, weights and adjustment.\nNext: Geary’s C, Getis-Ord, join counts and the scan statistic."
+    "text": "Take-home\n\nLocal Moran’s I gives a statistic and p-value per area; the quadrant tells the cluster type (HH, LL, HL, LH).\nYou ran many tests: adjust (\"fdr\") or treat the result as exploratory, and consider permutation p-values.\nPair the global test with the local map, and always report variable, weights and adjustment.\nNext: Geary’s C, Getis-Ord, join counts and the scan statistic.\n\nPractise it: this page is the reading for GIS workshop, Session 4: Local clusters, which has the lab."
+  },
+  {
+    "objectID": "gis/local_moran_lisa.html#self-check-quiz",
+    "href": "gis/local_moran_lisa.html#self-check-quiz",
+    "title": "Local Moran’s I (LISA)",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\nYou ran local Moran’s I on 79 blocks. About how many look ‘significant’ at 5% by chance alone?\n\nNone\nAbout 4\nAbout 40\nAll 79\n\n\n\nA block is in the High-Low quadrant. What is it?\n\nA low value surrounded by high values\nA high value among other high values\nA high value surrounded by low values\nA block with no neighbours at all\n\n\n\nHow should a LISA cluster map be treated?\n\nAs proof that each marked block is a cluster\nAs exploratory: where to look, not proof\nAs a replacement for the global Moran’s I\nAs a map of the raw dengue counts\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "gis/morans_i.html",
@@ -4456,7 +4484,14 @@
     "href": "gis/morans_i.html#take-home",
     "title": "Global Moran’s I",
     "section": "Take-home",
-    "text": "Take-home\n\nMoran’s I tests whether similar values are neighbours; compare it with its expectation of about 0.\nPrefer the permutation p-value and always state the weights.\nThe Moran scatterplot shows the slope and the High-High, Low-Low, High-Low and Low-High groups.\nA global test cannot locate clusters: next, Local Moran’s I (LISA)."
+    "text": "Take-home\n\nMoran’s I tests whether similar values are neighbours; compare it with its expectation of about 0.\nPrefer the permutation p-value and always state the weights.\nThe Moran scatterplot shows the slope and the High-High, Low-Low, High-Low and Low-High groups.\nA global test cannot locate clusters: next, Local Moran’s I (LISA).\n\nPractise it: this page is the reading for GIS workshop, Session 3: Global autocorrelation, which has the lab."
+  },
+  {
+    "objectID": "gis/morans_i.html#self-check-quiz",
+    "href": "gis/morans_i.html#self-check-quiz",
+    "title": "Global Moran’s I",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\nMoran’s I is 0.45 with a permutation p of 0.001. What does it mean?\n\nBlocks with high values are placed at random\nSimilar values tend to be neighbours\n45% of blocks belong to one single cluster\nThe rate rises by 0.45 per neighbour\n\n\n\nWhat can a global Moran’s I not tell you?\n\nWhether there is clustering\nWhere the clusters are\nWhether the pattern is random\nThe direction of autocorrelation\n\n\n\nWhat must you always state when reporting Moran’s I?\n\nThe colour scheme of the map\nThe weights used, and the p-value method\nThe CRS of the original data file\nThe name of the R package that drew the map\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "gis/spatial_data_sf.html",
@@ -4519,7 +4554,14 @@
     "href": "gis/spatial_data_sf.html#take-home",
     "title": "Spatial Data with sf",
     "section": "Take-home",
-    "text": "Take-home\n\nAn sf object is a data frame plus a geometry column; use st_read() and st_write().\nCheck st_crs() before every analysis; transform to a projected CRS (here EPSG:32644) to measure.\nJoins on attributes use left_join(); joins on where things are use st_join() and st_intersects().\nNext: Maps and Choropleths."
+    "text": "Take-home\n\nAn sf object is a data frame plus a geometry column; use st_read() and st_write().\nCheck st_crs() before every analysis; transform to a projected CRS (here EPSG:32644) to measure.\nJoins on attributes use left_join(); joins on where things are use st_join() and st_intersects().\nNext: Maps and Choropleths.\n\nPractise it: this page is the reading for GIS workshop, Session 1: Spatial data, which has the lab."
+  },
+  {
+    "objectID": "gis/spatial_data_sf.html#self-check-quiz",
+    "href": "gis/spatial_data_sf.html#self-check-quiz",
+    "title": "Spatial Data with sf",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\nBefore measuring distances in metres between blocks, what should you do?\n\nConvert the geometry column to plain text\nTransform to a projected CRS such as EPSG:32644\nUse st_join() to add the facilities first\nKeep WGS 84 (EPSG:4326) and multiply degrees by 1000\n\n\n\nYou need the block each facility lies in. Which function joins by location?\n\nleft_join()\nst_join()\nbind_rows()\nst_write()\n\n\n\nWhat is an sf object?\n\nAn image file of a map with its legend\nA data frame plus a geometry column\nA list of coordinates without attributes\nA shapefile that R cannot change in place\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "gis/spatial_weights.html",
@@ -4568,7 +4610,14 @@
     "href": "gis/spatial_weights.html#take-home",
     "title": "Neighbours and Spatial Weights",
     "section": "Take-home",
-    "text": "Take-home\n\nA weights matrix turns “near” into numbers; choose it deliberately (queen for polygons, k-nearest or distance for points).\nRow-standardised weights make the spatial lag the average of neighbours.\nLook for isolates and areas with very many neighbours; report your choice and test the sensitivity.\nNext: Global Moran’s I."
+    "text": "Take-home\n\nA weights matrix turns “near” into numbers; choose it deliberately (queen for polygons, k-nearest or distance for points).\nRow-standardised weights make the spatial lag the average of neighbours.\nLook for isolates and areas with very many neighbours; report your choice and test the sensitivity.\nNext: Global Moran’s I.\n\nPractise it: this page is the reading for GIS workshop, Session 2: Neighbours and weights, which has the lab."
+  },
+  {
+    "objectID": "gis/spatial_weights.html#self-check-quiz",
+    "href": "gis/spatial_weights.html#self-check-quiz",
+    "title": "Neighbours and Spatial Weights",
+    "section": "Self-check quiz",
+    "text": "Self-check quiz\n\nWith row-standardised weights (style W), what is the spatial lag of a block?\n\nThe sum of all values in the district\nThe average of its neighbours’ values\nThe block’s value minus the district mean\nThe distance to the nearest neighbour\n\n\n\nWhich neighbour definition suits point data such as facilities?\n\nQueen contiguity (shared border or corner)\nRook contiguity (shared border only)\nk-nearest neighbours or a distance band\nNeighbours by alphabetical block name\n\n\n\nAn island block has no neighbours. Why does that matter?\n\nIt doubles the weight of every other block\nIts lag is undefined; tests may fail or mislead\nMoran’s I then drops to zero\nIt must be deleted from the data before any test\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "gis-workshop/s1_spatial_data.html#where-we-are",
@@ -5002,7 +5051,7 @@
     "href": "data-visualization/ggplot_grammar.html#practise-in-r",
     "title": "Grammar of Graphics",
     "section": "Practise in R",
-    "text": "Practise in R\nDownload the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+    "text": "Practise in R\nDownload the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n🗺️ Then play the game world First Plots in Dungeons & Dataframes."
   },
   {
     "objectID": "data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html#module-2-overview",
@@ -5912,7 +5961,7 @@
     "href": "plot-gallery/basic.html",
     "title": "Basic Plots",
     "section": "",
-    "text": "Foundations of Plots View Slide Deck →\n\n\nExplore foundational plots grouped by data type and relationship\n\n\n\nIncludes: Bar chart, Pie chart, Donut chart, Stacked bar chart 🔗 View Slide Deck →\n\n\n\n\nIncludes: Histogram, Density plot, Scatter plot\n🔗 View Slide Deck →\n\n\n\n\nIncludes: Box plot, Grouped Bar, Stacked Bar plot 🔗 View Slide Deck →\n\n\n\n\nIncludes: Simple Line Chart, Multiple Line Chart (comparing groups), Line Chart with Points 🔗 View Slide Deck →\n\n\n\n\nDownload the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n\n\n\n\nWhich plot shows the distribution of one continuous variable, such as age?\n\nA histogram\nA pie chart\nA bar chart of counts\nA line chart over time\n\n\n\nYou compare systolic BP between three activity groups. Which plot shows the median, the spread and the outliers of each group?\n\nA scatter plot of SBP\nA box plot per group\nA histogram of all patients\nA pie chart of the groups\n\n\n\nIn ggplot2, what does aes(x = bmi, y = sbp) do?\n\nDraws the points in the plotting area\nSets the colour theme for the whole plot\nMaps variables to positions on the plot\nSorts the data before the plot is drawn\n\n\n\nA bar chart of counts starts its y-axis at 50 instead of 0. Why is that misleading?\n\nggplot2 then drops the smallest category from the plot\nThe legend then shows the wrong group names\nBars starting at 50 cannot be coloured by group\nBar lengths no longer show the counts in proportion\n\n\nYour score:  (first attempt counts)"
+    "text": "Foundations of Plots View Slide Deck →\n\n\nExplore foundational plots grouped by data type and relationship\n\n\n\nIncludes: Bar chart, Pie chart, Donut chart, Stacked bar chart 🔗 View Slide Deck →\n\n\n\n\nIncludes: Histogram, Density plot, Scatter plot\n🔗 View Slide Deck →\n\n\n\n\nIncludes: Box plot, Grouped Bar, Stacked Bar plot 🔗 View Slide Deck →\n\n\n\n\nIncludes: Simple Line Chart, Multiple Line Chart (comparing groups), Line Chart with Points 🔗 View Slide Deck →\n\n\n\n\nDownload the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n🗺️ Then play the game world First Plots in Dungeons & Dataframes.\n\n\n\n\nWhich plot shows the distribution of one continuous variable, such as age?\n\nA histogram\nA pie chart\nA bar chart of counts\nA line chart over time\n\n\n\nYou compare systolic BP between three activity groups. Which plot shows the median, the spread and the outliers of each group?\n\nA scatter plot of SBP\nA box plot per group\nA histogram of all patients\nA pie chart of the groups\n\n\n\nIn ggplot2, what does aes(x = bmi, y = sbp) do?\n\nDraws the points in the plotting area\nSets the colour theme for the whole plot\nMaps variables to positions on the plot\nSorts the data before the plot is drawn\n\n\n\nA bar chart of counts starts its y-axis at 50 instead of 0. Why is that misleading?\n\nggplot2 then drops the smallest category from the plot\nThe legend then shows the wrong group names\nBars starting at 50 cannot be coloured by group\nBar lengths no longer show the counts in proportion\n\n\nYour score:  (first attempt counts)"
   },
   {
     "objectID": "plot-gallery/basic.html#basic-plot",
@@ -5926,7 +5975,7 @@
     "href": "plot-gallery/basic.html#practise-in-r",
     "title": "Basic Plots",
     "section": "",
-    "text": "Download the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+    "text": "Download the lab First plots with ggplot2 and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n🗺️ Then play the game world First Plots in Dungeons & Dataframes."
   },
   {
     "objectID": "plot-gallery/basic.html#self-check-quiz",
@@ -6752,7 +6801,7 @@
     "href": "r-foundations/cleaning_messy_data.html#practise-in-r",
     "title": "Cleaning Messy Data",
     "section": "Practise in R",
-    "text": "Practise in R\nDownload the lab Cleaning messy data and the data (ncd_messy.csv). Fill in the blanks (___); the comments say what each step should do."
+    "text": "Practise in R\nDownload the lab Cleaning messy data and the data (ncd_messy.csv). Fill in the blanks (___); the comments say what each step should do.\n🗺️ Then play the game world Messy Data Dungeon in Dungeons & Dataframes."
   },
   {
     "objectID": "r-foundations/cleaning_messy_data.html#self-check-quiz",
@@ -6927,7 +6976,7 @@
     "href": "r-foundations/getting-started.html#practise-in-r",
     "title": "Introduction to R",
     "section": "🔧 Practise in R",
-    "text": "🔧 Practise in R\nDownload the lab Your first script and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do."
+    "text": "🔧 Practise in R\nDownload the lab Your first script and the data (ncd_survey.csv). Fill in the blanks (___); the comments say what each step should do.\n🗺️ Then play the game world Your First Script in Dungeons & Dataframes."
   },
   {
     "objectID": "r-foundations/getting-started.html#self-check-quiz-15",
@@ -7032,7 +7081,7 @@
     "href": "r-foundations/merging_dataset.html#practise-in-r",
     "title": "Merging Datasets",
     "section": "Practise in R",
-    "text": "Practise in R\nDownload the lab Joining and reshaping and the data (ncd_round1.csv · ncd_round2.csv · villages.csv). Fill in the blanks (___); the comments say what each step should do."
+    "text": "Practise in R\nDownload the lab Joining and reshaping and the data (ncd_round1.csv · ncd_round2.csv · villages.csv). Fill in the blanks (___); the comments say what each step should do.\n🗺️ Then play the game world Join Junction in Dungeons & Dataframes."
   },
   {
     "objectID": "r-foundations/merging_dataset.html#self-check-quiz",

@@ -1,5 +1,7 @@
 ---
 title: "Maps and Choropleths"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -115,3 +117,34 @@ htmlwidgets::saveWidget(map, "dengue_map.html", selfcontained = TRUE)   # for th
 -   **Classification is a choice**: report it, and keep breaks fixed when comparing maps.
 -   Use sequential colour for rates and diverging colour only around a meaningful midpoint.
 -   A map can look clustered by eye; to test it, go to **[Neighbours and Spatial Weights](spatial_weights.qmd)** and **[Global Moran's I](morans_i.qmd)**.
+
+**Practise it:** this page is the reading for **[GIS workshop, Session 1: Spatial data](../gis-workshop/s1_spatial_data.qmd)**, which has the lab.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("mc1", "Block A has 40 dengue cases and 40,000 people; block B has 20 cases and 5,000 people. What should the map show?",
+         c("Counts: A has twice the burden of B", "Rates: B has the higher burden per person", "Counts, because rates hide the real cases", "Population, since cases follow population"), answer = 2,
+         explain = "A: 100 per 100,000; B: 400 per 100,000. Counts mostly map where people live; rates show risk.")
+quiz_mcq("mc2", "Why report the classification method (quantiles, equal intervals, ...)?",
+         c("Quantile breaks are required by journals", "Different breaks can change the map's story", "ggplot2 cannot draw a map without breaks", "Readers need it to compute the p-value of the map"), answer = 2,
+         explain = "The same rates can look clustered or uniform depending on the breaks; state the method and keep breaks fixed across maps you compare.")
+quiz_mcq("mc3", "Which colour scheme suits incidence rates from low to high?",
+         c("A diverging scheme centred on the mean", "A qualitative scheme, one hue per block", "A sequential scheme, light to dark", "A rainbow scheme with many bright hues"), answer = 3,
+         explain = "Rates are ordered magnitudes: a sequential scheme. Diverging only around a meaningful midpoint; qualitative for categories.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

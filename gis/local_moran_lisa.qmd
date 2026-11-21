@@ -1,5 +1,7 @@
 ---
 title: "Local Moran's I (LISA)"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -103,3 +105,34 @@ c(analytic_sig = sum(p < 0.05), permutation_sig = sum(loc_perm[, "Pr(z != E(Ii))
 -   You ran many tests: **adjust** (`"fdr"`) or treat the result as exploratory, and consider permutation p-values.
 -   Pair the global test with the local map, and always report variable, weights and adjustment.
 -   Next: **[Geary's C, Getis-Ord, join counts and the scan statistic](other_spatial_tests.qmd)**.
+
+**Practise it:** this page is the reading for **[GIS workshop, Session 4: Local clusters](../gis-workshop/s4_local_clusters.qmd)**, which has the lab.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("lm1", "You ran local Moran's I on 79 blocks. About how many look 'significant' at 5% by chance alone?",
+         c("None", "About 4", "About 40", "All 79"), answer = 2,
+         explain = "5% of 79 is about 4; and neighbouring tests are correlated. Adjust (fdr) or treat the map as exploratory.")
+quiz_mcq("lm2", "A block is in the High-Low quadrant. What is it?",
+         c("A low value surrounded by high values", "A high value among other high values", "A high value surrounded by low values", "A block with no neighbours at all"), answer = 3,
+         explain = "The first word is the block, the second its neighbours: High-Low is a high outlier among low neighbours.")
+quiz_mcq("lm3", "How should a LISA cluster map be treated?",
+         c("As proof that each marked block is a cluster", "As exploratory: where to look, not proof", "As a replacement for the global Moran's I", "As a map of the raw dengue counts"), answer = 2,
+         explain = "Many correlated tests make individual 'significant' blocks unreliable; use LISA to guide further investigation.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

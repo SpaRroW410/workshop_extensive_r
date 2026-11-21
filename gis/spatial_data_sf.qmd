@@ -1,5 +1,7 @@
 ---
 title: "Spatial Data with sf"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -130,3 +132,34 @@ st_write(blocks, "blocks.shp")               # Shapefile: still common; 10-chara
 -   **Check `st_crs()`** before every analysis; transform to a projected CRS (here EPSG:32644) to measure.
 -   Joins on attributes use `left_join()`; joins on *where things are* use `st_join()` and `st_intersects()`.
 -   Next: **[Maps and Choropleths](maps_choropleth.qmd)**.
+
+**Practise it:** this page is the reading for **[GIS workshop, Session 1: Spatial data](../gis-workshop/s1_spatial_data.qmd)**, which has the lab.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("sf1", "Before measuring distances in metres between blocks, what should you do?",
+         c("Convert the geometry column to plain text", "Transform to a projected CRS such as EPSG:32644", "Use st_join() to add the facilities first", "Keep WGS 84 (EPSG:4326) and multiply degrees by 1000"), answer = 2,
+         explain = "Longitude/latitude are angles; a projected CRS in metres (here UTM zone 44N) gives correct distances and areas.")
+quiz_mcq("sf2", "You need the block each facility lies in. Which function joins by location?",
+         c("`left_join()`", "`st_join()`", "`bind_rows()`", "`st_write()`"), answer = 2,
+         explain = "st_join() matches rows by where the geometries are (st_intersects by default); left_join() matches by a key column.")
+quiz_mcq("sf3", "What is an sf object?",
+         c("An image file of a map with its legend", "A data frame plus a geometry column", "A list of coordinates without attributes", "A shapefile that R cannot change in place"), answer = 2,
+         explain = "sf stores each feature as a row of a data frame, with its shape in a geometry column, so dplyr verbs work on it.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

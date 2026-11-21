@@ -1,5 +1,7 @@
 ---
 title: "Quarto — Publication"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -364,3 +366,32 @@ Quarto automatically generates the reference list at the end of the document.
 - [ ] Citation style file (`.csl`) matches target journal
 - [ ] PDF renders cleanly with `tinytex`
 - [ ] Spelling checked (RStudio: Edit → Check Spelling)
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("qa1", "Which citation syntax gives (Patil, 2021) in the text?",
+         c("`@patil2021`", "`[@patil2021]`", "`[-@patil2021]`", "`{patil2021}`"), answer = 2,
+         explain = "Square brackets put the citation in parentheses; a bare @key gives Patil (2021); -@ hides the author.")
+quiz_mcq("qa2", "What does `shinylive` let you do in a Quarto page?",
+         c("Host a Shiny app on shinyapps.io for free", "Run a Shiny app in the browser, with no server", "Convert a Shiny app into a static PNG image", "Connect the page to a database server automatically"), answer = 2,
+         explain = "shinylive compiles the app to WebAssembly, so it runs in the reader's browser from a static page.")
+quiz_mcq("qa3", "Which YAML field sets the reference style, e.g. Vancouver?",
+         c("`bibliography: refs.bib`", "`cite-method: biblatex`", "`csl: vancouver.csl`", "`keywords: [R]`"), answer = 3,
+         explain = "csl: points to a Citation Style Language file; bibliography: points to the .bib file with the references.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

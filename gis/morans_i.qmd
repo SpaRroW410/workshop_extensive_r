@@ -1,5 +1,7 @@
 ---
 title: "Global Moran's I"
+author: "Sparrow"
+date: "2026-11-20"
 format:
   html:
     code-copy: true
@@ -126,3 +128,34 @@ Give the statistic, the weights, the number of simulations and the p-value; foll
 -   Prefer the **permutation p-value** and always state the **weights**.
 -   The **Moran scatterplot** shows the slope and the High-High, Low-Low, High-Low and Low-High groups.
 -   A global test cannot locate clusters: next, **[Local Moran's I (LISA)](local_moran_lisa.qmd)**.
+
+**Practise it:** this page is the reading for **[GIS workshop, Session 3: Global autocorrelation](../gis-workshop/s3_global_autocorrelation.qmd)**, which has the lab.
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("mi1", "Moran's I is 0.45 with a permutation p of 0.001. What does it mean?",
+         c("Blocks with high values are placed at random", "Similar values tend to be neighbours", "45% of blocks belong to one single cluster", "The rate rises by 0.45 per neighbour"), answer = 2,
+         explain = "A positive I well above its expectation (about 0) means positive spatial autocorrelation: like values sit near each other.")
+quiz_mcq("mi2", "What can a global Moran's I not tell you?",
+         c("Whether there is clustering", "Where the clusters are", "Whether the pattern is random", "The direction of autocorrelation"), answer = 2,
+         explain = "Global I is one number for the whole map; local statistics (LISA, Gi*) locate clusters.")
+quiz_mcq("mi3", "What must you always state when reporting Moran's I?",
+         c("The colour scheme of the map", "The weights used, and the p-value method", "The CRS of the original data file", "The name of the R package that drew the map"), answer = 2,
+         explain = "The result depends on the weights; and say whether the p-value is analytical or from permutations.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```
