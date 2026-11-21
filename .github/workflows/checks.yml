@@ -30,6 +30,20 @@ jobs:
           git diff --exit-code -- '*-workshop/labs'
       - name: Game item bank
         run: node dungeons/tests/lint_bank.js --strict
+      - name: Base-module labs are in sync with their solutions
+        run: |
+          Rscript scripts/build_base_labs.R > /dev/null
+          git diff --exit-code -- 'labs/*/*.R'
+      - name: Quiz quality gate (base modules)
+        run: |
+          Rscript regression-workshop/lint_quizzes.R $(grep -rl --include=*.qmd 'quiz_mcq(' r-foundations data-visualization plot-gallery specialized statistical-analysis ggstatsplot gtsummary quarto_repro_w exporting_tools gis) | tee /tmp/lint.txt
+          grep -q "^0 hard failures" /tmp/lint.txt
+      - name: No dead or .qmd links in the rendered site
+        run: python3 scripts/check_links.py
+      - name: No outline-only or output-less page in a menu (D1)
+        run: |
+          pip install pyyaml
+          python3 scripts/module_inventory.py --check > /dev/null
   cloud:
     # Gate, sign-in and progress code in cloud/ (Cloudflare Pages Functions), tested against a local D1.
     runs-on: ubuntu-latest

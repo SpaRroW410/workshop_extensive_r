@@ -18,7 +18,7 @@ reviewer later.
 - **F8**: `PACKAGES.md`, every package the site uses with its version, per track.
 
 **Broken / not done**: nothing is left broken. Not done: U3 (the 11 workshops: they need your reviewer), the
-final verification V1–V9 as one pass, and the CI step that fails on `stub` / `no-output` pages.
+and the final verification V1–V9 as one pass.
 
 **Where to start (15 minutes)**: open the Moderate home and click through M1 → M2 (a quiz and a lab each), then
 `plot-gallery/advanced/3.4` (the dengue forecasts). Then read decisions **N16** (M1 free) and **N29** (generated
@@ -78,4 +78,5 @@ alt text) below: those are the two calls you may want to change.
 | U-GAME D8 page → world links | ✅ committed | 12 unit pages; 7 tracks render exit 0; links 0/0; cloud 43/43; quest e2e and bank lint pass |
 | F7 alt text (base pages) | ✅ committed | 199 figures on 32 pages (N29); 7 tracks render exit 0, no warnings; 39 quiz pages pass; links 0/0; cloud 43/43; quest e2e pass |
 | F8 package list | ✅ committed | `PACKAGES.md`: 104 packages with versions per track (N30) |
-| Left for you | U3 workshops (reviewer), V1–V9 final pass, CI inventory step (U0 item 9) | |
+| U0 item 9 + CI | ✅ committed | CI now also checks: base labs in sync, base-module quiz lint, dead/.qmd links, no stub/no-output menu page (`module_inventory.py --check`); all pass locally. Inventory: 0 flagged pages; documented datasets no longer flagged ext-data |
+| Left for you | U3 workshops (needs the reviewer), V1–V9 as one final pass before launch | |
