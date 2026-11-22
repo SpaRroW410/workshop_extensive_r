@@ -1742,6 +1742,407 @@ ggplot(temperature_data, aes(x = hour, y = temp)) +
 
 ---
 
+# Principle 7: More Checks Before You Publish {background-color="#2C5F8D"}
+
+## Sixteen more checks {.smaller}
+
+Each slide shows the same data drawn two ways: **Avoid** (left) and **Better** (right). Open *Code* to see the change.
+All sixteen are also on the [Caveats flash cards](caveats.qmd).
+
+::: {.columns}
+::: {.column width="50%"}
+**Misleading or wrong chart**
+
+1. Counter-intuitive encodings
+2. Simpson's paradox
+3. Many thin bars shimmer
+4. Maybe you don't need a map
+5. Overlapping sets: UpSet, not Venn
+6. Bubbles by area, not radius
+7. Two values per group: dumbbell
+8. Readable date axes
+:::
+::: {.column width="50%"}
+**Design details**
+
+9. Two fonts are enough
+10. Avoid pure, flashy colours
+11. A quiet background
+12. No rainbow palettes
+13. Same colours across charts
+14. Show missing data as missing
+15. Mind the map projection
+16. Round your numbers · Mind the aspect ratio
+:::
+:::
+
+```{r}
+#| include: false
+# Data for this section: the course datasets (see data/README.md)
+library(readxl); library(sf); library(UpSetR)
+p7 <- function(f) c(file.path("../data", f), file.path("data", f))[file.exists(c(file.path("../data", f), file.path("data", f)))][1]
+ncd <- read_csv(p7("ncd_survey.csv"), show_col_types = FALSE) |>
+  mutate(phys_act = factor(phys_act, levels = c("low", "moderate", "high")))
+bp <- read_excel(p7("PublicHealth_BP_Dataset.xlsx"))
+dengue <- read_csv(p7("dengue_wards.csv"), show_col_types = FALSE) |>
+  mutate(date = seq(as.Date("2023-01-01"), by = "month", length.out = 36)[month_index])
+monthly <- dengue |> group_by(date) |> summarise(cases = sum(cases), .groups = "drop")
+blocks <- st_read(p7("gis/district_blocks.geojson"), quiet = TRUE)
+avoid <- function(p) p + labs(tag = "✗ Avoid") + theme(plot.tag = element_text(colour = "#C0392B", face = "bold", size = 13), plot.tag.position = "topleft")
+better <- function(p) p + labs(tag = "✓ Better") + theme(plot.tag = element_text(colour = "#1E8449", face = "bold", size = 13), plot.tag.position = "topleft")
+```
+
+---
+
+## 1. Counter-intuitive encodings {.smaller}
+
+```{r}
+#| code-fold: true
+#| fig-width: 11
+#| fig-height: 4.6
+#| fig-alt: "Two bar charts of the percentage with hypertension by age band. Left: the y-axis is reversed so bars hang from the top and the oldest group, which has the most hypertension, has the longest bar pointing down. Right: the usual axis, bars rising with age."
+htn_act <- ncd |> group_by(phys_act) |> summarise(pct = 100 * mean(htn))     # used on later slides
+htn_age <- ncd |> mutate(age_band = cut(age, c(29, 39, 49, 59, 69), labels = c("30–39", "40–49", "50–59", "60–69"))) |>
+  group_by(age_band) |> summarise(pct = 100 * mean(htn))
+base <- ggplot(htn_age, aes(age_band, pct)) + geom_col(fill = "#2C5F8D", width = 0.6) +
+  labs(x = "Age (years)", y = "Hypertension (%)") + theme_minimal(base_size = 13)
+avoid(base + scale_y_reverse() + labs(title = "Reversed axis: 'up' now means less")) +
+  better(base + labs(title = "Up means more, as readers expect"))
+```
+
+::: {.explanation}
+Readers assume up = more, darker = more, red = bad. Reversing an axis or a colour scale makes them read the opposite. Keep the usual direction; if you must invert (ranks), say so on the axis.
+:::
+
+---
+
+## 2. Simpson's paradox {.smaller}
+
+```{r}
+#| code-fold: true
+#| fig-width: 11
+#| fig-height: 4.6
+#| fig-alt: "Two scatter plots of recovery score against dose for three simulated hospitals. Left: all points pooled with one regression line sloping down. Right: points coloured by hospital, and within each hospital the line slopes up."
+set.seed(7)   # an illustration: three hospitals that treat patients of different severity
+sim <- map_dfr(1:3, \(h) tibble(hospital = paste("Hospital", LETTERS[h]),
+                                 dose = rnorm(40, 2 + 2 * h, 0.8),
+                                 recovery = 80 - 15 * h + 3 * (dose - 2 - 2 * h) + rnorm(40, 0, 3)))
+avoid(ggplot(sim, aes(dose, recovery)) + geom_point(alpha = 0.6) + geom_smooth(method = "lm", se = FALSE, colour = "black") +
+        labs(title = "Pooled: higher dose, worse recovery?") + theme_minimal(base_size = 13)) +
+  better(ggplot(sim, aes(dose, recovery, colour = hospital)) + geom_point(alpha = 0.6) + geom_smooth(method = "lm", se = FALSE) +
+           scale_colour_viridis_d(end = 0.85) + labs(title = "Within each hospital, dose helps", colour = NULL) +
+           theme_minimal(base_size = 13) + theme(legend.position = "bottom"))
+```
+
+::: {.explanation}
+The hospitals differ in severity and dose, so the pooled trend reverses the trend inside every hospital (simulated data). Colour or facet by a likely confounder before concluding; adjust for it in the model.
+:::
+
+---
+
+## 3. Many thin bars shimmer {.smaller}
+
+```{r}
+#| code-fold: true
+#| fig-width: 11
+#| fig-height: 4.6
+#| fig-alt: "Left: 600 thin dark lollipop sticks, one per adult, sorted by systolic blood pressure, forming a dense flickering block. Right: a histogram of the same 600 values with 5 mmHg bins."
+srt <- ncd |> arrange(sbp) |> mutate(rank = row_number())
+avoid(ggplot(srt, aes(rank, sbp)) + geom_segment(aes(xend = rank, y = 80, yend = sbp), linewidth = 0.3) +
+        labs(title = "600 thin lines: a moiré pattern", x = "Adults, sorted", y = "Systolic BP") + theme_minimal(base_size = 13)) +
+  better(ggplot(ncd, aes(sbp)) + geom_histogram(binwidth = 5, boundary = 0, fill = "#2C5F8D", colour = "white") +
+           labs(title = "The same 600 values, binned", x = "Systolic BP (mmHg)", y = "Adults") + theme_minimal(base_size = 13))
+```
+
+::: {.explanation}
+Dozens of closely spaced thin lines vibrate on screen and in print. Aggregate (histogram, dot plot) or use fewer, thicker marks.
+:::
+
+---
+
+## 4. Maybe you don't need a map {.smaller}
+
+```{r}
+#| code-fold: true
+#| fig-width: 11
+#| fig-height: 4.6
+#| fig-alt: "Left: a map of the district's sub-districts shaded by dengue incidence, where the large sub-districts dominate. Right: a sorted bar chart of the same incidence by sub-district with values printed."
+dist <- blocks |> group_by(district) |> summarise(cases = sum(dengue_cases), pop = sum(population)) |>
+  mutate(rate = cases / pop * 1e5)
+avoid(ggplot(dist) + geom_sf(aes(fill = rate), colour = "white") + scale_fill_viridis_c(name = "per 100k") +
+        labs(title = "Which sub-district is highest?") + theme_void(base_size = 13)) +
+  better(ggplot(st_drop_geometry(dist), aes(rate, reorder(district, rate))) + geom_col(fill = "#2C5F8D") +
+           geom_text(aes(label = round(rate)), hjust = -0.2) + scale_x_continuous(expand = expansion(c(0, 0.15))) +
+           labs(title = "Ranked: the answer at a glance", x = "Dengue per 100,000", y = NULL) + theme_minimal(base_size = 13))
+```
+
+::: {.explanation}
+If the question is "which area is highest?", a sorted bar chart answers it faster than a map, where large areas draw the eye. Use a map when **where** matters (clusters, neighbours, access).
+:::
+
+---
+
+## 5. Overlapping sets: UpSet, not Venn {.smaller}
+
+```{r}
+#| code-fold: true
+#| fig-width: 10
+#| fig-height: 4.8
+#| fig-alt: "UpSet plot of five risk factors in 600 adults: horizontal bars give the size of each risk factor, vertical bars give the number of adults with each exact combination, and a dot matrix below shows which factors make up each combination."
+risk <- ncd |> transmute(Hypertension = htn, Tobacco = as.integer(tobacco == "Yes"), Alcohol = as.integer(alcohol == "Yes"),
+                         Obesity = as.integer(bmi >= 30), Inactive = as.integer(phys_act == "low")) |> as.data.frame()
+upset(risk, nsets = 5, nintersects = 15, order.by = "freq", mainbar.y.label = "Adults with exactly this combination",
+      sets.x.label = "Adults with the factor", main.bar.color = "#2C5F8D", text.scale = 1.3)
+```
+
+::: {.explanation}
+A Venn diagram of five sets has 31 regions and cannot be read. An UpSet plot (`UpSetR::upset()`) shows the size of every combination as a bar, sorted. Use it for comorbidities and overlapping risk factors.
+:::
+
+---
+
+## 6. Bubbles by area, not radius {.smaller}
+
+```{r}
+#| code-fold: true
+#| fig-width: 11
+#| fig-height: 4.6
+#| fig-alt: "Two bubble charts of dengue cases by sub-district. Left: bubble radius proportional to cases, so large values look far too big. Right: bubble area proportional to cases."
+dd <- st_drop_geometry(dist) |> mutate(district = reorder(district, cases))
+bub <- ggplot(dd, aes(1, district, size = cases)) + geom_point(colour = "#2C5F8D", alpha = 0.7) +
+  geom_text(aes(x = 1.25, label = cases), size = 4, hjust = 0) + scale_x_continuous(limits = c(0.8, 1.5)) +
+  labs(x = NULL, y = NULL) + theme_minimal(base_size = 13) + theme(axis.text.x = element_blank(), legend.position = "none")
+avoid(bub + scale_radius(range = c(2, 22)) + labs(title = "Radius ∝ cases: big values inflated")) +
+  better(bub + scale_size_area(max_size = 22) + labs(title = "Area ∝ cases"))
+```
+
+::: {.explanation}
+Doubling the radius quadruples the area, and readers judge area. ggplot2's `scale_size()` and `scale_size_area()` map to area; avoid `scale_radius()`. The same applies to icons scaled in width and height.
+:::
+
+---
+
+## 7. Two values per group: a dumbbell {.smaller}
+
+```{r}
+#| code-fold: true
+#| fig-width: 11
+#| fig-height: 4.6
+#| fig-alt: "Left: grouped bars of mean systolic blood pressure at baseline and 6 months for each region in the intervention arm, starting at zero, so the change is hard to see. Right: a dumbbell chart joining the baseline and 6-month means for each region."
+bpi <- bp |> filter(TreatmentGroup == "Intervention") |> group_by(Region) |>
+  summarise(Baseline = mean(SysBP_0m), `6 months` = mean(SysBP_6m))
+avoid(bpi |> pivot_longer(-Region, names_to = "time", values_to = "sbp") |>
+        mutate(time = factor(time, c("Baseline", "6 months"))) |>
+        ggplot(aes(Region, sbp, fill = time)) + geom_col(position = "dodge") +
+        scale_fill_manual(values = c("grey70", "#2C5F8D")) + labs(title = "Grouped bars: compare across pairs", y = "Mean SBP", fill = NULL) +
+        theme_minimal(base_size = 13) + theme(legend.position = "bottom")) +
+  better(ggplot(bpi, aes(y = reorder(Region, Baseline))) +
+           geom_segment(aes(x = Baseline, xend = `6 months`), colour = "grey75", linewidth = 2) +
+           geom_point(aes(x = Baseline), colour = "grey55", size = 4) + geom_point(aes(x = `6 months`), colour = "#2C5F8D", size = 4) +
+           labs(title = "Dumbbell: the change is the line", x = "Mean SBP, baseline (grey) → 6 months (blue)", y = NULL) +
+           theme_minimal(base_size = 13))
+```
+
+::: {.explanation}
+With two values per group, a dumbbell shows both values and the change in one glance, and does not need an axis from zero (it encodes position, not length).
+:::
+
+---
+
+## 8. Readable date axes {.smaller}
+
+```{r}
+#| code-fold: true
+#| fig-width: 11
+#| fig-height: 4.6
+#| fig-alt: "Left: monthly dengue cases with dates as text categories, giving 36 crowded rotated labels such as 2023-01-01. Right: the same line with a real date axis labelled every six months as Jan 2023, Jul 2023 and so on."
+avoid(ggplot(monthly, aes(as.character(date), cases, group = 1)) + geom_line() +
+        labs(title = "Dates as text: 36 crowded labels", x = NULL, y = "Cases") + theme_minimal(base_size = 13) +
+        theme(axis.text.x = element_text(angle = 90, size = 7))) +
+  better(ggplot(monthly, aes(date, cases)) + geom_line(colour = "#2C5F8D", linewidth = 1) +
+           scale_x_date(date_breaks = "6 months", date_labels = "%b\n%Y") +
+           labs(title = "A real date axis, every 6 months", x = NULL, y = "Cases") + theme_minimal(base_size = 13))
+```
+
+::: {.explanation}
+Keep dates as `Date` (not text), so gaps are drawn to scale, and choose the breaks: `scale_x_date(date_breaks = "6 months", date_labels = "%b %Y")`. Avoid ambiguous formats like 01/02.
+:::
+
+---
+
+## 9. Two fonts are enough {.smaller}
+
+```{r}
+#| code-fold: true
+#| fig-width: 11
+#| fig-height: 4.6
+#| fig-alt: "Left: a bar chart whose title, subtitle, axis titles and labels each use a different font family and style. Right: the same chart in one font family, with hierarchy from size and weight only."
+base <- ggplot(htn_act, aes(pct, phys_act)) + geom_col(fill = "#2C5F8D", width = 0.6) +
+  labs(title = "Hypertension by activity", subtitle = "NCD survey, 600 adults", x = "Hypertension (%)", y = NULL)
+avoid(base + theme_minimal(base_size = 13) +
+        theme(plot.title = element_text(family = "serif", face = "bold.italic"), plot.subtitle = element_text(family = "mono"),
+              axis.title.x = element_text(family = "serif", face = "italic"), axis.text = element_text(family = "mono", face = "bold"))) +
+  better(base + theme_minimal(base_size = 13) + theme(plot.title = element_text(face = "bold"), plot.subtitle = element_text(colour = "grey40")))
+```
+
+::: {.explanation}
+Several families and styles compete for attention. Use one family; build hierarchy with size, weight and grey: `theme(plot.title = element_text(face = "bold"))`.
+:::
+
+---
+
+## 10. Avoid pure, flashy colours {.smaller}
+
+```{r}
+#| code-fold: true
+#| fig-width: 11
+#| fig-height: 4.6
+#| fig-alt: "Two scatter plots of systolic blood pressure against BMI coloured by physical activity. Left: pure red, green and blue. Right: the muted, colour-blind-safe Okabe-Ito colours."
+sc <- ggplot(ncd, aes(bmi, sbp, colour = phys_act)) + geom_point(alpha = 0.8, size = 1.6) +
+  labs(x = "BMI", y = "Systolic BP", colour = NULL) + theme_minimal(base_size = 13) + theme(legend.position = "bottom")
+avoid(sc + scale_colour_manual(values = c("#FF0000", "#00FF00", "#0000FF")) + labs(title = "Pure RGB: vibrating, not colour-blind safe")) +
+  better(sc + scale_colour_manual(values = c("#E69F00", "#56B4E9", "#009E73")) + labs(title = "Okabe-Ito: calm and safe"))
+```
+
+::: {.explanation}
+Fully saturated colours vibrate next to each other and tire the eye; pure red and green also fail for colour-blind readers. Use muted palettes (Okabe-Ito, viridis, ColorBrewer) and keep one stronger colour for emphasis.
+:::
+
+---
+
+## 11. A quiet background {.smaller}
+
+```{r}
+#| code-fold: true
+#| fig-width: 11
+#| fig-height: 4.6
+#| fig-alt: "Left: a line chart of monthly dengue cases on a dark blue panel with heavy white grid lines. Right: the same line on a white background with light grid lines."
+ln <- ggplot(monthly, aes(date, cases)) + labs(x = NULL, y = "Dengue cases") + theme_minimal(base_size = 13)
+avoid(ln + geom_line(colour = "orange", linewidth = 1) + labs(title = "Dark panel: low contrast, heavy grid") +
+        theme(panel.background = element_rect(fill = "#1F3B73"), panel.grid.major = element_line(colour = "white", linewidth = 0.8))) +
+  better(ln + geom_line(colour = "#C0392B", linewidth = 1) + labs(title = "White background, light grid"))
+```
+
+::: {.explanation}
+A coloured or dark panel lowers contrast and changes how colours look, especially when printed. Use white or very light grey with light grid lines: `theme_minimal()`.
+:::
+
+---
+
+## 12. No rainbow palettes {.smaller}
+
+```{r}
+#| code-fold: true
+#| fig-width: 11
+#| fig-height: 4.6
+#| fig-alt: "Two maps of the 79 district blocks shaded by dengue incidence per 100,000. Left: a rainbow palette with bright yellow and cyan bands that create false boundaries. Right: the viridis palette from dark to light."
+mp <- ggplot(blocks) + theme_void(base_size = 13)
+avoid(mp + geom_sf(aes(fill = dengue_per_100k), colour = NA) + scale_fill_gradientn(colours = rainbow(7), name = "per 100k") +
+        labs(title = "Rainbow: false edges, no order")) +
+  better(mp + geom_sf(aes(fill = dengue_per_100k), colour = NA) + scale_fill_viridis_c(option = "magma", direction = -1, name = "per 100k") +
+           labs(title = "Sequential: darker = more"))
+```
+
+::: {.explanation}
+A rainbow has no natural order and its bright bands (yellow, cyan) create boundaries that are not in the data; it also fails in greyscale. Use a sequential palette such as viridis or magma for numbers.
+:::
+
+---
+
+## 13. Same colours across charts {.smaller}
+
+```{r}
+#| code-fold: true
+#| fig-width: 11
+#| fig-height: 4.6
+#| fig-alt: "Two pairs of small charts about the treatment arms. In the top pair, Control is red in one chart and blue in the other. In the bottom pair, Control is grey and Intervention is blue in both charts."
+arm_cols <- c(Control = "grey55", Intervention = "#2C5F8D")
+pa <- ggplot(bp, aes(SysBP_6m, TreatmentGroup, fill = TreatmentGroup)) + geom_boxplot() + labs(y = NULL, x = "SBP at 6 months") +
+  theme_minimal(base_size = 12) + theme(legend.position = "none")
+pb <- ggplot(bp, aes(SysBP_0m, SysBP_6m, colour = TreatmentGroup)) + geom_point(alpha = 0.6) +
+  scale_x_continuous(breaks = seq(100, 160, 20)) +
+  labs(x = "SBP baseline", y = "SBP 6 months", colour = NULL) + theme_minimal(base_size = 12) + theme(legend.position = "bottom")
+avoid(pa + scale_fill_manual(values = c("#F8766D", "#00BFC4"))) + (pb + scale_colour_manual(values = c("#00BFC4", "#F8766D"))) +
+  better(pa + scale_fill_manual(values = arm_cols)) + (pb + scale_colour_manual(values = arm_cols)) +
+  plot_layout(ncol = 4)
+```
+
+::: {.explanation}
+If "Control" changes colour between charts, readers mis-match them. Define one named colour vector and use it in every plot: `arm_cols <- c(Control = "grey55", Intervention = "#2C5F8D")`.
+:::
+
+---
+
+## 14. Show missing data as missing {.smaller}
+
+```{r}
+#| code-fold: true
+#| fig-width: 11
+#| fig-height: 4.6
+#| fig-alt: "Two maps of dengue incidence where ten blocks did not report. Left: the missing blocks are drawn in the palette's lightest colour and look like low-incidence blocks. Right: they are grey, and a caption says they did not report."
+set.seed(3)
+blk_na <- blocks |> mutate(rate = replace(dengue_per_100k, sample(n(), 10), NA))
+mp2 <- ggplot(blk_na) + theme_void(base_size = 13)
+avoid(mp2 + geom_sf(aes(fill = coalesce(rate, 0)), colour = "white", linewidth = 0.2) +
+        scale_fill_distiller(palette = "Reds", direction = 1, name = "per 100k") + labs(title = "Missing drawn as zero")) +
+  better(mp2 + geom_sf(aes(fill = rate), colour = "white", linewidth = 0.2) +
+           scale_fill_distiller(palette = "Reds", direction = 1, name = "per 100k", na.value = "grey60") +
+           labs(title = "Missing in grey", caption = "Grey: no report from 10 blocks"))
+```
+
+::: {.explanation}
+A block that did not report is not a block with no cases. Give missing areas a distinct neutral colour (`na.value = "grey60"`) and say so in the legend or caption.
+:::
+
+---
+
+## 15. Mind the map projection {.smaller}
+
+```{r}
+#| code-fold: true
+#| fig-width: 11
+#| fig-height: 4.6
+#| fig-alt: "Two world maps with Greenland and the Democratic Republic of the Congo in red. Left: the Mercator projection, where Greenland looks several times larger than the Congo. Right: the equal-area Mollweide projection, where the two are about the same size, as they really are."
+sf_use_s2(FALSE)
+world <- st_as_sf(maps::map("world", fill = TRUE, plot = FALSE)) |> st_make_valid() |>
+  st_crop(xmin = -180, xmax = 180, ymin = -58, ymax = 83) |>
+  mutate(pick = ID %in% c("Greenland", "Democratic Republic of the Congo"))
+wm <- function(crs) ggplot(st_transform(world, crs)) + geom_sf(aes(fill = pick), colour = NA) +
+  scale_fill_manual(values = c("grey80", "#C0392B"), guide = "none") + theme_void(base_size = 13)
+avoid(wm(3857) + labs(title = "Mercator: Greenland looks far bigger")) +
+  better(wm("+proj=moll") + labs(title = "Equal-area: about the same size (2.2 vs 2.3 million km²)"))
+```
+
+::: {.explanation}
+Mercator keeps shapes but inflates areas far from the equator, so a world choropleth over-weights the north. For thematic maps use an equal-area projection (world) or a local projected CRS (a district, e.g. UTM: `st_transform(x, 32644)`).
+:::
+
+---
+
+## 16. Round your numbers · Mind the aspect ratio {.smaller}
+
+```{r}
+#| code-fold: true
+#| fig-width: 11
+#| fig-height: 4.6
+#| fig-alt: "Left pair: bar charts of hypertension by physical activity labelled with six-decimal percentages versus whole percentages. Right pair: the monthly dengue line squeezed into a tall narrow panel versus a wide panel where the seasonal slopes are readable."
+lab <- ggplot(htn_act, aes(pct / 100, phys_act)) + geom_col(fill = "#2C5F8D", width = 0.6) + labs(x = NULL, y = NULL) +
+  scale_x_continuous(labels = scales::percent, breaks = c(0, 0.2), expand = expansion(c(0, 0.9))) + theme_minimal(base_size = 12)
+avoid(lab + geom_text(aes(label = sprintf("%.4f%%", pct)), hjust = -0.05, size = 3.2) + labs(title = "False precision")) +
+  better(lab + geom_text(aes(label = scales::percent(pct / 100, accuracy = 1)), hjust = -0.1, size = 3.5) + labs(title = "Rounded")) +
+  avoid(ggplot(monthly, aes(date, cases)) + geom_line() + labs(title = "Squeezed", x = NULL, y = NULL) +
+          theme_minimal(base_size = 12) + theme(aspect.ratio = 2.2, axis.text.x = element_blank())) +
+  better(ggplot(monthly, aes(date, cases)) + geom_line(colour = "#2C5F8D") + labs(title = "Wide: slopes readable", x = NULL, y = NULL) +
+           theme_minimal(base_size = 12) + theme(aspect.ratio = 0.45)) +
+  plot_layout(ncol = 4, widths = c(1, 1, 0.6, 1.4))
+```
+
+::: {.explanation}
+"37.428571%" claims a precision the data do not have: round to what matters (`scales::percent(x, accuracy = 1)`). Stretching a plot changes how steep a trend looks: set width and height on purpose (`ggsave(width = 8, height = 4)`).
+:::
+
+---
+
 ## Resources & Further Learning
 
 ::: {.columns}

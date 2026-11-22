@@ -19,6 +19,7 @@ categories:
       - title: 'Avoid counter-intuitive encodings'
         problem: 'Readers expect up = more, red = bad, bigger = larger. An inverted axis or a reversed colour scale makes them read the opposite of the truth.'
         fix: 'Keep the usual direction; if you must invert (e.g. ranks), say so on the axis and in the title.'
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
         dtv: https://www.data-to-viz.com/caveat/counter_intuitive.html
       - title: 'Bars with error bars ("dynamite plots") hide the data'
         problem: 'A bar of the mean with an error bar shows two numbers and suggests values below the mean are the only ones that exist.'
@@ -43,6 +44,7 @@ categories:
       - title: 'Draw proportions accurately'
         problem: 'Icons or shapes scaled by height and width (both) exaggerate differences; a doubled value looks four times larger.'
         fix: 'Make area (not radius or height and width together) proportional to the value, or simply use bars.'
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
       - title: 'Respect time intervals'
         problem: 'Unevenly spaced dates (2010, 2015, 2020, 2021, 2022) drawn at equal distances distort the trend.'
         fix: 'Use a real date or numeric x-axis so the gaps are drawn to scale.'
@@ -55,7 +57,7 @@ categories:
         problem: 'A trend in the pooled data can reverse inside every subgroup when the groups differ in size and level.'
         fix: 'Colour or facet by the likely confounder before drawing a conclusion; adjust for it in the model.'
         code: "ggplot(d, aes(x, y, colour = group)) + geom_point() + geom_smooth(method = 'lm')"
-        course: [statistical-analysis/regression.qmd, Regression Analysis]
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
         dtv: https://www.data-to-viz.com/caveat/simpson.html
 
   - name: Wrong chart type
@@ -63,6 +65,7 @@ categories:
       - title: 'Many thin lollipops or bars can shimmer'
         problem: 'Dozens of closely spaced thin lines create a moiré pattern that is tiring to look at.'
         fix: 'Use fewer, thicker bars, or a dot plot, or aggregate into groups.'
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
       - title: 'The trouble with pie charts'
         problem: 'People compare angles and areas poorly; slices of 23% and 27% look the same, and more than 5 slices are unreadable.'
         fix: 'A sorted bar chart. Keep a pie only for 2–3 parts of a whole for a general audience.'
@@ -76,12 +79,12 @@ categories:
       - title: 'Maybe you do not need a map'
         problem: 'A map draws attention to large, empty areas; if geography is not the question, it wastes space.'
         fix: 'A sorted bar or dot chart of the regions answers "which is highest?" better than a map.'
-        course: [gis/maps_choropleth.qmd, Maps and Choropleths]
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
       - title: 'Two values per group? Try a dumbbell'
         problem: 'Grouped bars for before/after (or men/women) make the reader compare bars across pairs.'
         fix: 'A dumbbell (two points joined by a line) shows both values and the change in one glance.'
         code: "geom_segment(aes(x = before, xend = after, y = site, yend = site)) + geom_point(aes(before, site)) + geom_point(aes(after, site))"
-        course: [plot-gallery/showcase.qmd, Showcase]
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
       - title: 'Use circular bar plots with care'
         problem: 'Without a radial axis readers cannot read values, and the shape is driven by the order of the bars.'
         fix: 'Label each bar with its value and sort it; prefer a straight bar chart for comparison.'
@@ -98,12 +101,14 @@ categories:
       - title: 'Choose the background on purpose'
         problem: 'A dark or coloured panel background reduces contrast and changes how colours look.'
         fix: 'White or very light grey backgrounds; theme_minimal() or theme_classic().'
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
       - title: 'Keep enough contrast'
         problem: 'Light-yellow lines or pale text on white disappear on a projector and in print.'
         fix: 'Check contrast (text should be dark); avoid the lightest end of a palette for thin lines and text.'
       - title: 'Avoid pure, saturated colours'
         problem: 'Pure red, green and blue (#FF0000 ...) vibrate next to each other and tire the eye.'
         fix: 'Muted palettes (viridis, ColorBrewer, Okabe-Ito) with one stronger colour for emphasis.'
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
       - title: 'Numbers need a sequential palette'
         problem: 'A rainbow or qualitative palette on a numeric variable has no visual order.'
         fix: 'One hue from light to dark (or viridis) so darker = more.'
@@ -119,6 +124,7 @@ categories:
       - title: 'Avoid the rainbow palette'
         problem: 'Rainbow scales have sudden bright bands (yellow, cyan) that create boundaries not in the data, and fail in greyscale.'
         fix: 'viridis or a single-hue sequential scale.'
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
         dtv: https://blog.datawrapper.de/colors/
       - title: 'Diverging data, diverging palette'
         problem: 'Change from baseline, residuals and correlations have a meaningful zero that a sequential palette hides.'
@@ -140,6 +146,7 @@ categories:
       - title: 'Two fonts are enough'
         problem: 'Many fonts and styles compete for attention.'
         fix: 'One font family; vary size and weight for hierarchy.'
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
       - title: 'Do you need that box?'
         problem: 'Borders around the panel, legend and plot add ink without information.'
         fix: 'Remove panel borders and legend boxes; let white space separate elements.'
@@ -170,7 +177,7 @@ categories:
         problem: 'Web Mercator inflates areas far from the equator, so a choropleth over-weights them.'
         fix: 'Use an equal-area or local projected CRS for thematic maps (e.g. UTM for a district).'
         code: "st_transform(blocks, 32644)"
-        course: [gis/spatial_data_sf.qmd, Spatial Data with sf]
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
       - title: 'Normalise your maps'
         problem: 'A map of counts is mostly a map of where people live.'
         fix: 'Map rates (per 100,000) or ratios to expected; show counts only when workload is the question.'
@@ -181,6 +188,7 @@ categories:
         problem: 'A missing area coloured like the lowest class looks like "no disease".'
         fix: 'Give missing areas a distinct neutral colour or hatching and a legend entry.'
         code: "scale_fill_viridis_c(na.value = 'grey85')"
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
       - title: 'Do not let small regions vanish'
         problem: 'Dense urban wards are tiny on a map, though they hold most people.'
         fix: 'Add an inset or zoom, a cartogram, or a hexagon tile map.'
@@ -206,6 +214,7 @@ categories:
         problem: 'A value like "37.4285%" suggests a precision the data do not have and is harder to read.'
         fix: 'Round to what matters (37%); use scales::percent() for axes.'
         code: "scale_y_continuous(labels = scales::percent)"
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
       - title: 'Annotation is crucial'
         problem: 'Readers miss the event or threshold that explains the pattern.'
         fix: 'Add a short note, a reference line or a shaded period where it matters.'
@@ -222,6 +231,7 @@ categories:
         problem: 'If "Intervention" is blue in one panel and orange in the next, readers mis-match them.'
         fix: 'A named colour vector used by every plot.'
         code: "arm_cols <- c(Control = 'grey50', Intervention = '#2C5F8D'); scale_colour_manual(values = arm_cols)"
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
         dtv: https://www.data-to-viz.com/caveat/consistency.html
       - title: 'Share the y-axis to compare panels'
         problem: 'Panels with their own y range look similar even when one is ten times higher.'
@@ -251,6 +261,7 @@ categories:
         problem: 'If the radius doubles, the area quadruples.'
         fix: 'ggplot2''s scale_size() already maps to area; avoid scale_radius().'
         code: "scale_size_area(max_size = 12)"
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
         dtv: https://www.data-to-viz.com/caveat/radius_or_area.html
       - title: 'The spaghetti plot'
         problem: 'Twenty overlapping lines are unreadable.'
@@ -270,6 +281,7 @@ categories:
       - title: 'Overlapping sets? Use an UpSet plot'
         problem: 'Venn diagrams with more than three sets (e.g. comorbidities) are unreadable.'
         fix: 'An UpSet plot shows the size of every intersection as a bar.'
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
       - title: 'Stacked charts are hard to read'
         problem: 'Only the bottom segment has a common baseline; the rest cannot be compared.'
         fix: 'Grouped bars, small multiples, or 100% stacks with few segments.'
@@ -279,11 +291,13 @@ categories:
         problem: 'Stretching a plot changes how steep a trend looks.'
         fix: 'Choose the width/height on purpose (about 45° for the main slopes); set it in ggsave().'
         code: "ggsave('fig.png', width = 7, height = 4)"
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
         dtv: https://www.data-to-viz.com/caveat/aspect_ratio.html
       - title: 'Make date axes easy to read'
         problem: 'Default date labels can be dense or ambiguous (01/02).'
         fix: 'Unambiguous formats ("Jan 2025") and sensible breaks.'
         code: "scale_x_date(date_labels = '%b %Y')"
+        course: [data-visualization/best_practices.qmd, Best Practices (Principle 7)]
       - title: 'Reorder your heat map'
         problem: 'Rows and columns in input order hide any structure.'
         fix: 'Order by a summary or by clustering so similar rows sit together.'
