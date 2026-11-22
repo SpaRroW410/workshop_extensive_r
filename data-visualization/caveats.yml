@@ -1,0 +1,337 @@
+# Data-viz caveats as flash cards. Rendered by data-visualization/caveats.qmd.
+# Topics follow the caveat list of data-to-viz.com (Yan Holtz & Conor Healy); the wording here is our own.
+# Fields: title, problem, fix, code (optional R), course (optional: [path from repo root, label]), dtv (optional detail URL)
+categories:
+  - name: Misleading charts
+    cards:
+      - title: 'Do not cut the y-axis of a bar chart'
+        problem: 'Bars encode values by their length. Starting the axis at 120 mmHg makes a 3 mmHg gap look like a doubling.'
+        fix: 'Start bar charts at zero. If the differences matter but are small, show points with confidence intervals instead of bars.'
+        code: "ggplot(d, aes(group, sbp)) + geom_col() + scale_y_continuous(limits = c(0, NA))"
+        course: [data-visualization/best_practices.qmd, Best Practices]
+        dtv: https://www.data-to-viz.com/caveat/cut_y_axis.html
+      - title: 'Box plots hide the shape'
+        problem: 'Two groups can have identical boxes while one is bimodal and the other is not; small groups look as solid as large ones.'
+        fix: 'Add the raw points (jittered), or use a violin or raincloud, and print the n per group.'
+        code: "geom_boxplot(outlier.shape = NA) + geom_jitter(width = 0.15, alpha = 0.4)"
+        course: [specialized/merge_visuals.qmd, Merged Visuals]
+        dtv: https://www.data-to-viz.com/caveat/boxplot.html
+      - title: 'Avoid counter-intuitive encodings'
+        problem: 'Readers expect up = more, red = bad, bigger = larger. An inverted axis or a reversed colour scale makes them read the opposite of the truth.'
+        fix: 'Keep the usual direction; if you must invert (e.g. ranks), say so on the axis and in the title.'
+        dtv: https://www.data-to-viz.com/caveat/counter_intuitive.html
+      - title: 'Bars with error bars ("dynamite plots") hide the data'
+        problem: 'A bar of the mean with an error bar shows two numbers and suggests values below the mean are the only ones that exist.'
+        fix: 'Show the individual points with the mean and its 95% CI, or a box/violin plot. State whether bars are SD, SE or CI.'
+        code: "stat_summary(fun.data = mean_cl_normal, geom = 'pointrange') + geom_jitter(alpha = 0.3)"
+        course: [specialized/plot_stats.qmd, Statistical Plots]
+        dtv: https://www.data-to-viz.com/caveat/error_bar.html
+      - title: 'Be wary of two y-axes'
+        problem: 'The scales of the two axes are arbitrary, so any two series can be made to cross, diverge or move together.'
+        fix: 'Use two panels with a shared x-axis, or index both series to 100 at the start.'
+        code: "facet_wrap(~ series, ncol = 1, scales = 'free_y')"
+        course: [data-visualization/plot_data.qmd, Matching Data to Plots]
+        dtv: https://www.data-to-viz.com/caveat/dual_axis.html
+      - title: 'Avoid 3D'
+        problem: 'Perspective makes nearer bars and slices look bigger and hides some values behind others.'
+        fix: 'Use the 2D version. Three numeric variables? Colour or size for the third, or small multiples.'
+        course: [data-visualization/plot_data.qmd, Matching Data to Plots]
+        dtv: https://www.data-to-viz.com/caveat/3d.html
+      - title: 'Do not cherry-pick the data'
+        problem: 'Choosing the start date, the sites or the subgroup that tells the best story misleads even when every point is correct.'
+        fix: 'Show the full period and all groups, and say why any are left out.'
+      - title: 'Draw proportions accurately'
+        problem: 'Icons or shapes scaled by height and width (both) exaggerate differences; a doubled value looks four times larger.'
+        fix: 'Make area (not radius or height and width together) proportional to the value, or simply use bars.'
+      - title: 'Respect time intervals'
+        problem: 'Unevenly spaced dates (2010, 2015, 2020, 2021, 2022) drawn at equal distances distort the trend.'
+        fix: 'Use a real date or numeric x-axis so the gaps are drawn to scale.'
+        code: "aes(x = as.Date(visit_date))   # not factor(visit_date)"
+      - title: 'Show the sample size'
+        problem: 'A percentage from 8 people looks as solid as one from 800.'
+        fix: 'Print the n on the axis labels, in the legend or in a caption; add confidence intervals.'
+        code: "scale_x_discrete(labels = \\(x) paste0(x, '\\n(n = ', table(d$group)[x], ')'))"
+      - title: 'Beware of Simpson''s paradox'
+        problem: 'A trend in the pooled data can reverse inside every subgroup when the groups differ in size and level.'
+        fix: 'Colour or facet by the likely confounder before drawing a conclusion; adjust for it in the model.'
+        code: "ggplot(d, aes(x, y, colour = group)) + geom_point() + geom_smooth(method = 'lm')"
+        course: [statistical-analysis/regression.qmd, Regression Analysis]
+        dtv: https://www.data-to-viz.com/caveat/simpson.html
+
+  - name: Wrong chart type
+    cards:
+      - title: 'Many thin lollipops or bars can shimmer'
+        problem: 'Dozens of closely spaced thin lines create a moiré pattern that is tiring to look at.'
+        fix: 'Use fewer, thicker bars, or a dot plot, or aggregate into groups.'
+      - title: 'The trouble with pie charts'
+        problem: 'People compare angles and areas poorly; slices of 23% and 27% look the same, and more than 5 slices are unreadable.'
+        fix: 'A sorted bar chart. Keep a pie only for 2–3 parts of a whole for a general audience.'
+        code: "ggplot(d, aes(reorder(cause, n), n)) + geom_col() + coord_flip()"
+        course: [data-visualization/best_practices.qmd, Best Practices]
+        dtv: https://www.data-to-viz.com/caveat/pie.html
+      - title: 'Radial bars distort length'
+        problem: 'In a circular bar chart the outer bars are longer than inner bars of the same value.'
+        fix: 'Use straight bars; keep radial layouts for a decorative overview with labels on the values.'
+        dtv: https://www.data-to-viz.com/caveat/circular_barplot_accordeon.html
+      - title: 'Maybe you do not need a map'
+        problem: 'A map draws attention to large, empty areas; if geography is not the question, it wastes space.'
+        fix: 'A sorted bar or dot chart of the regions answers "which is highest?" better than a map.'
+        course: [gis/maps_choropleth.qmd, Maps and Choropleths]
+      - title: 'Two values per group? Try a dumbbell'
+        problem: 'Grouped bars for before/after (or men/women) make the reader compare bars across pairs.'
+        fix: 'A dumbbell (two points joined by a line) shows both values and the change in one glance.'
+        code: "geom_segment(aes(x = before, xend = after, y = site, yend = site)) + geom_point(aes(before, site)) + geom_point(aes(after, site))"
+        course: [plot-gallery/showcase.qmd, Showcase]
+      - title: 'Use circular bar plots with care'
+        problem: 'Without a radial axis readers cannot read values, and the shape is driven by the order of the bars.'
+        fix: 'Label each bar with its value and sort it; prefer a straight bar chart for comparison.'
+        dtv: https://www.data-to-viz.com/caveat/circular_bar_yaxis.html
+
+  - name: Colour
+    cards:
+      - title: 'Use colour on purpose'
+        problem: 'Colouring every bar differently adds a legend and implies groups that mean nothing.'
+        fix: 'One colour by default; add colour only to encode a variable or to highlight the message (grey + one accent).'
+        code: "geom_col(aes(fill = site == 'Hospital B')) + scale_fill_manual(values = c('grey70', '#C0392B'), guide = 'none')"
+        course: [data-visualization/best_practices.qmd, Best Practices]
+        dtv: https://www.data-to-viz.com/caveat/color_com_nothing.html
+      - title: 'Choose the background on purpose'
+        problem: 'A dark or coloured panel background reduces contrast and changes how colours look.'
+        fix: 'White or very light grey backgrounds; theme_minimal() or theme_classic().'
+      - title: 'Keep enough contrast'
+        problem: 'Light-yellow lines or pale text on white disappear on a projector and in print.'
+        fix: 'Check contrast (text should be dark); avoid the lightest end of a palette for thin lines and text.'
+      - title: 'Avoid pure, saturated colours'
+        problem: 'Pure red, green and blue (#FF0000 ...) vibrate next to each other and tire the eye.'
+        fix: 'Muted palettes (viridis, ColorBrewer, Okabe-Ito) with one stronger colour for emphasis.'
+      - title: 'Numbers need a sequential palette'
+        problem: 'A rainbow or qualitative palette on a numeric variable has no visual order.'
+        fix: 'One hue from light to dark (or viridis) so darker = more.'
+        code: "scale_fill_viridis_c()   # or scale_fill_distiller(palette = 'Blues', direction = 1)"
+        course: [data-visualization/gram_ggplot/module_3_colors_scales_themes.qmd, ggplot2 Module 3]
+      - title: 'Too many colours kill the story'
+        problem: 'Beyond about 6 colours readers cannot match lines to the legend.'
+        fix: 'Highlight 1–3 groups and grey the rest, or use small multiples.'
+        course: [data-visualization/best_practices.qmd, Best Practices]
+      - title: 'No gradient for unordered groups'
+        problem: 'A light-to-dark gradient on regions or treatments suggests an order that does not exist.'
+        fix: 'A qualitative palette (scale_colour_brewer(palette = ''Set2'') or Okabe-Ito) for categories.'
+      - title: 'Avoid the rainbow palette'
+        problem: 'Rainbow scales have sudden bright bands (yellow, cyan) that create boundaries not in the data, and fail in greyscale.'
+        fix: 'viridis or a single-hue sequential scale.'
+        dtv: https://blog.datawrapper.de/colors/
+      - title: 'Diverging data, diverging palette'
+        problem: 'Change from baseline, residuals and correlations have a meaningful zero that a sequential palette hides.'
+        fix: 'Two hues meeting at a neutral colour placed exactly at the midpoint.'
+        code: "scale_fill_gradient2(low = '#2166AC', mid = 'white', high = '#B2182B', midpoint = 0)"
+        course: [data-visualization/gram_ggplot/module_3_colors_scales_themes.qmd, ggplot2 Module 3]
+      - title: 'Think of colour-blind readers'
+        problem: 'About 1 in 12 men cannot tell red from green.'
+        fix: 'Colour-blind-safe palettes (viridis, Okabe-Ito), plus redundant cues (shape, direct labels).'
+        code: "scale_colour_viridis_d()"
+        course: [data-visualization/best_practices.qmd, Best Practices]
+
+  - name: Design
+    cards:
+      - title: 'Align everything with something'
+        problem: 'Titles, panels and annotations that float at random positions look messy and hard to scan.'
+        fix: 'Left-align title, subtitle and caption with the plot; use the same margins across panels.'
+        code: "theme(plot.title.position = 'plot', plot.caption.position = 'plot')"
+      - title: 'Two fonts are enough'
+        problem: 'Many fonts and styles compete for attention.'
+        fix: 'One font family; vary size and weight for hierarchy.'
+      - title: 'Do you need that box?'
+        problem: 'Borders around the panel, legend and plot add ink without information.'
+        fix: 'Remove panel borders and legend boxes; let white space separate elements.'
+        code: "theme(panel.border = element_blank(), legend.background = element_blank())"
+      - title: 'Font size matters'
+        problem: 'Default 11 pt axis text is unreadable on a slide or a printed half-page.'
+        fix: 'Set base_size for the output (about 14–18 for slides); check the figure at its final size.'
+        code: "theme_minimal(base_size = 16)"
+      - title: 'Group what belongs together'
+        problem: 'Related bars or panels far apart force the eye to jump.'
+        fix: 'Order categories so comparisons are adjacent; group panels by the question they answer.'
+      - title: 'Make the title say something'
+        problem: 'A title like "SBP by group" makes the reader find the message themselves.'
+        fix: 'State the finding in the title ("SBP fell by 9 mmHg with the intervention") and keep the description in the subtitle.'
+        course: [data-visualization/best_practices.qmd, Best Practices]
+      - title: 'Declutter'
+        problem: 'Heavy grids, tick marks, borders and legends compete with the data.'
+        fix: 'Light or no grid lines, direct labels instead of legends, no redundant text.'
+        course: [data-visualization/best_practices.qmd, Best Practices]
+        dtv: https://www.data-to-viz.com/caveat/declutter.html
+
+  - name: Maps
+    cards:
+      - title: 'Do not move regions around'
+        problem: 'Moving or resizing islands and remote areas to fit the frame changes their apparent size and position.'
+        fix: 'If you must inset a region, frame it and say so; keep the same projection.'
+      - title: 'Mind the projection'
+        problem: 'Web Mercator inflates areas far from the equator, so a choropleth over-weights them.'
+        fix: 'Use an equal-area or local projected CRS for thematic maps (e.g. UTM for a district).'
+        code: "st_transform(blocks, 32644)"
+        course: [gis/spatial_data_sf.qmd, Spatial Data with sf]
+      - title: 'Normalise your maps'
+        problem: 'A map of counts is mostly a map of where people live.'
+        fix: 'Map rates (per 100,000) or ratios to expected; show counts only when workload is the question.'
+        code: "mutate(rate = cases / population * 1e5)"
+        course: [gis/maps_choropleth.qmd, Maps and Choropleths]
+        dtv: https://xkcd.com/1138/
+      - title: 'Show missing data as missing'
+        problem: 'A missing area coloured like the lowest class looks like "no disease".'
+        fix: 'Give missing areas a distinct neutral colour or hatching and a legend entry.'
+        code: "scale_fill_viridis_c(na.value = 'grey85')"
+      - title: 'Do not let small regions vanish'
+        problem: 'Dense urban wards are tiny on a map, though they hold most people.'
+        fix: 'Add an inset or zoom, a cartogram, or a hexagon tile map.'
+        course: [plot-gallery/advanced/3.6_geographic_advanced.qmd, Geographic Advanced]
+
+  - name: Labels and legends
+    cards:
+      - title: 'Prefer horizontal labels'
+        problem: 'Rotated axis labels are hard to read.'
+        fix: 'Flip the axes so long category names sit horizontally.'
+        code: "ggplot(d, aes(n, reorder(diagnosis, n))) + geom_col()"
+        course: [data-visualization/best_practices.qmd, Best Practices]
+        dtv: https://www.data-to-viz.com/caveat/hard_label.html
+      - title: 'Use legends sparingly'
+        problem: 'A legend makes the eye jump back and forth.'
+        fix: 'Label lines and groups directly at their ends; drop the legend.'
+        code: "geom_text(data = last_points, aes(label = group), hjust = 0) + theme(legend.position = 'none')"
+      - title: 'Do not put labels on top of the data'
+        problem: 'Text over points or lines hides what it describes.'
+        fix: 'Offset labels, use ggrepel, or place them in empty space.'
+        code: "ggrepel::geom_text_repel(aes(label = name))"
+      - title: 'Round your numbers'
+        problem: 'A value like "37.4285%" suggests a precision the data do not have and is harder to read.'
+        fix: 'Round to what matters (37%); use scales::percent() for axes.'
+        code: "scale_y_continuous(labels = scales::percent)"
+      - title: 'Annotation is crucial'
+        problem: 'Readers miss the event or threshold that explains the pattern.'
+        fix: 'Add a short note, a reference line or a shaded period where it matters.'
+        code: "geom_vline(xintercept = as.Date('2024-06-01'), linetype = 2) + annotate('text', ...)"
+        dtv: https://www.data-to-viz.com/caveat/annotation.html
+      - title: 'Do not label every tick'
+        problem: 'A label on every year or category crowds the axis.'
+        fix: 'Fewer, round breaks.'
+        code: "scale_x_date(date_breaks = '6 months', date_labels = '%b %Y')"
+
+  - name: Dashboards and data stories
+    cards:
+      - title: 'Keep colours consistent across charts'
+        problem: 'If "Intervention" is blue in one panel and orange in the next, readers mis-match them.'
+        fix: 'A named colour vector used by every plot.'
+        code: "arm_cols <- c(Control = 'grey50', Intervention = '#2C5F8D'); scale_colour_manual(values = arm_cols)"
+        dtv: https://www.data-to-viz.com/caveat/consistency.html
+      - title: 'Share the y-axis to compare panels'
+        problem: 'Panels with their own y range look similar even when one is ten times higher.'
+        fix: 'Keep scales fixed when the panels are compared (the facet default); free them only to show shape.'
+      - title: 'Leave margins between charts'
+        problem: 'Panels pressed together read as one figure.'
+        fix: 'Space and alignment between panels (patchwork handles both).'
+      - title: 'Link charts that share an axis'
+        problem: 'Separate charts with the same x (time) are hard to read together.'
+        fix: 'Stack them vertically with aligned x-axes, or link them interactively (crosstalk).'
+        course: [specialized/interactive.qmd, Interactive Plots]
+
+  - name: Other
+    cards:
+      - title: 'Sort your bar chart'
+        problem: 'Alphabetical order hides the ranking.'
+        fix: 'Order bars by value (unless the categories have their own order, like age groups).'
+        code: "aes(x = reorder(region, rate))   # or forcats::fct_reorder()"
+        course: [plot-gallery/basic.qmd, Basic Plot Gallery]
+        dtv: https://www.data-to-viz.com/caveat/order_data.html
+      - title: 'Histograms - mind the bin width'
+        problem: 'The same data can look smooth, bimodal or noisy depending on the bins.'
+        fix: 'Try several widths and choose a meaningful one (5 mmHg, 1 year); report it.'
+        code: "geom_histogram(binwidth = 5, boundary = 0)"
+        dtv: https://www.data-to-viz.com/caveat/bin_size.html
+      - title: 'Size bubbles by area, not radius'
+        problem: 'If the radius doubles, the area quadruples.'
+        fix: 'ggplot2''s scale_size() already maps to area; avoid scale_radius().'
+        code: "scale_size_area(max_size = 12)"
+        dtv: https://www.data-to-viz.com/caveat/radius_or_area.html
+      - title: 'The spaghetti plot'
+        problem: 'Twenty overlapping lines are unreadable.'
+        fix: 'Grey all lines and highlight one or a few, or small multiples with the others in grey behind.'
+        course: [plot-gallery/showcase.qmd, Showcase]
+        dtv: https://www.data-to-viz.com/caveat/spaghetti.html
+      - title: 'Connect only connected dots'
+        problem: 'A line implies continuity between points; joining unrelated categories invents a trend.'
+        fix: 'Lines for ordered x (time, dose); points or bars for categories.'
+        course: [data-visualization/gram_ggplot/module_1_foundations_geoms.qmd, ggplot2 Module 1]
+        dtv: https://www.data-to-viz.com/caveat/connect_your_dot.html
+      - title: 'Drawing order matters'
+        problem: 'The layer drawn last hides the others: a large group can bury a small one.'
+        fix: 'Draw the highlight last; use transparency.'
+        code: "geom_point(data = others, colour = 'grey') + geom_point(data = highlight, colour = 'red')"
+        course: [data-visualization/gram_ggplot/module_4_advanced_best_practices.qmd, ggplot2 Module 4]
+      - title: 'Overlapping sets? Use an UpSet plot'
+        problem: 'Venn diagrams with more than three sets (e.g. comorbidities) are unreadable.'
+        fix: 'An UpSet plot shows the size of every intersection as a bar.'
+      - title: 'Stacked charts are hard to read'
+        problem: 'Only the bottom segment has a common baseline; the rest cannot be compared.'
+        fix: 'Grouped bars, small multiples, or 100% stacks with few segments.'
+        course: [data-visualization/plot_data.qmd, Matching Data to Plots]
+        dtv: https://www.data-to-viz.com/caveat/stacking.html
+      - title: 'Mind the aspect ratio'
+        problem: 'Stretching a plot changes how steep a trend looks.'
+        fix: 'Choose the width/height on purpose (about 45° for the main slopes); set it in ggsave().'
+        code: "ggsave('fig.png', width = 7, height = 4)"
+        dtv: https://www.data-to-viz.com/caveat/aspect_ratio.html
+      - title: 'Make date axes easy to read'
+        problem: 'Default date labels can be dense or ambiguous (01/02).'
+        fix: 'Unambiguous formats ("Jan 2025") and sensible breaks.'
+        code: "scale_x_date(date_labels = '%b %Y')"
+      - title: 'Reorder your heat map'
+        problem: 'Rows and columns in input order hide any structure.'
+        fix: 'Order by a summary or by clustering so similar rows sit together.'
+        code: "aes(y = fct_reorder(ward, cases, .fun = sum))"
+        course: [plot-gallery/showcase.qmd, Showcase]
+        dtv: https://www.data-to-viz.com/graph/heatmap.html
+      - title: 'Beware of overplotting'
+        problem: 'With thousands of points the scatter becomes a solid blob.'
+        fix: 'Transparency, smaller points, hexbins or 2D density.'
+        code: "geom_point(alpha = 0.2)   # or geom_hex()"
+        course: [plot-gallery/moderate.qmd, Intermediate Plot Gallery]
+        dtv: https://www.data-to-viz.com/caveat/overplotting.html
+      - title: 'Too many distributions at once'
+        problem: 'Overlaid densities or histograms for many groups become a tangle.'
+        fix: 'A ridgeline plot, small multiples or box plots side by side.'
+        code: "ggridges::geom_density_ridges()"
+        dtv: https://www.data-to-viz.com/caveat/multi_distribution.html
+      - title: 'Small multiples - rows or columns?'
+        problem: 'The layout decides what is easy to compare: aligned y values compare across a row, aligned x values down a column.'
+        fix: 'Put panels in one row to compare heights, in one column to compare positions on x.'
+        code: "facet_wrap(~ group, nrow = 1)"
+        dtv: https://www.data-to-viz.com/caveat/small_multiple.html
+      - title: 'Check the numbers on the chart'
+        problem: 'Percentages that do not add to 100, or totals that do not match the table, destroy trust.'
+        fix: 'Compute labels from the data in code; never type them by hand.'
+        dtv: https://www.data-to-viz.com/caveat/calculation_error.html
+      - title: 'Do not make readers do arithmetic'
+        problem: 'If the message is a difference, two lines make the reader subtract in their head.'
+        fix: 'Plot the difference itself (with its CI).'
+        dtv: https://www.data-to-viz.com/caveat/mental_calculation.html
+      - title: 'Area is a weak encoding'
+        problem: 'People underestimate area differences; bubbles and treemaps give rough impressions only.'
+        fix: 'Use position or length when exact comparison matters.'
+        dtv: https://www.data-to-viz.com/caveat/area_hard.html
+      - title: 'Grouped bars must look grouped'
+        problem: 'Evenly spaced bars hide which belong together.'
+        fix: 'Dodge within a group and leave a gap between groups.'
+        code: "geom_col(position = position_dodge(width = 0.8), width = 0.7)"
+        dtv: https://www.data-to-viz.com/caveat/grouped_bar.html
+      - title: 'Radar (spider) charts mislead'
+        problem: 'The area depends on the order of the axes, and values are hard to read.'
+        fix: 'A dot plot or parallel coordinates for several measures per item.'
+        dtv: https://www.data-to-viz.com/caveat/spider.html
+      - title: 'Log scales for rates of change'
+        problem: 'On a linear axis exponential growth looks explosive and early changes look flat.'
+        fix: 'A log axis when relative change is the question; label it clearly.'
+        code: "scale_y_log10(labels = scales::comma)"
+      - title: 'It is "choropleth"'
+        problem: 'The common misspelling "chloropleth" undermines a report.'
+        fix: 'choro (area) + pleth (quantity).'
+

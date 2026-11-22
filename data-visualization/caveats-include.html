@@ -1,0 +1,74 @@
+<script>
+// Flash cards: topic filter, and a practice mode that deals cards one at a time.
+// "Knew it" / "Review again" are remembered in this browser (localStorage), and cards to review come first.
+(function () {
+  const KEY = 'cv-caveats-v1';
+  let state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { state = {}; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+  const cards = [...document.querySelectorAll('.cv-card')];
+  const title = c => c.querySelector('summary').textContent.trim();
+  const mark = () => cards.forEach(c => {
+    c.classList.toggle('cv-known', state[title(c)] === 'known');
+    c.classList.toggle('cv-review', state[title(c)] === 'review');
+  });
+  mark();
+
+  // topic filter
+  const filters = [...document.querySelectorAll('.cv-filter')];
+  filters.forEach(f => f.addEventListener('click', () => {
+    filters.forEach(g => g.classList.toggle('active', g === f));
+    const cat = f.dataset.cat;
+    document.querySelectorAll('.cv-grid, .cv-heading, section.cv-heading').forEach(el => {
+      el.style.display = (cat === 'all' || el.dataset.cat === cat) ? '' : 'none';
+    });
+  }));
+
+  // practice mode
+  const box = document.querySelector('.cv-practice-box');
+  const btn = document.querySelector('.cv-practise');
+  if (!box || !btn) return;
+  let deck = [], i = 0;
+  const deal = () => {
+    const active = document.querySelector('.cv-filter.active');
+    const cat = active ? active.dataset.cat : 'all';
+    deck = cards.filter(c => cat === 'all' || c.dataset.cat === cat)
+      .map(c => ({ c, r: (state[title(c)] === 'review' ? 0 : state[title(c)] === 'known' ? 2 : 1) + Math.random() }))
+      .sort((a, b) => a.r - b.r).map(x => x.c);
+    i = 0; show();
+  };
+  const show = () => {
+    if (i >= deck.length) {
+      const known = deck.filter(c => state[title(c)] === 'known').length;
+      box.innerHTML = `<div class="cv-q">Done: ${known} of ${deck.length} marked "knew it".</div>
+        <button class="btn btn-primary btn-sm" data-a="again">Deal again</button>
+        <button class="btn btn-outline-secondary btn-sm" data-a="reset">Forget my marks</button>
+        <button class="btn btn-outline-secondary btn-sm" data-a="close">Close</button>`;
+      return;
+    }
+    const c = deck[i];
+    const body = c.querySelector('details').cloneNode(true);
+    body.querySelector('summary').remove();
+    box.innerHTML = `<div class="cv-count">Card ${i + 1} of ${deck.length} · ${c.dataset.cat}</div>
+      <div class="cv-q">${c.querySelector('summary').innerHTML}</div>
+      <p><em>What goes wrong, and how would you fix it?</em></p>
+      <div class="cv-answer" style="display:none"></div>
+      <button class="btn btn-primary btn-sm" data-a="show">Show answer</button>
+      <button class="btn btn-outline-secondary btn-sm" data-a="close">Close</button>`;
+    box.querySelector('.cv-answer').append(...body.childNodes);
+  };
+  box.addEventListener('click', e => {
+    const a = e.target.dataset && e.target.dataset.a; if (!a) return;
+    if (a === 'show') {
+      box.querySelector('.cv-answer').style.display = '';
+      e.target.outerHTML = `<button class="btn btn-success btn-sm" data-a="known">Knew it</button>
+        <button class="btn btn-danger btn-sm" data-a="review">Review again</button>`;
+    } else if (a === 'known' || a === 'review') {
+      state[title(deck[i])] = a; save(); mark(); i++; show();
+    } else if (a === 'again') { deal(); }
+    else if (a === 'reset') { state = {}; save(); mark(); deal(); }
+    else if (a === 'close') { box.style.display = 'none'; }
+  });
+  btn.addEventListener('click', () => { box.style.display = ''; deal(); box.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+})();
+</script>

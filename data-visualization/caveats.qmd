@@ -1,0 +1,91 @@
+---
+title: "Data Viz Caveats: Flash Cards"
+author: "Sparrow"
+date: "2026-11-22"
+format:
+  html:
+    toc: false
+    page-layout: full
+    code-copy: true
+    css: caveats.css
+    include-after-body: caveats-include.html
+execute:
+  echo: false
+---
+
+```{r}
+#| include: false
+cards <- yaml::read_yaml("caveats.yml", fileEncoding = "UTF-8")$categories
+n_cards <- sum(vapply(cards, \(c) length(c$cards), 1L))
+```
+
+A checklist of the mistakes that most often make a chart mislead or confuse, as **`r n_cards` flash cards** in
+`r length(cards)` groups. Read the title, decide what the problem is and how you would fix it, then **open the card**.
+Use **Practise** to be dealt the cards one at a time; the ones you mark *Review again* come back first.
+
+Most of these points are taught in [Best Practices](best_practices.qmd), [Matching Data to Plots](plot_data.qmd)
+and the ggplot2 modules; each card links to where. The list of topics follows the caveats collection of
+[data-to-viz.com](https://www.data-to-viz.com/caveats.html) by Yan Holtz and Conor Healy, where many cards have a
+longer illustrated page (the "data-to-viz" link on the card). The wording and the R code here are our own.
+
+::: {.cv-toolbar}
+[All]{.cv-filter .active data-cat="all"}
+```{r}
+#| output: asis
+for (c in cards) cat(sprintf('[%s (%d)]{.cv-filter data-cat="%s"}\n', c$name, length(c$cards), c$name))
+```
+[🃏 Practise]{.cv-practise}
+:::
+
+::: {.cv-practice-box style="display:none"}
+:::
+
+```{r}
+#| output: asis
+esc <- function(x) gsub(">", "&gt;", gsub("<", "&lt;", gsub("&", "&amp;", x)))
+for (c in cards) {
+  cat(sprintf('\n## %s {.cv-heading data-cat="%s"}\n\n::: {.cv-grid data-cat="%s"}\n', c$name, c$name, c$name))
+  for (k in c$cards) {
+    cat(sprintf('\n::: {.cv-card data-cat="%s"}\n<details>\n<summary>%s</summary>\n\n', c$name, esc(k$title)))
+    cat(sprintf('**Problem.** %s\n\n**Fix.** %s\n\n', k$problem, k$fix))
+    if (!is.null(k$code)) cat("```r\n", k$code, "\n```\n\n", sep = "")
+    links <- c(if (!is.null(k$course)) sprintf("[In the course: %s](../%s)", k$course[[2]], k$course[[1]]),
+               if (!is.null(k$dtv)) sprintf("[data-to-viz](%s)", k$dtv))
+    if (length(links)) cat(paste(links, collapse = " · "), "\n\n")
+    cat("</details>\n:::\n")
+  }
+  cat("\n:::\n")
+}
+```
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("cv1", "A chart shows the mean SBP of two arms as bars with error bars, the y-axis starting at 120 mmHg. How many caveats does it break?",
+         c("None: the error bars make it an honest chart", "One: the error bars alone are wrong", "Two: the cut axis and the bar of means", "One: just the axis start is wrong"), answer = 3,
+         explain = "Bars must start at zero, and a bar of the mean hides the data; show points with the mean and its CI instead.")
+quiz_mcq("cv2", "You map dengue cases (counts) per block. What should you map instead, and why?",
+         c("Cases per 100,000, so population does not drive it", "The log of the counts, to compress the colour scale", "Cases per km², so that large blocks look smaller", "The rank of each count, so classes have equal size"), answer = 1,
+         explain = "A count map mostly shows where people live; a rate shows the risk.")
+quiz_mcq("cv3", "Twenty ward lines overlap on one time-series chart. Which fix keeps every ward visible?",
+         c("Give each of the wards its own bright, saturated colour", "Small multiples, each ward over the rest in grey", "A 3D chart with one ward per depth level", "A dual y-axis for the larger and smaller wards"), answer = 2,
+         explain = "Small multiples with the other series in grey keep context and make each line readable.")
+quiz_mcq("cv4", "Change in SBP from baseline (negative and positive) is shown on a map. Which palette fits?",
+         c("A rainbow palette from red to violet", "A single-hue palette from light to dark blue", "A qualitative palette with one hue per block", "A diverging palette with white at zero"), answer = 4,
+         explain = "Data with a meaningful zero need two hues meeting at a neutral midpoint.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

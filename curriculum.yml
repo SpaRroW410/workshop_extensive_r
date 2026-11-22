@@ -24,6 +24,7 @@ pages:
   downloads.qmd: {title: "Downloads"}
   data-visualization/best_practices.qmd: {title: "Best Practices"}
   data-visualization/plot_data.qmd: {title: "Matching Data to Plots"}
+  data-visualization/caveats.qmd: {title: "Caveats: Flash Cards"}
   data-visualization/gram_ggplot/module_1_foundations_geoms.qmd: {title: "Module 1 — Foundations & Geoms"}
   data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd: {title: "Module 2 — Aesthetics, Faceting & Themes"}
   plot-gallery/moderate.qmd: {title: "Intermediate Plot Gallery"}
@@ -144,6 +145,7 @@ pages:
   data-visualization/gram_ggplot/module_4_advanced_best_practices.qmd: {title: "Module 4 — Advanced Best Practices"}
   plot-gallery/advanced.qmd: {title: "Advanced Plot Gallery"}
   plot-gallery/practical_application.qmd: {title: "Practical Applications"}
+  plot-gallery/showcase.qmd: {title: "Showcase: Final Output"}
   specialized/interactive.qmd: {title: "Interactive Plots"}
   ggstatsplot/ggstatsplot_advanced.qmd: {title: "ggstatsplot — Advanced"}
   statistical-analysis/data_analysis.qmd: {title: "Data Analysis"}
@@ -202,6 +204,7 @@ profiles:
           - data-visualization/ggplot_grammar.qmd
           - data-visualization/best_practices.qmd
           - data-visualization/plot_data.qmd
+          - data-visualization/caveats.qmd
           - "---"
           - data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
           - data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd
@@ -346,6 +349,7 @@ profiles:
           - data-visualization/ggplot_grammar.qmd
           - data-visualization/best_practices.qmd
           - data-visualization/plot_data.qmd
+          - data-visualization/caveats.qmd
           - plot-gallery/basic.qmd
           - "---"
           - statistical-analysis/statistical_tests.qmd
@@ -401,6 +405,7 @@ profiles:
           - data-visualization/ggplot_grammar.qmd
           - data-visualization/best_practices.qmd
           - data-visualization/plot_data.qmd
+          - data-visualization/caveats.qmd
           - "---"
           - data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
           - data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd
@@ -412,6 +417,7 @@ profiles:
           - {path: plot-gallery/moderate.qmd, text: "Intermediate Plots"}
           - {path: plot-gallery/advanced.qmd, text: "Advanced Plots"}
           - plot-gallery/practical_application.qmd
+          - plot-gallery/showcase.qmd
       - text: "Specialized Plots"
         items:
           - specialized/merge_visuals.qmd
@@ -510,6 +516,7 @@ profiles:
           - data-visualization/ggplot_grammar.qmd
           - data-visualization/best_practices.qmd
           - data-visualization/plot_data.qmd
+          - data-visualization/caveats.qmd
           - "---"
           - data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
           - data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd
@@ -520,6 +527,7 @@ profiles:
           - plot-gallery/moderate.qmd
           - plot-gallery/advanced.qmd
           - plot-gallery/practical_application.qmd
+          - plot-gallery/showcase.qmd
           - "---"
       - text: "Specialized Plots"
         items:
@@ -577,6 +585,7 @@ profiles:
           - data-visualization/ggplot_grammar.qmd
           - data-visualization/best_practices.qmd
           - data-visualization/plot_data.qmd
+          - data-visualization/caveats.qmd
           - "---"
           - data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
           - data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd
@@ -609,6 +618,7 @@ profiles:
           - data-visualization/ggplot_grammar.qmd
           - data-visualization/best_practices.qmd
           - data-visualization/plot_data.qmd
+          - data-visualization/caveats.qmd
           - "---"
           - data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
           - data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd
@@ -620,6 +630,7 @@ profiles:
           - {path: plot-gallery/moderate.qmd, text: "Intermediate Plots"}
           - {path: plot-gallery/advanced.qmd, text: "Advanced Plots"}
           - plot-gallery/practical_application.qmd
+          - plot-gallery/showcase.qmd
       - text: "Specialized Plots"
         items:
           - specialized/merge_visuals.qmd

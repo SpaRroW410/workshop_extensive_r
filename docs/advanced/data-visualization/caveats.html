@@ -1,0 +1,2264 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Sparrow">
+<meta name="dcterms.date" content="2026-11-22">
+
+<title>Data Viz Caveats: Flash Cards – Medical Statistics in R — Advanced</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-16b6e5b254f8b2b1abd3f8e69d611555.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../assets/theme_webp.css">
+<link rel="stylesheet" href="caveats.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="welcome.html">
+    <span class="navbar-title">Medical Statistics in R — Advanced</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-r-foundations" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">R Foundations</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-r-foundations">    
+        <li>
+    <a class="dropdown-item" href="../r-foundations/getting-started.html">
+ <span class="dropdown-text">Getting Started</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../r-foundations/data-wrangling.html">
+ <span class="dropdown-text">Data Wrangling (Tidyverse)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../r-foundations/merging_dataset.html">
+ <span class="dropdown-text">Merging Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../r-foundations/cleaning_messy_data.html">
+ <span class="dropdown-text">Cleaning Messy Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../r-foundations/iteration.html">
+ <span class="dropdown-text">Iteration (across, loops, functions)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-data-visualization" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Data Visualization</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-data-visualization">    
+        <li>
+    <a class="dropdown-item" href="../data-visualization/ggplot_grammar.html">
+ <span class="dropdown-text">Grammar of Graphics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../data-visualization/best_practices.html">
+ <span class="dropdown-text">Best Practices</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../data-visualization/plot_data.html">
+ <span class="dropdown-text">Matching Data to Plots</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../data-visualization/caveats.html">
+ <span class="dropdown-text">Caveats: Flash Cards</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../data-visualization/gram_ggplot/module_1_foundations_geoms.html">
+ <span class="dropdown-text">Module 1 — Foundations &amp; Geoms</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.html">
+ <span class="dropdown-text">Module 2 — Aesthetics, Faceting &amp; Themes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../data-visualization/gram_ggplot/module_3_colors_scales_themes.html">
+ <span class="dropdown-text">Module 3 — Colors, Scales &amp; Themes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../data-visualization/gram_ggplot/module_4_advanced_best_practices.html">
+ <span class="dropdown-text">Module 4 — Advanced Best Practices</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../plot-gallery/basic.html">
+ <span class="dropdown-text">Basic Plot Gallery</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../plot-gallery/moderate.html">
+ <span class="dropdown-text">Intermediate Plot Gallery</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../plot-gallery/advanced.html">
+ <span class="dropdown-text">Advanced Plot Gallery</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../plot-gallery/practical_application.html">
+ <span class="dropdown-text">Practical Applications</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../plot-gallery/showcase.html">
+ <span class="dropdown-text">Showcase: Final Output</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-specialized-plots" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Specialized Plots</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-specialized-plots">    
+        <li>
+    <a class="dropdown-item" href="../specialized/merge_visuals.html">
+ <span class="dropdown-text">Merged Visuals</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../specialized/plot_stats.html">
+ <span class="dropdown-text">Statistical Plots</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../specialized/interactive.html">
+ <span class="dropdown-text">Interactive Plots</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-statistical-analysis" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Statistical Analysis</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-statistical-analysis">    
+        <li>
+    <a class="dropdown-item" href="../statistical-analysis/statistical_tests.html">
+ <span class="dropdown-text">Test Selection Guide</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../statistical-analysis/regression.html">
+ <span class="dropdown-text">Regression Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../ggstatsplot/ggstatsplot_intro.html">
+ <span class="dropdown-text">ggstatsplot — Intro</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../ggstatsplot/ggstatsplot_moderate.html">
+ <span class="dropdown-text">ggstatsplot — Intermediate</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../ggstatsplot/ggstatsplot_advanced.html">
+ <span class="dropdown-text">ggstatsplot — Advanced</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../gtsummary/gtsummary_tutorial.html">
+ <span class="dropdown-text">gtsummary Tables</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../statistical-analysis/data_analysis.html">
+ <span class="dropdown-text">Data Analysis</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-advanced-workshops" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Advanced Workshops</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-advanced-workshops">    
+        <li>
+    <a class="dropdown-item" href="../advanced-workshops.html">
+ <span class="dropdown-text">All modules and sessions</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../survival-workshop/s1_time_to_event.html">
+ <span class="dropdown-text">A1 · Survival analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../counts-workshop/s1_counts_rates.html">
+ <span class="dropdown-text">A2 · Counts and rates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../ordinal-workshop/s1_categorical_outcomes.html">
+ <span class="dropdown-text">A3 · Ordinal and multinomial</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../clustered-workshop/s1_clustered_data.html">
+ <span class="dropdown-text">A4 · Clustered and repeated data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../survey-workshop/s1_survey_design.html">
+ <span class="dropdown-text">A5 · Survey data and weights</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../curves-workshop/s1_beyond_linear.html">
+ <span class="dropdown-text">A6 · Curves and interactions</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../missing-workshop/s1_patterns_mechanisms.html">
+ <span class="dropdown-text">A7 · Missing data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../prediction-workshop/s1_building_model.html">
+ <span class="dropdown-text">A8 · Prediction models</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../causal-workshop/s1_causal_questions_dags.html">
+ <span class="dropdown-text">A9 · Causal inference</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-quarto" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Quarto</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-quarto">    
+        <li>
+    <a class="dropdown-item" href="../quarto_repro_w/reproducible_writing.html">
+ <span class="dropdown-text">Quarto Basics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../quarto_repro_w/quarto_moderate.html">
+ <span class="dropdown-text">Quarto — Dynamic Documents</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../quarto_repro_w/quarto_advanced.html">
+ <span class="dropdown-text">Quarto — Publication</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-exporting--tools" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Exporting &amp; Tools</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-exporting--tools">    
+        <li>
+    <a class="dropdown-item" href="../exporting_tools/exporting_plots.html">
+ <span class="dropdown-text">Exporting Plots</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../exporting_tools/plotting_tools.html">
+ <span class="dropdown-text">Plotting Tools</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../exporting_tools/debugging_plots.html">
+ <span class="dropdown-text">Debugging Plots</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../exporting_tools/advanced_exporting.html">
+ <span class="dropdown-text">Advanced Exporting</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-reference" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-book" role="img">
+</i> 
+ <span class="menu-text">Reference</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-reference">    
+        <li>
+    <a class="dropdown-item" href="../contact.html">
+ <span class="dropdown-text">Contact Us</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../references.html">
+ <span class="dropdown-text">References</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../downloads.html">
+ <span class="dropdown-text">Downloads</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content column-page" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Data Viz Caveats: Flash Cards</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Sparrow </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 22, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>A checklist of the mistakes that most often make a chart mislead or confuse, as <strong>70 flash cards</strong> in 8 groups. Read the title, decide what the problem is and how you would fix it, then <strong>open the card</strong>. Use <strong>Practise</strong> to be dealt the cards one at a time; the ones you mark <em>Review again</em> come back first.</p>
+<p>Most of these points are taught in <a href="../data-visualization/best_practices.html">Best Practices</a>, <a href="../data-visualization/plot_data.html">Matching Data to Plots</a> and the ggplot2 modules; each card links to where. The list of topics follows the caveats collection of <a href="https://www.data-to-viz.com/caveats.html">data-to-viz.com</a> by Yan Holtz and Conor Healy, where many cards have a longer illustrated page (the “data-to-viz” link on the card). The wording and the R code here are our own.</p>
+<div class="cv-toolbar">
+<p><span class="cv-filter active" data-cat="all">All</span> <span class="cv-filter" data-cat="Misleading charts">Misleading charts (11)</span> <span class="cv-filter" data-cat="Wrong chart type">Wrong chart type (6)</span> <span class="cv-filter" data-cat="Colour">Colour (10)</span> <span class="cv-filter" data-cat="Design">Design (7)</span> <span class="cv-filter" data-cat="Maps">Maps (5)</span> <span class="cv-filter" data-cat="Labels and legends">Labels and legends (6)</span> <span class="cv-filter" data-cat="Dashboards and data stories">Dashboards and data stories (4)</span> <span class="cv-filter" data-cat="Other">Other (21)</span> <span class="cv-practise">🃏 Practise</span></p>
+</div>
+<div class="cv-practice-box" style="display:none">
+
+</div>
+<section id="misleading-charts" class="level2 cv-heading" data-cat="Misleading charts">
+<h2 class="cv-heading anchored" data-cat="Misleading charts" data-anchor-id="misleading-charts">Misleading charts</h2>
+<div class="cv-grid" data-cat="Misleading charts">
+<div class="cv-card" data-cat="Misleading charts">
+<details>
+<summary>
+Do not cut the y-axis of a bar chart
+</summary>
+<p><strong>Problem.</strong> Bars encode values by their length. Starting the axis at 120 mmHg makes a 3 mmHg gap look like a doubling.</p>
+<p><strong>Fix.</strong> Start bar charts at zero. If the differences matter but are small, show points with confidence intervals instead of bars.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(group, sbp)) <span class="sc">+</span> <span class="fu">geom_col</span>() <span class="sc">+</span> <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="cn">NA</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../data-visualization/best_practices.html">In the course: Best Practices</a> · <a href="https://www.data-to-viz.com/caveat/cut_y_axis.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Misleading charts">
+<details>
+<summary>
+Box plots hide the shape
+</summary>
+<p><strong>Problem.</strong> Two groups can have identical boxes while one is bimodal and the other is not; small groups look as solid as large ones.</p>
+<p><strong>Fix.</strong> Add the raw points (jittered), or use a violin or raincloud, and print the n per group.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span> <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../specialized/merge_visuals.html">In the course: Merged Visuals</a> · <a href="https://www.data-to-viz.com/caveat/boxplot.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Misleading charts">
+<details>
+<summary>
+Avoid counter-intuitive encodings
+</summary>
+<p><strong>Problem.</strong> Readers expect up = more, red = bad, bigger = larger. An inverted axis or a reversed colour scale makes them read the opposite of the truth.</p>
+<p><strong>Fix.</strong> Keep the usual direction; if you must invert (e.g.&nbsp;ranks), say so on the axis and in the title.</p>
+<p><a href="https://www.data-to-viz.com/caveat/counter_intuitive.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Misleading charts">
+<details>
+<summary>
+Bars with error bars (“dynamite plots”) hide the data
+</summary>
+<p><strong>Problem.</strong> A bar of the mean with an error bar shows two numbers and suggests values below the mean are the only ones that exist.</p>
+<p><strong>Fix.</strong> Show the individual points with the mean and its 95% CI, or a box/violin plot. State whether bars are SD, SE or CI.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stat_summary</span>(<span class="at">fun.data =</span> mean_cl_normal, <span class="at">geom =</span> <span class="st">'pointrange'</span>) <span class="sc">+</span> <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../specialized/plot_stats.html">In the course: Statistical Plots</a> · <a href="https://www.data-to-viz.com/caveat/error_bar.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Misleading charts">
+<details>
+<summary>
+Be wary of two y-axes
+</summary>
+<p><strong>Problem.</strong> The scales of the two axes are arbitrary, so any two series can be made to cross, diverge or move together.</p>
+<p><strong>Fix.</strong> Use two panels with a shared x-axis, or index both series to 100 at the start.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">facet_wrap</span>(<span class="sc">~</span> series, <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">scales =</span> <span class="st">'free_y'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../data-visualization/plot_data.html">In the course: Matching Data to Plots</a> · <a href="https://www.data-to-viz.com/caveat/dual_axis.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Misleading charts">
+<details>
+<summary>
+Avoid 3D
+</summary>
+<p><strong>Problem.</strong> Perspective makes nearer bars and slices look bigger and hides some values behind others.</p>
+<p><strong>Fix.</strong> Use the 2D version. Three numeric variables? Colour or size for the third, or small multiples.</p>
+<p><a href="../data-visualization/plot_data.html">In the course: Matching Data to Plots</a> · <a href="https://www.data-to-viz.com/caveat/3d.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Misleading charts">
+<details>
+<summary>
+Do not cherry-pick the data
+</summary>
+<p><strong>Problem.</strong> Choosing the start date, the sites or the subgroup that tells the best story misleads even when every point is correct.</p>
+<p><strong>Fix.</strong> Show the full period and all groups, and say why any are left out.</p>
+</details>
+</div>
+<div class="cv-card" data-cat="Misleading charts">
+<details>
+<summary>
+Draw proportions accurately
+</summary>
+<p><strong>Problem.</strong> Icons or shapes scaled by height and width (both) exaggerate differences; a doubled value looks four times larger.</p>
+<p><strong>Fix.</strong> Make area (not radius or height and width together) proportional to the value, or simply use bars.</p>
+</details>
+</div>
+<div class="cv-card" data-cat="Misleading charts">
+<details>
+<summary>
+Respect time intervals
+</summary>
+<p><strong>Problem.</strong> Unevenly spaced dates (2010, 2015, 2020, 2021, 2022) drawn at equal distances distort the trend.</p>
+<p><strong>Fix.</strong> Use a real date or numeric x-axis so the gaps are drawn to scale.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.Date</span>(visit_date))   <span class="co"># not factor(visit_date)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cv-card" data-cat="Misleading charts">
+<details>
+<summary>
+Show the sample size
+</summary>
+<p><strong>Problem.</strong> A percentage from 8 people looks as solid as one from 800.</p>
+<p><strong>Fix.</strong> Print the n on the axis labels, in the legend or in a caption; add confidence intervals.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> \(x) <span class="fu">paste0</span>(x, <span class="st">'</span><span class="sc">\n</span><span class="st">(n = '</span>, <span class="fu">table</span>(d<span class="sc">$</span>group)[x], <span class="st">')'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cv-card" data-cat="Misleading charts">
+<details>
+<summary>
+Beware of Simpson’s paradox
+</summary>
+<p><strong>Problem.</strong> A trend in the pooled data can reverse inside every subgroup when the groups differ in size and level.</p>
+<p><strong>Fix.</strong> Colour or facet by the likely confounder before drawing a conclusion; adjust for it in the model.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(x, y, <span class="at">colour =</span> group)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">'lm'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../statistical-analysis/regression.html">In the course: Regression Analysis</a> · <a href="https://www.data-to-viz.com/caveat/simpson.html">data-to-viz</a></p>
+</details>
+</div>
+</div>
+</section>
+<section id="wrong-chart-type" class="level2 cv-heading" data-cat="Wrong chart type">
+<h2 class="cv-heading anchored" data-cat="Wrong chart type" data-anchor-id="wrong-chart-type">Wrong chart type</h2>
+<div class="cv-grid" data-cat="Wrong chart type">
+<div class="cv-card" data-cat="Wrong chart type">
+<details>
+<summary>
+Many thin lollipops or bars can shimmer
+</summary>
+<p><strong>Problem.</strong> Dozens of closely spaced thin lines create a moiré pattern that is tiring to look at.</p>
+<p><strong>Fix.</strong> Use fewer, thicker bars, or a dot plot, or aggregate into groups.</p>
+</details>
+</div>
+<div class="cv-card" data-cat="Wrong chart type">
+<details>
+<summary>
+The trouble with pie charts
+</summary>
+<p><strong>Problem.</strong> People compare angles and areas poorly; slices of 23% and 27% look the same, and more than 5 slices are unreadable.</p>
+<p><strong>Fix.</strong> A sorted bar chart. Keep a pie only for 2–3 parts of a whole for a general audience.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(<span class="fu">reorder</span>(cause, n), n)) <span class="sc">+</span> <span class="fu">geom_col</span>() <span class="sc">+</span> <span class="fu">coord_flip</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../data-visualization/best_practices.html">In the course: Best Practices</a> · <a href="https://www.data-to-viz.com/caveat/pie.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Wrong chart type">
+<details>
+<summary>
+Radial bars distort length
+</summary>
+<p><strong>Problem.</strong> In a circular bar chart the outer bars are longer than inner bars of the same value.</p>
+<p><strong>Fix.</strong> Use straight bars; keep radial layouts for a decorative overview with labels on the values.</p>
+<p><a href="https://www.data-to-viz.com/caveat/circular_barplot_accordeon.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Wrong chart type">
+<details>
+<summary>
+Maybe you do not need a map
+</summary>
+<p><strong>Problem.</strong> A map draws attention to large, empty areas; if geography is not the question, it wastes space.</p>
+<p><strong>Fix.</strong> A sorted bar or dot chart of the regions answers “which is highest?” better than a map.</p>
+<p><a href="../../gis/gis/maps_choropleth.html">In the course: Maps and Choropleths</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Wrong chart type">
+<details>
+<summary>
+Two values per group? Try a dumbbell
+</summary>
+<p><strong>Problem.</strong> Grouped bars for before/after (or men/women) make the reader compare bars across pairs.</p>
+<p><strong>Fix.</strong> A dumbbell (two points joined by a line) shows both values and the change in one glance.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> before, <span class="at">xend =</span> after, <span class="at">y =</span> site, <span class="at">yend =</span> site)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(before, site)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(after, site))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../plot-gallery/showcase.html">In the course: Showcase</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Wrong chart type">
+<details>
+<summary>
+Use circular bar plots with care
+</summary>
+<p><strong>Problem.</strong> Without a radial axis readers cannot read values, and the shape is driven by the order of the bars.</p>
+<p><strong>Fix.</strong> Label each bar with its value and sort it; prefer a straight bar chart for comparison.</p>
+<p><a href="https://www.data-to-viz.com/caveat/circular_bar_yaxis.html">data-to-viz</a></p>
+</details>
+</div>
+</div>
+</section>
+<section id="colour" class="level2 cv-heading" data-cat="Colour">
+<h2 class="cv-heading anchored" data-cat="Colour" data-anchor-id="colour">Colour</h2>
+<div class="cv-grid" data-cat="Colour">
+<div class="cv-card" data-cat="Colour">
+<details>
+<summary>
+Use colour on purpose
+</summary>
+<p><strong>Problem.</strong> Colouring every bar differently adds a legend and implies groups that mean nothing.</p>
+<p><strong>Fix.</strong> One colour by default; add colour only to encode a variable or to highlight the message (grey + one accent).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill =</span> site <span class="sc">==</span> <span class="st">'Hospital B'</span>)) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">'grey70'</span>, <span class="st">'#C0392B'</span>), <span class="at">guide =</span> <span class="st">'none'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../data-visualization/best_practices.html">In the course: Best Practices</a> · <a href="https://www.data-to-viz.com/caveat/color_com_nothing.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Colour">
+<details>
+<summary>
+Choose the background on purpose
+</summary>
+<p><strong>Problem.</strong> A dark or coloured panel background reduces contrast and changes how colours look.</p>
+<p><strong>Fix.</strong> White or very light grey backgrounds; theme_minimal() or theme_classic().</p>
+</details>
+</div>
+<div class="cv-card" data-cat="Colour">
+<details>
+<summary>
+Keep enough contrast
+</summary>
+<p><strong>Problem.</strong> Light-yellow lines or pale text on white disappear on a projector and in print.</p>
+<p><strong>Fix.</strong> Check contrast (text should be dark); avoid the lightest end of a palette for thin lines and text.</p>
+</details>
+</div>
+<div class="cv-card" data-cat="Colour">
+<details>
+<summary>
+Avoid pure, saturated colours
+</summary>
+<p><strong>Problem.</strong> Pure red, green and blue (#FF0000 …) vibrate next to each other and tire the eye.</p>
+<p><strong>Fix.</strong> Muted palettes (viridis, ColorBrewer, Okabe-Ito) with one stronger colour for emphasis.</p>
+</details>
+</div>
+<div class="cv-card" data-cat="Colour">
+<details>
+<summary>
+Numbers need a sequential palette
+</summary>
+<p><strong>Problem.</strong> A rainbow or qualitative palette on a numeric variable has no visual order.</p>
+<p><strong>Fix.</strong> One hue from light to dark (or viridis) so darker = more.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_fill_viridis_c</span>()   <span class="co"># or scale_fill_distiller(palette = 'Blues', direction = 1)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../data-visualization/gram_ggplot/module_3_colors_scales_themes.html">In the course: ggplot2 Module 3</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Colour">
+<details>
+<summary>
+Too many colours kill the story
+</summary>
+<p><strong>Problem.</strong> Beyond about 6 colours readers cannot match lines to the legend.</p>
+<p><strong>Fix.</strong> Highlight 1–3 groups and grey the rest, or use small multiples.</p>
+<p><a href="../data-visualization/best_practices.html">In the course: Best Practices</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Colour">
+<details>
+<summary>
+No gradient for unordered groups
+</summary>
+<p><strong>Problem.</strong> A light-to-dark gradient on regions or treatments suggests an order that does not exist.</p>
+<p><strong>Fix.</strong> A qualitative palette (scale_colour_brewer(palette = ‘Set2’) or Okabe-Ito) for categories.</p>
+</details>
+</div>
+<div class="cv-card" data-cat="Colour">
+<details>
+<summary>
+Avoid the rainbow palette
+</summary>
+<p><strong>Problem.</strong> Rainbow scales have sudden bright bands (yellow, cyan) that create boundaries not in the data, and fail in greyscale.</p>
+<p><strong>Fix.</strong> viridis or a single-hue sequential scale.</p>
+<p><a href="https://blog.datawrapper.de/colors/">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Colour">
+<details>
+<summary>
+Diverging data, diverging palette
+</summary>
+<p><strong>Problem.</strong> Change from baseline, residuals and correlations have a meaningful zero that a sequential palette hides.</p>
+<p><strong>Fix.</strong> Two hues meeting at a neutral colour placed exactly at the midpoint.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">'#2166AC'</span>, <span class="at">mid =</span> <span class="st">'white'</span>, <span class="at">high =</span> <span class="st">'#B2182B'</span>, <span class="at">midpoint =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../data-visualization/gram_ggplot/module_3_colors_scales_themes.html">In the course: ggplot2 Module 3</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Colour">
+<details>
+<summary>
+Think of colour-blind readers
+</summary>
+<p><strong>Problem.</strong> About 1 in 12 men cannot tell red from green.</p>
+<p><strong>Fix.</strong> Colour-blind-safe palettes (viridis, Okabe-Ito), plus redundant cues (shape, direct labels).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_colour_viridis_d</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../data-visualization/best_practices.html">In the course: Best Practices</a></p>
+</details>
+</div>
+</div>
+</section>
+<section id="design" class="level2 cv-heading" data-cat="Design">
+<h2 class="cv-heading anchored" data-cat="Design" data-anchor-id="design">Design</h2>
+<div class="cv-grid" data-cat="Design">
+<div class="cv-card" data-cat="Design">
+<details>
+<summary>
+Align everything with something
+</summary>
+<p><strong>Problem.</strong> Titles, panels and annotations that float at random positions look messy and hard to scan.</p>
+<p><strong>Fix.</strong> Left-align title, subtitle and caption with the plot; use the same margins across panels.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">theme</span>(<span class="at">plot.title.position =</span> <span class="st">'plot'</span>, <span class="at">plot.caption.position =</span> <span class="st">'plot'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cv-card" data-cat="Design">
+<details>
+<summary>
+Two fonts are enough
+</summary>
+<p><strong>Problem.</strong> Many fonts and styles compete for attention.</p>
+<p><strong>Fix.</strong> One font family; vary size and weight for hierarchy.</p>
+</details>
+</div>
+<div class="cv-card" data-cat="Design">
+<details>
+<summary>
+Do you need that box?
+</summary>
+<p><strong>Problem.</strong> Borders around the panel, legend and plot add ink without information.</p>
+<p><strong>Fix.</strong> Remove panel borders and legend boxes; let white space separate elements.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">theme</span>(<span class="at">panel.border =</span> <span class="fu">element_blank</span>(), <span class="at">legend.background =</span> <span class="fu">element_blank</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cv-card" data-cat="Design">
+<details>
+<summary>
+Font size matters
+</summary>
+<p><strong>Problem.</strong> Default 11 pt axis text is unreadable on a slide or a printed half-page.</p>
+<p><strong>Fix.</strong> Set base_size for the output (about 14–18 for slides); check the figure at its final size.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">16</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cv-card" data-cat="Design">
+<details>
+<summary>
+Group what belongs together
+</summary>
+<p><strong>Problem.</strong> Related bars or panels far apart force the eye to jump.</p>
+<p><strong>Fix.</strong> Order categories so comparisons are adjacent; group panels by the question they answer.</p>
+</details>
+</div>
+<div class="cv-card" data-cat="Design">
+<details>
+<summary>
+Make the title say something
+</summary>
+<p><strong>Problem.</strong> A title like “SBP by group” makes the reader find the message themselves.</p>
+<p><strong>Fix.</strong> State the finding in the title (“SBP fell by 9 mmHg with the intervention”) and keep the description in the subtitle.</p>
+<p><a href="../data-visualization/best_practices.html">In the course: Best Practices</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Design">
+<details>
+<summary>
+Declutter
+</summary>
+<p><strong>Problem.</strong> Heavy grids, tick marks, borders and legends compete with the data.</p>
+<p><strong>Fix.</strong> Light or no grid lines, direct labels instead of legends, no redundant text.</p>
+<p><a href="../data-visualization/best_practices.html">In the course: Best Practices</a> · <a href="https://www.data-to-viz.com/caveat/declutter.html">data-to-viz</a></p>
+</details>
+</div>
+</div>
+</section>
+<section id="maps" class="level2 cv-heading" data-cat="Maps">
+<h2 class="cv-heading anchored" data-cat="Maps" data-anchor-id="maps">Maps</h2>
+<div class="cv-grid" data-cat="Maps">
+<div class="cv-card" data-cat="Maps">
+<details>
+<summary>
+Do not move regions around
+</summary>
+<p><strong>Problem.</strong> Moving or resizing islands and remote areas to fit the frame changes their apparent size and position.</p>
+<p><strong>Fix.</strong> If you must inset a region, frame it and say so; keep the same projection.</p>
+</details>
+</div>
+<div class="cv-card" data-cat="Maps">
+<details>
+<summary>
+Mind the projection
+</summary>
+<p><strong>Problem.</strong> Web Mercator inflates areas far from the equator, so a choropleth over-weights them.</p>
+<p><strong>Fix.</strong> Use an equal-area or local projected CRS for thematic maps (e.g.&nbsp;UTM for a district).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_transform</span>(blocks, <span class="dv">32644</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../../gis/gis/spatial_data_sf.html">In the course: Spatial Data with sf</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Maps">
+<details>
+<summary>
+Normalise your maps
+</summary>
+<p><strong>Problem.</strong> A map of counts is mostly a map of where people live.</p>
+<p><strong>Fix.</strong> Map rates (per 100,000) or ratios to expected; show counts only when workload is the question.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">rate =</span> cases <span class="sc">/</span> population <span class="sc">*</span> <span class="fl">1e5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../../gis/gis/maps_choropleth.html">In the course: Maps and Choropleths</a> · <a href="https://xkcd.com/1138/">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Maps">
+<details>
+<summary>
+Show missing data as missing
+</summary>
+<p><strong>Problem.</strong> A missing area coloured like the lowest class looks like “no disease”.</p>
+<p><strong>Fix.</strong> Give missing areas a distinct neutral colour or hatching and a legend entry.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_fill_viridis_c</span>(<span class="at">na.value =</span> <span class="st">'grey85'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cv-card" data-cat="Maps">
+<details>
+<summary>
+Do not let small regions vanish
+</summary>
+<p><strong>Problem.</strong> Dense urban wards are tiny on a map, though they hold most people.</p>
+<p><strong>Fix.</strong> Add an inset or zoom, a cartogram, or a hexagon tile map.</p>
+<p><a href="../plot-gallery/advanced/3.6_geographic_advanced.html">In the course: Geographic Advanced</a></p>
+</details>
+</div>
+</div>
+</section>
+<section id="labels-and-legends" class="level2 cv-heading" data-cat="Labels and legends">
+<h2 class="cv-heading anchored" data-cat="Labels and legends" data-anchor-id="labels-and-legends">Labels and legends</h2>
+<div class="cv-grid" data-cat="Labels and legends">
+<div class="cv-card" data-cat="Labels and legends">
+<details>
+<summary>
+Prefer horizontal labels
+</summary>
+<p><strong>Problem.</strong> Rotated axis labels are hard to read.</p>
+<p><strong>Fix.</strong> Flip the axes so long category names sit horizontally.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(n, <span class="fu">reorder</span>(diagnosis, n))) <span class="sc">+</span> <span class="fu">geom_col</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../data-visualization/best_practices.html">In the course: Best Practices</a> · <a href="https://www.data-to-viz.com/caveat/hard_label.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Labels and legends">
+<details>
+<summary>
+Use legends sparingly
+</summary>
+<p><strong>Problem.</strong> A legend makes the eye jump back and forth.</p>
+<p><strong>Fix.</strong> Label lines and groups directly at their ends; drop the legend.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_text</span>(<span class="at">data =</span> last_points, <span class="fu">aes</span>(<span class="at">label =</span> group), <span class="at">hjust =</span> <span class="dv">0</span>) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">'none'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cv-card" data-cat="Labels and legends">
+<details>
+<summary>
+Do not put labels on top of the data
+</summary>
+<p><strong>Problem.</strong> Text over points or lines hides what it describes.</p>
+<p><strong>Fix.</strong> Offset labels, use ggrepel, or place them in empty space.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>ggrepel<span class="sc">::</span><span class="fu">geom_text_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> name))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cv-card" data-cat="Labels and legends">
+<details>
+<summary>
+Round your numbers
+</summary>
+<p><strong>Problem.</strong> A value like “37.4285%” suggests a precision the data do not have and is harder to read.</p>
+<p><strong>Fix.</strong> Round to what matters (37%); use scales::percent() for axes.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cv-card" data-cat="Labels and legends">
+<details>
+<summary>
+Annotation is crucial
+</summary>
+<p><strong>Problem.</strong> Readers miss the event or threshold that explains the pattern.</p>
+<p><strong>Fix.</strong> Add a short note, a reference line or a shaded period where it matters.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">'2024-06-01'</span>), <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span> <span class="fu">annotate</span>(<span class="st">'text'</span>, ...)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="https://www.data-to-viz.com/caveat/annotation.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Labels and legends">
+<details>
+<summary>
+Do not label every tick
+</summary>
+<p><strong>Problem.</strong> A label on every year or category crowds the axis.</p>
+<p><strong>Fix.</strong> Fewer, round breaks.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">'6 months'</span>, <span class="at">date_labels =</span> <span class="st">'%b %Y'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</div>
+</section>
+<section id="dashboards-and-data-stories" class="level2 cv-heading" data-cat="Dashboards and data stories">
+<h2 class="cv-heading anchored" data-cat="Dashboards and data stories" data-anchor-id="dashboards-and-data-stories">Dashboards and data stories</h2>
+<div class="cv-grid" data-cat="Dashboards and data stories">
+<div class="cv-card" data-cat="Dashboards and data stories">
+<details>
+<summary>
+Keep colours consistent across charts
+</summary>
+<p><strong>Problem.</strong> If “Intervention” is blue in one panel and orange in the next, readers mis-match them.</p>
+<p><strong>Fix.</strong> A named colour vector used by every plot.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>arm_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Control =</span> <span class="st">'grey50'</span>, <span class="at">Intervention =</span> <span class="st">'#2C5F8D'</span>); <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> arm_cols)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="https://www.data-to-viz.com/caveat/consistency.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Dashboards and data stories">
+<details>
+<summary>
+Share the y-axis to compare panels
+</summary>
+<p><strong>Problem.</strong> Panels with their own y range look similar even when one is ten times higher.</p>
+<p><strong>Fix.</strong> Keep scales fixed when the panels are compared (the facet default); free them only to show shape.</p>
+</details>
+</div>
+<div class="cv-card" data-cat="Dashboards and data stories">
+<details>
+<summary>
+Leave margins between charts
+</summary>
+<p><strong>Problem.</strong> Panels pressed together read as one figure.</p>
+<p><strong>Fix.</strong> Space and alignment between panels (patchwork handles both).</p>
+</details>
+</div>
+<div class="cv-card" data-cat="Dashboards and data stories">
+<details>
+<summary>
+Link charts that share an axis
+</summary>
+<p><strong>Problem.</strong> Separate charts with the same x (time) are hard to read together.</p>
+<p><strong>Fix.</strong> Stack them vertically with aligned x-axes, or link them interactively (crosstalk).</p>
+<p><a href="../specialized/interactive.html">In the course: Interactive Plots</a></p>
+</details>
+</div>
+</div>
+</section>
+<section id="other" class="level2 cv-heading" data-cat="Other">
+<h2 class="cv-heading anchored" data-cat="Other" data-anchor-id="other">Other</h2>
+<div class="cv-grid" data-cat="Other">
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Sort your bar chart
+</summary>
+<p><strong>Problem.</strong> Alphabetical order hides the ranking.</p>
+<p><strong>Fix.</strong> Order bars by value (unless the categories have their own order, like age groups).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(region, rate))   <span class="co"># or forcats::fct_reorder()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../plot-gallery/basic.html">In the course: Basic Plot Gallery</a> · <a href="https://www.data-to-viz.com/caveat/order_data.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Histograms - mind the bin width
+</summary>
+<p><strong>Problem.</strong> The same data can look smooth, bimodal or noisy depending on the bins.</p>
+<p><strong>Fix.</strong> Try several widths and choose a meaningful one (5 mmHg, 1 year); report it.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">5</span>, <span class="at">boundary =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="https://www.data-to-viz.com/caveat/bin_size.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Size bubbles by area, not radius
+</summary>
+<p><strong>Problem.</strong> If the radius doubles, the area quadruples.</p>
+<p><strong>Fix.</strong> ggplot2’s scale_size() already maps to area; avoid scale_radius().</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="https://www.data-to-viz.com/caveat/radius_or_area.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+The spaghetti plot
+</summary>
+<p><strong>Problem.</strong> Twenty overlapping lines are unreadable.</p>
+<p><strong>Fix.</strong> Grey all lines and highlight one or a few, or small multiples with the others in grey behind.</p>
+<p><a href="../plot-gallery/showcase.html">In the course: Showcase</a> · <a href="https://www.data-to-viz.com/caveat/spaghetti.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Connect only connected dots
+</summary>
+<p><strong>Problem.</strong> A line implies continuity between points; joining unrelated categories invents a trend.</p>
+<p><strong>Fix.</strong> Lines for ordered x (time, dose); points or bars for categories.</p>
+<p><a href="../data-visualization/gram_ggplot/module_1_foundations_geoms.html">In the course: ggplot2 Module 1</a> · <a href="https://www.data-to-viz.com/caveat/connect_your_dot.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Drawing order matters
+</summary>
+<p><strong>Problem.</strong> The layer drawn last hides the others: a large group can bury a small one.</p>
+<p><strong>Fix.</strong> Draw the highlight last; use transparency.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_point</span>(<span class="at">data =</span> others, <span class="at">colour =</span> <span class="st">'grey'</span>) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">data =</span> highlight, <span class="at">colour =</span> <span class="st">'red'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../data-visualization/gram_ggplot/module_4_advanced_best_practices.html">In the course: ggplot2 Module 4</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Overlapping sets? Use an UpSet plot
+</summary>
+<p><strong>Problem.</strong> Venn diagrams with more than three sets (e.g.&nbsp;comorbidities) are unreadable.</p>
+<p><strong>Fix.</strong> An UpSet plot shows the size of every intersection as a bar.</p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Stacked charts are hard to read
+</summary>
+<p><strong>Problem.</strong> Only the bottom segment has a common baseline; the rest cannot be compared.</p>
+<p><strong>Fix.</strong> Grouped bars, small multiples, or 100% stacks with few segments.</p>
+<p><a href="../data-visualization/plot_data.html">In the course: Matching Data to Plots</a> · <a href="https://www.data-to-viz.com/caveat/stacking.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Mind the aspect ratio
+</summary>
+<p><strong>Problem.</strong> Stretching a plot changes how steep a trend looks.</p>
+<p><strong>Fix.</strong> Choose the width/height on purpose (about 45° for the main slopes); set it in ggsave().</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">'fig.png'</span>, <span class="at">width =</span> <span class="dv">7</span>, <span class="at">height =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="https://www.data-to-viz.com/caveat/aspect_ratio.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Make date axes easy to read
+</summary>
+<p><strong>Problem.</strong> Default date labels can be dense or ambiguous (01/02).</p>
+<p><strong>Fix.</strong> Unambiguous formats (“Jan 2025”) and sensible breaks.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_x_date</span>(<span class="at">date_labels =</span> <span class="st">'%b %Y'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Reorder your heat map
+</summary>
+<p><strong>Problem.</strong> Rows and columns in input order hide any structure.</p>
+<p><strong>Fix.</strong> Order by a summary or by clustering so similar rows sit together.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">fct_reorder</span>(ward, cases, <span class="at">.fun =</span> sum))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../plot-gallery/showcase.html">In the course: Showcase</a> · <a href="https://www.data-to-viz.com/graph/heatmap.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Beware of overplotting
+</summary>
+<p><strong>Problem.</strong> With thousands of points the scatter becomes a solid blob.</p>
+<p><strong>Fix.</strong> Transparency, smaller points, hexbins or 2D density.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>)   <span class="co"># or geom_hex()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="../plot-gallery/moderate.html">In the course: Intermediate Plot Gallery</a> · <a href="https://www.data-to-viz.com/caveat/overplotting.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Too many distributions at once
+</summary>
+<p><strong>Problem.</strong> Overlaid densities or histograms for many groups become a tangle.</p>
+<p><strong>Fix.</strong> A ridgeline plot, small multiples or box plots side by side.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>ggridges<span class="sc">::</span><span class="fu">geom_density_ridges</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="https://www.data-to-viz.com/caveat/multi_distribution.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Small multiples - rows or columns?
+</summary>
+<p><strong>Problem.</strong> The layout decides what is easy to compare: aligned y values compare across a row, aligned x values down a column.</p>
+<p><strong>Fix.</strong> Put panels in one row to compare heights, in one column to compare positions on x.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">facet_wrap</span>(<span class="sc">~</span> group, <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="https://www.data-to-viz.com/caveat/small_multiple.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Check the numbers on the chart
+</summary>
+<p><strong>Problem.</strong> Percentages that do not add to 100, or totals that do not match the table, destroy trust.</p>
+<p><strong>Fix.</strong> Compute labels from the data in code; never type them by hand.</p>
+<p><a href="https://www.data-to-viz.com/caveat/calculation_error.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Do not make readers do arithmetic
+</summary>
+<p><strong>Problem.</strong> If the message is a difference, two lines make the reader subtract in their head.</p>
+<p><strong>Fix.</strong> Plot the difference itself (with its CI).</p>
+<p><a href="https://www.data-to-viz.com/caveat/mental_calculation.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Area is a weak encoding
+</summary>
+<p><strong>Problem.</strong> People underestimate area differences; bubbles and treemaps give rough impressions only.</p>
+<p><strong>Fix.</strong> Use position or length when exact comparison matters.</p>
+<p><a href="https://www.data-to-viz.com/caveat/area_hard.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Grouped bars must look grouped
+</summary>
+<p><strong>Problem.</strong> Evenly spaced bars hide which belong together.</p>
+<p><strong>Fix.</strong> Dodge within a group and leave a gap between groups.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.8</span>), <span class="at">width =</span> <span class="fl">0.7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="https://www.data-to-viz.com/caveat/grouped_bar.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Radar (spider) charts mislead
+</summary>
+<p><strong>Problem.</strong> The area depends on the order of the axes, and values are hard to read.</p>
+<p><strong>Fix.</strong> A dot plot or parallel coordinates for several measures per item.</p>
+<p><a href="https://www.data-to-viz.com/caveat/spider.html">data-to-viz</a></p>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+Log scales for rates of change
+</summary>
+<p><strong>Problem.</strong> On a linear axis exponential growth looks explosive and early changes look flat.</p>
+<p><strong>Fix.</strong> A log axis when relative change is the question; label it clearly.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_y_log10</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cv-card" data-cat="Other">
+<details>
+<summary>
+It is “choropleth”
+</summary>
+<p><strong>Problem.</strong> The common misspelling “chloropleth” undermines a report.</p>
+<p><strong>Fix.</strong> choro (area) + pleth (quantity).</p>
+</details>
+</div>
+</div>
+</section>
+<section id="self-check-quiz" class="level2">
+<h2 class="anchored" data-anchor-id="self-check-quiz">Self-check quiz</h2>
+<div class="quiz-q" data-qid="cv1" data-type="mcq" data-hash="875afo.82njre" data-show="VHdvOiB0aGUgY3V0IGF4aXMgYW5kIHRoZSBiYXIgb2YgbWVhbnM=" data-explain="QmFycyBtdXN0IHN0YXJ0IGF0IHplcm8sIGFuZCBhIGJhciBvZiB0aGUgbWVhbiBoaWRlcyB0 aGUgZGF0YTsgc2hvdyBwb2ludHMgd2l0aCB0aGUgbWVhbiBhbmQgaXRzIENJIGluc3RlYWQu ">
+<p>A chart shows the mean SBP of two arms as bars with error bars, the y-axis starting at 120 mmHg. How many caveats does it break?</p>
+<ul>
+<li>None: the error bars make it an honest chart</li>
+<li>One: the error bars alone are wrong</li>
+<li>Two: the cut axis and the bar of means</li>
+<li>One: just the axis start is wrong</li>
+</ul>
+</div>
+<div class="quiz-q" data-qid="cv2" data-type="mcq" data-hash="875nob.82ny8p" data-show="Q2FzZXMgcGVyIDEwMCwwMDAsIHNvIHBvcHVsYXRpb24gZG9lcyBub3QgZHJpdmUgaXQ=" data-explain="QSBjb3VudCBtYXAgbW9zdGx5IHNob3dzIHdoZXJlIHBlb3BsZSBsaXZlOyBhIHJhdGUgc2hv d3MgdGhlIHJpc2su">
+<p>You map dengue cases (counts) per block. What should you map instead, and why?</p>
+<ul>
+<li>Cases per 100,000, so population does not drive it</li>
+<li>The log of the counts, to compress the colour scale</li>
+<li>Cases per km², so that large blocks look smaller</li>
+<li>The rank of each count, so classes have equal size</li>
+</ul>
+</div>
+<div class="quiz-q" data-qid="cv3" data-type="mcq" data-hash="8760x1.82ocq3" data-show="U21hbGwgbXVsdGlwbGVzLCBlYWNoIHdhcmQgb3ZlciB0aGUgcmVzdCBpbiBncmV5" data-explain="U21hbGwgbXVsdGlwbGVzIHdpdGggdGhlIG90aGVyIHNlcmllcyBpbiBncmV5IGtlZXAgY29u dGV4dCBhbmQgbWFrZSBlYWNoIGxpbmUgcmVhZGFibGUu">
+<p>Twenty ward lines overlap on one time-series chart. Which fix keeps every ward visible?</p>
+<ul>
+<li>Give each of the wards its own bright, saturated colour</li>
+<li>Small multiples, each ward over the rest in grey</li>
+<li>A 3D chart with one ward per depth level</li>
+<li>A dual y-axis for the larger and smaller wards</li>
+</ul>
+</div>
+<div class="quiz-q" data-qid="cv4" data-type="mcq" data-hash="876e5s.82or7i" data-show="QSBkaXZlcmdpbmcgcGFsZXR0ZSB3aXRoIHdoaXRlIGF0IHplcm8=" data-explain="RGF0YSB3aXRoIGEgbWVhbmluZ2Z1bCB6ZXJvIG5lZWQgdHdvIGh1ZXMgbWVldGluZyBhdCBh IG5ldXRyYWwgbWlkcG9pbnQu">
+<p>Change in SBP from baseline (negative and positive) is shown on a map. Which palette fits?</p>
+<ul>
+<li>A rainbow palette from red to violet</li>
+<li>A single-hue palette from light to dark blue</li>
+<li>A qualitative palette with one hue per block</li>
+<li>A diverging palette with white at zero</li>
+</ul>
+</div>
+<p><strong>Your score: <span class="quiz-score"></span></strong> (first attempt counts)</p>
+<!-- GENERATED by scripts/sync_workshop_assets.sh from regression-workshop/assets/quiz.css and quiz.js. Do not edit. -->
+<style>
+/* quiz.css — styles for quiz.js (reveal.js friendly; light theme) */
+.quiz-q {
+  text-align: left;
+  font-size: 0.85em;
+  max-width: 880px;
+  margin: 0 auto;
+}
+.quiz-q > p:first-child { font-size: 1.1em; font-weight: 600; margin-bottom: 0.6em; }
+.quiz-options { display: flex; flex-direction: column; gap: 0.4em; margin-bottom: 0.7em; }
+.quiz-option {
+  display: flex; align-items: center; gap: 0.7em;
+  text-align: left; font: inherit; color: #2c3e50;
+  background: #fff; border: 2px solid #cfd8dc; border-radius: 8px;
+  padding: 0.45em 0.8em; cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.quiz-option:hover:not(:disabled) { border-color: #3498db; background: #f3f9fd; }
+.quiz-option:disabled { cursor: default; }
+.quiz-letter {
+  flex: 0 0 1.6em; height: 1.6em; line-height: 1.6em; text-align: center;
+  border-radius: 50%; background: #ecf0f1; font-weight: 700; font-size: 0.85em;
+}
+.quiz-option.is-correct { border-color: #27ae60; background: #eafaf1; }
+.quiz-option.is-correct .quiz-letter { background: #27ae60; color: #fff; }
+.quiz-option.is-wrong { border-color: #e74c3c; background: #fdedec; }
+.quiz-option.is-wrong .quiz-letter { background: #e74c3c; color: #fff; }
+
+.quiz-fill { display: flex; gap: 0.5em; margin-bottom: 0.6em; }
+.quiz-input {
+  flex: 1; font: inherit; padding: 0.4em 0.7em;
+  border: 2px solid #cfd8dc; border-radius: 8px; color: #2c3e50;
+}
+.quiz-input:focus { outline: none; border-color: #3498db; }
+.quiz-input.is-correct { border-color: #27ae60; background: #eafaf1; }
+.quiz-input.is-wrong { border-color: #e74c3c; background: #fdedec; }
+
+.quiz-btn {
+  font: inherit; cursor: pointer; border: none; border-radius: 8px;
+  padding: 0.4em 1.1em; background: #3498db; color: #fff;
+}
+.quiz-btn:hover { background: #2980b9; }
+.quiz-btn-ghost { background: transparent; color: #7f8c8d; border: 1px solid #cfd8dc; padding: 0.2em 0.8em; font-size: 0.8em; }
+.quiz-btn-ghost:hover { background: #f4f6f7; color: #2c3e50; }
+
+.quiz-feedback { min-height: 1.4em; margin: 0.5em 0; line-height: 1.4; }
+.quiz-feedback.is-correct { color: #1e8449; }
+.quiz-feedback.is-wrong { color: #c0392b; }
+.quiz-feedback.is-info { color: #2c3e50; }
+.quiz-feedback code { background: #eef2f4; color: #c2185b; padding: 0 0.3em; border-radius: 3px; }
+.quiz-score { font-weight: 700; color: #2c3e50; }
+
+/* score tools (Save score / Reset) */
+.quiz-score-tools { margin-left: 0.6em; white-space: nowrap; }
+.quiz-score-tools .quiz-btn { font-size: 0.55em; padding: 0.15em 0.6em; margin-left: 0.3em; vertical-align: middle; }
+</style>
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+ * quiz.js — tiny self-check quiz engine for reveal.js / any HTML page
+ * ---------------------------------------------------------------------
+ * Vanilla JS, zero dependencies, works offline (file://) and inside
+ * Quarto reveal.js decks with embed-resources.
+ *
+ * SYNTAX (what lives in the .qmd — a Pandoc fenced div with data-attrs)
+ * ---------------------------------------------------------------------
+ *   MCQ (single answer)
+ *   ::: {.quiz-q data-qid="s1q1" data-type="mcq" data-hash="<hash>"
+ *         data-show="<base64>" data-explain="<base64>"}
+ *   Which model suits a binary outcome?
+ *
+ *   - Linear regression
+ *   - Logistic regression
+ *   - Cox regression
+ *   :::
+ *
+ *   Fill-in-the-blank
+ *   ::: {.quiz-q data-qid="s1q4" data-type="fill" data-hashes="<h1>,<h2>"
+ *         data-show="<base64>" data-explain="<base64>"}
+ *   Which gtsummary function builds Table 1?
+ *   :::
+ *
+ *   data-qid      unique id (it salts the hashes)
+ *   data-hash     hash of the correct option INDEX (0-based) — mcq
+ *   data-hashes   comma-separated hashes of each accepted answer — fill
+ *   data-show     base64 of the text revealed by "Show answer"
+ *   data-explain  base64 of the short explanation (basic `code` allowed)
+ *
+ * You never write those attributes by hand. Use the R helpers in
+ * assets/quiz.R, which take PLAIN text and emit the fenced div:
+ *
+ *   ```{r}
+ *   #| echo: false
+ *   #| output: asis
+ *   source("assets/quiz.R")
+ *   quiz_mcq("s1q1", "Which model suits a binary outcome?",
+ *            c("Linear", "Logistic", "Cox"), answer = 2,
+ *            explain = "Binary outcome -> logit link -> logistic.")
+ *   quiz_fill("s1q4", "Which gtsummary function builds Table 1?",
+ *             accept = c("tbl_summary", "tbl_summary()"),
+ *             explain = "tbl_summary() summarises variables, optionally by a group.")
+ *   ```
+ *
+ * Optional: <span class="quiz-score"></span> anywhere shows "x / y", followed by
+ *   "Save score" (downloads a text file) and "Reset" buttons. The first-attempt
+ *   results are kept in localStorage per deck, so a reload keeps the score.
+ *
+ * BEHAVIOUR
+ *   - MCQ: options are SHUFFLED at load (hash uses the authored index, so
+ *     data-hash is unaffected; add data-shuffle="0" to keep authored order).
+ *     Click an option -> instant ✔/✘; explanation appears after the
+ *     attempt (or after "Show answer").
+ *   - Fill: type + Enter / "Check". Answers are normalised (case,
+ *     surrounding/duplicate whitespace, backticks, trailing "()") before
+ *     hashing, so "  TBL_Summary() " matches "tbl_summary".
+ *   - Answers are NOT in the page source: only salted hashes are, and the
+ *     explanation / reveal text is base64-encoded. This stops casual
+ *     view-source peeking; it is NOT cryptographic security.
+ *
+ * HASH (must match quiz.R exactly): two polynomial rolling hashes over
+ *   the string  qid + "|" + value , base-36 encoded and concatenated.
+ * ═══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  var M1 = 2147483629, M2 = 2147483587;
+
+  function hash(str) {
+    var a = 5381, b = 52711;
+    for (var i = 0; i < str.length; i++) {
+      var c = str.charCodeAt(i);
+      a = (a * 131 + c) % M1;
+      b = (b * 137 + c) % M2;
+    }
+    return a.toString(36) + '.' + b.toString(36);
+  }
+
+  function normalise(s) {
+    return String(s).toLowerCase()
+      .replace(/`/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/\(\s*\)$/, '')   // "tbl_summary()" == "tbl_summary"
+      .trim();
+  }
+
+  function b64(s) {
+    if (!s) return '';
+    try {
+      var bin = atob(s), bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return new TextDecoder('utf-8').decode(bytes);
+    } catch (e) { return ''; }
+  }
+
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  // escape first, then allow `code` only
+  function lite(s) { return esc(s).replace(/`([^`]+)`/g, '<code>$1</code>'); }
+
+  var state = { total: 0, correct: 0, scored: {} };
+
+  // ── saved score ─────────────────────────────────────────────────────
+  // The first-attempt result of each question is kept in the browser
+  // (localStorage, one entry per deck file), so a reload keeps the score.
+  // "Save score" downloads a small text file a participant can keep or
+  // hand in; "Reset" clears the saved result for this deck.
+  var deckName = (location.pathname.split('/').pop() || 'deck').replace(/\.html?$/, '');
+  // Kept per workshop folder and deck: deck file names repeat across workshops
+  // (s5_choose_check_report is in three). Older versions used the deck name alone; that copy
+  // is read once, for this deck's questions only, so no saved score is lost.
+  var folder = location.pathname.split('/').slice(-2, -1)[0] || '';
+  var STORE = 'quiz-score:' + (folder ? folder + '/' : '') + deckName;
+  var LEGACY = 'quiz-score:' + deckName;
+  function persist() { try { localStorage.setItem(STORE, JSON.stringify(state.scored)); } catch (e) {} }
+  function restore() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORE));
+      var migrate = !saved && STORE !== LEGACY;
+      if (!saved) saved = JSON.parse(localStorage.getItem(LEGACY)) || {};
+      var qs = document.querySelectorAll('.quiz-q');
+      for (var i = 0; i < qs.length; i++) {
+        var id = qs[i].getAttribute('data-qid');
+        if (saved.hasOwnProperty(id)) { state.scored[id] = !!saved[id]; if (saved[id]) state.correct++; }
+      }
+      if (migrate && Object.keys(state.scored).length) persist();
+    } catch (e) {}
+  }
+  // Reset: forget this deck's answers, also in the old shared copy (other decks keep theirs there).
+  function forget() {
+    try {
+      localStorage.removeItem(STORE);
+      var old = JSON.parse(localStorage.getItem(LEGACY));
+      if (old && STORE !== LEGACY) {
+        var qs = document.querySelectorAll('.quiz-q');
+        for (var i = 0; i < qs.length; i++) delete old[qs[i].getAttribute('data-qid')];
+        if (Object.keys(old).length) localStorage.setItem(LEGACY, JSON.stringify(old)); else localStorage.removeItem(LEGACY);
+      }
+    } catch (e) {}
+  }
+  function scoreText() {
+    var lines = ['Quiz score', 'Deck: ' + (document.title || deckName), 'File: ' + deckName, 'Saved: ' + new Date().toLocaleString(),
+                 'Score (first attempt): ' + state.correct + ' / ' + state.total, ''];
+    var qs = document.querySelectorAll('.quiz-q');
+    for (var i = 0; i < qs.length; i++) {
+      var id = qs[i].getAttribute('data-qid');
+      lines.push(id + ': ' + (state.scored.hasOwnProperty(id) ? (state.scored[id] ? 'correct' : 'not correct') : 'not attempted'));
+    }
+    return lines.join('\n') + '\n';
+  }
+  function download() {
+    var a = document.createElement('a');
+    a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(scoreText());
+    a.download = 'quiz_' + deckName + '.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  function addScoreTools() {
+    var els = document.querySelectorAll('.quiz-score');
+    for (var i = 0; i < els.length; i++) {
+      if (els[i].getAttribute('data-tools')) continue;
+      els[i].setAttribute('data-tools', '1');
+      var box = document.createElement('span'); box.className = 'quiz-score-tools';
+      var sv = document.createElement('button'); sv.type = 'button'; sv.className = 'quiz-btn quiz-btn-ghost quiz-save'; sv.textContent = 'Save score';
+      sv.addEventListener('click', download);
+      var rs = document.createElement('button'); rs.type = 'button'; rs.className = 'quiz-btn quiz-btn-ghost quiz-reset'; rs.textContent = 'Reset';
+      rs.addEventListener('click', function () { forget(); location.reload(); });
+      box.appendChild(sv); box.appendChild(rs);
+      els[i].parentNode.insertBefore(box, els[i].nextSibling);
+    }
+  }
+
+  function updateScores() {
+    var els = document.querySelectorAll('.quiz-score');
+    for (var i = 0; i < els.length; i++) {
+      els[i].textContent = state.correct + ' / ' + state.total;
+    }
+  }
+
+  function record(qid, ok) {
+    if (state.scored.hasOwnProperty(qid)) return;      // first attempt only
+    state.scored[qid] = !!ok;
+    if (ok) state.correct++;
+    persist();
+    updateScores();
+  }
+
+  function feedback(q, ok, msg) {
+    var fb = q.querySelector('.quiz-feedback');
+    fb.className = 'quiz-feedback ' + (ok ? 'is-correct' : 'is-wrong');
+    fb.innerHTML = (ok ? '✔ Correct. ' : '✘ Not quite. ') + (msg ? lite(msg) : '');
+  }
+
+  function explanation(q) {
+    var ex = b64(q.getAttribute('data-explain'));
+    return ex;
+  }
+
+  function buildCommon(q) {
+    var fb = document.createElement('div');
+    fb.className = 'quiz-feedback';
+    fb.setAttribute('aria-live', 'polite');
+    q.appendChild(fb);
+
+    var show = document.createElement('button');
+    show.type = 'button';
+    show.className = 'quiz-btn quiz-btn-ghost';
+    show.textContent = 'Show answer';
+    q.appendChild(show);
+    return { fb: fb, show: show };
+  }
+
+  function initMCQ(q) {
+    var qid = q.getAttribute('data-qid');
+    var correctHash = q.getAttribute('data-hash');
+    var list = q.querySelector('ul, ol');
+    if (!list) return;
+    // authored index is what the hash is built on; DISPLAY order is shuffled so the
+    // answer position (and any length/position tell) cannot be learned.
+    var items = Array.prototype.slice.call(list.children).map(function (li, i) { return { li: li, i: i }; });
+    if (q.getAttribute('data-shuffle') !== '0') {
+      for (var k = items.length - 1; k > 0; k--) {
+        var r = Math.floor(Math.random() * (k + 1)), t = items[k]; items[k] = items[r]; items[r] = t;
+      }
+    }
+    var wrap = document.createElement('div');
+    wrap.className = 'quiz-options';
+    var btns = items.map(function (it, pos) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'quiz-option';
+      b.setAttribute('data-i', it.i);
+      b.innerHTML = '<span class="quiz-letter">' + String.fromCharCode(65 + pos) + '</span>' + it.li.innerHTML;
+      wrap.appendChild(b);
+      return b;
+    });
+    list.parentNode.replaceChild(wrap, list);
+    var c = buildCommon(q);
+
+    function isCorrect(i) { return hash(qid + '|' + i) === correctHash; }
+    function orig(b) { return parseInt(b.getAttribute('data-i'), 10); }
+    function reveal() {
+      btns.forEach(function (b) { if (isCorrect(orig(b))) b.classList.add('is-correct'); });
+    }
+
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var ok = isCorrect(orig(b));
+        b.classList.add(ok ? 'is-correct' : 'is-wrong');
+        record(qid, ok);
+        feedback(q, ok, explanation(q));
+        if (ok) btns.forEach(function (x) { x.disabled = true; });
+      });
+    });
+    c.show.addEventListener('click', function () {
+      reveal();
+      record(qid, false);
+      var ans = b64(q.getAttribute('data-show'));
+      var fb = q.querySelector('.quiz-feedback');
+      fb.className = 'quiz-feedback is-info';
+      fb.innerHTML = 'Answer: <strong>' + lite(ans) + '</strong>. ' + lite(explanation(q));
+      btns.forEach(function (x) { x.disabled = true; });
+    });
+  }
+
+  function initFill(q) {
+    var qid = q.getAttribute('data-qid');
+    var accepted = (q.getAttribute('data-hashes') || '').split(',');
+    var row = document.createElement('div');
+    row.className = 'quiz-fill';
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'quiz-input';
+    input.placeholder = 'type your answer…';
+    input.setAttribute('autocomplete', 'off');
+    input.setAttribute('autocapitalize', 'off');
+    input.setAttribute('spellcheck', 'false');
+    var check = document.createElement('button');
+    check.type = 'button';
+    check.className = 'quiz-btn';
+    check.textContent = 'Check';
+    row.appendChild(input);
+    row.appendChild(check);
+    q.appendChild(row);
+    var c = buildCommon(q);
+
+    function submit() {
+      var v = normalise(input.value);
+      if (!v) return;
+      var ok = accepted.indexOf(hash(qid + '|' + v)) !== -1;
+      input.classList.remove('is-correct', 'is-wrong');
+      input.classList.add(ok ? 'is-correct' : 'is-wrong');
+      record(qid, ok);
+      feedback(q, ok, explanation(q));
+    }
+    check.addEventListener('click', submit);
+    // keep reveal.js shortcuts (space, arrows, f, s, …) out of the text box
+    ['keydown', 'keyup', 'keypress'].forEach(function (ev) {
+      input.addEventListener(ev, function (e) {
+        e.stopPropagation();
+        if (ev === 'keydown' && e.key === 'Enter') submit();
+      });
+    });
+    c.show.addEventListener('click', function () {
+      record(qid, false);
+      var fb = q.querySelector('.quiz-feedback');
+      fb.className = 'quiz-feedback is-info';
+      fb.innerHTML = 'Answer: <strong>' + lite(b64(q.getAttribute('data-show'))) + '</strong>. ' + lite(explanation(q));
+    });
+  }
+
+  function init() {
+    var qs = document.querySelectorAll('.quiz-q');
+    state.total = qs.length;
+    for (var i = 0; i < qs.length; i++) {
+      var q = qs[i];
+      if (q.getAttribute('data-quiz-ready')) continue;
+      q.setAttribute('data-quiz-ready', '1');
+      var type = q.getAttribute('data-type');
+      if (type === 'mcq') initMCQ(q);
+      else if (type === 'fill') initFill(q);
+    }
+    restore();
+    addScoreTools();
+    updateScores();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+
+  // exposed for tests / tooling
+  window.Quiz = { hash: hash, normalise: normalise };
+})();
+</script>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Flash cards: topic filter, and a practice mode that deals cards one at a time.
+// "Knew it" / "Review again" are remembered in this browser (localStorage), and cards to review come first.
+(function () {
+  const KEY = 'cv-caveats-v1';
+  let state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { state = {}; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+  const cards = [...document.querySelectorAll('.cv-card')];
+  const title = c => c.querySelector('summary').textContent.trim();
+  const mark = () => cards.forEach(c => {
+    c.classList.toggle('cv-known', state[title(c)] === 'known');
+    c.classList.toggle('cv-review', state[title(c)] === 'review');
+  });
+  mark();
+
+  // topic filter
+  const filters = [...document.querySelectorAll('.cv-filter')];
+  filters.forEach(f => f.addEventListener('click', () => {
+    filters.forEach(g => g.classList.toggle('active', g === f));
+    const cat = f.dataset.cat;
+    document.querySelectorAll('.cv-grid, .cv-heading, section.cv-heading').forEach(el => {
+      el.style.display = (cat === 'all' || el.dataset.cat === cat) ? '' : 'none';
+    });
+  }));
+
+  // practice mode
+  const box = document.querySelector('.cv-practice-box');
+  const btn = document.querySelector('.cv-practise');
+  if (!box || !btn) return;
+  let deck = [], i = 0;
+  const deal = () => {
+    const active = document.querySelector('.cv-filter.active');
+    const cat = active ? active.dataset.cat : 'all';
+    deck = cards.filter(c => cat === 'all' || c.dataset.cat === cat)
+      .map(c => ({ c, r: (state[title(c)] === 'review' ? 0 : state[title(c)] === 'known' ? 2 : 1) + Math.random() }))
+      .sort((a, b) => a.r - b.r).map(x => x.c);
+    i = 0; show();
+  };
+  const show = () => {
+    if (i >= deck.length) {
+      const known = deck.filter(c => state[title(c)] === 'known').length;
+      box.innerHTML = `<div class="cv-q">Done: ${known} of ${deck.length} marked "knew it".</div>
+        <button class="btn btn-primary btn-sm" data-a="again">Deal again</button>
+        <button class="btn btn-outline-secondary btn-sm" data-a="reset">Forget my marks</button>
+        <button class="btn btn-outline-secondary btn-sm" data-a="close">Close</button>`;
+      return;
+    }
+    const c = deck[i];
+    const body = c.querySelector('details').cloneNode(true);
+    body.querySelector('summary').remove();
+    box.innerHTML = `<div class="cv-count">Card ${i + 1} of ${deck.length} · ${c.dataset.cat}</div>
+      <div class="cv-q">${c.querySelector('summary').innerHTML}</div>
+      <p><em>What goes wrong, and how would you fix it?</em></p>
+      <div class="cv-answer" style="display:none"></div>
+      <button class="btn btn-primary btn-sm" data-a="show">Show answer</button>
+      <button class="btn btn-outline-secondary btn-sm" data-a="close">Close</button>`;
+    box.querySelector('.cv-answer').append(...body.childNodes);
+  };
+  box.addEventListener('click', e => {
+    const a = e.target.dataset && e.target.dataset.a; if (!a) return;
+    if (a === 'show') {
+      box.querySelector('.cv-answer').style.display = '';
+      e.target.outerHTML = `<button class="btn btn-success btn-sm" data-a="known">Knew it</button>
+        <button class="btn btn-danger btn-sm" data-a="review">Review again</button>`;
+    } else if (a === 'known' || a === 'review') {
+      state[title(deck[i])] = a; save(); mark(); i++; show();
+    } else if (a === 'again') { deal(); }
+    else if (a === 'reset') { state = {}; save(); mark(); deal(); }
+    else if (a === 'close') { box.style.display = 'none'; }
+  });
+  btn.addEventListener('click', () => { box.style.display = ''; deal(); box.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("\.");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+<script>
+// Quarto's navbar `logo-href` is emitted as a literal string and is
+// not depth-adjusted for nested pages (unlike navbar.left/right items
+// and the theme <link>), so it 404s from any page below the project
+// root. Derive the correct relative prefix from the theme stylesheet
+// link, which Quarto *does* resolve correctly, and reuse it here.
+(function () {
+  var css = document.querySelector('link[href$="assets/theme_webp.css"]');
+  var brand = document.querySelector('a.navbar-brand');
+  if (css && brand) {
+    var prefix = css.getAttribute('href').replace(/assets\/theme_webp\.css$/, '');
+    brand.setAttribute('href', prefix + 'welcome.html');
+
+    // Floating bottom-right icon cluster: track home / site index /
+    // close. Kiosk mode (start-workshop.bat) hides all browser
+    // chrome, so these give a way back without relying on the
+    // browser's own controls. Positioned bottom-right to avoid the
+    // top navbar and the bottom-center "Home | Next Module" footer
+    // some pages already include.
+    var isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+
+    var style = document.createElement('style');
+    style.textContent =
+      '.ws-nav-cluster{position:fixed;bottom:10px;right:10px;z-index:10000;' +
+      'display:flex;gap:6px;background:rgba(255,255,255,0.9);' +
+      'border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,0.2);}' +
+      '.ws-nav-cluster a,.ws-nav-cluster button{width:36px;height:36px;' +
+      'border-radius:50%;border:none;background:#fff;font-size:1.1rem;' +
+      'display:flex;align-items:center;justify-content:center;cursor:pointer;' +
+      'text-decoration:none;color:inherit;box-shadow:0 1px 3px rgba(0,0,0,0.15);}' +
+      '.ws-nav-cluster a:hover,.ws-nav-cluster button:hover{background:#f0f0f0;}' +
+      '.ws-nav-hint{position:fixed;bottom:54px;right:10px;z-index:10000;' +
+      'background:#2c3e50;color:#fff;font-size:0.8rem;padding:6px 10px;' +
+      'border-radius:6px;display:none;white-space:nowrap;}';
+    document.head.appendChild(style);
+
+    var cluster = document.createElement('div');
+    cluster.className = 'ws-nav-cluster';
+
+    var trackHome = document.createElement('a');
+    trackHome.href = prefix + 'welcome.html';
+    trackHome.title = 'Back to track home';
+    trackHome.textContent = '🏠';
+    cluster.appendChild(trackHome);
+
+    var siteIndex = document.createElement('a');
+    siteIndex.href = prefix + '../index.html';
+    siteIndex.title = 'All workshop tracks';
+    siteIndex.textContent = '🧭';
+    cluster.appendChild(siteIndex);
+
+    if (isLocal) {
+      var hint = document.createElement('div');
+      hint.className = 'ws-nav-hint';
+      hint.textContent = 'Press Alt+F4 to exit full-screen';
+      document.body.appendChild(hint);
+
+      var closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.title = 'Exit full-screen';
+      closeBtn.textContent = '✕';
+      closeBtn.addEventListener('click', function () {
+        window.close();
+        hint.style.display = 'block';
+        setTimeout(function () { hint.style.display = 'none'; }, 3000);
+      });
+      cluster.appendChild(closeBtn);
+    }
+
+    document.body.appendChild(cluster);
+  }
+})();
+</script>
+
+
+
+
+</body></html>

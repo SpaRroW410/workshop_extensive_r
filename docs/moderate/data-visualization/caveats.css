@@ -1,0 +1,33 @@
+/* Flash cards for data-visualization/caveats.qmd */
+.cv-toolbar { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1rem 0 1.5rem; }
+.cv-toolbar p { display: contents; }
+.cv-filter, .cv-practise {
+  cursor: pointer; padding: .3rem .75rem; border: 1px solid #c8ced6; border-radius: 999px;
+  font-size: .9rem; background: #fff; user-select: none;
+}
+.cv-filter.active { background: #2C5F8D; color: #fff; border-color: #2C5F8D; }
+.cv-practise { background: #fff7e6; border-color: #e0b45c; font-weight: 600; }
+.cv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: .9rem; margin-bottom: 1.5rem; }
+.cv-card details {
+  border: 1px solid #d9dee5; border-left: 5px solid #2C5F8D; border-radius: 8px; padding: .7rem .9rem;
+  background: #fbfcfd; height: 100%;
+}
+.cv-card summary { cursor: pointer; font-weight: 600; list-style: none; }
+.cv-card summary::-webkit-details-marker { display: none; }
+.cv-card summary::after { content: " ▸ show"; font-weight: 400; color: #6c757d; font-size: .85rem; }
+.cv-card details[open] summary::after { content: " ▾"; }
+.cv-card details[open] { background: #fff; }
+.cv-card details p { margin: .5rem 0 0; font-size: .95rem; }
+.cv-card pre { font-size: .78rem; margin: .5rem 0 0; }
+.cv-card.cv-known details { border-left-color: #3a9a5b; }
+.cv-card.cv-review details { border-left-color: #c0392b; }
+.cv-practice-box {
+  border: 2px solid #e0b45c; border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: 1.5rem; background: #fffdf7;
+}
+.cv-practice-box .cv-count { color: #6c757d; font-size: .85rem; }
+.cv-practice-box .cv-q { font-size: 1.25rem; font-weight: 600; margin: .4rem 0 .8rem; }
+.cv-practice-box button { margin: .3rem .4rem .3rem 0; }
+@media (prefers-color-scheme: dark) {
+  .cv-card details, .cv-card details[open], .cv-filter { background: transparent; }
+}
+.cv-card pre code, .cv-practice-box pre code { white-space: pre-wrap; word-break: break-word; }

@@ -1,0 +1,286 @@
+---
+title: "Showcase: From Chart to Figure"
+subtitle: "Finished, publication-style figures from the course datasets, and your final output"
+author: "Sparrow"
+date: "2026-11-22"
+format:
+  html:
+    code-fold: true
+    code-summary: "Show the code"
+    code-copy: true
+    toc: true
+    lightbox: auto
+    fig-dpi: 150
+execute:
+  warning: false
+  message: false
+---
+
+```{r}
+#| include: false
+library(tidyverse); library(ggrepel); library(ggridges); library(patchwork); library(sf)
+dat <- function(f) c(file.path("../data", f), file.path("data", f))[file.exists(c(file.path("../data", f), file.path("data", f)))][1]
+
+# One house style for every figure on this page
+theme_showcase <- function(base = 13) {
+  theme_minimal(base_size = base) +
+    theme(plot.title = element_text(face = "bold", size = rel(1.15)),
+          plot.title.position = "plot", plot.caption.position = "plot",
+          plot.subtitle = element_text(colour = "grey30", margin = margin(b = 10)),
+          plot.caption = element_text(colour = "grey45", hjust = 0, size = rel(0.75)),
+          panel.grid.minor = element_blank(), axis.title = element_text(colour = "grey30"),
+          legend.position = "top", legend.justification = "left")
+}
+accent <- "#C0392B"; base_col <- "#2C5F8D"; grey <- "grey75"
+```
+
+The galleries show **what each chart type is**. This page shows the last step: turning a correct chart into a
+**figure that tells one message**, the kind of work you see collected on sites such as
+[Dataviz Inspiration](https://www.dataviz-inspiration.com) and the [R Graph Gallery](https://r-graph-gallery.com).
+Every figure uses a dataset from this course and follows the [caveat flash cards](../data-visualization/caveats.qmd):
+a title that states the finding, direct labels instead of legends, grey for context and one accent colour for the
+message. Open **Show the code** under each figure to see how.
+
+## 1. A dumbbell instead of grouped bars
+
+```{r}
+#| fig-width: 9
+#| fig-height: 5
+#| fig-alt: "Dumbbell chart: for each of four regions and each trial arm, a grey dot for mean systolic blood pressure at baseline joined to a coloured dot at 6 months. Intervention arms drop by about 9 to 10 mmHg in every region; control arms barely move."
+bp <- readxl::read_excel(dat("PublicHealth_BP_Dataset.xlsx"))
+db <- bp |>
+  group_by(Region, TreatmentGroup) |>
+  summarise(n = n(), base = mean(SysBP_0m), m6 = mean(SysBP_6m), .groups = "drop") |>
+  mutate(row = fct_rev(paste0(Region, " · ", TreatmentGroup, " (n = ", n, ")")),
+         change = m6 - base)
+ggplot(db, aes(y = row)) +
+  geom_segment(aes(x = base, xend = m6, yend = row), colour = grey, linewidth = 1.6) +
+  geom_point(aes(x = base), colour = "grey55", size = 3.5) +
+  geom_point(aes(x = m6, colour = TreatmentGroup), size = 3.5) +
+  geom_text(aes(x = pmin(base, m6) - 0.6, label = if_else(abs(change) < 0.5, "0", sprintf("%+.0f", change)), colour = TreatmentGroup),
+            hjust = 1, size = 3.8, fontface = "bold") +
+  scale_colour_manual(values = c(Control = "grey45", Intervention = accent), guide = "none") +
+  scale_x_continuous(limits = c(118, 147), breaks = seq(120, 145, 5)) +
+  labs(title = "Systolic BP fell by about 10 mmHg with the intervention, in every region",
+       subtitle = "Mean systolic BP at baseline (grey) and at 6 months (coloured); number = change in mmHg",
+       x = "Systolic blood pressure (mmHg)", y = NULL,
+       caption = "Data: simulated blood-pressure trial, 200 patients (data/README.md)") +
+  theme_showcase() + theme(panel.grid.major.y = element_blank())
+```
+
+**Why it works:** two values per group become one line each, so the change is read directly; the arms differ by
+colour and the number prints the effect. *Cards: Two values per group? Try a dumbbell · Show the sample size ·
+Make the title say something.*
+
+## 2. A ranking with uncertainty
+
+```{r}
+#| fig-width: 9
+#| fig-height: 6.5
+#| fig-alt: "Dot plot ranking 20 villages by the percentage of adults with hypertension, each with a 95% confidence interval; villages whose interval lies above the survey average of 32% are red, the rest grey, with a dashed line at the average."
+ncd <- read_csv(dat("ncd_survey.csv"), show_col_types = FALSE)
+overall <- mean(ncd$htn)
+vil <- ncd |> group_by(village) |>
+  summarise(n = n(), x = sum(htn), p = x / n, .groups = "drop") |>
+  mutate(lo = map2_dbl(x, n, \(x, n) binom.test(x, n)$conf.int[1]),
+         hi = map2_dbl(x, n, \(x, n) binom.test(x, n)$conf.int[2]),
+         above = lo > overall,
+         village = fct_reorder(paste0(village, " (", n, ")"), p))
+ggplot(vil, aes(p, village, colour = above)) +
+  geom_vline(xintercept = overall, linetype = 2, colour = "grey40") +
+  annotate("text", x = overall + 0.005, y = levels(vil$village)[1], label = sprintf("survey average %.0f%%", 100 * overall),
+           hjust = 0, vjust = -0.3, size = 3.5, colour = "grey30") +
+  geom_errorbar(aes(xmin = lo, xmax = hi), width = 0, orientation = "y", linewidth = 0.8) +
+  geom_point(size = 3) +
+  scale_colour_manual(values = c(`FALSE` = "grey55", `TRUE` = accent), guide = "none") +
+  scale_x_continuous(labels = scales::percent, limits = c(0, 0.8)) +
+  labs(title = if (sum(vil$above) == 1) "Only one of 20 villages is clearly above the survey average" else
+                 sprintf("Only %d of 20 villages are clearly above the survey average", sum(vil$above)),
+       subtitle = "Adults with hypertension, % with 95% confidence interval (n per village in brackets)",
+       x = NULL, y = NULL, caption = "Data: NCD survey, 600 adults in 20 villages (simulated)") +
+  theme_showcase() + theme(panel.grid.major.y = element_blank())
+```
+
+**Why it works:** sorted, so the ranking is free; the intervals stop readers over-reading a 53% from 30 people; the
+highlight only goes to villages that are *clearly* above average. *Cards: Sort your bar chart · Show the sample size
+· Use colour on purpose.*
+
+## 3. Small multiples instead of spaghetti
+
+```{r}
+#| fig-width: 10
+#| fig-height: 7.5
+#| fig-alt: "Thirty small panels, one per city ward, each showing that ward's monthly dengue cases per 100,000 as a red line over the other 29 wards in light grey, ordered from the highest to the lowest total incidence. Every ward peaks in the monsoon months each year."
+dengue <- read_csv(dat("dengue_wards.csv"), show_col_types = FALSE) |>
+  mutate(date = seq(as.Date("2023-01-01"), by = "month", length.out = 36)[month_index],
+         rate = cases / population * 1e5)
+ord <- dengue |> group_by(ward) |> summarise(tot = sum(cases) / first(population) * 1e5, slum = first(slum)) |>
+  mutate(lab = paste0(ward, if_else(slum == 1, " · slum", ""))) |> arrange(desc(tot))
+dd <- dengue |> left_join(ord, by = "ward") |> mutate(lab = factor(lab, ord$lab))
+ggplot(dd, aes(date, rate)) +
+  geom_line(data = rename(dd, other = lab), aes(group = other), colour = "grey85", linewidth = 0.3) +
+  geom_line(colour = accent, linewidth = 0.7) +
+  facet_wrap(~ lab, ncol = 6) +
+  scale_x_date(breaks = as.Date(c("2023-07-01", "2024-07-01", "2025-07-01")), date_labels = "%Y") +
+  labs(title = "Every ward peaks each monsoon; the highest burdens are mostly in slum wards",
+       subtitle = "Monthly dengue cases per 100,000, 2023–2025; each panel highlights one ward over the other 29 (grey), ordered by total incidence",
+       x = NULL, y = NULL, caption = "Data: 30 city wards (simulated, counts workshop)") +
+  theme_showcase(11) + theme(strip.text = element_text(hjust = 0, face = "bold"), panel.spacing = unit(0.8, "lines"))
+```
+
+**Why it works:** thirty lines on one panel are unreadable; here each ward is legible and the grey background keeps
+the comparison. Panels are sorted by burden, and the shared y-axis keeps them comparable. *Cards: The spaghetti
+plot · Share the y-axis · Reorder.*
+
+## 4. An ordered heat map
+
+```{r}
+#| fig-width: 10
+#| fig-height: 6.5
+#| fig-alt: "Heat map with 30 wards as rows, ordered by total dengue incidence, and 36 months as columns; colour from pale yellow to dark red shows cases per 100,000. Three dark vertical bands mark the monsoon seasons of 2023, 2024 and 2025."
+ggplot(dd, aes(date, fct_rev(factor(ward, ord$ward)), fill = rate)) +
+  geom_tile(colour = "white", linewidth = 0.2) +
+  scale_fill_distiller(palette = "YlOrRd", direction = 1, name = "Cases per 100,000",
+                       guide = guide_colourbar(barwidth = 12, barheight = 0.6, title.position = "top")) +
+  scale_x_date(breaks = seq(as.Date("2023-06-01"), as.Date("2025-06-01"), by = "6 months"),
+               date_labels = "%b %Y", expand = c(0, 0)) +
+  labs(title = "Three monsoon seasons; W17 and W27 are in the top four wards every year",
+       subtitle = "Monthly dengue cases per 100,000; wards ordered by total incidence",
+       x = NULL, y = NULL, caption = "Data: 30 city wards (simulated)") +
+  theme_showcase(11) + theme(panel.grid = element_blank())
+```
+
+**Why it works:** the rows are ordered by burden, so structure appears (seasons as columns, high wards on top); a
+sequential palette shows "more" as darker. *Cards: Reorder your heat map · Numbers need a sequential palette.*
+
+## 5. Linked panels on a shared time axis
+
+```{r}
+#| fig-width: 9
+#| fig-height: 6
+#| fig-alt: "Two stacked panels sharing a time axis from 2023 to 2025: monthly rainfall as grey bars on top and total dengue cases as a red line below; dengue rises and falls with the monsoon rain each year."
+monthly <- dengue |> group_by(date) |> summarise(cases = sum(cases), rain = mean(rain_mm))
+r0 <- cor(monthly$cases, monthly$rain)
+r1 <- cor(monthly$cases[-1], monthly$rain[-36])          # cases vs last month's rain
+p_rain <- ggplot(monthly, aes(date, rain)) + geom_col(fill = "grey65", width = 25) +
+  labs(x = NULL, y = "Rain (mm)") + theme_showcase(11) + theme(axis.text.x = element_blank())
+p_dengue <- ggplot(monthly, aes(date, cases)) + geom_line(colour = accent, linewidth = 1) + geom_point(colour = accent, size = 1.5) +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b %Y") +
+  labs(x = NULL, y = "Dengue cases") + theme_showcase(11)
+p_rain / p_dengue + plot_layout(heights = c(1, 1.6)) +
+  plot_annotation(title = "Dengue rises and falls with the monsoon rain",
+                  subtitle = sprintf("Monthly rainfall (mean of wards) and dengue cases (all wards)\nCorrelation of cases with the same month's rain r = %.2f; with last month's rain r = %.2f", r0, r1),
+                  caption = "Data: 30 city wards (simulated)", theme = theme_showcase())
+```
+
+**Why it works:** two series in different units are **not** forced onto a dual axis; the panels share the x-axis and
+are stacked, so the timing of the two can be compared month by month. *Cards: Be wary of two y-axes · Link charts that share an axis.*
+
+## 6. Distributions, many groups at once
+
+```{r}
+#| fig-width: 9
+#| fig-height: 5.5
+#| fig-alt: "Ridgeline plot of systolic blood pressure distributions for four age bands from 30 to 69 years, with a vertical dashed line at 140 mmHg; the distributions shift to the right with age."
+ridge <- ncd |> mutate(age_band = cut(age, c(29, 39, 49, 59, 69), labels = c("30–39", "40–49", "50–59", "60–69")))
+share <- ridge |> group_by(age_band) |> summarise(n = n(), hi = mean(sbp >= 140))
+ggplot(ridge, aes(sbp, age_band)) +
+  geom_density_ridges(fill = base_col, alpha = 0.75, colour = "white", scale = 1.15, quantile_lines = TRUE, quantiles = 2) +
+  geom_vline(xintercept = 140, linetype = 2, colour = accent) +
+  geom_text(data = share, aes(x = 205, y = age_band, label = sprintf("%.0f%% ≥ 140 (n = %d)", 100 * hi, n)),
+            hjust = 1, vjust = -1.2, size = 3.5, colour = "grey25") +
+  scale_x_continuous(limits = c(80, 210)) +
+  labs(title = "Systolic BP shifts upward with every decade of age",
+       subtitle = "Distribution of systolic BP by age band; white line = median, dashed red line = 140 mmHg",
+       x = "Systolic blood pressure (mmHg)", y = NULL, caption = "Data: NCD survey, 600 adults (simulated)") +
+  theme_showcase()
+```
+
+**Why it works:** four overlapping densities would tangle; ridgelines keep each visible with the medians marked and
+the share above the threshold printed beside it. *Cards: Too many distributions at once · Annotation is crucial.*
+
+## 7. A map that shows rates, with its legend as a histogram
+
+```{r}
+#| fig-width: 10
+#| fig-height: 6
+#| fig-alt: "Choropleth of 79 district blocks shaded by dengue incidence per 100,000 in five classes, with primary and community health centres as black triangles, next to a histogram of the block rates coloured with the same classes so it acts as the legend."
+blocks <- st_read(dat("gis/district_blocks.geojson"), quiet = TRUE) |> st_transform(32644)
+fac <- read_csv(dat("gis/facilities.csv"), show_col_types = FALSE) |>
+  filter(type %in% c("PHC", "CHC")) |> st_as_sf(coords = c("easting_m", "northing_m"), crs = 32644)
+brks <- unname(quantile(blocks$dengue_per_100k, seq(0, 1, 0.2)))
+blocks <- blocks |> mutate(cls = cut(dengue_per_100k, brks, include.lowest = TRUE, dig.lab = 4))
+pal <- setNames(RColorBrewer::brewer.pal(5, "YlOrRd"), levels(blocks$cls))
+m <- ggplot() +
+  geom_sf(data = blocks, aes(fill = cls), colour = "white", linewidth = 0.25) +
+  geom_sf(data = fac, shape = 17, size = 2, colour = "grey10") +
+  scale_fill_manual(values = pal, guide = "none") + theme_void()
+h <- ggplot(st_drop_geometry(blocks), aes(dengue_per_100k)) +
+  geom_histogram(aes(fill = after_stat(cut(x, brks, include.lowest = TRUE, dig.lab = 4))),
+                 bins = 20, colour = "white") +        # each bar coloured by the class of its centre
+  scale_fill_manual(values = pal, guide = "none") +
+  labs(x = "Dengue per 100,000", y = "Blocks") + theme_showcase(10)
+m + h + plot_layout(widths = c(2.2, 1)) +
+  plot_annotation(title = "High dengue incidence clusters in one part of the district",
+                  subtitle = "Dengue cases per 100,000 by block (quintiles); triangles = PHC/CHC. The histogram is the legend.",
+                  caption = "Data: synthetic district of 79 blocks (gis/make_gis_data.R)", theme = theme_showcase())
+```
+
+**Why it works:** rates, not counts; quintile classes stated; the histogram-legend shows how many blocks fall in
+each colour. Whether the cluster is real is a test, not a picture: see [Global Moran's I](../gis/morans_i.qmd).
+*Cards: Normalise your maps · Use colour on purpose.*
+
+## Your final output
+
+Make **one finished figure** from your own data (or a course dataset) as the capstone of the Data Visualization
+track.
+
+1.  **Ask one question** and write the answer as the title, in one sentence.
+2.  **Choose the chart** with [Matching Data to Plots](../data-visualization/plot_data.qmd); sketch it on paper first.
+3.  **Build it** in ggplot2; then go through the [caveat flash cards](../data-visualization/caveats.qmd) and fix
+    every card that applies.
+4.  **Finish it**: one accent colour, direct labels, units on the axes, n and source in the caption, alt text.
+5.  **Export it** at the journal's size and resolution (`ggsave(..., width = 18, units = "cm", dpi = 600)`), and a
+    static version if you also make an [interactive](../specialized/interactive.qmd) one.
+
+For ideas, browse the hundreds of examples on [Dataviz Inspiration](https://www.dataviz-inspiration.com) and the
+[R Graph Gallery](https://r-graph-gallery.com): pick one whose idea fits your question, and rebuild the idea with
+your data, not the design with theirs.
+
+::: callout-tip
+## Checklist before you call it finished
+-   Could someone who reads **only the title** state the finding?
+-   Is every colour doing a job? Is there a legend you could replace with labels?
+-   Are the axes honest (bars from zero, shared scales where panels are compared)?
+-   Are the n, the units, the source and the uncertainty on the figure?
+-   Does it work in **greyscale** and for **colour-blind** readers?
+:::
+
+## Self-check quiz
+
+```{r}
+#| include: false
+source("../assets/quiz.R")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("sc1", "In figure 2, several villages have percentages well above the average. Why is only one of them red?",
+         c("Red marks the village with the most adults surveyed in it", "Its whole confidence interval lies above the average", "Red marks villages above 50%, a fixed cut-off", "Red is assigned at random to show the palette"), answer = 2,
+         explain = "A point estimate above the average from 30 people can be chance; only villages whose 95% CI lies above the average are highlighted.")
+quiz_mcq("sc2", "Figure 5 shows rainfall and dengue in two stacked panels. Why not one chart with two y-axes?",
+         c("ggplot2 cannot draw a second y-axis on one plot", "The two series are measured in the same units", "Two axes can be scaled to suggest any relationship", "Stacked panels need less ink than a single combined panel"), answer = 3,
+         explain = "With a second axis the scales are arbitrary; stacked panels on a shared x-axis show the timing honestly.")
+quiz_mcq("sc3", "What makes a figure title like 'Dengue rises and falls with the monsoon rain' better than 'Dengue and rainfall'?",
+         c("It is shorter, so it fits above the plot on a slide", "It states the message the reader should take away", "It avoids naming the variables that are plotted", "Journals require a full sentence as the title"), answer = 2,
+         explain = "A title that states the finding tells readers what to look for; the description goes in the subtitle or axis labels.")
+```
+
+**Your score: <span class="quiz-score"></span>** (first attempt counts)
+
+```{r}
+#| echo: false
+#| output: asis
+source("../assets/quiz-engine.R"); quiz_engine()
+```

@@ -8,6 +8,7 @@ project:
   output-dir: docs/dataviz-complete
   render:
     - data-visualization/best_practices.qmd
+    - data-visualization/caveats.qmd
     - data-visualization/ggplot_grammar.qmd
     - data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
     - data-visualization/gram_ggplot/module_2_aesthetics_faceting_themes.qmd
@@ -40,6 +41,7 @@ project:
     - plot-gallery/moderate/2.5_relational_flow_intermediate.qmd
     - plot-gallery/moderate/2.6_geographic_intermediate.qmd
     - plot-gallery/practical_application.qmd
+    - plot-gallery/showcase.qmd
     - specialized/interactive.qmd
     - specialized/merge_visuals.qmd
     - specialized/plot_stats.qmd
@@ -67,6 +69,8 @@ website:
             href: data-visualization/best_practices.qmd
           - text: Matching Data to Plots
             href: data-visualization/plot_data.qmd
+          - text: 'Caveats: Flash Cards'
+            href: data-visualization/caveats.qmd
           - text: '---'
           - text: Module 1 — Foundations & Geoms
             href: data-visualization/gram_ggplot/module_1_foundations_geoms.qmd
@@ -86,6 +90,8 @@ website:
             href: plot-gallery/advanced.qmd
           - text: Practical Applications
             href: plot-gallery/practical_application.qmd
+          - text: 'Showcase: Final Output'
+            href: plot-gallery/showcase.qmd
       - text: Specialized Plots
         menu:
           - text: Merged Visuals

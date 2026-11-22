@@ -10,6 +10,7 @@ project:
     - regression-workshop/*.qmd
     - dungeons/*.qmd
     - data-visualization/best_practices.qmd
+    - data-visualization/caveats.qmd
     - data-visualization/ggplot_grammar.qmd
     - data-visualization/plot_data.qmd
     - gtsummary/gtsummary_tutorial.qmd
@@ -137,6 +138,8 @@ website:
             href: data-visualization/best_practices.qmd
           - text: Matching Data to Plots
             href: data-visualization/plot_data.qmd
+          - text: 'Caveats: Flash Cards'
+            href: data-visualization/caveats.qmd
           - text: Basic Plot Gallery
             href: plot-gallery/basic.qmd
           - text: '---'
