@@ -182,7 +182,7 @@ try {
     await dlg.locator('button.st-primary').click();
     await d.waitForSelector('section.st-own');
     const order = await d.evaluate(() => [...document.querySelectorAll('.reveal .slides > section')].map((s) => s.id || (s.classList.contains('st-own') ? 'OWN' : '')));
-    assert.equal(order[order.indexOf('where-we-are') + 1], 'OWN');
+    assert.equal(order[order.indexOf('where-we-are') + 1], 'OWN', 'slide order: ' + order.slice(0, 8).join(', '));
     const mine = await d.evaluate(() => fetch('/api/slides?anchor=stats-workshop/s1_know_your_data').then((r) => r.json()));
     assert.equal(mine.slides.length, 1); assert.equal(mine.slides[0].anchor, 'stats-workshop/s1_know_your_data#where-we-are');
     await d.click('.st-toggle');
