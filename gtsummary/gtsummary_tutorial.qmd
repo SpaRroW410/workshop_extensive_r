@@ -48,10 +48,16 @@ data %>%
       all_categorical() ~ "{n} ({p}%)"
     )
   ) %>% 
-  add_p() %>% 
+  add_p(test = all_continuous() ~ "t.test") %>%   # mean (SD) shown, so compare means
   modify_header(label = "**Variable**") %>% 
   bold_labels()
 ```
+
+::: {.callout-warning}
+## Match the test to the summary
+`add_p()` compares numbers with a **rank-based** test by default (Wilcoxon, Kruskal–Wallis). If the table shows **mean (SD)**,
+set the test to `"t.test"` (or `"oneway.test"` for 3 or more groups), as above; otherwise the table shows means but tests ranks.
+:::
 
 ### Table 1 for a study (NCD survey)
 
@@ -85,5 +91,226 @@ ncd |>
 -   In an **observational** study, p-values for exposure groups are descriptive; the size of the difference matters more than the p.
 -   Report **missing** counts, and the **number analysed**.
 -   Export for a paper with `as_flex_table()` (Word) or `as_gt()` (HTML/PDF).
+
+### What `add_p()` does by default
+
+| Variable | 2 groups | 3 or more groups |
+|---|---|---|
+| Number | Wilcoxon rank-sum (Mann–Whitney), **whatever the distribution** | Kruskal–Wallis |
+| Category | chi-square **without** Yates' correction if **every** expected count is ≥ 5, otherwise **Fisher's exact** | same rule |
+
+The default for categories is stricter than Cochran's rule (Fisher as soon as **any** expected count is below 5), which is
+safe. The default for numbers never uses a t-test: you choose that yourself, below.
+
+### Which tests gtsummary can run, and which it cannot
+
+| gtsummary does it | How |
+|---|---|
+| Welch t-test, one-way ANOVA, **Welch ANOVA** | `add_p(test = x ~ "t.test")`, `"aov"`, `"oneway.test"` |
+| Mann–Whitney, Kruskal–Wallis, Mood's median test | `"wilcox.test"`, `"kruskal.test"`, `"mood.test"` |
+| Chi-square (with or without Yates), Fisher, test of two proportions | `"chisq.test"`, `"chisq.test.no.correct"`, `"fisher.test"`, `"prop.test"` |
+| Monte Carlo p for chi-square or Fisher | `test.args = x ~ list(simulate.p.value = TRUE, B = 10000)` |
+| **Paired** t, Wilcoxon signed-rank, **McNemar** | long data, `"paired.t.test"`, `"paired.wilcox.test"`, `"mcnemar.test"` with `group = id` |
+| **Difference with 95% CI**, Cohen's d, Hedges' g, standardised difference (SMD) | `add_difference()`, `test = x ~ "cohens_d"`, `"smd"` |
+| Adjusted difference (ANCOVA), random-intercept model for clustered data | `add_difference(test = x ~ "ancova", adj.vars = ...)`; `"lme4"` with `group =` |
+| Confidence interval of each mean or percentage | `add_ci()` |
+| Multiple-testing adjustment | `add_q(method = "holm")` (or `"fdr"`) |
+| Regression tables (linear, logistic, Cox, Poisson …) | `tbl_regression()`, `tbl_uvregression()` |
+| Survey-weighted tests, log-rank | `tbl_svysummary()` + `add_p()`; `tbl_survfit()` + `add_p()` |
+| **Any other test** | your own function in `add_p(test = x ~ my_test)` (example below) |
+
+| Not in gtsummary (run it yourself, report it in the text or a separate table) | Use |
+|---|---|
+| Checking assumptions: Shapiro–Wilk, Q-Q plots, Levene | `shapiro.test()`, `ggplot() + stat_qq()`, `car::leveneTest()` |
+| Repeated measures with **3 or more** time points (sphericity, Greenhouse–Geisser), Friedman | `rstatix::anova_test()`, `friedman.test()` |
+| **Post hoc** tests after ANOVA or Kruskal–Wallis | `TukeyHSD()`, `rstatix::games_howell_test()`, `rstatix::dunn_test()` |
+| Correlation (Pearson, Spearman) | `cor.test()` |
+| Effect sizes for tables and ranks: Cramér's V, rank-biserial r, η², Kendall's W | `effectsize::cramers_v()`, `rstatix::wilcox_effsize()`, `effectsize::eta_squared()` |
+| One-sample tests against a benchmark | `t.test(x, mu = 100)`, `binom.test()` |
+| Agreement: Bland–Altman, kappa, ICC | `BlandAltmanLeh`, `irr::kappa2()`, `irr::icc()` |
+
+### A pipeline that chooses the test for each variable
+
+The rule, the same as in the Statistical Analysis workshop (Session 2): a number is analysed **parametrically** (mean (SD),
+t-test or Welch ANOVA) when it is roughly symmetric in **every** group (|skewness| < 1) and either the group has at least
+30 people or, in a smaller group, Shapiro–Wilk does not reject normality; otherwise **rank-based** (median (IQR),
+Mann–Whitney or Kruskal–Wallis). A category gets **chi-square** when at least 80% of expected counts are ≥ 5 and none is
+below 1 (and, in a 2 × 2 table, none below 5); otherwise **Fisher**.
+
+```{r}
+library(readxl)
+library(janitor)
+
+skewness <- function(x) { x <- x[!is.na(x)]; mean((x - mean(x))^3) / sd(x)^3 }
+
+# One row per variable: the evidence, the decision, the test and the summary to show
+choose_tests <- function(data, by, continuous, categorical) {
+  k <- n_distinct(data[[by]])
+  cont <- map(continuous, \(v) {
+    g <- map(split(data[[v]], data[[by]]), \(x) x[!is.na(x)])
+    n <- lengths(g); sk <- map_dbl(g, skewness)
+    sw <- map_dbl(g, \(x) if (length(x) < 30) shapiro.test(x)$p.value else NA)
+    tibble(variable = v, smallest_n = min(n), largest_skew = max(abs(sk)),
+           shapiro_small_groups = if (all(is.na(sw))) NA else min(sw, na.rm = TRUE),   # NA: no group under 30
+           parametric = all(abs(sk) < 1 & (n >= 30 | sw > 0.05), na.rm = TRUE))
+  }) |> list_rbind() |>
+    mutate(test = case_when(parametric & k == 2 ~ "t.test", parametric ~ "oneway.test",
+                            k == 2 ~ "wilcox.test", TRUE ~ "kruskal.test"),
+           statistic = if_else(parametric, "{mean} ({sd})", "{median} ({p25}, {p75})"))
+  cat <- map(categorical, \(v) {
+    e <- suppressWarnings(chisq.test(table(data[[v]], data[[by]]))$expected)
+    tibble(variable = v, table = paste(dim(e), collapse = " x "),
+           smallest_expected = min(e), pct_below_5 = 100 * mean(e < 5),
+           test = if_else((all(dim(e) == 2) & min(e) < 5) | mean(e < 5) > 0.2 | min(e) < 1,
+                          "fisher.test", "chisq.test.no.correct"))
+  }) |> list_rbind()
+  list(continuous = cont, categorical = cat)
+}
+```
+
+Applied to the workshop's practice data (631 adults; only 27 with diabetes, so small expected counts appear):
+
+```{r}
+p <- read_excel(c("../data/prac_modded.xlsx", "data/prac_modded.xlsx")[file.exists(c("../data/prac_modded.xlsx", "data/prac_modded.xlsx"))][1]) |>
+  clean_names() |>
+  mutate(diabetes = factor(past_history_of_diabetes, c("no", "yes"), c("No diabetes", "Diabetes")),
+         wealth   = factor(wealth_index_of_participants, c("poorest", "poorer", "middle", "richer", "richest")),
+         weight   = if_else(weight < 20, weight * 10, weight))    # the one entry error (see the workshop, Session 1)
+
+rules <- choose_tests(p, by = "diabetes",
+                      continuous  = c("age_of_participants", "height", "weight", "glucose_level_mg_d_l"),
+                      categorical = c("sex_of_participants", "past_history_of_hypertension", "wealth",
+                                      "marital_status_of_participants"))
+rules$continuous  |> mutate(across(where(is.numeric), \(x) signif(x, 2))) |> knitr::kable()
+rules$categorical |> mutate(across(where(is.numeric), \(x) signif(x, 2))) |> knitr::kable()
+```
+
+The decisions go straight into the table, so the summary and the test always match:
+
+```{r}
+#| warning: false
+# (warning: false hides chi-square's "approximation may be incorrect" note for wealth, which the rule accepted)
+tests <- c(setNames(as.list(rules$continuous$test), rules$continuous$variable),
+           setNames(as.list(rules$categorical$test), rules$categorical$variable))
+stats <- c(setNames(as.list(rules$continuous$statistic), rules$continuous$variable),
+           list(all_categorical() ~ "{n} ({p}%)"))
+
+p |>
+  select(diabetes, all_of(c(rules$continuous$variable, rules$categorical$variable))) |>
+  tbl_summary(by = diabetes, statistic = stats, digits = all_continuous() ~ 1,
+              label = list(age_of_participants ~ "Age (years)", height ~ "Height (cm)", weight ~ "Weight (kg)",
+                           glucose_level_mg_d_l ~ "Random glucose (mg/dL)", sex_of_participants ~ "Sex",
+                           past_history_of_hypertension ~ "Known hypertension", wealth ~ "Wealth index",
+                           marital_status_of_participants ~ "Marital status")) |>
+  add_p(test = tests, pvalue_fun = label_style_pvalue(digits = 3)) |>
+  add_q(method = "holm") |>
+  bold_labels()
+```
+
+-   With only 27 adults in the diabetes group, Shapiro–Wilk also decides for that group. **Age** fails (skewness 1.0, and
+    Shapiro–Wilk p = 0.02 among the diabetics): Mann–Whitney, median (IQR). Height, weight and glucose pass: Welch t, mean (SD).
+-   **Glucose** looks very skewed in the whole sample (skewness 3.6, workshop Session 2), but that is two groups mixed
+    together: **within** each group it is roughly symmetric, and that is what the t-test needs. Welch copes with the very
+    different SDs (14 vs 58 mg/dL).
+-   Known hypertension (2 × 2, an expected count of 2.6) and marital status (a third of expected counts below 5) go to
+    **Fisher**; wealth (exactly 20% below 5, none below 1) stays with chi-square.
+-   The **footnotes** name the test used for each row, so the methods section can say: *"Numbers were compared with
+    Welch's t-test when roughly symmetric (|skewness| < 1, and Shapiro–Wilk p > 0.05 in groups under 30) and with the
+    Mann–Whitney U test otherwise; categories with the chi-square test, or Fisher's exact test when expected counts were
+    small. p-values were adjusted with Holm's method."*
+-   **`add_q()`** adds Holm-adjusted p-values: a Table 1 makes many comparisons at once.
+
+For **three or more groups** the same function picks Welch ANOVA (`oneway.test`) or Kruskal–Wallis:
+
+```{r}
+choose_tests(p, by = "wealth", continuous = c("age_of_participants", "height", "weight"),
+             categorical = c("sex_of_participants", "past_history_of_diabetes"))$continuous |>
+  select(variable, largest_skew, parametric, test) |> knitr::kable(digits = 2)
+```
+
+::: {.callout-important}
+## A rule chosen from the data must be fixed in advance
+Choosing each test by looking at the data is common in Table 1 and acceptable when the **rule** is written in the
+protocol or analysis plan and reported. Do not try both tests and keep the smaller p. For the **main** comparison of a
+study, decide the test from the design and the known behaviour of the variable (length of hospital stay and
+triglycerides are skewed in every study), not from this pipeline.
+:::
+
+### Paired data: before and after in the same people
+
+Put the data in **long** form (one row per person per visit) and tell gtsummary who is who with `group =`:
+
+```{r}
+pain <- p |>
+  select(s_no, pain_foot_bfr, pain_foot_aftr) |>
+  pivot_longer(-s_no, names_to = "visit", values_to = "foot_pain") |>
+  mutate(visit = factor(visit, c("pain_foot_bfr", "pain_foot_aftr"), c("Before", "After")))
+fbs <- p |>
+  select(s_no, fbs_presentation, fbs_6_months) |>
+  pivot_longer(-s_no, names_to = "visit", values_to = "fbs") |>
+  mutate(visit = factor(visit, c("fbs_presentation", "fbs_6_months"), c("Before", "After")))
+
+tbl_merge(list(
+  pain |> tbl_summary(by = visit, include = foot_pain, label = foot_pain ~ "Foot pain") |>
+    add_p(test = foot_pain ~ "mcnemar.test", group = s_no),
+  fbs |> tbl_summary(by = visit, include = fbs, statistic = fbs ~ "{mean} ({sd})", label = fbs ~ "Fasting glucose (mg/dL)") |>
+    add_p(test = fbs ~ "paired.t.test", group = s_no)
+), tab_spanner = c("**Foot-care programme**", "**Lifestyle programme**"))
+```
+
+Without `group =`, gtsummary would compare the two visits as if they were different people. With **three** visits, use
+`rstatix::anova_test()` or `friedman.test()` (not in gtsummary).
+
+### Differences with confidence intervals
+
+A p-value alone does not say how big a difference is. `add_difference()` adds the difference and its 95% CI:
+
+```{r}
+p |>
+  select(diabetes, age_of_participants, height, weight) |>
+  tbl_summary(by = diabetes, statistic = all_continuous() ~ "{mean} ({sd})",
+              label = list(age_of_participants ~ "Age (years)", height ~ "Height (cm)", weight ~ "Weight (kg)")) |>
+  add_difference()                       # Welch t-test: difference in means (No diabetes - Diabetes)
+```
+
+Use `add_difference(test = everything() ~ "smd")` for **standardised** differences: the usual balance check for a
+randomised trial or a matched study, where p-values for baseline differences are not meaningful.
+
+### Your own test: chi-square test for trend
+
+For an **ordered** category (education, wealth) against a yes/no outcome, a test for **trend** asks one sharper question
+than the ordinary chi-square ("does the percentage rise or fall across the levels?"). gtsummary has no built-in trend test,
+but `add_p()` accepts any function that returns a p-value and a method name:
+
+```{r}
+trend_test <- function(data, variable, by, ...) {
+  tab <- table(data[[variable]], data[[by]])
+  res <- prop.trend.test(tab[, "Yes"], rowSums(tab))       # Cochran–Armitage chi-square for trend
+  tibble::tibble(p.value = res$p.value, method = "Chi-square test for trend")
+}
+
+ncd |>
+  mutate(education = factor(education, c("No schooling", "Primary", "Secondary", "Graduate+"))) |>
+  select(htn, education) |>
+  tbl_summary(by = htn, percent = "row", label = education ~ "Education",
+              missing_text = "Missing") |>
+  add_p(test = education ~ trend_test) |>
+  modify_spanning_header(all_stat_cols() ~ "**Hypertension**")
+```
+
+Hypertension falls steadily with education (44% with no schooling to 25% among graduates). The same pattern works for
+any test R can run: the function receives the data, the variable and the grouping column.
+
+### Checklist for a table with p-values
+
+-   The **summary** matches the **test**: mean (SD) with t-test or ANOVA, median (IQR) with rank-based tests.
+-   The **rule** for choosing tests is written in the methods; the footnotes name each test.
+-   **Paired** or clustered data use `group =`; never compare visits as independent groups.
+-   Report **missing** values (`missing_text`); tests use the people with data for that variable.
+-   Many comparisons: **adjust** (`add_q()`) or call them descriptive.
+-   Show **sizes**, not only p: `add_difference()` or `add_ci()`.
+-   Randomised trial baseline: **no** p-values; standardised differences if needed.
+-   What gtsummary cannot do (assumption checks, post hoc tests, 3+ repeated measures, correlation, agreement) goes in the
+    text or a separate table, with its own effect size and CI.
 
 :::

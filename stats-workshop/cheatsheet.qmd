@@ -92,6 +92,8 @@ Expected counts: `chisq.test(tab)$expected`. The rule is about **expected**, not
 
 **Many tests:** plan the main ones; `p.adjust(p, method = "holm")`; label the rest exploratory.
 
+**Table 1 (gtsummary):** `add_p(test = list(x ~ "t.test", y ~ "fisher.test"))` runs t, Welch ANOVA, Mann–Whitney, Kruskal–Wallis, chi-square, Fisher, McNemar and paired t (`group = id`); `add_difference()`, `add_q()`. Not: assumption checks, post hoc, 3+ repeated measures, correlation. [Details](../gtsummary/gtsummary_tutorial.qmd#which-tests-gtsummary-can-run-and-which-it-cannot)
+
 ## 7 · One sentence per result
 
 *Adults with a past history of diabetes were older: mean `r f(wt$estimate[2])` vs `r f(wt$estimate[1])` years (difference `r f(diff(wt$estimate))` years, 95% CI `r f(-wt$conf.int[2])` to `r f(-wt$conf.int[1])`; Welch t-test, `r fp(wt$p.value)`).*

@@ -129,6 +129,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="../ggstatsplot/ggstatsplot_intro.html">
  <span class="dropdown-text">ggstatsplot — Intro</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../gtsummary/gtsummary_tutorial.html">
+ <span class="dropdown-text">gtsummary Tables</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -486,6 +490,7 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 <p><strong>Many tests:</strong> plan the main ones; <code>p.adjust(p, method = "holm")</code>; label the rest exploratory.</p>
+<p><strong>Table 1 (gtsummary):</strong> <code>add_p(test = list(x ~ "t.test", y ~ "fisher.test"))</code> runs t, Welch ANOVA, Mann–Whitney, Kruskal–Wallis, chi-square, Fisher, McNemar and paired t (<code>group = id</code>); <code>add_difference()</code>, <code>add_q()</code>. Not: assumption checks, post hoc, 3+ repeated measures, correlation. <a href="../gtsummary/gtsummary_tutorial.html#which-tests-gtsummary-can-run-and-which-it-cannot">Details</a></p>
 </section>
 <section id="one-sentence-per-result" class="level2">
 <h2 class="anchored" data-anchor-id="one-sentence-per-result">7 · One sentence per result</h2>

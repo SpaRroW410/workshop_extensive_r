@@ -9,6 +9,7 @@ project:
   render:
     - stats-workshop/*.qmd
     - ggstatsplot/ggstatsplot_intro.qmd
+    - gtsummary/gtsummary_tutorial.qmd
     - r-foundations/data-wrangling.qmd
     - r-foundations/getting-started.qmd
     - statistical-analysis/data_analysis.qmd
@@ -37,6 +38,8 @@ website:
             href: statistical-analysis/data_analysis.qmd
           - text: ggstatsplot — Intro
             href: ggstatsplot/ggstatsplot_intro.qmd
+          - text: gtsummary Tables
+            href: gtsummary/gtsummary_tutorial.qmd
       - text: Statistics Workshop
         menu:
           - text: Session 1 — Know Your Data, Choose Your Test

@@ -263,6 +263,8 @@ cor.test(p$age_of_participants, p$glucose_level_mg_d_l, method = "spearman", exa
 | Many tests | which were planned; the adjustment method |
 | Interpretation | size and importance, not only "significant"; association, not cause |
 
+Building Table 1 with **gtsummary**: [which of these tests it runs, which it cannot, and a pipeline that picks each test](../gtsummary/gtsummary_tutorial.qmd#which-tests-gtsummary-can-run-and-which-it-cannot)
+
 ## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
