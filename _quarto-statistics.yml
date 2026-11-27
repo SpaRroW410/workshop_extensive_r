@@ -1,0 +1,69 @@
+# ═══════════════════════════════════════════════════════════════
+# _quarto-statistics.yml — GENERATED from curriculum.yml. DO NOT EDIT BY HAND.
+# Edit curriculum.yml, then run:  Rscript scripts/build_profiles.R
+# Render with:  quarto render --profile statistics
+# ═══════════════════════════════════════════════════════════════
+
+project:
+  output-dir: docs/statistics
+  render:
+    - stats-workshop/*.qmd
+    - ggstatsplot/ggstatsplot_intro.qmd
+    - gtsummary/gtsummary_tutorial.qmd
+    - r-foundations/data-wrangling.qmd
+    - r-foundations/getting-started.qmd
+    - statistical-analysis/data_analysis.qmd
+    - statistical-analysis/statistical_tests.qmd
+  resources:
+    - data/prac_modded.xlsx
+    - stats-workshop/labs/*.R
+website:
+  title: Medical Statistics in R — Statistical Analysis
+  site-url: '.'
+  search: true
+  navbar:
+    logo-href: welcome.html
+    left:
+      - text: R Foundations
+        menu:
+          - text: Getting Started
+            href: r-foundations/getting-started.qmd
+          - text: Data Wrangling (Tidyverse)
+            href: r-foundations/data-wrangling.qmd
+      - text: Statistical Analysis
+        menu:
+          - text: Test Selection Guide
+            href: statistical-analysis/statistical_tests.qmd
+          - text: Data Analysis
+            href: statistical-analysis/data_analysis.qmd
+          - text: ggstatsplot — Intro
+            href: ggstatsplot/ggstatsplot_intro.qmd
+          - text: gtsummary Tables
+            href: gtsummary/gtsummary_tutorial.qmd
+      - text: Statistics Workshop
+        menu:
+          - text: Session 1 — Know Your Data, Choose Your Test
+            href: stats-workshop/s1_know_your_data.qmd
+          - text: Session 2 — Checking Assumptions
+            href: stats-workshop/s2_assumptions.qmd
+          - text: Session 3 — Categorical Outcomes
+            href: stats-workshop/s3_categorical.qmd
+          - text: Session 4 — Comparing Two Groups on a Number
+            href: stats-workshop/s4_two_groups.qmd
+          - text: Session 5 — More Groups, Repeated Measures, Correlation and Reporting
+            href: stats-workshop/s5_groups_correlation_reporting.qmd
+          - text: '---'
+          - text: Statistical Tests Cheat Sheet
+            href: stats-workshop/cheatsheet.qmd
+    right:
+      - text: Reference
+        icon: book
+        menu:
+          - text: Contact Us
+            href: contact.qmd
+          - text: References
+            href: references.qmd
+          - text: Downloads
+            href: downloads.qmd
+ws-track: true
+

@@ -122,7 +122,7 @@ test('a paid .html address redirects to the clean address without revealing the 
 test('/api/me reports which tracks are open', async () => {
   const cookie = await userWith('gis@example.test', [['gis']]);
   const me = await (await fetch(site.base + '/api/me', { headers: { cookie } })).json();
-  assert.deepEqual(me.open, { basic: true, moderate: false, regression: false, advanced: false,
+  assert.deepEqual(me.open, { basic: true, moderate: false, regression: false, statistics: false, advanced: false,
     'dataviz-base': false, 'dataviz-complete': false, gis: true, dungeons: true });
   assert.equal(me.catalog.gis, 'GIS and Spatial Statistics');
 });

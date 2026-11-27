@@ -1,0 +1,297 @@
+---
+title: "Session 3 — Categorical Outcomes"
+subtitle: "Goodness of fit · chi-square for 2 x 2 and larger tables · expected counts · Fisher · McNemar · effect sizes and residuals · Lab 3"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+suppressPackageStartupMessages(library(exact2x2))
+scr <- binom.test(sum(p$ever_screened_for_bp == "yes"), nrow(p))
+t_sex <- table(p$sex_of_participants, p$past_history_of_diabetes)
+pt_sex <- prop.test(t_sex[, "yes"], rowSums(t_sex))
+t_htn <- table(p$past_history_of_hypertension, p$past_history_of_diabetes)
+f_htn <- fisher.test(t_htn)
+t_mw <- table(p$marital_status_of_participants, p$wealth_index_of_participants)
+x_mw <- chisq.test(t_mw)
+t_pain <- table(before = p$pain_foot_bfr, after = p$pain_foot_aftr)
+```
+
+## Where we are
+
+::: {.incremental}
+- Sessions 1–2: describe, check, and the assumptions behind the tests
+- Today: the outcome is a **category** (yes/no, or several groups)
+- By the end you can:
+  - test one proportion against an expected value
+  - choose between **chi-square** and **Fisher's exact** from the **expected** counts
+  - test a **paired** yes/no outcome with **McNemar**
+  - report a **risk difference**, **odds ratio** or **Cramér's V**, and find **which cells** drive a result
+:::
+
+# Topic 1 — One group {background-color="#2C3E50"}
+
+## Goodness of fit: is the split what we expected?
+
+```{r}
+observed <- table(p$ever_screened_for_bp)
+observed
+chisq.test(observed, p = c(0.5, 0.5))        # expected: half screened, half not
+```
+
+## Better: estimate the proportion with its CI
+
+```{r}
+binom.test(sum(p$ever_screened_for_bp == "yes"), nrow(p))$conf.int
+```
+
+::: {.eq}
+"`r f(100 * scr$estimate)`% of adults had ever been screened for blood pressure (95% CI `r f(100 * scr$conf.int[1])` to `r f(100 * scr$conf.int[2])`%)."
+:::
+
+- The test only says "not 50%"; the **proportion and its CI** say **how many** were screened
+- Use goodness of fit when the expected split is a real benchmark (a census, a target, a genetic ratio)
+
+# Topic 2 — Two groups, two outcomes: the 2 x 2 table {background-color="#2C3E50"}
+
+## Diabetes in women and men
+
+```{r}
+t_sex <- table(p$sex_of_participants, p$past_history_of_diabetes)
+t_sex
+chisq.test(t_sex, correct = FALSE)
+```
+
+## The assumption is about **expected** counts
+
+```{r}
+round(chisq.test(t_sex)$expected, 1)
+```
+
+::: {.incremental}
+- Expected count = row total × column total / grand total: what the table would hold if there were **no** association
+- Chi-square is reliable when **at least 80%** of expected counts are **≥ 5** and **none is below 1** (Cochran's rule)
+- In a **2 × 2** table: if **any** expected count is below 5, use **Fisher's exact test**
+- The **observed** counts can be small; it is the **expected** counts that matter
+:::
+
+## Report the effect, not only p
+
+```{r}
+prop.test(t_sex[, "yes"], rowSums(t_sex))$conf.int * 100   # difference in % (women − men)
+```
+
+::: {.eq}
+"A past history of diabetes was reported by `r f(100 * pt_sex$estimate[1])`% of women and `r f(100 * pt_sex$estimate[2])`% of men (difference `r f(100 * diff(rev(pt_sex$estimate)))` percentage points, 95% CI `r f(100 * pt_sex$conf.int[1])` to `r f(100 * pt_sex$conf.int[2])`; `r fp(chisq.test(t_sex, correct = FALSE)$p.value)`)."
+:::
+
+- **Risk difference** (percentage points) is the easiest to read; the **odds ratio** suits case-control data and regression
+- The CI includes 0: no evidence of a difference, and differences of a few points either way are still possible
+
+## When an expected count is small: Fisher
+
+```{r}
+t_htn <- table(hypertension = p$past_history_of_hypertension, diabetes = p$past_history_of_diabetes)
+t_htn
+round(chisq.test(t_htn)$expected, 1)
+broom::tidy(fisher.test(t_htn)) |> select(estimate, conf.low, conf.high, p.value)
+```
+
+## Reading Fisher's result
+
+::: {.eq}
+"Diabetes was more common in adults with a past history of hypertension: `r f(100 * prop.table(t_htn, 1)["yes", "yes"])`% vs `r f(100 * prop.table(t_htn, 1)["no", "yes"])`% (odds ratio `r f(f_htn$estimate)`, 95% CI `r f(f_htn$conf.int[1])` to `r f(f_htn$conf.int[2])`; Fisher's exact test, `r fp(f_htn$p.value)`)."
+:::
+
+::: {.incremental}
+- An expected count of `r f(min(chisq.test(t_htn)$expected))` triggers R's warning *"Chi-squared approximation may be incorrect"*: that is the cue for Fisher
+- The CI is **wide** (`r f(f_htn$conf.int[1])` to `r f(f_htn$conf.int[2])`) because only `r t_htn["yes", "yes"]` adults have both conditions: report it, do not hide it
+- This is an **association**, not proof that one causes the other
+:::
+
+## Yates' correction
+
+::: {.incremental}
+- `chisq.test()` on a 2 × 2 table applies **Yates' continuity correction** by default (`correct = TRUE`): it subtracts 0.5 from each |observed − expected|
+- It makes the test **conservative** (p a little too large)
+- With adequate expected counts, `correct = FALSE` is fine; with small ones, use **Fisher** rather than relying on Yates
+- Whatever you choose, **say which** in the methods
+:::
+
+# Topic 3 — Larger tables {background-color="#2C3E50"}
+
+## Marital status and wealth (3 x 5)
+
+```{r}
+x_mw <- chisq.test(table(p$marital_status_of_participants, p$wealth_index_of_participants))
+x_mw
+round(x_mw$expected, 1)
+```
+
+## A significant table: **where** is the difference?
+
+```{r}
+round(x_mw$stdres, 1)     # standardised residuals: beyond ±2 = a cell that stands out
+cramers_v(table(p$marital_status_of_participants, p$wealth_index_of_participants))
+```
+
+- **Formerly married** adults (mostly widowed) are **over**-represented among the poorest and poorer (+`r f(x_mw$stdres["formerly/ever married", "poorest"])`, +`r f(x_mw$stdres["formerly/ever married", "poorer"])`) and **under**-represented among the richer (`r f(x_mw$stdres["formerly/ever married", "richer"])`); the currently married show the mirror image
+- Cramér's V = `r f(cramers_v(t_mw)$Cramers_v_adjusted, 2)`: a **weak** association, though clearly not chance
+
+## If expected counts are too small: Monte Carlo
+
+```{r}
+set.seed(2026)
+chisq.test(table(p$marital_status_of_participants, p$wealth_index_of_participants),
+           simulate.p.value = TRUE, B = 10000)$p.value
+```
+
+- Simulates tables with the same margins: the p-value no longer relies on large expected counts
+- The smallest possible p is 1 / (B + 1): increase **B** for small p-values; set a **seed** so the result can be reproduced
+- Alternative for small tables: `fisher.test()`, which also handles r × c tables (add `simulate.p.value = TRUE` when the table is large)
+
+# Topic 4 — Paired yes/no outcomes {background-color="#2C3E50"}
+
+## Foot pain before and after: McNemar
+
+```{r}
+t_pain <- table(before = p$pain_foot_bfr, after = p$pain_foot_aftr)
+t_pain
+mcnemar.test(t_pain)
+```
+
+## Only the people who **changed** count
+
+::: {.incremental}
+- `r t_pain["No", "Yes"]` adults went from no pain to pain; `r t_pain["Yes", "No"]` from pain to no pain
+- McNemar compares these two **discordant** cells; the `r t_pain["No", "No"] + t_pain["Yes", "Yes"]` who did not change carry no information about change
+- Few discordant pairs (under about 25)? Use the **exact** McNemar test: `exact2x2::mcnemar.exact(t_pain)` (load the package with `library(exact2x2)` first)
+:::
+
+::: {.eq}
+"Foot pain was reported by `r f(100 * mean(p$pain_foot_bfr == "Yes"))`% of adults before and `r f(100 * mean(p$pain_foot_aftr == "Yes"))`% after the foot-care programme (`r t_pain["Yes", "No"]` improved, `r t_pain["No", "Yes"]` developed pain; McNemar test, `r fp(mcnemar.test(t_pain)$p.value)`)."
+:::
+
+## Which test for a category outcome?
+
+| Situation | Test | Effect to report |
+|---|---|---|
+| One proportion vs a benchmark | binomial test / goodness of fit | proportion (95% CI) |
+| 2 × 2, all expected ≥ 5 | chi-square | risk difference or odds ratio (95% CI) |
+| 2 × 2, any expected < 5 | Fisher's exact | odds ratio (95% CI) |
+| r × c, ≥ 80% expected ≥ 5, none < 1 | chi-square + residuals | Cramér's V; which cells |
+| r × c, small expected counts | Monte Carlo or Fisher | Cramér's V |
+| Paired yes/no | McNemar (exact if few changes) | % before and after |
+
+## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `stats-workshop/labs/lab3_categorical.R`
+
+- a proportion with its 95% CI
+- a 2 × 2 table: expected counts first, then chi-square or Fisher
+- risk difference and odds ratio, in a sentence
+- a larger table: residuals and Cramér's V
+- McNemar for before-and-after
+:::
+
+**Time:** 35 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t3q1", "A 2 x 2 table has an observed count of 2 in one cell, but all four expected counts are above 10. Which test fits?",
+         c("Fisher's exact test, because one observed count is small",
+           "McNemar test, because the table has a very small cell in it",
+           "Chi-square test, because the rule is about expected counts",
+           "No test at all, because the table is far too unbalanced"), answer = 3,
+         explain = "The chi-square approximation depends on the expected counts (row total x column total / grand total), not the observed ones. With every expected count above 5, chi-square is fine.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_fill("t3q2", "In a 3 x 5 table (15 cells), at most how many expected counts may be below 5 for chi-square to be acceptable by Cochran's rule? (Give a whole number.)",
+          accept = c("3", "three"),
+          explain = "Cochran's rule: at least 80% of expected counts must be 5 or more (and none below 1). 20% of 15 cells is 3.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t3q3", paste0("A chi-square test on marital status by wealth gives ", fp(x_mw$p.value), " and Cramér's V = ", f(cramers_v(t_mw)$Cramers_v_adjusted, 2), ". What is the best summary?"),
+         c("A strong association between marital status and wealth",
+           "A weak but real association; residuals show which cells",
+           "No association at all, since a V below 0.3 means none",
+           "Wealth is caused by marital status in this population group"), answer = 2,
+         explain = "A small p says the pattern is unlikely to be chance; V says it is weak. The standardised residuals show where it comes from. An association in survey data does not show cause.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t3q4", "Which part of a before-and-after yes/no table does the McNemar test use?",
+         c("All four cells of the table, weighted equally by their counts",
+           "Only the people whose answer stayed the same at both visits",
+           "Only the people whose answer changed in either direction",
+           "Only the row and column totals of the whole before-after table"), answer = 3,
+         explain = "McNemar compares the two discordant cells (no to yes, yes to no). People who did not change carry no information about change.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t3q5", paste0("Fisher's test gives an odds ratio of ", f(f_htn$estimate), " with a 95% CI from ", f(f_htn$conf.int[1]), " to ", f(f_htn$conf.int[2]), ". What does the wide interval mainly reflect?"),
+         c(paste("That the true odds ratio is most likely close to", round(mean(f_htn$conf.int))),
+           "That Fisher's exact test gives intervals this wide by design",
+           "That the p-value is likely above 0.05 for this comparison",
+           "That few adults are in the cell with both conditions"), answer = 4,
+         explain = paste("Only", t_htn["yes", "yes"], "adults had both hypertension and diabetes; few events make the estimate imprecise. The interval excludes 1, so the association is unlikely to be chance, but its size is uncertain."))
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- Check **expected** counts: chi-square if ≥ 80% are ≥ 5 and none < 1; Fisher for a 2 × 2 with any below 5
+- Report **proportions** and an **effect** (risk difference, odds ratio, Cramér's V) with a 95% CI
+- A significant larger table: the **residuals** say where
+- Paired yes/no: **McNemar**, driven by the people who changed
+:::
+
+**Next:** Session 4: comparing two groups on a number

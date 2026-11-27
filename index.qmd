@@ -184,6 +184,17 @@ format:
             <em>0/9</em>
           </div>
         </li>
+        <li data-track="statistics" data-total="8">
+          <div class="ws-pt-top">
+            <span class="ws-pt-name">Statistical Analysis</span>
+            <a class="ws-pt-link" href="statistics/welcome.html">Open →</a>
+          </div>
+          <div class="ws-pt-meta">
+            <div class="ws-progress-bar"><span></span></div>
+            <em>0/8</em>
+          </div>
+          <p class="ws-pt-quiz" data-folders="stats-workshop" data-decks="5"></p>
+        </li>
         <li data-track="gis" data-total="7">
           <div class="ws-pt-top">
             <span class="ws-pt-name">GIS &amp; Spatial</span>
@@ -369,6 +380,22 @@ format:
           <li>Debugging &amp; Advanced Export</li>
         </ul>
         <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('dataviz-complete')" disabled>
+          Enter Key →
+        </button>
+      </div>
+
+      <div class="ws-card ws-card--locked ws-card--stats-elective" data-profile="statistics">
+        <div class="ws-card-badge ws-badge--locked">🔒 Workshop Key</div>
+        <h3 class="ws-card-title">Statistical Analysis</h3>
+        <p class="ws-card-when">Best after Step 1 · Basic.</p>
+        <ul class="ws-card-list">
+          <li>Choosing a test from the design</li>
+          <li>Checking assumptions properly</li>
+          <li>Chi-square, Fisher, McNemar</li>
+          <li>t-tests, ANOVA and their rank-based partners</li>
+          <li>Interpreting and reporting each result</li>
+        </ul>
+        <button class="ws-btn ws-btn--locked ws-btn--loading" onclick="openKeyModal('statistics')" disabled>
           Enter Key →
         </button>
       </div>

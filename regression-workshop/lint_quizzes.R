@@ -32,12 +32,32 @@ extract_quiz_code <- function(path) {
   }
   out
 }
+extract_setup_code <- function(path) {   # the first chunk that sources assets/setup.R, minus the quiz engine
+  x <- readLines(path, warn = FALSE); inchunk <- FALSE; buf <- character(0)
+  for (ln in x) {
+    if (!inchunk && grepl("^```\\{r", ln)) { inchunk <- TRUE; buf <- character(0); next }
+    if (inchunk && grepl("^```\\s*$", ln)) { inchunk <- FALSE; if (any(grepl("setup\\.R", buf))) return(buf[!grepl("^#\\||quiz\\.R", buf)]); next }
+    if (inchunk) buf <- c(buf, ln)
+  }
+  character(0)
+}
 words <- function(s) { w <- tolower(unlist(strsplit(gsub("[^A-Za-z0-9_ ]", " ", s), "\\s+"))); setdiff(w[nchar(w) > 3], c("which", "that", "this", "with", "what", "from", "than", "their", "have", "does", "your", "when", "each", "into", "about", "after", "other", "there", "these", "those", "would", "should", "could", "model", "models")) }
 absolutes <- c("always", "never", "only", "exactly", "guarantees", "guarantee", "every", "any", "must", "completely", "entirely", "impossible", "proves")
 
 fails <- 0; warns <- 0; pos <- c()
 for (f in files) {
-  captured <- list(); eval(parse(text = extract_quiz_code(f)))
+  captured <- list()
+  # Questions whose text is computed from the data need the deck's setup chunk first (run in the deck's folder;
+  # the quiz engine itself is not sourced, so the capturing quiz_mcq/quiz_fill above stay in place).
+  ok <- tryCatch({ eval(parse(text = extract_quiz_code(f))); TRUE }, error = function(e) FALSE)
+  if (!ok) {
+    captured <- list(); env <- new.env(); deck <- f
+    owd <- setwd(dirname(deck))
+    setup <- extract_setup_code(basename(deck)); quiz <- extract_quiz_code(basename(deck))
+    suppressWarnings(suppressMessages(eval(parse(text = setup), envir = env)))   # source() in it writes to the global env
+    eval(parse(text = quiz), envir = env)
+    setwd(owd); f <- deck
+  }
   cat(sprintf("\n── %s (%d questions)\n", basename(f), length(captured)))
   for (q in captured) {
     msg_h <- character(0); msg_s <- character(0)

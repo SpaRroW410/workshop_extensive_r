@@ -20,6 +20,7 @@
 export const PRODUCTS = {
   moderate: 'Moderate track',
   regression: 'Regression track and workshop',
+  statistics: 'Statistical Analysis track and workshop',
   gis: 'GIS and Spatial Statistics',
   advanced: 'Advanced track and workshops A1 to A9',
   'game-full': 'Dungeons & Dataframes, all regions',
@@ -34,6 +35,7 @@ export const PAID = [
   ['/dataviz-base/*', 'moderate'],
   ['/dataviz-complete/*', 'advanced'],
   ['/regression/*', 'regression'],
+  ['/statistics/*', 'statistics'],
   ['/gis/*', 'gis'],
   ['/advanced/*', 'advanced'],
   ['/dungeons/dungeons/*', 'game-full'],
@@ -53,8 +55,17 @@ const ADVANCED_WORKSHOPS = {
   'causal-workshop': ['s1_causal_questions_dags', 'lab1_dag'],
 };
 
-/** Session 1 of a workshop: its slides, its lab, the cheat sheet and the quiz engine they load. */
-const sessionOne = (base, deck, lab) => [`${base}${deck}*`, `${base}labs/${lab}*`, `${base}cheatsheet*`, `${base}assets/*`];
+/** Session 1 of a workshop: its slides, its lab and the cheat sheet. (Decks embed their CSS and scripts;
+ *  the cheat sheet loads assets/cheatsheet.css, which is free via WORKSHOP_ASSETS below.) */
+const sessionOne = (base, deck, lab) => [`${base}${deck}*`, `${base}labs/${lab}*`, `${base}cheatsheet*`];
+
+/** Every workshop's assets/ folder: only the free cheat sheet's stylesheet is fetched from it at view time. */
+const WORKSHOP_ASSETS = [
+  '/regression/regression-workshop/assets/*',
+  '/dungeons/regression-workshop/assets/*',
+  '/gis/gis-workshop/assets/*',
+  '/statistics/stats-workshop/assets/*',
+];
 
 /**
  * Free paths inside paid areas. Every rule here is also an exclude rule in _routes.json,
@@ -65,7 +76,7 @@ export const FREE = [
   // so a visitor can see what a track holds before buying, and paid pages do not spend one
   // Function call per stylesheet. (Decision, NIGHT_NOTES.md: the plan lists no home pages.)
   // "/x/index.html" is not listed: Pages redirects it to "/x/", which is.
-  ...['moderate', 'dataviz-base', 'dataviz-complete', 'regression', 'gis', 'advanced'].flatMap((t) => [
+  ...['moderate', 'dataviz-base', 'dataviz-complete', 'regression', 'statistics', 'gis', 'advanced'].flatMap((t) => [
     `/${t}/`, `/${t}/welcome*`, `/${t}/site_libs/*`, `/${t}/assets/*`,
   ]),
   '/advanced/advanced-workshops*',
@@ -74,6 +85,8 @@ export const FREE = [
   ...sessionOne('/regression/regression-workshop/', 's1_foundations', 'lab1_explore'),
   '/regression/data/*',
   ...sessionOne('/dungeons/regression-workshop/', 's1_foundations', 'lab1_explore'),
+  ...sessionOne('/statistics/stats-workshop/', 's1_know_your_data', 'lab1_describe'),
+  '/statistics/data/*',
   ...sessionOne('/gis/gis-workshop/', 's1_spatial_data', 'lab1_data'),
   '/gis/gis/spatial_data_sf*', // Session 1 reading
   '/gis/gis/maps_choropleth*', // Session 1 reading
@@ -97,6 +110,8 @@ export const FREE = [
 
 /** Free, but left out of _routes.json to stay under Cloudflare's 100-rule limit. These run the Function. */
 export const FREE_VIA_FUNCTION = [
+  ...WORKSHOP_ASSETS,
+  ...Object.keys(ADVANCED_WORKSHOPS).map((w) => `/advanced/${w}/assets/*`),
   '/gis/gis/make_gis_data.R',
   '/dungeons/dungeons/roadmap*',
   '/dungeons/dungeons/site-design*',
@@ -141,7 +156,7 @@ export function holds(held, product) {
 }
 
 /** The track sites shown on the landing page, and the product each needs (null = free). */
-export const TRACKS = ['basic', 'moderate', 'regression', 'advanced', 'dataviz-base', 'dataviz-complete', 'gis', 'dungeons'];
+export const TRACKS = ['basic', 'moderate', 'regression', 'statistics', 'advanced', 'dataviz-base', 'dataviz-complete', 'gis', 'dungeons'];
 export function trackProduct(track) {
   const hit = PAID.find(([rule]) => rule === `/${track}/*`);
   if (hit) return hit[1];

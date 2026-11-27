@@ -1,0 +1,314 @@
+---
+title: "Session 2 — Checking Assumptions"
+subtitle: "Independence · what must be normal · plots before tests · normality tests and their traps · equal variances · when assumptions fail · Lab 2"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+suppressPackageStartupMessages(library(nortest))
+sw50 <- sapply(1:4, \(s) { set.seed(s); shapiro.test(sample(p$age_of_participants, 50))$p.value })
+set.seed(1)
+sw50_pct <- 100 * mean(replicate(1000, shapiro.test(sample(p$age_of_participants, 50))$p.value < 0.05))
+h_w <- p$height[p$sex_of_participants == "female"]
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 1: the design chooses the **family** of test
+- Today: the **assumptions** that decide between a parametric test (t, ANOVA, Pearson) and its rank-based partner
+- By the end you can:
+  - say **what exactly** has to be normal for each test
+  - read a histogram and a **Q-Q plot**
+  - use normality tests **without being fooled** by them
+  - check equal spread, and know why **Welch** is the safe default
+  - choose what to do when an assumption fails, and **report it**
+:::
+
+## Three assumptions behind most tests
+
+| Assumption | What it means | How you check it |
+|---|---|---|
+| **Independence** | one person's value tells you nothing about another's | **the design** (no test can check it) |
+| **Shape** | the right thing is roughly **normal** | plots first, then tests |
+| **Equal spread** | groups have similar variances | compare SDs, Levene; or use **Welch** |
+
+::: {.key}
+Categorical tests have their own assumption (enough **expected** counts): Session 3.
+:::
+
+# Topic 1 — Independence {background-color="#2C3E50"}
+
+## Independence comes from the design
+
+::: {.incremental}
+- **Broken** when the same person is measured twice (before and after, 0, 3 and 6 months) → use a **paired** or **repeated-measures** test
+- **Broken** when people come in clusters (families, villages, wards) → Advanced track, workshop A4
+- **Not broken** by people being similar: two women of the same age are still independent observations
+:::
+
+::: {.warn}
+A test for independent groups on paired data gives the **wrong** p-value. Session 4 shows how wrong.
+:::
+
+# Topic 2 — Normality {background-color="#2C3E50"}
+
+## What has to be normal?
+
+| Test | What should be roughly normal |
+|---|---|
+| One-sample t | the values themselves |
+| Independent t, one-way ANOVA | the values **within each group** (the residuals) |
+| **Paired t** | the **differences** (after − before), **not** each column |
+| Repeated-measures ANOVA | the residuals at each time point |
+| Pearson correlation | the pairs, and the relationship must be **linear** |
+
+::: {.key}
+Testing the whole outcome column when the test compares groups or pairs checks the wrong thing.
+:::
+
+## Look first: the Q-Q plot
+
+```{r}
+#| echo: false
+#| fig-height: 3.6
+bind_rows(tibble(var = "Height of women (cm)", x = h_w),
+          tibble(var = "Glucose (mg/dL)", x = p$glucose_level_mg_d_l)) |>
+  ggplot(aes(sample = x)) + stat_qq(colour = col_blue, alpha = .6) + stat_qq_line(colour = col_red) +
+  facet_wrap(~var, scales = "free") + labs(x = "Theoretical quantiles (normal)", y = "Observed values")
+```
+
+- **Points on the line**: roughly normal (height of women, skewness `r f(skew(h_w), 2)`)
+- **Points curving away at one end**: a long tail (glucose, skewness `r f(skew(p$glucose_level_mg_d_l), 1)`)
+
+## Three normality tests
+
+| Test | Good at | Watch out |
+|---|---|---|
+| **Shapiro–Wilk** `shapiro.test()` | most powerful all-round; n from 3 to 5,000 | very large n: flags trivial departures |
+| **Kolmogorov–Smirnov** `ks.test()` | comparing with a **fully specified** distribution | needs the mean and SD *given in advance*; weak in the tails |
+| **Lilliefors** `nortest::lillie.test()` | KS when mean and SD are **estimated** from the data | the version to use instead of plain KS |
+| **Anderson–Darling** `nortest::ad.test()` | more sensitive in the **tails** | same large-n problem |
+
+::: {.key}
+All of them answer one question: "could these data come from a normal distribution?" None says whether the departure **matters** for your test.
+:::
+
+## Trap 1: KS against the wrong normal
+
+```{r}
+h_w <- p$height[p$sex_of_participants == "female"]
+ks.test(h_w, "pnorm")$p.value                       # compares with mean 0, SD 1!
+ks.test(h_w, "pnorm", mean(h_w), sd(h_w))$p.value   # mean and SD from the data
+lillie.test(h_w)$p.value                            # the correct version
+```
+
+::: {.warn}
+`ks.test(x, "pnorm")` asks whether height looks like a **standard** normal (mean 0, SD 1). It always says no, for any real measurement. With the mean and SD estimated from the data, use **Lilliefors**: women's height is compatible with normal (`r fp(lillie.test(h_w)$p.value)`).
+:::
+
+## Trap 2: the answer depends on n
+
+::: {.columns}
+::: {.column width="50%"}
+**All `r nrow(p)` adults**, Shapiro–Wilk:
+
+```{r}
+#| echo: false
+vv <- list("height, women" = h_w, "height, all" = p$height, weight = p$weight,
+           age = p$age_of_participants, glucose = p$glucose_level_mg_d_l)
+tibble(variable = names(vv), skewness = round(sapply(vv, skew), 2),
+       p = fp(sapply(vv, \(x) shapiro.test(x)$p.value))) |>
+  knitr::kable(align = "lrr")
+```
+:::
+::: {.column width="50%"}
+**50 random adults**, age, four draws:
+
+```{r}
+#| echo: false
+tibble(draw = 1:4, `Shapiro-Wilk` = fp(sw50)) |> knitr::kable(align = "cr")
+```
+:::
+:::
+
+- **Height, all**: two normal groups (women and men) mixed together are not normal. What must be normal is the values **within each group**
+- Large n: a mild skew in age (`r f(skew(p$age_of_participants), 2)`) is "significant", yet a t-test on 631 ages is fine
+- Small n: in 1,000 draws of 50 the same ages were "not normal" only `r f(sw50_pct, 0)`% of the time, a coin toss. **Never test a random subsample**
+
+## Why mild skew rarely matters
+
+::: {.incremental}
+- t-tests and ANOVA compare **means**, and means of large samples are close to normal even when the data are not (**central limit theorem**)
+- Rough guide: with **30 or more per group** and no extreme outliers, mild skew (|skewness| < 1) does little harm
+- What does matter: **heavy tails and outliers** (glucose up to `r max(p$glucose_level_mg_d_l)` mg/dL), **small groups**, and **very unequal** group sizes with unequal spread
+:::
+
+::: {.key}
+Decide with the **plot**, the **skewness**, the **sample size** and the **question**. A normality test is one input, not the judge.
+:::
+
+# Topic 3 — Equal spread {background-color="#2C3E50"}
+
+## Compare the spreads {.smaller}
+
+```{r}
+p |> group_by(sex_of_participants) |> summarise(n = n(), mean = mean(weight), sd = sd(weight))
+leveneTest(weight ~ sex_of_participants, data = p)
+```
+
+- **Levene** (`car::leveneTest`, centred on the median) is robust to non-normal data; **Bartlett** is not
+- Rough guide: the larger SD under **twice** the smaller is rarely a problem with similar group sizes
+- Here Levene says the spreads differ (`r fp(leveneTest(weight ~ sex_of_participants, data = p)[1, 3])`), yet the SDs are `r f(sd(p$weight[p$sex_of_participants == "male"]))` and `r f(sd(p$weight[p$sex_of_participants == "female"]))` kg: like normality tests, Levene flags small differences in large samples
+
+## Welch is the safe default
+
+::: {.incremental}
+- `t.test()` in R runs **Welch's t-test** unless you add `var.equal = TRUE`
+- Similar group sizes: Welch and Student give almost the **same** answer (weight by sex, 95% CI `r paste(f(t.test(weight ~ sex_of_participants, data = p)$conf.int, 2), collapse = " to ")` vs `r paste(f(t.test(weight ~ sex_of_participants, data = p, var.equal = TRUE)$conf.int, 2), collapse = " to ")` kg)
+- Unequal variances, unequal group sizes: Student's t can be badly wrong; Welch stays correct
+- **Testing variances first and then choosing** the test adds its own errors
+:::
+
+::: {.key}
+Use **Welch** for two groups and **Welch ANOVA** (`oneway.test()`) for several. Report Levene only if a reviewer asks.
+:::
+
+# Topic 4 — When an assumption fails {background-color="#2C3E50"}
+
+## Four honest options
+
+| Problem | First | Then |
+|---|---|---|
+| Impossible values | check the **source**; correct or exclude, and report | sensitivity analysis |
+| Skewed, positive data | **log transform**, then a t-test on the log scale (ratio of geometric means) | check the plot again |
+| Skew or outliers that stay | **rank-based** test (Mann–Whitney, Wilcoxon, Kruskal–Wallis) | report medians (IQR) |
+| Unequal spread | **Welch** t or Welch ANOVA | — |
+| Paired or clustered data | a **paired** or **repeated-measures** test | Advanced track (A4) for clusters |
+
+## Write what you did
+
+::: {.eq}
+"Distributions were inspected with histograms and Q-Q plots. Height (within each sex) and weight were approximately normal and are summarised as mean (SD); age and glucose were right-skewed and are summarised as median (IQR). Groups were compared with Welch's t-test or, for skewed variables, the Mann–Whitney U test."
+:::
+
+- Name the **method of checking**, the **decision**, and the **test used**
+- No need to print every normality p-value
+
+## 🔧 Switch to R — Lab 2 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `stats-workshop/labs/lab2_assumptions.R`
+
+- histograms and Q-Q plots for four variables
+- Shapiro–Wilk, Lilliefors and Anderson–Darling, and the KS trap
+- normality of the **differences** for a paired comparison
+- Levene's test, and Welch vs Student
+- a log transform, and when it is not enough
+:::
+
+**Time:** 30 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t2q1", "For a paired t-test of fasting glucose at presentation and at 6 months, what should be roughly normal?",
+         c("Fasting glucose at presentation, tested on its own",
+           "Both glucose columns, each one tested separately on its own",
+           "The pooled glucose values from both visits together",
+           "The 6-month minus presentation differences per person"), answer = 4,
+         explain = "A paired t-test is a one-sample t-test on the differences, so only the differences need to be roughly normal. The two columns can each be skewed.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t2q2", "ks.test(p$height, \"pnorm\") gives p < 0.001 although height looks normal on a Q-Q plot. Why?",
+         c("It compares height with a normal of mean 0 and SD 1",
+           "Height is not normal; the Q-Q plot hides its skew",
+           "The KS test cannot be used for continuous variables",
+           "The sample of 631 is too small for a KS test to work"), answer = 1,
+         explain = "Without a mean and SD, ks.test() uses the standard normal (mean 0, SD 1), which no height can match. With parameters estimated from the data, use the Lilliefors test.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t2q3", paste0("With 631 adults, Shapiro-Wilk gives p < 0.001 for age (skewness ", f(skew(p$age_of_participants), 1), "). What follows for a t-test comparing mean age?"),
+         c("A t-test cannot be used; switch to a rank-based test",
+           "A t-test is reasonable: mild skew and large groups",
+           "Remove the oldest adults until the test is not significant",
+           "Test 50 random adults instead to get a fairer p-value"), answer = 2,
+         explain = "In large samples normality tests flag small departures. With mild skew and large groups the mean is well behaved (central limit theorem), so a t-test is fine. Removing data or subsampling to change a p-value is not.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t2q4", "Why is Welch's t-test a good default for comparing two independent means?",
+         c("It does not need the values within each group to be numeric at all",
+           "It stays correct when variances differ and loses little when equal",
+           "It usually gives smaller p-values than Student's t for the same data",
+           "It removes the need to check the data for impossible measurements"), answer = 2,
+         explain = "Welch's test does not assume equal variances. When they are equal it agrees closely with Student's t; when they are not, it keeps the error rate right.")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t2q5", "Which assumption can only be judged from the study design, not tested on the data?",
+         c("That the outcome is roughly normal within each group",
+           "That the groups have roughly equal variances",
+           "That each observation is independent of the others",
+           "That no expected count in the table is below five"), answer = 3,
+         explain = "Independence depends on how the data were collected: repeated measurements on the same people, or clusters such as families and villages. No test on the data can confirm it.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- Know **what** must be normal: residuals, **differences**, not the raw column
+- **Plot first** (histogram, Q-Q); tests support the plot, and their verdict depends on n
+- `ks.test(x, "pnorm")` is a trap: use **Lilliefors**
+- **Welch** by default; rank-based tests or a log scale when skew or outliers stay
+- Report **how** you checked and **what** you decided
+:::
+
+**Next:** Session 3: categorical outcomes

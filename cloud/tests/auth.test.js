@@ -14,7 +14,7 @@ test('signed out, /api/me says so', async () => {
   const body = await r.json();
   assert.equal(body.user, null);
   assert.deepEqual(body.products, []);
-  assert.deepEqual(body.open, { basic: true, moderate: false, regression: false, advanced: false, 'dataviz-base': false, 'dataviz-complete': false, gis: false, dungeons: true });
+  assert.deepEqual(body.open, { basic: true, moderate: false, regression: false, statistics: false, advanced: false, 'dataviz-base': false, 'dataviz-complete': false, gis: false, dungeons: true });
 });
 
 test('Sign in with Google starts at Google with our client id and callback', async () => {

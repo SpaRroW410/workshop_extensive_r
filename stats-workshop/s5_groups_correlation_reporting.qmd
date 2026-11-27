@@ -1,0 +1,355 @@
+---
+title: "Session 5 — More Groups, Repeated Measures, Correlation and Reporting"
+subtitle: "One-way and Welch ANOVA · Kruskal–Wallis · repeated measures and sphericity · Friedman · post hoc tests · Pearson and Spearman · multiple testing · Lab 5"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+a_b   <- aov(bmi ~ wealth_index_of_participants, data = p)
+a_tab <- summary(a_b)[[1]]
+tk    <- TukeyHSD(a_b)$wealth_index_of_participants
+eta   <- eta_squared(a_b)$Eta2
+bm    <- p |> group_by(wealth_index_of_participants) |> summarise(m = mean(bmi))
+kw    <- kruskal.test(sbp_presentation ~ marital_status_of_participants, data = p)
+dn    <- dunn_test(p, sbp_presentation ~ marital_status_of_participants, p.adjust.method = "holm")
+age_m <- tapply(p$age_of_participants, p$marital_status_of_participants, mean)
+fbs_long <- p |> select(s_no, fbs_presentation, fbs_3_months, fbs_6_months) |>
+  pivot_longer(-s_no, names_to = "time", values_to = "fbs") |>
+  mutate(time = factor(time, c("fbs_presentation", "fbs_3_months", "fbs_6_months")))
+rm_a  <- anova_test(data = fbs_long, dv = fbs, wid = s_no, within = time)
+sbp_long <- p |> select(s_no, sbp_presentation, sbp_3_months, sbp_6_months) |>
+  pivot_longer(-s_no, names_to = "time", values_to = "sbp") |>
+  mutate(time = factor(time, c("sbp_presentation", "sbp_3_months", "sbp_6_months")))
+fr    <- friedman_test(sbp_long, sbp ~ time | s_no)
+kw_w  <- friedman_effsize(sbp_long, sbp ~ time | s_no)$effsize
+ca    <- cor.test(p$age_of_participants, p$sbp_in_mm_hg)
+cs    <- cor.test(p$age_of_participants, p$glucose_level_mg_d_l, method = "spearman", exact = FALSE)
+```
+
+## Where we are
+
+::: {.incremental}
+- Session 4: two groups, or two measurements on the same people
+- Today: **three or more** groups or time points, the **relationship** between two numbers, and putting it all into **words**
+- By the end you can:
+  - run ANOVA or Kruskal–Wallis, and their **post hoc** tests, only when they are warranted
+  - check **sphericity** for repeated measures and use **paired** post hoc tests
+  - read **r**, its CI and **r²**, and choose Pearson or Spearman
+  - control for **multiple testing**, and write a results paragraph
+:::
+
+# Topic 1 — Three or more independent groups {background-color="#2C3E50"}
+
+## One-way ANOVA: BMI by wealth index
+
+```{r}
+p |> group_by(wealth_index_of_participants) |> summarise(n = n(), mean = mean(bmi), sd = sd(bmi))
+a_b <- aov(bmi ~ wealth_index_of_participants, data = p)
+summary(a_b)
+```
+
+## Check the assumptions on the residuals
+
+::: {.columns}
+::: {.column width="45%"}
+```{r}
+#| fig-width: 4.6
+#| fig-height: 3.4
+#| echo: false
+ggplot(tibble(r = residuals(a_b)), aes(sample = r)) + stat_qq(colour = col_blue, alpha = .5) +
+  stat_qq_line(colour = col_red) + labs(x = "Normal quantiles", y = "Residuals (kg/m²)")
+```
+:::
+::: {.column width="55%"}
+```{r}
+leveneTest(bmi ~ wealth_index_of_participants, data = p)
+oneway.test(bmi ~ wealth_index_of_participants, data = p)$p.value   # Welch ANOVA
+```
+:::
+:::
+
+- Residuals on the line; Levene `r fp(leveneTest(bmi ~ wealth_index_of_participants, data = p)[1, 3])`, but the SDs differ little (largest under 1.5 × smallest) and **Welch ANOVA** agrees (`r fp(oneway.test(bmi ~ wealth_index_of_participants, data = p)$p.value)`): the conclusion does not depend on the choice
+
+## Significant: now how big, and where?
+
+::: {.eq}
+"Mean BMI rose with household wealth, from `r f(bm$m[1])` kg/m² in the poorest to `r f(bm$m[5])` kg/m² in the richest group (one-way ANOVA, F(`r a_tab$Df[1]`, `r a_tab$Df[2]`) = `r f(a_tab$"F value"[1], 1)`, `r fp(a_tab$"Pr(>F)"[1])`; η² = `r f(eta, 2)`). Richest vs poorest: `r f(tk["richest-poorest", "diff"])` kg/m² (95% CI `r f(tk["richest-poorest", "lwr"])` to `r f(tk["richest-poorest", "upr"])`, Tukey)."
+:::
+
+::: {.incremental}
+- The F-test says only "the means are not all equal"; **Tukey** gives each pair's difference with a CI adjusted for `r nrow(tk)` comparisons
+- η² = `r f(eta, 2)`: wealth explains about **`r f(100 * eta, 0)`%** of the variation in BMI, a **medium** effect (0.01 small, 0.06 medium, 0.14 large); most variation is between people within a group
+- The groups are **ordered**: a trend test or regression with wealth as a score (Regression track) uses that order and asks one question instead of `r nrow(tk)`
+:::
+
+## Post hoc tests: when and which
+
+| After | Post hoc | R |
+|---|---|---|
+| One-way ANOVA, equal SDs | **Tukey HSD** | `TukeyHSD(aov(...))` |
+| Welch ANOVA, unequal SDs | **Games–Howell** | `rstatix::games_howell_test()` |
+| Kruskal–Wallis | **Dunn** with Holm adjustment | `rstatix::dunn_test(..., p.adjust.method = "holm")` |
+
+::: {.warn}
+Run post hoc tests to answer a question you **planned**, or after a clear overall result. Hunting through every pair after a non-significant overall test produces false findings.
+:::
+
+## Kruskal–Wallis: systolic pressure by marital status
+
+```{r}
+p |> group_by(marital_status_of_participants) |>
+  summarise(median = median(sbp_presentation), q1 = quantile(sbp_presentation, .25), q3 = quantile(sbp_presentation, .75))
+kruskal.test(sbp_presentation ~ marital_status_of_participants, data = p)
+```
+
+- For skewed outcomes or outliers (SBP at presentation is right-skewed); compares the **distributions**, through ranks
+- `r fp(kw$p.value)`: a difference somewhere. **Dunn** (Holm-adjusted) shows where: formerly married vs never married `r fp(dn$p.adj[2])`, vs currently married `r fp(dn$p.adj[3])`
+
+## Before you explain it: who is in each group?
+
+```{r}
+dunn_test(p, sbp_presentation ~ marital_status_of_participants, p.adjust.method = "holm") |>
+  select(group1, group2, p.adj)
+```
+
+::: {.warn}
+Formerly married adults (mostly widowed) are **older**: mean age `r f(age_m[3])` vs `r f(age_m[2])` (currently) and `r f(age_m[1])` years (never married), and SBP rises with age. The test shows a **difference**, not its **cause**: separating marital status from age needs **regression** (Regression track).
+:::
+
+# Topic 2 — Repeated measurements {background-color="#2C3E50"}
+
+## Repeated-measures ANOVA: fasting glucose at 0, 3 and 6 months
+
+```{r}
+fbs_long <- p |> select(s_no, fbs_presentation, fbs_3_months, fbs_6_months) |>
+  pivot_longer(-s_no, names_to = "time", values_to = "fbs")
+anova_test(data = fbs_long, dv = fbs, wid = s_no, within = time)
+```
+
+## Sphericity, and the correction {.smaller}
+
+::: {.incremental}
+- **Sphericity**: the variance of the differences is the same for every pair of time points (0–3, 0–6, 3–6)
+- **Mauchly's test** checks it; when violated, use the **Greenhouse–Geisser** corrected p-value (`p[GG]`), which `anova_test()` prints alongside
+- Here Mauchly `r fp(rm_a$"Mauchly's Test for Sphericity"$p)`: sphericity is violated (the 0–6 month changes vary more than the 0–3), so report the **GG-corrected** result, ε = `r f(rm_a$"Sphericity Corrections"$GGe, 2)`
+- **ges** (generalised η²) = `r f(rm_a$ANOVA$ges, 2)`: a **modest** share of the total variation, because people differ from **each other** far more than from one visit to the next. The F-test is huge because each person is compared with themselves
+:::
+
+::: {.eq}
+"Mean fasting glucose fell from `r f(mean(p$fbs_presentation))` mg/dL at presentation to `r f(mean(p$fbs_3_months))` at 3 and `r f(mean(p$fbs_6_months))` at 6 months (repeated-measures ANOVA with Greenhouse–Geisser correction, F(`r f(rm_a$ANOVA$DFn * rm_a$"Sphericity Corrections"$GGe, 2)`, `r f(rm_a$ANOVA$DFd * rm_a$"Sphericity Corrections"$GGe, 0)`) = `r f(rm_a$ANOVA$F, 0)`, `r fp(rm_a$"Sphericity Corrections"$"p[GG]")`; generalised η² = `r f(rm_a$ANOVA$ges, 2)`)."
+:::
+
+## Post hoc for repeated measures must be **paired**
+
+```{r}
+pairwise.t.test(fbs_long$fbs, fbs_long$time, paired = TRUE, p.adjust.method = "bonferroni")
+```
+
+::: {.warn}
+Without `paired = TRUE`, `pairwise.t.test()` treats the three visits as **independent groups** of different people and pools their SD: the wrong test for repeated measurements. Because the visits are strongly correlated it throws away most of the information: its p-values are many orders of magnitude larger, and with a smaller change it would miss it altogether.
+:::
+
+## Friedman: systolic pressure at 0, 3 and 6 months
+
+```{r}
+sbp_long <- p |> select(s_no, sbp_presentation, sbp_3_months, sbp_6_months) |>
+  pivot_longer(-s_no, names_to = "time", values_to = "sbp")
+friedman.test(sbp ~ time | s_no, data = sbp_long)
+pairwise.wilcox.test(sbp_long$sbp, sbp_long$time, paired = TRUE, p.adjust.method = "holm")$p.value
+```
+
+- The rank-based partner of repeated-measures ANOVA; every person needs **all** time points
+- Medians `r median(p$sbp_presentation)` → `r median(p$sbp_3_months)` → `r median(p$sbp_6_months)` mmHg; effect size **Kendall's W** = `r f(kw_w, 2)` (0.1 small, 0.3 moderate, 0.5 large)
+
+# Topic 3 — Two numbers together: correlation {background-color="#2C3E50"}
+
+## Plot first, then r
+
+::: {.columns}
+::: {.column width="48%"}
+```{r}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 3.6
+ggplot(p, aes(age_of_participants, sbp_in_mm_hg)) + geom_point(alpha = .35, colour = col_blue) +
+  geom_smooth(method = "lm", se = FALSE, colour = col_red) + labs(x = "Age (years)", y = "SBP (mmHg)")
+```
+:::
+::: {.column width="52%"}
+```{r}
+cor.test(p$age_of_participants, p$sbp_in_mm_hg)
+```
+:::
+:::
+
+## Reading r
+
+::: {.eq}
+"Systolic pressure rose with age (Pearson r = `r f(ca$estimate, 2)`, 95% CI `r f(ca$conf.int[1], 2)` to `r f(ca$conf.int[2], 2)`; `r fp(ca$p.value)`)."
+:::
+
+::: {.incremental}
+- **r²** = `r f(ca$estimate^2, 2)`: age accounts for about **`r f(100 * ca$estimate^2, 0)`%** of the variation in SBP. A **moderate** association: highly significant, yet most of the variation lies elsewhere
+- Correlation measures **linear association** only; it is not agreement (use Bland–Altman for that) and not causation
+- To estimate *how much* SBP changes per year of age, and to adjust for other factors: **regression** (Regression track)
+:::
+
+## Pearson or Spearman?
+
+| | Pearson r | Spearman ρ |
+|---|---|---|
+| Measures | **linear** association | **monotonic** association (through ranks) |
+| Needs | roughly normal pairs, no extreme outliers | ordinal or numeric data, any shape |
+| Use for | age and SBP | glucose (skewed, outliers up to `r max(p$glucose_level_mg_d_l)` mg/dL), ordinal scores |
+
+```{r}
+cor.test(p$age_of_participants, p$glucose_level_mg_d_l, method = "spearman", exact = FALSE)$estimate
+```
+
+# Topic 4 — Many tests, and the write-up {background-color="#2C3E50"}
+
+## Multiple testing
+
+::: {.incremental}
+- At p < 0.05, **1 in 20** tests of a true null hypothesis comes out "significant" by chance
+- 20 independent comparisons → about a **64%** chance of at least one false positive
+- **Bonferroni**: multiply each p by the number of tests (simple, strict). **Holm**: the same idea step by step, never worse, usually better
+- `p.adjust(c(0.01, 0.02, 0.04), method = "holm")` → `r paste(signif(p.adjust(c(0.01, 0.02, 0.04), method = "holm"), 2), collapse = ", ")`
+- Decide the **main** comparisons in advance; label the rest as **exploratory**
+:::
+
+## A results paragraph
+
+::: {.eq}
+"Of `r nrow(p)` adults, `r sum(p$past_history_of_diabetes == "yes")` (`r f(100 * mean(p$past_history_of_diabetes == "yes"))`%) reported diabetes. They were older (mean difference `r f(diff(t.test(age_of_participants ~ past_history_of_diabetes, data = p)$estimate))` years, 95% CI `r f(-t.test(age_of_participants ~ past_history_of_diabetes, data = p)$conf.int[2])` to `r f(-t.test(age_of_participants ~ past_history_of_diabetes, data = p)$conf.int[1])`; Welch t-test) and more often hypertensive (odds ratio `r f(fisher.test(table(p$past_history_of_hypertension, p$past_history_of_diabetes))$estimate)`, 95% CI `r f(fisher.test(table(p$past_history_of_hypertension, p$past_history_of_diabetes))$conf.int[1])` to `r f(fisher.test(table(p$past_history_of_hypertension, p$past_history_of_diabetes))$conf.int[2])`; Fisher's exact test). Mean fasting glucose fell over six months (Topic 2)."
+:::
+
+- **Every** claim: the numbers, the **effect with its CI**, the **test**; p-values to 2–3 decimals, "p < 0.001" below that
+- Methods: how assumptions were checked and what was done when they failed (Session 2)
+
+## Reporting checklist
+
+| | Write down |
+|---|---|
+| Descriptives | n for every group; mean (SD) or median (IQR); n (%) |
+| Data checks | what was excluded and why; sensitivity analysis |
+| Assumptions | how checked (plots, tests); what was done if not met |
+| Each result | effect size **with 95% CI**, the test, the exact p |
+| Many tests | which were planned; the adjustment method |
+| Interpretation | size and importance, not only "significant"; association, not cause |
+
+Building Table 1 with **gtsummary**: [which of these tests it runs, which it cannot, and a pipeline that picks each test](../gtsummary/gtsummary_tutorial.qmd#which-tests-gtsummary-can-run-and-which-it-cannot)
+
+## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `stats-workshop/labs/lab5_more_groups.R`
+
+- one-way ANOVA with residual checks, Welch ANOVA and Tukey
+- Kruskal–Wallis, and when not to run post hoc tests
+- repeated-measures ANOVA with sphericity, and **paired** post hoc tests
+- Friedman with Kendall's W
+- Pearson and Spearman, r², and a Holm adjustment
+:::
+
+**Time:** 40 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t5q1", "A one-way ANOVA gives p = 0.056 and eta squared = 0.009. What is the best reading?",
+         c("A trend that would be significant with a few more people",
+           "Weak evidence, and the grouping explains under 1% of variation",
+           "Clear evidence of a difference, since p is close to 0.05",
+           "The groups are now proven equal, so no differences are reported"), answer = 2,
+         explain = "p = 0.056 is weak evidence, not a 'trend'; eta squared below 0.01 means the grouping explains almost none of the variation. Report the group means and the CIs.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t5q2", "Fasting glucose was measured in the same adults at 0, 3 and 6 months. Which post hoc comparison is right after a repeated-measures ANOVA?",
+         c("pairwise.t.test() with the default settings on the long data",
+           "pairwise.t.test() with paired = TRUE and an adjustment",
+           "Three separate Welch t-tests with no multiplicity adjustment",
+           "A Tukey HSD test on the aov() of glucose by time point only"), answer = 2,
+         explain = "The same people appear at every time point, so the comparisons must be paired, with a correction (Bonferroni or Holm) for the three tests.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t5q3", "Mauchly's test for a repeated-measures ANOVA gives p = 0.002. What should you report?",
+         c("The uncorrected F-test, since sphericity is a minor point",
+           "A Kruskal-Wallis test in place of the repeated measures model",
+           "The Greenhouse-Geisser corrected p-value for the time effect",
+           "Nothing, as the analysis cannot be done with these data"), answer = 3,
+         explain = "A small Mauchly p means sphericity is violated. The Greenhouse-Geisser correction adjusts the degrees of freedom; anova_test() prints it as p[GG].")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t5q4", paste0("Age and systolic pressure: r = ", f(ca$estimate, 2), ", 95% CI ", f(ca$conf.int[1], 2), " to ", f(ca$conf.int[2], 2), ", ", fp(ca$p.value), ". What is the right reading?"),
+         c("A strong link, since the p-value is so very small",
+           paste0("Age explains about ", f(100 * ca$estimate^2, 0), "% of the variation in SBP"),
+           "Getting older causes a rise in systolic pressure",
+           "SBP and age agree closely when measured in adults"), answer = 2,
+         explain = paste0("r squared = ", f(ca$estimate^2, 2), ": a real, moderate association; most of the variation in SBP lies elsewhere. A small p reflects the large sample, not strength. Correlation is neither causation nor agreement."))
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_fill("t5q5", "With 20 independent tests at the 5% level and every null hypothesis true, the chance of at least one false positive is about what percent? (number only)",
+          accept = c("64", "64%", "0.64", "65", "64.2"),
+          explain = "1 - 0.95^20 = 0.64. Plan the main comparisons, adjust (Holm or Bonferroni), and label the rest as exploratory.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- ≥ 3 groups: ANOVA (Welch if SDs differ) or **Kruskal–Wallis**; post hoc only when warranted
+- Repeated measures: check **sphericity**; post hoc tests must be **paired**
+- Correlation: **plot**, then r with its CI; r² for strength; not cause, not agreement
+- Plan the main tests; **adjust** the rest; report effect sizes with CIs, in sentences
+:::
+
+**Next:** the **Regression** track: the same questions with several factors at once

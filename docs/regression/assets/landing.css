@@ -603,3 +603,7 @@ a.ws-pt-link[href]:hover { text-decoration: underline; color: #1e8449; }
 .ws-continue-title::after { content: " →"; }
 .ws-pt-quiz { margin: 0.25rem 0 0; font-size: 0.74rem; color: #5f6b76; }
 .ws-pt--locked .ws-pt-quiz { color: #8a949c; }
+
+/* Electives: as many columns as fit (four on a laptop) */
+.ws-electives .ws-cards-row { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.ws-card--stats-elective { background: #fffaf3; border-color: #d35400; }

@@ -20,6 +20,10 @@ test('free paths stay free', () => {
     '/dungeons/dungeons/b4_first_plots_files/figure-html/x.png', '/dungeons/dungeons/r1pretest',
     '/dungeons/dungeons/r1posttest.html', '/dungeons/dungeons/campus', '/dungeons/dungeons/roadmap.html',
     '/dungeons/r-foundations/getting-started.html',
+    '/statistics/', '/statistics/welcome', '/statistics/stats-workshop/s1_know_your_data.html',
+    '/statistics/stats-workshop/cheatsheet', '/statistics/stats-workshop/labs/lab1_describe.R',
+    '/statistics/data/prac_modded.xlsx', '/statistics/stats-workshop/assets/cheatsheet.css',
+    '/advanced/counts-workshop/assets/cheatsheet.css',
   ]) assert.equal(productFor(p), null, p);
 });
 
@@ -44,6 +48,9 @@ test('paid paths need their product', () => {
     '/dungeons/dungeons/r2pretest.html': 'game-full',
     '/dungeons/dungeons/facilitator.html': 'game-full',
     '/dungeons/regression-workshop/s4_assumptions.html': 'regression',
+    '/statistics/stats-workshop/s3_categorical.html': 'statistics',
+    '/statistics/stats-workshop/labs/lab3_categorical.R': 'statistics',
+    '/statistics/statistical-analysis/data_analysis': 'statistics',
   };
   for (const [p, want] of Object.entries(cases)) assert.equal(productFor(p), want, p);
 });
@@ -112,7 +119,7 @@ test('no page a paid track sells is also in the free Basic site', () => {
     return out;
   };
   const basic = new Set(htmlIn('basic'));
-  for (const track of ['moderate', 'dataviz-base', 'dataviz-complete', 'regression', 'gis', 'advanced']) {
+  for (const track of ['moderate', 'dataviz-base', 'dataviz-complete', 'regression', 'statistics', 'gis', 'advanced']) {
     const sold = htmlIn(track).filter((rel) => productFor(`/${track}/${rel}`) !== null);
     const leaked = sold.filter((rel) => basic.has(rel) && !['index.html', 'contact.html', 'references.html', 'downloads.html'].includes(rel));
     // Pages Basic itself teaches (in its own menu) are free there by design; anything else is a leak.
