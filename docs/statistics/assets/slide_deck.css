@@ -1,0 +1,223 @@
+/* === RevealJS Typography === */
+.reveal {
+  font-family: 'Georgia', serif, Times, "Times New Roman";
+  line-height: 1.6;
+  color: #333333;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4 {
+  font-family: 'Merriweather', serif, Times, "Times New Roman";
+  color: #2c3e50;
+  margin-top: 0.5em;
+  margin-bottom: 0.3em;
+}
+
+
+
+
+/* === RevealJS Code Blocks === */
+.reveal pre code {
+  background-color: #1e1e1e;
+  color: #f8f8f2;
+  font-family: 'Fira Code', monospace;
+  font-size: 1.2em;
+  line-height: 1.6;
+  padding: 1em;
+  border-radius: 8px;
+  overflow-x: auto;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.reveal code {
+  background-color: #333;
+  color: #e0e0e0;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 1.1em;
+}
+
+.reveal pre {
+  margin-bottom: 1.5em;
+}
+
+/* === RevealJS Column Heading Spacing === */
+.reveal .columns h2 {
+  margin-bottom: 0.2em;
+}
+
+.reveal .columns h3 {
+  margin-top: 0.2em;
+  margin-bottom: 0.4em;
+}
+
+.reveal .columns .column h3:first-child {
+  margin-top: 0.2em;
+}
+
+/* === RevealJS Slide Layout === */
+.slide-custom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 700px;
+  margin: auto;
+  padding: 1em;
+  background: #fff;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+.slide-img {
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto 1em auto;
+  display: block;
+}
+
+.slide-heading {
+  font-size: clamp(1.4em, 3vw, 2em);
+  font-family: 'Merriweather', serif;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 0.2em;
+  margin-top: 0.5em;
+}
+
+.slide-code {
+  width: 100%;
+  margin-bottom: 1em;
+  font-size: clamp(0.85em, 2vw, 1em);
+  background: #f0f0f0;
+  color: #d6336c;
+  border-radius: 6px;
+  padding: 1em;
+  font-family: 'Fira Code', monospace;
+  overflow-x: auto;
+}
+
+.slide-desc {
+  font-size: clamp(0.99em, 2vw, 1.08em);
+  color: #333;
+  margin-top: 1em;
+  text-align: left;
+}
+
+.code-toggle {
+  margin: 0.5em 0;
+  padding: 0.45em 1.2em;
+  border: none;
+  border-radius: 5px;
+  background: #007ACC;
+  color: #fff;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+/* === RevealJS Quarto Figure Centering === */
+.reveal .quarto-figure,
+.reveal .figure {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.reveal .quarto-figure > img,
+.reveal .figure > img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* === Responsive for Small Screens === */
+@media (max-width: 600px) {
+  .slide-custom {
+    max-width: 96vw;
+    padding: 0.5em;
+  }
+  .slide-heading, .slide-code, .slide-desc {
+    font-size: clamp(0.9em, 4vw, 1em);
+  }
+}
+
+/* Optional: Style slide numbers */
+.reveal .slide-number {
+  font-size: 0.9em;
+  color: #555;
+  bottom: 1em;
+  right: 1em;
+}
+
+/* Optional: Style code copy button */
+.reveal .code-copy-button {
+  background-color: #007ACC;
+  color: #fff;
+  border-radius: 4px;
+  padding: 0.3em 0.6em;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+/* Optional: Style chalkboard toolbar */
+.reveal .chalkboard-toolbar {
+  background-color: #333;
+  color: #fff;
+  border-radius: 6px;
+  padding: 0.5em;
+}
+
+@media (max-width: 600px) {
+  .reveal h1,
+  .reveal h2,
+  .reveal h3,
+  .reveal h4 {
+    font-size: 1.2em; /* or use clamp() for smoother scaling */
+  }
+
+  .reveal p,
+  .reveal li {
+    font-size: 1em;
+  }
+
+  .reveal code,
+  .reveal pre code {
+    font-size: 0.9em;
+  }
+  
+  .reveal h2 {
+  font-size: clamp(1em, 4vw, 1.6em);
+}
+
+}
+
+
+/* DT DataTables Styling */
+/* DT DataTables - Make smaller */
+.dataTables_wrapper {
+  font-size: 0.75em !important;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+/* Ensure table fits */
+.dataTables_wrapper table {
+  width: 100% !important;
+  font-size: 0.85em; /* Additional reduction for table content */
+}
+
+/* Make controls compact */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+  font-size: 0.9em;
+  padding: 0.3em 0;
+}
+
+/* Reduce cell padding */
+.dataTables_wrapper table.compact tbody td,
+.dataTables_wrapper table.compact tbody th {
+  padding: 3px 6px;
+}

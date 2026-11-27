@@ -12,8 +12,8 @@ self-study plan of tracks, hands-on workshops and a game (*Dungeons & Dataframes
 | Landing page: the game, the four-step study plan, electives, profile | `index.qmd`, `assets/landing.css` | none (renders to `docs/`) |
 | Track home pages (one block per track) | `welcome.qmd` | every profile |
 | **Core tracks** Basic → Moderate → Regression → Advanced | `r-foundations/`, `data-visualization/`, `plot-gallery/`, `specialized/`, `statistical-analysis/`, `ggstatsplot/`, `gtsummary/`, `quarto_repro_w/`, `exporting_tools/` | `basic`, `moderate`, `regression`, `advanced` |
-| **Electives** Data Visualization (Foundations, Complete), GIS | the visualization folders, `gis/` | `dataviz-base`, `dataviz-complete`, `gis` |
-| **Workshops**: 5–6 decks with quizzes, fill-in labs with facilitator solutions, cheat sheet, `make_data.R` | `regression-workshop/`, `gis-workshop/`, `survival-` `counts-` `ordinal-` `clustered-` `survey-` `curves-` `missing-` `prediction-` `causal-workshop/` (A1–A9) | `regression`, `gis`, `advanced` |
+| **Electives** Data Visualization (Foundations, Complete), Statistical Analysis, GIS | the visualization folders, `stats-workshop/`, `gis/` | `dataviz-base`, `dataviz-complete`, `statistics`, `gis` |
+| **Workshops**: 5–6 decks with quizzes, fill-in labs with facilitator solutions, cheat sheet, `make_data.R` | `regression-workshop/`, `stats-workshop/` (statistical tests: assumptions and interpretation), `gis-workshop/`, `survival-` `counts-` `ordinal-` `clustered-` `survey-` `curves-` `missing-` `prediction-` `causal-workshop/` (A1–A9) | `regression`, `statistics`, `gis`, `advanced` |
 | **The game**, Regions 1–3 | `dungeons/` | `dungeons` |
 | **Cloudflare**: sign-in, paid-path gate, progress sync | `cloud/` (see [`cloud/README.md`](cloud/README.md)) | — |
 

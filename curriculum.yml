@@ -131,6 +131,12 @@ pages:
   causal-workshop/s4_ipw.qmd: {title: "Session 4 — Inverse Probability Weighting"}
   causal-workshop/s5_sensitivity_reporting.qmd: {title: "Session 5 — Sensitivity Analysis and Reporting"}
   causal-workshop/cheatsheet.qmd: {title: "Causal Inference Cheat Sheet"}
+  stats-workshop/s1_know_your_data.qmd: {title: "Session 1 — Know Your Data, Choose Your Test"}
+  stats-workshop/s2_assumptions.qmd: {title: "Session 2 — Checking Assumptions"}
+  stats-workshop/s3_categorical.qmd: {title: "Session 3 — Categorical Outcomes"}
+  stats-workshop/s4_two_groups.qmd: {title: "Session 4 — Comparing Two Groups on a Number"}
+  stats-workshop/s5_groups_correlation_reporting.qmd: {title: "Session 5 — More Groups, Repeated Measures, Correlation and Reporting"}
+  stats-workshop/cheatsheet.qmd: {title: "Statistical Tests Cheat Sheet"}
   regression-workshop/s1_foundations.qmd: {title: "Session 1 — Foundations"}
   regression-workshop/s2_simple_regression.qmd: {title: "Session 2 — Simple Linear Regression"}
   regression-workshop/s3_multiple_regression.qmd: {title: "Session 3 — Inference & Multiple Regression"}
@@ -625,6 +631,43 @@ profiles:
           - exporting_tools/plotting_tools.qmd
           - exporting_tools/debugging_plots.qmd
           - exporting_tools/advanced_exporting.qmd
+    right:
+      - text: "Reference"
+        icon: book
+        items:
+          - contact.qmd
+          - references.qmd
+          - downloads.qmd
+  statistics:
+    title: "Medical Statistics in R — Statistical Analysis"
+    output-dir: docs/statistics
+    logo-href: welcome.html
+    # Statistical tests in depth: assumptions and interpretation (stats-workshop/), on the Basic track's practice data.
+    project-extra:
+      render:
+      - stats-workshop/*.qmd
+      resources:
+      - data/prac_modded.xlsx
+      - stats-workshop/labs/*.R
+    left:
+      - text: "R Foundations"
+        items:
+          - r-foundations/getting-started.qmd
+          - r-foundations/data-wrangling.qmd
+      - text: "Statistical Analysis"
+        items:
+          - statistical-analysis/statistical_tests.qmd
+          - statistical-analysis/data_analysis.qmd
+          - ggstatsplot/ggstatsplot_intro.qmd
+      - text: "Statistics Workshop"
+        items:
+          - stats-workshop/s1_know_your_data.qmd
+          - stats-workshop/s2_assumptions.qmd
+          - stats-workshop/s3_categorical.qmd
+          - stats-workshop/s4_two_groups.qmd
+          - stats-workshop/s5_groups_correlation_reporting.qmd
+          - "---"
+          - stats-workshop/cheatsheet.qmd
     right:
       - text: "Reference"
         icon: book

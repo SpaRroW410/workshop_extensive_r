@@ -44,7 +44,7 @@ entry <- function(m, prof) {
 # into that track by _filters/crosstrack.lua, using _filters/pages.json written below.
 SHARED <- c("index.qmd", "welcome.qmd", "contact.qmd", "downloads.qmd", "references.qmd")
 # The track a page "belongs to" when several render it: the first one in this order (cheapest first).
-HOME_ORDER <- c("basic", "moderate", "regression", "dataviz-base", "dataviz-complete", "gis", "advanced", "dungeons")
+HOME_ORDER <- c("basic", "moderate", "statistics", "regression", "dataviz-base", "dataviz-complete", "gis", "advanced", "dungeons")
 
 menu_paths <- function(p) {
   x <- unlist(lapply(c(p$left, p$right), function(m)

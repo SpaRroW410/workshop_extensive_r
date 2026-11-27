@@ -171,6 +171,78 @@ Work through the steps in order. Tick a step when you have finished it; ticks ar
 
 :::
 
+<!-- ═══════════════════════════════════════════════════════════════ STATISTICS -->
+
+::: {.content-visible when-profile="statistics"}
+
+::: {.ws-track-hero .ws-track--statistics data-track="statistics"}
+[🟠 Workshop Key Unlocked]{.ws-track-badge}
+
+[Statistical Analysis Track]{.ws-track-title}
+
+An elective, best after Step 1 · Basic. The tests you met in Basic, done properly: how to **check the assumptions** behind each test, what to do when they fail, and how to **interpret and report** every result with an effect size and a 95% confidence interval. A one-day workshop of five sessions with slides, quizzes, labs and a cheat sheet, on the same practice dataset as the Basic track's Data Analysis page.
+:::
+
+::: {.ws-track-game}
+🗺️ **Play as you learn.** *Which Test?* (Region 1) and *Tests in Context* (Region 2) in *Dungeons & Dataframes* practise choosing and reading tests.
+[Open the game →](../dungeons/dungeons/index.html){.ws-track-game-btn}
+:::
+
+## 🗓️ Self-study plan
+
+One session at a sitting: read the slides, answer the quiz on the last slides, then do the lab. Tick a step when you have finished it; ticks are saved in this browser.
+
+::: {.ws-plan}
+1.  **Check your R basics**
+
+    [Getting Started](r-foundations/getting-started.qmd) · [Data Wrangling (Tidyverse)](r-foundations/data-wrangling.qmd)
+
+2.  **See the whole map first**
+
+    [Test Selection Guide](statistical-analysis/statistical_tests.qmd), then [Data Analysis](statistical-analysis/data_analysis.qmd): every test once, in R.
+
+3.  **Session 1 — Know your data, choose your test**
+
+    [Slides and quiz](stats-workshop/s1_know_your_data.qmd) · [Lab 1](stats-workshop/labs/lab1_describe.R)
+
+4.  **Session 2 — Checking assumptions**
+
+    [Slides and quiz](stats-workshop/s2_assumptions.qmd) · [Lab 2](stats-workshop/labs/lab2_assumptions.R)
+
+5.  **Session 3 — Categorical outcomes**
+
+    [Slides and quiz](stats-workshop/s3_categorical.qmd) · [Lab 3](stats-workshop/labs/lab3_categorical.R)
+
+6.  **Session 4 — Comparing two groups on a number**
+
+    [Slides and quiz](stats-workshop/s4_two_groups.qmd) · [Lab 4](stats-workshop/labs/lab4_two_groups.R)
+
+7.  **Session 5 — More groups, repeated measures, correlation and reporting**
+
+    [Slides and quiz](stats-workshop/s5_groups_correlation_reporting.qmd) · [Lab 5](stats-workshop/labs/lab5_more_groups.R)
+
+8.  **Keep the cheat sheet, then plot your tests**
+
+    [Statistical Tests Cheat Sheet](stats-workshop/cheatsheet.qmd), then [ggstatsplot — Intro](ggstatsplot/ggstatsplot_intro.qmd) to show a test and its result in one figure. Next: the **Regression** track.
+:::
+
+## 🎯 What you will be able to do
+
+- Choose a test from the outcome, the number of groups and the design
+- Check normality, equal spread, sphericity and expected counts, and act when they fail
+- Avoid the common traps: the KS test against the wrong normal, testing a subsample, unpaired post hoc tests on repeated measures
+- Report each result as an effect size with a 95% CI, the test and the p-value, in one sentence
+
+## 📥 Downloads
+
+- Data: [prac_modded.xlsx](data/prac_modded.xlsx) (631 adults, the Basic track's practice dataset)
+- Labs (fill in the `___` blanks): [Lab 1](stats-workshop/labs/lab1_describe.R) · [Lab 2](stats-workshop/labs/lab2_assumptions.R) · [Lab 3](stats-workshop/labs/lab3_categorical.R) · [Lab 4](stats-workshop/labs/lab4_two_groups.R) · [Lab 5](stats-workshop/labs/lab5_more_groups.R)
+- Everything else is on the [Downloads](downloads.qmd) page.
+
+> 💡 **Tip:** Session 1 shows impossible blood pressure values in this dataset. Always check your own data the same way before testing anything.
+
+:::
+
 <!-- ═══════════════════════════════════════════════════════════════ REGRESSION -->
 
 ::: {.content-visible when-profile="regression"}

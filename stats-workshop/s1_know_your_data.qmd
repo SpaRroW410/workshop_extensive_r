@@ -1,0 +1,306 @@
+---
+title: "Session 1 — Know Your Data, Choose Your Test"
+subtitle: "Variable types · describing data · checking it · choosing a test · reading a result · Lab 1"
+author: "Community Medicine Workshop"
+format:
+  revealjs:
+    theme: serif
+    css: [../assets/slide_deck.css, assets/workshop.css, assets/quiz.css]
+    include-after-body: assets/quiz-include.html
+    embed-resources: true
+    slide-number: true
+    navigation-mode: linear
+    code-copy: true
+    center: false
+    transition: fade
+    width: 1280
+    height: 720
+    fig-align: center
+    html-math-method: plain
+execute:
+  echo: true
+  warning: false
+  message: false
+  fig-width: 9
+  fig-height: 4.6
+  fig-dpi: 100
+---
+
+```{r}
+#| include: false
+source("assets/setup.R")
+source("assets/quiz.R")
+s_lt_d   <- sum(p$sbp_in_mm_hg < p$dbp_in_mm_hg)
+sbp_rng  <- range(c(p$sbp_presentation, p$sbp_3_months, p$sbp_6_months))
+wt <- t.test(weight ~ sex_of_participants, data = p)
+wd <- cohens_d(weight ~ sex_of_participants, data = p)
+```
+
+## Where we are
+
+::: {.incremental}
+- The **Basic** track showed *which* test to run and *how* to run it in R
+- This workshop adds the two things a thesis examiner asks about:
+  - **Were the assumptions met?** How did you check, and what did you do if not?
+  - **What does the result mean?** In words, with an effect size and a confidence interval
+- By the end of today you can:
+  - classify variables and describe them correctly
+  - **check the data** before testing anything
+  - choose a test from four questions
+  - read a p-value, a confidence interval and an effect size
+:::
+
+## Our data
+
+::: {.columns}
+::: {.column width="52%"}
+- **`r nrow(p)` adults** screened for NCDs (`data/prac_modded.xlsx`, the practice dataset of the Basic track)
+- Sex, age, wealth index, marital status, poverty line
+- Screening history, past hypertension and diabetes
+- Blood pressure, glucose, height, weight
+- Foot pain **before and after** an intervention
+- Fasting glucose and SBP at **presentation, 3 and 6 months**
+:::
+::: {.column width="48%"}
+```{r}
+p |> select(sex_of_participants, age_of_participants,
+            wealth_index_of_participants, sbp_in_mm_hg) |>
+  head(5)
+```
+:::
+:::
+
+# Topic 1 — What kind of variable? {background-color="#2C3E50"}
+
+## Four kinds of variable
+
+| Type | What it is | In our data |
+|---|---|---|
+| **Nominal** | categories, no order | sex, marital status, diabetes yes/no |
+| **Ordinal** | categories **with order**, gaps not equal | wealth index (poorest → richest) |
+| **Interval** | numbers, equal gaps, **no true zero** | temperature in °C (not in our data) |
+| **Ratio** | numbers, equal gaps, **true zero** | age, weight, SBP, glucose |
+
+::: {.key}
+The **outcome's type** decides the family of tests: counts and percentages for categories; means or medians for numbers.
+:::
+
+## Describing a category: counts and percentages
+
+```{r}
+p |> count(wealth_index_of_participants) |>
+  mutate(percent = round(100 * n / sum(n), 1))
+```
+
+- Give the **order** for ordinal variables (`factor(..., levels = ...)`), or R sorts them alphabetically
+- Always report **n and %**, and the denominator if anything is missing
+
+## Describing a number: mean or median? {.smaller}
+
+::: {.columns}
+::: {.column width="50%"}
+```{r}
+p |> summarise(mean = mean(age_of_participants), sd = sd(age_of_participants),
+               median = median(age_of_participants),
+               q1 = quantile(age_of_participants, .25),
+               q3 = quantile(age_of_participants, .75))
+```
+:::
+::: {.column width="50%"}
+```{r}
+#| fig-width: 5.5
+#| fig-height: 2.9
+ggplot(p, aes(age_of_participants)) +
+  geom_histogram(binwidth = 5, fill = col_blue, colour = "white") +
+  labs(x = "Age (years)", y = "Adults")
+```
+:::
+:::
+
+**Symmetric** → mean (SD); **skewed** or outliers → median (IQR). Age is a little right-skewed: mean `r f(mean(p$age_of_participants))` > median `r f(median(p$age_of_participants), 0)`.
+
+# Topic 2 — Check before you test {background-color="#2C3E50"}
+
+## A test cannot rescue bad data
+
+```{r}
+p |> summarise(sbp_below_dbp = sum(sbp_in_mm_hg < dbp_in_mm_hg),
+               median_dbp    = median(dbp_in_mm_hg),
+               min_sbp_follow_up = min(c(sbp_3_months, sbp_6_months)),
+               max_sbp_follow_up = max(c(sbp_3_months, sbp_6_months)))
+```
+
+::: {.warn}
+In `r s_lt_d` adults the systolic pressure is **lower** than the diastolic, the median DBP is `r median(p$dbp_in_mm_hg)` mmHg, and follow-up SBP runs from `r min(c(p$sbp_3_months, p$sbp_6_months))` to `r max(c(p$sbp_3_months, p$sbp_6_months))` mmHg. These are recording problems, not biology.
+:::
+
+## What to do with suspicious values
+
+::: {.incremental}
+1. **Look** at every variable first: `summary()`, a histogram, impossible combinations (SBP < DBP)
+2. **Query** the source (case sheet, register) and correct what can be corrected
+3. Decide **before** testing what you exclude, and **report it** ("12 records with SBP < DBP were excluded")
+4. Run the analysis **with and without** the doubtful records: a **sensitivity analysis**
+:::
+
+::: {.key}
+In this workshop the blood pressure columns are used to practise tests on skewed, messy data. The cleaner variables (height, weight, fasting glucose, age) carry the parametric tests.
+:::
+
+# Topic 3 — Choosing a test {background-color="#2C3E50"}
+
+## Four questions choose the test
+
+::: {.incremental}
+1. **What is the outcome?** Category (yes/no, groups) or number (mmHg, kg)?
+2. **How many groups** am I comparing? One (against a known value), two, or more?
+3. **Paired or independent?** Same people measured twice (before/after), or different people?
+4. **Do the assumptions hold?** Roughly normal, similar spread, enough expected counts?
+:::
+
+::: {.key}
+Questions 1–3 come from the **study design** and are fixed before you see the data. Only question 4 is checked on the data (Session 2).
+:::
+
+## The map: category outcome
+
+| Comparison | Independent groups | Paired (same people) |
+|---|---|---|
+| One group vs expected proportions | **Chi-square goodness of fit** | — |
+| 2 × 2 table | **Chi-square**; **Fisher's exact** if an expected count < 5 | **McNemar** (exact McNemar if few discordant pairs) |
+| Larger table (r × c) | **Chi-square** if ≥ 80% of expected counts ≥ 5 and none < 1; else **Monte Carlo** or **Fisher** | — |
+| Several predictors at once | **Logistic regression** (Regression track) | — |
+
+## The map: number outcome
+
+| Comparison | Roughly normal | Skewed, ordinal or outliers |
+|---|---|---|
+| One group vs a known value | **one-sample t** | **one-sample Wilcoxon** |
+| Two independent groups | **Welch t** | **Mann–Whitney U** |
+| Two paired measurements | **paired t** | **Wilcoxon signed-rank** |
+| ≥ 3 independent groups | **one-way ANOVA** (Welch ANOVA if spreads differ) | **Kruskal–Wallis** |
+| ≥ 3 repeated measurements | **repeated-measures ANOVA** | **Friedman** |
+| Two numbers together | **Pearson r** | **Spearman ρ** |
+
+# Topic 4 — Reading a result {background-color="#2C3E50"}
+
+## Three numbers, not one
+
+::: {.incremental}
+- **Effect size**: *how big* is the difference? (difference in means, odds ratio, Cohen's d, r)
+- **95% confidence interval**: the range of effect sizes compatible with the data
+- **p-value**: *if there were truly no difference*, how often would data at least this extreme turn up by chance?
+:::
+
+::: {.warn}
+A p-value is **not** the probability that the null hypothesis is true, and it says **nothing about size or importance**. p > 0.05 is **not** proof of no difference.
+:::
+
+## Example: weight in women and men
+
+```{r}
+t.test(weight ~ sex_of_participants, data = p)
+```
+
+## The sentence to write
+
+::: {.eq}
+"Mean weight was `r f(wt$estimate[1])` kg in women and `r f(wt$estimate[2])` kg in men (difference `r f(diff(rev(wt$estimate)))` kg, 95% CI `r f(wt$conf.int[1])` to `r f(wt$conf.int[2])`; Welch t-test, `r fp(wt$p.value)`; Cohen's d = `r f(wd$Cohens_d, 2)`)."
+:::
+
+::: {.incremental}
+- Women vs men: from **`r f(abs(wt$conf.int[1]))` kg lighter to `r f(wt$conf.int[2])` kg heavier**. The data rule out a large difference
+- d = `r f(wd$Cohens_d, 2)` is **negligible** (rough guide: 0.2 small, 0.5 medium, 0.8 large)
+- Say "no evidence of a difference", never "the groups are the same"
+:::
+
+## 🔧 Switch to R — Lab 1 {.lab-slide background-color="#1565c0"}
+
+::: {.lab-box}
+**File:** `stats-workshop/labs/lab1_describe.R`
+
+- counts and percentages, with the wealth index in order
+- mean (SD) and median (IQR), and which to report
+- impossible and suspicious values, and how many
+- choosing the test for five research questions
+:::
+
+**Time:** 30 minutes · answer the Q questions in the comments
+
+## Self-check quiz (1/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t1q1", "The wealth index (poorest, poorer, middle, richer, richest) is which kind of variable?",
+         c("Nominal, because its levels are labels with no order",
+           "Ordinal, because its levels have an order but unequal gaps",
+           "Interval, because each level is exactly one equal step apart",
+           "Ratio, because the poorest level is a true zero point"), answer = 2,
+         explain = "The categories are ordered (poorest to richest) but the distance between them is not a measured quantity, so the variable is ordinal.")
+```
+
+## Self-check quiz (2/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t1q2", "Fasting glucose is strongly right-skewed with a few very high values. How should you summarise it?",
+         c("Mean and standard deviation, because it is a number",
+           "Median and interquartile range, because it is skewed",
+           "Mode and range, because the high values are outliers",
+           "Mean and standard error, because the sample is large"), answer = 2,
+         explain = "Skew and outliers pull the mean and inflate the SD. The median and IQR describe the typical value and spread without being dragged by the tail.")
+```
+
+## Self-check quiz (3/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t1q3", "You find 104 records where systolic pressure is lower than diastolic. What should you do first?",
+         c("Run the planned test, because a large sample absorbs a few errors",
+           "Delete those rows quietly so the results look cleaner",
+           "Query the source records, then decide and report what to exclude",
+           "Swap the two columns for those rows and carry on testing"), answer = 3,
+         explain = "Impossible values are recording problems. Check the source, correct what you can, decide on exclusions before testing, report them, and compare results with and without them.")
+```
+
+## Self-check quiz (4/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t1q4", "Foot pain (yes/no) was recorded in the same adults before and after an intervention. Which test compares the two?",
+         c("Chi-square test of independence on the before-after 2 x 2 table",
+           "Fisher's exact test, because the outcome has only two levels",
+           "Paired t-test on the yes/no answers coded as 0 and 1",
+           "McNemar test, because the same people were measured twice"), answer = 4,
+         explain = "Before and after in the same people are paired. For a paired yes/no outcome the McNemar test uses the people who changed (yes to no, no to yes).")
+```
+
+## Self-check quiz (5/5) {.smaller}
+
+```{r}
+#| echo: false
+#| output: asis
+quiz_mcq("t1q5", "A comparison gives p = 0.54 with a 95% CI for the difference of -1.7 to 3.2 kg. What is the right reading?",
+         c("No evidence of a difference; a large difference is unlikely",
+           "The two groups have been shown to have the same mean weight",
+           "There is a 54% chance that the null hypothesis is really true",
+           "The study failed, so the result should not be reported"), answer = 1,
+         explain = "A large p-value means the data are compatible with no difference; the CI shows which differences remain plausible (here small ones). It is never proof of equality, and the p-value is not the probability that H0 is true.")
+```
+
+## Score and take-home
+
+**Your score: <span class="quiz-score"></span>**
+
+::: {.incremental}
+- The **outcome type**, the **number of groups** and **pairing** come from the design
+- **Describe** before you test: n (%), mean (SD) or median (IQR)
+- **Check** for impossible values; report what you excluded
+- Report **effect size + 95% CI + p**, in a sentence
+:::
+
+**Next:** Session 2: checking assumptions

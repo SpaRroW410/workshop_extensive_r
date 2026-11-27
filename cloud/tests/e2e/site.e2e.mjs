@@ -60,6 +60,18 @@ try {
     assert.ok(await page.locator('.reveal .slides').count(), 'the Session 1 deck renders');
   });
 
+  await step('Statistical Analysis, signed out: Session 1 and the styled cheat sheet open; Session 2 is locked', async () => {
+    await page.goto(site.base + '/statistics/stats-workshop/s1_know_your_data.html', { waitUntil: 'networkidle' });
+    assert.match(page.url(), /s1_know_your_data/);
+    assert.ok(await page.locator('.reveal .slides section').count() > 5, 'Session 1 deck renders');
+    const css = await fetch(site.base + '/statistics/stats-workshop/assets/cheatsheet.css');
+    assert.equal(css.status, 200, 'the free cheat sheet can load its stylesheet');
+    await page.goto(site.base + '/statistics/stats-workshop/cheatsheet.html', { waitUntil: 'networkidle' });
+    assert.match(page.url(), /cheatsheet/);
+    await page.goto(site.base + '/statistics/stats-workshop/s2_assumptions.html', { waitUntil: 'networkidle' });
+    assert.match(page.url(), /\/account\?need=statistics/);
+  });
+
   await step('sign in (test login), get regression: landing opens it, profile shows the name', async () => {
     const r = await page.evaluate(async () => (await fetch('/api/auth/sign-up/email', {
       method: 'POST', headers: { 'content-type': 'application/json' },

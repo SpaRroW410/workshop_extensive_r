@@ -1,0 +1,101 @@
+---
+title: "Statistical Tests Cheat Sheet"
+subtitle: "Choose · check · test · interpret · NCD screening practice data · print on 2 pages (A4)"
+format:
+  html:
+    theme: cosmo
+    toc: false
+    page-layout: full
+    html-math-method: plain
+    css: assets/cheatsheet.css
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+source("assets/setup.R")
+wt <- t.test(age_of_participants ~ past_history_of_diabetes, data = p)
+```
+
+::: {.sheet}
+
+## 1 · Four questions choose the test
+
+1. **Outcome**: category or number? 2. **Groups**: one, two, or more? 3. **Paired** (same people again) or **independent**? 4. **Assumptions** met?
+
+## 2 · Category outcome
+
+| Situation | Test | R | Report |
+|---|---|---|---|
+| One proportion vs benchmark | binomial / goodness of fit | `binom.test(x, n)`; `chisq.test(tab, p = ...)` | % (95% CI) |
+| 2 × 2, all expected ≥ 5 | chi-square | `chisq.test(tab, correct = FALSE)` | risk difference or OR (95% CI) |
+| 2 × 2, any expected < 5 | Fisher's exact | `fisher.test(tab)` | OR (95% CI) |
+| r × c, ≥ 80% expected ≥ 5, none < 1 | chi-square | `chisq.test(tab)`; `$stdres` | Cramér's V; cells with \|residual\| > 2 |
+| r × c, small expected | Monte Carlo | `chisq.test(tab, simulate.p.value = TRUE, B = 10000)` | Cramér's V |
+| Paired yes/no | McNemar | `mcnemar.test(tab)`; `exact2x2::mcnemar.exact(tab)` | % before and after |
+
+Expected counts: `chisq.test(tab)$expected`. The rule is about **expected**, not observed, counts.
+
+## 3 · Number outcome
+
+| Design | Roughly normal | Skewed / outliers / ordinal |
+|---|---|---|
+| One group vs a value | `t.test(x, mu = 100)` | `wilcox.test(x, mu = 100)` |
+| Two independent groups | **Welch** `t.test(y ~ g)` | Mann–Whitney `wilcox.test(y ~ g, conf.int = TRUE)` |
+| Two paired measurements | `t.test(a, b, paired = TRUE)` | Wilcoxon signed-rank `wilcox.test(a, b, paired = TRUE)` |
+| ≥ 3 independent groups | `aov()`; Welch: `oneway.test()` | `kruskal.test(y ~ g)` |
+| ≥ 3 repeated measurements | `rstatix::anova_test(dv, wid, within)` | `friedman.test(y, time, id)` |
+| Two numbers | `cor.test(x, y)` (Pearson) | `cor.test(x, y, method = "spearman")` |
+
+**Post hoc:** Tukey `TukeyHSD()`; Games–Howell `rstatix::games_howell_test()`; Dunn `rstatix::dunn_test(..., p.adjust.method = "holm")`; repeated measures: `pairwise.t.test(..., paired = TRUE)`.
+
+## 4 · Checking assumptions
+
+| Assumption | Check | If not met |
+|---|---|---|
+| Independence | the **design** | paired / repeated-measures test; clustered data → workshop A4 |
+| Normal: **within groups**, the **differences** (paired), the **residuals** (ANOVA) | Q-Q plot `stat_qq()`; skewness; Shapiro–Wilk; Lilliefors `nortest::lillie.test()` | log scale, or a rank-based test |
+| Equal spread | compare SDs; `car::leveneTest()` | **Welch** (default) |
+| Sphericity (repeated) | Mauchly in `anova_test()` | Greenhouse–Geisser `p[GG]` |
+| Expected counts | `chisq.test()$expected` | Fisher, Monte Carlo |
+
+::: {.bad}
+- `ks.test(x, "pnorm")` compares with **mean 0, SD 1**: always "not normal". Use `lillie.test(x)`
+- Large n: normality tests flag trivial departures. Small n: they miss big ones. **Never** test a random subsample
+- z-test only with a **known population SD**; otherwise **t**, whatever n
+- `pairwise.t.test()` after repeated measures **without** `paired = TRUE`
+:::
+
+## 5 · Effect sizes
+
+| Test | Effect size | R | Rough guide |
+|---|---|---|---|
+| t-tests | difference (95% CI); Cohen's d; paired dz | `effectsize::cohens_d()` | 0.2 / 0.5 / 0.8 |
+| Mann–Whitney, Wilcoxon | Hodges–Lehmann shift; r | `wilcox.test(conf.int = TRUE)`; `rstatix::wilcox_effsize()` | r 0.1 / 0.3 / 0.5 |
+| ANOVA | η² (generalised η² for repeated) | `effectsize::eta_squared()` | 0.01 / 0.06 / 0.14 |
+| Kruskal–Wallis, Friedman | ε² / η²[H]; Kendall's W | `rstatix::kruskal_effsize()`, `friedman_effsize()` | W 0.1 / 0.3 / 0.5 |
+| Chi-square | risk difference, OR; Cramér's V | `prop.test()$conf.int`; `effectsize::cramers_v()` | V 0.1 / 0.3 / 0.5 |
+| Correlation | r (95% CI); r² | `cor.test()` | r 0.1 / 0.3 / 0.5 |
+
+## 6 · Reading a result
+
+| You see | You say |
+|---|---|
+| p < 0.05, CI excludes 0 (or 1) | evidence of a difference; give its **size** and CI |
+| p ≥ 0.05, **narrow** CI | no evidence of a difference; any difference is small |
+| p ≥ 0.05, **wide** CI | **cannot tell**: too little information |
+| p = 0.056 | weak evidence (not "a trend", not "nearly significant") |
+| tiny p, small effect | real but small; judge **clinical** importance |
+| r = 0.18 | weak: r² = 3% of variation; not cause, not agreement |
+
+**Many tests:** plan the main ones; `p.adjust(p, method = "holm")`; label the rest exploratory.
+
+## 7 · One sentence per result
+
+*Adults with a past history of diabetes were older: mean `r f(wt$estimate[2])` vs `r f(wt$estimate[1])` years (difference `r f(diff(wt$estimate))` years, 95% CI `r f(-wt$conf.int[2])` to `r f(-wt$conf.int[1])`; Welch t-test, `r fp(wt$p.value)`).*
+
+Effect + 95% CI + test + p. Methods: how assumptions were checked and what was done when they were not met.
+
+:::

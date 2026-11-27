@@ -99,6 +99,16 @@ and 5 (seat codes, cohorts) are not started. GitHub Pages still serves `docs/` w
 - Full re-render of all eight tracks: no broken internal links; 62 deck quizzes, game e2e, cloud tests and both
   browser suites pass.
 
+## 5d. Statistical Analysis track, 2026-11-27 (branch `statistical-analysis`)
+
+- New elective track `statistics` (`docs/statistics/`, product `statistics`, key `STATISTICS` in `config.json`): the Basic track's
+  test pages plus `stats-workshop/`, five sessions on choosing tests, **checking assumptions** and **interpreting results**,
+  on `data/prac_modded.xlsx`. Labs and solutions run; quizzes lint clean; all 67 deck quizzes pass in a browser.
+- Corrects the earlier material: KS against N(0,1), Shapiro on a random subsample, z when n > 30, Levene-then-Student,
+  unpaired post hoc tests after repeated measures, the expected-count rule, and a script bug (`table_htn_gender`).
+- `_routes.json` now 96 of 100 rules: workshop `assets/` folders are free through the Function (decks embed their
+  CSS; only the cheat sheets load a stylesheet).
+
 ## 6. How to re-verify
 
 ```sh
