@@ -26,15 +26,16 @@ try {
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto(base + DECK, { waitUntil: 'load' });
   await page.waitForFunction(() => window.Reveal && Reveal.isReady());
-  const goTo = (k) => page.evaluate((k) => { const i = Reveal.getIndices(window.SlideTools.cells[k].closest('section')); Reveal.slide(i.h, i.v); }, k).then(() => page.waitForTimeout(400));
+  const cellsJs = "[...document.querySelectorAll('.reveal .slides div.cell')].filter((c) => c.querySelector('.cell-code'))";
+  const goTo = (k) => page.evaluate((k) => { const i = Reveal.getIndices(document.querySelectorAll('.st-box')[k].closest('section')); Reveal.slide(i.h, i.v); }, k).then(() => page.waitForTimeout(400));
   await step('View mode: deck unchanged, no webR requested, Edit button shown', async () => {
     assert.equal(await page.locator('.st-toggle').innerText(), '✎ Edit');
     assert.equal(await page.locator('.st-box').count(), 0);
-    assert.equal(await page.evaluate(() => !!window.SlideTools.webR), false);
+    assert.equal(await page.evaluate(() => !!window.SlideTools.R.webR), false);
   });
   await step('Edit on: every R chunk becomes an editor with Run and Reset', async () => {
     await page.click('.st-toggle');
-    const cells = await page.evaluate(() => window.SlideTools.cells.length);
+    const cells = await page.evaluate((js) => eval(js).length, cellsJs);
     assert.ok(cells > 0);
     assert.equal(await page.locator('.st-code').count(), cells);
     assert.equal(await page.locator('.st-run').count(), cells);
@@ -49,7 +50,7 @@ try {
     assert.match(out, /\[1\] TRUE/); assert.match(out, /\[1\] 631/);
   });
   await step('A later chunk runs after the earlier ones (shared R session) and draws nothing wrong', async () => {
-    const k = await page.evaluate(() => window.SlideTools.cells.length - 1);
+    const k = await page.evaluate(() => document.querySelectorAll('.st-box').length - 1);
     const cell = page.locator('.st-box').nth(k);
     await goTo(k);
     await cell.locator('.st-run').click();

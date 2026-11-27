@@ -16,7 +16,8 @@ async function step(name, fn) {
   catch (e) { steps.push(['FAIL', name]); console.log('FAIL', name, '\n     ' + e.message.split('\n').slice(0, 3).join('\n     ')); }
 }
 const site = await startSite({ siteDir: DEPLOY });
-const browser = await chromium.launch();
+// webR packages come from repo.r-wasm.org: use the session's proxy if there is one (the site itself is local)
+const browser = await chromium.launch(process.env.HTTPS_PROXY ? { proxy: { server: process.env.HTTPS_PROXY, bypass: 'localhost,127.0.0.1' } } : {});
 const errors = [];
 const watch = (page) => {
   page.on('pageerror', (e) => errors.push(`${page.url()}: ${e.message}`));
@@ -193,6 +194,22 @@ try {
     await o.waitForFunction(() => window.Reveal && Reveal.isReady() && window.SlideTools);
     assert.equal(await o.locator('section.st-own').count(), 0);
     await ctx3.close();
+  });
+
+  await step('on Cloudflare: Run uses the self-hosted webR, the deck manifest and the data through the site', async () => {
+    const d = watch(await ctx.newPage());
+    const webrUrls = [];
+    d.on('request', (q) => { if (/webr/.test(q.url())) webrUrls.push(q.url()); });
+    await d.goto(site.base + '/statistics/stats-workshop/s1_know_your_data#/our-data', { waitUntil: 'load' });
+    await d.waitForFunction(() => window.Reveal && Reveal.isReady() && window.SlideTools);
+    if (!(await d.locator('.st-box').count())) await d.click('.st-toggle');
+    const box = d.locator('section#our-data .st-box').first();
+    await box.locator('.st-code').fill('nrow(p)');
+    await box.locator('.st-run').click();
+    await d.waitForFunction(() => /\[1\] 631/.test((document.querySelector('section#our-data .st-out') || {}).textContent || ''), null, { timeout: 600000 });
+    assert.ok(webrUrls.some((u) => u.startsWith(site.base + '/webr/')), 'webR loaded from our own domain');
+    await d.click('.st-toggle');
+    await d.close();
   });
 
   await step('no script errors anywhere', async () => assert.deepEqual(errors, []));

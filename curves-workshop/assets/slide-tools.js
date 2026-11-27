@@ -47,7 +47,8 @@
   // ── Which deck a slide or cell came from ─────────────────────────────
   // In a deck: this page. In the custom-deck player: each section carries data-st-src="/<track>/<workshop>/<deck>.html".
   const srcOf = (node) => { const s = node && node.closest && node.closest('section[data-st-src]'); return s ? s.dataset.stSrc : location.pathname; };
-  const refOfSrc = (src) => { const m = (src || '').match(/\/([a-z0-9-]+-workshop)\/(s\d\w*)\.html$/); return m ? `${m[1]}/${m[2]}` : null; };
+  // Cloudflare Pages serves "deck.html" at "deck" (no extension): accept both.
+  const refOfSrc = (src) => { const m = (src || '').match(/\/([a-z0-9-]+-workshop)\/(s\d\w*)(?:\.html)?$/); return m ? `${m[1]}/${m[2]}` : null; };
   ST.deckRef = refOfSrc(location.pathname);
 
   // ── Manifests ────────────────────────────────────────────────────────
@@ -55,9 +56,9 @@
   function manifestFor(src) {
     if (!manifests.has(src)) {
       manifests.set(src, (async () => {
-        if (!online || !src.endsWith('.html')) return null;
+        if (!online || !refOfSrc(src)) return null;
         try {
-          const r = await fetch(src.replace(/\.html$/, '.webr.json'), { credentials: 'same-origin' });
+          const r = await fetch(src.replace(/(\.html)?$/, '.webr.json'), { credentials: 'same-origin' });
           if (r.ok && (r.headers.get('content-type') || '').includes('json')) return await r.json();
         } catch (e) { /* offline */ }
         return null;
