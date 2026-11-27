@@ -1,0 +1,14 @@
+{"format":"medstats-custom-deck","version":1,"title":"Export test deck",
+ "items":[{"type":"slide","ref":"stats-workshop/s2_assumptions#look-first-the-q-q-plot"},
+          {"type":"slide","ref":"stats-workshop/s2_assumptions#compare-the-spreads"},
+          {"type":"slide","ref":"stats-workshop/s4_two_groups#welch-t-age-by-diabetes-history"},
+          {"type":"slide","ref":"stats-workshop/s4_two_groups#reading-it"},
+          {"type":"slide","ref":"stats-workshop/s2_assumptions#self-check-quiz-15"},
+          {"type":"slide","ref":"regression-workshop/s1_foundations#data-dictionary"},
+          {"type":"own","id":"own1"}],
+ "own":{"own1":{"title":"My summary","layout":"text","font":"lato","align":"left","blocks":[
+   {"type":"text","size":"L","markdown":"- Welch by **default**\n- Check *expected* counts"},
+   {"type":"box","kind":"warn","size":"M","markdown":"p > 0.05 is not proof of no difference"},
+   {"type":"table","rows":[["Test","Use"],["Welch t","two means"],["Fisher","small counts"]]},
+   {"type":"code","code":"summary(c(1,2,3))","output":{"saved":"   Min. 1st Qu.  Median \n      1     1.5       2 "}}],"notes":"Say this slowly."}},
+ "notes":{"stats-workshop/s4_two_groups#reading-it":"Ask the room which sign they expect."}}
