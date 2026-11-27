@@ -40,7 +40,7 @@ ct <- coeftest(m_rr, vcov. = vcovHC(m_rr, type = "HC0"))
 rr <- exp(c(RR = ct["programme", 1], lo = ct["programme", 1] - 1.96 * ct["programme", 2], hi = ct["programme", 1] + 1.96 * ct["programme", 2]))
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Sessions 2 to 4: four methods, one answer (about −6 mmHg)
@@ -51,15 +51,15 @@ rr <- exp(c(RR = ct["programme", 1], lo = ct["programme", 1] - 1.96 * ct["progra
   - frame the study as a **target trial** and **report** it
 :::
 
-# Topic 1 — Unmeasured confounding {background-color="#2C3E50"}
+# Topic 1 — Unmeasured confounding {#topic-1-unmeasured-confounding background-color="#2C3E50"}
 
-## The untestable assumption
+## The untestable assumption {#the-untestable-assumption}
 
 ::: {.warn}
 In these data an **unrecorded** factor, **motivation**, raises enrolment and lowers SBP. No method can adjust for it. That is why the estimates are **−6.3** where the truth is **−5.8**: a small **residual bias**. In real data you **never know** its size; you can only ask **how strong** it would have to be.
 :::
 
-## A risk ratio for a binary outcome
+## A risk ratio for a binary outcome {#a-risk-ratio-for-a-binary-outcome}
 
 ```{r}
 round(rr, 2)
@@ -67,7 +67,7 @@ round(rr, 2)
 
 Controlled BP at 12 months (SBP below 140): **RR 1.57** (95% CI 1.44 to 1.71), adjusted for the confounders. A Poisson model with **robust SE** gives a **risk ratio** for a common outcome (A2).
 
-## The E-value
+## The E-value {#the-e-value}
 
 ```{r}
 evalues.RR(est = rr[["RR"]], lo = rr[["lo"]], hi = rr[["hi"]])
@@ -77,7 +77,7 @@ evalues.RR(est = rr[["RR"]], lo = rr[["lo"]], hi = rr[["hi"]])
 **E-value 2.5** (and **2.2** for the confidence limit). An unmeasured confounder would need a risk ratio of **at least 2.5 with both enrolment and BP control**, beyond the measured confounders, to **explain the effect away**; **2.2** would be enough to make the CI include 1. **Large E-value = robust**; close to 1 = fragile.
 :::
 
-## Is 2.5 plausible? Benchmarks
+## Is 2.5 plausible? Benchmarks {#is-2.5-plausible-benchmarks}
 
 ```{r}
 round(exp(coef(m_rr))[c("diabetes", "educationSecondary+", "urban")], 2)
@@ -91,9 +91,9 @@ round(c(full = coef(m_adj)[["programme"]], without_baseline_sbp = coef(update(m_
 - The E-value is **not** a p-value and has **no threshold**: interpret it with **subject knowledge**
 :::
 
-# Topic 2 — Design thinking {background-color="#2C3E50"}
+# Topic 2 — Design thinking {#topic-2-design-thinking background-color="#2C3E50"}
 
-## Other threats
+## Other threats {#other-threats}
 
 | Threat | Check |
 |---|---|
@@ -103,7 +103,7 @@ round(c(full = coef(m_adj)[["programme"]], without_baseline_sbp = coef(update(m_
 | **Measurement error** in confounders | residual confounding |
 | **Model misspecification** | flexible terms (A6), doubly robust |
 
-## Emulate a target trial
+## Emulate a target trial {#emulate-a-target-trial}
 
 ::: {.good}
 Write the **trial you would have liked to run**, then copy it with the data:
@@ -116,9 +116,9 @@ Write the **trial you would have liked to run**, then copy it with the data:
 7. **Analysis plan**
 :::
 
-# Topic 3 — Reporting {background-color="#2C3E50"}
+# Topic 3 — Reporting {#topic-3-reporting background-color="#2C3E50"}
 
-## What to report
+## What to report {#what-to-report}
 
 ::: {.good}
 - The **causal question**, the **estimand** and the **DAG** (supplement)
@@ -133,7 +133,7 @@ Write the **trial you would have liked to run**, then copy it with the data:
 *Example:* "After adjustment for age, sex, education, residence, BMI, diabetes and baseline SBP, enrolment was associated with a 6.3 mmHg lower SBP at 12 months (95% CI 5.4 to 7.1); matching (−5.9) and weighting (−5.7) gave similar estimates. The E-value for BP control was 2.5 (2.2 for the confidence limit)."
 :::
 
-## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 5 {#switch-to-r-lab-5 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `causal-workshop/labs/lab5_sens.R`
@@ -145,7 +145,7 @@ Write the **trial you would have liked to run**, then copy it with the data:
 
 **Time:** 35 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -158,7 +158,7 @@ quiz_mcq("z5q1", "Regression, matching and weighting all give about -6 mmHg. Wha
          explain = "The methods use the same measured confounders in different ways. Their agreement rules out method-specific problems, not unmeasured confounding.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -171,7 +171,7 @@ quiz_mcq("z5q2", "The E-value for the risk ratio is 2.5. What does it mean?",
          explain = "The E-value is the minimum strength of association, with both the exposure and the outcome, that an unmeasured confounder would need to fully account for the estimate.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -184,7 +184,7 @@ quiz_mcq("z5q3", "How can you judge whether an E-value of 2.5 is reassuring?",
          explain = "There is no threshold. If the strongest known confounders are much weaker than the E-value, an unmeasured one of that strength is less plausible.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -197,7 +197,7 @@ quiz_mcq("z5q4", "What is the purpose of emulating a target trial?",
          explain = "Specifying the hypothetical trial forces a clear question and aligns eligibility, start of follow-up and exposure, which prevents biases such as immortal time.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -210,7 +210,7 @@ quiz_mcq("z5q5", "Which wording is appropriate when reporting an observational c
          explain = "The analysis targets a causal effect and should say so, together with the assumptions on which that interpretation rests.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

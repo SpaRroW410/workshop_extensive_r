@@ -37,7 +37,7 @@ source("assets/quiz.R")
 m_true <- glm(f_true, data = dev, family = binomial)
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 2: the **apparent** performance is measured on the data that built the model
@@ -48,9 +48,9 @@ m_true <- glm(f_true, data = dev, family = binomial)
   - read a **bootstrap calibration slope** as a shrinkage factor
 :::
 
-# Topic 1 — Overfitting {background-color="#2C3E50"}
+# Topic 1 — Overfitting {#topic-1-overfitting background-color="#2C3E50"}
 
-## Adding noise
+## Adding noise {#adding-noise}
 
 ```{r}
 m_all <- glm(f_all, data = dev, family = binomial)
@@ -62,9 +62,9 @@ c(parameters = length(coef(m_all)) - 1, events_per_parameter = round(sum(dev$dia
 The ten extra markers are **pure noise**, yet the **apparent AUC rises from 0.796 to 0.821**. With **18 parameters** and **84 events (4.7 per parameter)** the model **memorises** chance patterns. This is **overfitting**: the apparent performance is **optimistic** and the predictions in new patients will be **too extreme**.
 :::
 
-# Topic 2 — Internal validation {background-color="#2C3E50"}
+# Topic 2 — Internal validation {#topic-2-internal-validation background-color="#2C3E50"}
 
-## Split sample
+## Split sample {#split-sample}
 
 ```{r}
 set.seed(1)
@@ -80,7 +80,7 @@ auc_of(dev$diabetes[-idx], predict(fit_s, dev[-idx, ], type = "response")) |> ro
 - Reasonable only for **very large** data sets
 :::
 
-## Cross-validation
+## Cross-validation {#cross-validation}
 
 ```{r}
 set.seed(1)
@@ -93,7 +93,7 @@ c(true = cv_auc(f_true), all = cv_auc(f_all)) |> round(3)
 **10-fold CV**: fit on nine tenths, predict the held-out tenth, repeat. The AUC is **0.77** (8 predictors) and **0.76** (all markers): **lower than the apparent** 0.80 and 0.82, and **no gain from the markers**. Repeat with **several random fold assignments** for stability.
 :::
 
-## Bootstrap optimism
+## Bootstrap optimism {#bootstrap-optimism}
 
 ```{r}
 optimism <- function(form, B = 200) { set.seed(7); mean(replicate(B, { i <- sample(nrow(dev), replace = TRUE); f <- glm(form, data = dev[i, ], family = binomial)
@@ -110,7 +110,7 @@ round(rbind(apparent = c(true = auc_of(dev$diabetes, fitted(m_true)), all = auc_
 - Uses **all** the data, and is the **recommended** internal validation for development studies
 :::
 
-## Optimism in calibration
+## Optimism in calibration {#optimism-in-calibration}
 
 ```{r}
 slope_boot <- function(form, B = 200) { set.seed(7); mean(replicate(B, { i <- sample(nrow(dev), replace = TRUE); f <- glm(form, data = dev[i, ], family = binomial)
@@ -122,7 +122,7 @@ c(true = slope_boot(f_true), all = slope_boot(f_all)) |> round(2)
 The bootstrap **calibration slope** is **0.90** (8 predictors) and **0.80** (all markers). A slope of 0.80 means the predictions are **too extreme by about 20%**: they should be **shrunk** (Session 4). The **more parameters per event**, the **smaller** the slope.
 :::
 
-## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 3 {#switch-to-r-lab-3 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `prediction-workshop/labs/lab3_internal.R`
@@ -134,7 +134,7 @@ The bootstrap **calibration slope** is **0.90** (8 predictors) and **0.80** (all
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -147,7 +147,7 @@ quiz_mcq("p3q1", "Adding ten pure-noise markers raises the apparent AUC from 0.7
          explain = "Extra parameters let the model follow chance patterns in the development data. This raises the apparent but not the real performance.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -160,7 +160,7 @@ quiz_mcq("p3q2", "Why is a single 70/30 split a poor way to validate a model in 
          explain = "With few events, a third of the data for testing leaves little for fitting and testing, and a different seed gives a different answer.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -173,7 +173,7 @@ quiz_mcq("p3q3", "What does the bootstrap optimism correction do?",
          explain = "Fitting in bootstrap samples and testing in the original data mimics fitting and applying a model, giving the average inflation to subtract from the apparent value.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -186,7 +186,7 @@ quiz_mcq("p3q4", "The optimism-corrected AUCs of the 8-predictor and the all-mar
          explain = "After correcting for optimism the two models perform equally, so the apparent gain of the larger model was optimism.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -199,7 +199,7 @@ quiz_mcq("p3q5", "A bootstrap calibration slope of 0.80 suggests what?",
          explain = "A slope below 1 means that low risks are too low and high risks too high. Multiplying the linear predictor by about 0.8 corrects this.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

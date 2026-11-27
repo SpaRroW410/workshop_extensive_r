@@ -38,7 +38,7 @@ m_all <- glm(f_all, data = dev, family = binomial)
 x_all <- model.matrix(f_all, dev)[, -1]; y <- dev$diabetes
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 3: the all-markers model is **overfitted** (bootstrap slope 0.80)
@@ -48,9 +48,9 @@ x_all <- model.matrix(f_all, dev)[, -1]; y <- dev$diabetes
   - **uniform shrinkage**
 :::
 
-# Topic 1 — Variable selection {background-color="#2C3E50"}
+# Topic 1 — Variable selection {#topic-1-variable-selection background-color="#2C3E50"}
 
-## Backward stepwise (AIC)
+## Backward stepwise (AIC) {#backward-stepwise-aic}
 
 ```{r}
 m_step <- step(m_all, direction = "backward", trace = 0)
@@ -61,7 +61,7 @@ names(coef(m_step))[-1]
 The selection kept **age, waist, family history, hypertension, activity, smoking** (BMI and sex were dropped) **and four noise markers: m6, m8, m9, m10**. With 84 events, selection **chases chance**.
 :::
 
-## How stable is the selection?
+## How stable is the selection? {#how-stable-is-the-selection}
 
 ```{r}
 set.seed(3)
@@ -76,9 +76,9 @@ round(setNames(rowMeans(sel), paste0("m", 1:10)), 2)
 - Prefer: **pre-specify** predictors (clinical knowledge, literature), **penalise**, or accept **shrinkage**
 :::
 
-# Topic 2 — Penalised regression {background-color="#2C3E50"}
+# Topic 2 — Penalised regression {#topic-2-penalised-regression background-color="#2C3E50"}
 
-## Ridge
+## Ridge {#ridge}
 
 ```{r}
 set.seed(1)
@@ -93,7 +93,7 @@ round(cbind(ML = coef(m_all)[paste0("m", 1:10)], ridge = as.numeric(coef(cv_r, s
 - **Standardise** the predictors (glmnet does it by default)
 :::
 
-## Lasso
+## Lasso {#lasso}
 
 ```{r}
 set.seed(1)
@@ -106,7 +106,7 @@ rownames(b_l)[as.numeric(b_l) != 0][-1]
 The **lasso** (penalty on the **sum of absolute values**) sets some coefficients **exactly to zero**: it **selects and shrinks**. At **λ.1se** (largest penalty within one SE of the best) it kept **only age, waist and family history**: it removed all the **noise markers**, but also the real **hypertension, smoking and activity**: a sparse, probably **over-shrunk** model. `lambda.min` keeps more.
 :::
 
-## Uniform shrinkage
+## Uniform shrinkage {#uniform-shrinkage}
 
 ```{r}
 lp0 <- predict(m_all, dev)
@@ -121,7 +121,7 @@ c(mean_predicted_after = mean(plogis(lp_s + b0)), prevalence = mean(dev$diabetes
 - Simple, transparent, and works with **any** model; the same idea as **ridge**, with one factor
 :::
 
-## What to use?
+## What to use? {#what-to-use}
 
 ::: {.good}
 1. **Pre-specify** a small set of predictors; avoid data-driven selection when events are few
@@ -131,7 +131,7 @@ c(mean_predicted_after = mean(plogis(lp_s + b0)), prevalence = mean(dev$diabetes
 5. **External validation** (Session 5) tells you whether it worked
 :::
 
-## 🔧 Switch to R — Lab 4 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 4 {#switch-to-r-lab-4 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `prediction-workshop/labs/lab4_shrink.R`
@@ -143,7 +143,7 @@ c(mean_predicted_after = mean(plogis(lp_s + b0)), prevalence = mean(dev$diabetes
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -156,7 +156,7 @@ quiz_mcq("p4q1", "Backward stepwise selection kept four noise markers. What is t
          explain = "With few events per variable, selection follows random patterns, and different samples give different models, as the bootstrap inclusion frequencies show.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -169,7 +169,7 @@ quiz_mcq("p4q2", "What does ridge regression do to the coefficients?",
          explain = "The ridge penalty is on the squares of the coefficients, so all of them are pulled towards zero by an amount that depends on lambda.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -182,7 +182,7 @@ quiz_mcq("p4q3", "How is the penalty lambda usually chosen in glmnet?",
          explain = "cv.glmnet fits the penalised model over a grid of lambda values and evaluates each by cross-validation. The apparent AUC would favour no penalty at all.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -195,7 +195,7 @@ quiz_mcq("p4q4", "The lasso at lambda.1se kept only age, waist and family histor
          explain = "A strong penalty sets many coefficients to zero, including real ones. Choosing lambda.min or checking external calibration shows whether the model is over-shrunk.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -208,7 +208,7 @@ quiz_mcq("p4q5", "What is uniform shrinkage?",
          explain = "A single factor, often the bootstrap calibration slope, pulls all coefficients towards zero. The intercept is refitted so that the average risk stays correct.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 2: keep an ordinary model and **repair the SE**
@@ -44,9 +44,9 @@ source("assets/quiz.R")
   - contrast **conditional** and **marginal** effects
 :::
 
-# Topic 1 — The model {background-color="#2C3E50"}
+# Topic 1 — The model {#topic-1-the-model background-color="#2C3E50"}
 
-## A random intercept for each village
+## A random intercept for each village {#a-random-intercept-for-each-village}
 
 ::: {.eq}
 SBP~ij~ = β~0~ + β~1~ Programme~j~ + β~2~ Age~ij~ + … + **u~j~** + ε~ij~       u~j~ ~ N(0, τ²),  ε~ij~ ~ N(0, σ²)
@@ -59,7 +59,7 @@ SBP~ij~ = β~0~ + β~1~ Programme~j~ + β~2~ Age~ij~ + … + **u~j~** + ε~ij~  
 - ICC = **τ² / (τ² + σ²)**
 :::
 
-## Fit it
+## Fit it {#fit-it}
 
 ```{r}
 m1 <- lmer(sbp ~ arm + age + sex + bmi + (1 | village), data = bp12)
@@ -70,7 +70,7 @@ summary(m1)$coefficients |> round(3)
 The programme effect is **−3.6 mmHg** (SE **1.6**), with **Satterthwaite degrees of freedom of about 39** from `lmerTest`. `(1 | village)` means *a separate intercept for each village*.
 :::
 
-## Variance components and ICC
+## Variance components and ICC {#variance-components-and-icc}
 
 ```{r}
 VarCorr(m1)
@@ -83,7 +83,7 @@ icc(m1)
 - Adjusted and unadjusted ICC differ because covariates explain part of the variance
 :::
 
-## Is the village effect needed?
+## Is the village effect needed? {#is-the-village-effect-needed}
 
 ```{r}
 ranova(m1)
@@ -95,9 +95,9 @@ ranova(m1)
 - **Do not drop** the cluster effect because the ICC is small or the test is not significant: the **design** says the data are clustered
 :::
 
-# Topic 2 — Shrinkage {background-color="#2C3E50"}
+# Topic 2 — Shrinkage {#topic-2-shrinkage background-color="#2C3E50"}
 
-## Predicted village effects (BLUPs)
+## Predicted village effects (BLUPs) {#predicted-village-effects-blups}
 
 ```{r}
 #| output-location: slide
@@ -111,7 +111,7 @@ tibble(village = rownames(ranef(m1)$village), re = ranef(m1)$village[, 1]) |> ar
 Shifts range from about **−5 to +6 mmHg**. They are **predictions** (BLUPs), not parameters.
 :::
 
-## Shrinkage
+## Shrinkage {#shrinkage}
 
 ::: {.eq}
 û~j~ = [ τ² / (τ² + σ²/n~j~) ] × (village mean − overall mean)
@@ -123,9 +123,9 @@ Shifts range from about **−5 to +6 mmHg**. They are **predictions** (BLUPs), n
 - Good for ranking or flagging villages: extremes by chance are **moderated**
 :::
 
-# Topic 3 — Comparing approaches {background-color="#2C3E50"}
+# Topic 3 — Comparing approaches {#topic-3-comparing-approaches background-color="#2C3E50"}
 
-## Same effect, three standard errors
+## Same effect, three standard errors {#same-effect-three-standard-errors}
 
 ```{r}
 rbind(naive = summary(m_lm <- lm(sbp ~ arm + age + sex + bmi, data = bp12))$coefficients["armProgramme", 1:2],
@@ -137,7 +137,7 @@ rbind(naive = summary(m_lm <- lm(sbp ~ arm + age + sex + bmi, data = bp12))$coef
 The **naive** SE is too small. The **cluster-robust** and **mixed-model** SEs agree. For a linear model with an identity link, the **conditional** and **marginal** effects are the **same**.
 :::
 
-## Conditional or marginal?
+## Conditional or marginal? {#conditional-or-marginal}
 
 | | Mixed model | GEE / robust |
 |---|---|---|
@@ -147,7 +147,7 @@ The **naive** SE is too small. The **cluster-robust** and **mixed-model** SEs ag
 | Also gives | village predictions, variance components | no cluster-level estimates |
 | Missing data | valid under MAR | needs more care |
 
-## Reporting a mixed model
+## Reporting a mixed model {#reporting-a-mixed-model}
 
 ::: {.good}
 - State the **model**: fixed effects, the **random effect** and the **estimation** (REML)
@@ -156,7 +156,7 @@ The **naive** SE is too small. The **cluster-robust** and **mixed-model** SEs ag
 - Say whether the effect is **conditional**
 :::
 
-## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 3 {#switch-to-r-lab-3 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `clustered-workshop/labs/lab3_mixed.R`
@@ -168,7 +168,7 @@ The **naive** SE is too small. The **cluster-robust** and **mixed-model** SEs ag
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -181,7 +181,7 @@ quiz_mcq("c3q1", "In a model with (1 | village), what is the random intercept?",
          explain = "The random intercept is a village-specific deviation from the overall intercept, drawn from a normal distribution with variance tau squared.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -194,7 +194,7 @@ quiz_mcq("c3q2", "The village SD is 3.6 and the residual SD is 14.2. Which expre
          explain = "The ICC is the between-cluster variance divided by the total variance, so squared SDs are needed: 13 / (13 + 202), about 0.06.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -207,7 +207,7 @@ quiz_mcq("c3q3", "What does shrinkage do to a village's predicted effect?",
          explain = "BLUPs combine the village's own data with the overall mean, with a weight that depends on how much data the village has. Less data means more shrinkage.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -220,7 +220,7 @@ quiz_mcq("c3q4", "An ICC of 0.02 is found in a cluster-randomised trial with 50 
          explain = "With 50 per cluster, DEFF = 1 + 49 x 0.02 = 2. The analysis should follow the design, not a test or a small ICC.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -233,7 +233,7 @@ quiz_mcq("c3q5", "For a continuous outcome, how do the mixed model and cluster-r
          explain = "With an identity link the conditional and marginal effects coincide, so the estimates are alike, and both approaches give honest SEs.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

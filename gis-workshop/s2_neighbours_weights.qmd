@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 1: spatial data, CRS, joins, honest maps
@@ -45,9 +45,9 @@ source("assets/quiz.R")
   - check how sensitive a result is to the choice
 :::
 
-# Topic 1 — Who is a neighbour? {background-color="#2C3E50"}
+# Topic 1 — Who is a neighbour? {#topic-1-who-is-a-neighbour background-color="#2C3E50"}
 
-## Contiguity: share a boundary
+## Contiguity: share a boundary {#contiguity-share-a-boundary}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -69,7 +69,7 @@ c(queen_links = sum(card(nb_q)), rook_links = sum(card(nb_r)))
 summary(nb_q)
 ```
 
-## Seeing the links
+## Seeing the links {#seeing-the-links}
 
 ```{r}
 #| output-location: slide
@@ -83,7 +83,7 @@ plot(nb_q, cen, add = TRUE, col = "red", pch = 19, cex = 0.4)
 Check three things in `summary()`: the **average number of neighbours** (about 5 here), the **least and most connected** blocks, and any **isolates** (they break most tests unless `zero.policy = TRUE`).
 :::
 
-## Distance and k-nearest neighbours
+## Distance and k-nearest neighbours {#distance-and-k-nearest-neighbours}
 
 ```{r}
 #| output-location: slide
@@ -102,9 +102,9 @@ plot(st_geometry(blocks), border = "grey80", main = "Distance band"); plot(nb_d,
 | k nearest | exactly k | unequal areas, points | links across a gap that are not real |
 | Distance band | varies | points, a travel-distance idea | too short: isolates; too long: everyone linked |
 
-# Topic 2 — From neighbours to weights {background-color="#2C3E50"}
+# Topic 2 — From neighbours to weights {#topic-2-from-neighbours-to-weights background-color="#2C3E50"}
 
-## A neighbour list says who; weights say how much
+## A neighbour list says who; weights say how much {#a-neighbour-list-says-who-weights-say-how-much}
 
 | Style | Meaning |
 |---|---|
@@ -122,7 +122,7 @@ sum(lw$weights[[1]])
 With `"W"`, area *i* gives each of its *k* neighbours weight 1/*k*. An area with 2 neighbours weights each by 0.5; one with 8 by 0.125.
 :::
 
-## The spatial lag
+## The spatial lag {#the-spatial-lag}
 
 ::: {.eq}
 lag(x)~i~ = Σ~j~ w~ij~ x~j~ = **the average of i's neighbours**
@@ -143,9 +143,9 @@ p1 + p2
 
 The lag is **smoother** than the original. Moran's I (Session 3) is essentially the slope of the lag on the value.
 
-# Topic 3 — Does the choice matter? {background-color="#2C3E50"}
+# Topic 3 — Does the choice matter? {#topic-3-does-the-choice-matter background-color="#2C3E50"}
 
-## Sensitivity
+## Sensitivity {#sensitivity}
 
 ```{r}
 w_list <- list(queen = nb2listw(nb_q, style = "W", zero.policy = TRUE), rook = nb2listw(nb_r, style = "W", zero.policy = TRUE),
@@ -160,7 +160,7 @@ map_dfr(w_list, \(w) { m <- moran.test(blocks$dengue_per_100k, w, zero.policy = 
 - **Report** the weights and check sensitivity
 :::
 
-## Common mistakes
+## Common mistakes {#common-mistakes}
 
 ::: {.bad}
 - Using the default without saying which one
@@ -169,7 +169,7 @@ map_dfr(w_list, \(w) { m <- moran.test(blocks$dengue_per_100k, w, zero.policy = 
 - Computing distances in **degrees** instead of a projected CRS
 :::
 
-## 🔧 Switch to R — Lab 2 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 2 {#switch-to-r-lab-2 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `gis-workshop/labs/lab2_weights.R`
@@ -181,7 +181,7 @@ map_dfr(w_list, \(w) { m <- moran.test(blocks$dengue_per_100k, w, zero.policy = 
 
 **Time:** 30 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -194,7 +194,7 @@ quiz_mcq("s2q1", "In row-standardised weights, what do the weights of one area a
          explain = "Row-standardisation divides each neighbour's weight by the area's neighbour count, so every row sums to 1. That makes the lag a weighted average.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -207,7 +207,7 @@ quiz_mcq("s2q2", "An area has 4 neighbours and row-standardised weights. What is
          explain = "With weights of 1/4 each, the lag is the plain average of the neighbours' values.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -220,7 +220,7 @@ quiz_mcq("s2q3", "Why are queen contiguity neighbours a poor choice for point da
          explain = "Contiguity is defined by shared polygon boundaries. For points, use k-nearest or distance-based neighbours.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -233,7 +233,7 @@ quiz_mcq("s2q4", "summary(nb) reports one region with no neighbours (an island).
          explain = "Isolates have no neighbours, so the lag is undefined. Look at the map, decide a justified link (for example k-nearest) or analyse with zero.policy and say so.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -246,7 +246,7 @@ quiz_mcq("s2q5", "Moran's I is 0.48 with queen weights and 0.12 with a distance 
          explain = "Different neighbour definitions can give different answers when the pattern is scale dependent. Report which weights you used, why, and what happens with others.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 1: declared the design, saw why weights matter
@@ -45,9 +45,9 @@ source("assets/quiz.R")
   - test an association in a **weighted table**
 :::
 
-# Topic 1 — Means, proportions, totals {background-color="#2C3E50"}
+# Topic 1 — Means, proportions, totals {#topic-1-means-proportions-totals background-color="#2C3E50"}
 
-## Means and totals
+## Means and totals {#means-and-totals}
 
 ```{r}
 m <- svymean(~sbp, des); m; confint(m)
@@ -58,7 +58,7 @@ svytotal(~hypertension, des)
 Mean SBP **125.7 mmHg** (95% CI 124.6 to 126.9). About **82,700 adults** in the population have hypertension (SE 6,000): a **total** needs the weights, since it scales up to the population.
 :::
 
-## A proportion with a good CI
+## A proportion with a good CI {#a-proportion-with-a-good-ci}
 
 ```{r}
 svyciprop(~I(hypertension == 1), des, method = "logit")
@@ -70,7 +70,7 @@ svyciprop(~I(hypertension == 1), des, method = "logit")
 - Note the **`I(... == 1)`**: `svyciprop` needs a logical or 0/1 formula
 :::
 
-## By groups
+## By groups {#by-groups}
 
 ```{r}
 svyby(~hypertension, ~residence, des, svymean)
@@ -84,7 +84,7 @@ svyby(~hypertension, ~region, des, svymean, vartype = c("se", "ci"))
 **Urban 29.7%** vs **rural 16.1%**. Regions look alike (19 to 23%); the CIs are wide because each region has only **12 PSUs**.
 :::
 
-## Quantiles
+## Quantiles {#quantiles}
 
 ```{r}
 svyquantile(~sbp, des, quantiles = c(0.25, 0.5, 0.75))
@@ -95,9 +95,9 @@ svyquantile(~sbp, des, quantiles = c(0.25, 0.5, 0.75))
 - `svyquantile()` gives the **population** quartiles with CIs: median **126 mmHg**
 :::
 
-# Topic 2 — Design effect and subpopulations {background-color="#2C3E50"}
+# Topic 2 — Design effect and subpopulations {#topic-2-design-effect-and-subpopulations background-color="#2C3E50"}
 
-## Design effect
+## Design effect {#design-effect}
 
 ```{r}
 svymean(~hypertension, des, deff = TRUE)
@@ -113,7 +113,7 @@ DEFF = variance (actual design) / variance (simple random sample of the same siz
 - **Differs by outcome**: large when the outcome varies a lot between PSUs
 :::
 
-## Subpopulations
+## Subpopulations {#subpopulations}
 
 ```{r}
 des_w30 <- subset(des, sex == "Female" & age >= 30)
@@ -124,7 +124,7 @@ svymean(~hypertension, des_w30)
 Use **`subset()` on the design**, not `filter()` on the data followed by a new `svydesign()`. `subset()` keeps the **whole design** (all strata and PSUs), so the variance is right. Filtering can remove a PSU from a stratum and make the variance **wrong** or impossible.
 :::
 
-## Weighted tables and tests
+## Weighted tables and tests {#weighted-tables-and-tests}
 
 ```{r}
 svytable(~education + hypertension, des) |> round(0)
@@ -137,7 +137,7 @@ svychisq(~education + hypertension, des)
 - **Rao-Scott** test (p ≈ 0.05); never `chisq.test()` on survey data
 :::
 
-## The same with srvyr (tidy syntax)
+## The same with srvyr (tidy syntax) {#the-same-with-srvyr-tidy-syntax}
 
 ```{r}
 resp |> as_survey_design(ids = psu, strata = stratum, weights = weight, nest = TRUE) |> group_by(residence) |>
@@ -148,7 +148,7 @@ resp |> as_survey_design(ids = psu, strata = stratum, weights = weight, nest = T
 `survey_mean()`, `survey_total()`, `survey_quantile()` plug into `group_by()` and `summarise()`; `unweighted(n())` gives the **respondent** count.
 :::
 
-## 🔧 Switch to R — Lab 2 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 2 {#switch-to-r-lab-2 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `survey-workshop/labs/lab2_describe.R`
@@ -160,7 +160,7 @@ resp |> as_survey_design(ids = psu, strata = stratum, weights = weight, nest = T
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -173,7 +173,7 @@ quiz_mcq("v2q1", "Why is the logit method often chosen for the CI of a prevalenc
          explain = "A symmetric interval can fall below 0 or above 1 for proportions near the ends. The logit scale keeps limits inside the range.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -186,7 +186,7 @@ quiz_mcq("v2q2", "Why use subset() on the design instead of filtering the data a
          explain = "Subpopulation estimates must use the complete design. Removing rows can drop PSUs and change the variance, sometimes leaving strata with a single PSU.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -199,7 +199,7 @@ quiz_mcq("v2q3", "The design effect for hypertension is 2.6 and n is 1,853. What
          explain = "The effective sample size is n divided by the design effect: 1,853 / 2.6 is about 710.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -212,7 +212,7 @@ quiz_mcq("v2q4", "svytotal(~hypertension, des) gives 82,700. What does this esti
          explain = "A total is the weighted sum: each respondent counts for the number of adults he or she represents, giving a population count.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -225,7 +225,7 @@ quiz_mcq("v2q5", "Why should svyquantile() be used rather than median() for the 
          explain = "The ordinary median treats every respondent equally. The survey version applies the weights, so it estimates the population median.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

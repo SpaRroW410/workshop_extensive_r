@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 2: adjust in the **outcome model**
@@ -43,9 +43,9 @@ source("assets/quiz.R")
   - estimate the effect in the matched sample
 :::
 
-# Topic 1 — The propensity score {background-color="#2C3E50"}
+# Topic 1 — The propensity score {#topic-1-the-propensity-score background-color="#2C3E50"}
 
-## Probability of enrolment
+## Probability of enrolment {#probability-of-enrolment}
 
 ```{r}
 ps_model <- glm(f_ps, data = htn, family = binomial)
@@ -59,7 +59,7 @@ htn |> group_by(programme) |> summarise(min = round(min(ps), 2), mean = round(me
 - The aim is **balance**, not prediction: do **not** judge it by the AUC
 :::
 
-## Overlap (positivity)
+## Overlap (positivity) {#overlap-positivity}
 
 ```{r}
 #| output-location: slide
@@ -71,9 +71,9 @@ ggplot(htn, aes(ps, fill = factor(programme, labels = c("Not enrolled", "Enrolle
 The two distributions **overlap** over almost the whole range: for nearly every enrolled adult there are **comparable** non-enrolled adults. Regions **without** overlap cannot be compared without **extrapolation**.
 :::
 
-# Topic 2 — Matching {background-color="#2C3E50"}
+# Topic 2 — Matching {#topic-2-matching background-color="#2C3E50"}
 
-## Balance before matching
+## Balance before matching {#balance-before-matching}
 
 ```{r}
 bal.tab(f_ps, data = htn, un = TRUE, s.d.denom = "pooled")$Balance[, "Diff.Un", drop = FALSE] |> round(2)
@@ -81,7 +81,7 @@ bal.tab(f_ps, data = htn, un = TRUE, s.d.denom = "pooled")$Balance[, "Diff.Un", 
 
 **Standardised mean difference (SMD)**: difference in means divided by the SD. **Below 0.1** is the usual target. Here **baseline SBP 0.63** and **age 0.43**: far off.
 
-## 1:1 nearest-neighbour matching
+## 1:1 nearest-neighbour matching {#nearest-neighbour-matching}
 
 ```{r}
 m_out <- matchit(f_ps, data = htn, method = "nearest", distance = "glm", caliper = 0.2)
@@ -94,7 +94,7 @@ m_out
 - No outcome data are used: the design is fixed **before** looking at SBP
 :::
 
-## Balance after matching
+## Balance after matching {#balance-after-matching}
 
 ```{r}
 #| output-location: slide
@@ -110,9 +110,9 @@ bal.tab(m_out, un = TRUE)$Balance[c("age", "diabetes", "baseline_sbp"), c("Diff.
 All SMDs are now **below 0.1** (baseline SBP 0.63 → 0.06). Judge matching by **balance**, never by p-values. If balance is poor, **change the propensity model** (add interactions, curves) and match again.
 :::
 
-# Topic 3 — The effect {background-color="#2C3E50"}
+# Topic 3 — The effect {#topic-3-the-effect background-color="#2C3E50"}
 
-## In the matched sample
+## In the matched sample {#in-the-matched-sample}
 
 ```{r}
 md <- match.data(m_out)
@@ -127,7 +127,7 @@ round(coeftest(fit_m, vcov. = vcovCL, cluster = ~subclass)["programme", 1:2], 2)
 - Adding the covariates to this model ("double adjustment") removes residual imbalance
 :::
 
-## Strengths and limits
+## Strengths and limits {#strengths-and-limits}
 
 | Strength | Limit |
 |---|---|
@@ -135,7 +135,7 @@ round(coeftest(fit_m, vcov. = vcovCL, cluster = ~subclass)["programme", 1:2], 2)
 | **Balance** is visible and checkable | Discards unmatched people (precision, target population) |
 | Easy to explain | Many choices (caliper, ratio, replacement): **pre-specify** |
 
-## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 3 {#switch-to-r-lab-3 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `causal-workshop/labs/lab3_match.R`
@@ -147,7 +147,7 @@ round(coeftest(fit_m, vcov. = vcovCL, cluster = ~subclass)["programme", 1:2], 2)
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -160,7 +160,7 @@ quiz_mcq("z3q1", "What is a propensity score?",
          explain = "The propensity score summarises the measured confounders into one number: the chance of being exposed. Adults with the same score are comparable on those confounders.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -173,7 +173,7 @@ quiz_mcq("z3q2", "How should you judge whether propensity-score matching has wor
          explain = "The purpose of the score is to balance confounders between groups. A high AUC can even signal poor overlap.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -186,7 +186,7 @@ quiz_mcq("z3q3", "The propensity distributions of the two groups hardly overlap.
          explain = "Without overlap (positivity) the comparison relies on extrapolation. The honest options are to restrict the population or to accept that the effect is not identified there.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -199,7 +199,7 @@ quiz_mcq("z3q4", "In 1:1 matching, 172 enrolled adults found no match within the
          explain = "Dropping unmatched adults protects comparability but changes who the result is about. Report how many were dropped and who they were.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -212,7 +212,7 @@ quiz_mcq("z3q5", "Which variables belong in the propensity-score model?",
          explain = "The score must balance pre-exposure confounders. Post-exposure variables (mediators, colliders) bias the estimate, however well they predict.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 2: simple methods are biased or have wrong SEs
@@ -43,9 +43,9 @@ source("assets/quiz.R")
   - **analyse** each data set and **pool** with Rubin's rules
 :::
 
-# Topic 1 — The idea {background-color="#2C3E50"}
+# Topic 1 — The idea {#topic-1-the-idea background-color="#2C3E50"}
 
-## Three steps
+## Three steps {#three-steps}
 
 ::: {.eq}
 **Impute** (m times)  →  **Analyse** (each data set)  →  **Pool** (Rubin's rules)
@@ -58,7 +58,7 @@ source("assets/quiz.R")
 - `mice` uses **chained equations**: each incomplete variable is imputed from a model with **all the other variables**, cycling through them (**iterations**)
 :::
 
-## Setup before imputing
+## Setup before imputing {#setup-before-imputing}
 
 ```{r}
 ini <- mice(dat, maxit = 0, printFlag = FALSE)
@@ -71,7 +71,7 @@ ini$method
 - The **predictor matrix** (1 = use as predictor): by default **everything predicts everything**; remove the **id**, include the **outcome** (SBP)
 :::
 
-## Run it
+## Run it {#run-it}
 
 ```{r}
 dat2 <- dat |> mutate(smoker = factor(smoker, labels = c("No", "Yes")))
@@ -83,9 +83,9 @@ imp$method
 **20 imputations**, **10 iterations**, a **fixed seed** (reproducible). Smoking is now imputed by `logreg`, the continuous variables by `pmm`.
 :::
 
-# Topic 2 — Checking {background-color="#2C3E50"}
+# Topic 2 — Checking {#topic-2-checking background-color="#2C3E50"}
 
-## Convergence
+## Convergence {#convergence}
 
 ```{r}
 #| output-location: slide
@@ -99,7 +99,7 @@ plot(imp, c("bmi", "hba1c", "activity"))
 - A trend or lines that **stay apart** = not converged: more iterations or fix the model
 :::
 
-## Imputed vs observed values
+## Imputed vs observed values {#imputed-vs-observed-values}
 
 ```{r}
 #| output-location: slide
@@ -111,9 +111,9 @@ densityplot(imp, ~ bmi)
 **Blue** = observed, **red** = imputed (each imputation). Imputed BMI is **shifted to the right** (mean 25.1 vs 24.1 observed): adults with a **high SBP**, who are more often missing, tend to have a **higher BMI**. Differences are **allowed** when the missingness is not random; **implausible values** are not.
 :::
 
-# Topic 3 — Analyse and pool {background-color="#2C3E50"}
+# Topic 3 — Analyse and pool {#topic-3-analyse-and-pool background-color="#2C3E50"}
 
-## with() and pool()
+## with() and pool() {#with-and-pool}
 
 ```{r}
 fit <- with(imp, lm(sbp ~ age + sex + bmi + smoker + activity))
@@ -121,7 +121,7 @@ pooled <- pool(fit)
 summary(pooled, conf.int = TRUE)[, c("term", "estimate", "std.error", "df", "conf.low", "conf.high")] |> mutate(across(where(is.numeric), \(x) round(x, 3)))
 ```
 
-## Comparison with complete case
+## Comparison with complete case {#comparison-with-complete-case}
 
 ```{r}
 m_cc <- lm(sbp ~ age + sex + bmi + smoker + activity, data = dat)
@@ -133,7 +133,7 @@ round(rbind(complete_case = summary(m_cc)$coefficients["bmi", 1:2], multiple_imp
 **MI 0.79 (SE 0.066)** against **complete case 0.69 (SE 0.071)**; the truth is about **0.80 to 0.86**. MI **removes most of the bias** and is **more precise** because it **uses all 2,000 adults**. The SE is **honest**: it includes the **between-imputation** variance.
 :::
 
-## Rules for good imputation models
+## Rules for good imputation models {#rules-for-good-imputation-models}
 
 ::: {.good}
 1. Include **all variables in the analysis model**, **including the outcome**
@@ -143,7 +143,7 @@ round(rbind(complete_case = summary(m_cc)$coefficients["bmi", 1:2], multiple_imp
 5. **Check** convergence and imputed values
 :::
 
-## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 3 {#switch-to-r-lab-3 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `missing-workshop/labs/lab3_mice.R`
@@ -155,7 +155,7 @@ round(rbind(complete_case = summary(m_cc)$coefficients["bmi", 1:2], multiple_imp
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -168,7 +168,7 @@ quiz_mcq("m3q1", "What does predictive mean matching (pmm) do?",
          explain = "pmm predicts a value for each missing entry, finds observed adults with close predictions, and takes one of their actual values, so imputations look like real data.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -181,7 +181,7 @@ quiz_mcq("m3q2", "Why are m imputed data sets created and analysed separately?",
          explain = "The imputed values differ between data sets, and so do the estimates. The between-imputation variance carries the uncertainty due to missing data.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -194,7 +194,7 @@ quiz_mcq("m3q3", "What do Rubin's rules do?",
          explain = "The pooled estimate is the mean of the m estimates, and the total variance is the mean within-imputation variance plus an inflated between-imputation variance.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -207,7 +207,7 @@ quiz_mcq("m3q4", "In the convergence plot the lines of different imputations cro
          explain = "Mixing without a trend is the sign of convergence. It does not prove that the imputation model is right, which needs checks of the imputed values.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -220,7 +220,7 @@ quiz_mcq("m3q5", "Why is the id column left out of the imputation model?",
          explain = "A unique identifier has no relationship with the variables, but would be treated as a predictor, which adds noise and can cause errors.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

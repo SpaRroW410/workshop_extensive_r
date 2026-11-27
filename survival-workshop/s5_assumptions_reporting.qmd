@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 4: the Cox model and hazard ratios
@@ -44,9 +44,9 @@ source("assets/quiz.R")
   - **report** a survival analysis
 :::
 
-# Topic 1 — Proportional hazards {background-color="#2C3E50"}
+# Topic 1 — Proportional hazards {#topic-1-proportional-hazards background-color="#2C3E50"}
 
-## The assumption
+## The assumption {#the-assumption}
 
 ::: {.key}
 The Cox model assumes the **hazard ratio is constant over time**. If one group is worse **early** and the same **later**, a single HR averages two different stories.
@@ -58,7 +58,7 @@ zph <- cox.zph(fit)
 round(zph$table, 3)
 ```
 
-## Reading the test
+## Reading the test {#reading-the-test}
 
 ::: {.incremental}
 - `cox.zph()` tests whether **Schoenfeld residuals** trend with time, **one p-value per term** plus a global one
@@ -66,7 +66,7 @@ round(zph$table, 3)
 - With nine terms tested, **borderline** p-values (age, BMI) can be **chance**: **look at the plot** before acting
 :::
 
-## Look at it
+## Look at it {#look-at-it}
 
 ```{r}
 #| output-location: slide
@@ -80,9 +80,9 @@ plot(zph[8]); abline(h = 0, col = "red")
 - A second look: **log-log plot** of the curves; **parallel** lines support proportional hazards
 :::
 
-# Topic 2 — Fixing a violation {background-color="#2C3E50"}
+# Topic 2 — Fixing a violation {#topic-2-fixing-a-violation background-color="#2C3E50"}
 
-## Fix 1: stratify
+## Fix 1: stratify {#fix-1-stratify}
 
 ```{r}
 cox_strat <- coxph(Surv(time_months, status) ~ age + sex + hiv + diabetes + smoker + bmi + mdr_tb + treatment + strata(smear), data = tb)
@@ -95,7 +95,7 @@ round(exp(coef(cox_strat)), 2)
 - Use for a **categorical** variable
 :::
 
-## Fix 2: split time and estimate the effect in each period
+## Fix 2: split time and estimate the effect in each period {#fix-2-split-time-and-estimate-the-effect-in-each-period}
 
 ```{r}
 tb_split <- survSplit(Surv(time_months, status) ~ ., data = tb, cut = 6, episode = "period")
@@ -108,9 +108,9 @@ round(exp(coef(cox_split))[c("smear_pos:factor(period)1", "smear_pos:factor(peri
 "Smear-positive disease **tripled the hazard in the first 6 months** (HR about 3) and was **not harmful afterwards** (HR about 0.6)." The **effect of time** is itself a finding. Other options: **time-varying covariates**, **landmark analysis**, **parametric models**.
 :::
 
-# Topic 3 — Censoring and reporting {background-color="#2C3E50"}
+# Topic 3 — Censoring and reporting {#topic-3-censoring-and-reporting background-color="#2C3E50"}
 
-## Is censoring "non-informative"?
+## Is censoring "non-informative"? {#is-censoring-non-informative}
 
 ::: {.incremental}
 - Kaplan-Meier and Cox assume patients **censored at time t** have the **same future risk** as those who remain
@@ -123,7 +123,7 @@ round(exp(coef(cox_split))[c("smear_pos:factor(period)1", "smear_pos:factor(peri
 tb |> group_by(hiv) |> summarise(n = n(), pct_lost = round(100 * mean(censor_reason %in% "Lost to follow-up"), 1))
 ```
 
-## Other threats
+## Other threats {#other-threats}
 
 | Problem | What to do |
 |---|---|
@@ -132,7 +132,7 @@ tb |> group_by(hiv) |> summarise(n = n(), pct_lost = round(100 * mean(censor_rea
 | **Different time zero** for groups | use the **same** starting point (e.g. start of treatment) |
 | **Too many covariates** for the events | fewer predictors; shrinkage |
 
-## Reporting checklist
+## Reporting checklist {#reporting-checklist}
 
 ::: {.good}
 1. **Population, time zero, event, end of follow-up**; number of patients, events, censored
@@ -143,7 +143,7 @@ tb |> group_by(hiv) |> summarise(n = n(), pct_lost = round(100 * mean(censor_rea
 6. **Limitations:** informative censoring, competing risks, confounding, **association, not cause**
 :::
 
-## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 5 {#switch-to-r-lab-5 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `survival-workshop/labs/lab5_assumptions.R`
@@ -155,7 +155,7 @@ tb |> group_by(hiv) |> summarise(n = n(), pct_lost = round(100 * mean(censor_rea
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -168,7 +168,7 @@ quiz_mcq("s5q1", "cox.zph() gives p = 0.0001 for the smear-status term. What doe
          explain = "A small p-value means Schoenfeld residuals trend with time, so the HR changes over follow-up. It says the proportional-hazards assumption fails for that term, not that the effect is null.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -181,7 +181,7 @@ quiz_mcq("s5q2", "Which is an appropriate response to a proportional-hazards vio
          explain = "Stratifying gives each level its own baseline hazard, so the other hazard ratios are not distorted. The price is that no HR is estimated for the stratifying variable itself.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -194,7 +194,7 @@ quiz_mcq("s5q3", "In the time-split analysis the smear HR is about 3 for the fir
          explain = "Splitting time shows the hazard differs by period. A single average HR hides that the early excess risk disappears later.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -207,7 +207,7 @@ quiz_mcq("s5q4", "Why can a large number lost to follow-up threaten a Kaplan-Mei
          explain = "The method assumes censored patients have the same future risk as those who remain. If the patients lost were at higher risk, survival is overestimated.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -220,7 +220,7 @@ quiz_mcq("s5q5", "Which item belongs in the report of a survival analysis?",
          explain = "A reader needs patients, events, censoring, median follow-up, effect sizes with CI, and evidence about the model assumption.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

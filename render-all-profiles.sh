@@ -177,6 +177,9 @@ for f in docs/dungeons/dungeons/*.html; do
 done
 
 # ── Done ──────────────────────────────────────────────────────
+# Slide catalogue for the custom-deck builder (titles only; CUSTOM_DECKS_PLAN.md §3.3)
+node scripts/slide_ids.mjs --check && node scripts/slide_ids.mjs --catalogue
+
 echo ""
 echo "════════════════════════════════════════"
 echo "  ✅ All profiles rendered successfully"

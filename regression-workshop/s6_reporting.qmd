@@ -41,7 +41,7 @@ roc_obj <- roc(cc$htn, fitted(m_log), quiet = TRUE)
 f1 <- function(x, d = 1) formatC(x, format = "f", digits = d)
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - You can now **fit** linear and logistic models and **check** them
@@ -52,9 +52,9 @@ f1 <- function(x, d = 1) formatC(x, format = "f", digits = d)
   - **what lies beyond** this workshop (models and packages)
 :::
 
-# Topic 9 — Reading the output {background-color="#2C3E50"}
+# Topic 9 — Reading the output {#topic-9-reading-the-output background-color="#2C3E50"}
 
-## Linear regression: what each number means
+## Linear regression: what each number means {#linear-regression-what-each-number-means}
 
 ```{r}
 #| echo: false
@@ -72,7 +72,7 @@ tibble(
 ) |> knitr::kable()
 ```
 
-## Logistic regression: what each number means
+## Logistic regression: what each number means {#logistic-regression-what-each-number-means}
 
 ```{r}
 #| echo: false
@@ -92,7 +92,7 @@ tibble(
 ) |> knitr::kable()
 ```
 
-## A publication-ready combined table
+## A publication-ready combined table {#a-publication-ready-combined-table}
 
 ```{r}
 #| output-location: slide
@@ -105,9 +105,9 @@ tbl_merge(list(t_lin, t_log), tab_spanner = c("**Systolic BP (β, mmHg)**", "**H
   modify_header(estimate_1 ~ "**β**", estimate_2 ~ "**OR**")
 ```
 
-# Topic 10 — Writing it up {background-color="#2C3E50"}
+# Topic 10 — Writing it up {#topic-10-writing-it-up background-color="#2C3E50"}
 
-## Results sentence — linear regression
+## Results sentence — linear regression {#results-sentence-linear-regression}
 
 ::: {.key}
 "After adjusting for age, BMI, sex, residence, education, tobacco, alcohol and physical activity, **each 1 g/day higher salt intake was associated with a `r f1(sl$estimate)` mmHg higher systolic blood pressure (95% CI `r f1(sl$conf.low)` to `r f1(sl$conf.high)`; p < 0.001)** (n = `r nrow(cc)`; adjusted R² = `r f1(r2s$adj.r.squared, 2)`)."
@@ -118,7 +118,7 @@ tbl_merge(list(t_lin, t_log), tab_spanner = c("**Systolic BP (β, mmHg)**", "**H
 - Give the **crude** estimate too (`r f1(coef(lm(sbp ~ salt_g, cc))[[2]])` mmHg) so readers see the effect of adjustment
 :::
 
-## Results sentence — logistic regression
+## Results sentence — logistic regression {#results-sentence-logistic-regression}
 
 ::: {.key}
 "Hypertension was present in `r f1(100 * mean(cc$htn), 0)`% of participants. After adjustment, **each 1 g/day higher salt intake was associated with `r f1(100 * (so$estimate - 1), 0)`% higher odds of hypertension (adjusted OR `r f1(so$estimate, 2)`; 95% CI `r f1(so$conf.low, 2)` to `r f1(so$conf.high, 2)`)**. The model showed good discrimination (AUC `r f1(as.numeric(auc(roc_obj)), 2)`)."
@@ -129,7 +129,7 @@ tbl_merge(list(t_lin, t_log), tab_spanner = c("**Systolic BP (β, mmHg)**", "**H
 - With a **common outcome**, add the **prevalence ratio** if you want to say "times as likely"
 :::
 
-## Tables and figures: what a reader needs
+## Tables and figures: what a reader needs {#tables-and-figures-what-a-reader-needs}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -155,7 +155,7 @@ tbl_merge(list(t_lin, t_log), tab_spanner = c("**Systolic BP (β, mmHg)**", "**H
 :::
 :::
 
-## The Methods paragraph
+## The Methods paragraph {#the-methods-paragraph}
 
 ::: {.incremental}
 1. **Model and why** — "multiple linear regression for SBP; logistic regression for hypertension (SBP ≥ 140 or DBP ≥ 90)"
@@ -166,7 +166,7 @@ tbl_merge(list(t_lin, t_log), tab_spanner = c("**Systolic BP (β, mmHg)**", "**H
 6. **Software** — R version and packages (below)
 :::
 
-## Software line: let R tell you
+## Software line: let R tell you {#software-line-let-r-tell-you}
 
 ```{r}
 R.version.string
@@ -178,9 +178,9 @@ sapply(c("tidyverse", "gtsummary", "broom", "performance", "pROC", "car", "lmtes
 "Analyses were done in R `r paste(R.version$major, R.version$minor, sep = ".")` using the tidyverse, gtsummary, performance, car, lmtest and pROC packages." Follow **STROBE** for observational studies.
 :::
 
-# Common pitfalls {background-color="#2C3E50"}
+# Common pitfalls {#common-pitfalls background-color="#2C3E50"}
 
-## Pitfall 1 — Stepwise selection presented as *the* analysis
+## Pitfall 1 — Stepwise selection presented as *the* analysis {#pitfall-1-stepwise-selection-presented-as-the-analysis}
 
 ::: {.bad}
 "Variables were selected by backward stepwise regression (AIC)." → biased β, narrow CIs, unstable model, ignores confounding logic.
@@ -190,7 +190,7 @@ sapply(c("tidyverse", "gtsummary", "broom", "performance", "pROC", "car", "lmtes
 **Instead:** pre-specify covariates from a **DAG or the literature**; report the same model whatever the p-values. If you use `step()`, label it **exploratory** (Session 3 demos).
 :::
 
-## Pitfall 2 — "p < 0.2 into the model"
+## Pitfall 2 — "p < 0.2 into the model" {#pitfall-2-p-0.2-into-the-model}
 
 ```{r}
 vars <- c("salt_g", "age", "bmi", "sex", "residence", "education", "tobacco", "alcohol", "phys_act")
@@ -206,7 +206,7 @@ Physical activity has **univariable p ≈ 1** — a "p < 0.2" screen would **dro
 :::
 :::
 
-## Pitfalls 3–6: say it properly {.smaller}
+## Pitfalls 3–6: say it properly {#pitfalls-36-say-it-properly .smaller}
 
 | Pitfall | ✘ Don't | ✔ Do |
 |---|---|---|
@@ -215,7 +215,7 @@ Physical activity has **univariable p ≈ 1** — a "p < 0.2" screen would **dro
 | **5. Pseudo-R² as R²** | "The model explains 29% of the variance in hypertension" | "Tjur's R² was 0.29 (a descriptive pseudo-R²)" |
 | **6. Statistical = clinical** | "Highly significant (p < 0.001), therefore important" | "A 1.8 mmHg difference per g/day (95% CI 1.2–2.4): a 5 g reduction ≈ 9 mmHg lower mean SBP" |
 
-## Pitfall 7 — Overfitting: too few events per variable
+## Pitfall 7 — Overfitting: too few events per variable {#pitfall-7-overfitting-too-few-events-per-variable}
 
 ```{r}
 events <- sum(cc$htn); params <- length(coef(m_log)) - 1
@@ -227,7 +227,7 @@ c(events = events, parameters = params, events_per_variable = round(events / par
 - Too many predictors → the model memorises noise: **great on this sample, poor on the next**
 :::
 
-## Overfitting in action: 60 pure-noise predictors
+## Overfitting in action: 60 pure-noise predictors {#overfitting-in-action-60-pure-noise-predictors}
 
 ```{r}
 set.seed(3)
@@ -243,7 +243,7 @@ round(c(AUC_on_training_data = as.numeric(auc_in), AUC_on_new_data = as.numeric(
 Pure noise can look **"good"** on the data that built it (AUC well above 0.5) and falls back toward **0.5** on new data — the signature of overfitting.
 :::
 
-## Pitfall 8 — Ignoring assumptions and clustering
+## Pitfall 8 — Ignoring assumptions and clustering {#pitfall-8-ignoring-assumptions-and-clustering}
 
 ```{r}
 se_naive   <- summary(m_lin)$coefficients[, "Std. Error"]
@@ -258,7 +258,7 @@ tibble(term = names(se_naive), naive_SE = round(se_naive, 2), village_robust_SE 
 - Remedies: mixed models, GEE, cluster-robust SE, survey methods (next slides)
 :::
 
-## Pitfall 9 — Calling associations causal
+## Pitfall 9 — Calling associations causal {#pitfall-9-calling-associations-causal}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -281,7 +281,7 @@ tibble(term = names(se_naive), naive_SE = round(se_naive, 2), village_robust_SE 
 - Causal claims need design (RCT, strong quasi-experiment) and **explicit causal reasoning**
 :::
 
-## Before you submit
+## Before you submit {#before-you-submit}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -300,9 +300,9 @@ tibble(term = names(se_naive), naive_SE = round(se_naive, 2), village_robust_SE 
 :::
 :::
 
-# Beyond this workshop {background-color="#2C3E50"}
+# Beyond this workshop {#beyond-this-workshop background-color="#2C3E50"}
 
-## Other outcome types {.smaller}
+## Other outcome types {#other-outcome-types .smaller}
 
 | Model | Packages | When you'd use it |
 |---|---|---|
@@ -311,7 +311,7 @@ tibble(term = names(se_naive), naive_SE = round(se_naive, 2), village_robust_SE 
 | **Multinomial logistic** | `nnet::multinom` | **Unordered categories** (facility chosen, contraceptive method) |
 | **Cox proportional hazards** | `survival` | **Time-to-event** with censoring (time to TB cure, relapse, death) |
 
-## Data structure and design {.smaller}
+## Data structure and design {#data-structure-and-design .smaller}
 
 | Model | Packages | When you'd use it |
 |---|---|---|
@@ -323,7 +323,7 @@ tibble(term = names(se_naive), naive_SE = round(se_naive, 2), village_robust_SE 
 Our villages are exactly why Session 4's independence assumption matters: a **mixed model** or **GEE** is the natural next step.
 :::
 
-## Flexible models and helpful tools {.smaller}
+## Flexible models and helpful tools {#flexible-models-and-helpful-tools .smaller}
 
 | Model or tool | Packages | When you'd use it |
 |---|---|---|
@@ -333,7 +333,7 @@ Our villages are exactly why Session 4's independence assumption matters: a **mi
 | **Regression modelling strategy** | `rms` | Harrell's toolkit: validation (bootstrap), nomograms, restricted cubic splines |
 | **Reporting and plots** | `modelsummary`, `sjPlot`, `broom`, `easystats` | Tidy extraction, publication tables, coefficient and effect plots, diagnostics |
 
-## Take-home messages of the day
+## Take-home messages of the day {#take-home-messages-of-the-day}
 
 ::: {.incremental}
 1. **Outcome type → model**; regression gives effects **in units**, with CIs
@@ -344,7 +344,7 @@ Our villages are exactly why Session 4's independence assumption matters: a **mi
 6. **Report** like a scientist: units, references, CIs, limitations — and **association ≠ causation**
 :::
 
-## 🔧 Switch to R — Lab 6 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 6 {#switch-to-r-lab-6 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `regression-workshop/labs/lab6_reporting.R`
@@ -356,7 +356,7 @@ Our villages are exactly why Session 4's independence assumption matters: a **mi
 
 **Time:** 35 minutes · bring your thesis variables next time!
 
-## Self-check quiz (1/6) {.smaller}
+## Self-check quiz (1/6) {#self-check-quiz-16 .smaller}
 
 ```{r}
 #| echo: false
@@ -369,7 +369,7 @@ quiz_mcq("s6q1", "Which sentence reports a linear regression result correctly?",
          explain = "Report direction, size WITH units, a CI, the adjustment set, and use 'associated with'-style wording. A bare significance statement is not enough.")
 ```
 
-## Self-check quiz (2/6) {.smaller}
+## Self-check quiz (2/6) {#self-check-quiz-26 .smaller}
 
 ```{r}
 #| echo: false
@@ -382,7 +382,7 @@ quiz_mcq("s6q2", "Why is 'keep variables with univariable p < 0.2' a poor strate
          explain = "In our data physical activity had a univariable p near 1 but an adjusted OR of about 0.57. Choose covariates from theory (DAG/literature), not crude p-values.")
 ```
 
-## Self-check quiz (3/6) {.smaller}
+## Self-check quiz (3/6) {#self-check-quiz-36 .smaller}
 
 ```{r}
 #| echo: false
@@ -395,7 +395,7 @@ quiz_mcq("s6q3", "A cross-sectional survey finds higher salt intake is associate
          explain = "Cross-sectional data show association, not temporal order, and adjustment only handles measured confounders. Use association language and discuss limitations.")
 ```
 
-## Self-check quiz (4/6) {.smaller}
+## Self-check quiz (4/6) {#self-check-quiz-46 .smaller}
 
 ```{r}
 #| echo: false
@@ -405,7 +405,7 @@ quiz_fill("s6q4", "Using at least 10 events per variable, about how many predict
           explain = "60 events ÷ 10 events per variable = 6 predictors. More than that risks overfitting.")
 ```
 
-## Self-check quiz (5/6) {.smaller}
+## Self-check quiz (5/6) {#self-check-quiz-56 .smaller}
 
 ```{r}
 #| echo: false
@@ -415,7 +415,7 @@ quiz_fill("s6q5", "Participants in our survey come from 20 villages and resemble
           explain = "Observations within a village are correlated, so the effective sample size is below n. Mixed models, GEE or cluster-robust SEs address it.")
 ```
 
-## Self-check quiz (6/6) {.smaller}
+## Self-check quiz (6/6) {#self-check-quiz-66 .smaller}
 
 ```{r}
 #| echo: false
@@ -425,7 +425,7 @@ quiz_fill("s6q6", "Prevalence is 50% in adults aged 50+ and 16% in younger adult
           explain = "PR = 0.50 / 0.16 ≈ 3.1. The corresponding OR (5.1) is larger because the outcome is common.")
 ```
 
-## Score and close
+## Score and close {#score-and-close}
 
 **Your score: <span class="quiz-score"></span>**
 

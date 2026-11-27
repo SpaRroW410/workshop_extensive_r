@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Regression workshop: outcomes that are a **measurement** or a **yes/no**
@@ -44,7 +44,7 @@ source("assets/quiz.R")
   - describe **follow-up** correctly
 :::
 
-## Our data: a synthetic TB cohort
+## Our data: a synthetic TB cohort {#our-data-a-synthetic-tb-cohort}
 
 ::: {.columns}
 ::: {.column width="55%"}
@@ -61,9 +61,9 @@ table(tb$status)
 :::
 :::
 
-# Topic 1 — Why survival analysis? {background-color="#2C3E50"} 
+# Topic 1 — Why survival analysis? {#topic-1-why-survival-analysis background-color="#2C3E50"}
 
-## Two problems with ordinary methods
+## Two problems with ordinary methods {#two-problems-with-ordinary-methods}
 
 ::: {.incremental}
 - **Different follow-up:** a patient enrolled last month has had little time to die; one enrolled two years ago has had a lot. Comparing **proportions** who died ignores this
@@ -80,7 +80,7 @@ table(tb$status)
 | **Lost to follow-up** | moved away, stopped attending |
 | **Competing event** | died of something else (a different question; see Session 5) |
 
-## Censored patients still carry information
+## Censored patients still carry information {#censored-patients-still-carry-information}
 
 ```{r}
 #| output-location: slide
@@ -97,7 +97,7 @@ tb |> slice(1:15) |> mutate(row = row_number(), outcome = ifelse(status == 1, "D
 - **Dropping** them wastes information and **biases** towards early deaths; **treating them as survivors forever** biases the other way
 :::
 
-## The three quantities
+## The three quantities {#the-three-quantities}
 
 | Quantity | Meaning |
 |---|---|
@@ -109,9 +109,9 @@ tb |> slice(1:15) |> mutate(row = row_number(), outcome = ifelse(status == 1, "D
 The **hazard** is a **rate** (events per person-time), not a probability. Cox regression (Session 4) models the hazard.
 :::
 
-# Topic 2 — The Surv object {background-color="#2C3E50"}
+# Topic 2 — The Surv object {#topic-2-the-surv-object background-color="#2C3E50"}
 
-## Time and event together
+## Time and event together {#time-and-event-together}
 
 ```{r}
 y <- Surv(tb$time_months, tb$status)
@@ -125,7 +125,7 @@ head(y, 10)
 - This object goes on the left of every survival model: `survfit(Surv(...) ~ group)`, `coxph(Surv(...) ~ x)`
 :::
 
-## Do not summarise survival times with a mean
+## Do not summarise survival times with a mean {#do-not-summarise-survival-times-with-a-mean}
 
 ```{r}
 c(mean_all = mean(tb$time_months), mean_among_deaths = mean(tb$time_months[tb$status == 1]))
@@ -135,9 +135,9 @@ c(mean_all = mean(tb$time_months), mean_among_deaths = mean(tb$time_months[tb$st
 Neither number is a survival time. The first mixes deaths and censored times; the second looks only at those who died and **ignores everyone who survived**, so it is biased downwards.
 :::
 
-# Topic 3 — Person-time and rates {background-color="#2C3E50"}
+# Topic 3 — Person-time and rates {#topic-3-person-time-and-rates background-color="#2C3E50"}
 
-## Incidence rate
+## Incidence rate {#incidence-rate}
 
 ```{r}
 py <- sum(tb$time_months) / 12
@@ -150,7 +150,7 @@ c(deaths = sum(tb$status), person_years = round(py, 1), rate_per_100_py = round(
 - Valid if the hazard is roughly **constant**; Kaplan-Meier (Session 2) removes that assumption
 :::
 
-## Describing follow-up honestly
+## Describing follow-up honestly {#describing-follow-up-honestly}
 
 ```{r}
 rkm <- survfit(Surv(time_months, 1 - status) ~ 1, data = tb)
@@ -161,7 +161,7 @@ c(median_raw_time = median(tb$time_months), median_followup_reverse_KM = unname(
 The **reverse Kaplan-Meier** swaps the roles of event and censoring, so it asks "how long would a typical patient be followed *if they did not die*?". The **median of the raw times** is pulled down by deaths and understates follow-up.
 :::
 
-## Checklist before any analysis
+## Checklist before any analysis {#checklist-before-any-analysis}
 
 ::: {.good}
 1. Define **time zero** (start of treatment, diagnosis) and the **event** precisely
@@ -170,7 +170,7 @@ The **reverse Kaplan-Meier** swaps the roles of event and censoring, so it asks 
 4. Report **median follow-up** (reverse KM), person-time and events
 :::
 
-## 🔧 Switch to R — Lab 1 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 1 {#switch-to-r-lab-1 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `survival-workshop/labs/lab1_data.R`
@@ -182,7 +182,7 @@ The **reverse Kaplan-Meier** swaps the roles of event and censoring, so it asks 
 
 **Time:** 30 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -195,7 +195,7 @@ quiz_mcq("s1q1", "What does a patient who was alive at the last clinic visit (mo
          explain = "A censored patient is known to have survived to the last contact. Survival methods use that time at risk, then drop the patient from the risk set. Dropping or assuming survival or death all bias the estimate.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -208,7 +208,7 @@ quiz_mcq("s1q2", "A TB cohort has 113 deaths among 600 patients. Why is 'mortali
          explain = "Patients enrolled later were observed for less time, so fewer have had the chance to die. Rates (events per person-time) and Kaplan-Meier estimates use each patient's time at risk.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -221,7 +221,7 @@ quiz_mcq("s1q3", "In the output of a Surv object, 17.2+ means what?",
          explain = "The plus sign marks a censored time: the patient was still event-free at 17.2 months, and is not observed afterwards.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -234,7 +234,7 @@ quiz_mcq("s1q4", "What is the hazard in survival analysis?",
          explain = "The hazard is a rate, events per unit of time among those still at risk. Survival is a probability; the median is a time; deaths over patients is a crude proportion.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -247,7 +247,7 @@ quiz_mcq("s1q5", "Why is the reverse Kaplan-Meier median a better description of
          explain = "Patients who died stop being followed, which pulls raw times down. Treating censoring as the event shows how long a patient would be followed if they did not die.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

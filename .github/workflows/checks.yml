@@ -17,6 +17,8 @@ jobs:
         run: Rscript -e 'install.packages(c("yaml", "jsonlite", "tidyverse", "readxl", "janitor", "rstatix", "effectsize", "car", "nortest", "exact2x2"))'
       - name: Profile files match curriculum.yml
         run: Rscript scripts/build_profiles.R --check
+      - name: Every workshop slide has a stable ID (custom decks and notes refer to them)
+        run: node scripts/slide_ids.mjs --check
       - name: Quiz engine copies match the master copy
         run: bash scripts/sync_workshop_assets.sh --check
       - name: Quiz quality gate (all workshops)

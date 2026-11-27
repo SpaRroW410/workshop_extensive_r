@@ -38,7 +38,7 @@ dat2 <- dat |> mutate(smoker = factor(smoker, labels = c("No", "Yes")))
 imp <- mice(dat2, m = 20, maxit = 10, seed = 2038, printFlag = FALSE)
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 3: impute, analyse, pool
@@ -50,9 +50,9 @@ imp <- mice(dat2, m = 20, maxit = 10, seed = 2038, printFlag = FALSE)
   - use **auxiliary variables**
 :::
 
-# Topic 1 — How much did the missing data cost? {background-color="#2C3E50"}
+# Topic 1 — How much did the missing data cost? {#topic-1-how-much-did-the-missing-data-cost background-color="#2C3E50"}
 
-## Fraction of missing information
+## Fraction of missing information {#fraction-of-missing-information}
 
 ```{r}
 fit <- with(imp, lm(sbp ~ age + sex + bmi + smoker + activity))
@@ -66,7 +66,7 @@ pool(fit)$pooled[, c("term", "fmi", "lambda")] |> mutate(across(where(is.numeric
 - A high fmi means **more imputations** are needed
 :::
 
-## How many imputations?
+## How many imputations? {#how-many-imputations}
 
 ```{r}
 se_bmi <- function(m, seed) { i <- mice(dat2, m = m, maxit = 10, seed = seed, printFlag = FALSE); s <- summary(pool(with(i, lm(sbp ~ age + sex + bmi + smoker + activity)))); s$std.error[s$term == "bmi"] }
@@ -77,9 +77,9 @@ sapply(c(m5 = 5, m50 = 50), function(m) round(range(sapply(1:6, function(seed) s
 Six different seeds: with **m = 5** the pooled SE of BMI ranges from **0.063 to 0.089**; with **m = 50**, only **0.065 to 0.071**. More imputations make the results **independent of the seed**. Old advice (m = 5) is **outdated**: use **at least as many as the percentage of incomplete cases** (here 55), at least 20.
 :::
 
-# Topic 2 — Analysis complications {background-color="#2C3E50"}
+# Topic 2 — Analysis complications {#topic-2-analysis-complications background-color="#2C3E50"}
 
-## A derived variable: hypertension
+## A derived variable: hypertension {#a-derived-variable-hypertension}
 
 ```{r}
 long <- complete(imp, "long", include = TRUE) |> mutate(htn = as.integer(sbp >= 140))
@@ -94,7 +94,7 @@ summary(pool(fit_h), conf.int = TRUE, exponentiate = TRUE)[-1, c("term", "estima
 - Odds ratio **1.14 per BMI unit** (95% CI 1.09 to 1.19)
 :::
 
-## An interaction
+## An interaction {#an-interaction}
 
 ```{r}
 fit_full <- with(imp, lm(sbp ~ age + sex * bmi + smoker + activity))
@@ -107,7 +107,7 @@ D1(fit_full, fit_red)
 - If you plan an **interaction** or a **curve**, the **imputation model must contain it** (e.g. impute **separately by group**, or add the product as a variable), otherwise the imputed values behave **as if no interaction existed**, biasing it **towards zero**
 :::
 
-## Auxiliary variables
+## Auxiliary variables {#auxiliary-variables}
 
 ```{r}
 imp_no <- mice(dat2 |> select(-hba1c), m = 20, maxit = 10, seed = 2038, printFlag = FALSE)
@@ -120,7 +120,7 @@ round(c(without_hba1c = b_no$estimate[b_no$term == "bmi"], with_hba1c = b_full$e
 **HbA1c is not in the SBP model**, but it is **related to BMI** and to the missingness. Including it as an **auxiliary variable** costs nothing and can **reduce bias and increase precision**; here the effect is **small** (0.80 vs 0.79). Include variables that **predict the missing values or the missingness**.
 :::
 
-## Checklist
+## Checklist {#checklist}
 
 ::: {.good}
 1. Report the **fmi** for key estimates
@@ -130,7 +130,7 @@ round(c(without_hba1c = b_no$estimate[b_no$term == "bmi"], with_hba1c = b_full$e
 5. Use **`D1()`/`D3()`** for tests of several coefficients, not the average of p-values
 :::
 
-## 🔧 Switch to R — Lab 4 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 4 {#switch-to-r-lab-4 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `missing-workshop/labs/lab4_diagnostics.R`
@@ -142,7 +142,7 @@ round(c(without_hba1c = b_no$estimate[b_no$term == "bmi"], with_hba1c = b_full$e
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -155,7 +155,7 @@ quiz_mcq("m4q1", "A pooled estimate has an fmi of 0.3. What does that mean?",
          explain = "The fraction of missing information is the share of the total variance attributable to the missing data. It is not the percentage of missing values.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -168,7 +168,7 @@ quiz_mcq("m4q2", "Why use m = 50 rather than m = 5 for the final analysis?",
          explain = "With few imputations the between-imputation variance is poorly estimated, so SEs change from one seed to another. More imputations stabilise them.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -181,7 +181,7 @@ quiz_mcq("m4q3", "SBP is incomplete and the analysis needs hypertension (SBP of 
          explain = "Derived variables are computed after imputation within each data set, so they stay consistent with the imputed original variable and no information is lost.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -194,7 +194,7 @@ quiz_mcq("m4q4", "Why should the imputation model contain the interaction you pl
          explain = "The imputation model should be at least as rich as the analysis model. If it ignores the interaction, the imputed data contain none, and the pooled analysis underestimates it.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -207,7 +207,7 @@ quiz_mcq("m4q5", "What are auxiliary variables in multiple imputation?",
          explain = "Auxiliary variables are in the imputation model only. They carry information about the missing values or the missingness and can reduce bias and increase precision.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

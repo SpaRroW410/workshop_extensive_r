@@ -38,7 +38,7 @@ b_c <- coef(m_crude)[["salt_g"]]; b_a <- coef(m_adj)[["salt_g"]]
 ci_a <- confint(m_adj)["salt_g", ]
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 2: one predictor → slope in units, prediction, R²
@@ -50,9 +50,9 @@ ci_a <- confint(m_adj)["salt_g", ]
   - **Model-building strategies** — and why stepwise is risky
 :::
 
-# Topic 5 — Inference for β {background-color="#2C3E50"}
+# Topic 5 — Inference for β {#topic-5-inference-for-beta background-color="#2C3E50"}
 
-## Is the slope different from zero?
+## Is the slope different from zero? {#is-the-slope-different-from-zero}
 
 ::: {.key}
 **H₀:** β = 0 (no linear association)   **H₁:** β ≠ 0
@@ -68,7 +68,7 @@ tidy(m_crude, conf.int = TRUE) |> mutate(across(where(is.numeric), ~ signif(.x, 
 - **95% CI** = estimate ± ≈2 SE
 :::
 
-## What a p-value looks like
+## What a p-value looks like {#what-a-p-value-looks-like}
 
 ```{r}
 #| echo: false
@@ -88,7 +88,7 @@ ggplot(d, aes(x, y)) +
   labs(x = "t statistic if the true β were 0", y = "density")
 ```
 
-## What a p-value is — and is not
+## What a p-value is — and is not {#what-a-p-value-is-and-is-not}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -109,7 +109,7 @@ the probability of data this extreme **if β were truly 0** (and the model assum
 :::
 :::
 
-## Confidence intervals say more
+## Confidence intervals say more {#confidence-intervals-say-more}
 
 ```{r}
 cbind(estimate = coef(m_adj), confint(m_adj))["salt_g", ] |> round(2)
@@ -121,7 +121,7 @@ cbind(estimate = coef(m_adj), confint(m_adj))["salt_g", ] |> round(2)
 - CI excludes 0 ⇔ p < 0.05 (same information, richer format)
 :::
 
-## Statistical vs clinical significance
+## Statistical vs clinical significance {#statistical-vs-clinical-significance}
 
 ```{r}
 # A tiny true effect: 0.5 mmHg per g/day, SD of salt = 2.3 g, residual SD = 15 mmHg
@@ -138,9 +138,9 @@ With enough people, even an effect of **0.5 mmHg per g/day** becomes "highly sig
 Our adjusted effect is about 1.8 mmHg per g/day: a 5 g/day reduction in the community would shift mean SBP by about 9 mmHg — clinically large at population level. Judge size against what matters clinically, not against 0.05.
 :::
 
-# Topic 6 — Confounding and adjustment {background-color="#2C3E50"}
+# Topic 6 — Confounding and adjustment {#topic-6-confounding-and-adjustment background-color="#2C3E50"}
 
-## What is a confounder?
+## What is a confounder? {#what-is-a-confounder}
 
 ```{mermaid}
 %%| echo: false
@@ -159,7 +159,7 @@ flowchart LR
 A **confounder** is associated with the exposure **and** the outcome, and is not on the causal path between them. Ignoring it **mixes** its effect into the crude estimate.
 :::
 
-## In our data: older, heavier people eat more salt
+## In our data: older, heavier people eat more salt {#in-our-data-older-heavier-people-eat-more-salt}
 
 ```{r}
 #| output-location: slide
@@ -177,7 +177,7 @@ cc |> select(salt_g, sbp, age, bmi) |>
 Age and BMI also raise SBP directly. So part of the crude salt–SBP slope is **really age and BMI**.
 :::
 
-## Crude vs adjusted β
+## Crude vs adjusted β {#crude-vs-adjusted-beta}
 
 ```{r}
 m_crude <- lm(sbp ~ salt_g, data = cc)
@@ -194,7 +194,7 @@ The salt β shrinks from **`r round(b_c, 1)`** to **`r round(b_a, 1)`** mmHg per
 :::
 :::
 
-## Which variable moved it? Add them one at a time
+## Which variable moved it? Add them one at a time {#which-variable-moved-it-add-them-one-at-a-time}
 
 ```{r}
 #| output-location: slide
@@ -216,7 +216,7 @@ ggplot(path, aes(estimate, fct_rev(model))) +
   labs(x = "β for salt (mmHg per g/day), 95% CI", y = NULL)
 ```
 
-## Interpreting adjusted coefficients
+## Interpreting adjusted coefficients {#interpreting-adjusted-coefficients}
 
 ```{r}
 #| output-location: slide
@@ -227,7 +227,7 @@ tbl_regression(m_adj, intercept = FALSE) |> bold_labels()
 Every coefficient is "holding the other variables in the model constant". Read the salt row: about 1.8 mmHg per g/day. Then age: about 0.6 mmHg per year. BMI: about 0.9 mmHg per kg/m² — so roughly 4.5 mmHg per 5 units.
 :::
 
-## "Holding the others constant"
+## "Holding the others constant" {#holding-the-others-constant}
 
 ::: {.key}
 **Adjusted β for salt = `r round(b_a, 1)`:** *compare two people of the **same age, BMI, sex, residence, education, tobacco, alcohol and activity** — the one who eats 1 g/day more has, on average, `r round(b_a, 1)` mmHg higher SBP.*
@@ -238,7 +238,7 @@ Every coefficient is "holding the other variables in the model constant". Read t
 - Unmeasured confounding (family history, stress, measurement error in salt) can remain
 :::
 
-## Confounding can even reverse a story: education
+## Confounding can even reverse a story: education {#confounding-can-even-reverse-a-story-education}
 
 ```{r}
 #| output-location: slide
@@ -259,9 +259,9 @@ ggplot(edu, aes(estimate, term, colour = model)) +
 Crude: "educated people have lower SBP". Adjusted for **age** (older adults have less schooling *and* higher SBP) the gradient largely disappears.
 :::
 
-# Dummy coding {background-color="#2C3E50"}
+# Dummy coding {#dummy-coding background-color="#2C3E50"}
 
-## Categorical predictors become 0/1 columns
+## Categorical predictors become 0/1 columns {#categorical-predictors-become-01-columns}
 
 ```{r}
 model.matrix(~ education, data = cc) |> head(6)
@@ -273,7 +273,7 @@ model.matrix(~ education, data = cc) |> head(6)
 - Each coefficient = **difference vs the reference**, holding the other variables constant
 :::
 
-## Interpreting each level
+## Interpreting each level {#interpreting-each-level}
 
 ```{r}
 tidy(m_adj, conf.int = TRUE) |>
@@ -288,7 +288,7 @@ tidy(m_adj, conf.int = TRUE) |>
 - Always state the **reference category** when you report a categorical β
 :::
 
-## Changing the reference: `relevel()`
+## Changing the reference: `relevel()` {#changing-the-reference-relevel}
 
 ```{r}
 cc$education2 <- relevel(cc$education, ref = "Graduate+")
@@ -302,9 +302,9 @@ c(salt_before = coef(m_adj)[["salt_g"]], salt_after = coef(m_adj2)[["salt_g"]])
 Same model, same fit, same salt β — only the **comparison** changes. Choose a reference that is **large**, **clinically meaningful** (e.g. lowest-risk or "usual" group) and **stated in the table footnote**.
 :::
 
-# Model-building strategies {background-color="#2C3E50"}
+# Model-building strategies {#model-building-strategies background-color="#2C3E50"}
 
-## Four ways to choose covariates {.smaller}
+## Four ways to choose covariates {#four-ways-to-choose-covariates .smaller}
 
 | Strategy | Idea | Verdict |
 |---|---|---|
@@ -313,7 +313,7 @@ Same model, same fit, same salt β — only the **comparison** changes. Choose a
 | **Forward / backward / stepwise (AIC)** | Let an algorithm add and drop terms | ⚠️ Exploration only |
 | **Univariable p < 0.2 screening** | Keep what is "significant" alone | ⚠️ Avoid (Session 6) |
 
-## Purposeful selection (Hosmer–Lemeshow)
+## Purposeful selection (Hosmer–Lemeshow) {#purposeful-selection-hosmerlemeshow}
 
 ::: {.incremental}
 1. Fit each variable **alone**; keep those clinically important or with a liberal p (≈ 0.20–0.25)
@@ -329,7 +329,7 @@ It is driven by **change in the exposure β**, not only p-values — better than
 :::
 :::
 
-## DAG / theory-driven selection — recommended
+## DAG / theory-driven selection — recommended {#dag-theory-driven-selection-recommended}
 
 ```{mermaid}
 %%| echo: false
@@ -359,7 +359,7 @@ flowchart LR
 This DAG is the team's causal story, drawn before analysis. Orange = confounders to adjust for. Dashed = risk factors for the outcome only: adjusting for them improves precision but is not needed for confounding. DAGs are assumptions — state them, defend them, and show sensitivity to alternatives.
 :::
 
-## How theory chooses the model
+## How theory chooses the model {#how-theory-chooses-the-model}
 
 ::: {.incremental}
 - **Adjust for** common causes of exposure and outcome (age, sex, residence, BMI-as-confounder, education)
@@ -374,7 +374,7 @@ That is exactly the "adjusted" model we have been fitting — chosen from the **
 :::
 :::
 
-## Automated selection: how `step()` works
+## Automated selection: how `step()` works {#automated-selection-how-step-works}
 
 ::: {.columns}
 ::: {.column width="34%"}
@@ -404,7 +404,7 @@ at each step consider **adding or dropping** → stop when AIC cannot improve
 AIC = fit penalised for number of parameters; **lower is better**. (Same data, same rows in every model!)
 :::
 
-## `step()` in R — forward
+## `step()` in R — forward {#step-in-r-forward}
 
 ```{r}
 m_null <- lm(sbp ~ 1, data = cc)
@@ -415,7 +415,7 @@ fwd <- step(m_null, scope = formula(m_full), direction = "forward", trace = 0)
 fwd$anova |> mutate(across(where(is.numeric), ~ round(.x, 1)))
 ```
 
-## `step()` in R — backward and both
+## `step()` in R — backward and both {#step-in-r-backward-and-both}
 
 ```{r}
 bwd  <- step(m_full, direction = "backward", trace = 0)
@@ -423,7 +423,7 @@ both <- step(m_full, direction = "both",     trace = 0)
 bwd$anova |> mutate(across(where(is.numeric), ~ round(.x, 1)))
 ```
 
-## Do they agree?
+## Do they agree? {#do-they-agree}
 
 ```{r}
 sel <- list(forward = fwd, backward = bwd, both = both, full = m_full)
@@ -439,7 +439,7 @@ map_dfr(sel, ~ {
 **Forward kept `waist`; backward and both kept `bmi`** — near-duplicates. Which "wins" is a coin flip, not science.
 :::
 
-## Why automated selection is problematic
+## Why automated selection is problematic {#why-automated-selection-is-problematic}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -464,7 +464,7 @@ map_dfr(sel, ~ {
 Let us *see* 1–3 in our data.
 :::
 
-## Demo 1: step() on pure noise
+## Demo 1: step() on pure noise {#demo-1-step-on-pure-noise}
 
 ```{r}
 set.seed(1)
@@ -479,7 +479,7 @@ tidy(kept) |> filter(str_detect(term, "^z")) |> mutate(across(where(is.numeric),
 Twenty **random-number** variables, nothing to find. `step()` kept **`r sum(grepl("^z", names(coef(kept))))`** of them, one with **p = `r round(min(summary(kept)$coefficients[grepl("^z", rownames(summary(kept)$coefficients)), 4]), 3)`**. A thesis table built this way reports "significant" noise.
 :::
 
-## Demo 2: the selection changes with the sample
+## Demo 2: the selection changes with the sample {#demo-2-the-selection-changes-with-the-sample}
 
 ```{r}
 #| output-location: slide
@@ -504,7 +504,7 @@ ggplot(freq, aes(selected, reorder(variable, selected))) +
 Bootstrap = resample the same 550 people with replacement and rerun the whole procedure. Variables such as BMI, alcohol and education flip in and out; residence and waist are rarely selected. A "final model" from one run is one draw from this distribution.
 :::
 
-## Demo 3: the β after selection is distorted
+## Demo 3: the β after selection is distorted {#demo-3-the-beta-after-selection-is-distorted}
 
 ```{r}
 #| fig-height: 3.8
@@ -520,7 +520,7 @@ tibble(beta = b_alc) |>
 Red line = full-model β (`r round(coef(m_full)[["alcoholYes"]], 1)`). Alcohol survived in **`r sum(b_alc != 0)`** of 100 runs; **when kept, its average β was `r round(mean(b_alc[b_alc != 0]), 1)`** — inflated; when dropped it is **0**. One "final" model hides all of this, hence **overly narrow CIs**.
 :::
 
-## A defensible workflow
+## A defensible workflow {#a-defensible-workflow}
 
 ::: {.incremental}
 1. **Think first** — draw the DAG; list confounders; fix the model in the protocol
@@ -530,7 +530,7 @@ Red line = full-model β (`r round(coef(m_full)[["alcoholYes"]], 1)`). Alcohol s
 5. Use `step()`, if at all, **only to explore** — and say so
 :::
 
-## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 3 {#switch-to-r-lab-3 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `regression-workshop/labs/lab3_multiple.R`
@@ -542,7 +542,7 @@ Red line = full-model β (`r round(coef(m_full)[["alcoholYes"]], 1)`). Alcohol s
 
 **Time:** 45 minutes · answer Q1–Q5 in the comments
 
-## Self-check quiz (1/6) {.smaller}
+## Self-check quiz (1/6) {#self-check-quiz-16 .smaller}
 
 ```{r}
 #| echo: false
@@ -555,7 +555,7 @@ quiz_mcq("s3q1", "The salt coefficient has p = 0.0003. Which statement is correc
          explain = "A p-value is the probability of data this extreme IF H0 (and the model) were true. It says nothing about effect size or clinical importance.")
 ```
 
-## Self-check quiz (2/6) {.smaller}
+## Self-check quiz (2/6) {#self-check-quiz-26 .smaller}
 
 ```{r}
 #| echo: false
@@ -568,7 +568,7 @@ quiz_mcq("s3q2", "The salt β falls from 3.4 (crude) to 1.8 after adjusting for 
          explain = "Age and BMI relate to both salt intake and SBP, so part of the crude association was theirs. Adjusting removes measured confounding.")
 ```
 
-## Self-check quiz (3/6) {.smaller}
+## Self-check quiz (3/6) {#self-check-quiz-36 .smaller}
 
 ```{r}
 #| echo: false
@@ -581,7 +581,7 @@ quiz_mcq("s3q3", "In the adjusted model with low activity as the reference, phys
          explain = "A dummy coefficient is the difference versus the REFERENCE level, holding the other covariates constant. Always name the reference.")
 ```
 
-## Self-check quiz (4/6) {.smaller}
+## Self-check quiz (4/6) {#self-check-quiz-46 .smaller}
 
 ```{r}
 #| echo: false
@@ -594,7 +594,7 @@ quiz_mcq("s3q4", "Which statement about stepwise (AIC) selection is TRUE?",
          explain = "After selection the usual SEs ignore the data-driven search: estimates are biased away from 0, CIs are too narrow and the chosen set is unstable.")
 ```
 
-## Self-check quiz (5/6) {.smaller}
+## Self-check quiz (5/6) {#self-check-quiz-56 .smaller}
 
 ```{r}
 #| echo: false
@@ -604,7 +604,7 @@ quiz_fill("s3q5", "An algorithm starts from an intercept-only model, adds the va
           explain = "Forward selection adds terms; backward elimination starts full and drops terms; stepwise can do both.")
 ```
 
-## Self-check quiz (6/6) {.smaller}
+## Self-check quiz (6/6) {#self-check-quiz-66 .smaller}
 
 ```{r}
 #| echo: false
@@ -614,7 +614,7 @@ quiz_fill("s3q6", "With low activity as reference, phys_actmoderate = −3.4 and
           explain = "Both coefficients are differences from the same reference, so high versus moderate is −5.0 − (−3.4) = −1.6 mmHg.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

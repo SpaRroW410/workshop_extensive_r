@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 3: a random intercept for **village**
@@ -45,9 +45,9 @@ source("assets/quiz.R")
   - explain why mixed models cope with **missing visits** (MAR)
 :::
 
-# Topic 1 — Looking at trajectories {background-color="#2C3E50"}
+# Topic 1 — Looking at trajectories {#topic-1-looking-at-trajectories background-color="#2C3E50"}
 
-## Long format
+## Long format {#long-format}
 
 ```{r}
 bp |> filter(person %in% c("V01-P01", "V01-P02")) |> select(person, arm, months, sbp)
@@ -58,7 +58,7 @@ bp |> count(person) |> count(n, name = "people")
 **One row per visit** (long format) is what the models need. Only **59%** of people have all four visits.
 :::
 
-## Mean SBP by arm and visit
+## Mean SBP by arm and visit {#mean-sbp-by-arm-and-visit}
 
 ```{r}
 #| output-location: slide
@@ -72,9 +72,9 @@ bp |> group_by(arm, months) |> summarise(mean_sbp = mean(sbp), .groups = "drop")
 Similar at baseline (randomised). The **programme arm declines** and the **control arm** stays about flat.
 :::
 
-# Topic 2 — The model {background-color="#2C3E50"}
+# Topic 2 — The model {#topic-2-the-model background-color="#2C3E50"}
 
-## Time × arm with nested random effects
+## Time × arm with nested random effects {#time-arm-with-nested-random-effects}
 
 ```{r}
 m_t <- lmer(sbp ~ months * arm + age + sex + bmi + (1 | village / person), data = bp)
@@ -85,7 +85,7 @@ summary(m_t)$coefficients["months:armProgramme", ] |> round(3)
 The **interaction** is the **difference in slopes**: the programme arm declines **about 0.4 mmHg per month faster**. `(1 | village / person)` gives a random intercept for each village **and** for each person within it.
 :::
 
-## The effect at 12 months
+## The effect at 12 months {#the-effect-at-12-months}
 
 ```{r}
 fe <- fixef(m_t)
@@ -99,15 +99,15 @@ fe[["armProgramme"]] + 12 * fe[["months:armProgramme"]]
 - If the trend is not a straight line, use **months as a factor** or a spline
 :::
 
-## Is the interaction within-person or between-village?
+## Is the interaction within-person or between-village? {#is-the-interaction-within-person-or-between-village}
 
 ::: {.warn}
 The **interaction** compares **changes within people**, so the naive SE is not too small, it is **too large** (0.12 instead of 0.07). Clustering inflates SEs of **between-cluster** effects and can **reduce** them for **within-cluster** effects. That is why the model must follow the design.
 :::
 
-# Topic 3 — Slopes, AR(1) and missing data {background-color="#2C3E50"}
+# Topic 3 — Slopes, AR(1) and missing data {#topic-3-slopes-ar1-and-missing-data background-color="#2C3E50"}
 
-## A random slope for time
+## A random slope for time {#a-random-slope-for-time}
 
 ```{r}
 m_s <- lmer(sbp ~ months * arm + age + sex + bmi + (1 | village) + (months | person), data = bp, control = lmerControl(optimizer = "bobyqa"))
@@ -120,7 +120,7 @@ anova(m_t, m_s)
 - Random slopes need **many** visits per person; with 4 visits the model can fail to converge
 :::
 
-## GEE with AR(1)
+## GEE with AR(1) {#gee-with-ar1}
 
 ```{r}
 d <- bp |> arrange(person, months)
@@ -134,7 +134,7 @@ round(summary(g_ar)$coefficients["months:armProgramme", ], 3)
 - This GEE has `id = person` and so **ignores the village** level
 :::
 
-## Missing visits
+## Missing visits {#missing-visits}
 
 ::: {.key}
 About **13% of visits are missing**, and dropout is more likely for **older** people and after a **high** SBP. That is **missing at random** (MAR): the reason depends on **observed** values.
@@ -151,7 +151,7 @@ c(complete_cases = n_distinct(complete$person), all_people = n_distinct(bp$perso
 - If missingness depends on the **unobserved** value itself (MNAR), neither is safe: run a **sensitivity analysis** (later module)
 :::
 
-## 🔧 Switch to R — Lab 4 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 4 {#switch-to-r-lab-4 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `clustered-workshop/labs/lab4_long.R`
@@ -163,7 +163,7 @@ c(complete_cases = n_distinct(complete$person), all_people = n_distinct(bp$perso
 
 **Time:** 45 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -176,7 +176,7 @@ quiz_mcq("c4q1", "What does the months:armProgramme coefficient in the model est
          explain = "The interaction is the difference in slopes between the arms. The 'months' term alone is the control slope, and the arm term alone is the baseline difference.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -189,7 +189,7 @@ quiz_mcq("c4q2", "What does (1 | village / person) specify?",
          explain = "The slash nests the grouping factors: persons within villages. This takes account of both the village level and the repeated visits.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -202,7 +202,7 @@ quiz_mcq("c4q3", "In this model the interaction naive SE (0.12) was larger than 
          explain = "A comparison of change within each person removes the stable person-to-person differences. Clustering mainly inflates between-cluster estimates, such as the arm effect.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -215,7 +215,7 @@ quiz_mcq("c4q4", "Under missing at random, why can the mixed model be used with 
          explain = "Likelihood-based mixed models are valid when the chance of missingness depends only on observed data that are in the model. They do not need complete cases.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -228,7 +228,7 @@ quiz_mcq("c4q5", "A random slope for months is tried and the likelihood-ratio p-
          explain = "A non-significant improvement means the extra variance component is not needed. It is not proof of no difference, but the simpler model is preferred.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Earlier workshops: **explain** (the effect of an exposure)
@@ -43,7 +43,7 @@ source("assets/quiz.R")
   - fit a model and give a **predicted risk** and **risk groups**
 :::
 
-## Prediction is not explanation
+## Prediction is not explanation {#prediction-is-not-explanation}
 
 | | Explanation | Prediction |
 |---|---|---|
@@ -56,7 +56,7 @@ source("assets/quiz.R")
 Coefficients of correlated predictors need **not** be interpretable in a prediction model; what matters is **how well the predicted risks work in new patients**.
 :::
 
-## Our problem: screening for undiagnosed diabetes
+## Our problem: screening for undiagnosed diabetes {#our-problem-screening-for-undiagnosed-diabetes}
 
 ::: {.columns}
 ::: {.column width="55%"}
@@ -73,9 +73,9 @@ dev |> select(age, sex, bmi, waist, fam_history, hypertension, activity, smoker,
 :::
 :::
 
-# Topic 1 — Is the sample big enough? {background-color="#2C3E50"}
+# Topic 1 — Is the sample big enough? {#topic-1-is-the-sample-big-enough background-color="#2C3E50"}
 
-## Events per variable
+## Events per variable {#events-per-variable}
 
 ```{r}
 c(adults = nrow(dev), events = sum(dev$diabetes), prevalence = mean(dev$diabetes))
@@ -86,9 +86,9 @@ sum(dev$diabetes) / 8
 It is the **number of events** (the rarer outcome), not the number of adults, that limits the model. **84 events for 8 parameters** = **10.5 events per parameter**, just at the **rule of thumb (10)**. Newer criteria (Riley et al.) give a sample size from the **expected performance** and **shrinkage**; they usually ask for **more**.
 :::
 
-# Topic 2 — The model {background-color="#2C3E50"}
+# Topic 2 — The model {#topic-2-the-model background-color="#2C3E50"}
 
-## Fit and read
+## Fit and read {#fit-and-read}
 
 ```{r}
 m1 <- glm(f_true, data = dev, family = binomial)
@@ -100,7 +100,7 @@ round(exp(coef(m1)), 3)
 - The **BMI OR is 0.97**: waist and BMI carry **the same information**, so single coefficients are **unstable**. For **prediction** this is acceptable; for **explanation** it would not be
 :::
 
-## Predicted risks
+## Predicted risks {#predicted-risks}
 
 ```{r}
 dev$risk <- predict(m1, type = "response")
@@ -116,7 +116,7 @@ predict(m1, newdata = new, type = "response")
 Risks range from **0.2% to 86%** (median 7.7%); their mean equals the **prevalence (12%)**. A 55-year-old man with BMI 29, waist 100 cm, family history, hypertension, 2 hours of activity, non-smoker has a predicted risk of **54%**. Clinicians use **risks**, not odds ratios.
 :::
 
-## Risk groups
+## Risk groups {#risk-groups}
 
 ```{r}
 dev |> mutate(group = cut(risk, c(0, 0.05, 0.15, 1), labels = c("low (<5%)", "medium (5-15%)", "high (15%+)"), include.lowest = TRUE)) |> group_by(group) |> summarise(n = n(), observed = round(mean(diabetes), 3))
@@ -126,7 +126,7 @@ dev |> mutate(group = cut(risk, c(0, 0.05, 0.15, 1), labels = c("low (<5%)", "me
 Observed diabetes: **2%, 10%, 28%**. These look great, but they are in the **same data used to build the model**: **optimistic**. Sessions 2 to 5 show how to **measure** performance **honestly**.
 :::
 
-## The steps (TRIPOD)
+## The steps (TRIPOD) {#the-steps-tripod}
 
 ::: {.good}
 1. **Define** the outcome, predictors and the intended **use** (who, when, why)
@@ -138,7 +138,7 @@ Observed diabetes: **2%, 10%, 28%**. These look great, but they are in the **sam
 7. **Report** with TRIPOD: full equation, performance, limitations
 :::
 
-## 🔧 Switch to R — Lab 1 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 1 {#switch-to-r-lab-1 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `prediction-workshop/labs/lab1_build.R`
@@ -150,7 +150,7 @@ Observed diabetes: **2%, 10%, 28%**. These look great, but they are in the **sam
 
 **Time:** 35 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -163,7 +163,7 @@ quiz_mcq("p1q1", "The model has 84 events and 8 parameters. What mostly limits h
          explain = "The information for a binary outcome sits in the rarer outcome. Events per variable is the usual way to judge how many parameters can be estimated reliably.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -176,7 +176,7 @@ quiz_mcq("p1q2", "Why is a predicted risk more useful to a clinician than an odd
          explain = "A risk of 54% can be compared with a treatment threshold. An odds ratio describes relative differences between groups, not the absolute chance for a patient.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -189,7 +189,7 @@ quiz_mcq("p1q3", "What is the difference between a prediction model and an expla
          explain = "A prediction model is judged by the accuracy of its risks in new patients, while an explanatory analysis is concerned with the effect of one exposure, free of confounding.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -202,7 +202,7 @@ quiz_mcq("p1q4", "The BMI odds ratio is 0.97, although BMI is a risk factor, bec
          explain = "Waist and BMI carry almost the same information, so the split of the effect between them is arbitrary. The joint prediction is not affected, but the coefficients should not be interpreted.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -215,7 +215,7 @@ quiz_mcq("p1q5", "Why is the performance of a model in the data used to build it
          explain = "Parameters are chosen to fit the development data as closely as possible, including chance patterns that will not repeat in new patients.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 
