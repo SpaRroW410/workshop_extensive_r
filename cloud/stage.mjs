@@ -125,12 +125,13 @@ if (webrSkipped) console.warn(`webR not staged (${webrSkipped}); decks will load
 console.log(`Staged ${count} files in cloud/.deploy (${moved} paid files hidden, sync script on ${injected} pages, _routes.json written)`);
 
 async function stageWebR(dest) {
+  // The browser build is the GitHub release archive (the npm package is webR's Node.js build).
   const cache = join(HERE, '.cache', `webr-${WEBR_VERSION}`);
-  const dist = join(cache, 'package', 'dist');
+  const dist = join(cache, `webr-${WEBR_VERSION}`);
   if (!existsSync(join(dist, 'R.wasm'))) {
     try {
       mkdirSync(cache, { recursive: true });
-      const r = await fetch(`https://registry.npmjs.org/webr/-/webr-${WEBR_VERSION}.tgz`);
+      const r = await fetch(`https://github.com/r-wasm/webr/releases/download/v${WEBR_VERSION}/webr-${WEBR_VERSION}.tar.gz`);
       if (!r.ok) return `download failed: ${r.status}`;
       const tgz = join(cache, 'webr.tgz');
       writeFileSync(tgz, Buffer.from(await r.arrayBuffer()));
@@ -139,7 +140,7 @@ async function stageWebR(dest) {
   }
   const keep = (src) => {
     const rel = relative(dist, src).split('\\').join('/');
-    return !/^(tests|repl|webR)(\/|$)|\.map$|\.d\.ts$|^webr\.cjs$/.test(rel);
+    return !/^(assets|tests)(\/|$)|^repl\.|^index\.html$|\.map$/.test(rel);
   };
   cpSync(dist, dest, { recursive: true, filter: keep });
   return null;

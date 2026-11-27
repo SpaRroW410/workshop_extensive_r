@@ -207,7 +207,7 @@ try {
     await box.locator('.st-code').fill('nrow(p)');
     await box.locator('.st-run').click();
     await d.waitForFunction(() => /\[1\] 631/.test((document.querySelector('section#our-data .st-out') || {}).textContent || ''), null, { timeout: 600000 });
-    assert.ok(webrUrls.some((u) => u.startsWith(site.base + '/webr/')), 'webR loaded from our own domain');
+    assert.ok(webrUrls.some((u) => u.startsWith(site.base + '/webr/') && /R\.wasm|webr-worker\.js/.test(u)), 'webR (R.wasm, worker) loaded from our own domain:\n' + webrUrls.join('\n'));
     await d.click('.st-toggle');
     await d.close();
   });
