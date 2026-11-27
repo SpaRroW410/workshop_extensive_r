@@ -175,7 +175,7 @@ Decide with the **plot**, the **skewness**, the **sample size** and the **questi
 
 # Topic 3 — Equal spread {background-color="#2C3E50"}
 
-## Compare the spreads
+## Compare the spreads {.smaller}
 
 ```{r}
 p |> group_by(sex_of_participants) |> summarise(n = n(), mean = mean(weight), sd = sd(weight))

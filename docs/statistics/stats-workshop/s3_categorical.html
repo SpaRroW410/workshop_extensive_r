@@ -1381,7 +1381,7 @@ Community Medicine Workshop
 <div class="cell-output cell-output-stdout">
 <pre><code>
  no yes 
-203 428 </code></pre>
+202 429 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a><span class="fu">chisq.test</span>(observed, <span class="at">p =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>))        <span class="co"># expected: half screened, half not</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -1389,7 +1389,7 @@ Community Medicine Workshop
     Chi-squared test for given probabilities
 
 data:  observed
-X-squared = 80.23, df = 1, p-value &lt; 2.2e-16</code></pre>
+X-squared = 81.662, df = 1, p-value &lt; 2.2e-16</code></pre>
 </div>
 </div>
 </section>
@@ -1398,13 +1398,13 @@ X-squared = 80.23, df = 1, p-value &lt; 2.2e-16</code></pre>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-label="1"></a><span class="fu">binom.test</span>(<span class="fu">sum</span>(p<span class="sc">$</span>ever_screened_for_bp <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>), <span class="fu">nrow</span>(p))<span class="sc">$</span>conf.int</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.6402769 0.7146217
+<pre><code>[1] 0.6419014 0.7161517
 attr(,&quot;conf.level&quot;)
 [1] 0.95</code></pre>
 </div>
 </div>
 <div class="eq">
-<p>“67.8% of adults had ever been screened for blood pressure (95% CI 64.0 to 71.5%).”</p>
+<p>“68.0% of adults had ever been screened for blood pressure (95% CI 64.2 to 71.6%).”</p>
 </div>
 <ul>
 <li>The test only says “not 50%”; the <strong>proportion and its CI</strong> say <strong>how many</strong> were screened</li>
@@ -1424,8 +1424,8 @@ attr(,&quot;conf.level&quot;)
 <div class="cell-output cell-output-stdout">
 <pre><code>        
           no yes
-  female 332  17
-  male   265  17</code></pre>
+  female 321  14
+  male   283  13</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a aria-label="1"></a><span class="fu">chisq.test</span>(t_sex, <span class="at">correct =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -1433,7 +1433,7 @@ attr(,&quot;conf.level&quot;)
     Pearson&#39;s Chi-squared test
 
 data:  t_sex
-X-squared = 0.40978, df = 1, p-value = 0.5221</code></pre>
+X-squared = 0.017372, df = 1, p-value = 0.8951</code></pre>
 </div>
 </div>
 </section>
@@ -1444,8 +1444,8 @@ X-squared = 0.40978, df = 1, p-value = 0.5221</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>        
             no  yes
-  female 330.2 18.8
-  male   266.8 15.2</code></pre>
+  female 320.7 14.3
+  male   283.3 12.7</code></pre>
 </div>
 </div>
 <ul>
@@ -1460,13 +1460,13 @@ X-squared = 0.40978, df = 1, p-value = 0.5221</code></pre>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a aria-label="1"></a><span class="fu">prop.test</span>(t_sex[, <span class="st">&quot;yes&quot;</span>], <span class="fu">rowSums</span>(t_sex))<span class="sc">$</span>conf.int <span class="sc">*</span> <span class="dv">100</span>   <span class="co"># difference in % (women − men)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] -5.058012  2.743395
+<pre><code>[1] -3.594384  3.168809
 attr(,&quot;conf.level&quot;)
 [1] 0.95</code></pre>
 </div>
 </div>
 <div class="eq">
-<p>“A past history of diabetes was reported by 4.9% of women and 6.0% of men (difference -1.2 percentage points, 95% CI -5.1 to 2.7; p = 0.522).”</p>
+<p>“A past history of diabetes was reported by 4.2% of women and 4.4% of men (difference -0.2 percentage points, 95% CI -3.6 to 3.2; p = 0.895).”</p>
 </div>
 <ul>
 <li><strong>Risk difference</strong> (percentage points) is the easiest to read; the <strong>odds ratio</strong> suits case-control data and regression</li>
@@ -1481,33 +1481,33 @@ attr(,&quot;conf.level&quot;)
 <div class="cell-output cell-output-stdout">
 <pre><code>            diabetes
 hypertension  no yes
-         no  555  20
-         yes  42  14</code></pre>
+         no  553  17
+         yes  51  10</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a aria-label="1"></a><span class="fu">round</span>(<span class="fu">chisq.test</span>(t_htn)<span class="sc">$</span>expected, <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            diabetes
-hypertension  no yes
-         no  544  31
-         yes  53   3</code></pre>
+hypertension    no  yes
+         no  545.6 24.4
+         yes  58.4  2.6</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a aria-label="1"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(<span class="fu">fisher.test</span>(t_htn)) <span class="sc">|&gt;</span> <span class="fu">select</span>(estimate, conf.low, conf.high, p.value)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 4
-  estimate conf.low conf.high     p.value
-     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
-1     9.18     3.99      20.7 0.000000136</code></pre>
+  estimate conf.low conf.high   p.value
+     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1     6.34     2.46      15.6 0.0000786</code></pre>
 </div>
 </div>
 </section>
 <section id="reading-fishers-result" class="slide level2">
 <h2>Reading Fisher’s result</h2>
 <div class="eq">
-<p>“Diabetes was more common in adults with a past history of hypertension: 25.0% vs 3.5% (odds ratio 9.2, 95% CI 4.0 to 20.7; Fisher’s exact test, p &lt; 0.001).”</p>
+<p>“Diabetes was more common in adults with a past history of hypertension: 16.4% vs 3.0% (odds ratio 6.3, 95% CI 2.5 to 15.6; Fisher’s exact test, p &lt; 0.001).”</p>
 </div>
 <ul>
-<li class="fragment">An expected count of 3.0 triggers R’s warning <em>“Chi-squared approximation may be incorrect”</em>: that is the cue for Fisher</li>
-<li class="fragment">The CI is <strong>wide</strong> (4.0 to 20.7) because only 14 adults have both conditions: report it, do not hide it</li>
+<li class="fragment">An expected count of 2.6 triggers R’s warning <em>“Chi-squared approximation may be incorrect”</em>: that is the cue for Fisher</li>
+<li class="fragment">The CI is <strong>wide</strong> (2.5 to 15.6) because only 10 adults have both conditions: report it, do not hide it</li>
 <li class="fragment">This is an <strong>association</strong>, not proof that one causes the other</li>
 </ul>
 </section>
@@ -1535,15 +1535,15 @@ hypertension  no yes
     Pearson&#39;s Chi-squared test
 
 data:  table(p$marital_status_of_participants, p$wealth_index_of_participants)
-X-squared = 26.65, df = 8, p-value = 0.0008122</code></pre>
+X-squared = 29.05, df = 8, p-value = 0.0003108</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a aria-label="1"></a><span class="fu">round</span>(x_mw<span class="sc">$</span>expected, <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                       
                         poorest poorer middle richer richest
-  never married             7.2   22.5   31.2   37.6    35.5
-  currently married        21.6   67.4   93.4  112.5   106.1
-  formerly/ever married     5.2   16.1   22.4   26.9    25.4</code></pre>
+  never married             5.3    7.9    9.7   11.0    10.1
+  currently married        65.2   96.9  119.2  135.5   124.3
+  formerly/ever married     5.5    8.2   10.1   11.5    10.6</code></pre>
 </div>
 </div>
 </section>
@@ -1554,22 +1554,22 @@ X-squared = 26.65, df = 8, p-value = 0.0008122</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>                       
                         poorest poorer middle richer richest
-  never married            -1.4   -0.1    0.6   -0.3     0.6
-  currently married        -1.7    0.1   -2.2    1.2     1.7
-  formerly/ever married     3.8    0.0    2.3   -1.2    -2.9</code></pre>
+  never married             0.8   -2.0   -0.3    1.4     0.0
+  currently married        -2.5   -1.2    0.5    0.9     1.5
+  formerly/ever married     2.6    3.5   -0.4   -2.7    -2.0</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a aria-label="1"></a><span class="fu">cramers_v</span>(<span class="fu">table</span>(p<span class="sc">$</span>marital_status_of_participants, p<span class="sc">$</span>wealth_index_of_participants))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Cramer&#39;s V (adj.) |       95% CI
 --------------------------------
-0.12              | [0.00, 1.00]
+0.13              | [0.01, 1.00]
 
 - One-sided CIs: upper bound fixed at [1.00].</code></pre>
 </div>
 </div>
 <ul>
-<li><strong>Formerly married</strong> adults are <strong>over</strong>-represented among the poorest (+3.8) and <strong>under</strong>-represented among the richest (-2.9)</li>
-<li>Cramér’s V = 0.12: a <strong>weak</strong> association, though clearly not chance</li>
+<li><strong>Formerly married</strong> adults (mostly widowed) are <strong>over</strong>-represented among the poorest and poorer (+2.6, +3.5) and <strong>under</strong>-represented among the richer (-2.7); the currently married show the mirror image</li>
+<li>Cramér’s V = 0.13: a <strong>weak</strong> association, though clearly not chance</li>
 </ul>
 </section>
 <section id="if-expected-counts-are-too-small-monte-carlo" class="slide level2">
@@ -1579,7 +1579,7 @@ X-squared = 26.65, df = 8, p-value = 0.0008122</code></pre>
 <span id="cb29-2"><a aria-label="2"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(p<span class="sc">$</span>marital_status_of_participants, p<span class="sc">$</span>wealth_index_of_participants),</span>
 <span id="cb29-3"><a aria-label="3"></a>           <span class="at">simulate.p.value =</span> <span class="cn">TRUE</span>, <span class="at">B =</span> <span class="dv">10000</span>)<span class="sc">$</span>p.value</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.00159984</code></pre>
+<pre><code>[1] 0.00049995</code></pre>
 </div>
 </div>
 <ul>
@@ -1601,8 +1601,8 @@ X-squared = 26.65, df = 8, p-value = 0.0008122</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>      after
 before  No Yes
-   No  176 159
-   Yes 150 146</code></pre>
+   No  398  17
+   Yes 104 112</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a aria-label="1"></a><span class="fu">mcnemar.test</span>(t_pain)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -1610,19 +1610,19 @@ before  No Yes
     McNemar&#39;s Chi-squared test with continuity correction
 
 data:  t_pain
-McNemar&#39;s chi-squared = 0.20712, df = 1, p-value = 0.649</code></pre>
+McNemar&#39;s chi-squared = 61.124, df = 1, p-value = 5.359e-15</code></pre>
 </div>
 </div>
 </section>
 <section id="only-the-people-who-changed-count" class="slide level2">
 <h2>Only the people who <strong>changed</strong> count</h2>
 <ul>
-<li class="fragment">159 adults went from no pain to pain; 150 from pain to no pain</li>
-<li class="fragment">McNemar compares these two <strong>discordant</strong> cells; the 322 who did not change carry no information about change</li>
+<li class="fragment">17 adults went from no pain to pain; 104 from pain to no pain</li>
+<li class="fragment">McNemar compares these two <strong>discordant</strong> cells; the 510 who did not change carry no information about change</li>
 <li class="fragment">Few discordant pairs (under about 25)? Use the <strong>exact</strong> McNemar test: <code>exact2x2::mcnemar.exact(t_pain)</code> (load the package with <code>library(exact2x2)</code> first)</li>
 </ul>
 <div class="eq">
-<p>“Foot pain was reported by 46.9% before and 48.3% after the intervention (McNemar test, p = 0.649): no evidence of a change.”</p>
+<p>“Foot pain was reported by 34.2% of adults before and 20.4% after the foot-care programme (104 improved, 17 developed pain; McNemar test, p &lt; 0.001).”</p>
 </div>
 </section>
 <section id="which-test-for-a-category-outcome" class="slide level2">
@@ -1709,7 +1709,7 @@ McNemar&#39;s chi-squared = 0.20712, df = 1, p-value = 0.649</code></pre>
 <section id="self-check-quiz-35" class="slide level2 smaller">
 <h2>Self-check quiz (3/5)</h2>
 <div class="quiz-q" data-qid="t3q3" data-type="mcq" data-hash="il4x7g.9z7lgs" data-show="QSB3ZWFrIGJ1dCByZWFsIGFzc29jaWF0aW9uOyByZXNpZHVhbHMgc2hvdyB3aGljaCBjZWxs cw==" data-explain="QSBzbWFsbCBwIHNheXMgdGhlIHBhdHRlcm4gaXMgdW5saWtlbHkgdG8gYmUgY2hhbmNlOyBW IHNheXMgaXQgaXMgd2Vhay4gVGhlIHN0YW5kYXJkaXNlZCByZXNpZHVhbHMgc2hvdyB3aGVy ZSBpdCBjb21lcyBmcm9tLiBBbiBhc3NvY2lhdGlvbiBpbiBzdXJ2ZXkgZGF0YSBkb2VzIG5v dCBzaG93IGNhdXNlLg==">
-<p>A chi-square test on marital status by wealth gives p &lt; 0.001 and Cramér’s V = 0.12. What is the best summary?</p>
+<p>A chi-square test on marital status by wealth gives p &lt; 0.001 and Cramér’s V = 0.13. What is the best summary?</p>
 <ul>
 <li>A strong association between marital status and wealth</li>
 <li>A weak but real association; residuals show which cells</li>
@@ -1732,10 +1732,10 @@ McNemar&#39;s chi-squared = 0.20712, df = 1, p-value = 0.649</code></pre>
 </section>
 <section id="self-check-quiz-55" class="slide level2 smaller">
 <h2>Self-check quiz (5/5)</h2>
-<div class="quiz-q" data-qid="t3q5" data-type="mcq" data-hash="il5now.9z8efk" data-show="VGhhdCBmZXcgYWR1bHRzIGFyZSBpbiB0aGUgY2VsbCB3aXRoIGJvdGggY29uZGl0aW9ucw==" data-explain="T25seSAxNCBhZHVsdHMgaGFkIGJvdGggaHlwZXJ0ZW5zaW9uIGFuZCBkaWFiZXRlczsgZmV3 IGV2ZW50cyBtYWtlIHRoZSBlc3RpbWF0ZSBpbXByZWNpc2UuIFRoZSBpbnRlcnZhbCBleGNs dWRlcyAxLCBzbyB0aGUgYXNzb2NpYXRpb24gaXMgdW5saWtlbHkgdG8gYmUgY2hhbmNlLCBi dXQgaXRzIHNpemUgaXMgdW5jZXJ0YWluLg==">
-<p>Fisher’s test gives an odds ratio of 9.2 with a 95% CI from 4.0 to 20.7. What does the wide interval mainly reflect?</p>
+<div class="quiz-q" data-qid="t3q5" data-type="mcq" data-hash="il5now.9z8efk" data-show="VGhhdCBmZXcgYWR1bHRzIGFyZSBpbiB0aGUgY2VsbCB3aXRoIGJvdGggY29uZGl0aW9ucw==" data-explain="T25seSAxMCBhZHVsdHMgaGFkIGJvdGggaHlwZXJ0ZW5zaW9uIGFuZCBkaWFiZXRlczsgZmV3 IGV2ZW50cyBtYWtlIHRoZSBlc3RpbWF0ZSBpbXByZWNpc2UuIFRoZSBpbnRlcnZhbCBleGNs dWRlcyAxLCBzbyB0aGUgYXNzb2NpYXRpb24gaXMgdW5saWtlbHkgdG8gYmUgY2hhbmNlLCBi dXQgaXRzIHNpemUgaXMgdW5jZXJ0YWluLg==">
+<p>Fisher’s test gives an odds ratio of 6.3 with a 95% CI from 2.5 to 15.6. What does the wide interval mainly reflect?</p>
 <ul>
-<li>That the true odds ratio is most likely close to 12 itself</li>
+<li>That the true odds ratio is most likely close to 9</li>
 <li>That Fisher’s exact test gives intervals this wide by design</li>
 <li>That the p-value is likely above 0.05 for this comparison</li>
 <li>That few adults are in the cell with both conditions</li>

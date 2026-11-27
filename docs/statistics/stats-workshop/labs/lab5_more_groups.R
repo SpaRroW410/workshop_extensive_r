@@ -17,23 +17,36 @@ p <- read_excel(p_path) |> clean_names() |>
     sex_of_participants            = factor(sex_of_participants),
     across(c(pain_foot_bfr, pain_foot_aftr), \(x) factor(x, levels = c("No", "Yes")))
   )
+# Session 1 found two entry errors (SBP and DBP swapped in 4 records; one weight without its decimal point),
+# confirmed and corrected here as in Lab 1. BMI is added for Lab 5.
+p <- p |>
+  mutate(swapped = sbp_in_mm_hg < dbp_in_mm_hg,
+         sbp = if_else(swapped, dbp_in_mm_hg, sbp_in_mm_hg),
+         dbp_in_mm_hg = if_else(swapped, sbp_in_mm_hg, dbp_in_mm_hg),
+         sbp_in_mm_hg = sbp,
+         weight = if_else(weight < 20, weight * 10, weight),
+         bmi = weight / (height / 100)^2) |>
+  select(-swapped, -sbp)
 skew <- function(x) { x <- x[!is.na(x)]; mean((x - mean(x))^3) / sd(x)^3 }
 
 # ── Task 1 ──────────────────────────────────────────────────────
-# Goal: One-way ANOVA of height by marital status; check residuals and spread; Welch ANOVA; Tukey; eta squared.
-a <- ___(height ~ marital_status_of_participants, data = p)
+# Goal: One-way ANOVA of BMI by wealth index; check residuals and spread; Welch ANOVA; Tukey; eta squared.
+p |> group_by(wealth_index_of_participants) |> summarise(n = n(), mean = mean(bmi), sd = sd(bmi))
+a <- ___(bmi ~ wealth_index_of_participants, data = p)
 summary(a)
 ggplot(tibble(r = residuals(a)), aes(sample = r)) + stat_qq() + stat_qq_line(colour = "red")
-leveneTest(height ~ marital_status_of_participants, data = p)
-___(height ~ marital_status_of_participants, data = p)
+leveneTest(bmi ~ wealth_index_of_participants, data = p)
+___(bmi ~ wealth_index_of_participants, data = p)
 ___(a)
 eta_squared(a)
 
-# Q1. Write the result. Is "a trend towards significance" a fair description?
+# Q1. Write the result: how big is the effect, and which groups differ?
 
 # ── Task 2 ──────────────────────────────────────────────────────
-# Goal: Kruskal-Wallis of systolic pressure at presentation by marital status.
+# Goal: Kruskal-Wallis of systolic pressure at presentation by marital status; Dunn post hoc; then look at age.
+p |> group_by(marital_status_of_participants) |> summarise(median = median(sbp_presentation), mean_age = mean(age_of_participants))
 ___(sbp_presentation ~ marital_status_of_participants, data = p)
+dunn_test(p, sbp_presentation ~ marital_status_of_participants, p.adjust.method = ___)
 
 # ── Task 3 ──────────────────────────────────────────────────────
 # Goal: Repeated-measures ANOVA of fasting glucose at presentation, 3 and 6 months; then PAIRED post hoc tests.
@@ -60,4 +73,4 @@ cor.test(p$age_of_participants, p$glucose_level_mg_d_l, ___, exact = FALSE)
 
 # ── Task 6 ──────────────────────────────────────────────────────
 # Goal: Holm adjustment for three p-values from planned comparisons.
-p.adjust(c(0.012, 0.030, 0.041), method = ___)
+p.adjust(c(0.012, 0.030, 0.041), ___)

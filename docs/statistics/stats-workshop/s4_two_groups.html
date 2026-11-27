@@ -1382,13 +1382,13 @@ Community Medicine Workshop
     One Sample t-test
 
 data:  p$fbs_presentation
-t = 0.50447, df = 630, p-value = 0.6141
+t = 16.437, df = 630, p-value &lt; 2.2e-16
 alternative hypothesis: true mean is not equal to 100
 95 percent confidence interval:
-  99.40643 101.00396
+ 107.9482 110.1049
 sample estimates:
 mean of x 
- 100.2052 </code></pre>
+ 109.0266 </code></pre>
 </div>
 </div>
 </section>
@@ -1403,21 +1403,15 @@ mean of x
 <p>Default: <code>t.test()</code>. A z-test only if a published population SD is used, and say so.</p>
 </div>
 </section>
-<section id="two-non-significant-results-two-different-stories" class="slide level2">
-<h2>Two non-significant results, two different stories</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p><strong>Glucose vs 100 mg/dL</strong> (n = 631)</p>
-<p>Mean 100.2, 95% CI 99.4 to 101.0; p = 0.614</p>
-<p>→ <strong>precise</strong>: the mean is close to 100; any difference is under about 1 mg/dL</p>
-</div><div class="column" style="width:50%;">
-<p><strong>Age of the poorest vs all adults</strong> (n = 34)</p>
-<p>Mean 49.1 vs 43.8, 95% CI 42.3 to 56.0; p = 0.126</p>
-<p>→ <strong>imprecise</strong>: a difference of up to 12 years is still compatible with the data</p>
-</div></div>
-<div class="warn">
-<p>Both are “not significant”. Only the <strong>confidence interval</strong> tells you whether the study <strong>showed</strong> little difference or simply <strong>could not tell</strong>.</p>
+<section id="reading-the-one-sample-result" class="slide level2">
+<h2>Reading the one-sample result</h2>
+<div class="eq">
+<p>“Mean fasting glucose at presentation was 109.0 mg/dL (95% CI 107.9 to 110.1), 9.0 mg/dL above the 100 mg/dL threshold for impaired fasting glucose (one-sample t-test, p &lt; 0.001).”</p>
 </div>
+<ul>
+<li>The benchmark must come from <strong>outside</strong> the data (a clinical cut-off, a national survey), chosen <strong>before</strong> the analysis</li>
+<li>The CI is narrow because n is large: the <strong>average</strong> adult here is above the threshold, though many individuals are not</li>
+</ul>
 </section></section>
 <section>
 <section id="topic-2-two-independent-groups" class="title-slide slide level1 center" data-background-color="#2C3E50">
@@ -1433,8 +1427,8 @@ mean of x
 <pre><code># A tibble: 2 × 4
   past_history_of_diabetes     n  mean    sd
   &lt;chr&gt;                    &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
-1 no                         597  43.4  17.5
-2 yes                         34  52.3  13.2</code></pre>
+1 no                         604  42.9  11.4
+2 yes                         27  53.8  11.1</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-label="1"></a><span class="fu">t.test</span>(age_of_participants <span class="sc">~</span> past_history_of_diabetes, <span class="at">data =</span> p)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -1442,26 +1436,42 @@ mean of x
     Welch Two Sample t-test
 
 data:  age_of_participants by past_history_of_diabetes
-t = -3.7426, df = 39.86, p-value = 0.0005742
+t = -4.9647, df = 28.475, p-value = 2.928e-05
 alternative hypothesis: true difference in means between group no and group yes is not equal to 0
 95 percent confidence interval:
- -13.700819  -4.091574
+ -15.35778  -6.39106
 sample estimates:
  mean in group no mean in group yes 
-         43.36851          52.26471 </code></pre>
+         42.94040          53.81481 </code></pre>
 </div>
 </div>
 </section>
 <section id="reading-it" class="slide level2">
 <h2>Reading it</h2>
 <div class="eq">
-<p>“Adults with a past history of diabetes were older: mean 52.3 vs 43.4 years (difference 8.9 years, 95% CI 4.1 to 13.7; Welch t-test, p &lt; 0.001; Cohen’s d = 0.57).”</p>
+<p>“Adults with a past history of diabetes were older: mean 53.8 vs 42.9 years (difference 10.9 years, 95% CI 6.4 to 15.4; Welch t-test, p &lt; 0.001; Cohen’s d = 0.97).”</p>
 </div>
 <ul>
-<li class="fragment"><strong>Welch</strong>: the groups are very unequal in size (34 vs 597), exactly where Student’s t can mislead</li>
+<li class="fragment"><strong>Welch</strong>: the groups are very unequal in size (27 vs 604), exactly where Student’s t can mislead</li>
 <li class="fragment">The sign: R reports <strong>no − yes</strong>; turn it round so the sentence reads naturally, and say which way</li>
-<li class="fragment">d ≈ 0.6: a <strong>medium</strong> difference</li>
+<li class="fragment">d ≈ 1.0: a <strong>large</strong> difference; diabetes becomes more common with age</li>
 </ul>
+</section>
+<section id="two-non-significant-results-two-different-stories" class="slide level2">
+<h2>Two non-significant results, two different stories</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Fasting glucose, women vs men</strong> (n = 631)</p>
+<p>108.9 vs 109.1 mg/dL, difference 95% CI -2.4 to 2.0; p = 0.848</p>
+<p>→ <strong>precise</strong>: any difference is under about 2 mg/dL</p>
+</div><div class="column" style="width:50%;">
+<p><strong>Same, in the 27 adults with diabetes</strong></p>
+<p>142.8 vs 150.7 mg/dL, difference 95% CI -17.5 to 1.8; p = 0.105</p>
+<p>→ <strong>imprecise</strong>: women could be up to 18 mg/dL lower, or slightly higher</p>
+</div></div>
+<div class="warn">
+<p>Both are “not significant”. Only the <strong>confidence interval</strong> tells you whether the study <strong>showed</strong> little difference or simply <strong>could not tell</strong>.</p>
+</div>
 </section>
 <section id="mannwhitney-u-glucose-by-diabetes-history" class="slide level2">
 <h2>Mann–Whitney U: glucose by diabetes history</h2>
@@ -1473,8 +1483,8 @@ sample estimates:
 <pre><code># A tibble: 2 × 5
   past_history_of_diabetes     n median    q1    q3
   &lt;chr&gt;                    &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1 no                         597    109   98    124
-2 yes                         34    156  128.   293</code></pre>
+1 no                         604    106    96   115
+2 yes                         27    200   158   240</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a aria-label="1"></a><span class="fu">wilcox.test</span>(glucose_level_mg_d_l <span class="sc">~</span> past_history_of_diabetes, <span class="at">data =</span> p, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -1482,13 +1492,13 @@ sample estimates:
     Wilcoxon rank sum test with continuity correction
 
 data:  glucose_level_mg_d_l by past_history_of_diabetes
-W = 3168.5, p-value = 1.457e-11
+W = 1224.5, p-value = 7.528e-14
 alternative hypothesis: true location shift is not equal to 0
 95 percent confidence interval:
- -80.99994 -35.00004
+ -115.00008  -71.00002
 sample estimates:
 difference in location 
-             -51.99996 </code></pre>
+             -93.99999 </code></pre>
 </div>
 </div>
 </section>
@@ -1498,10 +1508,10 @@ difference in location
 <li class="fragment">It ranks all values and asks whether one group tends to have <strong>higher values</strong> than the other</li>
 <li class="fragment">It is <strong>not</strong> a test of medians unless the two distributions have the <strong>same shape</strong></li>
 <li class="fragment"><code>conf.int = TRUE</code> gives the <strong>Hodges–Lehmann</strong> shift: the typical difference between a person in one group and a person in the other</li>
-<li class="fragment">Effect size <strong>r</strong> = Z / √N: 0.27 here (rough guide: 0.1 small, 0.3 medium, 0.5 large)</li>
+<li class="fragment">Effect size <strong>r</strong> = Z / √N: 0.30 here (rough guide: 0.1 small, 0.3 medium, 0.5 large)</li>
 </ul>
 <div class="eq">
-<p>“Glucose was higher in adults with a history of diabetes: median 156 (IQR 128–293) vs 109 (98–124) mg/dL; Mann–Whitney U test, p &lt; 0.001; Hodges–Lehmann shift 52 mg/dL (95% CI 35 to 81).”</p>
+<p>“Glucose was higher in adults with a history of diabetes: median 200 (IQR 158–240) vs 106 (96–115) mg/dL; Mann–Whitney U test, p &lt; 0.001; Hodges–Lehmann shift 94 mg/dL (95% CI 71 to 115).”</p>
 </div>
 </section></section>
 <section>
@@ -1516,7 +1526,7 @@ difference in location
 <span id="cb11-2"><a aria-label="2"></a><span class="fu">c</span>(<span class="at">mean =</span> <span class="fu">mean</span>(d), <span class="at">sd =</span> <span class="fu">sd</span>(d), <span class="at">skewness =</span> <span class="fu">skew</span>(d))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       mean          sd    skewness 
-15.20475436 14.58589037  0.02576178 </code></pre>
+10.40266244  6.60438831 -0.04241131 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a aria-label="1"></a><span class="fu">t.test</span>(p<span class="sc">$</span>fbs_presentation, p<span class="sc">$</span>fbs_6_months, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -1524,26 +1534,26 @@ difference in location
     Paired t-test
 
 data:  p$fbs_presentation and p$fbs_6_months
-t = 26.186, df = 630, p-value &lt; 2.2e-16
+t = 39.566, df = 630, p-value &lt; 2.2e-16
 alternative hypothesis: true mean difference is not equal to 0
 95 percent confidence interval:
- 14.06450 16.34501
+  9.886364 10.918961
 sample estimates:
 mean difference 
-       15.20475 </code></pre>
+       10.40266 </code></pre>
 </div>
 </div>
 </section>
 <section id="reading-the-paired-result" class="slide level2">
 <h2>Reading the paired result</h2>
 <div class="eq">
-<p>“Fasting glucose fell by a mean of 15.2 mg/dL from presentation to 6 months (95% CI 14.1 to 16.3; paired t-test, p &lt; 0.001; d<sub>z</sub> = 1.04).”</p>
+<p>“Fasting glucose fell by a mean of 10.4 mg/dL from presentation to 6 months (95% CI 9.9 to 10.9; paired t-test, p &lt; 0.001; d<sub>z</sub> = 1.58).”</p>
 </div>
 <ul>
-<li class="fragment">The assumption is about the <strong>differences</strong> (skewness 0.03: fine), not about either column</li>
+<li class="fragment">The assumption is about the <strong>differences</strong> (skewness -0.04: fine), not about either column</li>
 <li class="fragment">The effect size for paired data is <strong>d<sub>z</sub></strong> = mean difference / SD of the differences</li>
-<li class="fragment"><strong>Why paired?</strong> Each person is their own control. The test for independent groups would ignore that the same people were measured twice: wrong whenever the visits are correlated</li>
-<li class="fragment">In this practice dataset the two visits are hardly correlated (r = 0.00), so here both give similar intervals. In real follow-up data the correlation is usually strong and pairing gives a <strong>much narrower</strong> CI</li>
+<li class="fragment"><strong>Why paired?</strong> Each person is their own control. The visits are strongly correlated (r = 0.91): a person high at presentation stays high</li>
+<li class="fragment">Ignoring the pairing (Welch) gives a 95% CI of 8.8 to 12.0, about 3 times <strong>wider</strong>: the between-person spread swamps the change</li>
 </ul>
 </section>
 <section id="wilcoxon-signed-rank-systolic-pressure-presentation-and-6-months" class="slide level2">
@@ -1555,19 +1565,19 @@ mean difference
     Wilcoxon signed rank test with continuity correction
 
 data:  p$sbp_presentation and p$sbp_6_months
-V = 157262, p-value &lt; 2.2e-16
+V = 172556, p-value &lt; 2.2e-16
 alternative hypothesis: true location shift is not equal to 0
 95 percent confidence interval:
- 26.50002 35.00004
+ 7.000042 8.500018
 sample estimates:
 (pseudo)median 
-      30.99996 </code></pre>
+      7.999917 </code></pre>
 </div>
 </div>
 <ul>
-<li>For paired data that are <strong>skewed or have outliers</strong> (SBP here runs from 48 to 356 mmHg)</li>
-<li>Assumes the differences are <strong>roughly symmetric</strong>; it estimates the <strong>pseudo-median</strong> difference: 31 mmHg (95% CI 27 to 35)</li>
-<li>With impossible values in these columns, report it <strong>with and without</strong> them (Session 1)</li>
+<li>For paired data that are <strong>skewed or have outliers</strong> (SBP at presentation: skewness 0.48, up to 209 mmHg)</li>
+<li>Assumes the differences are <strong>roughly symmetric</strong> (skewness 0.12); it estimates the <strong>pseudo-median</strong> fall: 8 mmHg (95% CI 7 to 9)</li>
+<li>Here the paired t-test would also be fine; with real outliers or a small sample, Wilcoxon is the safer choice</li>
 </ul>
 </section>
 <section id="which-test-for-two-groups" class="slide level2">

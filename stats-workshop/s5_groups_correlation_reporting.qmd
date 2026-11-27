@@ -151,7 +151,7 @@ fbs_long <- p |> select(s_no, fbs_presentation, fbs_3_months, fbs_6_months) |>
 anova_test(data = fbs_long, dv = fbs, wid = s_no, within = time)
 ```
 
-## Sphericity, and the correction
+## Sphericity, and the correction {.smaller}
 
 ::: {.incremental}
 - **Sphericity**: the variance of the differences is the same for every pair of time points (0–3, 0–6, 3–6)

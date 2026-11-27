@@ -17,6 +17,16 @@ p <- read_excel(p_path) |> clean_names() |>
     sex_of_participants            = factor(sex_of_participants),
     across(c(pain_foot_bfr, pain_foot_aftr), \(x) factor(x, levels = c("No", "Yes")))
   )
+# Session 1 found two entry errors (SBP and DBP swapped in 4 records; one weight without its decimal point),
+# confirmed and corrected here as in Lab 1. BMI is added for Lab 5.
+p <- p |>
+  mutate(swapped = sbp_in_mm_hg < dbp_in_mm_hg,
+         sbp = if_else(swapped, dbp_in_mm_hg, sbp_in_mm_hg),
+         dbp_in_mm_hg = if_else(swapped, sbp_in_mm_hg, dbp_in_mm_hg),
+         sbp_in_mm_hg = sbp,
+         weight = if_else(weight < 20, weight * 10, weight),
+         bmi = weight / (height / 100)^2) |>
+  select(-swapped, -sbp)
 skew <- function(x) { x <- x[!is.na(x)]; mean((x - mean(x))^3) / sd(x)^3 }
 suppressPackageStartupMessages(library(exact2x2))
 

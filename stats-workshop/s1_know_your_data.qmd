@@ -121,7 +121,7 @@ ggplot(p, aes(age_of_participants)) +
 
 # Topic 2 — Check before you test {background-color="#2C3E50"}
 
-## A test cannot rescue bad data
+## A test cannot rescue bad data {.smaller}
 
 ```{r}
 p_raw |> summarise(sbp_below_dbp = sum(sbp_in_mm_hg < dbp_in_mm_hg),
