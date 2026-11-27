@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Custom deck · Medical Statistics in R</title>
+<meta name="robots" content="noindex">
+<style>
+  body { margin: 0; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color: #2c3e50; background: #f6f7f9; display: grid; place-items: center; min-height: 100vh; }
+  .box { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); padding: 1.5rem 2rem; max-width: 34rem; }
+  .err { color: #922b21; }
+</style>
+</head>
+<body>
+<div class="box" role="status" id="status">Putting your deck together…</div>
+<script>
+/*
+ * The custom-deck player (CUSTOM_DECKS_PLAN.md §3.4). /deck?id=<deck>[&share=<token>][&print-pdf]
+ * Fetches each source deck once (through the gate, so access rules apply), cuts out the chosen slides by
+ * their stable IDs, and writes ONE reveal.js deck into this page, using a workshop deck as the shell
+ * (styles, reveal.js, quiz engine, slide-tools: all embedded in every deck). Slides the viewer may not
+ * open become a locked card. With &print-pdf, reveal.js lays out pages and the print dialog opens: Save as PDF.
+ */
+(async function () {
+  'use strict';
+  const q = new URLSearchParams(location.search);
+  const id = q.get('id'); const share = q.get('share');
+  const SHELL = '/statistics/stats-workshop/s1_know_your_data.html';  // a free deck: always readable
+  const status = (t, bad) => { const s = document.getElementById('status'); s.textContent = t; s.className = 'box' + (bad ? ' err' : ''); };
+  const local = (k) => { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch (e) { return {}; } };
+
+  try {
+    if (!id) throw new Error('No deck given. Open a deck from the Custom decks page.');
+    // 1. The deck
+    let deck;
+    if (id.startsWith('local-')) {
+      const d = local('st-decks')[id];
+      if (!d) throw new Error('This deck is saved on another device (or was deleted).');
+      const own = local('st-own');
+      deck = { title: d.title, items: d.items, own: Object.fromEntries(Object.entries(own).map(([k, v]) => [k, v.body])) };
+    } else {
+      const r = await fetch('/api/decks/' + encodeURIComponent(id) + (share ? '?share=' + encodeURIComponent(share) : ''), { credentials: 'same-origin' });
+      if (r.status === 404) throw new Error('This deck does not exist, or its link is no longer shared.');
+      if (!r.ok) throw new Error('The deck could not be loaded (' + r.status + ').');
+      deck = (await r.json()).deck;
+    }
+    // 2. Where each slide lives
+    const cat = (await (await fetch('/slides.json')).json()).decks;
+    const byRef = {}; const products = {};
+    for (const d of cat) for (const s of d.slides) byRef[`${d.workshop}/${d.deck}#${s.id}`] = { d, s };
+    let names = {};
+    try { names = (await (await fetch('/api/me', { credentials: 'same-origin' })).json()).catalog || {}; } catch (e) { /* offline */ }
+
+    // 3. Fetch each source deck once
+    const pages = new Map();
+    const fetchDeck = (path) => {
+      if (!pages.has(path)) pages.set(path, (async () => {
+        const r = await fetch(path, { credentials: 'same-origin' });
+        const type = r.headers.get('content-type') || '';
+        if (!r.ok || /\/account(\?|$)/.test(new URL(r.url).pathname + new URL(r.url).search) || !type.includes('html')) return null;
+        const text = await r.text();
+        return { text, doc: new DOMParser().parseFromString(text, 'text/html') };
+      })());
+      return pages.get(path);
+    };
+    const needed = [...new Set(deck.items.filter((i) => i.type === 'slide' && byRef[i.ref]).map((i) => byRef[i.ref].d.path))];
+    let done = 0;
+    await Promise.all(needed.map(async (p) => { await fetchDeck(p); status(`Putting your deck together… ${++done} of ${needed.length} sources`); }));
+
+    // 4. The shell: the first source deck the viewer can open, else a free deck
+    let shell = null;
+    for (const p of needed) { const pg = await fetchDeck(p); if (pg) { shell = pg; break; } }
+    if (!shell) shell = await fetchDeck(SHELL);
+    if (!shell) throw new Error('The slides could not be loaded. Check your connection.');
+    const doc = new DOMParser().parseFromString(shell.text, 'text/html');
+    const slides = doc.querySelector('.reveal .slides');
+    slides.replaceChildren();
+    const make = (tag, attrs, html) => { const e = doc.createElement(tag); for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v); if (html !== undefined) e.innerHTML = html; return e; };
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+    // Title slide
+    slides.append(make('section', { id: 'title-slide', class: 'quarto-title-block center' },
+      `<h1 class="title">${esc(deck.title)}</h1><p class="subtitle">${deck.items.length} slides · a custom deck</p>`));
+
+    // Absolute links inside imported slides (images are embedded; links to labs etc. are relative to the source deck)
+    const absolutise = (sec, path) => sec.querySelectorAll('[href],[src]').forEach((n) => {
+      for (const a of ['href', 'src']) {
+        const v = n.getAttribute(a);
+        if (v && !/^(data:|https?:|mailto:|#|\/)/.test(v)) n.setAttribute(a, new URL(v, location.origin + path).pathname);
+      }
+    });
+    let k = 0;
+    for (const item of deck.items) {
+      k++;
+      if (item.type === 'own') {
+        const body = deck.own && deck.own[item.id];
+        if (!body) continue;
+        const ph = make('section', { class: 'slide level2', 'data-st-own-id': item.id });
+        ph.setAttribute('data-st-own-json', JSON.stringify(body));
+        slides.append(ph);
+        continue;
+      }
+      const hit = byRef[item.ref];
+      if (!hit) {
+        slides.append(make('section', { class: 'slide level2 st-locked' }, `<h2>Slide removed</h2><p>This slide (<code>${esc(item.ref)}</code>) is no longer in the workshop.</p>`));
+        continue;
+      }
+      const page = await fetchDeck(hit.d.path);
+      const sid = item.ref.split('#')[1];
+      const src = page && page.doc.getElementById(sid);
+      if (!src) {
+        const need = hit.d.product || '';
+        const next = encodeURIComponent(location.pathname + location.search);
+        slides.append(make('section', { class: 'slide level2 st-locked' },
+          `<h2>${esc(hit.s.title)}</h2><div class="st-lock-card"><p>🔒 This slide is part of <b>${esc(names[need] || need || 'a paid track')}</b>.</p>` +
+          `<p><a href="/account?need=${encodeURIComponent(need)}&amp;next=${next}">Unlock it</a> to see it here.</p></div>`));
+        continue;
+      }
+      // The slide, and its output continuation slide if any; cells keep their position in the source deck
+      const allCells = [...page.doc.querySelectorAll('.reveal .slides div.cell')].filter((c) => c.querySelector('.cell-code'));
+      const parts = [src];
+      const cont = page.doc.getElementById(sid + '-output');
+      if (cont) parts.push(cont);
+      for (const part of parts) {
+        const sec = doc.importNode(part, true);
+        const partCells = [...part.querySelectorAll('div.cell')];
+        [...sec.querySelectorAll('div.cell')].forEach((c, j) => { const i = allCells.indexOf(partCells[j]); if (i >= 0) c.setAttribute('data-st-k', String(i)); });
+        sec.querySelectorAll('section').forEach((inner) => inner.removeAttribute('id'));
+        sec.setAttribute('data-st-src', hit.d.path);
+        sec.setAttribute('data-st-id', part.id);
+        sec.id = `d${k}-${part.id}`;
+        absolutise(sec, hit.d.path);
+        slides.append(sec);
+      }
+    }
+    // Styles for locked cards (the shell has the slide-tools styles)
+    doc.head.append(make('style', {}, '.reveal .st-lock-card{border:2px dashed #d4ac0d;background:#fffaf0;border-radius:12px;padding:.6em 1em;font-size:.8em}'));
+    doc.title = deck.title + ' · custom deck';
+
+    // 5. Replace this page with the assembled deck
+    const html = '<!doctype html>\n' + doc.documentElement.outerHTML;
+    document.open(); document.write(html); document.close();
+    if (q.has('print-pdf')) {
+      const go = () => setTimeout(() => window.print(), 1200);
+      const wait = () => (window.Reveal && Reveal.isReady && Reveal.isReady() ? go() : setTimeout(wait, 200));
+      wait();
+    }
+  } catch (e) {
+    status(e.message || String(e), true);
+    const a = document.createElement('p'); a.innerHTML = '<a href="/decks">← Custom decks</a>'; document.getElementById('status').append(a);
+  }
+})();
+</script>
+</body>
+</html>

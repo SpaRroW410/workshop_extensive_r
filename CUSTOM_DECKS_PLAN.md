@@ -1,7 +1,8 @@
 # Custom decks, notes, own slides and runnable code — plan
 
 Written 2026-11-27, alongside [`LAUNCH_PLAN.md`](LAUNCH_PLAN.md) (Cloudflare launch in the next few weeks) and
-[`MODULES_PLAN.md`](MODULES_PLAN.md). Nothing here is built yet.
+[`MODULES_PLAN.md`](MODULES_PLAN.md). **Built 2026-11-27/28: C0–C5** (see §10 for what was decided while building, and
+`NIGHT_NOTES.md` for the test results). C6 (images) and C7 (groups) are not built.
 
 ## 1. What was asked, and decided
 
@@ -252,3 +253,19 @@ includes all tracks: your decision (§9, decision 1).
 3. **Images in own slides** (C6): needed, or later?
 4. **Notes on reading pages** (Basic, Moderate): the same notes panel, or workshop decks only?
 5. **Shared decks:** may participants see the facilitator's own slides and notes, or only the workshop slides?
+
+## 10. Decided while building (2026-11-27/28)
+
+| # | Decision | Why |
+|---|---|---|
+| B1 | Slide IDs = the IDs Quarto already generated, written into each heading | existing links and anchors keep working; nothing to migrate |
+| B2 | 14 IDs with `²` or `β` made ASCII (`r2-…`, `beta`); the check requires ASCII (dots allowed) | odd characters in URLs and saved references; nothing linked to them yet |
+| B3 | Slides created by `output-location: slide` (`<id>-output`) travel with their slide | they are its output, not a slide of their own |
+| B4 | webR is **not committed**: `cloud/stage.mjs` downloads the pinned version (0.6.1) into `.deploy/webr/` | ~45 MB of binaries would bloat the repository for ever; decks fall back to webR's own server (same version) on GitHub Pages or offline copies |
+| B5 | The player assembles **one** reveal.js deck in the page (no frames); the shell is the first source deck the viewer can open, else the free Statistics Session 1 deck | instant navigation, one document for PDF, the same Edit/Run/notes tools; 11 of 12 workshops share the same styles (GIS differs slightly) |
+| B6 | Notes and own slides use the server only when the account flag `ws-account` is set; otherwise this device | signed-out visitors cost no Function requests, as the launch plan requires |
+| B7 | Edited workshop code is scratch only (Reset restores it); "Save my version" not built | keeps C1 small; notes cover "remember this"; add it if readers ask |
+| B8 | Own slides keep **text** output when run; plots appear when the slide is run | a saved plot image would push slides towards the 100 KB limit |
+| B9 | The editor's preview is exact inside a deck (real theme), close in the builder (no deck theme there) | the builder is not a deck; the player shows the real result |
+| B10 | "⬇ For PowerPoint" is shown to everyone; the export runs on the user's machine | who may export is your decision (§9, 1); nothing to gate until then |
+| B11 | In the player, running a workshop slide's code loads **that** slide's deck setup; switching to another deck's slide reloads setup | slides from several decks can be mixed without wrong variables |

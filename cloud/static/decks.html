@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Custom decks · Medical Statistics in R</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/st/slide-tools.css">
+<style>
+  :root { --ink: #2c3e50; --muted: #5f6b76; --line: #e3e8ec; --bg: #f6f7f9; --blue: #1565c0; --lock: #b9770e; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: #1b2631; font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .bar { background: var(--ink); color: #fff; padding: .65rem clamp(1rem, 3vw, 3rem); display: flex; align-items: center; gap: 1rem; }
+  .bar a { color: #fff; text-decoration: none; }
+  .bar .home { font-family: Georgia, serif; font-weight: 700; font-size: 1.1rem; }
+  .bar .who { margin-left: auto; font-size: .9rem; opacity: .9; }
+  main { display: grid; grid-template-columns: minmax(300px, 1fr) minmax(340px, 1.15fr); gap: 1rem; padding: 1rem clamp(.75rem, 3vw, 3rem); max-width: 1500px; margin: 0 auto; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  .panel { background: #fff; border-radius: 12px; box-shadow: 0 1px 8px rgba(0,0,0,.07); padding: 1rem 1.1rem; min-width: 0; }
+  h1 { font-family: Georgia, serif; color: var(--ink); font-size: 1.35rem; margin: 0 0 .6rem; }
+  h2 { font-size: 1rem; margin: 1rem 0 .4rem; color: var(--ink); }
+  .muted { color: var(--muted); font-size: .88rem; }
+  input[type=search], input[type=text], select { font: inherit; border: 1px solid #b9c4ce; border-radius: 6px; padding: .45rem .6rem; width: 100%; }
+  .btn { font: 600 .88rem/1 system-ui, sans-serif; padding: .5rem .75rem; border-radius: 6px; border: 1px solid #b9c4ce; background: #fff; color: var(--ink); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: .35rem; }
+  .btn:hover { background: #f0f3f6; }
+  .btn--primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .btn--primary:hover { background: #0f4f99; }
+  .btn--danger { color: #922b21; border-color: #e6b0aa; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: .5rem 0; }
+  details.ws { border-top: 1px solid var(--line); }
+  details.ws > summary { cursor: pointer; padding: .5rem .2rem; font-weight: 700; color: var(--ink); }
+  details.deck { margin-left: .8rem; }
+  details.deck > summary { cursor: pointer; padding: .3rem .2rem; font-weight: 600; }
+  ul.slides, ul.items { list-style: none; margin: 0; padding: 0; }
+  ul.slides li { display: flex; align-items: center; gap: .5rem; padding: .22rem .3rem .22rem 1.6rem; border-radius: 5px; }
+  ul.slides li:hover { background: #f4f7fa; }
+  ul.slides li.sec { font-weight: 700; color: var(--muted); padding-left: 1rem; }
+  ul.slides .t { flex: 1; min-width: 0; }
+  .add { border: 1px solid var(--blue); color: var(--blue); background: #fff; border-radius: 5px; padding: .1rem .45rem; font-weight: 700; cursor: pointer; }
+  .add:hover { background: #e3f0fc; }
+  .lock { color: var(--lock); font-size: .82rem; white-space: nowrap; }
+  .tag { font-size: .75rem; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 0 .45rem; white-space: nowrap; }
+  ul.items li { display: flex; align-items: center; gap: .5rem; padding: .45rem .5rem; border: 1px solid var(--line); border-radius: 8px; margin-bottom: .35rem; background: #fff; }
+  ul.items li .n { color: var(--muted); font-variant-numeric: tabular-nums; width: 1.8rem; text-align: right; }
+  ul.items li .t { flex: 1; min-width: 0; }
+  ul.items li .src { display: block; font-size: .78rem; color: var(--muted); }
+  ul.items li.own { border-left: 4px solid #8e44ad; }
+  ul.items li.locked { background: #fffaf3; }
+  ul.items button { border: 1px solid #c8d0d7; background: #fff; border-radius: 5px; cursor: pointer; padding: .15rem .45rem; }
+  .empty { color: var(--muted); padding: 1rem; text-align: center; border: 2px dashed var(--line); border-radius: 10px; }
+  .msg { padding: .5rem .7rem; border-radius: 8px; font-size: .9rem; margin: .5rem 0; }
+  .msg.ok { background: #eafaf1; color: #1e8449; } .msg.err { background: #fdedec; color: #922b21; } .msg.info { background: #eef5fc; color: #1b4f72; }
+  .share { display: flex; gap: .4rem; } .share input { flex: 1; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header class="bar"><a class="home" href="/">Medical Statistics in R</a><span>· Custom decks</span><span class="who" id="who"></span></header>
+<main>
+  <section class="panel" aria-labelledby="lib-h">
+    <h1 id="lib-h">Workshop slides</h1>
+    <p class="muted">Pick slides from any workshop. Slides from a track you have not unlocked are added too, and show locked until you do.</p>
+    <input type="search" id="q" placeholder="Search slide titles, e.g. Fisher, Kaplan, VIF" aria-label="Search slide titles">
+    <div id="lib" aria-live="polite"><p class="muted">Loading the slide list…</p></div>
+    <h2>Your own slides</h2>
+    <div id="own-list"><p class="muted">None yet.</p></div>
+  </section>
+
+  <section class="panel" aria-labelledby="deck-h">
+    <h1 id="deck-h">Your deck</h1>
+    <div class="row">
+      <label style="flex:1" for="pick" class="muted">Deck</label>
+    </div>
+    <select id="pick" aria-label="Choose a deck"></select>
+    <div class="row"><input type="text" id="title" maxlength="120" placeholder="Deck title" aria-label="Deck title"></div>
+    <div id="where" class="msg info" hidden></div>
+    <ul class="items" id="items"></ul>
+    <div class="row">
+      <button class="btn" id="new-slide" type="button">＋ New slide of your own</button>
+    </div>
+    <div class="row">
+      <button class="btn btn--primary" id="save" type="button">Save</button>
+      <a class="btn" id="play" href="#" target="_blank" rel="noopener">▶ Play</a>
+      <a class="btn" id="pdf" href="#" target="_blank" rel="noopener">⬇ PDF</a>
+      <button class="btn" id="share" type="button">🔗 Share link</button>
+      <button class="btn" id="export" type="button" title="For facilitators: a file for tools/export_pptx.R (editable PowerPoint)">⬇ For PowerPoint</button>
+      <button class="btn btn--danger" id="delete" type="button">Delete deck</button>
+    </div>
+    <div class="share" id="share-box" hidden><input type="text" id="share-url" readonly aria-label="Share link"><button class="btn" id="unshare" type="button">Stop sharing</button></div>
+    <div id="msg" role="status"></div>
+  </section>
+</main>
+<script src="/st/slide-tools.js"></script>
+<script>
+(function () {
+  'use strict';
+  const ST = window.SlideTools;
+  const $ = (id) => document.getElementById(id);
+  const el = ST.el;
+  const store = {
+    get(k, d) { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* private mode */ } },
+  };
+  const state = { me: null, cat: null, byRef: {}, decks: [], deck: null, own: {}, dirty: false };
+  const account = () => !!(state.me && state.me.user);
+  function msg(text, kind) { $('msg').replaceChildren(text ? el('div', { class: 'msg ' + (kind || 'ok') }, text) : ''); }
+
+  // ── Who, what they own, the catalogue ───────────────────────────────
+  async function loadMe() {
+    try { const r = await fetch('/api/me', { credentials: 'same-origin' }); if (r.ok) state.me = await r.json(); } catch (e) { /* offline */ }
+    if (account()) { try { localStorage.setItem('ws-account', state.me.user.id); } catch (e) { /* */ } }
+    $('who').replaceChildren(account() ? `Signed in as ${state.me.user.name}` : el('a', { href: '/account?next=/decks' }, 'Sign in to keep decks on every device'));
+  }
+  const open = (deck) => deck.product === null || !!(state.me && state.me.open && state.me.open[deck.profile]);
+  const productName = (p) => (state.me && state.me.catalog && state.me.catalog[p]) || p;
+  async function loadCatalogue() {
+    const r = await fetch('/slides.json');
+    state.cat = (await r.json()).decks;
+    for (const d of state.cat) for (const s of d.slides) state.byRef[`${d.workshop}/${d.deck}#${s.id}`] = { deck: d, slide: s };
+  }
+  const WS_NAMES = { 'regression-workshop': 'Regression', 'stats-workshop': 'Statistical Analysis', 'gis-workshop': 'GIS and Spatial Statistics',
+    'survival-workshop': 'A1 Survival', 'counts-workshop': 'A2 Counts and rates', 'ordinal-workshop': 'A3 Ordinal and multinomial',
+    'clustered-workshop': 'A4 Clustered data', 'survey-workshop': 'A5 Survey data', 'curves-workshop': 'A6 Curves and interactions',
+    'missing-workshop': 'A7 Missing data', 'prediction-workshop': 'A8 Prediction models', 'causal-workshop': 'A9 Causal inference' };
+  const wsName = (w) => WS_NAMES[w] || w;
+  const session = (deck) => 'Session ' + (deck.deck.match(/^s(\d+)/) || [, '?'])[1];
+
+  // ── The library (left) ───────────────────────────────────────────────
+  function renderLibrary() {
+    const q = $('q').value.trim().toLowerCase();
+    const lib = $('lib');
+    const groups = {};
+    for (const d of state.cat) (groups[d.workshop] = groups[d.workshop] || []).push(d);
+    const out = [];
+    for (const [w, decks] of Object.entries(groups)) {
+      const wsBox = el('details', { class: 'ws', open: !!q });
+      let hits = 0;
+      const deckEls = decks.map((d) => {
+        const slides = d.slides.filter((s) => !q || s.title.toLowerCase().includes(q));
+        hits += slides.length;
+        if (!slides.length) return null;
+        const box = el('details', { class: 'deck', open: !!q },
+          el('summary', {}, `${session(d)} · ${d.title.replace(/^Session \d+\s*[—–-]\s*/, '')} `, open(d) ? '' : el('span', { class: 'lock' }, '🔒 ' + productName(d.product))));
+        const ul = el('ul', { class: 'slides' });
+        for (const s of slides) {
+          const ref = `${d.workshop}/${d.deck}#${s.id}`;
+          const li = el('li', { class: s.level === 1 ? 'sec' : '' },
+            el('button', { class: 'add', type: 'button', title: 'Add to the deck', 'aria-label': `Add "${s.title}" to the deck`, onclick: () => addItem({ type: 'slide', ref }) }, '+'),
+            el('span', { class: 't' }, s.title),
+            s.code ? el('span', { class: 'tag' }, 'R') : null, s.quiz ? el('span', { class: 'tag' }, 'quiz') : null);
+          ul.append(li);
+        }
+        box.append(ul);
+        return box;
+      }).filter(Boolean);
+      if (!hits) continue;
+      wsBox.append(el('summary', {}, wsName(w) + (q ? ` (${hits})` : '')), ...deckEls);
+      out.push(wsBox);
+    }
+    lib.replaceChildren(...(out.length ? out : [el('p', { class: 'muted' }, 'No slide matches.')]));
+  }
+
+  // ── Own slides ───────────────────────────────────────────────────────
+  async function loadOwn() {
+    try { for (const s of await ST.ownStore.list()) state.own[s.id] = s; } catch (e) { /* none */ }
+    renderOwnList();
+  }
+  function renderOwnList() {
+    const list = Object.values(state.own);
+    $('own-list').replaceChildren(list.length ? el('ul', { class: 'slides' }, ...list.map((s) => el('li', {},
+      el('button', { class: 'add', type: 'button', title: 'Add to the deck', 'aria-label': `Add your slide "${s.body.title}" to the deck`, onclick: () => addItem({ type: 'own', id: s.id }) }, '+'),
+      el('span', { class: 't' }, s.body.title || '(untitled)'),
+      el('button', { class: 'btn', type: 'button', onclick: () => editOwn(s.id) }, 'Edit')))) : el('p', { class: 'muted' }, 'None yet. Make one with “＋ New slide of your own”.'));
+  }
+  function editOwn(id) {
+    ST.openEditor({ id, body: state.own[id] && state.own[id].body, onsave: (nid, body) => { state.own[nid] = { id: nid, body }; renderOwnList(); renderItems(); } });
+  }
+
+  // ── Decks: account (/api/decks) or this device ('st-decks') ─────────
+  async function loadDecks() {
+    if (account()) {
+      const r = await fetch('/api/decks', { credentials: 'same-origin' });
+      state.decks = r.ok ? (await r.json()).decks : [];
+    } else {
+      state.decks = Object.entries(store.get('st-decks', {})).map(([id, d]) => ({ id, title: d.title, count: d.items.length }));
+    }
+    const pick = $('pick');
+    pick.replaceChildren(el('option', { value: '' }, '＋ New deck'), ...state.decks.map((d) => el('option', { value: d.id }, `${d.title} (${d.count})`)));
+  }
+  async function openDeck(id) {
+    if (!id) state.deck = { id: null, title: '', items: [], share: null };
+    else if (id.startsWith('local-')) state.deck = { id, ...store.get('st-decks', {})[id], share: null };
+    else {
+      const r = await fetch('/api/decks/' + encodeURIComponent(id), { credentials: 'same-origin' });
+      const { deck } = await r.json();
+      state.deck = deck;
+      for (const [oid, body] of Object.entries(deck.own || {})) if (!state.own[oid]) state.own[oid] = { id: oid, body };
+    }
+    $('pick').value = state.deck.id || '';
+    $('title').value = state.deck.title || '';
+    state.dirty = false;
+    renderItems();
+  }
+  function addItem(item) { state.deck.items.push(item); state.dirty = true; renderItems(); msg(''); }
+  function describe(item) {
+    if (item.type === 'own') { const s = state.own[item.id]; return { title: s ? s.body.title || '(untitled)' : '(a slide of yours that was deleted)', src: 'Your slide', own: true }; }
+    const hit = state.byRef[item.ref];
+    if (!hit) return { title: item.ref.split('#')[1], src: 'This slide was removed from the workshop', gone: true };
+    return { title: hit.slide.title, src: `${wsName(hit.deck.workshop)} · ${session(hit.deck)}`, locked: !open(hit.deck), product: hit.deck.product };
+  }
+  function renderItems() {
+    const items = state.deck.items;
+    const ul = $('items');
+    if (!items.length) { ul.replaceChildren(el('li', { class: 'empty' }, 'Empty. Add slides with + on the left.')); }
+    else ul.replaceChildren(...items.map((it, i) => {
+      const d = describe(it);
+      return el('li', { class: (d.own ? 'own ' : '') + (d.locked ? 'locked' : '') },
+        el('span', { class: 'n' }, String(i + 1)),
+        el('span', { class: 't' }, d.title, el('span', { class: 'src' }, d.src, d.locked ? el('span', { class: 'lock' }, ` · 🔒 ${productName(d.product)}`) : '')),
+        el('button', { type: 'button', 'aria-label': 'Move up', title: 'Move up', disabled: i === 0, onclick: () => move(i, -1) }, '↑'),
+        el('button', { type: 'button', 'aria-label': 'Move down', title: 'Move down', disabled: i === items.length - 1, onclick: () => move(i, 1) }, '↓'),
+        el('button', { type: 'button', 'aria-label': 'Remove from the deck', title: 'Remove', onclick: () => { items.splice(i, 1); state.dirty = true; renderItems(); } }, '✕'));
+    }));
+    const where = $('where');
+    where.hidden = false;
+    where.textContent = account() ? 'Saved to your account.' : 'Saved on this device only. Sign in to keep it on every device and to share it.';
+    const id = state.deck.id;
+    for (const [b, extra] of [['play', ''], ['pdf', '&print-pdf']]) {
+      $(b).href = id ? `/deck?id=${encodeURIComponent(id)}${extra}` : '#';
+      $(b).toggleAttribute('aria-disabled', !id);
+    }
+    $('share').disabled = !account() || !id;
+    $('delete').disabled = !id;
+    $('share-box').hidden = !state.deck.share;
+    if (state.deck.share) $('share-url').value = `${location.origin}/deck?id=${encodeURIComponent(id)}&share=${encodeURIComponent(state.deck.share)}`;
+  }
+  function move(i, d) { const a = state.deck.items; a.splice(i + d, 0, a.splice(i, 1)[0]); state.dirty = true; renderItems(); }
+
+  async function save() {
+    const title = $('title').value.trim();
+    if (!title) { msg('Give the deck a title first.', 'err'); $('title').focus(); return false; }
+    state.deck.title = title;
+    if (account()) {
+      const isNew = !state.deck.id;
+      const r = await fetch('/api/decks' + (isNew ? '' : '/' + encodeURIComponent(state.deck.id)), {
+        method: isNew ? 'POST' : 'PUT', credentials: 'same-origin', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ title, items: state.deck.items }) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) { msg('Not saved: ' + (j.error || r.status), 'err'); return false; }
+      if (isNew) state.deck.id = j.id;
+    } else {
+      const all = store.get('st-decks', {});
+      state.deck.id = state.deck.id || 'local-' + Math.random().toString(36).slice(2, 12);
+      all[state.deck.id] = { title, items: state.deck.items, updatedAt: Date.now() };
+      store.set('st-decks', all);
+    }
+    state.dirty = false;
+    await loadDecks(); $('pick').value = state.deck.id; renderItems();
+    msg('Saved.');
+    return true;
+  }
+
+  // ── Wiring ───────────────────────────────────────────────────────────
+  $('q').addEventListener('input', renderLibrary);
+  $('title').addEventListener('input', () => { state.dirty = true; });
+  $('pick').addEventListener('change', (e) => {
+    if (state.dirty && !confirm('Leave this deck without saving?')) { e.target.value = state.deck.id || ''; return; }
+    openDeck(e.target.value);
+  });
+  $('save').addEventListener('click', save);
+  for (const b of ['play', 'pdf']) $(b).addEventListener('click', async (e) => {
+    if (state.dirty || !state.deck.id) { e.preventDefault(); if (await save()) window.open($(b).href, '_blank', 'noopener'); }
+  });
+  $('new-slide').addEventListener('click', () => ST.openEditor({ onsave: (id, body) => { state.own[id] = { id, body }; renderOwnList(); addItem({ type: 'own', id }); } }));
+  $('share').addEventListener('click', async () => {
+    if (state.dirty && !(await save())) return;
+    const r = await fetch('/api/decks/' + encodeURIComponent(state.deck.id), { method: 'PUT', credentials: 'same-origin', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ share: true }) });
+    const j = await r.json();
+    if (r.ok) { state.deck.share = j.share; renderItems(); $('share-url').select(); msg('Anyone with this link can view the deck. Paid slides stay locked for viewers who have not unlocked them.', 'info'); }
+  });
+  $('unshare').addEventListener('click', async () => {
+    const r = await fetch('/api/decks/' + encodeURIComponent(state.deck.id), { method: 'PUT', credentials: 'same-origin', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ share: false }) });
+    if (r.ok) { state.deck.share = null; renderItems(); msg('The link no longer works.', 'info'); }
+  });
+  $('delete').addEventListener('click', async () => {
+    if (!state.deck.id || !confirm(`Delete the deck “${state.deck.title}”? Your own slides are kept.`)) return;
+    if (state.deck.id.startsWith('local-')) { const all = store.get('st-decks', {}); delete all[state.deck.id]; store.set('st-decks', all); }
+    else await fetch('/api/decks/' + encodeURIComponent(state.deck.id), { method: 'DELETE', credentials: 'same-origin' });
+    await loadDecks(); await openDeck(''); msg('Deck deleted.');
+  });
+  // For facilitators: everything tools/export_pptx.R needs, in one file.
+  $('export').addEventListener('click', () => {
+    if (!state.deck.items.length) { msg('Add slides first.', 'err'); return; }
+    const own = {};
+    for (const it of state.deck.items) if (it.type === 'own' && state.own[it.id]) own[it.id] = state.own[it.id].body;
+    const notes = {};
+    let local = {}; try { local = JSON.parse(localStorage.getItem('st-notes')) || {}; } catch (e) { /* */ }
+    const finish = (all) => {
+      for (const it of state.deck.items) if (it.type === 'slide' && all[it.ref]) notes[it.ref] = all[it.ref].text;
+      const file = { format: 'medstats-custom-deck', version: 1, title: state.deck.title || 'Custom deck', items: state.deck.items, own, notes };
+      const a = el('a', { href: URL.createObjectURL(new Blob([JSON.stringify(file, null, 1)], { type: 'application/json' })), download: (state.deck.title || 'deck').replace(/[^\w-]+/g, '_') + '.json' });
+      document.body.append(a); a.click(); a.remove();
+      msg('Saved a .json file. Run: Rscript tools/export_pptx.R <file>.json (see the README in tools/).', 'info');
+    };
+    if (account()) fetch('/api/notes', { credentials: 'same-origin' }).then((r) => r.json()).then((j) => finish(j.notes || {})).catch(() => finish(local));
+    else finish(local);
+  });
+  window.addEventListener('beforeunload', (e) => { if (state.dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+  (async function start() {
+    await loadMe();
+    try { await loadCatalogue(); } catch (e) { $('lib').replaceChildren(el('p', { class: 'msg err' }, 'The slide list could not be loaded.')); return; }
+    renderLibrary();
+    await loadOwn();
+    await loadDecks();
+    const want = new URLSearchParams(location.search).get('id');
+    await openDeck(want && state.decks.some((d) => d.id === want) ? want : (state.decks[0] ? state.decks[0].id : ''));
+  })();
+})();
+</script>
+</body>
+</html>
