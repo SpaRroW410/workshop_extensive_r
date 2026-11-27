@@ -3657,10 +3657,13 @@ border: 1px solid #b9c4ce; background: #fff; color: #1b2631; }
   };
 
   // ── Own slides in a workshop deck: after their anchor slide ──────────
+  let placeSeq = 0;
   async function placeOwnSlides() {
     if (!ST.deckRef || !window.Reveal) return;
+    const mine = ++placeSeq;
     let slides = [];
     try { slides = await ST.ownStore.list(ST.deckRef); } catch (e) { return; }
+    if (mine !== placeSeq) return;            // a later call (e.g. after a save) has newer data: let it win
     ST.own = Object.fromEntries(slides.map((s) => [s.id, s]));
     document.querySelectorAll('section.st-own').forEach((s) => s.remove());
     for (const s of slides) {

@@ -180,9 +180,12 @@ try {
     await dlg.locator('input[aria-label="Slide title"]').fill('My extra example');
     await dlg.locator('textarea[aria-label="Text"]').fill('Weight differs by sex.');
     await dlg.locator('button.st-primary').click();
-    await d.waitForSelector('section.st-own');
-    const order = await d.evaluate(() => [...document.querySelectorAll('.reveal .slides > section')].map((s) => s.id || (s.classList.contains('st-own') ? 'OWN' : '')));
-    assert.equal(order[order.indexOf('where-we-are') + 1], 'OWN', 'slide order: ' + order.slice(0, 8).join(', '));
+    // (the editor's preview is also a section.st-own: wait for the one placed in the deck)
+    await d.waitForSelector('dialog.st-editor', { state: 'detached' });
+    await d.waitForSelector('.reveal .slides > section.st-own', { state: 'attached' });
+    const order = await d.evaluate(() => [...document.querySelectorAll('.reveal .slides > section')].map((s) => s.id || (s.classList.contains('st-own') ? 'OWN' : s.className.slice(0, 20))));
+    const dbg = await d.evaluate(() => fetch('/api/slides').then((r) => r.json()).then((j) => j.slides.map((x) => x.anchor + ' ' + x.body.title).join(' | ')));
+    assert.equal(order[order.indexOf('where-we-are') + 1], 'OWN', 'slide order: ' + order.slice(0, 8).join(', ') + ' · OWN at ' + order.indexOf('OWN') + ' · saved: ' + dbg);
     const mine = await d.evaluate(() => fetch('/api/slides?anchor=stats-workshop/s1_know_your_data').then((r) => r.json()));
     assert.equal(mine.slides.length, 1); assert.equal(mine.slides[0].anchor, 'stats-workshop/s1_know_your_data#where-we-are');
     await d.click('.st-toggle');
@@ -196,7 +199,7 @@ try {
     await ctx3.close();
   });
 
-  await step('on Cloudflare: Run uses the self-hosted webR, the deck manifest and the data through the site', async () => {
+  if (!process.env.SKIP_RUN) await step('on Cloudflare: Run uses the self-hosted webR, the deck manifest and the data through the site', async () => {
     const d = watch(await ctx.newPage());
     const webrUrls = [];
     d.on('request', (q) => { if (/webr/.test(q.url())) webrUrls.push(q.url()); });
