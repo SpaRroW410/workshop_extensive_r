@@ -31,8 +31,10 @@ execute:
 source("assets/setup.R")
 source("assets/quiz.R")
 t_fbs  <- t.test(p$fbs_presentation, mu = 100)
-poor   <- filter(p, wealth_index_of_participants == "poorest")
-t_poor <- t.test(poor$age_of_participants, mu = mean(p$age_of_participants))
+t_sexf <- t.test(fbs_presentation ~ sex_of_participants, data = p)
+dmp    <- filter(p, past_history_of_diabetes == "yes")
+t_dmf  <- t.test(fbs_presentation ~ sex_of_participants, data = dmp)
+pt_un  <- t.test(p$fbs_presentation, p$fbs_6_months)
 w_age  <- t.test(age_of_participants ~ past_history_of_diabetes, data = p)
 d_age  <- cohens_d(age_of_participants ~ past_history_of_diabetes, data = p, pooled_sd = FALSE)
 pt     <- t.test(p$fbs_presentation, p$fbs_6_months, paired = TRUE)
@@ -75,28 +77,14 @@ t.test(p$fbs_presentation, mu = 100)
 Default: `t.test()`. A z-test only if a published population SD is used, and say so.
 :::
 
-## Two non-significant results, two different stories
+## Reading the one-sample result
 
-::: {.columns}
-::: {.column width="50%"}
-**Glucose vs 100 mg/dL** (n = `r nrow(p)`)
-
-Mean `r f(t_fbs$estimate)`, 95% CI `r f(t_fbs$conf.int[1])` to `r f(t_fbs$conf.int[2])`; `r fp(t_fbs$p.value)`
-
-→ **precise**: the mean is close to 100; any difference is under about 1 mg/dL
-:::
-::: {.column width="50%"}
-**Age of the poorest vs all adults** (n = `r nrow(poor)`)
-
-Mean `r f(t_poor$estimate)` vs `r f(mean(p$age_of_participants))`, 95% CI `r f(t_poor$conf.int[1])` to `r f(t_poor$conf.int[2])`; `r fp(t_poor$p.value)`
-
-→ **imprecise**: a difference of up to 12 years is still compatible with the data
-:::
+::: {.eq}
+"Mean fasting glucose at presentation was `r f(t_fbs$estimate)` mg/dL (95% CI `r f(t_fbs$conf.int[1])` to `r f(t_fbs$conf.int[2])`), `r f(t_fbs$estimate - 100)` mg/dL above the 100 mg/dL threshold for impaired fasting glucose (one-sample t-test, `r fp(t_fbs$p.value)`)."
 :::
 
-::: {.warn}
-Both are "not significant". Only the **confidence interval** tells you whether the study **showed** little difference or simply **could not tell**.
-:::
+- The benchmark must come from **outside** the data (a clinical cut-off, a national survey), chosen **before** the analysis
+- The CI is narrow because n is large: the **average** adult here is above the threshold, though many individuals are not
 
 # Topic 2 — Two independent groups {background-color="#2C3E50"}
 
@@ -117,7 +105,30 @@ t.test(age_of_participants ~ past_history_of_diabetes, data = p)
 ::: {.incremental}
 - **Welch**: the groups are very unequal in size (`r sum(p$past_history_of_diabetes == "yes")` vs `r sum(p$past_history_of_diabetes == "no")`), exactly where Student's t can mislead
 - The sign: R reports **no − yes**; turn it round so the sentence reads naturally, and say which way
-- d ≈ `r f(abs(d_age$Cohens_d), 1)`: a **medium** difference
+- d ≈ `r f(abs(d_age$Cohens_d), 1)`: a **large** difference; diabetes becomes more common with age
+:::
+
+## Two non-significant results, two different stories
+
+::: {.columns}
+::: {.column width="50%"}
+**Fasting glucose, women vs men** (n = `r nrow(p)`)
+
+`r f(t_sexf$estimate[1])` vs `r f(t_sexf$estimate[2])` mg/dL, difference 95% CI `r f(t_sexf$conf.int[1])` to `r f(t_sexf$conf.int[2])`; `r fp(t_sexf$p.value)`
+
+→ **precise**: any difference is under about `r f(max(abs(t_sexf$conf.int)), 0)` mg/dL
+:::
+::: {.column width="50%"}
+**Same, in the `r nrow(dmp)` adults with diabetes**
+
+`r f(t_dmf$estimate[1])` vs `r f(t_dmf$estimate[2])` mg/dL, difference 95% CI `r f(t_dmf$conf.int[1])` to `r f(t_dmf$conf.int[2])`; `r fp(t_dmf$p.value)`
+
+→ **imprecise**: women could be up to `r f(-t_dmf$conf.int[1], 0)` mg/dL lower, or slightly higher
+:::
+:::
+
+::: {.warn}
+Both are "not significant". Only the **confidence interval** tells you whether the study **showed** little difference or simply **could not tell**.
 :::
 
 ## Mann–Whitney U: glucose by diabetes history
@@ -161,8 +172,8 @@ t.test(p$fbs_presentation, p$fbs_6_months, paired = TRUE)
 ::: {.incremental}
 - The assumption is about the **differences** (skewness `r f(skew(d), 2)`: fine), not about either column
 - The effect size for paired data is **d~z~** = mean difference / SD of the differences
-- **Why paired?** Each person is their own control. The test for independent groups would ignore that the same people were measured twice: wrong whenever the visits are correlated
-- In this practice dataset the two visits are hardly correlated (r = `r f(cor(p$fbs_presentation, p$fbs_6_months), 2)`), so here both give similar intervals. In real follow-up data the correlation is usually strong and pairing gives a **much narrower** CI
+- **Why paired?** Each person is their own control. The visits are strongly correlated (r = `r f(cor(p$fbs_presentation, p$fbs_6_months), 2)`): a person high at presentation stays high
+- Ignoring the pairing (Welch) gives a 95% CI of `r f(pt_un$conf.int[1])` to `r f(pt_un$conf.int[2])`, about `r f(diff(pt_un$conf.int) / diff(pt$conf.int), 0)` times **wider**: the between-person spread swamps the change
 :::
 
 ## Wilcoxon signed-rank: systolic pressure, presentation and 6 months
@@ -171,9 +182,9 @@ t.test(p$fbs_presentation, p$fbs_6_months, paired = TRUE)
 wilcox.test(p$sbp_presentation, p$sbp_6_months, paired = TRUE, conf.int = TRUE)
 ```
 
-- For paired data that are **skewed or have outliers** (SBP here runs from `r min(p$sbp_6_months)` to `r max(p$sbp_presentation)` mmHg)
-- Assumes the differences are **roughly symmetric**; it estimates the **pseudo-median** difference: `r f(ws$estimate, 0)` mmHg (95% CI `r f(ws$conf.int[1], 0)` to `r f(ws$conf.int[2], 0)`)
-- With impossible values in these columns, report it **with and without** them (Session 1)
+- For paired data that are **skewed or have outliers** (SBP at presentation: skewness `r f(skew(p$sbp_presentation), 2)`, up to `r max(p$sbp_presentation)` mmHg)
+- Assumes the differences are **roughly symmetric** (skewness `r f(skew(p$sbp_presentation - p$sbp_6_months), 2)`); it estimates the **pseudo-median** fall: `r f(ws$estimate, 0)` mmHg (95% CI `r f(ws$conf.int[1], 0)` to `r f(ws$conf.int[2], 0)`)
+- Here the paired t-test would also be fine; with real outliers or a small sample, Wilcoxon is the safer choice
 
 ## Which test for two groups?
 

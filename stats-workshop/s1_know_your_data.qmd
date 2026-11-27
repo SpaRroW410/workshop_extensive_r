@@ -30,8 +30,8 @@ execute:
 #| include: false
 source("assets/setup.R")
 source("assets/quiz.R")
-s_lt_d   <- sum(p$sbp_in_mm_hg < p$dbp_in_mm_hg)
-sbp_rng  <- range(c(p$sbp_presentation, p$sbp_3_months, p$sbp_6_months))
+s_lt_d   <- sum(p_raw$sbp_in_mm_hg < p_raw$dbp_in_mm_hg)
+wt_low   <- p_raw |> filter(weight < 20)
 wt <- t.test(weight ~ sex_of_participants, data = p)
 wd <- cohens_d(weight ~ sex_of_participants, data = p)
 ```
@@ -124,14 +124,15 @@ ggplot(p, aes(age_of_participants)) +
 ## A test cannot rescue bad data
 
 ```{r}
-p |> summarise(sbp_below_dbp = sum(sbp_in_mm_hg < dbp_in_mm_hg),
-               median_dbp    = median(dbp_in_mm_hg),
-               min_sbp_follow_up = min(c(sbp_3_months, sbp_6_months)),
-               max_sbp_follow_up = max(c(sbp_3_months, sbp_6_months)))
+p_raw |> summarise(sbp_below_dbp = sum(sbp_in_mm_hg < dbp_in_mm_hg),
+                   min_weight = min(weight), min_height = min(height),
+                   max_glucose = max(glucose_level_mg_d_l))
+p_raw |> filter(sbp_in_mm_hg < dbp_in_mm_hg | weight < 20) |>
+  select(s_no, sbp_in_mm_hg, dbp_in_mm_hg, height, weight)
 ```
 
 ::: {.warn}
-In `r s_lt_d` adults the systolic pressure is **lower** than the diastolic, the median DBP is `r median(p$dbp_in_mm_hg)` mmHg, and follow-up SBP runs from `r min(c(p$sbp_3_months, p$sbp_6_months))` to `r max(c(p$sbp_3_months, p$sbp_6_months))` mmHg. These are recording problems, not biology.
+In `r s_lt_d` adults the systolic pressure is **lower** than the diastolic (the two columns were swapped at entry), and one adult of `r wt_low$height` cm weighs `r wt_low$weight` kg (the decimal point was lost: `r wt_low$weight * 10` kg). These are recording problems, not biology. A glucose of `r max(p_raw$glucose_level_mg_d_l)` mg/dL, by contrast, is high but **possible** in uncontrolled diabetes: keep it.
 :::
 
 ## What to do with suspicious values
@@ -139,12 +140,12 @@ In `r s_lt_d` adults the systolic pressure is **lower** than the diastolic, the 
 ::: {.incremental}
 1. **Look** at every variable first: `summary()`, a histogram, impossible combinations (SBP < DBP)
 2. **Query** the source (case sheet, register) and correct what can be corrected
-3. Decide **before** testing what you exclude, and **report it** ("12 records with SBP < DBP were excluded")
+3. Decide **before** testing what you exclude, and **report it** ("4 records with SBP and DBP swapped were corrected from the case sheets")
 4. Run the analysis **with and without** the doubtful records: a **sensitivity analysis**
 :::
 
 ::: {.key}
-In this workshop the blood pressure columns are used to practise tests on skewed, messy data. The cleaner variables (height, weight, fasting glucose, age) carry the parametric tests.
+In this workshop the case sheets confirmed both errors, so they are **corrected** (Lab 1 does it). Every later session uses the corrected data. **Extreme but possible** values are not errors: they stay.
 :::
 
 # Topic 3 — Choosing a test {background-color="#2C3E50"}
@@ -205,13 +206,14 @@ t.test(weight ~ sex_of_participants, data = p)
 ## The sentence to write
 
 ::: {.eq}
-"Mean weight was `r f(wt$estimate[1])` kg in women and `r f(wt$estimate[2])` kg in men (difference `r f(diff(rev(wt$estimate)))` kg, 95% CI `r f(wt$conf.int[1])` to `r f(wt$conf.int[2])`; Welch t-test, `r fp(wt$p.value)`; Cohen's d = `r f(wd$Cohens_d, 2)`)."
+"Mean weight was `r f(wt$estimate[2])` kg in men and `r f(wt$estimate[1])` kg in women (difference `r f(diff(wt$estimate))` kg, 95% CI `r f(-wt$conf.int[2])` to `r f(-wt$conf.int[1])`; Welch t-test, `r fp(wt$p.value)`; Cohen's d = `r f(abs(wd$Cohens_d), 2)`)."
 :::
 
 ::: {.incremental}
-- Women vs men: from **`r f(abs(wt$conf.int[1]))` kg lighter to `r f(wt$conf.int[2])` kg heavier**. The data rule out a large difference
-- d = `r f(wd$Cohens_d, 2)` is **negligible** (rough guide: 0.2 small, 0.5 medium, 0.8 large)
-- Say "no evidence of a difference", never "the groups are the same"
+- R reports **women − men** (alphabetical order), a negative number: turn it round so the sentence reads naturally
+- Men are heavier by **`r f(-wt$conf.int[2])` to `r f(-wt$conf.int[1])` kg**: the CI gives the size, not only "significant"
+- d = `r f(abs(wd$Cohens_d), 2)` is a **medium** difference (rough guide: 0.2 small, 0.5 medium, 0.8 large). Men are also taller: weight differs partly *because* height does (BMI, Session 5)
+- Had p been above 0.05: "no evidence of a difference", **never** "the groups are the same"
 :::
 
 ## 🔧 Switch to R — Lab 1 {.lab-slide background-color="#1565c0"}
@@ -258,7 +260,7 @@ quiz_mcq("t1q2", "Fasting glucose is strongly right-skewed with a few very high 
 ```{r}
 #| echo: false
 #| output: asis
-quiz_mcq("t1q3", "You find 104 records where systolic pressure is lower than diastolic. What should you do first?",
+quiz_mcq("t1q3", "You find 4 records where systolic pressure is lower than diastolic. What should you do first?",
          c("Run the planned test, because a large sample absorbs a few errors",
            "Delete those rows quietly so the results look cleaner",
            "Query the source records, then decide and report what to exclude",

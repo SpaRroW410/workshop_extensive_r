@@ -31,7 +31,10 @@ execute:
 source("assets/setup.R")
 source("assets/quiz.R")
 suppressPackageStartupMessages(library(nortest))
-sw50 <- sapply(1:3, \(s) { set.seed(s); shapiro.test(sample(p$age_of_participants, 50))$p.value })
+sw50 <- sapply(1:4, \(s) { set.seed(s); shapiro.test(sample(p$age_of_participants, 50))$p.value })
+set.seed(1)
+sw50_pct <- 100 * mean(replicate(1000, shapiro.test(sample(p$age_of_participants, 50))$p.value < 0.05))
+h_w <- p$height[p$sex_of_participants == "female"]
 ```
 
 ## Where we are
@@ -94,13 +97,13 @@ Testing the whole outcome column when the test compares groups or pairs checks t
 ```{r}
 #| echo: false
 #| fig-height: 3.6
-bind_rows(tibble(var = "Height (cm)", x = p$height),
+bind_rows(tibble(var = "Height of women (cm)", x = h_w),
           tibble(var = "Glucose (mg/dL)", x = p$glucose_level_mg_d_l)) |>
   ggplot(aes(sample = x)) + stat_qq(colour = col_blue, alpha = .6) + stat_qq_line(colour = col_red) +
   facet_wrap(~var, scales = "free") + labs(x = "Theoretical quantiles (normal)", y = "Observed values")
 ```
 
-- **Points on the line**: roughly normal (height, skewness `r f(skew(p$height), 2)`)
+- **Points on the line**: roughly normal (height of women, skewness `r f(skew(h_w), 2)`)
 - **Points curving away at one end**: a long tail (glucose, skewness `r f(skew(p$glucose_level_mg_d_l), 1)`)
 
 ## Three normality tests
@@ -119,13 +122,14 @@ All of them answer one question: "could these data come from a normal distributi
 ## Trap 1: KS against the wrong normal
 
 ```{r}
-ks.test(p$height, "pnorm")$p.value                                   # compares with mean 0, SD 1!
-ks.test(p$height, "pnorm", mean(p$height), sd(p$height))$p.value     # mean and SD from the data
-lillie.test(p$height)$p.value                                        # the correct version
+h_w <- p$height[p$sex_of_participants == "female"]
+ks.test(h_w, "pnorm")$p.value                       # compares with mean 0, SD 1!
+ks.test(h_w, "pnorm", mean(h_w), sd(h_w))$p.value   # mean and SD from the data
+lillie.test(h_w)$p.value                            # the correct version
 ```
 
 ::: {.warn}
-`ks.test(x, "pnorm")` asks whether height looks like a **standard** normal (mean 0, SD 1). It always says no, for any real measurement. With the mean and SD estimated from the data, use **Lilliefors**: height is compatible with normal (`r fp(lillie.test(p$height)$p.value)`).
+`ks.test(x, "pnorm")` asks whether height looks like a **standard** normal (mean 0, SD 1). It always says no, for any real measurement. With the mean and SD estimated from the data, use **Lilliefors**: women's height is compatible with normal (`r fp(lillie.test(h_w)$p.value)`).
 :::
 
 ## Trap 2: the answer depends on n
@@ -136,25 +140,26 @@ lillie.test(p$height)$p.value                                        # the corre
 
 ```{r}
 #| echo: false
-tibble(variable = c("height", "weight", "age", "glucose"),
-       skewness = round(c(skew(p$height), skew(p$weight), skew(p$age_of_participants), skew(p$glucose_level_mg_d_l)), 2),
-       p = fp(c(shapiro.test(p$height)$p.value, shapiro.test(p$weight)$p.value,
-                shapiro.test(p$age_of_participants)$p.value, shapiro.test(p$glucose_level_mg_d_l)$p.value))) |>
+vv <- list("height, women" = h_w, "height, all" = p$height, weight = p$weight,
+           age = p$age_of_participants, glucose = p$glucose_level_mg_d_l)
+tibble(variable = names(vv), skewness = round(sapply(vv, skew), 2),
+       p = fp(sapply(vv, \(x) shapiro.test(x)$p.value))) |>
   knitr::kable(align = "lrr")
 ```
 :::
 ::: {.column width="50%"}
-**50 random adults**, age, three draws:
+**50 random adults**, age, four draws:
 
 ```{r}
 #| echo: false
-tibble(draw = 1:3, `Shapiro-Wilk` = fp(sw50)) |> knitr::kable(align = "cr")
+tibble(draw = 1:4, `Shapiro-Wilk` = fp(sw50)) |> knitr::kable(align = "cr")
 ```
 :::
 :::
 
+- **Height, all**: two normal groups (women and men) mixed together are not normal. What must be normal is the values **within each group**
 - Large n: a mild skew in age (`r f(skew(p$age_of_participants), 2)`) is "significant", yet a t-test on 631 ages is fine
-- Small n: the verdict changes with the luck of the draw. **Never test a random subsample**
+- Small n: in 1,000 draws of 50 the same ages were "not normal" only `r f(sw50_pct, 0)`% of the time, a coin toss. **Never test a random subsample**
 
 ## Why mild skew rarely matters
 
@@ -179,12 +184,13 @@ leveneTest(weight ~ sex_of_participants, data = p)
 
 - **Levene** (`car::leveneTest`, centred on the median) is robust to non-normal data; **Bartlett** is not
 - Rough guide: the larger SD under **twice** the smaller is rarely a problem with similar group sizes
+- Here Levene says the spreads differ (`r fp(leveneTest(weight ~ sex_of_participants, data = p)[1, 3])`), yet the SDs are `r f(sd(p$weight[p$sex_of_participants == "male"]))` and `r f(sd(p$weight[p$sex_of_participants == "female"]))` kg: like normality tests, Levene flags small differences in large samples
 
 ## Welch is the safe default
 
 ::: {.incremental}
 - `t.test()` in R runs **Welch's t-test** unless you add `var.equal = TRUE`
-- Equal variances: Welch and Student give almost the **same** answer (weight by sex: p = `r f(t.test(weight ~ sex_of_participants, data = p)$p.value, 3)` vs `r f(t.test(weight ~ sex_of_participants, data = p, var.equal = TRUE)$p.value, 3)`)
+- Similar group sizes: Welch and Student give almost the **same** answer (weight by sex, 95% CI `r paste(f(t.test(weight ~ sex_of_participants, data = p)$conf.int, 2), collapse = " to ")` vs `r paste(f(t.test(weight ~ sex_of_participants, data = p, var.equal = TRUE)$conf.int, 2), collapse = " to ")` kg)
 - Unequal variances, unequal group sizes: Student's t can be badly wrong; Welch stays correct
 - **Testing variances first and then choosing** the test adds its own errors
 :::
@@ -208,7 +214,7 @@ Use **Welch** for two groups and **Welch ANOVA** (`oneway.test()`) for several. 
 ## Write what you did
 
 ::: {.eq}
-"Distributions were inspected with histograms and Q-Q plots. Height and weight were approximately normal and are summarised as mean (SD); age and glucose were right-skewed and are summarised as median (IQR). Groups were compared with Welch's t-test or, for skewed variables, the Mann–Whitney U test."
+"Distributions were inspected with histograms and Q-Q plots. Height (within each sex) and weight were approximately normal and are summarised as mean (SD); age and glucose were right-skewed and are summarised as median (IQR). Groups were compared with Welch's t-test or, for skewed variables, the Mann–Whitney U test."
 :::
 
 - Name the **method of checking**, the **decision**, and the **test used**
@@ -259,7 +265,7 @@ quiz_mcq("t2q2", "ks.test(p$height, \"pnorm\") gives p < 0.001 although height l
 ```{r}
 #| echo: false
 #| output: asis
-quiz_mcq("t2q3", "With 631 adults, Shapiro-Wilk gives p < 0.001 for age (skewness 0.4). What follows for a t-test comparing mean age?",
+quiz_mcq("t2q3", paste0("With 631 adults, Shapiro-Wilk gives p < 0.001 for age (skewness ", f(skew(p$age_of_participants), 1), "). What follows for a t-test comparing mean age?"),
          c("A t-test cannot be used; switch to a rank-based test",
            "A t-test is reasonable: mild skew and large groups",
            "Remove the oldest adults until the test is not significant",

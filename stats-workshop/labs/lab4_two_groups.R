@@ -17,6 +17,16 @@ p <- read_excel(p_path) |> clean_names() |>
     sex_of_participants            = factor(sex_of_participants),
     across(c(pain_foot_bfr, pain_foot_aftr), \(x) factor(x, levels = c("No", "Yes")))
   )
+# Session 1 found two entry errors (SBP and DBP swapped in 4 records; one weight without its decimal point),
+# confirmed and corrected here as in Lab 1. BMI is added for Lab 5.
+p <- p |>
+  mutate(swapped = sbp_in_mm_hg < dbp_in_mm_hg,
+         sbp = if_else(swapped, dbp_in_mm_hg, sbp_in_mm_hg),
+         dbp_in_mm_hg = if_else(swapped, sbp_in_mm_hg, dbp_in_mm_hg),
+         sbp_in_mm_hg = sbp,
+         weight = if_else(weight < 20, weight * 10, weight),
+         bmi = weight / (height / 100)^2) |>
+  select(-swapped, -sbp)
 skew <- function(x) { x <- x[!is.na(x)]; mean((x - mean(x))^3) / sd(x)^3 }
 
 # ── Task 1 ──────────────────────────────────────────────────────
@@ -24,9 +34,10 @@ skew <- function(x) { x <- x[!is.na(x)]; mean((x - mean(x))^3) / sd(x)^3 }
 t.test(p$fbs_presentation, ___)
 
 # ── Task 2 ──────────────────────────────────────────────────────
-# Goal: The same test for age in the poorest adults vs the mean of all adults. Compare the CI with Task 1.
-poor <- filter(p, wealth_index_of_participants == "poorest")
-t.test(poor$age_of_participants, mu = ___)
+# Goal: Fasting glucose at presentation, women vs men: in all adults, then only in adults with diabetes. Compare the CIs.
+t.test(fbs_presentation ~ sex_of_participants, data = p)
+dm <- filter(p, past_history_of_diabetes == "yes")
+t.test(fbs_presentation ~ sex_of_participants, ___)
 
 # Q2. Both tests are "not significant". Which one tells you more, and why?
 
@@ -50,9 +61,11 @@ d <- p$fbs_presentation - p$fbs_6_months
 c(mean = mean(d), sd = sd(d), skew = skew(d))
 t.test(p$fbs_presentation, p$fbs_6_months, ___)
 ___
+cor(p$fbs_presentation, p$fbs_6_months)
+t.test(p$fbs_presentation, p$fbs_6_months)$conf.int                # WRONG here: ignores the pairing
 
 # ── Task 6 ──────────────────────────────────────────────────────
-# Goal: Systolic pressure at presentation and 6 months (skewed, outliers): Wilcoxon signed-rank.
+# Goal: Systolic pressure at presentation and 6 months (right-skewed): Wilcoxon signed-rank.
 ___(p$sbp_presentation, p$sbp_6_months, paired = TRUE, conf.int = TRUE)
 
 # Q6. Why is a Mann-Whitney test wrong here?

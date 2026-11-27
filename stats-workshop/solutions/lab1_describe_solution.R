@@ -27,7 +27,7 @@ dim(p)                                                              #@ dim
 # ── Task 2 ──────────────────────────────────────────────────────
 # Goal: Count and percentage for the wealth index, in order from poorest to richest.
 p |> count(wealth_index_of_participants) |> mutate(percent = round(100 * n / sum(n), 1))   #@ count || sum(n)
-#% A (Q2): poorest 34 (5.4%), poorer 106 (16.8%), middle 147 (23.3%), richer 177 (28.1%), richest 167 (26.5%). The order comes from factor(levels = ...) in the setup; without it R sorts alphabetically.
+#% A (Q2): poorest 76 (12.0%), poorer 113 (17.9%), middle 139 (22.0%), richer 158 (25.0%), richest 145 (23.0%). The order comes from factor(levels = ...) in the setup; without it R sorts alphabetically.
 
 # Q2. Why does the order of the levels matter for an ordinal variable?
 
@@ -38,18 +38,29 @@ p |> summarise(mean = mean(age_of_participants), sd = sd(age_of_participants),
 p |> summarise(mean = mean(glucose_level_mg_d_l), sd = sd(glucose_level_mg_d_l),
                median = median(glucose_level_mg_d_l), iqr = IQR(glucose_level_mg_d_l))
 c(age = skew(p$age_of_participants), glucose = skew(p$glucose_level_mg_d_l))           #@ skew(p$glucose_level_mg_d_l)
-#% A (Q3): age: mean 43.8 (SD 17.4), median 42 (IQR 29); glucose: mean 121 (SD 44), median 111 (IQR 27.5). Glucose is strongly skewed (4.4): report median (IQR). Age is mildly skewed (0.4): either is acceptable; mean (SD) is common.
+#% A (Q3): age: mean 43.4 (SD 11.5), median 42 (IQR 16); glucose: mean 110 (SD 26), median 106 (IQR 19). Glucose is strongly skewed (3.6): report median (IQR). Age is mildly skewed (0.7): either is acceptable; mean (SD) is common.
 
 # Q3. Which summary would you report for glucose, and why?
 
 # ── Task 4 ──────────────────────────────────────────────────────
-# Goal: Look for impossible or suspicious values in blood pressure.
+# Goal: Look for impossible or suspicious values: SBP below DBP, implausible weights, extreme glucose.
 sum(p$sbp_in_mm_hg < p$dbp_in_mm_hg)                                #@ p$dbp_in_mm_hg
-range(c(p$sbp_presentation, p$sbp_3_months, p$sbp_6_months))       #@ range
-median(p$dbp_in_mm_hg)
-#% A (Q4): 104 adults have SBP below DBP (impossible); follow-up SBP spans 38 to 387 mmHg (implausible at both ends); the median DBP of 108 mmHg is implausibly high for a screening population. Query the source, decide exclusions before testing, report them, and run a sensitivity analysis.
+p |> filter(sbp_in_mm_hg < dbp_in_mm_hg | weight < 20) |>           #@ weight < 20
+  select(s_no, sbp_in_mm_hg, dbp_in_mm_hg, height, weight)
+range(p$glucose_level_mg_d_l)                                       #@ range
+#% A (Q4): 4 adults have SBP below DBP (S.no 57, 212, 388, 540: the two columns were swapped at entry), and S.no 301 weighs 5.6 kg at 161 cm (decimal point lost: 56 kg). Query the case sheets, correct what is confirmed (below), report it, and run a sensitivity analysis. A glucose of 291 mg/dL is high but possible in uncontrolled diabetes: keep it.
 
-# Q4. What would you do before using the blood pressure columns in a thesis?
+# Q4. What would you do before using these columns in a thesis?
+
+# The case sheets confirmed both errors, so correct them (Labs 2-5 start from this corrected data):
+p <- p |>
+  mutate(swapped = sbp_in_mm_hg < dbp_in_mm_hg,
+         sbp = if_else(swapped, dbp_in_mm_hg, sbp_in_mm_hg),
+         dbp_in_mm_hg = if_else(swapped, sbp_in_mm_hg, dbp_in_mm_hg),
+         sbp_in_mm_hg = sbp,
+         weight = if_else(weight < 20, weight * 10, weight)) |>
+  select(-swapped, -sbp)
+sum(p$sbp_in_mm_hg < p$dbp_in_mm_hg)                                # now 0
 
 # ── Task 5 ──────────────────────────────────────────────────────
 # Goal: Choose a test for each question (write the name; no code).

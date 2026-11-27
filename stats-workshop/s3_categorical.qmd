@@ -159,7 +159,7 @@ round(x_mw$stdres, 1)     # standardised residuals: beyond ±2 = a cell that sta
 cramers_v(table(p$marital_status_of_participants, p$wealth_index_of_participants))
 ```
 
-- **Formerly married** adults are **over**-represented among the poorest (+`r f(x_mw$stdres["formerly/ever married", "poorest"])`) and **under**-represented among the richest (`r f(x_mw$stdres["formerly/ever married", "richest"])`)
+- **Formerly married** adults (mostly widowed) are **over**-represented among the poorest and poorer (+`r f(x_mw$stdres["formerly/ever married", "poorest"])`, +`r f(x_mw$stdres["formerly/ever married", "poorer"])`) and **under**-represented among the richer (`r f(x_mw$stdres["formerly/ever married", "richer"])`); the currently married show the mirror image
 - Cramér's V = `r f(cramers_v(t_mw)$Cramers_v_adjusted, 2)`: a **weak** association, though clearly not chance
 
 ## If expected counts are too small: Monte Carlo
@@ -193,7 +193,7 @@ mcnemar.test(t_pain)
 :::
 
 ::: {.eq}
-"Foot pain was reported by `r f(100 * mean(p$pain_foot_bfr == "Yes"))`% before and `r f(100 * mean(p$pain_foot_aftr == "Yes"))`% after the intervention (McNemar test, `r fp(mcnemar.test(t_pain)$p.value)`): no evidence of a change."
+"Foot pain was reported by `r f(100 * mean(p$pain_foot_bfr == "Yes"))`% of adults before and `r f(100 * mean(p$pain_foot_aftr == "Yes"))`% after the foot-care programme (`r t_pain["Yes", "No"]` improved, `r t_pain["No", "Yes"]` developed pain; McNemar test, `r fp(mcnemar.test(t_pain)$p.value)`)."
 :::
 
 ## Which test for a category outcome?
@@ -249,7 +249,7 @@ quiz_fill("t3q2", "In a 3 x 5 table (15 cells), at most how many expected counts
 ```{r}
 #| echo: false
 #| output: asis
-quiz_mcq("t3q3", "A chi-square test on marital status by wealth gives p < 0.001 and Cramér's V = 0.12. What is the best summary?",
+quiz_mcq("t3q3", paste0("A chi-square test on marital status by wealth gives ", fp(x_mw$p.value), " and Cramér's V = ", f(cramers_v(t_mw)$Cramers_v_adjusted, 2), ". What is the best summary?"),
          c("A strong association between marital status and wealth",
            "A weak but real association; residuals show which cells",
            "No association at all, since a V below 0.3 means none",
@@ -275,12 +275,12 @@ quiz_mcq("t3q4", "Which part of a before-and-after yes/no table does the McNemar
 ```{r}
 #| echo: false
 #| output: asis
-quiz_mcq("t3q5", "Fisher's test gives an odds ratio of 9.2 with a 95% CI from 4.0 to 20.7. What does the wide interval mainly reflect?",
-         c("That the true odds ratio is most likely close to 12 itself",
+quiz_mcq("t3q5", paste0("Fisher's test gives an odds ratio of ", f(f_htn$estimate), " with a 95% CI from ", f(f_htn$conf.int[1]), " to ", f(f_htn$conf.int[2]), ". What does the wide interval mainly reflect?"),
+         c(paste("That the true odds ratio is most likely close to", round(mean(f_htn$conf.int))),
            "That Fisher's exact test gives intervals this wide by design",
            "That the p-value is likely above 0.05 for this comparison",
            "That few adults are in the cell with both conditions"), answer = 4,
-         explain = "Only 14 adults had both hypertension and diabetes; few events make the estimate imprecise. The interval excludes 1, so the association is unlikely to be chance, but its size is uncertain.")
+         explain = paste("Only", t_htn["yes", "yes"], "adults had both hypertension and diabetes; few events make the estimate imprecise. The interval excludes 1, so the association is unlikely to be chance, but its size is uncertain."))
 ```
 
 ## Score and take-home

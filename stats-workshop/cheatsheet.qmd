@@ -88,7 +88,7 @@ Expected counts: `chisq.test(tab)$expected`. The rule is about **expected**, not
 | p ≥ 0.05, **wide** CI | **cannot tell**: too little information |
 | p = 0.056 | weak evidence (not "a trend", not "nearly significant") |
 | tiny p, small effect | real but small; judge **clinical** importance |
-| r = 0.18 | weak: r² = 3% of variation; not cause, not agreement |
+| r = 0.35 | moderate: r² = 12% of variation; not cause, not agreement |
 
 **Many tests:** plan the main ones; `p.adjust(p, method = "holm")`; label the rest exploratory.
 

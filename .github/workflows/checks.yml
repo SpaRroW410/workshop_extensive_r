@@ -12,7 +12,9 @@ jobs:
         with:
           use-public-rspm: true
       - name: Install R packages used by the checks
-        run: Rscript -e 'install.packages(c("yaml", "jsonlite"))'
+        # yaml/jsonlite for the profile check; the rest because some stats-workshop quiz questions are computed from the
+        # data, so the quiz lint runs those decks' setup chunks (binaries from Posit Public Package Manager).
+        run: Rscript -e 'install.packages(c("yaml", "jsonlite", "tidyverse", "readxl", "janitor", "rstatix", "effectsize", "car", "nortest", "exact2x2"))'
       - name: Profile files match curriculum.yml
         run: Rscript scripts/build_profiles.R --check
       - name: Quiz engine copies match the master copy

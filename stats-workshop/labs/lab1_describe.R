@@ -40,12 +40,23 @@ c(age = skew(p$age_of_participants), glucose = ___)
 # Q3. Which summary would you report for glucose, and why?
 
 # ── Task 4 ──────────────────────────────────────────────────────
-# Goal: Look for impossible or suspicious values in blood pressure.
+# Goal: Look for impossible or suspicious values: SBP below DBP, implausible weights, extreme glucose.
 sum(p$sbp_in_mm_hg < ___)
-___(c(p$sbp_presentation, p$sbp_3_months, p$sbp_6_months))
-median(p$dbp_in_mm_hg)
+p |> filter(sbp_in_mm_hg < dbp_in_mm_hg | ___) |>
+  select(s_no, sbp_in_mm_hg, dbp_in_mm_hg, height, weight)
+___(p$glucose_level_mg_d_l)
 
-# Q4. What would you do before using the blood pressure columns in a thesis?
+# Q4. What would you do before using these columns in a thesis?
+
+# The case sheets confirmed both errors, so correct them (Labs 2-5 start from this corrected data):
+p <- p |>
+  mutate(swapped = sbp_in_mm_hg < dbp_in_mm_hg,
+         sbp = if_else(swapped, dbp_in_mm_hg, sbp_in_mm_hg),
+         dbp_in_mm_hg = if_else(swapped, sbp_in_mm_hg, dbp_in_mm_hg),
+         sbp_in_mm_hg = sbp,
+         weight = if_else(weight < 20, weight * 10, weight)) |>
+  select(-swapped, -sbp)
+sum(p$sbp_in_mm_hg < p$dbp_in_mm_hg)                                # now 0
 
 # ── Task 5 ──────────────────────────────────────────────────────
 # Goal: Choose a test for each question (write the name; no code).

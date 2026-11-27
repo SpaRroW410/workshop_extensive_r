@@ -29,12 +29,19 @@ Plus `cheatsheet.qmd` (2 pages, prints to A4). Suggested format: one full day (S
 | "≥ 5 in ≥ 75% of cells" | Cochran: ≥ 80% of **expected** counts ≥ 5 and none < 1; Fisher for a 2 × 2 with any below 5 |
 | `chisq.test(table_htn_gender)` | that object never existed; the table is built in the lab |
 
-## Data notes (shown to participants in Session 1)
+## Data
 
-The blood pressure columns have recording problems: 104 adults with SBP below DBP, a median DBP of 108 mmHg, follow-up SBP
-from 38 to 387 mmHg. They are kept on purpose for the rank-based tests and the "check before you test" lesson; the parametric
-examples use the cleaner variables (height, weight, fasting glucose, age). In this practice file the three visits are barely
-correlated, so paired and unpaired intervals come out similar; the decks say so.
+`data/prac_modded.xlsx` is **synthetic** and is built by `make_data.R` (run from the repo root; it ends with a feature check
+that stops if a teaching feature is lost). Column names and category labels are those of the original practice file, so the
+Basic track's Data Analysis page and `data_analysis.R` still run. The story: 631 adults screened for NCDs, then followed for
+6 months in a lifestyle and foot-care programme. Effects are medically plausible: men about 13 cm taller and heavier; BMI rising
+with wealth; SBP rising with age (r ≈ 0.35); known diabetes about 4%, more common in older and hypertensive adults (Fisher, one
+expected count below 5); glucose strongly right-skewed; formerly (mostly widowed) married adults older and poorer; foot pain
+falling from about a third to a fifth (McNemar); fasting glucose and SBP falling over the visits, which are strongly correlated
+within a person (so pairing narrows the CI about threefold).
+
+**Planted entry errors** (Session 1): 4 records with SBP and DBP swapped and one weight without its decimal point. `assets/setup.R`
+keeps the raw data as `p_raw` and corrects them in `p`, which Sessions 2–5 use; Lab 1 does the same correction.
 
 ## Facilitator workflow
 

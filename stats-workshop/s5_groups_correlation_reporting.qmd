@@ -30,11 +30,14 @@ execute:
 #| include: false
 source("assets/setup.R")
 source("assets/quiz.R")
-a_h   <- aov(height ~ marital_status_of_participants, data = p)
-a_tab <- summary(a_h)[[1]]
-tk    <- TukeyHSD(a_h)$marital_status_of_participants
-eta   <- eta_squared(a_h)$Eta2
+a_b   <- aov(bmi ~ wealth_index_of_participants, data = p)
+a_tab <- summary(a_b)[[1]]
+tk    <- TukeyHSD(a_b)$wealth_index_of_participants
+eta   <- eta_squared(a_b)$Eta2
+bm    <- p |> group_by(wealth_index_of_participants) |> summarise(m = mean(bmi))
 kw    <- kruskal.test(sbp_presentation ~ marital_status_of_participants, data = p)
+dn    <- dunn_test(p, sbp_presentation ~ marital_status_of_participants, p.adjust.method = "holm")
+age_m <- tapply(p$age_of_participants, p$marital_status_of_participants, mean)
 fbs_long <- p |> select(s_no, fbs_presentation, fbs_3_months, fbs_6_months) |>
   pivot_longer(-s_no, names_to = "time", values_to = "fbs") |>
   mutate(time = factor(time, c("fbs_presentation", "fbs_3_months", "fbs_6_months")))
@@ -62,12 +65,12 @@ cs    <- cor.test(p$age_of_participants, p$glucose_level_mg_d_l, method = "spear
 
 # Topic 1 — Three or more independent groups {background-color="#2C3E50"}
 
-## One-way ANOVA: height by marital status
+## One-way ANOVA: BMI by wealth index
 
 ```{r}
-p |> group_by(marital_status_of_participants) |> summarise(n = n(), mean = mean(height), sd = sd(height))
-a_h <- aov(height ~ marital_status_of_participants, data = p)
-summary(a_h)
+p |> group_by(wealth_index_of_participants) |> summarise(n = n(), mean = mean(bmi), sd = sd(bmi))
+a_b <- aov(bmi ~ wealth_index_of_participants, data = p)
+summary(a_b)
 ```
 
 ## Check the assumptions on the residuals
@@ -78,29 +81,30 @@ summary(a_h)
 #| fig-width: 4.6
 #| fig-height: 3.4
 #| echo: false
-ggplot(tibble(r = residuals(a_h)), aes(sample = r)) + stat_qq(colour = col_blue, alpha = .5) +
-  stat_qq_line(colour = col_red) + labs(x = "Normal quantiles", y = "Residuals (cm)")
+ggplot(tibble(r = residuals(a_b)), aes(sample = r)) + stat_qq(colour = col_blue, alpha = .5) +
+  stat_qq_line(colour = col_red) + labs(x = "Normal quantiles", y = "Residuals (kg/m²)")
 ```
 :::
 ::: {.column width="55%"}
 ```{r}
-leveneTest(height ~ marital_status_of_participants, data = p)
-oneway.test(height ~ marital_status_of_participants, data = p)$p.value   # Welch ANOVA
+leveneTest(bmi ~ wealth_index_of_participants, data = p)
+oneway.test(bmi ~ wealth_index_of_participants, data = p)$p.value   # Welch ANOVA
 ```
 :::
 :::
 
-- Residuals on the line, similar SDs (Levene `r fp(leveneTest(height ~ marital_status_of_participants, data = p)[1, 3])`), and **Welch ANOVA** agrees: the classical ANOVA is fine
+- Residuals on the line; Levene `r fp(leveneTest(bmi ~ wealth_index_of_participants, data = p)[1, 3])`, but the SDs differ little (largest under 1.5 × smallest) and **Welch ANOVA** agrees (`r fp(oneway.test(bmi ~ wealth_index_of_participants, data = p)$p.value)`): the conclusion does not depend on the choice
 
-## A borderline result: read it, do not round it
+## Significant: now how big, and where?
 
 ::: {.eq}
-"Mean height differed little by marital status: `r f(mean(p$height[p$marital_status_of_participants == "never married"]))` cm in never married, `r f(mean(p$height[p$marital_status_of_participants == "currently married"]))` in currently married and `r f(mean(p$height[p$marital_status_of_participants == "formerly/ever married"]))` in formerly married adults (one-way ANOVA, F(`r a_tab$Df[1]`, `r a_tab$Df[2]`) = `r f(a_tab$"F value"[1], 2)`, `r fp(a_tab$"Pr(>F)"[1])`; η² = `r f(eta, 3)`)."
+"Mean BMI rose with household wealth, from `r f(bm$m[1])` kg/m² in the poorest to `r f(bm$m[5])` kg/m² in the richest group (one-way ANOVA, F(`r a_tab$Df[1]`, `r a_tab$Df[2]`) = `r f(a_tab$"F value"[1], 1)`, `r fp(a_tab$"Pr(>F)"[1])`; η² = `r f(eta, 2)`). Richest vs poorest: `r f(tk["richest-poorest", "diff"])` kg/m² (95% CI `r f(tk["richest-poorest", "lwr"])` to `r f(tk["richest-poorest", "upr"])`, Tukey)."
 :::
 
 ::: {.incremental}
-- p = `r f(a_tab$"Pr(>F)"[1], 3)` is **not** "nearly significant" or "a trend": it is weak evidence, and η² says marital status explains under **1%** of the variation in height
-- The largest difference (never vs currently married) is `r f(tk["currently married-never married", "diff"] * -1)` cm, 95% CI `r f(-tk["currently married-never married", "upr"], 2)` to `r f(-tk["currently married-never married", "lwr"], 2)` (Tukey): compatible with **no** difference and with a few cm
+- The F-test says only "the means are not all equal"; **Tukey** gives each pair's difference with a CI adjusted for `r nrow(tk)` comparisons
+- η² = `r f(eta, 2)`: wealth explains about **`r f(100 * eta, 0)`%** of the variation in BMI, a **medium** effect (0.01 small, 0.06 medium, 0.14 large); most variation is between people within a group
+- The groups are **ordered**: a trend test or regression with wealth as a score (Regression track) uses that order and asks one question instead of `r nrow(tk)`
 :::
 
 ## Post hoc tests: when and which
@@ -123,8 +127,19 @@ p |> group_by(marital_status_of_participants) |>
 kruskal.test(sbp_presentation ~ marital_status_of_participants, data = p)
 ```
 
-- For skewed outcomes or outliers (SBP has implausible values, Session 1); compares the **distributions**, through ranks
-- `r fp(kw$p.value)` and almost identical medians: **no** evidence of a difference, so **no** post hoc tests
+- For skewed outcomes or outliers (SBP at presentation is right-skewed); compares the **distributions**, through ranks
+- `r fp(kw$p.value)`: a difference somewhere. **Dunn** (Holm-adjusted) shows where: formerly married vs never married `r fp(dn$p.adj[2])`, vs currently married `r fp(dn$p.adj[3])`
+
+## Before you explain it: who is in each group?
+
+```{r}
+dunn_test(p, sbp_presentation ~ marital_status_of_participants, p.adjust.method = "holm") |>
+  select(group1, group2, p.adj)
+```
+
+::: {.warn}
+Formerly married adults (mostly widowed) are **older**: mean age `r f(age_m[3])` vs `r f(age_m[2])` (currently) and `r f(age_m[1])` years (never married), and SBP rises with age. The test shows a **difference**, not its **cause**: separating marital status from age needs **regression** (Regression track).
+:::
 
 # Topic 2 — Repeated measurements {background-color="#2C3E50"}
 
@@ -141,12 +156,12 @@ anova_test(data = fbs_long, dv = fbs, wid = s_no, within = time)
 ::: {.incremental}
 - **Sphericity**: the variance of the differences is the same for every pair of time points (0–3, 0–6, 3–6)
 - **Mauchly's test** checks it; when violated, use the **Greenhouse–Geisser** corrected p-value (`p[GG]`), which `anova_test()` prints alongside
-- Here Mauchly `r fp(rm_a$"Mauchly's Test for Sphericity"$p)` and the GG ε ≈ `r f(rm_a$"Sphericity Corrections"$GGe, 2)`: no problem
-- **ges** (generalised η²) = `r f(rm_a$ANOVA$ges, 2)`: time explains a large share of the variation
+- Here Mauchly `r fp(rm_a$"Mauchly's Test for Sphericity"$p)`: sphericity is violated (the 0–6 month changes vary more than the 0–3), so report the **GG-corrected** result, ε = `r f(rm_a$"Sphericity Corrections"$GGe, 2)`
+- **ges** (generalised η²) = `r f(rm_a$ANOVA$ges, 2)`: a **modest** share of the total variation, because people differ from **each other** far more than from one visit to the next. The F-test is huge because each person is compared with themselves
 :::
 
 ::: {.eq}
-"Mean fasting glucose fell from `r f(mean(p$fbs_presentation))` mg/dL at presentation to `r f(mean(p$fbs_3_months))` at 3 and `r f(mean(p$fbs_6_months))` at 6 months (repeated-measures ANOVA, F(`r rm_a$ANOVA$DFn`, `r rm_a$ANOVA$DFd`) = `r f(rm_a$ANOVA$F, 0)`, `r fp(rm_a$ANOVA$p)`; generalised η² = `r f(rm_a$ANOVA$ges, 2)`)."
+"Mean fasting glucose fell from `r f(mean(p$fbs_presentation))` mg/dL at presentation to `r f(mean(p$fbs_3_months))` at 3 and `r f(mean(p$fbs_6_months))` at 6 months (repeated-measures ANOVA with Greenhouse–Geisser correction, F(`r f(rm_a$ANOVA$DFn * rm_a$"Sphericity Corrections"$GGe, 2)`, `r f(rm_a$ANOVA$DFd * rm_a$"Sphericity Corrections"$GGe, 0)`) = `r f(rm_a$ANOVA$F, 0)`, `r fp(rm_a$"Sphericity Corrections"$"p[GG]")`; generalised η² = `r f(rm_a$ANOVA$ges, 2)`)."
 :::
 
 ## Post hoc for repeated measures must be **paired**
@@ -156,7 +171,7 @@ pairwise.t.test(fbs_long$fbs, fbs_long$time, paired = TRUE, p.adjust.method = "b
 ```
 
 ::: {.warn}
-Without `paired = TRUE`, `pairwise.t.test()` treats the three visits as **independent groups** of different people and pools their SD: the wrong test for repeated measurements. Here every change is large, so the p-values agree; with smaller changes the unpaired version can miss or invent a difference.
+Without `paired = TRUE`, `pairwise.t.test()` treats the three visits as **independent groups** of different people and pools their SD: the wrong test for repeated measurements. Because the visits are strongly correlated it throws away most of the information: its p-values are many orders of magnitude larger, and with a smaller change it would miss it altogether.
 :::
 
 ## Friedman: systolic pressure at 0, 3 and 6 months
@@ -195,11 +210,11 @@ cor.test(p$age_of_participants, p$sbp_in_mm_hg)
 ## Reading r
 
 ::: {.eq}
-"Systolic pressure rose slightly with age (Pearson r = `r f(ca$estimate, 2)`, 95% CI `r f(ca$conf.int[1], 2)` to `r f(ca$conf.int[2], 2)`; `r fp(ca$p.value)`)."
+"Systolic pressure rose with age (Pearson r = `r f(ca$estimate, 2)`, 95% CI `r f(ca$conf.int[1], 2)` to `r f(ca$conf.int[2], 2)`; `r fp(ca$p.value)`)."
 :::
 
 ::: {.incremental}
-- **r²** = `r f(ca$estimate^2, 2)`: age accounts for about **`r f(100 * ca$estimate^2, 0)`%** of the variation in SBP. Highly significant, yet **weak**
+- **r²** = `r f(ca$estimate^2, 2)`: age accounts for about **`r f(100 * ca$estimate^2, 0)`%** of the variation in SBP. A **moderate** association: highly significant, yet most of the variation lies elsewhere
 - Correlation measures **linear association** only; it is not agreement (use Bland–Altman for that) and not causation
 - To estimate *how much* SBP changes per year of age, and to adjust for other factors: **regression** (Regression track)
 :::
@@ -306,12 +321,12 @@ quiz_mcq("t5q3", "Mauchly's test for a repeated-measures ANOVA gives p = 0.002. 
 ```{r}
 #| echo: false
 #| output: asis
-quiz_mcq("t5q4", "Age and systolic pressure: r = 0.18, 95% CI 0.10 to 0.25, p < 0.001. What is the right reading?",
+quiz_mcq("t5q4", paste0("Age and systolic pressure: r = ", f(ca$estimate, 2), ", 95% CI ", f(ca$conf.int[1], 2), " to ", f(ca$conf.int[2], 2), ", ", fp(ca$p.value), ". What is the right reading?"),
          c("A strong link, since the p-value is so very small",
-           "Age explains about 3% of the variation in SBP",
+           paste0("Age explains about ", f(100 * ca$estimate^2, 0), "% of the variation in SBP"),
            "Getting older causes a rise in systolic pressure",
            "SBP and age agree closely when measured in adults"), answer = 2,
-         explain = "r squared = 0.03: a real but weak association. A small p reflects the large sample, not strength. Correlation is neither causation nor agreement.")
+         explain = paste0("r squared = ", f(ca$estimate^2, 2), ": a real, moderate association; most of the variation in SBP lies elsewhere. A small p reflects the large sample, not strength. Correlation is neither causation nor agreement."))
 ```
 
 ## Self-check quiz (5/5) {.smaller}
