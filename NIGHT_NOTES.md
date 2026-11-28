@@ -1,3 +1,68 @@
+# Night notes — custom decks, notes, own slides, runnable code (2026-11-27/28)
+
+Branch `claude/eager-newton-ai0u3z` (from `main` after PR #8). Plan: [`CUSTOM_DECKS_PLAN.md`](CUSTOM_DECKS_PLAN.md);
+what I decided on the way is its §10 (B1–B11).
+
+## ❓ Questions for you — answered 2026-11-28
+
+Answers: 1 export for custom decks, open to all · 2 limits stay · 3 images after the Cloudflare launch · 4 notes on Basic
+and Moderate pages too (**built**: 142 pages, tested) · 5 viewers see own slides but not the owner's speaker notes
+(**built**: the share API strips them, tested). Original questions below.
+Follow-up to 1 ("open for all"): **⬇ PowerPoint** on `/decks` now makes the file in the browser for any user (text, tables, code
+editable; charts as pictures; locked slides left out). Tested in the custom-deck browser suite (13/13).
+
+1. **PowerPoint export and group sharing:** a Facilitator product, or part of the all-tracks bundle? For now the
+   "⬇ For PowerPoint" button is shown to everyone (the export runs on the user's own machine, so there is nothing to gate yet).
+2. **Free-account limits:** built as the plan says (20 decks, 200 own slides, 20,000-character notes). Lower for free?
+3. **Images in own slides** (C6, needs Cloudflare R2): now or later? Not built.
+4. **Notes on reading pages** (Basic, Moderate)? Built for workshop decks only.
+5. **Shared decks:** viewers currently see the owner's own slides (they are part of the deck) but **not** the owner's
+   notes. Is that right?
+
+## ✅ Finished (committed and pushed; every phase has its own tests)
+
+| Phase | What works | Proof |
+|---|---|---|
+| C0 Stable slide IDs | all 1,256 workshop slides carry an explicit `{#id}` (Quarto's own IDs, so links still work); `slides.lock.json`; CI fails on a missing, duplicate, non-ASCII or silently removed ID; `docs/slides.json` catalogue | `node scripts/slide_ids.mjs --check`; a re-rendered deck has identical section IDs |
+| C1 Edit mode + webR | ✎ Edit (top right) on every deck: each R chunk editable, ▶ Run in the browser, ↺ Reset; the deck's setup, data and earlier chunks run first; View mode unchanged and downloads nothing | `scripts/tests/edit_mode.e2e.mjs` 7/7; on the staged Cloudflare site a Run loads webR **from our own domain** and gives `[1] 631` |
+| C2 Notes | 📝 panel per slide in Edit mode, shown as a card in View mode; account when signed in, else this device; no server request for signed-out readers | API tests; browser: written on one page, shown after reload, stored in the account |
+| C3 Custom decks | `/decks` builder (search 1,256 slides, add, reorder, save, share link, delete); `/deck` player assembles **one** reveal.js deck; paid slides the viewer lacks become a 🔒 card (no content leaks); ⬇ PDF opens print layout | `cloud/tests/e2e/decks.e2e.mjs` (signed out on device, signed in in the account, owner vs link viewer without the product, PDF) |
+| C4 Own slides | editor: 6 layouts, 4 fonts, sizes S–XL, alignment (left/centre/right/justify, top/middle), two-column split, text/box/table blocks, **code + output** with output space (fits / S / M / L / N lines, below or beside) and ▶ Run-and-keep; live preview with an overflow warning; "＋ Add slide after this" in any deck, visible only to you | browser test: made in the editor, `<script>` stays text, renders in its font and alignment, lands right after its anchor, absent when signed out |
+| C5 PowerPoint | `tools/export_pptx.R deck.json` → 16:9 `.pptx`: text boxes, real tables, **charts as editable vector shapes**, quiz answer + your notes in speaker notes | `tools/tests/test_export.R` 11/11; checked visually via LibreOffice |
+
+Also: D1 migration `0003_slides.sql`; APIs `/api/notes`, `/api/decks`, `/api/slides` (7 new tests, **49 pass**);
+`stage.mjs` self-hosts webR 0.6.1 (browser build from the GitHub release, not committed: ~45 MB) and publishes `/st/`;
+account page links to Custom decks.
+
+Other checks after the full re-render: site e2e 11/11, sync e2e 10/10, 67 deck quizzes, quiz lint 0 failures in all
+12 workshops, labs in sync, item bank strict, profiles and quiz assets match.
+
+## ⚠️ What broke on the way (all fixed), and what is not done
+
+- **Cloudflare serves `deck.html` as `deck`**: the deck tools did not recognise a deck there (notes, own slides, Run
+  would all have failed live). Fixed and covered by the staged-site test.
+- **The npm webR package is the Node.js build**: self-hosted webR silently fell back to webR's server. Now staged from
+  the GitHub release; the test checks that `R.wasm` comes from our domain.
+- **Race:** a just-saved own slide could vanish when the deck's first load of your slides arrived late. Fixed.
+- **Direct `quarto render --profile` deletes the `regression-quest/` redirect stubs and `.render-stamp` files**
+  (`render-all-profiles.sh` writes them). Restored. After changing only `assets/slide-tools.*`, use
+  `quarto render --profile <track>` for the workshop tracks and then restore those files (`git checkout -- docs/regression/regression-quest docs/*/.render-stamp`),
+  or `bash render-all-profiles.sh --force` (wipes and re-renders everything: slow). The incremental script does not notice a change in a workshop's `assets/`.
+- `npm test` rewrites the gate's hidden-folder name with a test value: run `node stage.mjs` **after** it, before the
+  browser tests. (`deploy.sh` stages right before uploading, so a deploy is not affected.)
+- Not built: C6 images, C7 group sharing (with launch phase 5), "Save my version" of edited workshop code (B7).
+- Not reviewed by a person yet: the editor's look on a phone (it works, but the dialog is dense below 860 px).
+
+## ☕ Start here (about 15 minutes)
+
+1. `cd cloud && npm ci && npm test && node stage.mjs && npx wrangler pages dev` (or `npm run dev`), open
+   `http://localhost:8788/statistics/stats-workshop/s1_know_your_data`, press **✎ Edit**, change `head(5)` to `head(10)`
+   and **▶ Run** (first run downloads R, ~20–40 s).
+2. Open `/decks`, add three slides (one from Regression: it shows 🔒), **＋ New slide of your own**, **Save**, **▶ Play**.
+3. Answer the five questions above; each is a small change.
+
+---
+
 # Night notes — launch plan, phases 0 to 3 (2026-11-19)
 
 ## ❓ Questions for you (nothing is waiting on them; I carried on)

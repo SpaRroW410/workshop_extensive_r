@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 2: Kaplan-Meier curves by group
@@ -44,9 +44,9 @@ source("assets/quiz.R")
   - explain why a **t-test of follow-up time** is wrong
 :::
 
-# Topic 1 — The log-rank test {background-color="#2C3E50"}
+# Topic 1 — The log-rank test {#topic-1-the-log-rank-test background-color="#2C3E50"}
 
-## What it compares
+## What it compares {#what-it-compares}
 
 At every event time, given how many are at risk in each group, how many deaths would we **expect** in each group **if the curves were the same**? The test adds up (observed − expected) over all event times.
 
@@ -54,7 +54,7 @@ At every event time, given how many are at risk in each group, how many deaths w
 **H₀:** the survival curves (hazards) are the **same** in all groups. Small p: evidence of a **difference somewhere along follow-up**. It uses the **whole curve**, and is most powerful when the hazards are **proportional**.
 :::
 
-## HIV status
+## HIV status {#hiv-status}
 
 ```{r}
 lr_hiv <- survdiff(Surv(time_months, status) ~ hiv, data = tb)
@@ -67,7 +67,7 @@ lr_hiv
 - The test gives **no size of effect**: use the hazard ratio (Session 4)
 :::
 
-## A null result
+## A null result {#a-null-result}
 
 ```{r}
 lr_sex <- survdiff(Surv(time_months, status) ~ sex, data = tb)
@@ -78,9 +78,9 @@ c(chisq = round(lr_sex$chisq, 2), p = round(1 - pchisq(lr_sex$chisq, 1), 2))
 p = `r round(1 - pchisq(lr_sex$chisq, 1), 2)` means **no evidence** of a difference by sex, **not proof** of none: look at the **CI of the hazard ratio** to see which differences remain plausible.
 :::
 
-# Topic 2 — Getting it right {background-color="#2C3E50"}
+# Topic 2 — Getting it right {#topic-2-getting-it-right background-color="#2C3E50"}
 
-## Stratified log-rank
+## Stratified log-rank {#stratified-log-rank}
 
 Compare HIV groups **within** treatment arms, then combine:
 
@@ -93,7 +93,7 @@ survdiff(Surv(time_months, status) ~ hiv + strata(treatment), data = tb)
 - It cannot compare the stratifying variable itself, and **adjusts for one factor at a time**: for several, use Cox
 :::
 
-## More than two groups
+## More than two groups {#more-than-two-groups}
 
 ```{r}
 tb |> mutate(group = case_when(mdr_tb == "Yes" ~ "MDR-TB", hiv == "Positive" ~ "HIV, drug-sensitive", TRUE ~ "Drug-sensitive, HIV-negative")) |>
@@ -102,7 +102,7 @@ tb |> mutate(group = case_when(mdr_tb == "Yes" ~ "MDR-TB", hiv == "Positive" ~ "
 
 An **overall** test on k groups has **k − 1 df**; it says *some* group differs. Follow with pairwise comparisons, **adjusted** for multiple testing.
 
-## The wrong tests
+## The wrong tests {#the-wrong-tests}
 
 ::: {.bad}
 - **t-test or Wilcoxon on follow-up time:** mixes deaths and censored times, and answers a different question
@@ -113,7 +113,7 @@ An **overall** test on k groups has **k − 1 df**; it says *some* group differs
 c(t_test = signif(t.test(time_months ~ hiv, data = tb)$p.value, 2), log_rank = signif(1 - pchisq(lr_hiv$chisq, 1), 2))
 ```
 
-## The log-rank test does not
+## The log-rank test does not {#the-log-rank-test-does-not}
 
 ::: {.incremental}
 - **Adjust** for several covariates: use **Cox regression**
@@ -121,7 +121,7 @@ c(t_test = signif(t.test(time_months ~ hiv, data = tb)$p.value, 2), log_rank = s
 - Work well when the **curves cross**: then the "average" difference can be near zero while the curves differ early and late
 :::
 
-## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 3 {#switch-to-r-lab-3 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `survival-workshop/labs/lab3_logrank.R`
@@ -133,7 +133,7 @@ c(t_test = signif(t.test(time_months ~ hiv, data = tb)$p.value, 2), log_rank = s
 
 **Time:** 30 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -146,7 +146,7 @@ quiz_mcq("s3q1", "What is the null hypothesis of the log-rank test comparing two
          explain = "The log-rank test asks whether the two survival (hazard) curves coincide over the whole follow-up. It does not compare only a median or one time point.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -159,7 +159,7 @@ quiz_mcq("s3q2", "HIV-positive patients had 19 observed deaths and 11.4 expected
          explain = "Expected deaths are what the group would have if the curves were identical. A group with more deaths than expected fared worse than the pooled experience.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -172,7 +172,7 @@ quiz_mcq("s3q3", "Why is a t-test on the follow-up time of two groups inappropri
          explain = "Censored times are not death times, so comparing average follow-up times does not compare survival. The log-rank test uses the censoring information correctly.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -185,7 +185,7 @@ quiz_mcq("s3q4", "The log-rank test by sex gives p = 0.63. Which conclusion is b
          explain = "A large p-value is weak evidence against 'no difference', not proof of equality. The hazard ratio and its CI show which differences are still plausible.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -198,7 +198,7 @@ quiz_mcq("s3q5", "When is a stratified log-rank test most useful?",
          explain = "Stratification compares groups within levels of another variable and combines the results, so imbalance in that variable does not distort the comparison.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

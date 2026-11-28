@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Theory of Regression Analysis {.smaller}
+## Theory of Regression Analysis {#theory-of-regression-analysis .smaller}
 
 **A full-day workshop for community medicine residents and faculty**
 
@@ -53,7 +53,7 @@ Walk through the day. Stress that every session ends with a lab in R and a 5-que
 Everyone should have R, the workshop repo and the `data/ncd_survey.csv` file open before we start.
 :::
 
-## Our running example {.smaller}
+## Our running example {#our-running-example .smaller}
 
 > *"Does eating more salt raise blood pressure in our community — and by how much?"*
 
@@ -69,9 +69,9 @@ Everyone should have R, the workshop repo and the `data/ncd_survey.csv` file ope
 The data are simulated so that every teaching point (confounding, collinearity, non-constant variance, clustering, common outcome, missing values) shows up on cue. Do not mention individual features yet — we will discover them.
 :::
 
-# Topic 1 — What is regression? {background-color="#2C3E50"}
+# Topic 1 — What is regression? {#topic-1-what-is-regression background-color="#2C3E50"}
 
-## What is regression?
+## What is regression? {#what-is-regression}
 
 ::: {.key}
 Regression describes how the **average** value of an **outcome** changes with one or more **predictors**.
@@ -98,7 +98,7 @@ ggplot(ncd, aes(salt_g, sbp)) +
 :::
 :::
 
-## Why do we use regression? {.smaller}
+## Why do we use regression? {#why-do-we-use-regression .smaller}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -119,7 +119,7 @@ ggplot(ncd, aes(salt_g, sbp)) +
 :::
 :::
 
-## Regression in community medicine {.smaller}
+## Regression in community medicine {#regression-in-community-medicine .smaller}
 
 | Public health question | Outcome | Typical model |
 |---|---|---|
@@ -134,7 +134,7 @@ ggplot(ncd, aes(salt_g, sbp)) +
 Ask the audience for their own thesis topics and place each on this table. The right-most column is the thread of the whole day.
 :::
 
-## Correlation vs regression: same data
+## Correlation vs regression: same data {#correlation-vs-regression-same-data}
 
 ```{r}
 #| echo: false
@@ -147,7 +147,7 @@ ggplot(ncd, aes(salt_g, sbp)) +
   labs(x = "Salt intake (g/day)", y = "Systolic BP (mmHg)")
 ```
 
-## Correlation vs regression: same data
+## Correlation vs regression: same data {#correlation-vs-regression-same-data-1}
 
 ```{r}
 #| echo: false
@@ -162,7 +162,7 @@ ggplot(ncd, aes(salt_g, sbp)) +
   labs(x = "Salt intake (g/day)", y = "Systolic BP (mmHg)")
 ```
 
-## Correlation vs regression: the differences {.smaller}
+## Correlation vs regression: the differences {#correlation-vs-regression-the-differences .smaller}
 
 ```{r}
 cor(ncd$sbp, ncd$salt_g, use = "complete.obs")        # symmetric, unit-free
@@ -177,7 +177,7 @@ coef(lm(salt_g ~ sbp, data = ncd))["sbp"]              # swap the roles -> a dif
 | Adjust for other variables | No | **Yes** |
 | Predict new values | No | **Yes** |
 
-## Dependent vs independent variables {.smaller}
+## Dependent vs independent variables {#dependent-vs-independent-variables .smaller}
 
 | Role | Also called | In our survey |
 |---|---|---|
@@ -191,7 +191,7 @@ coef(lm(salt_g ~ sbp, data = ncd))["sbp"]              # swap the roles -> a dif
 :::
 :::
 
-## Type of outcome decides the model
+## Type of outcome decides the model {#type-of-outcome-decides-the-model}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -217,9 +217,9 @@ The first question in any regression analysis is not "which software?" but **"wh
 :::
 :::
 
-# Choosing a model {background-color="#2C3E50"}
+# Choosing a model {#choosing-a-model background-color="#2C3E50"}
 
-## The model-selection flowchart
+## The model-selection flowchart {#the-model-selection-flowchart}
 
 ```{mermaid}
 %%| echo: false
@@ -244,7 +244,7 @@ flowchart LR
 Green = covered today (linear, logistic and the prevalence-ratio variant). Grey = Session 6 "beyond this workshop" slide gives packages and one line on when to use each. Clustering is not an outcome type but changes how we fit: our villages are an example.
 :::
 
-## Flowchart in practice: our survey
+## Flowchart in practice: our survey {#flowchart-in-practice-our-survey}
 
 | Question | Outcome type | Model | Today? |
 |---|---|---|---|
@@ -255,9 +255,9 @@ Green = covered today (linear, logistic and the prevalence-ratio variant). Grey 
 | Time until a hypertensive starts treatment | Time-to-event | Cox | <span class="pill no">later</span> |
 | Villages share unmeasured factors | Clustered | Mixed / GEE | <span class="pill no">mention</span> |
 
-# Meet the data {background-color="#2C3E50"}
+# Meet the data {#meet-the-data background-color="#2C3E50"}
 
-## Data dictionary {.smaller}
+## Data dictionary {#data-dictionary .smaller}
 
 | Variable | Meaning | Type |
 |---|---|---|
@@ -269,7 +269,7 @@ Green = covered today (linear, logistic and the prevalence-ratio variant). Grey 
 | `sbp`, `dbp` | Blood pressure (mmHg) | continuous (**outcomes**) |
 | `htn` | SBP ≥ 140 **or** DBP ≥ 90 | binary (**outcome**) |
 
-## Import and inspect
+## Import and inspect {#import-and-inspect}
 
 ```{r}
 library(tidyverse)
@@ -281,7 +281,7 @@ glimpse(ncd_raw)
 In the lab the path is found automatically from the script. On the slide the deck sits in regression-workshop/ so the relative path is ../data/. Behind the scenes the deck converts text columns to factors with sensible level order (as in Lab 1, Task 4) and keeps the prepared data frame as `ncd`.
 :::
 
-## Missing values
+## Missing values {#missing-values}
 
 ```{r}
 ncd_raw |> summarise(across(everything(), ~ sum(is.na(.x)))) |>
@@ -292,7 +292,7 @@ ncd_raw |> summarise(across(everything(), ~ sum(is.na(.x)))) |>
 Three variables have about 3% missing. A regression model **silently drops** these rows (complete-case analysis) — so n changes from model to model unless you plan for it.
 :::
 
-## Table 1 with `tbl_summary()`
+## Table 1 with `tbl_summary()` {#table-1-with-tbl_summary}
 
 ```{r}
 #| output-location: slide
@@ -307,7 +307,7 @@ ncd |>
 Point at the Missing rows, the medians for continuous variables and the p-values. Table 1 compares groups one variable at a time: it cannot adjust, and it cannot tell us about causation.
 :::
 
-## Look before you model
+## Look before you model {#look-before-you-model}
 
 ```{r}
 #| fig-height: 4.2
@@ -317,7 +317,7 @@ ggplot(ncd, aes(salt_g, sbp)) +
   labs(x = "Salt intake (g/day)", y = "Systolic BP (mmHg)")
 ```
 
-## `cor()` — and its limits
+## `cor()` — and its limits {#cor-and-its-limits}
 
 ```{r}
 ncd |> select(age, bmi, waist, salt_g, sbp) |>
@@ -330,7 +330,7 @@ ncd |> select(age, bmi, waist, salt_g, sbp) |>
 - `bmi` and `waist`: **r = 0.95**. Remember this — it comes back in Session 4
 :::
 
-## 🔧 Switch to R — Lab 1 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 1 {#switch-to-r-lab-1 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `regression-workshop/labs/lab1_explore.R`
@@ -342,7 +342,7 @@ ncd |> select(age, bmi, waist, salt_g, sbp) |>
 
 **Time:** 30 minutes · **Fill every** `___` · answer Q1–Q4 in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -352,7 +352,7 @@ quiz_mcq("s1q1", "A study asks: *Is tobacco use (yes/no) associated with having 
          explain = "The outcome (hypertension) is binary, so logistic regression is the starting point.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -365,7 +365,7 @@ quiz_mcq("s1q2", "Time from starting TB treatment to death, with some patients l
          explain = "Time-to-event data with censoring call for Cox regression.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -378,7 +378,7 @@ quiz_mcq("s1q3", "Which statement about correlation vs regression is TRUE?",
          explain = "Correlation is symmetric and unit-free. Regression is directional (swapping roles changes the slope), gives an effect in outcome units and can adjust for other variables.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -388,7 +388,7 @@ quiz_fill("s1q4", "A study records whether each patient is alive or dead one yea
           explain = "Two possible categories means a binary outcome, which points to logistic regression.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -398,7 +398,7 @@ quiz_fill("s1q5", "About 3% of salt_g values are missing and a model silently dr
           explain = "Analysing only rows with no missing model variable is complete-case analysis, so n can change from model to model.")
 ```
 
-## Score and take-home {.smaller}
+## Score and take-home {#score-and-take-home .smaller}
 
 **Your score: <span class="quiz-score"></span>**
 

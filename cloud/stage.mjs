@@ -9,6 +9,7 @@
 import { cpSync, rmSync, readdirSync, statSync, writeFileSync, readFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join, relative, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 import { routesJson } from './src/products.js';
 import { hidePaidFiles } from './src/layout.js';
 
@@ -97,6 +98,32 @@ for (const file of walk(OUT).filter((p) => p.endsWith('.html'))) {
   injected++;
 }
 
+// The slide tools (Edit mode, notes, own slides) for the custom-deck builder and player: /st/.
+// The decks embed their own copy; the master is regression-workshop/assets/.
+mkdirSync(join(OUT, 'st'), { recursive: true });
+for (const f of ['slide-tools.js', 'slide-tools.css']) cpSync(join(HERE, '..', 'regression-workshop', 'assets', f), join(OUT, 'st', f));
+
+// webR (R in the browser, for Edit mode in the decks) served from our own domain: /webr/.
+// Pinned to the version slide-tools.js asks for; downloaded once into .cache/ (not committed: ~45 MB).
+// The decks fall back to webR's own server when /webr/ is absent (GitHub Pages, files opened offline).
+const WEBR_VERSION = '0.6.1';
+const webrSkipped = await stageWebR(join(OUT, 'webr'));
+
+// Notes on the Basic/Moderate pages (decided 2026-11-28), in whichever track shows them.
+// Their folders; workshop decks have their own tools, the game and the landing page have none.
+const NOTE_FOLDERS = ['r-foundations', 'data-visualization', 'plot-gallery', 'specialized', 'statistical-analysis', 'ggstatsplot', 'gtsummary', 'quarto_repro_w', 'exporting_tools'];
+let notePages = 0;
+for (const file of walk(OUT).filter((p) => p.endsWith('.html'))) {
+  const rel = relative(OUT, file).split('\\').join('/');
+  if (!NOTE_FOLDERS.includes(rel.split('/')[1])) continue;
+  const html = readFileSync(file, 'utf8');
+  const at = html.lastIndexOf('</body>');
+  if (at < 0 || html.includes('/st/page-notes.js')) continue;
+  const tags = '<link rel="stylesheet" href="/st/slide-tools.css"><link rel="stylesheet" href="/st/page-notes.css"><script src="/st/page-notes.js" defer></script>\n';
+  writeFileSync(file, html.slice(0, at) + tags + html.slice(at));
+  notePages++;
+}
+
 // Paid files leave their public paths (see src/layout.js for why).
 const { moved } = hidePaidFiles(OUT, join(HERE, 'src', 'generated'));
 
@@ -109,4 +136,27 @@ if (problems.length) {
   process.exit(1);
 }
 mkdirSync(OUT, { recursive: true });
-console.log(`Staged ${count} files in cloud/.deploy (${moved} paid files hidden, sync script on ${injected} pages, _routes.json written)`);
+if (webrSkipped) console.warn(`webR not staged (${webrSkipped}); decks will load it from webr.r-wasm.org`);
+console.log(`Staged ${count} files in cloud/.deploy (${moved} paid files hidden, sync script on ${injected} pages, notes on ${notePages} Basic/Moderate pages, _routes.json written)`);
+
+async function stageWebR(dest) {
+  // The browser build is the GitHub release archive (the npm package is webR's Node.js build).
+  const cache = join(HERE, '.cache', `webr-${WEBR_VERSION}`);
+  const dist = join(cache, `webr-${WEBR_VERSION}`);
+  if (!existsSync(join(dist, 'R.wasm'))) {
+    try {
+      mkdirSync(cache, { recursive: true });
+      const r = await fetch(`https://github.com/r-wasm/webr/releases/download/v${WEBR_VERSION}/webr-${WEBR_VERSION}.tar.gz`);
+      if (!r.ok) return `download failed: ${r.status}`;
+      const tgz = join(cache, 'webr.tgz');
+      writeFileSync(tgz, Buffer.from(await r.arrayBuffer()));
+      execFileSync('tar', ['-xzf', tgz, '-C', cache]);
+    } catch (e) { return e.message; }
+  }
+  const keep = (src) => {
+    const rel = relative(dist, src).split('\\').join('/');
+    return !/^(assets|tests)(\/|$)|^repl\.|^index\.html$|\.map$/.test(rel);
+  };
+  cpSync(dist, dest, { recursive: true, filter: keep });
+  return null;
+}

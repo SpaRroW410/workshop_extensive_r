@@ -41,7 +41,7 @@ set.seed(1); cv_r <- cv.glmnet(x_all, dev$diabetes, family = "binomial", alpha =
 val$risk <- predict(m_true, newdata = val, type = "response"); lpv <- qlogis(val$risk)
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Sessions 1 to 4: build, evaluate, internally validate, shrink
@@ -53,9 +53,9 @@ val$risk <- predict(m_true, newdata = val, type = "response"); lpv <- qlogis(val
   - **report** with TRIPOD
 :::
 
-# Topic 1 — Validation in a new district {background-color="#2C3E50"}
+# Topic 1 — Validation in a new district {#topic-1-validation-in-a-new-district background-color="#2C3E50"}
 
-## Discrimination and average calibration
+## Discrimination and average calibration {#discrimination-and-average-calibration}
 
 ```{r}
 roc_v <- roc(val$diabetes, val$risk, quiet = TRUE)
@@ -67,7 +67,7 @@ ci.auc(roc_v)
 **AUC 0.71** (95% CI 0.68 to 0.74): **lower** than the apparent 0.80 and the bootstrap-corrected 0.776. **Mean predicted risk 17.9%** vs **24.6% observed**: the model **under-estimates** risk in this district (older, less active, higher prevalence).
 :::
 
-## Calibration slope and plot
+## Calibration slope and plot {#calibration-slope-and-plot}
 
 ```{r}
 c(slope = coef(glm(diabetes ~ lpv, data = val, family = binomial))[["lpv"]], intercept_offset = coef(glm(diabetes ~ offset(lpv), data = val, family = binomial))[[1]]) |> round(2)
@@ -86,7 +86,7 @@ ggplot(calv, aes(predicted, observed)) + geom_abline(linetype = 2) + geom_point(
 - Typical of **external validation**: performance **drops** and **calibration** needs updating
 :::
 
-## Which development strategy transports best?
+## Which development strategy transports best? {#which-development-strategy-transports-best}
 
 ```{r}
 slope_of <- function(lp) coef(glm(diabetes ~ lp, data = val, family = binomial))[["lp"]]
@@ -101,9 +101,9 @@ sapply(lps, function(lp) c(auc = auc_of(val$diabetes, lp), slope = slope_of(lp))
 - **No strategy fully repairs** the change of population: that needs **recalibration**
 :::
 
-# Topic 2 — Updating and usefulness {background-color="#2C3E50"}
+# Topic 2 — Updating and usefulness {#topic-2-updating-and-usefulness background-color="#2C3E50"}
 
-## Recalibration
+## Recalibration {#recalibration}
 
 ```{r}
 rec <- glm(diabetes ~ lpv, data = val, family = binomial)
@@ -118,7 +118,7 @@ c(brier_before = mean((val$risk - val$diabetes)^2), brier_after = mean((val$risk
 - Models need **updating over time** and across **settings**
 :::
 
-## Decision curve: net benefit
+## Decision curve: net benefit {#decision-curve-net-benefit}
 
 ::: {.eq}
 net benefit = TP / n − FP / n × t / (1 − t)       t = the risk threshold at which you would act
@@ -130,13 +130,13 @@ ts <- seq(0.05, 0.40, 0.05)
 tibble(threshold = ts, model = sapply(ts, \(t) nb(val$risk_rec, val$diabetes, t)), treat_all = sapply(ts, \(t) mean(val$diabetes) - (1 - mean(val$diabetes)) * t / (1 - t))) |> mutate(across(-threshold, \(x) round(x, 3)))
 ```
 
-## Reading the decision curve
+## Reading the decision curve {#reading-the-decision-curve}
 
 ::: {.key}
 **Treat none = 0.** The model has the **same** net benefit as **treat-all** up to a threshold of **10%**, and a **clearly higher** one from **15%** (0.126 vs 0.112) up to 40%, where treating everyone becomes **harmful** (negative above about 25%). A net benefit of **0.10 at 20%** is like finding **10 extra true cases per 100 adults with no unnecessary test**. **Choose the threshold from costs and benefits**, not from the AUC.
 :::
 
-## Reporting: TRIPOD
+## Reporting: TRIPOD {#reporting-tripod}
 
 ::: {.good}
 - **Source of data**, setting, **outcome**, **predictors** and their measurement
@@ -151,7 +151,7 @@ tibble(threshold = ts, model = sapply(ts, \(t) nb(val$risk_rec, val$diabetes, t)
 *Example:* "The model (logistic regression, 8 predictors, 84 events in 700 adults) had an apparent AUC of 0.80 (bootstrap-corrected 0.78); in an external cohort of 2,000 adults the AUC was 0.71, the calibration slope 0.67 and risk was under-estimated (mean 17.9% vs 24.6% observed)."
 :::
 
-## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 5 {#switch-to-r-lab-5 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `prediction-workshop/labs/lab5_external.R`
@@ -163,7 +163,7 @@ tibble(threshold = ts, model = sapply(ts, \(t) nb(val$risk_rec, val$diabetes, t)
 
 **Time:** 45 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -176,7 +176,7 @@ quiz_mcq("p5q1", "The AUC is 0.80 in development and 0.71 in the external cohort
          explain = "External validation usually shows lower performance because of overfitting and because the new population has a different case-mix or different predictor effects.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -189,7 +189,7 @@ quiz_mcq("p5q2", "The mean predicted risk is 17.9% and the observed risk 24.6% i
          explain = "A mean predicted risk below the observed prevalence means the model under-estimates risk on average. This is a different problem from poor ranking or too-extreme predictions.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -202,7 +202,7 @@ quiz_mcq("p5q3", "What does an external calibration slope of 0.67 mean?",
          explain = "A slope below 1 shows that the predicted risks vary more than the true risks. Shrinking the linear predictor by the slope would fix this.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -215,7 +215,7 @@ quiz_mcq("p5q4", "What is a decision curve used for?",
          explain = "A decision curve weighs true positives against false positives at the threshold where a clinician would act, and compares the model with treating everybody or nobody.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -228,7 +228,7 @@ quiz_mcq("p5q5", "Which item is essential in a report of a model that others wil
          explain = "TRIPOD asks for the complete model so that risks can be calculated by others, together with its performance and validation.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

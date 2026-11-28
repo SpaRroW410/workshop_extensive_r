@@ -35,7 +35,7 @@ b0 <- coef(m1)[[1]]; b1 <- coef(m1)[[2]]
 sig <- sigma(m1)
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 1: regression models the **average outcome** as a function of predictors
@@ -48,9 +48,9 @@ sig <- sigma(m1)
   - **centre** predictors so the intercept means something
 :::
 
-# Topic 3 — The straight-line model {background-color="#2C3E50"}
+# Topic 3 — The straight-line model {#topic-3-the-straight-line-model background-color="#2C3E50"}
 
-## The equation
+## The equation {#the-equation}
 
 ::: {.eq}
 SBP~i~ = β~0~ + β~1~ × salt~i~ + ε~i~
@@ -74,7 +74,7 @@ ggplot(ncd, aes(salt_g, sbp)) +
   labs(x = "Salt intake (g/day)", y = "Systolic BP (mmHg)")
 ```
 
-## Fit it with `lm()`
+## Fit it with `lm()` {#fit-it-with-lm}
 
 ```{r}
 m1 <- lm(sbp ~ salt_g, data = ncd)
@@ -85,7 +85,7 @@ summary(m1)
 Read the Estimate column first. Then Std. Error, t, p. Then residual standard error and R². We will take each in turn today and in Session 3.
 :::
 
-## Interpretation — always in units
+## Interpretation — always in units {#interpretation-always-in-units}
 
 ::: {.big .center}
 Each extra **1 g/day** of salt → mean SBP **`r round(b1, 1)` mmHg** higher
@@ -97,7 +97,7 @@ Each extra **1 g/day** of salt → mean SBP **`r round(b1, 1)` mmHg** higher
 - It describes an **association across people**, not what happens if one person changes their diet
 :::
 
-## The unit you choose changes the number
+## The unit you choose changes the number {#the-unit-you-choose-changes-the-number}
 
 ```{r}
 tibble(
@@ -110,7 +110,7 @@ tibble(
 Same model, same data — three different-looking numbers. Always report **the unit**, and pick an increment that is **clinically meaningful** (5 g ≈ a teaspoon of salt).
 :::
 
-## The intercept
+## The intercept {#the-intercept}
 
 ```{r}
 #| echo: false
@@ -129,9 +129,9 @@ ggplot(ncd, aes(salt_g, sbp)) +
 No one in the survey eats 0 g of salt — the intercept is an **extrapolation**. Keep that in mind: we return to it under *centering*.
 :::
 
-# Prediction {background-color="#2C3E50"}
+# Prediction {#prediction background-color="#2C3E50"}
 
-## Predict with `predict()`
+## Predict with `predict()` {#predict-with-predict}
 
 ```{r}
 new_salt <- tibble(salt_g = c(5, 8, 12))
@@ -146,7 +146,7 @@ predict(m1, newdata = new_salt)
 Predict only **within the range of the data** (about 2–14 g/day). Beyond it, the straight line is a guess.
 :::
 
-## Two different questions, two different intervals
+## Two different questions, two different intervals {#two-different-questions-two-different-intervals}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -169,7 +169,7 @@ Predict only **within the range of the data** (about 2–14 g/day). Beyond it, t
 :::
 :::
 
-## CI vs PI in R: `interval =`
+## CI vs PI in R: `interval =` {#ci-vs-pi-in-r-interval}
 
 ```{r}
 predict(m1, new_salt, interval = "confidence") |> round(1)   # for the MEAN
@@ -180,7 +180,7 @@ predict(m1, new_salt, interval = "prediction") |> round(1)   # for an INDIVIDUAL
 At 8 g/day: mean SBP **`r round(predict(m1, tibble(salt_g=8), interval="confidence")[1])`** (95% CI `r paste(round(predict(m1, tibble(salt_g=8), interval="confidence")[2:3]), collapse="–")`) but an individual may lie anywhere from **`r round(predict(m1, tibble(salt_g=8), interval="prediction")[2])`** to **`r round(predict(m1, tibble(salt_g=8), interval="prediction")[3])`**.
 :::
 
-## Both bands on one plot
+## Both bands on one plot {#both-bands-on-one-plot}
 
 ```{r}
 #| output-location: slide
@@ -202,9 +202,9 @@ bind_cols(grid, ci, pi) |>
 Notice the CI band is narrowest near the mean of salt and flares at the ends. The PI band is wide everywhere and contains roughly 95% of the dots.
 :::
 
-# Residuals and OLS {background-color="#2C3E50"}
+# Residuals and OLS {#residuals-and-ols background-color="#2C3E50"}
 
-## Fitted values and residuals
+## Fitted values and residuals {#fitted-values-and-residuals}
 
 ::: {.key}
 **Fitted value** ŷ = what the line predicts for a person.  **Residual** = observed − fitted.
@@ -226,7 +226,7 @@ ggplot(d_res, aes(salt_g, sbp)) +
   labs(x = "Salt intake (g/day)", y = "SBP (mmHg)", caption = "Red segments are residuals (40 random people)")
 ```
 
-## OLS: choose the line with the smallest squared misses
+## OLS: choose the line with the smallest squared misses {#ols-choose-the-line-with-the-smallest-squared-misses}
 
 ```{r}
 #| echo: false
@@ -254,7 +254,7 @@ ggplot(dd, aes(x, y)) +
 Each red square has side = the size of the residual; its area is the squared residual. OLS finds the intercept and slope that make the total red area as small as possible. No calculus needed: R does the minimisation. Axes are standardised only so the squares look square.
 :::
 
-## Residuals vs fitted: first look
+## Residuals vs fitted: first look {#residuals-vs-fitted-first-look}
 
 ```{r}
 #| fig-height: 4.2
@@ -270,9 +270,9 @@ augment(m1) |>
 Residuals should scatter evenly around 0. Hold that thought — Session 4 reads this plot properly.
 :::
 
-# R² and adjusted R² {background-color="#2C3E50"}
+# R² and adjusted R² {#r2-and-adjusted-r2 background-color="#2C3E50"}
 
-## R²: how much of the variation does the model account for?
+## R²: how much of the variation does the model account for? {#r2-how-much-of-the-variation-does-the-model-account-for}
 
 ```{r}
 r2(m1)
@@ -284,7 +284,7 @@ sigma(m1)   # residual standard error, in mmHg
 - **Residual SE ≈ `r round(sig)` mmHg**: a typical miss — it is why the prediction interval is so wide
 :::
 
-## R² always rises; adjusted R² punishes junk
+## R² always rises; adjusted R² punishes junk {#r2-always-rises-adjusted-r2-punishes-junk}
 
 ```{r}
 set.seed(2026)
@@ -302,7 +302,7 @@ map_dfr(c(0, 5, 20), \(k) {
 Adding pure noise **raises R²** every time; **adjusted R²** charges for each extra parameter. Use adjusted R² when you compare models of different size.
 :::
 
-## Reading R² sensibly {.smaller}
+## Reading R² sensibly {#reading-r2-sensibly .smaller}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -321,9 +321,9 @@ A model can fit well and still violate assumptions, or fit *this* dataset only (
 :::
 :::
 
-# Topic 4 — Centering and scaling {background-color="#2C3E50"}
+# Topic 4 — Centering and scaling {#topic-4-centering-and-scaling background-color="#2C3E50"}
 
-## An intercept at age 0?
+## An intercept at age 0? {#an-intercept-at-age-0}
 
 ```{r}
 m_age <- lm(sbp ~ age, data = ncd)
@@ -334,7 +334,7 @@ coef(m_age)
 The intercept says: a **0-year-old** has SBP **`r round(coef(m_age)[1])` mmHg**. Our sample is aged 30–69, so this describes nobody.
 :::
 
-## Centering: move the zero to a meaningful place
+## Centering: move the zero to a meaningful place {#centering-move-the-zero-to-a-meaningful-place}
 
 ```{r}
 ncd <- ncd |> mutate(age_c = age - 50)          # 0 now means "age 50"
@@ -350,7 +350,7 @@ bind_rows(raw = tidy(m_age), centred = tidy(m_age_c), .id = "model") |>
 - Centre on the **mean** or on a **clinically meaningful value** (age 50, BMI 25)
 :::
 
-## Same line, new origin
+## Same line, new origin {#same-line-new-origin}
 
 ```{r}
 #| echo: false
@@ -366,7 +366,7 @@ ggplot(ncd, aes(age, sbp)) +
   labs(x = "Age (years)", y = "SBP (mmHg)")
 ```
 
-## Scaling: change the unit, not the relationship
+## Scaling: change the unit, not the relationship {#scaling-change-the-unit-not-the-relationship}
 
 ```{r}
 tidy(lm(sbp ~ I(age / 10), data = ncd)) |> select(term, estimate) |> mutate(estimate = round(estimate, 2))   # per 10 years
@@ -378,7 +378,7 @@ tidy(lm(sbp ~ scale(age), data = ncd))  |> select(term, estimate) |> mutate(esti
 - **Per SD** (standardised) lets you compare predictors measured in different units — but loses clinical units; prefer natural units for reporting
 :::
 
-## 🔧 Switch to R — Lab 2 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 2 {#switch-to-r-lab-2 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `regression-workshop/labs/lab2_simple.R`
@@ -390,7 +390,7 @@ tidy(lm(sbp ~ scale(age), data = ncd))  |> select(term, estimate) |> mutate(esti
 
 **Time:** 30 minutes · answer Q1–Q6 in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -403,7 +403,7 @@ quiz_mcq("s2q1", "The model sbp ~ salt_g gives a slope of 3.4. Which is the best
          explain = "A slope is a difference in MEAN outcome per one-unit difference in the predictor, in outcome units, across people. It is an association, not a within-person change.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -413,7 +413,7 @@ quiz_mcq("s2q2", "A clinician wants the range within which the SBP of the NEXT p
          explain = "A prediction interval adds the person-to-person scatter (residual SD) to the uncertainty in the line, so it is much wider than the CI for the mean.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -423,7 +423,7 @@ quiz_mcq("s2q3", "After centering age at 50 in `lm(sbp ~ age_c)`, what does the 
          explain = "Centring moves the zero point: the intercept becomes the expected outcome at age 50 while the slope is unchanged.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -433,7 +433,7 @@ quiz_fill("s2q4", "Residual SD is about 15 mmHg. A 95% prediction interval for O
           explain = "A prediction interval is about mean ± 1.96 × residual SD, which is 1.96 × 15 ≈ 29 mmHg. The CI for the mean is far narrower.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -443,7 +443,7 @@ quiz_fill("s2q5", "Adding 20 pure-noise variables nudged R-squared up from 0.20 
           explain = "Adjusted R² charges a penalty for every extra parameter, so noise variables do not raise it the way they raise plain R².")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

@@ -987,22 +987,22 @@
     "text": "Confidence intervals: exponentiate the limits too\n\nci_log &lt;- confint(m_adj)[\"salt_g\", ]                       # profile-likelihood CI on the log-odds scale\nrbind(`log-odds (β)` = c(est = b_salt, ci_log), `odds ratio` = exp(c(est = b_salt, ci_log))) |&gt; round(3)\n\n               est 2.5 % 97.5 %\nlog-odds (β) 0.214 0.101  0.330\nodds ratio   1.238 1.107  1.391\n\n\n\nCI for β is built on the log scale, where it is (approximately) symmetric\nExponentiating each limit gives the CI for the OR: 1.24 (1.11 to 1.39)\nBecause exp stretches the right side more, the OR CI is asymmetric around the estimate"
   },
   {
-    "objectID": "regression-workshop/s5_logistic_regression.html#symmetric-on-the-β-scale-asymmetric-on-the-or-scale",
-    "href": "regression-workshop/s5_logistic_regression.html#symmetric-on-the-β-scale-asymmetric-on-the-or-scale",
+    "objectID": "regression-workshop/s5_logistic_regression.html#symmetric-on-the-beta-scale-asymmetric-on-the-or-scale",
+    "href": "regression-workshop/s5_logistic_regression.html#symmetric-on-the-beta-scale-asymmetric-on-the-or-scale",
     "title": "Session 5 — Logistic Regression",
     "section": "Symmetric on the β scale, asymmetric on the OR scale",
     "text": "Symmetric on the β scale, asymmetric on the OR scale\n\nbind_rows(\n  tidy(m_adj, conf.int = TRUE, conf.level = .95) |&gt; mutate(scale = \"log-odds (β)\"),\n  tidy(m_adj, conf.int = TRUE, exponentiate = TRUE) |&gt; mutate(scale = \"odds ratio (OR)\")) |&gt;\n  filter(term %in% c(\"sexMale\", \"alcoholYes\", \"salt_g\")) |&gt;\n  mutate(scale = fct_inorder(scale), null = if_else(scale == \"odds ratio (OR)\", 1, 0)) |&gt;\n  ggplot(aes(estimate, term)) +\n  geom_vline(aes(xintercept = null), linetype = \"dashed\", colour = col_red) +\n  geom_pointrange(aes(xmin = conf.low, xmax = conf.high), colour = col_navy) +\n  facet_wrap(~ scale, scales = \"free_x\") +\n  labs(x = NULL, y = NULL, caption = \"Dashed line = no effect: β = 0 on the left, OR = 1 on the right\")"
   },
   {
-    "objectID": "regression-workshop/s5_logistic_regression.html#symmetric-on-the-β-scale-asymmetric-on-the-or-scale-output",
-    "href": "regression-workshop/s5_logistic_regression.html#symmetric-on-the-β-scale-asymmetric-on-the-or-scale-output",
+    "objectID": "regression-workshop/s5_logistic_regression.html#symmetric-on-the-beta-scale-asymmetric-on-the-or-scale-output",
+    "href": "regression-workshop/s5_logistic_regression.html#symmetric-on-the-beta-scale-asymmetric-on-the-or-scale-output",
     "title": "Session 5 — Logistic Regression",
     "section": "Symmetric on the β scale, asymmetric on the OR scale",
     "text": "Symmetric on the β scale, asymmetric on the OR scale"
   },
   {
-    "objectID": "regression-workshop/s5_logistic_regression.html#why-or-1-corresponds-to-β-0",
-    "href": "regression-workshop/s5_logistic_regression.html#why-or-1-corresponds-to-β-0",
+    "objectID": "regression-workshop/s5_logistic_regression.html#why-or-1-corresponds-to-beta-0",
+    "href": "regression-workshop/s5_logistic_regression.html#why-or-1-corresponds-to-beta-0",
     "title": "Session 5 — Logistic Regression",
     "section": "Why OR = 1 corresponds to β = 0",
     "text": "Why OR = 1 corresponds to β = 0\n\ne0 = 1 ⇒ β = 0 ⇔ OR = 1\n\n\nOR = 1 means no change in the odds — no association\nA CI for the OR that includes 1 is the same as a CI for β that includes 0 → not significant at 5%\nOR &gt; 1 = higher odds; OR &lt; 1 = lower odds (β &gt; 0 / β &lt; 0)"
@@ -1078,22 +1078,22 @@
     "text": "AIC: comparing models that are not nested\n\nm_bmi   &lt;- glm(htn ~ age + sex + bmi,   data = cc, family = binomial)\nm_waist &lt;- glm(htn ~ age + sex + waist, data = cc, family = binomial)\nAIC(m_bmi, m_waist)\n\n        df      AIC\nm_bmi    4 549.4734\nm_waist  4 548.3553\n\n\n\nAIC = −2 log-likelihood + 2 × (number of parameters) — fit, penalised for complexity\nLower is better; a difference &lt; 2 means essentially no preference\nWorks for non-nested comparisons (BMI vs waist) where an LRT cannot\nAlways compare on the same rows (watch missing data!)"
   },
   {
-    "objectID": "regression-workshop/s5_logistic_regression.html#three-pseudo-r²-measures",
-    "href": "regression-workshop/s5_logistic_regression.html#three-pseudo-r²-measures",
+    "objectID": "regression-workshop/s5_logistic_regression.html#three-pseudo-r2-measures",
+    "href": "regression-workshop/s5_logistic_regression.html#three-pseudo-r2-measures",
     "title": "Session 5 — Logistic Regression",
     "section": "Three pseudo-R² measures",
     "text": "Three pseudo-R² measures\n\nr2(m_adj)                       # for logistic models r2() reports Tjur's R2\n\n# R2 for Logistic Regression\n  Tjur's R2: 0.292\n\ntibble(measure = c(\"McFadden\", \"Nagelkerke\", \"Tjur\"),\n       value   = c(r2_mcfadden(m_adj)$R2[[1]], r2_nagelkerke(m_adj)[[1]], r2_tjur(m_adj)[[1]])) |&gt;\n  mutate(value = round(value, 2))\n\n# A tibble: 3 × 2\n  measure    value\n  &lt;chr&gt;      &lt;dbl&gt;\n1 McFadden    0.26\n2 Nagelkerke  0.38\n3 Tjur        0.29\n\n\n\nThree different numbers for one model — because they are different things."
   },
   {
-    "objectID": "regression-workshop/s5_logistic_regression.html#how-to-use-and-not-use-pseudo-r²",
-    "href": "regression-workshop/s5_logistic_regression.html#how-to-use-and-not-use-pseudo-r²",
+    "objectID": "regression-workshop/s5_logistic_regression.html#how-to-use-and-not-use-pseudo-r2",
+    "href": "regression-workshop/s5_logistic_regression.html#how-to-use-and-not-use-pseudo-r2",
     "title": "Session 5 — Logistic Regression",
     "section": "How to use (and not use) pseudo-R²",
     "text": "How to use (and not use) pseudo-R²\n\n\n\nNot\n\nthe same as linear R²\n“% of variance explained”\ncomparable across datasets or with R² from lm()\n\n\n\n\nDo\n\nremember their values run low (a McFadden of 0.2–0.4 is already a very good fit)\nreport one descriptively, naming it\ncompare models with LRT / AIC instead"
   },
   {
-    "objectID": "regression-workshop/s5_logistic_regression.html#tjurs-r²-has-a-picture",
-    "href": "regression-workshop/s5_logistic_regression.html#tjurs-r²-has-a-picture",
+    "objectID": "regression-workshop/s5_logistic_regression.html#tjurs-r2-has-a-picture",
+    "href": "regression-workshop/s5_logistic_regression.html#tjurs-r2-has-a-picture",
     "title": "Session 5 — Logistic Regression",
     "section": "Tjur’s R² has a picture",
     "text": "Tjur’s R² has a picture\n\n\nTjur’s R² ≈ the gap between the mean predicted probability in people with and without the outcome. Handy — but still only descriptive."
@@ -1295,8 +1295,8 @@
     "text": "In our data: older, heavier people eat more salt"
   },
   {
-    "objectID": "regression-workshop/s3_multiple_regression.html#crude-vs-adjusted-β",
-    "href": "regression-workshop/s3_multiple_regression.html#crude-vs-adjusted-β",
+    "objectID": "regression-workshop/s3_multiple_regression.html#crude-vs-adjusted-beta",
+    "href": "regression-workshop/s3_multiple_regression.html#crude-vs-adjusted-beta",
     "title": "Session 3 — Inference and Multiple Linear Regression",
     "section": "Crude vs adjusted β",
     "text": "Crude vs adjusted β\n\nm_crude &lt;- lm(sbp ~ salt_g, data = cc)\nm_adj   &lt;- lm(sbp ~ salt_g + age + bmi + sex + residence + education +\n                tobacco + alcohol + phys_act, data = cc)\n\nc(crude = coef(m_crude)[[\"salt_g\"]], adjusted = coef(m_adj)[[\"salt_g\"]])\n\n   crude adjusted \n3.357640 1.799679 \n\n100 * (coef(m_crude)[[\"salt_g\"]] - coef(m_adj)[[\"salt_g\"]]) / coef(m_crude)[[\"salt_g\"]]   # % change\n\n[1] 46.40047\n\n\n\n\nThe salt β shrinks from 3.4 to 1.8 mmHg per g/day — 46% of the crude association was confounding. (Rule of thumb: ≥10% change ⇒ the variable matters as a confounder.)"
@@ -1456,8 +1456,8 @@
     "text": "Demo 2: the selection changes with the sample"
   },
   {
-    "objectID": "regression-workshop/s3_multiple_regression.html#demo-3-the-β-after-selection-is-distorted",
-    "href": "regression-workshop/s3_multiple_regression.html#demo-3-the-β-after-selection-is-distorted",
+    "objectID": "regression-workshop/s3_multiple_regression.html#demo-3-the-beta-after-selection-is-distorted",
+    "href": "regression-workshop/s3_multiple_regression.html#demo-3-the-beta-after-selection-is-distorted",
     "title": "Session 3 — Inference and Multiple Linear Regression",
     "section": "Demo 3: the β after selection is distorted",
     "text": "Demo 3: the β after selection is distorted\n\nb_alc &lt;- sapply(res, `[[`, \"alc\")\ntibble(beta = b_alc) |&gt;\n  ggplot(aes(beta)) +\n  geom_histogram(bins = 30, fill = col_blue, colour = \"white\") +\n  geom_vline(xintercept = coef(m_full)[[\"alcoholYes\"]], colour = col_red, linewidth = 1.2) +\n  labs(x = \"β for alcohol across 100 step() runs (0 = dropped)\", y = \"bootstrap samples\")\n\n\n\nRed line = full-model β (2.5). Alcohol survived in 64 of 100 runs; when kept, its average β was 3.7 — inflated; when dropped it is 0. One “final” model hides all of this, hence overly narrow CIs."
@@ -1967,22 +1967,22 @@
     "text": "Residuals vs fitted: first look\n\naugment(m1) |&gt;\n  ggplot(aes(.fitted, .resid)) +\n  geom_point(alpha = .4, colour = col_blue) +\n  geom_hline(yintercept = 0, linetype = \"dashed\", colour = col_red) +\n  geom_smooth(se = FALSE, colour = col_navy, method = \"loess\", formula = y ~ x) +\n  labs(x = \"Fitted SBP (mmHg)\", y = \"Residual (mmHg)\")\n\n\n\nResiduals should scatter evenly around 0. Hold that thought — Session 4 reads this plot properly."
   },
   {
-    "objectID": "regression-workshop/s2_simple_regression.html#r²-how-much-of-the-variation-does-the-model-account-for",
-    "href": "regression-workshop/s2_simple_regression.html#r²-how-much-of-the-variation-does-the-model-account-for",
+    "objectID": "regression-workshop/s2_simple_regression.html#r2-how-much-of-the-variation-does-the-model-account-for",
+    "href": "regression-workshop/s2_simple_regression.html#r2-how-much-of-the-variation-does-the-model-account-for",
     "title": "Session 2 — Simple Linear Regression",
     "section": "R²: how much of the variation does the model account for?",
     "text": "R²: how much of the variation does the model account for?\n\nr2(m1)\n\n# R2 for Linear Regression\n       R2: 0.202\n  adj. R2: 0.200\n\nsigma(m1)   # residual standard error, in mmHg\n\n[1] 15.13919\n\n\n\nR² = 0.2 → salt alone accounts for about 20% of the variation in SBP\nResidual SE ≈ 15 mmHg: a typical miss — it is why the prediction interval is so wide"
   },
   {
-    "objectID": "regression-workshop/s2_simple_regression.html#r²-always-rises-adjusted-r²-punishes-junk",
-    "href": "regression-workshop/s2_simple_regression.html#r²-always-rises-adjusted-r²-punishes-junk",
+    "objectID": "regression-workshop/s2_simple_regression.html#r2-always-rises-adjusted-r2-punishes-junk",
+    "href": "regression-workshop/s2_simple_regression.html#r2-always-rises-adjusted-r2-punishes-junk",
     "title": "Session 2 — Simple Linear Regression",
     "section": "R² always rises; adjusted R² punishes junk",
     "text": "R² always rises; adjusted R² punishes junk\n\nset.seed(2026)\njunk &lt;- as_tibble(matrix(rnorm(nrow(ncd) * 20), ncol = 20, dimnames = list(NULL, paste0(\"z\", 1:20))))\nd_j  &lt;- bind_cols(ncd |&gt; select(sbp, salt_g), junk) |&gt; drop_na()\n\nmap_dfr(c(0, 5, 20), \\(k) {\n  f &lt;- reformulate(c(\"salt_g\", head(names(junk), k)), \"sbp\")\n  s &lt;- summary(lm(f, data = d_j))\n  tibble(`random noise variables added` = k, R2 = round(s$r.squared, 3), `adjusted R2` = round(s$adj.r.squared, 3))\n})\n\n# A tibble: 3 × 3\n  `random noise variables added`    R2 `adjusted R2`\n                           &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;\n1                              0 0.202         0.2  \n2                              5 0.21          0.201\n3                             20 0.227         0.198\n\n\n\nAdding pure noise raises R² every time; adjusted R² charges for each extra parameter. Use adjusted R² when you compare models of different size."
   },
   {
-    "objectID": "regression-workshop/s2_simple_regression.html#reading-r²-sensibly",
-    "href": "regression-workshop/s2_simple_regression.html#reading-r²-sensibly",
+    "objectID": "regression-workshop/s2_simple_regression.html#reading-r2-sensibly",
+    "href": "regression-workshop/s2_simple_regression.html#reading-r2-sensibly",
     "title": "Session 2 — Simple Linear Regression",
     "section": "Reading R² sensibly",
     "text": "Reading R² sensibly\n\n\n\nA low R² does not mean the predictor is unimportant\nBP depends on age, genes, diet, stress… A salt slope can be real and clinically important with R² of 0.2.\n\n\n\nA high R² does not mean the model is right\nA model can fit well and still violate assumptions, or fit this dataset only (overfitting). R² says nothing about causation."

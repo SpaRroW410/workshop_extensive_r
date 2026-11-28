@@ -52,6 +52,7 @@ CI (`.github/workflows/checks.yml`) runs the fast ones on every push.
 
 - [`LAUNCH_PLAN.md`](LAUNCH_PLAN.md): Cloudflare, accounts, saved progress, paid access.
 - [`MODULES_PLAN.md`](MODULES_PLAN.md): bringing every module to one standard, and expert review.
+- [`CUSTOM_DECKS_PLAN.md`](CUSTOM_DECKS_PLAN.md): custom decks, notes, own slides, code runnable in the browser (webR), PDF and PowerPoint export.
 - [`SITE_PLAN.md`](SITE_PLAN.md): the long-term structure of tracks and the game; [`dungeons/ROADMAP.md`](dungeons/ROADMAP.md).
 - [`STATUS.md`](STATUS.md): what exists, what was checked, what is open.
 

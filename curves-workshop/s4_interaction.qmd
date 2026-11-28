@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Sessions 1 to 3: the **shape** of one predictor's effect
@@ -45,9 +45,9 @@ source("assets/quiz.R")
   - avoid the **subgroup p-value trap**
 :::
 
-# Topic 1 — Continuous × continuous {background-color="#2C3E50"}
+# Topic 1 — Continuous × continuous {#topic-1-continuous-continuous background-color="#2C3E50"}
 
-## Salt and age
+## Salt and age {#salt-and-age}
 
 ```{r}
 m_i <- lm(sbp ~ salt * age + bmi + activity + sex + smoker, data = ncd)
@@ -58,7 +58,7 @@ round(summary(m_i)$coefficients["salt:age", ], 4)
 `salt * age` = `salt + age + salt:age`. The interaction is **+0.050 mmHg per g/day per year of age** (p < 0.001): **the effect of salt grows 0.05 mmHg per g/day for every year of age**.
 :::
 
-## Simple slopes
+## Simple slopes {#simple-slopes}
 
 ```{r}
 b <- coef(m_i)
@@ -73,7 +73,7 @@ emtrends(m_i, ~ age, var = "salt", at = list(age = c(30, 45, 60)))
 - `emtrends` gives the slopes with **CIs** at chosen ages
 :::
 
-## Plot it
+## Plot it {#plot-it}
 
 ```{r}
 #| output-location: slide
@@ -87,7 +87,7 @@ ggplot(g, aes(salt, fit, colour = factor(age))) + geom_line(linewidth = 1.3) + s
 **Fan-shaped lines**: flat at 30, steeper at 60. An interaction shows as **non-parallel lines**.
 :::
 
-## Centring
+## Centring {#centring}
 
 ```{r}
 ncd <- ncd |> mutate(age45 = age - 45)
@@ -99,9 +99,9 @@ round(c(salt_uncentred = coef(m_i)[["salt"]], salt_centred = coef(m_c)[["salt"]]
 With an interaction, the **"main effect" of salt is the effect when age = 0**: meaningless. **Centre** age (here at 45) and the salt coefficient becomes the effect **at age 45** (0.74). The **interaction** coefficient does **not** change.
 :::
 
-# Topic 2 — Categorical and scales {background-color="#2C3E50"}
+# Topic 2 — Categorical and scales {#topic-2-categorical-and-scales background-color="#2C3E50"}
 
-## Smoking × sex for CVD risk
+## Smoking × sex for CVD risk {#smoking-sex-for-cvd-risk}
 
 ```{r}
 g_ss <- glm(cvd10 ~ age + bmi + I(bmi^2) + sex * smoker, data = ncd, family = binomial)
@@ -113,7 +113,7 @@ emmeans(g_ss, ~ smoker | sex, type = "response") |> pairs(reverse = TRUE)
 Smoking: **OR about 1.0 in women** and **2.3 in men**. The interaction term (log-OR 0.82, **p = 0.007**) tests whether the two odds ratios **differ**.
 :::
 
-## Additive scale
+## Additive scale {#additive-scale}
 
 ```{r}
 nd <- expand.grid(sex = factor(c("Female", "Male"), levels = levels(ncd$sex)), smoker = c(0, 1), age = 50, bmi = 25)
@@ -128,15 +128,15 @@ nd
 - Always show **predicted risks**, not only odds ratios
 :::
 
-# Topic 3 — Testing and caution {background-color="#2C3E50"}
+# Topic 3 — Testing and caution {#topic-3-testing-and-caution background-color="#2C3E50"}
 
-## The subgroup p-value trap
+## The subgroup p-value trap {#the-subgroup-p-value-trap}
 
 ::: {.bad}
 "Smoking is **significant in men** (p < 0.001) but **not in women** (p = 0.98), so sex **modifies** the effect." **This is not a valid test.** A difference in **significance** is not a **significant difference**. Test the **interaction term** (here p = 0.007), and show both **estimates with CIs**.
 :::
 
-## Good practice
+## Good practice {#good-practice}
 
 ::: {.good}
 1. **Pre-specify** a few plausible interactions (from theory)
@@ -146,7 +146,7 @@ nd
 5. Plot **predictions**; centre continuous variables
 :::
 
-## 🔧 Switch to R — Lab 4 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 4 {#switch-to-r-lab-4 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `curves-workshop/labs/lab4_interaction.R`
@@ -158,7 +158,7 @@ nd
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -171,7 +171,7 @@ quiz_mcq("k4q1", "In the model with salt * age the interaction coefficient is 0.
          explain = "The slope for salt is the salt coefficient plus 0.05 times age, so the effect of salt increases by 0.05 mmHg per g/day for each year of age.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -184,7 +184,7 @@ quiz_mcq("k4q2", "After age is centred at 45, the salt coefficient changes. Why?
          explain = "With an interaction, the lower-order coefficient is the effect when the other variable is zero. Centring moves that point to a meaningful age. The interaction coefficient is unchanged.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -197,7 +197,7 @@ quiz_mcq("k4q3", "Smoking is clearly harmful in men (OR 2.3) but not in women (O
          explain = "A difference in significance is not a significant difference. The interaction term tests directly whether the two odds ratios differ.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -210,7 +210,7 @@ quiz_mcq("k4q4", "Predicted 10-year risk for smokers vs non-smokers: men 10.8% v
          explain = "The additive-scale effect is the difference in predicted risks within each sex: 10.8 - 5.1 = 5.7 in men, and 4.0 - 4.1 about 0 in women.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -223,7 +223,7 @@ quiz_mcq("k4q5", "Why is a study often underpowered for an interaction even when
          explain = "The interaction compares estimates from subgroups, each based on part of the sample, so its standard error is larger than that of a main effect.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

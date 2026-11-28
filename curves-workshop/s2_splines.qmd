@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 1: found curvature; simple fixes
@@ -44,9 +44,9 @@ source("assets/quiz.R")
   - test **non-linearity** in a logistic model
 :::
 
-# Topic 1 — Piecewise linear {background-color="#2C3E50"}
+# Topic 1 — Piecewise linear {#topic-1-piecewise-linear background-color="#2C3E50"}
 
-## A hinge at age 45
+## A hinge at age 45 {#a-hinge-at-age-45}
 
 ```{r}
 m_h <- lm(sbp ~ age + pmax(age - 45, 0) + bmi + salt + activity + sex + smoker, data = ncd)
@@ -58,7 +58,7 @@ c(before = coef(m_h)[["age"]], after = coef(m_h)[["age"]] + coef(m_h)[[3]]) |> r
 `pmax(age - 45, 0)` is **0 below 45** and **age − 45 above it**: its coefficient is the **change in slope**. SBP rises **0.27 mmHg per year before 45** and **0.56 after**: twice as fast. Easy to **explain**, and the slopes are **directly reportable**.
 :::
 
-## Where is the knot?
+## Where is the knot? {#where-is-the-knot}
 
 ```{r}
 aic_k <- sapply(30:60, function(k) AIC(lm(sbp ~ age + pmax(age - k, 0) + bmi + salt + activity + sex + smoker, data = ncd)))
@@ -69,9 +69,9 @@ aic_k <- sapply(30:60, function(k) AIC(lm(sbp ~ age + pmax(age - k, 0) + bmi + s
 The data choose **45**. But a knot **picked from the data** is not free: the search is **not counted**, so CIs are **too narrow**. Prefer a knot from **subject knowledge** (e.g. a clinical cut-off), or use a **smooth** spline.
 :::
 
-# Topic 2 — Natural splines {background-color="#2C3E50"}
+# Topic 2 — Natural splines {#topic-2-natural-splines background-color="#2C3E50"}
 
-## ns(): a smooth curve
+## ns(): a smooth curve {#ns-a-smooth-curve}
 
 ```{r}
 m_l <- lm(sbp ~ age + bmi + salt + activity + sex + smoker, data = ncd)
@@ -86,7 +86,7 @@ anova(m_l, m_ns)
 - The F test against the straight line: p ≈ 8×10⁻⁹
 :::
 
-## How many degrees of freedom?
+## How many degrees of freedom? {#how-many-degrees-of-freedom}
 
 ```{r}
 aic_df <- sapply(1:8, function(k) AIC(lm(sbp ~ ns(age, df = k) + bmi + salt + activity + sex + smoker, data = ncd)))
@@ -97,7 +97,7 @@ round(setNames(aic_df, paste0("df", 1:8)), 0)
 **df = 1 is a straight line.** AIC drops by **36** at df = 2, then stays **flat**: **3 to 5 df** are plenty for age. More df just adds **wiggles** (Session 5 shows it **hurts prediction**). Rule of thumb: **3 to 5 df** for a main predictor, fewer for small data.
 :::
 
-## A prediction plot
+## A prediction plot {#a-prediction-plot}
 
 ```{r}
 #| output-location: slide
@@ -112,9 +112,9 @@ grid |> mutate(fit = pr$fit, lo = fit - 1.96 * pr$se.fit, hi = fit + 1.96 * pr$s
 **Predicted SBP with a 95% band**, other variables held at **typical values** (mean BMI, salt, activity; man; non-smoker). The **plot is the result**: report it instead of the coefficients.
 :::
 
-# Topic 3 — Splines for binary outcomes {background-color="#2C3E50"}
+# Topic 3 — Splines for binary outcomes {#topic-3-splines-for-binary-outcomes background-color="#2C3E50"}
 
-## BMI and CVD risk
+## BMI and CVD risk {#bmi-and-cvd-risk}
 
 ```{r}
 g_ns <- glm(cvd10 ~ age + ns(bmi, 4) + sex + smoker, data = ncd, family = binomial)
@@ -134,7 +134,7 @@ ggplot(gb, aes(bmi, p)) + geom_line(linewidth = 1.2, colour = col_red) + scale_y
 Likelihood-ratio test: deviance drop **235 on 3 df**, so a straight line is **not enough**. The curve is **U-shaped**: lowest near **BMI 24 to 25**, high for low BMI, much higher for **obesity**.
 :::
 
-## Cautions
+## Cautions {#cautions}
 
 ::: {.warn}
 - Predictions **outside the data range** are **extrapolation** (the natural spline continues in a straight line)
@@ -142,7 +142,7 @@ Likelihood-ratio test: deviance drop **235 on 3 df**, so a straight line is **no
 - Put the spline **inside the model** with the other predictors, then predict **holding them fixed**
 :::
 
-## 🔧 Switch to R — Lab 2 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 2 {#switch-to-r-lab-2 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `curves-workshop/labs/lab2_splines.R`
@@ -154,7 +154,7 @@ Likelihood-ratio test: deviance drop **235 on 3 df**, so a straight line is **no
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -167,7 +167,7 @@ quiz_mcq("k2q1", "In a model with age + pmax(age - 45, 0), the coefficient of th
          explain = "The hinge is zero until age 45, so its coefficient is the extra slope after the knot. The slope after is the sum of the two coefficients (0.27 + 0.29).")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -180,7 +180,7 @@ quiz_mcq("k2q2", "Why is picking the knot from the data (the best AIC over many 
          explain = "Trying many knots is a form of multiple testing that the standard errors ignore. A knot from subject-matter knowledge, or a smooth term, avoids this.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -193,7 +193,7 @@ quiz_mcq("k2q3", "What is the best description of ns(age, df = 4)?",
          explain = "A natural spline is a flexible smooth curve, linear beyond the outer knots. Its basis coefficients depend on the construction, so interpret the fitted curve.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -206,7 +206,7 @@ quiz_mcq("k2q4", "The AIC for natural splines with 1 to 8 df is 30,771 then abou
          explain = "The fit improves greatly from 1 to 2 df and then stays flat. Extra df add wiggle and variance without improving the fit.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -219,7 +219,7 @@ quiz_mcq("k2q5", "How is a prediction plot with a 95% band for a spline model bu
          explain = "Predictions come from a new data grid, with the other covariates at chosen values, and the band from the standard errors of the predictions.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

@@ -4,7 +4,7 @@
 #   scripts/sync_workshop_assets.sh --check  exit 1 if any copy differs (used by CI)
 set -euo pipefail
 cd "$(dirname "$0")/.."
-files="quiz.js quiz.R quiz.css quiz-include.html"
+files="quiz.js quiz.R quiz.css quiz-include.html slide-tools.js slide-tools.css"
 status=0
 for d in *-workshop; do
   [ "$d" = "regression-workshop" ] && continue

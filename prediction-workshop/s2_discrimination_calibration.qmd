@@ -38,7 +38,7 @@ m1 <- glm(f_true, data = dev, family = binomial)
 dev$risk <- predict(m1, type = "response")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 1: a model that gives a **risk** for each adult
@@ -48,9 +48,9 @@ dev$risk <- predict(m1, type = "response")
 - (Both are still **apparent** here: in the development data)
 :::
 
-# Topic 1 — Discrimination {background-color="#2C3E50"}
+# Topic 1 — Discrimination {#topic-1-discrimination background-color="#2C3E50"}
 
-## ROC curve and AUC
+## ROC curve and AUC {#roc-curve-and-auc}
 
 ```{r}
 #| output-location: slide
@@ -67,7 +67,7 @@ ci.auc(roc1)
 **AUC 0.80** (95% CI 0.75 to 0.85). It is the probability that a **randomly chosen adult with diabetes has a higher predicted risk** than one without. **0.5 = coin toss, 1 = perfect**. A common reading: 0.7 to 0.8 acceptable, 0.8 to 0.9 good, but the **usefulness depends on the use**.
 :::
 
-## A threshold
+## A threshold {#a-threshold}
 
 ```{r}
 tab <- table(predicted = dev$risk >= 0.15, diabetes = dev$diabetes); tab
@@ -82,7 +82,7 @@ round(c(sensitivity = tab["TRUE", "1"] / sum(tab[, "1"]), specificity = tab["FAL
 - The **AUC** summarises **all thresholds**; the **choice of threshold** needs **costs and benefits** (Session 5)
 :::
 
-## Added value
+## Added value {#added-value}
 
 ```{r}
 c(age_only = auc_of(dev$diabetes, predict(glm(diabetes ~ age, data = dev, family = binomial), type = "response")), full_model = auc_of(dev$diabetes, dev$risk)) |> round(3)
@@ -90,9 +90,9 @@ c(age_only = auc_of(dev$diabetes, predict(glm(diabetes ~ age, data = dev, family
 
 Age alone gives **0.68**; the full model **0.80**: the other predictors add **real discrimination**.
 
-# Topic 2 — Calibration {background-color="#2C3E50"}
+# Topic 2 — Calibration {#topic-2-calibration background-color="#2C3E50"}
 
-## Calibration plot
+## Calibration plot {#calibration-plot}
 
 ```{r}
 #| output-location: slide
@@ -105,7 +105,7 @@ ggplot(cal, aes(predicted, observed)) + geom_abline(linetype = 2) + geom_point(s
 Group the adults by **deciles of predicted risk** and compare the **mean predicted** with the **observed** proportion. **Points on the diagonal** = well calibrated. **Below** = the model **over-estimates**; **above** = it **under-estimates**.
 :::
 
-## Calibration slope and intercept
+## Calibration slope and intercept {#calibration-slope-and-intercept}
 
 ```{r}
 lp <- qlogis(dev$risk)
@@ -116,7 +116,7 @@ round(coef(glm(diabetes ~ lp, data = dev, family = binomial)), 3)
 Intercept **0** and slope **1.000** in the development data: this is **guaranteed** when a logistic model is fitted by maximum likelihood. It says **nothing** about new patients. In **new data**: **slope below 1** = predictions **too extreme** (overfitting); **intercept (calibration-in-the-large)** shows **average over- or under-estimation**.
 :::
 
-## Brier score
+## Brier score {#brier-score}
 
 ```{r}
 brier <- mean((dev$risk - dev$diabetes)^2); brier_null <- mean((mean(dev$diabetes) - dev$diabetes)^2)
@@ -129,7 +129,7 @@ round(c(brier = brier, scaled = 1 - brier / brier_null), 3)
 - Avoid the **Hosmer-Lemeshow test**: it depends on the grouping, has low power and says **nothing about how** the calibration fails
 :::
 
-## 🔧 Switch to R — Lab 2 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 2 {#switch-to-r-lab-2 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `prediction-workshop/labs/lab2_perf.R`
@@ -141,7 +141,7 @@ round(c(brier = brier, scaled = 1 - brier / brier_null), 3)
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -154,7 +154,7 @@ quiz_mcq("p2q1", "How do you read an AUC of 0.80?",
          explain = "The AUC is the probability that a randomly chosen case has a higher predicted risk than a randomly chosen non-case. It says nothing about the calibration of the risks.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -167,7 +167,7 @@ quiz_mcq("p2q2", "A threshold of 15% gives a sensitivity of 0.62. What happens w
          explain = "A lower threshold labels more adults as positive, so more cases are found (higher sensitivity) but more non-cases are labelled positive (lower specificity).")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -180,7 +180,7 @@ quiz_mcq("p2q3", "In the development data the calibration slope is exactly 1 and
          explain = "Maximum likelihood forces the apparent calibration to be perfect. Calibration has to be assessed in new data or with a bootstrap.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -193,7 +193,7 @@ quiz_mcq("p2q4", "In a calibration plot the points lie below the diagonal at hig
          explain = "Observed proportions below predicted ones mean that the predicted risk is too high. Discrimination is a separate question.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -206,7 +206,7 @@ quiz_mcq("p2q5", "Why do PPV and NPV differ between a screening clinic and the g
          explain = "Predictive values combine sensitivity and specificity with the prevalence. With a higher prevalence, the PPV rises and the NPV falls.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

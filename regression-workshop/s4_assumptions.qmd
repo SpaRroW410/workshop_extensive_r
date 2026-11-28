@@ -34,7 +34,7 @@ cc <- ncd |> drop_na(sbp, salt_g, age, bmi, waist, sex, residence, education, to
 m <- lm(sbp ~ salt_g + age + bmi + sex + residence + education + tobacco + alcohol + phys_act, data = cc)
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - We have a model: `sbp ~ salt_g + age + bmi + sex + residence + education + tobacco + alcohol + phys_act`
@@ -42,9 +42,9 @@ m <- lm(sbp ~ salt_g + age + bmi + sex + residence + education + tobacco + alcoh
 - For each assumption today: **what it means → how to check → what a violation looks like in OUR data → what to do**
 :::
 
-# Topic 7 — Assumptions {background-color="#2C3E50"}
+# Topic 7 — Assumptions {#topic-7-assumptions background-color="#2C3E50"}
 
-## The checklist
+## The checklist {#the-checklist}
 
 | | Assumption | Plain meaning |
 |---|---|---|
@@ -58,7 +58,7 @@ m <- lm(sbp ~ salt_g + age + bmi + sex + residence + education + tobacco + alcoh
 Plus a look for **influential points** (a few people driving the result).
 :::
 
-## What goes wrong when each fails
+## What goes wrong when each fails {#what-goes-wrong-when-each-fails}
 
 | Violation | Main consequence |
 |---|---|
@@ -68,7 +68,7 @@ Plus a look for **influential points** (a few people driving the result).
 | Unequal variance | SEs **wrong** (usually too small/large in places); estimates less efficient |
 | Multicollinearity | SEs **inflated**, β unstable, even sign flips |
 
-## The one-page panel: `check_model()`
+## The one-page panel: `check_model()` {#the-one-page-panel-check_model}
 
 ```{r}
 #| fig-width: 12
@@ -80,9 +80,9 @@ check_model(m, check = c("linearity", "homogeneity", "qq", "outliers"))
 Walk through the four panels. Top-left reference line should be flat and horizontal; it curves. Top-right should be flat; it rises (funnel). Q-Q points should sit on the line; they roughly do. Bottom-right should keep points inside the contour lines. We now take each assumption in turn.
 :::
 
-# L — Linearity {background-color="#2C3E50"}
+# L — Linearity {#l-linearity background-color="#2C3E50"}
 
-## Linearity: what and how
+## Linearity: what and how {#linearity-what-and-how}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -97,7 +97,7 @@ Walk through the four panels. Top-left reference line should be flat and horizon
 :::
 :::
 
-## In our data: age is slightly curved
+## In our data: age is slightly curved {#in-our-data-age-is-slightly-curved}
 
 ```{r}
 #| output-location: slide
@@ -114,7 +114,7 @@ cc |>
 Residuals are slightly negative in the middle and positive at the ends: SBP rises faster at older ages than a straight line allows. A formal check: `resettest()`.
 :::
 
-## A formal nudge: RESET test
+## A formal nudge: RESET test {#a-formal-nudge-reset-test}
 
 ```{r}
 resettest(m, power = 2, type = "regressor")
@@ -124,7 +124,7 @@ resettest(m, power = 2, type = "regressor")
 A small p-value suggests curvature somewhere — **but look at the plot** to see *where* and *how much*.
 :::
 
-## What to do about non-linearity
+## What to do about non-linearity {#what-to-do-about-non-linearity}
 
 ```{r}
 m_quad <- lm(sbp ~ salt_g + age + I(age^2) + bmi + sex + residence + education +
@@ -139,9 +139,9 @@ anova(m, m_quad)
 - Or **transform** the predictor (e.g. log) when the curve is monotonic
 :::
 
-# I — Independence {background-color="#2C3E50"}
+# I — Independence {#i-independence background-color="#2C3E50"}
 
-## Independence: what and how
+## Independence: what and how {#independence-what-and-how}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -154,7 +154,7 @@ anova(m, m_quad)
 :::
 :::
 
-## In our data: people are clustered in 20 villages
+## In our data: people are clustered in 20 villages {#in-our-data-people-are-clustered-in-20-villages}
 
 ```{r}
 #| output-location: slide
@@ -167,7 +167,7 @@ cc |>
   theme(axis.text.x = element_text(angle = 90, vjust = .5))
 ```
 
-## How big is the clustering?
+## How big is the clustering? {#how-big-is-the-clustering}
 
 ```{r}
 a   <- anova(lm(resid(m) ~ factor(cc$village)))
@@ -181,7 +181,7 @@ c(ICC = round(icc, 3), design_effect = round(1 + (k - 1) * icc, 2))
 - **Design effect ≈ `r round(1 + (k - 1) * icc, 1)`**: for village-level exposures the standard errors may be too small by about √`r round(1 + (k - 1) * icc, 1)` ≈ **`r round(sqrt(1 + (k - 1) * icc), 1)`×**
 :::
 
-## What to do about non-independence
+## What to do about non-independence {#what-to-do-about-non-independence}
 
 ::: {.warn}
 In this workshop we only **detect and discuss** the village clustering — we do **not** model it.
@@ -194,9 +194,9 @@ In this workshop we only **detect and discuss** the village clustering — we do
 - At minimum: **report** the design, state the limitation, and be cautious with village-level predictors (e.g., residence)
 :::
 
-# N — Normality {background-color="#2C3E50"}
+# N — Normality {#n-normality background-color="#2C3E50"}
 
-## Normality of residuals: what and how
+## Normality of residuals: what and how {#normality-of-residuals-what-and-how}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -211,7 +211,7 @@ With n ≈ 550, the **central limit theorem** protects CIs for β. Normality mat
 :::
 :::
 
-## In our data
+## In our data {#in-our-data}
 
 ```{r}
 #| output-location: slide
@@ -225,7 +225,7 @@ augment(m) |>
 check_normality(m)
 ```
 
-## If normality is badly violated
+## If normality is badly violated {#if-normality-is-badly-violated}
 
 ::: {.incremental}
 - Check for **outliers** or data errors first
@@ -234,9 +234,9 @@ check_normality(m)
 - **Robust regression** (`MASS::rlm`) or a different model for the outcome type
 :::
 
-# E — Equal variance {background-color="#2C3E50"}
+# E — Equal variance {#e-equal-variance background-color="#2C3E50"}
 
-## Homoscedasticity: what and how
+## Homoscedasticity: what and how {#homoscedasticity-what-and-how}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -251,7 +251,7 @@ Biological outcomes often get **more variable at higher levels**: older adults v
 :::
 :::
 
-## In our data: SBP varies more in older adults
+## In our data: SBP varies more in older adults {#in-our-data-sbp-varies-more-in-older-adults}
 
 ```{r}
 #| output-location: slide
@@ -263,7 +263,7 @@ cc |>
   labs(x = "Age band", y = "Residual (mmHg)")
 ```
 
-## Tests for non-constant variance
+## Tests for non-constant variance {#tests-for-non-constant-variance}
 
 ```{r}
 check_heteroscedasticity(m)
@@ -274,7 +274,7 @@ bptest(m)
 Both flag non-constant variance. They are **variants** of the Breusch–Pagan test (the second is the studentised, more robust version), so their p-values differ slightly — **name the test you used**. The effect is **mild**: residual SD roughly **`r round(sd(resid(m)[cc$age < 45]))` mmHg** under 45 vs **`r round(sd(resid(m)[cc$age >= 55]))` mmHg** at 55+.
 :::
 
-## What to do about unequal variance
+## What to do about unequal variance {#what-to-do-about-unequal-variance}
 
 ```{r}
 rob <- coeftest(m, vcov. = sandwich::vcovHC(m, type = "HC3"))
@@ -289,9 +289,9 @@ tibble(term = names(coef(m)),
 - Our violation is **mild**: conclusions do not change — but you should know and say so
 :::
 
-# M — Multicollinearity {background-color="#2C3E50"}
+# M — Multicollinearity {#m-multicollinearity background-color="#2C3E50"}
 
-## Multicollinearity: what and how
+## Multicollinearity: what and how {#multicollinearity-what-and-how}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -308,7 +308,7 @@ Rule of thumb: **> 5** worry, **> 10** serious.
 :::
 :::
 
-## In our data: BMI and waist
+## In our data: BMI and waist {#in-our-data-bmi-and-waist}
 
 ```{r}
 #| output-location: slide
@@ -319,14 +319,14 @@ ggplot(cc, aes(bmi, waist)) +
   labs(x = "BMI (kg/m²)", y = "Waist (cm)")
 ```
 
-## VIF with both in the model
+## VIF with both in the model {#vif-with-both-in-the-model}
 
 ```{r}
 m_both <- lm(sbp ~ salt_g + age + bmi + waist, data = cc)
 check_collinearity(m_both)
 ```
 
-## What collinearity does to the estimates
+## What collinearity does to the estimates {#what-collinearity-does-to-the-estimates}
 
 ```{r}
 m_bmi <- lm(sbp ~ salt_g + age + bmi, data = cc)
@@ -341,7 +341,7 @@ With waist added, the **BMI coefficient shrinks toward zero (and can flip sign)*
 :::
 :::
 
-## How to handle collinearity
+## How to handle collinearity {#how-to-handle-collinearity}
 
 ::: {.incremental}
 - **Choose one** on clinical grounds (BMI for an exposure of interest; waist if central adiposity is the question) — **our fix**
@@ -351,9 +351,9 @@ With waist added, the **BMI coefficient shrinks toward zero (and can flip sign)*
 - Do **not** drop by p-value alone
 :::
 
-# Influential points {background-color="#2C3E50"}
+# Influential points {#influential-points background-color="#2C3E50"}
 
-## A few people can drive a result
+## A few people can drive a result {#a-few-people-can-drive-a-result}
 
 ```{r}
 infl <- augment(m) |> mutate(row = row_number()) |> arrange(desc(.cooksd)) |> select(row, sbp, salt_g, age, .std.resid, .cooksd) |> head(5)
@@ -367,7 +367,7 @@ check_outliers(m)
 - Do not delete people just because they are inconvenient
 :::
 
-## All five assumptions on one slide {.smaller}
+## All five assumptions on one slide {#all-five-assumptions-on-one-slide .smaller}
 
 | Assumption | Check | In our data | What we do |
 |---|---|---|---|
@@ -377,7 +377,7 @@ check_outliers(m)
 | Equal variance | Residuals vs fitted, BP test | Variance rises with age (mild) | Robust SE |
 | Collinearity | VIF | BMI & waist: VIF ≈ 10 | Keep one |
 
-## 🔧 Switch to R — Lab 4 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 4 {#switch-to-r-lab-4 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `regression-workshop/labs/lab4_assumptions.R`
@@ -390,7 +390,7 @@ check_outliers(m)
 
 **Time:** 40 minutes · answer Q1–Q5 in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -403,7 +403,7 @@ quiz_mcq("s4q1", "The smoothed line through the residuals plotted against age is
          explain = "A U-shaped residual pattern signals curvature in age. A squared term (or a spline) lets the fitted line bend.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -416,7 +416,7 @@ quiz_mcq("s4q2", "BMI and waist (r = 0.95) both enter a model and each has a VIF
          explain = "VIF above 10 signals serious collinearity. Choose one measure from the research question (or combine them), not from p-values alone.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -429,7 +429,7 @@ quiz_mcq("s4q3", "Participants are sampled from 20 villages that share influence
          explain = "Clustered observations are not independent, so the effective sample size is below n and naive SEs are too small, especially for village-level predictors.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -439,7 +439,7 @@ quiz_fill("s4q4", "Residuals plotted against fitted values fan out like a funnel
           explain = "A funnel means residual spread changes with the fitted value: heteroscedasticity. Robust (sandwich) SEs are an easy remedy.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -449,7 +449,7 @@ quiz_fill("s4q5", "When one predictor is regressed on all the others, R² = 0.90
           explain = "VIF = 1 / (1 − R²) = 1 / 0.10 = 10, which is already in the serious range.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

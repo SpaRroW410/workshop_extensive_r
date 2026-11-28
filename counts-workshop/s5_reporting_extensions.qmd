@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Sessions 1-4: rates, Poisson, overdispersion, zeros, checking
@@ -43,22 +43,22 @@ source("assets/quiz.R")
   - use **Poisson regression with robust SEs** for **prevalence ratios**
 :::
 
-# Topic 1 — Say it properly {background-color="#2C3E50"}
+# Topic 1 — Say it properly {#topic-1-say-it-properly background-color="#2C3E50"}
 
-## The final model
+## The final model {#the-final-model}
 
 ```{r}
 m_nb <- MASS::glm.nb(cases ~ fogging + slum + rain_lag1 + month_index + sin(2 * pi * month / 12) + cos(2 * pi * month / 12) + offset(log(population)), data = dg)
 tbl_regression(m_nb, exponentiate = TRUE, include = c(fogging, slum, rain_lag1, month_index))
 ```
 
-## The sentence for the paper
+## The sentence for the paper {#the-sentence-for-the-paper}
 
 ::: {.key}
 "In a negative binomial model with a ward-population offset, adjusted for ward type, previous-month rainfall, time trend and seasonality, the dengue **rate** in fogged ward-months was **`r round(exp(coef(m_nb))[["foggingYes"]], 2)` times** that in unfogged ward-months (95% CI `r round(exp(confint.default(m_nb))["foggingYes", 1], 2)`-`r round(exp(confint.default(m_nb))["foggingYes", 2], 2)`), a **`r round(100 * (1 - exp(coef(m_nb))[["foggingYes"]]))`% lower rate**."
 :::
 
-## Words that are right and wrong
+## Words that are right and wrong {#words-that-are-right-and-wrong}
 
 | Say | Do not say |
 |---|---|
@@ -67,9 +67,9 @@ tbl_regression(m_nb, exponentiate = TRUE, include = c(fogging, slum, rain_lag1, 
 | "adjusted for ..." and **list them** | "controlling for everything" |
 | the **unit** (per 100 mm, per 100,000) | a bare coefficient |
 
-# Topic 2 — Cases averted {background-color="#2C3E50"}
+# Topic 2 — Cases averted {#topic-2-cases-averted background-color="#2C3E50"}
 
-## A counterfactual
+## A counterfactual {#a-counterfactual}
 
 ```{r}
 fogged <- dg |> filter(fogging == "Yes"); cf <- fogged |> mutate(fogging = factor("No", levels = levels(dg$fogging)))
@@ -83,9 +83,9 @@ c(with_fogging = round(sum(predict(m_nb, newdata = fogged, type = "response"))),
 - It is only as good as the **adjustment**: unmeasured confounding remains
 :::
 
-# Topic 3 — Extensions {background-color="#2C3E50"}
+# Topic 3 — Extensions {#topic-3-extensions background-color="#2C3E50"}
 
-## Poisson for prevalence ratios
+## Poisson for prevalence ratios {#poisson-for-prevalence-ratios}
 
 In **cross-sectional** data with a **common yes/no outcome**, the odds ratio overstates the prevalence ratio (regression workshop, Session 5). **Poisson regression with robust SEs** estimates the **prevalence ratio** directly:
 
@@ -99,7 +99,7 @@ round(exp(cbind(PR = coef(pr), confint.default(pr, vcov. = vcovCL(pr, cluster = 
 - The alternatives are a **log-binomial** model (can fail to converge) or converting an OR with the baseline risk
 :::
 
-## Beyond this workshop
+## Beyond this workshop {#beyond-this-workshop}
 
 ::: {.incremental}
 - **Mixed models** with a random effect for ward (`glmmTMB`, `lme4`)
@@ -109,7 +109,7 @@ round(exp(cbind(PR = coef(pr), confint.default(pr, vcov. = vcovCL(pr, cluster = 
 - **Outbreak detection** (Farrington, EARS) for surveillance
 :::
 
-## Reporting checklist
+## Reporting checklist {#reporting-checklist}
 
 ::: {.good}
 1. **Event, unit, period, denominator**; number of events and units
@@ -121,7 +121,7 @@ round(exp(cbind(PR = coef(pr), confint.default(pr, vcov. = vcovCL(pr, cluster = 
 7. **Limitations:** reporting changes, ecological design, association not cause
 :::
 
-## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 5 {#switch-to-r-lab-5 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `counts-workshop/labs/lab5_report.R`
@@ -133,7 +133,7 @@ round(exp(cbind(PR = coef(pr), confint.default(pr, vcov. = vcovCL(pr, cluster = 
 
 **Time:** 30 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -146,7 +146,7 @@ quiz_mcq("s5q1", "A negative binomial model gives a rate ratio of 0.66 for foggi
          explain = "A rate ratio of 0.66 is a 34% lower rate. In observational data say 'associated with', state the adjustment, and do not call it an odds or a risk ratio.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -159,7 +159,7 @@ quiz_mcq("s5q2", "How are cases averted estimated from a count model?",
          explain = "The counterfactual approach predicts the same observations under the two exposure settings; the difference estimates the effect on counts, under the model's assumptions.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -172,7 +172,7 @@ quiz_mcq("s5q3", "When is Poisson regression with robust standard errors useful 
          explain = "With a common outcome the odds ratio exaggerates the ratio of risks. Poisson with robust SEs estimates the prevalence (risk) ratio directly.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -185,7 +185,7 @@ quiz_mcq("s5q4", "Which statement belongs in the limitations of the dengue analy
          explain = "Surveillance changes, ecological (ward-level) design and unmeasured confounding all limit what the model can say.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -198,7 +198,7 @@ quiz_mcq("s5q5", "Why must the unit of a predictor be reported with its rate rat
          explain = "The rate ratio is multiplicative for each unit of the predictor: 1.003 per mm is 1.31 per 100 mm. Without the unit the number cannot be interpreted.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

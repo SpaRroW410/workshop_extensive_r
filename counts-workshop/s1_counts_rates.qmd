@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Regression workshop: continuous outcomes (linear) and yes/no outcomes (logistic)
@@ -44,7 +44,7 @@ source("assets/quiz.R")
   - spot **zeros**, **trend** and **seasonality**
 :::
 
-## Our data: dengue in a city
+## Our data: dengue in a city {#our-data-dengue-in-a-city}
 
 ::: {.columns}
 ::: {.column width="55%"}
@@ -59,9 +59,9 @@ dg |> select(ward, date, population, slum, cases, rain_lag1, fogging) |> head(6)
 :::
 :::
 
-# Topic 1 — Counts and rates {background-color="#2C3E50"}
+# Topic 1 — Counts and rates {#topic-1-counts-and-rates background-color="#2C3E50"}
 
-## A count is not a rate
+## A count is not a rate {#a-count-is-not-a-rate}
 
 ::: {.incremental}
 - **Count:** how many events (cases)
@@ -75,15 +75,15 @@ c(cases = sum(dg$cases), rate_per_100k_person_months = round(sum(dg$cases) / sum
 dg |> group_by(slum) |> summarise(cases = sum(cases), person_months = sum(population), rate_per_100k = round(cases / person_months * 1e5, 1))
 ```
 
-## Person-time and the rate ratio
+## Person-time and the rate ratio {#person-time-and-the-rate-ratio}
 
 ::: {.key}
 **Person-time** is the denominator: each ward-month contributes its population x 1 month. The slum **rate ratio** is about `r round((sum(dg$cases[dg$slum == "Slum"]) / sum(dg$population[dg$slum == "Slum"])) / (sum(dg$cases[dg$slum == "Non-slum"]) / sum(dg$population[dg$slum == "Non-slum"])), 1)`.
 :::
 
-# Topic 2 — The Poisson distribution {background-color="#2C3E50"}
+# Topic 2 — The Poisson distribution {#topic-2-the-poisson-distribution background-color="#2C3E50"}
 
-## Counts of rare, independent events
+## Counts of rare, independent events {#counts-of-rare-independent-events}
 
 ::: {.eq}
 P(Y = k) = e^-mu^ mu^k^ / k!   with   **mean = variance = mu**
@@ -103,7 +103,7 @@ bind_rows(tibble(k = 0:25, p = dpois(0:25, 2), mu = "mean 2"), tibble(k = 0:25, 
   ggplot(aes(k, p, fill = mu)) + geom_col(position = "dodge") + labs(x = "Count", y = "Probability", fill = NULL)
 ```
 
-## Does our data look Poisson?
+## Does our data look Poisson? {#does-our-data-look-poisson}
 
 ```{r}
 c(mean = round(mean(dg$cases), 1), variance = round(var(dg$cases), 0))
@@ -114,9 +114,9 @@ c(observed_zeros = round(mean(dg$cases == 0), 3), poisson_expected_zeros = signi
 The **variance is about `r round(var(dg$cases) / mean(dg$cases))` times the mean**, and there are far more **zeros** than a Poisson allows. This is **overdispersion** (Session 3) and **excess zeros** (Session 4). Part of it is just **different wards, seasons and rates mixed together**, which regression can explain.
 :::
 
-# Topic 3 — Look before you model {background-color="#2C3E50"}
+# Topic 3 — Look before you model {#topic-3-look-before-you-model background-color="#2C3E50"}
 
-## Trend and seasonality
+## Trend and seasonality {#trend-and-seasonality}
 
 ```{r}
 #| output-location: slide
@@ -131,7 +131,7 @@ dg |> group_by(date) |> summarise(cases = sum(cases)) |> ggplot(aes(date, cases)
 - Ignoring season confounds comparisons: fogging started in **month 25**, after growth
 :::
 
-## Checklist before modelling counts
+## Checklist before modelling counts {#checklist-before-modelling-counts}
 
 ::: {.good}
 1. Define the **event**, the **unit** (ward-month) and the **denominator** (person-time)
@@ -140,7 +140,7 @@ dg |> group_by(date) |> summarise(cases = sum(cases)) |> ggplot(aes(date, cases)
 4. List the **exposures**, **confounders** (season, trend, ward type) and **clustering** (the same ward is measured 36 times)
 :::
 
-## 🔧 Switch to R — Lab 1 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 1 {#switch-to-r-lab-1 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `counts-workshop/labs/lab1_counts.R`
@@ -152,7 +152,7 @@ dg |> group_by(date) |> summarise(cases = sum(cases)) |> ggplot(aes(date, cases)
 
 **Time:** 30 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -165,7 +165,7 @@ quiz_mcq("s1q1", "Ward A (60,000 people) reports 90 cases in a month and ward B 
          explain = "Rate = cases / population. A is 150 per 100,000 and B is 250 per 100,000, so B is higher despite fewer cases. Counts reflect population size.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -178,7 +178,7 @@ quiz_mcq("s1q2", "What is the denominator of an incidence rate?",
          explain = "An incidence rate divides events by the person-time during which they could occur, so groups and periods of different size can be compared.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -191,7 +191,7 @@ quiz_mcq("s1q3", "A Poisson distribution has mean 4. What is its variance?",
          explain = "The defining property of the Poisson distribution is variance = mean. Real counts often violate this.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -204,7 +204,7 @@ quiz_mcq("s1q4", "Monthly case counts have mean 9.6 and variance 394. What does 
          explain = "A variance far above the mean means the data are overdispersed, often because rates differ between wards and times, or events cluster.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -217,7 +217,7 @@ quiz_mcq("s1q5", "Why does a plot of cases against time matter before modelling?
          explain = "Season and trend affect the outcome and may coincide with the exposure (fogging started late in the study). Seeing them guides what to adjust for.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

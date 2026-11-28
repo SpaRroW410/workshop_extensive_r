@@ -45,7 +45,7 @@ ws     <- wilcox.test(p$sbp_presentation, p$sbp_6_months, paired = TRUE, conf.in
 med    <- p |> group_by(past_history_of_diabetes) |> summarise(m = median(glucose_level_mg_d_l), q1 = quantile(glucose_level_mg_d_l, .25), q3 = quantile(glucose_level_mg_d_l, .75))
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 2: checking shape and spread; Session 3: category outcomes
@@ -57,15 +57,15 @@ med    <- p |> group_by(past_history_of_diabetes) |> summarise(m = median(glucos
   - tell a **precise** non-significant result from an **imprecise** one
 :::
 
-# Topic 1 — One group against a benchmark {background-color="#2C3E50"}
+# Topic 1 — One group against a benchmark {#topic-1-one-group-against-a-benchmark background-color="#2C3E50"}
 
-## One-sample t: fasting glucose against 100 mg/dL
+## One-sample t: fasting glucose against 100 mg/dL {#one-sample-t-fasting-glucose-against-100-mgdl}
 
 ```{r}
 t.test(p$fbs_presentation, mu = 100)
 ```
 
-## z or t?
+## z or t? {#z-or-t}
 
 ::: {.incremental}
 - A **z-test** needs the **population** SD to be **known** in advance; in practice it almost never is
@@ -77,7 +77,7 @@ t.test(p$fbs_presentation, mu = 100)
 Default: `t.test()`. A z-test only if a published population SD is used, and say so.
 :::
 
-## Reading the one-sample result
+## Reading the one-sample result {#reading-the-one-sample-result}
 
 ::: {.eq}
 "Mean fasting glucose at presentation was `r f(t_fbs$estimate)` mg/dL (95% CI `r f(t_fbs$conf.int[1])` to `r f(t_fbs$conf.int[2])`), `r f(t_fbs$estimate - 100)` mg/dL above the 100 mg/dL threshold for impaired fasting glucose (one-sample t-test, `r fp(t_fbs$p.value)`)."
@@ -86,9 +86,9 @@ Default: `t.test()`. A z-test only if a published population SD is used, and say
 - The benchmark must come from **outside** the data (a clinical cut-off, a national survey), chosen **before** the analysis
 - The CI is narrow because n is large: the **average** adult here is above the threshold, though many individuals are not
 
-# Topic 2 — Two independent groups {background-color="#2C3E50"}
+# Topic 2 — Two independent groups {#topic-2-two-independent-groups background-color="#2C3E50"}
 
-## Welch t: age by diabetes history
+## Welch t: age by diabetes history {#welch-t-age-by-diabetes-history}
 
 ```{r}
 p |> group_by(past_history_of_diabetes) |>
@@ -96,7 +96,7 @@ p |> group_by(past_history_of_diabetes) |>
 t.test(age_of_participants ~ past_history_of_diabetes, data = p)
 ```
 
-## Reading it
+## Reading it {#reading-it}
 
 ::: {.eq}
 "Adults with a past history of diabetes were older: mean `r f(w_age$estimate[2])` vs `r f(w_age$estimate[1])` years (difference `r f(diff(w_age$estimate))` years, 95% CI `r f(-w_age$conf.int[2])` to `r f(-w_age$conf.int[1])`; Welch t-test, `r fp(w_age$p.value)`; Cohen's d = `r f(abs(d_age$Cohens_d), 2)`)."
@@ -108,7 +108,7 @@ t.test(age_of_participants ~ past_history_of_diabetes, data = p)
 - d ≈ `r f(abs(d_age$Cohens_d), 1)`: a **large** difference; diabetes becomes more common with age
 :::
 
-## Two non-significant results, two different stories
+## Two non-significant results, two different stories {#two-non-significant-results-two-different-stories}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -131,7 +131,7 @@ t.test(age_of_participants ~ past_history_of_diabetes, data = p)
 Both are "not significant". Only the **confidence interval** tells you whether the study **showed** little difference or simply **could not tell**.
 :::
 
-## Mann–Whitney U: glucose by diabetes history
+## Mann–Whitney U: glucose by diabetes history {#mannwhitney-u-glucose-by-diabetes-history}
 
 ```{r}
 p |> group_by(past_history_of_diabetes) |>
@@ -140,7 +140,7 @@ p |> group_by(past_history_of_diabetes) |>
 wilcox.test(glucose_level_mg_d_l ~ past_history_of_diabetes, data = p, conf.int = TRUE)
 ```
 
-## What Mann–Whitney actually tests
+## What Mann–Whitney actually tests {#what-mannwhitney-actually-tests}
 
 ::: {.incremental}
 - It ranks all values and asks whether one group tends to have **higher values** than the other
@@ -153,9 +153,9 @@ wilcox.test(glucose_level_mg_d_l ~ past_history_of_diabetes, data = p, conf.int 
 "Glucose was higher in adults with a history of diabetes: median `r med$m[2]` (IQR `r f(med$q1[2], 0)`–`r f(med$q3[2], 0)`) vs `r med$m[1]` (`r med$q1[1]`–`r med$q3[1]`) mg/dL; Mann–Whitney U test, `r fp(mw$p.value)`; Hodges–Lehmann shift `r f(-mw$estimate, 0)` mg/dL (95% CI `r f(-mw$conf.int[2], 0)` to `r f(-mw$conf.int[1], 0)`)."
 :::
 
-# Topic 3 — Paired measurements {background-color="#2C3E50"}
+# Topic 3 — Paired measurements {#topic-3-paired-measurements background-color="#2C3E50"}
 
-## Paired t: fasting glucose at presentation and 6 months
+## Paired t: fasting glucose at presentation and 6 months {#paired-t-fasting-glucose-at-presentation-and-6-months}
 
 ```{r}
 d <- p$fbs_presentation - p$fbs_6_months
@@ -163,7 +163,7 @@ c(mean = mean(d), sd = sd(d), skewness = skew(d))
 t.test(p$fbs_presentation, p$fbs_6_months, paired = TRUE)
 ```
 
-## Reading the paired result
+## Reading the paired result {#reading-the-paired-result}
 
 ::: {.eq}
 "Fasting glucose fell by a mean of `r f(pt$estimate)` mg/dL from presentation to 6 months (95% CI `r f(pt$conf.int[1])` to `r f(pt$conf.int[2])`; paired t-test, `r fp(pt$p.value)`; d~z~ = `r f(d_pt, 2)`)."
@@ -176,7 +176,7 @@ t.test(p$fbs_presentation, p$fbs_6_months, paired = TRUE)
 - Ignoring the pairing (Welch) gives a 95% CI of `r f(pt_un$conf.int[1])` to `r f(pt_un$conf.int[2])`, about `r f(diff(pt_un$conf.int) / diff(pt$conf.int), 0)` times **wider**: the between-person spread swamps the change
 :::
 
-## Wilcoxon signed-rank: systolic pressure, presentation and 6 months
+## Wilcoxon signed-rank: systolic pressure, presentation and 6 months {#wilcoxon-signed-rank-systolic-pressure-presentation-and-6-months}
 
 ```{r}
 wilcox.test(p$sbp_presentation, p$sbp_6_months, paired = TRUE, conf.int = TRUE)
@@ -186,7 +186,7 @@ wilcox.test(p$sbp_presentation, p$sbp_6_months, paired = TRUE, conf.int = TRUE)
 - Assumes the differences are **roughly symmetric** (skewness `r f(skew(p$sbp_presentation - p$sbp_6_months), 2)`); it estimates the **pseudo-median** fall: `r f(ws$estimate, 0)` mmHg (95% CI `r f(ws$conf.int[1], 0)` to `r f(ws$conf.int[2], 0)`)
 - Here the paired t-test would also be fine; with real outliers or a small sample, Wilcoxon is the safer choice
 
-## Which test for two groups?
+## Which test for two groups? {#which-test-for-two-groups}
 
 | Design | Roughly normal | Skewed / outliers / ordinal | Report |
 |---|---|---|---|
@@ -194,7 +194,7 @@ wilcox.test(p$sbp_presentation, p$sbp_6_months, paired = TRUE, conf.int = TRUE)
 | Two independent groups | **Welch t** | **Mann–Whitney U** | difference in means (95% CI), d; or medians (IQR), HL shift, r |
 | Two paired measurements | **paired t** (differences normal) | **Wilcoxon signed-rank** | mean difference (95% CI), d~z~; or pseudo-median |
 
-## 🔧 Switch to R — Lab 4 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 4 {#switch-to-r-lab-4 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `stats-workshop/labs/lab4_two_groups.R`
@@ -208,7 +208,7 @@ wilcox.test(p$sbp_presentation, p$sbp_6_months, paired = TRUE, conf.int = TRUE)
 
 **Time:** 35 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -221,7 +221,7 @@ quiz_mcq("t4q1", "You compare a sample mean with a reference value and estimate 
          explain = "The z-test needs a known population SD. An SD estimated from the sample calls for the t-test; with large n the two give nearly the same answer, so there is no reason to switch.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -234,7 +234,7 @@ quiz_mcq("t4q2", "Study A: p = 0.61, 95% CI for the difference -0.6 to 1.0. Stud
          explain = "Non-significant results differ in precision. A's narrow interval rules out a meaningful difference; B's wide interval is compatible with no difference and with a large one.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -247,7 +247,7 @@ quiz_mcq("t4q3", "Glucose is strongly skewed in both groups and the shapes diffe
          explain = "Mann-Whitney compares the ranks: whether values in one group tend to exceed those in the other. It is a test of medians only when the two distributions have the same shape.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -257,7 +257,7 @@ quiz_fill("t4q4", "For a paired t-test, the effect size dz is the mean of the di
           explain = "dz = mean difference / SD of the differences. Using the SD of either visit instead gives a different number and must be labelled as such.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -270,7 +270,7 @@ quiz_mcq("t4q5", "The same adults had systolic pressure measured at presentation
          explain = "Same people twice means paired data; with skewed differences, the Wilcoxon signed-rank test. Mann-Whitney and Welch treat the visits as independent groups, and cutting a number into categories throws information away.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

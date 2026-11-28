@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Sessions 2–3: describe and compare curves
@@ -44,9 +44,9 @@ source("assets/quiz.R")
   - draw a **predicted survival curve** for a patient profile
 :::
 
-# Topic 1 — The hazard ratio {background-color="#2C3E50"}
+# Topic 1 — The hazard ratio {#topic-1-the-hazard-ratio background-color="#2C3E50"}
 
-## The model
+## The model {#the-model}
 
 ::: {.eq}
 h(t | x) = h~0~(t) × exp(β~1~x~1~ + β~2~x~2~ + …)
@@ -59,7 +59,7 @@ h(t | x) = h~0~(t) × exp(β~1~x~1~ + β~2~x~2~ + …)
 - Like logistic regression it uses **exp(coefficient)**, but it models **rates over time**
 :::
 
-## One predictor
+## One predictor {#one-predictor}
 
 ```{r}
 cox1 <- coxph(Surv(time_months, status) ~ hiv, data = tb)
@@ -70,16 +70,16 @@ exp(cbind(HR = coef(cox1), confint(cox1))) |> round(2)
 **HR = `r round(exp(coef(cox1)), 2)`** (95% CI `r round(exp(confint(cox1))[1], 1)`–`r round(exp(confint(cox1))[2], 1)`): at any time, the **hazard of death is about `r round(100 * (exp(coef(cox1)) - 1))`% higher** in HIV-positive patients. It is a **rate ratio, not a risk ratio**; and unlike the log-rank test it has a **size and a CI**.
 :::
 
-# Topic 2 — Adjusted model {background-color="#2C3E50"}
+# Topic 2 — Adjusted model {#topic-2-adjusted-model background-color="#2C3E50"}
 
-## Several predictors at once
+## Several predictors at once {#several-predictors-at-once}
 
 ```{r}
 cox_full <- coxph(Surv(time_months, status) ~ age + sex + hiv + diabetes + smoker + bmi + mdr_tb + treatment, data = tb)
 round(exp(cbind(HR = coef(cox_full), confint(cox_full))), 2)    # tbl_regression(cox_full, exponentiate = TRUE) formats this for a paper
 ```
 
-## Reading the adjusted hazard ratios
+## Reading the adjusted hazard ratios {#reading-the-adjusted-hazard-ratios}
 
 ::: {.incremental}
 - Each HR is **adjusted for the others**: "holding age, sex, … fixed"
@@ -87,7 +87,7 @@ round(exp(cbind(HR = coef(cox_full), confint(cox_full))), 2)    # tbl_regression
 - The **CI** shows the precision: a CI that includes **1** means no clear association
 :::
 
-## Reading continuous predictors
+## Reading continuous predictors {#reading-continuous-predictors}
 
 ```{r}
 cox_age10 <- coxph(Surv(time_months, status) ~ I(age / 10) + hiv + mdr_tb + treatment, data = tb)
@@ -96,7 +96,7 @@ round(exp(cbind(HR = coef(cox_age10), confint(cox_age10))), 2)[1, ]
 
 The HR for age is for **one year** unless you rescale: **per 10 years** is a more readable unit (HR^10). For BMI, use a clinically sensible step (per 5 kg/m²).
 
-## Events per variable
+## Events per variable {#events-per-variable}
 
 ```{r}
 c(events = sum(tb$status), coefficients = length(coef(cox_full)), events_per_coefficient = round(sum(tb$status) / length(coef(cox_full)), 1))
@@ -106,9 +106,9 @@ c(events = sum(tb$status), coefficients = length(coef(cox_full)), events_per_coe
 The information in a Cox model is the **number of events**, not the number of patients. As a rule of thumb, aim for **about 10 or more events per coefficient**; with fewer, estimates are unstable and the model overfits. Choose predictors **from theory** first (Session 6 of the regression workshop).
 :::
 
-# Topic 3 — Using the model {background-color="#2C3E50"}
+# Topic 3 — Using the model {#topic-3-using-the-model background-color="#2C3E50"}
 
-## Predicted survival for a patient profile
+## Predicted survival for a patient profile {#predicted-survival-for-a-patient-profile}
 
 ```{r}
 #| output-location: slide
@@ -121,7 +121,7 @@ tibble(month = ps$time, hiv_neg = ps$surv[, 1], hiv_pos = ps$surv[, 2]) |> pivot
 
 A **40-year-old man on DOT without MDR-TB or diabetes**, HIV-negative vs positive: the model gives the **expected curve** for any covariate pattern.
 
-## HR is not a risk ratio
+## HR is not a risk ratio {#hr-is-not-a-risk-ratio}
 
 ::: {.incremental}
 - An HR of 2 means the **rate** of dying is twice as high **at each moment**, not that the **cumulative risk** is doubled
@@ -129,7 +129,7 @@ A **40-year-old man on DOT without MDR-TB or diabetes**, HIV-negative vs positiv
 - Report the HR **and** survival (or risk) at fixed times when possible
 :::
 
-## Reporting a Cox model
+## Reporting a Cox model {#reporting-a-cox-model}
 
 ::: {.good}
 - **Events and patients** in each group; **median follow-up**
@@ -138,7 +138,7 @@ A **40-year-old man on DOT without MDR-TB or diabetes**, HIV-negative vs positiv
 - The result of the **proportional-hazards check** (Session 5)
 :::
 
-## 🔧 Switch to R — Lab 4 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 4 {#switch-to-r-lab-4 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `survival-workshop/labs/lab4_cox.R`
@@ -150,7 +150,7 @@ A **40-year-old man on DOT without MDR-TB or diabetes**, HIV-negative vs positiv
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -163,7 +163,7 @@ quiz_mcq("s4q1", "A Cox model gives HR = 2.0 (95% CI 1.2 to 3.3) for HIV-positiv
          explain = "A hazard ratio compares instantaneous event rates at any time. It is not a ratio of cumulative risks or of survival times.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -176,7 +176,7 @@ quiz_mcq("s4q2", "Age has HR = 1.02 per year. What is the approximate HR per 10 
          explain = "Hazard ratios multiply: 1.02^10 ≈ 1.22. The unit of a continuous variable matters, so rescale to a meaningful step.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -189,7 +189,7 @@ quiz_mcq("s4q3", "Why is the number of events, not the number of patients, the k
          explain = "Estimating coefficients relies on comparing who has the event with who is at risk. Few events mean unstable estimates, whatever the number of patients.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -202,7 +202,7 @@ quiz_mcq("s4q4", "In a Cox model the HR for treatment (DOT vs self-administered)
          explain = "An HR below 1 is a lower hazard: 1 − 0.57 = 43% lower, adjusted for the other variables in the model, relative to the reference group.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -215,7 +215,7 @@ quiz_mcq("s4q5", "What is the baseline hazard h0(t) in the Cox model?",
          explain = "The Cox model leaves the shape of h0(t) free, estimating only the hazard ratios. That is why it is called semi-parametric.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Sessions 1 and 2: design, weights, descriptive estimates
@@ -44,9 +44,9 @@ source("assets/quiz.R")
   - give **predicted probabilities**
 :::
 
-# Topic 1 — svyglm {background-color="#2C3E50"}
+# Topic 1 — svyglm {#topic-1-svyglm background-color="#2C3E50"}
 
-## A logistic model for hypertension
+## A logistic model for hypertension {#a-logistic-model-for-hypertension}
 
 ```{r}
 m_svy <- svyglm(hypertension ~ age + sex + residence + bmi + wealth, design = des, family = quasibinomial())
@@ -59,7 +59,7 @@ round(summary(m_svy)$coefficients, 3)
 - Age, BMI and **urban residence** are associated with hypertension; sex and wealth are not, once adjusted
 :::
 
-## Odds ratios
+## Odds ratios {#odds-ratios}
 
 ```{r}
 round(exp(cbind(OR = coef(m_svy), confint(m_svy)))[-1, ], 2)
@@ -69,9 +69,9 @@ round(exp(cbind(OR = coef(m_svy), confint(m_svy)))[-1, ], 2)
 Per year of age **OR 1.06**; per BMI unit **OR 1.10**; **urban vs rural OR 2.1** (95% CI 1.4 to 3.1), adjusted for the other variables. As always, an **odds** ratio is **not** a risk ratio: hypertension is common here (20%), so it exaggerates the risk ratio.
 :::
 
-# Topic 2 — Why not just glm()? {background-color="#2C3E50"}
+# Topic 2 — Why not just glm()? {#topic-2-why-not-just-glm background-color="#2C3E50"}
 
-## Three analyses of the same model
+## Three analyses of the same model {#three-analyses-of-the-same-model}
 
 ```{r}
 m_glm <- glm(hypertension ~ age + sex + residence + bmi + wealth, data = resp, family = binomial)
@@ -88,15 +88,15 @@ rbind(`glm (ignores design)` = summary(m_glm)$coefficients["residenceUrban", 1:2
 - Rule: **use `svyglm`** for design-based inference; compare with `glm` as a sensitivity check
 :::
 
-## Should regression be weighted?
+## Should regression be weighted? {#should-regression-be-weighted}
 
 ::: {.warn}
 Some statisticians prefer an **unweighted model** when the model is well specified and includes the variables used for the sampling (e.g. residence): it is more efficient. For **population-level reporting** (prevalence, ORs for a national report), the **design-based** `svyglm` is the safe default. If the two give **very different** coefficients, the model is probably **missing something**.
 :::
 
-# Topic 3 — Other outcomes and tests {background-color="#2C3E50"}
+# Topic 3 — Other outcomes and tests {#topic-3-other-outcomes-and-tests background-color="#2C3E50"}
 
-## A continuous outcome
+## A continuous outcome {#a-continuous-outcome}
 
 ```{r}
 m_lin <- svyglm(sbp ~ age + sex + residence + bmi + wealth, design = des)
@@ -107,7 +107,7 @@ round(summary(m_lin)$coefficients, 2)
 SBP rises **0.45 mmHg per year** of age, **0.8 mmHg per BMI unit**, and is **5.8 mmHg higher** in urban adults. Default family: gaussian, with design-based SEs.
 :::
 
-## Testing a multi-level variable
+## Testing a multi-level variable {#testing-a-multi-level-variable}
 
 ```{r}
 m_edu <- svyglm(hypertension ~ age + sex + residence + bmi + wealth + education, design = des, family = quasibinomial())
@@ -120,7 +120,7 @@ regTermTest(m_edu, ~education)
 - Likelihood-ratio tests and AIC are **not available** in the usual way for survey models (no true likelihood); use Wald tests
 :::
 
-## Predicted probabilities
+## Predicted probabilities {#predicted-probabilities}
 
 ```{r}
 nd <- data.frame(age = 50, sex = factor("Male", levels = levels(resp$sex)), residence = factor(c("Rural", "Urban"), levels = levels(resp$residence)), bmi = 26, wealth = 3)
@@ -131,7 +131,7 @@ round(predict(m_svy, newdata = nd, type = "response"), 2)
 A 50-year-old man with BMI 26: probability of hypertension about **26% in a rural** and **42% in an urban** area. **Predicted probabilities** are easier for readers than odds ratios: report **both**.
 :::
 
-## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 3 {#switch-to-r-lab-3 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `survey-workshop/labs/lab3_regression.R`
@@ -143,7 +143,7 @@ A 50-year-old man with BMI 26: probability of hypertension about **26% in a rura
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -156,7 +156,7 @@ quiz_mcq("v3q1", "Why is family = quasibinomial() used for a binary outcome in s
          explain = "A binomial model warns about non-integer successes created by weights. The quasi family avoids that, and svyglm takes the variance from the design.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -169,7 +169,7 @@ quiz_mcq("v3q2", "The glm and svyglm coefficients for urban residence are close,
          explain = "Weights mainly change the estimate. The correlation of respondents within PSUs mainly changes the variance, which glm ignores.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -182,7 +182,7 @@ quiz_mcq("v3q3", "A glm that uses weights = weight but has no clusters gives a c
          explain = "Weights alone correct the point estimate. Clustering and stratification enter the variance, so the SE needs the design.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -195,7 +195,7 @@ quiz_mcq("v3q4", "What does regTermTest(model, ~education) test?",
          explain = "It is a Wald test of the whole term, which has two coefficients for three education levels, with a design-based variance.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -208,7 +208,7 @@ quiz_mcq("v3q5", "In the model, the odds ratio for urban residence is 2.1. Which
          explain = "The OR compares odds. With a common outcome (20%) the risk ratio is much smaller than the odds ratio, so 'twice as likely' overstates the effect.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

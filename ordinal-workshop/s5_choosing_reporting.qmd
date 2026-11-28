@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Sessions 1-4: ordered and nominal outcomes, the assumption, the models
@@ -44,9 +44,9 @@ source("assets/quiz.R")
   - write the **methods and results**
 :::
 
-# Topic 1 — Ordinal or multinomial? {background-color="#2C3E50"}
+# Topic 1 — Ordinal or multinomial? {#topic-1-ordinal-or-multinomial background-color="#2C3E50"}
 
-## A decision
+## A decision {#a-decision}
 
 | Question | Answer | Model |
 |---|---|---|
@@ -56,7 +56,7 @@ source("assets/quiz.R")
 | | One or a few predictors fail | **Partial** proportional odds |
 | | Many fail | **Multinomial** |
 
-## The same data, two models
+## The same data, two models {#the-same-data-two-models}
 
 ```{r}
 a_ord <- MASS::polr(anaemia ~ wealth + tribal, data = mat, Hess = TRUE)
@@ -68,9 +68,9 @@ c(ordinal = AIC(a_ord), multinomial = AIC(a_mn)) |> round(0)
 The multinomial model has the **lower AIC** because it frees the tribal effect at each cut-point; it also needs **many more parameters** (`r length(coef(a_mn))` vs `r length(coef(a_ord)) + length(a_ord$zeta)`). When proportional odds **holds**, the ordinal model is simpler and **more powerful**. When it fails and cannot be relaxed, **multinomial is the safe fallback**.
 :::
 
-# Topic 2 — Showing results {background-color="#2C3E50"}
+# Topic 2 — Showing results {#topic-2-showing-results background-color="#2C3E50"}
 
-## Probabilities against a predictor
+## Probabilities against a predictor {#probabilities-against-a-predictor}
 
 ```{r}
 #| output-location: slide
@@ -84,7 +84,7 @@ cbind(wealth = 1:5, as.data.frame(predict(m_ord, newdata = nd, type = "probs")))
 
 The same idea for the nominal outcome: predicted probabilities of each **delivery place** across wealth show **home falling and private rising**.
 
-## Accuracy is a weak summary
+## Accuracy is a weak summary {#accuracy-is-a-weak-summary}
 
 ```{r}
 mat$delivery <- relevel(mat$delivery, ref = "Home")
@@ -96,9 +96,9 @@ c(model = mean(predict(mn) == mat$delivery), always_most_common = max(prop.table
 The model is right about **48%** of the time vs **32%** for always guessing the most common place. Covariates **shift probabilities** but **cannot predict an individual's choice**; accuracy ignores the probabilities. Use **predicted probabilities**, **AIC** or **log-likelihood**, and, if prediction is the aim, **calibration** and **proper scoring rules**.
 :::
 
-# Topic 3 — Reporting {background-color="#2C3E50"}
+# Topic 3 — Reporting {#topic-3-reporting background-color="#2C3E50"}
 
-## Wording
+## Wording {#wording}
 
 ::: {.good}
 **Ordinal:** "In a proportional-odds model adjusted for education, BMI, antenatal visits, parity, age, tribal group and residence, each higher wealth quintile was associated with **24% lower odds** of being in a worse anaemia category (OR 0.76, 95% CI ...). The assumption held for all predictors except tribal group, so its effect is reported separately at each cut-point."
@@ -108,7 +108,7 @@ The model is right about **48%** of the time vs **32%** for always guessing the 
 **Multinomial:** "Compared with home delivery, each wealth quintile increased the **relative risk** of delivering in a private hospital 2.8-fold (RRR 2.76, 95% CI ...)."
 :::
 
-## Reporting checklist
+## Reporting checklist {#reporting-checklist}
 
 ::: {.incremental}
 1. **Outcome** categories, order, **counts**; **reference** category (nominal)
@@ -119,7 +119,7 @@ The model is right about **48%** of the time vs **32%** for always guessing the 
 6. **Limitations**: sparse categories, many parameters, association not cause, self-reported outcomes
 :::
 
-## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 5 {#switch-to-r-lab-5 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `ordinal-workshop/labs/lab5_report.R`
@@ -131,7 +131,7 @@ The model is right about **48%** of the time vs **32%** for always guessing the 
 
 **Time:** 30 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -144,7 +144,7 @@ quiz_mcq("s5q1", "When is the multinomial model a good choice for an ordered out
          explain = "Multinomial makes no ordering assumption, so it is the fallback when proportional odds clearly fails. It uses more parameters and so needs a larger sample.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -157,7 +157,7 @@ quiz_mcq("s5q2", "The multinomial model classifies 48% of women correctly and al
          explain = "Even a useful model may predict an individual's category poorly. Accuracy ignores the predicted probabilities, so judge the model by probabilities, likelihood and calibration.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -170,7 +170,7 @@ quiz_mcq("s5q3", "Why plot predicted probabilities against a predictor such as w
          explain = "The plot shows what the model implies for readers on the probability scale: for example home deliveries falling and private rising.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -183,7 +183,7 @@ quiz_mcq("s5q4", "Which sentence is the best way to report an ordinal result whe
          explain = "State the OR for a higher category with its CI and the adjustment. Avoid treating categories as numbers or giving only a p-value.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -196,7 +196,7 @@ quiz_mcq("s5q5", "What belongs in the limitations of a categorical-outcome analy
          explain = "Small categories and many parameters destabilise estimates, and an observational design supports association only.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

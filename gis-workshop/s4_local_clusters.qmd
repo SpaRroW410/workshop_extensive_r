@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 3: the map **is** clustered (global Moran's I)
@@ -44,9 +44,9 @@ source("assets/quiz.R")
   - run and read a **spatial scan statistic**
 :::
 
-# Topic 1 — Local Moran's I (LISA) {background-color="#2C3E50"}
+# Topic 1 — Local Moran's I (LISA) {#topic-1-local-morans-i-lisa background-color="#2C3E50"}
 
-## One statistic per area
+## One statistic per area {#one-statistic-per-area}
 
 ```{r}
 loc <- localmoran(blocks$dengue_per_100k, lw, zero.policy = TRUE)
@@ -63,7 +63,7 @@ head(round(loc, 3), 4)
 The **average of the local values equals the global I**: the global statistic is the average of the local ones (`r round(mean(loc[, "Ii"]), 3)`).
 :::
 
-## Cluster types from the quadrant
+## Cluster types from the quadrant {#cluster-types-from-the-quadrant}
 
 ```{r}
 z <- as.numeric(scale(blocks$dengue_per_100k)); lag_z <- lag.listw(lw, z, zero.policy = TRUE); p <- loc[, "Pr(z != E(Ii))"]
@@ -86,7 +86,7 @@ ggplot(blocks) + geom_sf(aes(fill = lisa), colour = "white") + scale_fill_manual
 - Here: a hot spot in the **south-east**, a cold spot in the **north-west**, one outlier
 :::
 
-## Multiple testing
+## Multiple testing {#multiple-testing}
 
 You ran **79 tests**: at 5%, about 4 blocks look significant by chance, and the tests are **correlated** (neighbours share neighbours).
 
@@ -100,9 +100,9 @@ c(unadjusted = sum(p < 0.05), fdr = sum(p.adjust(p, "fdr") < 0.05), bonferroni =
 - The analytic p-values assume near-normal data; `localmoran_perm()` gives permutation p-values for skewed rates
 :::
 
-# Topic 2 — Getis-Ord Gi* {background-color="#2C3E50"}
+# Topic 2 — Getis-Ord Gi* {#topic-2-getis-ord-gi background-color="#2C3E50"}
 
-## Hot and cold spots directly
+## Hot and cold spots directly {#hot-and-cold-spots-directly}
 
 Gi\* sums the values of an area **and its neighbours** (the `*` includes the area itself) and turns the sum into a **z-score**.
 
@@ -123,7 +123,7 @@ ggplot(blocks) + geom_sf(aes(fill = gi_class), colour = "white") +
 ```
 
 
-## Gi\* or LISA?
+## Gi\* or LISA? {#gi-or-lisa}
 
 ::: {.key}
 **LISA** finds areas **similar** to their neighbours (hot or cold) **and outliers**.
@@ -137,9 +137,9 @@ ggplot(blocks) + geom_sf(aes(fill = gi_class), colour = "white") +
 Both run one test per area: apply the same **multiple-testing** caution.
 :::
 
-# Topic 3 — The scan statistic {background-color="#2C3E50"}
+# Topic 3 — The scan statistic {#topic-3-the-scan-statistic background-color="#2C3E50"}
 
-## Kulldorff's circles
+## Kulldorff's circles {#kulldorffs-circles}
 
 Slide **circles of many sizes** over the map; for each ask whether it holds **more cases than expected from the population**. Reports the **most likely cluster**, its relative risk and a Monte Carlo p-value. Uses **counts and population** (Poisson), so no rates are needed.
 
@@ -156,7 +156,7 @@ summary(sc)
 - Report the model (Poisson), the window, the number of simulations
 :::
 
-## Which local tool?
+## Which local tool? {#which-local-tool}
 
 | Question | Tool |
 |---|---|
@@ -165,7 +165,7 @@ summary(sc)
 | Is there one most likely cluster, from counts and population? | **scan statistic** |
 | Are the results robust? | other weights; adjusted p; compare methods |
 
-## 🔧 Switch to R — Lab 4 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 4 {#switch-to-r-lab-4 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `gis-workshop/labs/lab4_local.R`
@@ -177,7 +177,7 @@ summary(sc)
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -190,7 +190,7 @@ quiz_mcq("s4q1", "A block is classed High-Low (significant) in a LISA map. What 
          explain = "High-Low means the area's own value is above average while the average of its neighbours is below: a spatial outlier that differs from its surroundings.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -203,7 +203,7 @@ quiz_mcq("s4q2", "Why should LISA p-values be adjusted or treated cautiously?",
          explain = "With 79 tests about 4 would be significant by chance at 5%, and overlapping neighbourhoods make the tests dependent. Adjust (e.g. FDR) and read the map as exploratory.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -216,7 +216,7 @@ quiz_mcq("s4q3", "How are the local Moran values related to the global Moran's I
          explain = "With row-standardised weights the mean of the local Ii equals the global Moran's I, which is why local values 'decompose' the global statistic.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -229,7 +229,7 @@ quiz_mcq("s4q4", "What does Getis-Ord Gi* give that local Moran's I does not?",
          explain = "Gi* sums values over a neighbourhood so a high z means a hot spot and a low z a cold spot. LISA's positive I does not distinguish high-high from low-low without the quadrant.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -242,7 +242,7 @@ quiz_mcq("s4q5", "What does the Kulldorff scan statistic report as its main resu
          explain = "The scan statistic searches circles of varying size and reports the most likely cluster, its observed and expected cases, the relative risk and a Monte Carlo p-value.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

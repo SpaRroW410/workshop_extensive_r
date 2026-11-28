@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 2: you choose the **knots and df** yourself
@@ -44,9 +44,9 @@ source("assets/quiz.R")
   - let a curve **differ by group**
 :::
 
-# Topic 1 — The model {background-color="#2C3E50"}
+# Topic 1 — The model {#topic-1-the-model background-color="#2C3E50"}
 
-## A GAM for SBP
+## A GAM for SBP {#a-gam-for-sbp}
 
 ```{r}
 #| output-location: slide
@@ -61,7 +61,7 @@ summary(g1)
 - The parametric part reads like a normal regression (salt +0.65 mmHg per g/day)
 :::
 
-## The curves
+## The curves {#the-curves}
 
 ```{r}
 #| output-location: slide
@@ -73,7 +73,7 @@ par(mfrow = c(1, 3)); plot(g1, shade = TRUE, ylab = "Effect on SBP (mmHg)")
 Each panel is the **partial effect** of one variable (others held fixed), with a **95% band**. Age **bends at about 45**, BMI **flattens** (diminishing returns), activity **flattens** too.
 :::
 
-## Is it better than a straight line?
+## Is it better than a straight line? {#is-it-better-than-a-straight-line}
 
 ```{r}
 AIC(m_l <- lm(sbp ~ age + bmi + salt + activity + sex + smoker, data = ncd), g1) |> round(0)
@@ -81,9 +81,9 @@ AIC(m_l <- lm(sbp ~ age + bmi + salt + activity + sex + smoker, data = ncd), g1)
 
 The GAM has **AIC 30,692** against **30,771** for the straight-line model: clearly better.
 
-# Topic 2 — Checking {background-color="#2C3E50"}
+# Topic 2 — Checking {#topic-2-checking background-color="#2C3E50"}
 
-## Is k big enough?
+## Is k big enough? {#is-k-big-enough}
 
 ```{r}
 #| echo: true
@@ -98,9 +98,9 @@ gam.check(g1)
 - Also look at the **residual plots** (normality, constant variance)
 :::
 
-# Topic 3 — Binary outcomes and groups {background-color="#2C3E50"}
+# Topic 3 — Binary outcomes and groups {#topic-3-binary-outcomes-and-groups background-color="#2C3E50"}
 
-## A logistic GAM
+## A logistic GAM {#a-logistic-gam}
 
 ```{r}
 g2 <- gam(cvd10 ~ s(age) + s(bmi) + sex + smoker, data = ncd, family = binomial, method = "REML")
@@ -117,7 +117,7 @@ plot(g2, select = 2, trans = plogis, shift = coef(g2)[1], seWithMean = TRUE, xla
 The BMI smooth has **edf 5.0**: very curved (**U-shaped**); the age smooth has **edf 1.0**: a **straight line on the logit scale**. The GAM **discovered both** without being told.
 :::
 
-## A curve for each group
+## A curve for each group {#a-curve-for-each-group}
 
 ```{r}
 g3 <- gam(sbp ~ s(age, by = sex) + sex + s(bmi) + s(activity) + salt + smoker, data = ncd, method = "REML")
@@ -130,7 +130,7 @@ round(AIC(g1, g3), 0)
 - Keep **`sex` as a main effect** too when you use `by = sex`
 :::
 
-## GAM or natural spline?
+## GAM or natural spline? {#gam-or-natural-spline}
 
 ```{r}
 nd <- data.frame(age = c(30, 45, 70), bmi = mean(ncd$bmi), salt = mean(ncd$salt), activity = mean(ncd$activity), sex = factor("Male", levels = levels(ncd$sex)), smoker = 0)
@@ -142,7 +142,7 @@ round(cbind(gam = predict(g1, nd), ns = predict(m_ns, nd)), 1)
 **Practically identical** (107.7 vs 107.8; 112.5 vs 112.2; 126.0 vs 125.7). The GAM **chooses the df for you**; a spline with a few df is **easier to explain and to refit** in other software. Both are fine; **report the plot**.
 :::
 
-## 🔧 Switch to R — Lab 3 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 3 {#switch-to-r-lab-3 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `curves-workshop/labs/lab3_gam.R`
@@ -154,7 +154,7 @@ round(cbind(gam = predict(g1, nd), ns = predict(m_ns, nd)), 1)
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -167,7 +167,7 @@ quiz_mcq("k3q1", "In a GAM summary a smooth term has an edf of 1.0. What does th
          explain = "The effective degrees of freedom measure the curvature. An edf of 1 is the same as a straight line.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -180,7 +180,7 @@ quiz_mcq("k3q2", "What does method = \"REML\" do in gam()?",
          explain = "REML estimates the smoothing penalty, so the data decide how wiggly each curve is, instead of the analyst choosing the df.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -193,7 +193,7 @@ quiz_mcq("k3q3", "gam.check shows a low k-index with a small p-value, and the ed
          explain = "When the edf approaches k' the basis restricts the curve. A larger k allows the smooth to capture the shape, and the penalty still prevents overfitting.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -206,7 +206,7 @@ quiz_mcq("k3q4", "The GAM and a natural spline with 4 df give almost the same pr
          explain = "Both are flexible smooth curves. When the shape is simple, a few df are enough and the two approaches agree.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -219,7 +219,7 @@ quiz_mcq("k3q5", "What does s(age, by = sex) give?",
          explain = "The by argument fits one smooth per level of the factor. A main effect of sex alone only shifts a single curve up or down.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

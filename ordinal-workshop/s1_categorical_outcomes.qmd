@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Regression workshop: continuous (linear) and **binary** (logistic) outcomes
@@ -44,7 +44,7 @@ source("assets/quiz.R")
   - spot **sparse categories**
 :::
 
-## Our data: a maternal health survey
+## Our data: a maternal health survey {#our-data-a-maternal-health-survey}
 
 ::: {.columns}
 ::: {.column width="55%"}
@@ -60,9 +60,9 @@ mat |> select(id, age, education, wealth, tribal, anc_visits, anaemia, delivery)
 :::
 :::
 
-# Topic 1 — Which type of outcome? {background-color="#2C3E50"}
+# Topic 1 — Which type of outcome? {#topic-1-which-type-of-outcome background-color="#2C3E50"}
 
-## Nominal or ordered?
+## Nominal or ordered? {#nominal-or-ordered}
 
 | Outcome | Type | Model family |
 |---|---|---|
@@ -76,7 +76,7 @@ mat |> select(id, age, education, wealth, tribal, anc_visits, anaemia, delivery)
 Ask: **does the order of the categories mean something?** Mild anaemia is *between* none and moderate, so anaemia is ordered. "PHC" is not between "Home" and "Public hospital" in any statistical sense, so delivery place is nominal.
 :::
 
-## Cumulative proportions
+## Cumulative proportions {#cumulative-proportions}
 
 ```{r}
 round(100 * prop.table(table(mat$anaemia)), 1)
@@ -89,9 +89,9 @@ round(100 * cumsum(prop.table(table(mat$anaemia))), 1)
 - Nominal outcomes have no cumulative scale: each category is compared with a **reference**
 :::
 
-# Topic 2 — Describing {background-color="#2C3E50"}
+# Topic 2 — Describing {#topic-2-describing background-color="#2C3E50"}
 
-## Anaemia by wealth
+## Anaemia by wealth {#anaemia-by-wealth}
 
 ```{r}
 round(100 * prop.table(table(mat$wealth, mat$anaemia), 1), 1)
@@ -108,9 +108,9 @@ ggplot(mat, aes(factor(wealth), fill = anaemia)) + geom_bar(position = "fill") +
 The share with **no anaemia** rises from about 30% to 78%, and **severe** anaemia almost vanishes in the richest quintile. A **100% stacked bar** is the standard picture for an ordered outcome.
 :::
 
-# Topic 3 — What not to do {background-color="#2C3E50"}
+# Topic 3 — What not to do {#topic-3-what-not-to-do background-color="#2C3E50"}
 
-## Treating categories as numbers
+## Treating categories as numbers {#treating-categories-as-numbers}
 
 ```{r}
 coef(lm(as.numeric(anaemia) ~ wealth, data = mat))["wealth"]
@@ -121,13 +121,13 @@ coef(lm(as.numeric(anaemia) ~ wealth, data = mat))["wealth"]
 - "-0.24 categories per quintile" is **not interpretable** and can be misleading at the extremes
 :::
 
-## Dichotomising
+## Dichotomising {#dichotomising}
 
 ::: {.warn}
 Collapsing to "any anaemia vs none" **throws away** the difference between mild and severe, loses **power**, and depends on **where you cut**. Use it for a simple summary, not as the analysis when the ordering is available.
 :::
 
-## Checklist before modelling
+## Checklist before modelling {#checklist-before-modelling}
 
 ::: {.good}
 1. **Nominal or ordered?** (order meaningful?)
@@ -136,7 +136,7 @@ Collapsing to "any anaemia vs none" **throws away** the difference between mild 
 4. Plan the **assumption check** (proportional odds)
 :::
 
-## 🔧 Switch to R — Lab 1 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 1 {#switch-to-r-lab-1 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `ordinal-workshop/labs/lab1_outcomes.R`
@@ -148,7 +148,7 @@ Collapsing to "any anaemia vs none" **throws away** the difference between mild 
 
 **Time:** 30 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -161,7 +161,7 @@ quiz_mcq("s1q1", "Which outcome is ordered, and so suited to an ordinal model?",
          explain = "Only for anaemia grade do the categories have a natural, meaningful order. The others are unordered labels, so a nominal model is needed.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -174,7 +174,7 @@ quiz_mcq("s1q2", "The cumulative percentages for anaemia are 54, 81, 93 and 100.
          explain = "A cumulative proportion adds the lower categories: None (54%) plus Mild (27%) is 81%, the probability of mild or better.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -187,7 +187,7 @@ quiz_mcq("s1q3", "A linear regression of anaemia coded 1 to 4 on wealth is a poo
          explain = "Coding categories as 1, 2, 3, 4 assumes the gap between each pair is the same, and an average category number has no clear meaning.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -200,7 +200,7 @@ quiz_mcq("s1q4", "What is the main cost of dichotomising an ordered outcome into
          explain = "Collapsing categories throws away information on severity, reduces precision, and the result depends on the chosen cut-point.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -213,7 +213,7 @@ quiz_mcq("s1q5", "What should you check about the categories of an outcome befor
          explain = "Very small categories make coefficients unstable and tests unreliable; consider merging neighbouring categories when it is clinically sensible.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

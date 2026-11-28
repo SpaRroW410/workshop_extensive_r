@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Sessions 3–4: the outcome is spatially clustered, and we know where
@@ -44,16 +44,16 @@ source("assets/quiz.R")
   - **report** a spatial analysis
 :::
 
-# Topic 1 — Check the residuals {background-color="#2C3E50"}
+# Topic 1 — Check the residuals {#topic-1-check-the-residuals background-color="#2C3E50"}
 
-## Fit OLS first
+## Fit OLS first {#fit-ols-first}
 
 ```{r}
 ols <- lm(dengue_per_100k ~ poverty_index + literacy_pct, data = blocks)
 round(summary(ols)$coefficients, 3)
 ```
 
-## Moran's I on the residuals
+## Moran's I on the residuals {#morans-i-on-the-residuals}
 
 ```{r}
 lm.morantest(ols, lw, zero.policy = TRUE)
@@ -70,9 +70,9 @@ ggplot(blocks) + geom_sf(aes(fill = res_ols)) + scale_fill_gradient2(low = "#216
   labs(title = "OLS residuals: neighbours share the same sign")
 ```
 
-# Topic 2 — Which spatial model? {background-color="#2C3E50"}
+# Topic 2 — Which spatial model? {#topic-2-which-spatial-model background-color="#2C3E50"}
 
-## Two structures
+## Two structures {#two-structures}
 
 | Model | Idea | Think of |
 |---|---|---|
@@ -83,14 +83,14 @@ ggplot(blocks) + geom_sf(aes(fill = res_ols)) + scale_fill_gradient2(low = "#216
 Lag: y = ρWy + Xβ + ε &nbsp;&nbsp;|&nbsp;&nbsp; Error: y = Xβ + u, u = λWu + ε
 :::
 
-## Lagrange multiplier tests
+## Lagrange multiplier tests {#lagrange-multiplier-tests}
 
 ```{r}
 #| output-location: slide
 lm.RStests(ols, lw, test = c("RSerr", "RSlag", "adjRSerr", "adjRSlag"), zero.policy = TRUE)
 ```
 
-## Choosing from the LM tests
+## Choosing from the LM tests {#choosing-from-the-lm-tests}
 
 ::: {.incremental}
 - If **only one** plain test is significant, use that model
@@ -98,7 +98,7 @@ lm.RStests(ols, lw, test = c("RSerr", "RSlag", "adjRSerr", "adjRSlag"), zero.pol
 - Use **theory** too: contagion points to lag, omitted exposures to error
 :::
 
-## Fit and compare
+## Fit and compare {#fit-and-compare}
 
 ```{r}
 sem <- errorsarlm(dengue_per_100k ~ poverty_index + literacy_pct, data = blocks, listw = lw, zero.policy = TRUE)
@@ -113,9 +113,9 @@ c(OLS = unname(moran.test(residuals(ols), lw, zero.policy = TRUE)$estimate[1]), 
 
 Lower AIC is better (same data). The residual Moran's I should fall towards 0.
 
-# Topic 3 — Interpreting and reporting {background-color="#2C3E50"}
+# Topic 3 — Interpreting and reporting {#topic-3-interpreting-and-reporting background-color="#2C3E50"}
 
-## Coefficients in the lag model {.smaller}
+## Coefficients in the lag model {#coefficients-in-the-lag-model .smaller}
 
 ::: {.warn}
 In a **lag** model a change in one block's poverty also changes its neighbours' rates, which feed back. The coefficient is **not** the whole effect. Report **impacts**: direct, indirect and total.
@@ -128,7 +128,7 @@ summary(impacts(sar, listw = lw, R = 199), zstats = TRUE, short = TRUE)
 
 In the **error** model the coefficients keep the OLS meaning, with corrected standard errors.
 
-## Other routes
+## Other routes {#other-routes}
 
 ::: {.incremental}
 - **Add covariates** that explain the clustering; the residual autocorrelation may vanish
@@ -137,7 +137,7 @@ In the **error** model the coefficients keep the OLS meaning, with corrected sta
 - Always **map the residuals**
 :::
 
-## Reporting checklist
+## Reporting checklist {#reporting-checklist}
 
 ::: {.good}
 1. The **outcome** (rate, not count) and the **areas**, with the **CRS** if distances were used
@@ -148,7 +148,7 @@ In the **error** model the coefficients keep the OLS meaning, with corrected sta
 6. **Limitations**: area size (MAUP), small numbers, edge effects, association not cause
 :::
 
-## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 5 {#switch-to-r-lab-5 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `gis-workshop/labs/lab5_regression.R`
@@ -160,7 +160,7 @@ In the **error** model the coefficients keep the OLS meaning, with corrected sta
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -173,7 +173,7 @@ quiz_mcq("s5q1", "Residuals of an area-level regression have a significant posit
          explain = "Positive residual autocorrelation means neighbouring residuals share information, so there are fewer independent observations than the model assumes and standard errors are too small.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -186,7 +186,7 @@ quiz_mcq("s5q2", "Which situation points to a spatial LAG model?",
          explain = "A lag model includes the neighbours' outcomes as a predictor (spillover). Shared unmeasured factors are the typical reason for a spatial error model.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -199,7 +199,7 @@ quiz_mcq("s5q3", "Both plain LM tests are significant, but only the robust lag t
          explain = "When both plain tests are significant, the robust versions help decide. Only the robust lag test remaining significant favours the lag model.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -212,7 +212,7 @@ quiz_mcq("s5q4", "In a spatial lag model, why is the coefficient of a covariate 
          explain = "Through the spatial multiplier, a change in x in one area changes y there and in neighbouring areas. Direct, indirect and total impacts report these effects.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -225,7 +225,7 @@ quiz_mcq("s5q5", "After fitting a spatial error model, what should you check?",
          explain = "A spatial model is meant to absorb the spatial structure. If residuals still show autocorrelation, the model (or weights) needs rethinking.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

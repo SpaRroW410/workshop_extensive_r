@@ -32,16 +32,16 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 1: the DAG says **adjust for** age, sex, education, urban, BMI, diabetes, baseline SBP
 - Today: **do it with regression**, see what **bad controls** do, and get **ATE and ATT** by **standardisation**
 :::
 
-# Topic 1 — Regression adjustment {background-color="#2C3E50"}
+# Topic 1 — Regression adjustment {#topic-1-regression-adjustment background-color="#2C3E50"}
 
-## Adjusted for the confounders
+## Adjusted for the confounders {#adjusted-for-the-confounders}
 
 ```{r}
 m_adj <- lm(f_out, data = htn)
@@ -52,9 +52,9 @@ round(c(estimate = coef(m_adj)[["programme"]], confint(m_adj)["programme", ]), 2
 **−6.3 mmHg** (95% CI −7.1 to −5.4), against the naive **−1.4**. Confounding **hid** most of the benefit, because the enrolled started with a **higher** SBP. (Because the data are synthetic we know the truth: **−5.8**.)
 :::
 
-# Topic 2 — Bad controls {background-color="#2C3E50"}
+# Topic 2 — Bad controls {#topic-2-bad-controls background-color="#2C3E50"}
 
-## Adjusting for a mediator or a collider
+## Adjusting for a mediator or a collider {#adjusting-for-a-mediator-or-a-collider}
 
 ```{r}
 m_med <- update(m_adj, . ~ . + adherent); m_col <- update(m_adj, . ~ . + clinic_visits)
@@ -68,15 +68,15 @@ round(c(naive = coef(lm(sbp_12m ~ programme, data = htn))[["programme"]], adjust
 - "Adjust for everything available" is **wrong**
 :::
 
-## Table 2 fallacy
+## Table 2 fallacy {#table-2-fallacy}
 
 ::: {.warn}
 In the adjusted model, **only the programme coefficient** has a causal reading. The coefficients of age, diabetes and so on are **not** their total effects (their own confounders and mediators differ). Do not interpret every row of a regression table causally.
 :::
 
-# Topic 3 — Standardisation {background-color="#2C3E50"}
+# Topic 3 — Standardisation {#topic-3-standardisation background-color="#2C3E50"}
 
-## The effect may differ between people
+## The effect may differ between people {#the-effect-may-differ-between-people}
 
 ```{r}
 htn <- htn |> mutate(bsbp_c = baseline_sbp - 150)
@@ -86,7 +86,7 @@ round(summary(m_int)$coefficients[c("programme", "programme:bsbp_c"), 1:2], 3)
 
 The programme lowers SBP by **5.9 mmHg at a baseline of 150**, and by **0.09 mmHg more for each extra mmHg** of baseline SBP. So **which average** do we want?
 
-## g-computation
+## g-computation {#g-computation}
 
 ```{r}
 p1 <- predict(m_int, transform(htn, programme = 1)); p0 <- predict(m_int, transform(htn, programme = 0))
@@ -102,7 +102,7 @@ round(c(ATE = mean(p1 - p0), ATT = mean((p1 - p0)[htn$programme == 1])), 2)
 - Works for **any** outcome model (logistic: risk differences and risk ratios)
 :::
 
-## Which estimand?
+## Which estimand? {#which-estimand}
 
 | Question | Estimand |
 |---|---|
@@ -114,7 +114,7 @@ round(c(ATE = mean(p1 - p0), ATT = mean((p1 - p0)[htn$programme == 1])), 2)
 State the **estimand** before choosing the method: regression, matching and weighting can each target **different** populations.
 :::
 
-## 🔧 Switch to R — Lab 2 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 2 {#switch-to-r-lab-2 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `causal-workshop/labs/lab2_adjust.R`
@@ -126,7 +126,7 @@ State the **estimand** before choosing the method: regression, matching and weig
 
 **Time:** 35 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -139,7 +139,7 @@ quiz_mcq("z2q1", "The naive difference is -1.4 mmHg and the confounder-adjusted 
          explain = "Enrolled adults started with a higher SBP and more risk factors, so without the programme they would have had a higher SBP. The confounding worked against the benefit.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -152,7 +152,7 @@ quiz_mcq("z2q2", "After adding adherence to the model the programme coefficient 
          explain = "Adherence is on the causal path. Holding it fixed leaves only the direct effect, which is not the total benefit of the programme.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -165,7 +165,7 @@ quiz_mcq("z2q3", "The model that includes clinic visits has a higher R-squared b
          explain = "Variables affected by the exposure and the outcome predict the outcome well, yet conditioning on them biases the effect. Choose covariates from the DAG.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -178,7 +178,7 @@ quiz_mcq("z2q4", "What does standardisation (g-computation) do?",
          explain = "Predictions under exposure and under no exposure for the same people are compared, and the average difference estimates the causal effect in that population.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -191,7 +191,7 @@ quiz_mcq("z2q5", "The ATT (-6.6) is larger than the ATE (-6.2). What explains th
          explain = "The effect increases with baseline SBP, and the enrolled have higher values. Averaging over them gives a larger effect than averaging over everyone.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

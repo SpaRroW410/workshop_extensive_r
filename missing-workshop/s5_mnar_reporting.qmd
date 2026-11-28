@@ -38,7 +38,7 @@ dat2 <- dat |> mutate(smoker = factor(smoker, labels = c("No", "Yes")))
 imp <- mice(dat2, m = 30, maxit = 10, seed = 2038, printFlag = FALSE)
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Sessions 3 and 4: MI under **MAR**
@@ -49,9 +49,9 @@ imp <- mice(dat2, m = 30, maxit = 10, seed = 2038, printFlag = FALSE)
   - **report** missing data properly
 :::
 
-# Topic 1 — The MNAR problem {background-color="#2C3E50"}
+# Topic 1 — The MNAR problem {#topic-1-the-mnar-problem background-color="#2C3E50"}
 
-## Observed vs MAR imputation
+## Observed vs MAR imputation {#observed-vs-mar-imputation}
 
 ```{r}
 obs <- mean(dat$hba1c, na.rm = TRUE)
@@ -63,9 +63,9 @@ round(c(observed = obs, MAR_imputation = mar), 2)
 **5.35%** observed and **5.38%** after MAR imputation. The **truth is 5.50%** (known only because the data are synthetic). Adults with a **high HbA1c** did not come to the lab, and **nothing in the data says so**: MAR imputation learns from the **observed** (lower) values.
 :::
 
-# Topic 2 — Delta adjustment {background-color="#2C3E50"}
+# Topic 2 — Delta adjustment {#topic-2-delta-adjustment background-color="#2C3E50"}
 
-## Assume the missing values are higher
+## Assume the missing values are higher {#assume-the-missing-values-are-higher}
 
 ```{r}
 post <- make.post(dat2)
@@ -80,7 +80,7 @@ round(summary(pool(with(imp_d, lm(hba1c ~ 1))))$estimate, 2)
 - delta = 0 is **MAR**; delta > 0 is **MNAR**
 :::
 
-## A tipping-point table
+## A tipping-point table {#a-tipping-point-table}
 
 ```{r}
 run_delta <- function(delta) { po <- make.post(dat2); po["hba1c"] <- paste0("imp[[j]][, i] <- imp[[j]][, i] + ", delta)
@@ -92,7 +92,7 @@ do.call(rbind, lapply(c(0, 0.2, 0.4, 0.6, 0.8), run_delta)) |> round(3)
 The mean rises by about **0.045 for each 0.2** (a fifth of the values are missing). With **delta of about 0.55** we reach the **true value 5.50**. In practice you **do not know the truth**: show **a range of plausible deltas** (from clinical knowledge) and ask **at which delta does my conclusion change?** (the **tipping point**).
 :::
 
-## Which conclusions are fragile?
+## Which conclusions are fragile? {#which-conclusions-are-fragile}
 
 ```{r}
 prev <- function(i) mean(sapply(1:i$m, function(k) mean(complete(i, k)$hba1c >= 6.5)))
@@ -105,9 +105,9 @@ round(100 * c(MAR = prev(imp), delta_0.5 = prev(imp_5)), 1)
 The share with **HbA1c of 6.5% or more** is **0.4%** under MAR (the same as the observed 0.4%) and **3.1%** with delta = 0.5 (the facilitator truth: **4.4%**). The **mean** moved a little; the **prevalence** of the high range moved **eightfold**. Conclusions about **tails** are the most **sensitive** to MNAR.
 :::
 
-# Topic 3 — Rubin's rules and reporting {background-color="#2C3E50"}
+# Topic 3 — Rubin's rules and reporting {#topic-3-rubins-rules-and-reporting background-color="#2C3E50"}
 
-## Rubin's rules by hand
+## Rubin's rules by hand {#rubins-rules-by-hand}
 
 ```{r}
 fits <- with(imp, lm(hba1c ~ 1))
@@ -120,7 +120,7 @@ c(estimate = mean(est), W = W, B = B, total_se = sqrt(W + (1 + 1 / m) * B)) |> s
 T = W + (1 + 1/m) B        W = mean within-imputation variance        B = variance of the m estimates
 :::
 
-## Reporting missing data
+## Reporting missing data {#reporting-missing-data}
 
 ::: {.good}
 - The **amount** of missing data **per variable**, and the number of **complete cases**
@@ -135,7 +135,7 @@ T = W + (1 + 1/m) B        W = mean within-imputation variance        B = varian
 *Example:* "Missing values (BMI 26%, HbA1c 21%, activity 12%, smoking 9%, SBP 6%) were handled by multiple imputation by chained equations (20 imputations, predictive mean matching, outcome and auxiliary variables in the imputation model, estimates pooled by Rubin's rules); a delta-adjustment sensitivity analysis explored departures from missing at random for HbA1c."
 :::
 
-## 🔧 Switch to R — Lab 5 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 5 {#switch-to-r-lab-5 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `missing-workshop/labs/lab5_mnar.R`
@@ -147,7 +147,7 @@ T = W + (1 + 1/m) B        W = mean within-imputation variance        B = varian
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -160,7 +160,7 @@ quiz_mcq("m5q1", "Why does MAR imputation barely change the mean HbA1c (5.35 to 
          explain = "A MAR imputation model is estimated on observed values. If the missingness depends on the unobserved value itself, nothing in the data corrects for it.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -173,7 +173,7 @@ quiz_mcq("m5q2", "What is a delta adjustment?",
          explain = "Delta is the assumed average difference between missing and observed-like values. delta = 0 is MAR, and larger values express stronger departures.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -186,7 +186,7 @@ quiz_mcq("m5q3", "The pooled mean HbA1c is 5.38 for delta = 0 and 5.55 for delta
          explain = "Tipping-point analysis varies the MNAR assumption and finds the value at which the substantive conclusion would change, so readers can judge whether it is plausible.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -199,7 +199,7 @@ quiz_mcq("m5q4", "The share with HbA1c of 6.5% or more is 0.4% under MAR and 3.1
          explain = "Estimates of tails and prevalences can change greatly with an MNAR assumption. Reporting a range of plausible deltas gives an honest picture.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -212,7 +212,7 @@ quiz_mcq("m5q5", "What should a report say about missing data?",
          explain = "Readers need to know how much is missing, why, how it was handled, with what settings, and how robust the conclusions are to the assumption.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

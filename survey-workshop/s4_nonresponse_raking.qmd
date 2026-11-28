@@ -39,7 +39,7 @@ pop <- read_csv(pp, show_col_types = FALSE)
 adults <- adults |> mutate(age_grp = cut(age, c(17, 29, 44, 59, 120), labels = c("18-29", "30-44", "45-59", "60+")))
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Session 1: weight = 1 / selection probability
@@ -51,9 +51,9 @@ adults <- adults |> mutate(age_grp = cut(age, c(17, 29, 44, 59, 120), labels = c
   - use **replicate weights** for variances
 :::
 
-# Topic 1 — Nonresponse {background-color="#2C3E50"}
+# Topic 1 — Nonresponse {#topic-1-nonresponse background-color="#2C3E50"}
 
-## Who responds?
+## Who responds? {#who-responds}
 
 ```{r}
 adults |> group_by(sex) |> summarise(n = n(), response_rate = round(mean(responded), 2))
@@ -64,7 +64,7 @@ adults |> group_by(age_grp) |> summarise(n = n(), response_rate = round(mean(res
 Overall response is **74%**, but **men 69%** vs **women 79%**, and young adults least. If you ignore this, **men and the young are under-represented**: any outcome that differs by sex or age is **biased**.
 :::
 
-## The adjustment
+## The adjustment {#the-adjustment}
 
 ::: {.eq}
 final weight = design weight / response rate in the weighting cell
@@ -82,9 +82,9 @@ all.equal(adj$w_new, adj$weight, tolerance = 0.001)
 - It cannot fix nonresponse that depends on things you did **not** measure (e.g. education here)
 :::
 
-# Topic 2 — Diagnostics and raking {background-color="#2C3E50"}
+# Topic 2 — Diagnostics and raking {#topic-2-diagnostics-and-raking background-color="#2C3E50"}
 
-## Check the weights
+## Check the weights {#check-the-weights}
 
 ```{r}
 w <- weights(des)
@@ -95,7 +95,7 @@ c(min = min(w), median = median(w), max = max(w), cv = sd(w) / mean(w), n_eff_ki
 CV **0.43**; the **Kish effective sample size** is about **1,560** of 1,853: unequal weights cost about **16% of the precision**. Very large weights (or CV above about 1) are a warning: look at **who** has them.
 :::
 
-## Raking (calibration)
+## Raking (calibration) {#raking-calibration}
 
 ```{r}
 pop_age <- pop |> filter(variable == "age_group") |> transmute(age_grp = level, Freq = adults)
@@ -113,7 +113,7 @@ round(rbind(before = prop.table(svytable(~education, des)), after = prop.table(s
 - Check afterwards that the weights are **not too variable**
 :::
 
-## Trimming
+## Trimming {#trimming}
 
 ```{r}
 des_t <- trimWeights(des_r, upper = 1.5 * median(weights(des_r)), strict = TRUE)
@@ -124,9 +124,9 @@ c(before = max(weights(des_r)), after = max(weights(des_t))) |> round(0)
 **Trimming** caps very large weights: it trades a little **bias** for less **variance**. Report it if you do it.
 :::
 
-# Topic 3 — Replicate weights {background-color="#2C3E50"}
+# Topic 3 — Replicate weights {#topic-3-replicate-weights background-color="#2C3E50"}
 
-## Another way to get the variance
+## Another way to get the variance {#another-way-to-get-the-variance}
 
 ```{r}
 set.seed(1)
@@ -141,7 +141,7 @@ c(taylor = SE(svymean(~hypertension, des)), bootstrap = SE(svymean(~hypertension
 - Same answer as Taylor linearisation here (**0.0149** vs **0.015**)
 :::
 
-## 🔧 Switch to R — Lab 4 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 4 {#switch-to-r-lab-4 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `survey-workshop/labs/lab4_weights.R`
@@ -153,7 +153,7 @@ c(taylor = SE(svymean(~hypertension, des)), bootstrap = SE(svymean(~hypertension
 
 **Time:** 40 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -166,7 +166,7 @@ quiz_mcq("v4q1", "Men respond less often than women. If this is ignored, what is
          explain = "Nonresponse that depends on sex and on the outcome distorts the sample. Weights adjusted for nonresponse give respondents the weight of the missing ones.")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -179,7 +179,7 @@ quiz_mcq("v4q2", "In the nonresponse adjustment, why is the design weight divide
          explain = "A cell with a 50% response rate has half of its sample missing, so each respondent weighs twice as much: the weights keep adding up to the cell total.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -192,7 +192,7 @@ quiz_mcq("v4q3", "What does raking (calibration) do?",
          explain = "Raking, or iterative proportional fitting, rescales the weights step by step to reproduce known margins such as the census age, sex and education distribution.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -205,7 +205,7 @@ quiz_mcq("v4q4", "The Kish effective sample size is 1,563 for 1,853 respondents.
          explain = "The Kish formula measures the loss of precision from variable weights alone. Clustering comes on top of this and is part of the design effect.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -218,7 +218,7 @@ quiz_mcq("v4q5", "What are replicate weights used for?",
          explain = "The estimate is recomputed with each set of replicate weights, and the variation between the replicates gives the standard error. They do not change the point estimate.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

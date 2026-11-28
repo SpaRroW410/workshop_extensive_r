@@ -32,7 +32,7 @@ source("assets/setup.R")
 source("assets/quiz.R")
 ```
 
-## Where we are
+## Where we are {#where-we-are}
 
 ::: {.incremental}
 - Sessions 2-3: ordered outcomes and their assumption
@@ -43,9 +43,9 @@ source("assets/quiz.R")
   - get **predicted probabilities**
 :::
 
-# Topic 1 — The model {background-color="#2C3E50"}
+# Topic 1 — The model {#topic-1-the-model background-color="#2C3E50"}
 
-## A set of logistic models against a reference
+## A set of logistic models against a reference {#a-set-of-logistic-models-against-a-reference}
 
 ::: {.eq}
 log [ P(Y = j) / P(Y = Home) ] = β~0j~ + β~1j~ x~1~ + …    for j = PHC, Public, Private
@@ -58,7 +58,7 @@ log [ P(Y = j) / P(Y = Home) ] = β~0j~ + β~1j~ x~1~ + …    for j = PHC, Publ
 - Fitted jointly by maximum likelihood: the probabilities add to 1
 :::
 
-## Fit it
+## Fit it {#fit-it}
 
 ```{r}
 mat$delivery <- relevel(mat$delivery, ref = "Home")
@@ -70,9 +70,9 @@ round(exp(coef(mn)[, "wealth"]), 2)
 Each **wealth quintile** multiplies the odds of delivering in a **private hospital rather than at home** by **`r round(exp(coef(mn)[, "wealth"]), 2)[3]`**, in a **public hospital** by `r round(exp(coef(mn)[, "wealth"]), 2)[2]`, in a **PHC** by `r round(exp(coef(mn)[, "wealth"]), 2)[1]`. Wealth pulls women **away from home, and most strongly towards private care**.
 :::
 
-# Topic 2 — Tests and tables {background-color="#2C3E50"}
+# Topic 2 — Tests and tables {#topic-2-tests-and-tables background-color="#2C3E50"}
 
-## The output has no p-values
+## The output has no p-values {#the-output-has-no-p-values}
 
 ```{r}
 s <- summary(mn); z <- s$coefficients / s$standard.errors
@@ -86,15 +86,15 @@ mn0 <- nnet::multinom(delivery ~ wealth + anc_visits + residence + tribal, data 
 anova(mn0, mn)
 ```
 
-## A table
+## A table {#a-table}
 
 ```{r}
 tbl_regression(mn, exponentiate = TRUE, include = wealth)
 ```
 
-# Topic 3 — Using it {background-color="#2C3E50"}
+# Topic 3 — Using it {#topic-3-using-it background-color="#2C3E50"}
 
-## Predicted probabilities
+## Predicted probabilities {#predicted-probabilities}
 
 ```{r}
 nd <- data.frame(wealth = c(1, 5), education = factor("Secondary", levels = levels(mat$education)), anc_visits = 4, residence = factor("Urban", levels = c("Urban", "Rural")), tribal = factor("No", levels = c("No", "Yes")))
@@ -107,7 +107,7 @@ rownames(nd) <- c("poorest", "richest"); round(predict(mn, newdata = nd, type = 
 - The **probabilities** tell the story more clearly than 9 odds ratios
 :::
 
-## The choice of reference
+## The choice of reference {#the-choice-of-reference}
 
 ::: {.incremental}
 - It changes **which comparisons** are shown, **not the model**: the fitted probabilities and log-likelihood are **identical**
@@ -115,7 +115,7 @@ rownames(nd) <- c("poorest", "richest"); round(predict(mn, newdata = nd, type = 
 - Any other comparison (Private vs Public) = the **difference** of two coefficients; refit with another reference to get its CI
 :::
 
-## Pitfalls
+## Pitfalls {#pitfalls}
 
 ::: {.bad}
 - Reading RRRs as **risk ratios** when the outcome is common (they are odds-type ratios)
@@ -124,7 +124,7 @@ rownames(nd) <- c("poorest", "richest"); round(predict(mn, newdata = nd, type = 
 - Ignoring the **independence of irrelevant alternatives** (adding or removing a category can change the others: be cautious with similar categories)
 :::
 
-## 🔧 Switch to R — Lab 4 {.lab-slide background-color="#1565c0"}
+## 🔧 Switch to R — Lab 4 {#switch-to-r-lab-4 .lab-slide background-color="#1565c0"}
 
 ::: {.lab-box}
 **File:** `ordinal-workshop/labs/lab4_multinom.R`
@@ -136,7 +136,7 @@ rownames(nd) <- c("poorest", "richest"); round(predict(mn, newdata = nd, type = 
 
 **Time:** 35 minutes · answer the Q questions in the comments
 
-## Self-check quiz (1/5) {.smaller}
+## Self-check quiz (1/5) {#self-check-quiz-15 .smaller}
 
 ```{r}
 #| echo: false
@@ -149,7 +149,7 @@ quiz_mcq("s4q1", "In a multinomial model with four outcome categories and Home a
          explain = "A K-category outcome yields K - 1 equations, so each predictor has K - 1 coefficients (here 3).")
 ```
 
-## Self-check quiz (2/5) {.smaller}
+## Self-check quiz (2/5) {#self-check-quiz-25 .smaller}
 
 ```{r}
 #| echo: false
@@ -162,7 +162,7 @@ quiz_mcq("s4q2", "The relative risk ratio for wealth is 2.76 for Private hospita
          explain = "The ratio compares the odds of one category with the reference, per unit of the predictor. It is not an absolute risk and not about all hospitals.")
 ```
 
-## Self-check quiz (3/5) {.smaller}
+## Self-check quiz (3/5) {#self-check-quiz-35 .smaller}
 
 ```{r}
 #| echo: false
@@ -175,7 +175,7 @@ quiz_mcq("s4q3", "Why use a likelihood-ratio test to test education in a multino
          explain = "A multi-level predictor has many coefficients (3 education dummies x 3 equations). A joint test compares the models with and without it.")
 ```
 
-## Self-check quiz (4/5) {.smaller}
+## Self-check quiz (4/5) {#self-check-quiz-45 .smaller}
 
 ```{r}
 #| echo: false
@@ -188,7 +188,7 @@ quiz_mcq("s4q4", "What happens to the fitted probabilities if you change the ref
          explain = "The reference only defines the parametrisation. Models with different references are equivalent: same likelihood, same predictions.")
 ```
 
-## Self-check quiz (5/5) {.smaller}
+## Self-check quiz (5/5) {#self-check-quiz-55 .smaller}
 
 ```{r}
 #| echo: false
@@ -201,7 +201,7 @@ quiz_mcq("s4q5", "Which is a good reason to choose the multinomial model for an 
          explain = "A multinomial model makes no ordering assumption, so it is a safe fallback when proportional odds clearly fails. The cost is many more parameters.")
 ```
 
-## Score and take-home
+## Score and take-home {#score-and-take-home}
 
 **Your score: <span class="quiz-score"></span>**
 

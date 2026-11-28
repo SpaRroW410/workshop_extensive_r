@@ -1,0 +1,5148 @@
+{
+ "causal-workshop/s1_causal_questions_dags": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "our-question-did-the-programme-lower-blood-pressure",
+   "title": "Our question: did the programme lower blood pressure?"
+  },
+  {
+   "id": "topic-1-the-naive-comparison",
+   "title": "Topic 1 — The naive comparison"
+  },
+  {
+   "id": "enrolled-vs-not-enrolled",
+   "title": "Enrolled vs not enrolled"
+  },
+  {
+   "id": "potential-outcomes",
+   "title": "Potential outcomes"
+  },
+  {
+   "id": "topic-2-dags",
+   "title": "Topic 2 — DAGs"
+  },
+  {
+   "id": "three-roles-a-variable-can-play",
+   "title": "Three roles a variable can play"
+  },
+  {
+   "id": "the-dag-in-r",
+   "title": "The DAG in R"
+  },
+  {
+   "id": "let-the-dag-choose",
+   "title": "Let the DAG choose"
+  },
+  {
+   "id": "what-a-dag-does-not-do",
+   "title": "What a DAG does not do"
+  },
+  {
+   "id": "switch-to-r-lab-1",
+   "title": "🔧 Switch to R — Lab 1"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "causal-workshop/s2_adjustment_standardisation": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-regression-adjustment",
+   "title": "Topic 1 — Regression adjustment"
+  },
+  {
+   "id": "adjusted-for-the-confounders",
+   "title": "Adjusted for the confounders"
+  },
+  {
+   "id": "topic-2-bad-controls",
+   "title": "Topic 2 — Bad controls"
+  },
+  {
+   "id": "adjusting-for-a-mediator-or-a-collider",
+   "title": "Adjusting for a mediator or a collider"
+  },
+  {
+   "id": "table-2-fallacy",
+   "title": "Table 2 fallacy"
+  },
+  {
+   "id": "topic-3-standardisation",
+   "title": "Topic 3 — Standardisation"
+  },
+  {
+   "id": "the-effect-may-differ-between-people",
+   "title": "The effect may differ between people"
+  },
+  {
+   "id": "g-computation",
+   "title": "g-computation"
+  },
+  {
+   "id": "which-estimand",
+   "title": "Which estimand?"
+  },
+  {
+   "id": "switch-to-r-lab-2",
+   "title": "🔧 Switch to R — Lab 2"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "causal-workshop/s3_propensity_matching": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-the-propensity-score",
+   "title": "Topic 1 — The propensity score"
+  },
+  {
+   "id": "probability-of-enrolment",
+   "title": "Probability of enrolment"
+  },
+  {
+   "id": "overlap-positivity",
+   "title": "Overlap (positivity)"
+  },
+  {
+   "id": "topic-2-matching",
+   "title": "Topic 2 — Matching"
+  },
+  {
+   "id": "balance-before-matching",
+   "title": "Balance before matching"
+  },
+  {
+   "id": "nearest-neighbour-matching",
+   "title": "1:1 nearest-neighbour matching"
+  },
+  {
+   "id": "balance-after-matching",
+   "title": "Balance after matching"
+  },
+  {
+   "id": "topic-3-the-effect",
+   "title": "Topic 3 — The effect"
+  },
+  {
+   "id": "in-the-matched-sample",
+   "title": "In the matched sample"
+  },
+  {
+   "id": "strengths-and-limits",
+   "title": "Strengths and limits"
+  },
+  {
+   "id": "switch-to-r-lab-3",
+   "title": "🔧 Switch to R — Lab 3"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "causal-workshop/s4_ipw": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-the-weights",
+   "title": "Topic 1 — The weights"
+  },
+  {
+   "id": "inverse-probability-of-the-option-received",
+   "title": "Inverse probability of the option received"
+  },
+  {
+   "id": "balance-after-weighting",
+   "title": "Balance after weighting"
+  },
+  {
+   "id": "topic-2-the-effect",
+   "title": "Topic 2 — The effect"
+  },
+  {
+   "id": "ate-with-a-robust-se",
+   "title": "ATE with a robust SE"
+  },
+  {
+   "id": "att-weights",
+   "title": "ATT weights"
+  },
+  {
+   "id": "extreme-weights",
+   "title": "Extreme weights"
+  },
+  {
+   "id": "topic-3-doubly-robust",
+   "title": "Topic 3 — Doubly robust"
+  },
+  {
+   "id": "weights-plus-an-outcome-model",
+   "title": "Weights plus an outcome model"
+  },
+  {
+   "id": "all-the-estimates",
+   "title": "All the estimates"
+  },
+  {
+   "id": "switch-to-r-lab-4",
+   "title": "🔧 Switch to R — Lab 4"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "causal-workshop/s5_sensitivity_reporting": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-unmeasured-confounding",
+   "title": "Topic 1 — Unmeasured confounding"
+  },
+  {
+   "id": "the-untestable-assumption",
+   "title": "The untestable assumption"
+  },
+  {
+   "id": "a-risk-ratio-for-a-binary-outcome",
+   "title": "A risk ratio for a binary outcome"
+  },
+  {
+   "id": "the-e-value",
+   "title": "The E-value"
+  },
+  {
+   "id": "is-2.5-plausible-benchmarks",
+   "title": "Is 2.5 plausible? Benchmarks"
+  },
+  {
+   "id": "topic-2-design-thinking",
+   "title": "Topic 2 — Design thinking"
+  },
+  {
+   "id": "other-threats",
+   "title": "Other threats"
+  },
+  {
+   "id": "emulate-a-target-trial",
+   "title": "Emulate a target trial"
+  },
+  {
+   "id": "topic-3-reporting",
+   "title": "Topic 3 — Reporting"
+  },
+  {
+   "id": "what-to-report",
+   "title": "What to report"
+  },
+  {
+   "id": "switch-to-r-lab-5",
+   "title": "🔧 Switch to R — Lab 5"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "clustered-workshop/s1_clustered_data": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "our-data-a-village-blood-pressure-trial",
+   "title": "Our data: a village blood-pressure trial"
+  },
+  {
+   "id": "topic-1-levels-and-clusters",
+   "title": "Topic 1 — Levels and clusters"
+  },
+  {
+   "id": "levels-in-the-data",
+   "title": "Levels in the data"
+  },
+  {
+   "id": "why-this-matters",
+   "title": "Why this matters"
+  },
+  {
+   "id": "topic-2-the-icc",
+   "title": "Topic 2 — The ICC"
+  },
+  {
+   "id": "villages-differ",
+   "title": "Villages differ"
+  },
+  {
+   "id": "the-intra-class-correlation",
+   "title": "The intra-class correlation"
+  },
+  {
+   "id": "estimating-the-icc",
+   "title": "Estimating the ICC"
+  },
+  {
+   "id": "topic-3-the-design-effect",
+   "title": "Topic 3 — The design effect"
+  },
+  {
+   "id": "design-effect-and-effective-sample-size",
+   "title": "Design effect and effective sample size"
+  },
+  {
+   "id": "the-naive-analysis-at-12-months",
+   "title": "The naive analysis at 12 months"
+  },
+  {
+   "id": "one-valid-simple-analysis",
+   "title": "One valid simple analysis"
+  },
+  {
+   "id": "switch-to-r-lab-1",
+   "title": "🔧 Switch to R — Lab 1"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "clustered-workshop/s2_robust_gee": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-cluster-robust-ses",
+   "title": "Topic 1 — Cluster-robust SEs"
+  },
+  {
+   "id": "same-model-honest-se",
+   "title": "Same model, honest SE"
+  },
+  {
+   "id": "how-it-works-idea-only",
+   "title": "How it works (idea only)"
+  },
+  {
+   "id": "few-clusters-the-cr2-correction",
+   "title": "Few clusters: the CR2 correction"
+  },
+  {
+   "id": "topic-2-gee",
+   "title": "Topic 2 — GEE"
+  },
+  {
+   "id": "generalised-estimating-equations",
+   "title": "Generalised estimating equations"
+  },
+  {
+   "id": "a-gee-for-sbp",
+   "title": "A GEE for SBP"
+  },
+  {
+   "id": "working-correlation-does-the-choice-matter",
+   "title": "Working correlation: does the choice matter?"
+  },
+  {
+   "id": "a-binary-outcome-controlled-bp",
+   "title": "A binary outcome: controlled BP"
+  },
+  {
+   "id": "cluster-robust-lm-or-gee",
+   "title": "Cluster-robust lm or GEE?"
+  },
+  {
+   "id": "switch-to-r-lab-2",
+   "title": "🔧 Switch to R — Lab 2"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "clustered-workshop/s3_mixed_models": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-the-model",
+   "title": "Topic 1 — The model"
+  },
+  {
+   "id": "a-random-intercept-for-each-village",
+   "title": "A random intercept for each village"
+  },
+  {
+   "id": "fit-it",
+   "title": "Fit it"
+  },
+  {
+   "id": "variance-components-and-icc",
+   "title": "Variance components and ICC"
+  },
+  {
+   "id": "is-the-village-effect-needed",
+   "title": "Is the village effect needed?"
+  },
+  {
+   "id": "topic-2-shrinkage",
+   "title": "Topic 2 — Shrinkage"
+  },
+  {
+   "id": "predicted-village-effects-blups",
+   "title": "Predicted village effects (BLUPs)"
+  },
+  {
+   "id": "shrinkage",
+   "title": "Shrinkage"
+  },
+  {
+   "id": "topic-3-comparing-approaches",
+   "title": "Topic 3 — Comparing approaches"
+  },
+  {
+   "id": "same-effect-three-standard-errors",
+   "title": "Same effect, three standard errors"
+  },
+  {
+   "id": "conditional-or-marginal",
+   "title": "Conditional or marginal?"
+  },
+  {
+   "id": "reporting-a-mixed-model",
+   "title": "Reporting a mixed model"
+  },
+  {
+   "id": "switch-to-r-lab-3",
+   "title": "🔧 Switch to R — Lab 3"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "clustered-workshop/s4_repeated_measures": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-looking-at-trajectories",
+   "title": "Topic 1 — Looking at trajectories"
+  },
+  {
+   "id": "long-format",
+   "title": "Long format"
+  },
+  {
+   "id": "mean-sbp-by-arm-and-visit",
+   "title": "Mean SBP by arm and visit"
+  },
+  {
+   "id": "topic-2-the-model",
+   "title": "Topic 2 — The model"
+  },
+  {
+   "id": "time-arm-with-nested-random-effects",
+   "title": "Time × arm with nested random effects"
+  },
+  {
+   "id": "the-effect-at-12-months",
+   "title": "The effect at 12 months"
+  },
+  {
+   "id": "is-the-interaction-within-person-or-between-village",
+   "title": "Is the interaction within-person or between-village?"
+  },
+  {
+   "id": "topic-3-slopes-ar1-and-missing-data",
+   "title": "Topic 3 — Slopes, AR(1) and missing data"
+  },
+  {
+   "id": "a-random-slope-for-time",
+   "title": "A random slope for time"
+  },
+  {
+   "id": "gee-with-ar1",
+   "title": "GEE with AR(1)"
+  },
+  {
+   "id": "missing-visits",
+   "title": "Missing visits"
+  },
+  {
+   "id": "switch-to-r-lab-4",
+   "title": "🔧 Switch to R — Lab 4"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "clustered-workshop/s5_choose_check_report": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-choosing",
+   "title": "Topic 1 — Choosing"
+  },
+  {
+   "id": "decision-guide",
+   "title": "Decision guide"
+  },
+  {
+   "id": "one-table-of-the-approaches",
+   "title": "One table of the approaches"
+  },
+  {
+   "id": "topic-2-checking",
+   "title": "Topic 2 — Checking"
+  },
+  {
+   "id": "residuals-and-random-effects",
+   "title": "Residuals and random effects"
+  },
+  {
+   "id": "common-problems",
+   "title": "Common problems"
+  },
+  {
+   "id": "topic-3-planning-and-reporting",
+   "title": "Topic 3 — Planning and reporting"
+  },
+  {
+   "id": "sample-size-for-a-cluster-trial",
+   "title": "Sample size for a cluster trial"
+  },
+  {
+   "id": "reporting-a-clustered-analysis",
+   "title": "Reporting a clustered analysis"
+  },
+  {
+   "id": "switch-to-r-lab-5",
+   "title": "🔧 Switch to R — Lab 5"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "counts-workshop/s1_counts_rates": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "our-data-dengue-in-a-city",
+   "title": "Our data: dengue in a city"
+  },
+  {
+   "id": "topic-1-counts-and-rates",
+   "title": "Topic 1 — Counts and rates"
+  },
+  {
+   "id": "a-count-is-not-a-rate",
+   "title": "A count is not a rate"
+  },
+  {
+   "id": "person-time-and-the-rate-ratio",
+   "title": "Person-time and the rate ratio"
+  },
+  {
+   "id": "topic-2-the-poisson-distribution",
+   "title": "Topic 2 — The Poisson distribution"
+  },
+  {
+   "id": "counts-of-rare-independent-events",
+   "title": "Counts of rare, independent events"
+  },
+  {
+   "id": "does-our-data-look-poisson",
+   "title": "Does our data look Poisson?"
+  },
+  {
+   "id": "topic-3-look-before-you-model",
+   "title": "Topic 3 — Look before you model"
+  },
+  {
+   "id": "trend-and-seasonality",
+   "title": "Trend and seasonality"
+  },
+  {
+   "id": "checklist-before-modelling-counts",
+   "title": "Checklist before modelling counts"
+  },
+  {
+   "id": "switch-to-r-lab-1",
+   "title": "🔧 Switch to R — Lab 1"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "counts-workshop/s2_poisson_regression": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-the-model",
+   "title": "Topic 1 — The model"
+  },
+  {
+   "id": "a-log-linear-model",
+   "title": "A log-linear model"
+  },
+  {
+   "id": "why-the-offset",
+   "title": "Why the offset?"
+  },
+  {
+   "id": "topic-2-adjusted-analysis",
+   "title": "Topic 2 — Adjusted analysis"
+  },
+  {
+   "id": "adjusting-for-season-trend-rain-and-ward-type",
+   "title": "Adjusting for season, trend, rain and ward type"
+  },
+  {
+   "id": "reading-the-adjusted-rate-ratios",
+   "title": "Reading the adjusted rate ratios"
+  },
+  {
+   "id": "reading-a-rate-ratio",
+   "title": "Reading a rate ratio"
+  },
+  {
+   "id": "topic-3-predictions",
+   "title": "Topic 3 — Predictions"
+  },
+  {
+   "id": "expected-counts",
+   "title": "Expected counts"
+  },
+  {
+   "id": "pitfalls-so-far",
+   "title": "Pitfalls so far"
+  },
+  {
+   "id": "switch-to-r-lab-2",
+   "title": "🔧 Switch to R — Lab 2"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "counts-workshop/s3_overdispersion": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-detecting-it",
+   "title": "Topic 1 — Detecting it"
+  },
+  {
+   "id": "the-dispersion-statistic",
+   "title": "The dispersion statistic"
+  },
+  {
+   "id": "what-dispersion-means",
+   "title": "What dispersion means"
+  },
+  {
+   "id": "why-is-count-data-overdispersed",
+   "title": "Why is count data overdispersed?"
+  },
+  {
+   "id": "topic-2-three-remedies",
+   "title": "Topic 2 — Three remedies"
+  },
+  {
+   "id": "quasi-poisson",
+   "title": "Quasi-Poisson"
+  },
+  {
+   "id": "negative-binomial",
+   "title": "Negative binomial"
+  },
+  {
+   "id": "rate-ratios-compared",
+   "title": "Rate ratios compared"
+  },
+  {
+   "id": "robust-clustered-standard-errors",
+   "title": "Robust (clustered) standard errors"
+  },
+  {
+   "id": "topic-3-choosing",
+   "title": "Topic 3 — Choosing"
+  },
+  {
+   "id": "which-one",
+   "title": "Which one?"
+  },
+  {
+   "id": "switch-to-r-lab-3",
+   "title": "🔧 Switch to R — Lab 3"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "counts-workshop/s4_zeros_checking": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-zeros",
+   "title": "Topic 1 — Zeros"
+  },
+  {
+   "id": "are-there-too-many",
+   "title": "Are there too many?"
+  },
+  {
+   "id": "where-do-the-zeros-come-from",
+   "title": "Where do the zeros come from?"
+  },
+  {
+   "id": "topic-2-zero-inflated-models",
+   "title": "Topic 2 — Zero-inflated models"
+  },
+  {
+   "id": "two-processes",
+   "title": "Two processes"
+  },
+  {
+   "id": "fitting-it",
+   "title": "Fitting it"
+  },
+  {
+   "id": "be-cautious",
+   "title": "Be cautious"
+  },
+  {
+   "id": "topic-3-checking-the-fit",
+   "title": "Topic 3 — Checking the fit"
+  },
+  {
+   "id": "observed-against-fitted-over-time",
+   "title": "Observed against fitted, over time"
+  },
+  {
+   "id": "leftover-correlation",
+   "title": "Leftover correlation"
+  },
+  {
+   "id": "model-checking-checklist",
+   "title": "Model-checking checklist"
+  },
+  {
+   "id": "switch-to-r-lab-4",
+   "title": "🔧 Switch to R — Lab 4"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "counts-workshop/s5_reporting_extensions": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-say-it-properly",
+   "title": "Topic 1 — Say it properly"
+  },
+  {
+   "id": "the-final-model",
+   "title": "The final model"
+  },
+  {
+   "id": "the-sentence-for-the-paper",
+   "title": "The sentence for the paper"
+  },
+  {
+   "id": "words-that-are-right-and-wrong",
+   "title": "Words that are right and wrong"
+  },
+  {
+   "id": "topic-2-cases-averted",
+   "title": "Topic 2 — Cases averted"
+  },
+  {
+   "id": "a-counterfactual",
+   "title": "A counterfactual"
+  },
+  {
+   "id": "topic-3-extensions",
+   "title": "Topic 3 — Extensions"
+  },
+  {
+   "id": "poisson-for-prevalence-ratios",
+   "title": "Poisson for prevalence ratios"
+  },
+  {
+   "id": "beyond-this-workshop",
+   "title": "Beyond this workshop"
+  },
+  {
+   "id": "reporting-checklist",
+   "title": "Reporting checklist"
+  },
+  {
+   "id": "switch-to-r-lab-5",
+   "title": "🔧 Switch to R — Lab 5"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "curves-workshop/s1_beyond_linear": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "our-data-an-ncd-risk-factor-survey",
+   "title": "Our data: an NCD risk-factor survey"
+  },
+  {
+   "id": "topic-1-seeing-curvature",
+   "title": "Topic 1 — Seeing curvature"
+  },
+  {
+   "id": "straight-line-vs-smoother",
+   "title": "Straight line vs smoother"
+  },
+  {
+   "id": "residuals-against-the-predictor",
+   "title": "Residuals against the predictor"
+  },
+  {
+   "id": "topic-2-simple-fixes",
+   "title": "Topic 2 — Simple fixes"
+  },
+  {
+   "id": "polynomial-terms",
+   "title": "Polynomial terms"
+  },
+  {
+   "id": "categorising-the-predictor",
+   "title": "Categorising the predictor"
+  },
+  {
+   "id": "transformations",
+   "title": "Transformations"
+  },
+  {
+   "id": "topic-3-a-u-shape-that-a-line-cannot-see",
+   "title": "Topic 3 — A U-shape that a line cannot see"
+  },
+  {
+   "id": "bmi-and-cvd-risk-linear-term",
+   "title": "BMI and CVD risk: linear term"
+  },
+  {
+   "id": "add-a-quadratic-term",
+   "title": "Add a quadratic term"
+  },
+  {
+   "id": "what-to-do",
+   "title": "What to do"
+  },
+  {
+   "id": "switch-to-r-lab-1",
+   "title": "🔧 Switch to R — Lab 1"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "curves-workshop/s2_splines": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-piecewise-linear",
+   "title": "Topic 1 — Piecewise linear"
+  },
+  {
+   "id": "a-hinge-at-age-45",
+   "title": "A hinge at age 45"
+  },
+  {
+   "id": "where-is-the-knot",
+   "title": "Where is the knot?"
+  },
+  {
+   "id": "topic-2-natural-splines",
+   "title": "Topic 2 — Natural splines"
+  },
+  {
+   "id": "ns-a-smooth-curve",
+   "title": "ns(): a smooth curve"
+  },
+  {
+   "id": "how-many-degrees-of-freedom",
+   "title": "How many degrees of freedom?"
+  },
+  {
+   "id": "a-prediction-plot",
+   "title": "A prediction plot"
+  },
+  {
+   "id": "topic-3-splines-for-binary-outcomes",
+   "title": "Topic 3 — Splines for binary outcomes"
+  },
+  {
+   "id": "bmi-and-cvd-risk",
+   "title": "BMI and CVD risk"
+  },
+  {
+   "id": "cautions",
+   "title": "Cautions"
+  },
+  {
+   "id": "switch-to-r-lab-2",
+   "title": "🔧 Switch to R — Lab 2"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "curves-workshop/s3_gam": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-the-model",
+   "title": "Topic 1 — The model"
+  },
+  {
+   "id": "a-gam-for-sbp",
+   "title": "A GAM for SBP"
+  },
+  {
+   "id": "the-curves",
+   "title": "The curves"
+  },
+  {
+   "id": "is-it-better-than-a-straight-line",
+   "title": "Is it better than a straight line?"
+  },
+  {
+   "id": "topic-2-checking",
+   "title": "Topic 2 — Checking"
+  },
+  {
+   "id": "is-k-big-enough",
+   "title": "Is k big enough?"
+  },
+  {
+   "id": "topic-3-binary-outcomes-and-groups",
+   "title": "Topic 3 — Binary outcomes and groups"
+  },
+  {
+   "id": "a-logistic-gam",
+   "title": "A logistic GAM"
+  },
+  {
+   "id": "a-curve-for-each-group",
+   "title": "A curve for each group"
+  },
+  {
+   "id": "gam-or-natural-spline",
+   "title": "GAM or natural spline?"
+  },
+  {
+   "id": "switch-to-r-lab-3",
+   "title": "🔧 Switch to R — Lab 3"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "curves-workshop/s4_interaction": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-continuous-continuous",
+   "title": "Topic 1 — Continuous × continuous"
+  },
+  {
+   "id": "salt-and-age",
+   "title": "Salt and age"
+  },
+  {
+   "id": "simple-slopes",
+   "title": "Simple slopes"
+  },
+  {
+   "id": "plot-it",
+   "title": "Plot it"
+  },
+  {
+   "id": "centring",
+   "title": "Centring"
+  },
+  {
+   "id": "topic-2-categorical-and-scales",
+   "title": "Topic 2 — Categorical and scales"
+  },
+  {
+   "id": "smoking-sex-for-cvd-risk",
+   "title": "Smoking × sex for CVD risk"
+  },
+  {
+   "id": "additive-scale",
+   "title": "Additive scale"
+  },
+  {
+   "id": "topic-3-testing-and-caution",
+   "title": "Topic 3 — Testing and caution"
+  },
+  {
+   "id": "the-subgroup-p-value-trap",
+   "title": "The subgroup p-value trap"
+  },
+  {
+   "id": "good-practice",
+   "title": "Good practice"
+  },
+  {
+   "id": "switch-to-r-lab-4",
+   "title": "🔧 Switch to R — Lab 4"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "curves-workshop/s5_choose_check_report": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-choosing",
+   "title": "Topic 1 — Choosing"
+  },
+  {
+   "id": "cross-validated-error",
+   "title": "Cross-validated error"
+  },
+  {
+   "id": "decision-guide",
+   "title": "Decision guide"
+  },
+  {
+   "id": "topic-2-checking-and-extrapolation",
+   "title": "Topic 2 — Checking and extrapolation"
+  },
+  {
+   "id": "marginal-standardised-predictions",
+   "title": "Marginal (standardised) predictions"
+  },
+  {
+   "id": "do-not-extrapolate",
+   "title": "Do not extrapolate"
+  },
+  {
+   "id": "topic-3-reporting",
+   "title": "Topic 3 — Reporting"
+  },
+  {
+   "id": "reporting-a-non-linear-effect",
+   "title": "Reporting a non-linear effect"
+  },
+  {
+   "id": "an-example-sentence",
+   "title": "An example sentence"
+  },
+  {
+   "id": "switch-to-r-lab-5",
+   "title": "🔧 Switch to R — Lab 5"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "gis-workshop/s1_spatial_data": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "our-data-a-synthetic-district",
+   "title": "Our data: a synthetic district"
+  },
+  {
+   "id": "topic-1-spatial-data-in-r",
+   "title": "Topic 1 — Spatial data in R"
+  },
+  {
+   "id": "three-kinds-of-vector-geometry-plus-raster",
+   "title": "Three kinds of vector geometry (plus raster)"
+  },
+  {
+   "id": "reading-a-layer",
+   "title": "Reading a layer"
+  },
+  {
+   "id": "topic-2-coordinate-reference-systems",
+   "title": "Topic 2 — Coordinate reference systems"
+  },
+  {
+   "id": "a-crs-says-how-numbers-become-places",
+   "title": "A CRS says how numbers become places"
+  },
+  {
+   "id": "why-it-matters",
+   "title": "Why it matters"
+  },
+  {
+   "id": "topic-3-joins",
+   "title": "Topic 3 — Joins"
+  },
+  {
+   "id": "attribute-join-and-spatial-join",
+   "title": "Attribute join and spatial join"
+  },
+  {
+   "id": "distance-to-the-nearest-facility",
+   "title": "Distance to the nearest facility"
+  },
+  {
+   "id": "topic-4-honest-choropleths",
+   "title": "Topic 4 — Honest choropleths"
+  },
+  {
+   "id": "counts-mislead-rates-do-not",
+   "title": "Counts mislead, rates do not"
+  },
+  {
+   "id": "classification-changes-the-story",
+   "title": "Classification changes the story"
+  },
+  {
+   "id": "colour",
+   "title": "Colour"
+  },
+  {
+   "id": "switch-to-r-lab-1",
+   "title": "🔧 Switch to R — Lab 1"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "gis-workshop/s2_neighbours_weights": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-who-is-a-neighbour",
+   "title": "Topic 1 — Who is a neighbour?"
+  },
+  {
+   "id": "contiguity-share-a-boundary",
+   "title": "Contiguity: share a boundary"
+  },
+  {
+   "id": "seeing-the-links",
+   "title": "Seeing the links"
+  },
+  {
+   "id": "distance-and-k-nearest-neighbours",
+   "title": "Distance and k-nearest neighbours"
+  },
+  {
+   "id": "topic-2-from-neighbours-to-weights",
+   "title": "Topic 2 — From neighbours to weights"
+  },
+  {
+   "id": "a-neighbour-list-says-who-weights-say-how-much",
+   "title": "A neighbour list says who; weights say how much"
+  },
+  {
+   "id": "the-spatial-lag",
+   "title": "The spatial lag"
+  },
+  {
+   "id": "topic-3-does-the-choice-matter",
+   "title": "Topic 3 — Does the choice matter?"
+  },
+  {
+   "id": "sensitivity",
+   "title": "Sensitivity"
+  },
+  {
+   "id": "common-mistakes",
+   "title": "Common mistakes"
+  },
+  {
+   "id": "switch-to-r-lab-2",
+   "title": "🔧 Switch to R — Lab 2"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "gis-workshop/s3_global_autocorrelation": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-morans-i",
+   "title": "Topic 1 — Moran's I"
+  },
+  {
+   "id": "are-similar-values-neighbours",
+   "title": "Are similar values neighbours?"
+  },
+  {
+   "id": "four-areas-by-hand",
+   "title": "Four areas by hand"
+  },
+  {
+   "id": "on-the-district",
+   "title": "On the district"
+  },
+  {
+   "id": "the-permutation-monte-carlo-test",
+   "title": "The permutation (Monte Carlo) test"
+  },
+  {
+   "id": "topic-2-the-moran-scatterplot",
+   "title": "Topic 2 — The Moran scatterplot"
+  },
+  {
+   "id": "value-against-the-average-of-its-neighbours",
+   "title": "Value against the average of its neighbours"
+  },
+  {
+   "id": "topic-3-other-global-tests",
+   "title": "Topic 3 — Other global tests"
+  },
+  {
+   "id": "which-global-test",
+   "title": "Which global test?"
+  },
+  {
+   "id": "gearys-c-general-g-join-counts",
+   "title": "Geary's C, General G, join counts"
+  },
+  {
+   "id": "pitfalls",
+   "title": "Pitfalls"
+  },
+  {
+   "id": "how-to-report",
+   "title": "How to report"
+  },
+  {
+   "id": "switch-to-r-lab-3",
+   "title": "🔧 Switch to R — Lab 3"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "gis-workshop/s4_local_clusters": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-local-morans-i-lisa",
+   "title": "Topic 1 — Local Moran's I (LISA)"
+  },
+  {
+   "id": "one-statistic-per-area",
+   "title": "One statistic per area"
+  },
+  {
+   "id": "cluster-types-from-the-quadrant",
+   "title": "Cluster types from the quadrant"
+  },
+  {
+   "id": "multiple-testing",
+   "title": "Multiple testing"
+  },
+  {
+   "id": "topic-2-getis-ord-gi",
+   "title": "Topic 2 — Getis-Ord Gi*"
+  },
+  {
+   "id": "hot-and-cold-spots-directly",
+   "title": "Hot and cold spots directly"
+  },
+  {
+   "id": "gi-or-lisa",
+   "title": "Gi\\* or LISA?"
+  },
+  {
+   "id": "topic-3-the-scan-statistic",
+   "title": "Topic 3 — The scan statistic"
+  },
+  {
+   "id": "kulldorffs-circles",
+   "title": "Kulldorff's circles"
+  },
+  {
+   "id": "which-local-tool",
+   "title": "Which local tool?"
+  },
+  {
+   "id": "switch-to-r-lab-4",
+   "title": "🔧 Switch to R — Lab 4"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "gis-workshop/s5_spatial_regression": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-check-the-residuals",
+   "title": "Topic 1 — Check the residuals"
+  },
+  {
+   "id": "fit-ols-first",
+   "title": "Fit OLS first"
+  },
+  {
+   "id": "morans-i-on-the-residuals",
+   "title": "Moran's I on the residuals"
+  },
+  {
+   "id": "topic-2-which-spatial-model",
+   "title": "Topic 2 — Which spatial model?"
+  },
+  {
+   "id": "two-structures",
+   "title": "Two structures"
+  },
+  {
+   "id": "lagrange-multiplier-tests",
+   "title": "Lagrange multiplier tests"
+  },
+  {
+   "id": "choosing-from-the-lm-tests",
+   "title": "Choosing from the LM tests"
+  },
+  {
+   "id": "fit-and-compare",
+   "title": "Fit and compare"
+  },
+  {
+   "id": "topic-3-interpreting-and-reporting",
+   "title": "Topic 3 — Interpreting and reporting"
+  },
+  {
+   "id": "coefficients-in-the-lag-model",
+   "title": "Coefficients in the lag model"
+  },
+  {
+   "id": "other-routes",
+   "title": "Other routes"
+  },
+  {
+   "id": "reporting-checklist",
+   "title": "Reporting checklist"
+  },
+  {
+   "id": "switch-to-r-lab-5",
+   "title": "🔧 Switch to R — Lab 5"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "missing-workshop/s1_patterns_mechanisms": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "our-data-an-ncd-cohort-with-gaps",
+   "title": "Our data: an NCD cohort with gaps"
+  },
+  {
+   "id": "topic-1-mechanisms",
+   "title": "Topic 1 — Mechanisms"
+  },
+  {
+   "id": "three-mechanisms",
+   "title": "Three mechanisms"
+  },
+  {
+   "id": "why-it-matters",
+   "title": "Why it matters"
+  },
+  {
+   "id": "topic-2-describing-missing-data",
+   "title": "Topic 2 — Describing missing data"
+  },
+  {
+   "id": "how-much-and-which-pattern",
+   "title": "How much and which pattern?"
+  },
+  {
+   "id": "a-picture",
+   "title": "A picture"
+  },
+  {
+   "id": "topic-3-what-drives-the-missingness",
+   "title": "Topic 3 — What drives the missingness?"
+  },
+  {
+   "id": "compare-with-and-without-bmi",
+   "title": "Compare with and without BMI"
+  },
+  {
+   "id": "model-the-missingness",
+   "title": "Model the missingness"
+  },
+  {
+   "id": "littles-mcar-test",
+   "title": "Little's MCAR test"
+  },
+  {
+   "id": "switch-to-r-lab-1",
+   "title": "🔧 Switch to R — Lab 1"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "missing-workshop/s2_simple_methods": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-complete-case-analysis",
+   "title": "Topic 1 — Complete-case analysis"
+  },
+  {
+   "id": "listwise-deletion",
+   "title": "Listwise deletion"
+  },
+  {
+   "id": "topic-2-single-fixes",
+   "title": "Topic 2 — Single fixes"
+  },
+  {
+   "id": "mean-imputation",
+   "title": "Mean imputation"
+  },
+  {
+   "id": "missing-indicator-method",
+   "title": "Missing-indicator method"
+  },
+  {
+   "id": "single-stochastic-imputation",
+   "title": "Single stochastic imputation"
+  },
+  {
+   "id": "comparison",
+   "title": "Comparison"
+  },
+  {
+   "id": "switch-to-r-lab-2",
+   "title": "🔧 Switch to R — Lab 2"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "missing-workshop/s3_multiple_imputation": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-the-idea",
+   "title": "Topic 1 — The idea"
+  },
+  {
+   "id": "three-steps",
+   "title": "Three steps"
+  },
+  {
+   "id": "setup-before-imputing",
+   "title": "Setup before imputing"
+  },
+  {
+   "id": "run-it",
+   "title": "Run it"
+  },
+  {
+   "id": "topic-2-checking",
+   "title": "Topic 2 — Checking"
+  },
+  {
+   "id": "convergence",
+   "title": "Convergence"
+  },
+  {
+   "id": "imputed-vs-observed-values",
+   "title": "Imputed vs observed values"
+  },
+  {
+   "id": "topic-3-analyse-and-pool",
+   "title": "Topic 3 — Analyse and pool"
+  },
+  {
+   "id": "with-and-pool",
+   "title": "with() and pool()"
+  },
+  {
+   "id": "comparison-with-complete-case",
+   "title": "Comparison with complete case"
+  },
+  {
+   "id": "rules-for-good-imputation-models",
+   "title": "Rules for good imputation models"
+  },
+  {
+   "id": "switch-to-r-lab-3",
+   "title": "🔧 Switch to R — Lab 3"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "missing-workshop/s4_mi_diagnostics": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-how-much-did-the-missing-data-cost",
+   "title": "Topic 1 — How much did the missing data cost?"
+  },
+  {
+   "id": "fraction-of-missing-information",
+   "title": "Fraction of missing information"
+  },
+  {
+   "id": "how-many-imputations",
+   "title": "How many imputations?"
+  },
+  {
+   "id": "topic-2-analysis-complications",
+   "title": "Topic 2 — Analysis complications"
+  },
+  {
+   "id": "a-derived-variable-hypertension",
+   "title": "A derived variable: hypertension"
+  },
+  {
+   "id": "an-interaction",
+   "title": "An interaction"
+  },
+  {
+   "id": "auxiliary-variables",
+   "title": "Auxiliary variables"
+  },
+  {
+   "id": "checklist",
+   "title": "Checklist"
+  },
+  {
+   "id": "switch-to-r-lab-4",
+   "title": "🔧 Switch to R — Lab 4"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "missing-workshop/s5_mnar_reporting": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-the-mnar-problem",
+   "title": "Topic 1 — The MNAR problem"
+  },
+  {
+   "id": "observed-vs-mar-imputation",
+   "title": "Observed vs MAR imputation"
+  },
+  {
+   "id": "topic-2-delta-adjustment",
+   "title": "Topic 2 — Delta adjustment"
+  },
+  {
+   "id": "assume-the-missing-values-are-higher",
+   "title": "Assume the missing values are higher"
+  },
+  {
+   "id": "a-tipping-point-table",
+   "title": "A tipping-point table"
+  },
+  {
+   "id": "which-conclusions-are-fragile",
+   "title": "Which conclusions are fragile?"
+  },
+  {
+   "id": "topic-3-rubins-rules-and-reporting",
+   "title": "Topic 3 — Rubin's rules and reporting"
+  },
+  {
+   "id": "rubins-rules-by-hand",
+   "title": "Rubin's rules by hand"
+  },
+  {
+   "id": "reporting-missing-data",
+   "title": "Reporting missing data"
+  },
+  {
+   "id": "switch-to-r-lab-5",
+   "title": "🔧 Switch to R — Lab 5"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "ordinal-workshop/s1_categorical_outcomes": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "our-data-a-maternal-health-survey",
+   "title": "Our data: a maternal health survey"
+  },
+  {
+   "id": "topic-1-which-type-of-outcome",
+   "title": "Topic 1 — Which type of outcome?"
+  },
+  {
+   "id": "nominal-or-ordered",
+   "title": "Nominal or ordered?"
+  },
+  {
+   "id": "cumulative-proportions",
+   "title": "Cumulative proportions"
+  },
+  {
+   "id": "topic-2-describing",
+   "title": "Topic 2 — Describing"
+  },
+  {
+   "id": "anaemia-by-wealth",
+   "title": "Anaemia by wealth"
+  },
+  {
+   "id": "topic-3-what-not-to-do",
+   "title": "Topic 3 — What not to do"
+  },
+  {
+   "id": "treating-categories-as-numbers",
+   "title": "Treating categories as numbers"
+  },
+  {
+   "id": "dichotomising",
+   "title": "Dichotomising"
+  },
+  {
+   "id": "checklist-before-modelling",
+   "title": "Checklist before modelling"
+  },
+  {
+   "id": "switch-to-r-lab-1",
+   "title": "🔧 Switch to R — Lab 1"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "ordinal-workshop/s2_ordinal_logistic": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-the-model",
+   "title": "Topic 1 — The model"
+  },
+  {
+   "id": "cumulative-logits",
+   "title": "Cumulative logits"
+  },
+  {
+   "id": "one-predictor",
+   "title": "One predictor"
+  },
+  {
+   "id": "topic-2-an-adjusted-model",
+   "title": "Topic 2 — An adjusted model"
+  },
+  {
+   "id": "several-predictors",
+   "title": "Several predictors"
+  },
+  {
+   "id": "reading-the-adjusted-odds-ratios",
+   "title": "Reading the adjusted odds ratios"
+  },
+  {
+   "id": "thresholds",
+   "title": "Thresholds"
+  },
+  {
+   "id": "topic-3-predicted-probabilities",
+   "title": "Topic 3 — Predicted probabilities"
+  },
+  {
+   "id": "what-it-means-for-a-woman",
+   "title": "What it means for a woman"
+  },
+  {
+   "id": "compared-with-a-binary-model",
+   "title": "Compared with a binary model"
+  },
+  {
+   "id": "reporting-an-ordinal-model",
+   "title": "Reporting an ordinal model"
+  },
+  {
+   "id": "switch-to-r-lab-2",
+   "title": "🔧 Switch to R — Lab 2"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "ordinal-workshop/s3_proportional_odds_check": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-testing",
+   "title": "Topic 1 — Testing"
+  },
+  {
+   "id": "the-brant-test",
+   "title": "The Brant test"
+  },
+  {
+   "id": "reading-the-brant-test",
+   "title": "Reading the Brant test"
+  },
+  {
+   "id": "see-it",
+   "title": "See it"
+  },
+  {
+   "id": "topic-2-what-to-do",
+   "title": "Topic 2 — What to do"
+  },
+  {
+   "id": "partial-proportional-odds",
+   "title": "Partial proportional odds"
+  },
+  {
+   "id": "reading-the-comparison",
+   "title": "Reading the comparison"
+  },
+  {
+   "id": "options-when-the-assumption-fails",
+   "title": "Options when the assumption fails"
+  },
+  {
+   "id": "do-not-report-one-or-blindly",
+   "title": "Do not report one OR blindly"
+  },
+  {
+   "id": "switch-to-r-lab-3",
+   "title": "🔧 Switch to R — Lab 3"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "ordinal-workshop/s4_multinomial_logistic": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-the-model",
+   "title": "Topic 1 — The model"
+  },
+  {
+   "id": "a-set-of-logistic-models-against-a-reference",
+   "title": "A set of logistic models against a reference"
+  },
+  {
+   "id": "fit-it",
+   "title": "Fit it"
+  },
+  {
+   "id": "topic-2-tests-and-tables",
+   "title": "Topic 2 — Tests and tables"
+  },
+  {
+   "id": "the-output-has-no-p-values",
+   "title": "The output has no p-values"
+  },
+  {
+   "id": "a-table",
+   "title": "A table"
+  },
+  {
+   "id": "topic-3-using-it",
+   "title": "Topic 3 — Using it"
+  },
+  {
+   "id": "predicted-probabilities",
+   "title": "Predicted probabilities"
+  },
+  {
+   "id": "the-choice-of-reference",
+   "title": "The choice of reference"
+  },
+  {
+   "id": "pitfalls",
+   "title": "Pitfalls"
+  },
+  {
+   "id": "switch-to-r-lab-4",
+   "title": "🔧 Switch to R — Lab 4"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "ordinal-workshop/s5_choosing_reporting": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-ordinal-or-multinomial",
+   "title": "Topic 1 — Ordinal or multinomial?"
+  },
+  {
+   "id": "a-decision",
+   "title": "A decision"
+  },
+  {
+   "id": "the-same-data-two-models",
+   "title": "The same data, two models"
+  },
+  {
+   "id": "topic-2-showing-results",
+   "title": "Topic 2 — Showing results"
+  },
+  {
+   "id": "probabilities-against-a-predictor",
+   "title": "Probabilities against a predictor"
+  },
+  {
+   "id": "accuracy-is-a-weak-summary",
+   "title": "Accuracy is a weak summary"
+  },
+  {
+   "id": "topic-3-reporting",
+   "title": "Topic 3 — Reporting"
+  },
+  {
+   "id": "wording",
+   "title": "Wording"
+  },
+  {
+   "id": "reporting-checklist",
+   "title": "Reporting checklist"
+  },
+  {
+   "id": "switch-to-r-lab-5",
+   "title": "🔧 Switch to R — Lab 5"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "prediction-workshop/s1_building_model": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "prediction-is-not-explanation",
+   "title": "Prediction is not explanation"
+  },
+  {
+   "id": "our-problem-screening-for-undiagnosed-diabetes",
+   "title": "Our problem: screening for undiagnosed diabetes"
+  },
+  {
+   "id": "topic-1-is-the-sample-big-enough",
+   "title": "Topic 1 — Is the sample big enough?"
+  },
+  {
+   "id": "events-per-variable",
+   "title": "Events per variable"
+  },
+  {
+   "id": "topic-2-the-model",
+   "title": "Topic 2 — The model"
+  },
+  {
+   "id": "fit-and-read",
+   "title": "Fit and read"
+  },
+  {
+   "id": "predicted-risks",
+   "title": "Predicted risks"
+  },
+  {
+   "id": "risk-groups",
+   "title": "Risk groups"
+  },
+  {
+   "id": "the-steps-tripod",
+   "title": "The steps (TRIPOD)"
+  },
+  {
+   "id": "switch-to-r-lab-1",
+   "title": "🔧 Switch to R — Lab 1"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "prediction-workshop/s2_discrimination_calibration": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-discrimination",
+   "title": "Topic 1 — Discrimination"
+  },
+  {
+   "id": "roc-curve-and-auc",
+   "title": "ROC curve and AUC"
+  },
+  {
+   "id": "a-threshold",
+   "title": "A threshold"
+  },
+  {
+   "id": "added-value",
+   "title": "Added value"
+  },
+  {
+   "id": "topic-2-calibration",
+   "title": "Topic 2 — Calibration"
+  },
+  {
+   "id": "calibration-plot",
+   "title": "Calibration plot"
+  },
+  {
+   "id": "calibration-slope-and-intercept",
+   "title": "Calibration slope and intercept"
+  },
+  {
+   "id": "brier-score",
+   "title": "Brier score"
+  },
+  {
+   "id": "switch-to-r-lab-2",
+   "title": "🔧 Switch to R — Lab 2"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "prediction-workshop/s3_overfitting_internal": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-overfitting",
+   "title": "Topic 1 — Overfitting"
+  },
+  {
+   "id": "adding-noise",
+   "title": "Adding noise"
+  },
+  {
+   "id": "topic-2-internal-validation",
+   "title": "Topic 2 — Internal validation"
+  },
+  {
+   "id": "split-sample",
+   "title": "Split sample"
+  },
+  {
+   "id": "cross-validation",
+   "title": "Cross-validation"
+  },
+  {
+   "id": "bootstrap-optimism",
+   "title": "Bootstrap optimism"
+  },
+  {
+   "id": "optimism-in-calibration",
+   "title": "Optimism in calibration"
+  },
+  {
+   "id": "switch-to-r-lab-3",
+   "title": "🔧 Switch to R — Lab 3"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "prediction-workshop/s4_shrinkage_selection": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-variable-selection",
+   "title": "Topic 1 — Variable selection"
+  },
+  {
+   "id": "backward-stepwise-aic",
+   "title": "Backward stepwise (AIC)"
+  },
+  {
+   "id": "how-stable-is-the-selection",
+   "title": "How stable is the selection?"
+  },
+  {
+   "id": "topic-2-penalised-regression",
+   "title": "Topic 2 — Penalised regression"
+  },
+  {
+   "id": "ridge",
+   "title": "Ridge"
+  },
+  {
+   "id": "lasso",
+   "title": "Lasso"
+  },
+  {
+   "id": "uniform-shrinkage",
+   "title": "Uniform shrinkage"
+  },
+  {
+   "id": "what-to-use",
+   "title": "What to use?"
+  },
+  {
+   "id": "switch-to-r-lab-4",
+   "title": "🔧 Switch to R — Lab 4"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "prediction-workshop/s5_external_reporting": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-validation-in-a-new-district",
+   "title": "Topic 1 — Validation in a new district"
+  },
+  {
+   "id": "discrimination-and-average-calibration",
+   "title": "Discrimination and average calibration"
+  },
+  {
+   "id": "calibration-slope-and-plot",
+   "title": "Calibration slope and plot"
+  },
+  {
+   "id": "which-development-strategy-transports-best",
+   "title": "Which development strategy transports best?"
+  },
+  {
+   "id": "topic-2-updating-and-usefulness",
+   "title": "Topic 2 — Updating and usefulness"
+  },
+  {
+   "id": "recalibration",
+   "title": "Recalibration"
+  },
+  {
+   "id": "decision-curve-net-benefit",
+   "title": "Decision curve: net benefit"
+  },
+  {
+   "id": "reading-the-decision-curve",
+   "title": "Reading the decision curve"
+  },
+  {
+   "id": "reporting-tripod",
+   "title": "Reporting: TRIPOD"
+  },
+  {
+   "id": "switch-to-r-lab-5",
+   "title": "🔧 Switch to R — Lab 5"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "regression-workshop/s1_foundations": [
+  {
+   "id": "theory-of-regression-analysis",
+   "title": "Theory of Regression Analysis"
+  },
+  {
+   "id": "our-running-example",
+   "title": "Our running example"
+  },
+  {
+   "id": "topic-1-what-is-regression",
+   "title": "Topic 1 — What is regression?"
+  },
+  {
+   "id": "what-is-regression",
+   "title": "What is regression?"
+  },
+  {
+   "id": "why-do-we-use-regression",
+   "title": "Why do we use regression?"
+  },
+  {
+   "id": "regression-in-community-medicine",
+   "title": "Regression in community medicine"
+  },
+  {
+   "id": "correlation-vs-regression-same-data",
+   "title": "Correlation vs regression: same data"
+  },
+  {
+   "id": "correlation-vs-regression-same-data-1",
+   "title": "Correlation vs regression: same data"
+  },
+  {
+   "id": "correlation-vs-regression-the-differences",
+   "title": "Correlation vs regression: the differences"
+  },
+  {
+   "id": "dependent-vs-independent-variables",
+   "title": "Dependent vs independent variables"
+  },
+  {
+   "id": "type-of-outcome-decides-the-model",
+   "title": "Type of outcome decides the model"
+  },
+  {
+   "id": "choosing-a-model",
+   "title": "Choosing a model"
+  },
+  {
+   "id": "the-model-selection-flowchart",
+   "title": "The model-selection flowchart"
+  },
+  {
+   "id": "flowchart-in-practice-our-survey",
+   "title": "Flowchart in practice: our survey"
+  },
+  {
+   "id": "meet-the-data",
+   "title": "Meet the data"
+  },
+  {
+   "id": "data-dictionary",
+   "title": "Data dictionary"
+  },
+  {
+   "id": "import-and-inspect",
+   "title": "Import and inspect"
+  },
+  {
+   "id": "missing-values",
+   "title": "Missing values"
+  },
+  {
+   "id": "table-1-with-tbl_summary",
+   "title": "Table 1 with tbl_summary()"
+  },
+  {
+   "id": "look-before-you-model",
+   "title": "Look before you model"
+  },
+  {
+   "id": "cor-and-its-limits",
+   "title": "cor() — and its limits"
+  },
+  {
+   "id": "switch-to-r-lab-1",
+   "title": "🔧 Switch to R — Lab 1"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "regression-workshop/s2_simple_regression": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-3-the-straight-line-model",
+   "title": "Topic 3 — The straight-line model"
+  },
+  {
+   "id": "the-equation",
+   "title": "The equation"
+  },
+  {
+   "id": "fit-it-with-lm",
+   "title": "Fit it with lm()"
+  },
+  {
+   "id": "interpretation-always-in-units",
+   "title": "Interpretation — always in units"
+  },
+  {
+   "id": "the-unit-you-choose-changes-the-number",
+   "title": "The unit you choose changes the number"
+  },
+  {
+   "id": "the-intercept",
+   "title": "The intercept"
+  },
+  {
+   "id": "prediction",
+   "title": "Prediction"
+  },
+  {
+   "id": "predict-with-predict",
+   "title": "Predict with predict()"
+  },
+  {
+   "id": "two-different-questions-two-different-intervals",
+   "title": "Two different questions, two different intervals"
+  },
+  {
+   "id": "ci-vs-pi-in-r-interval",
+   "title": "CI vs PI in R: interval ="
+  },
+  {
+   "id": "both-bands-on-one-plot",
+   "title": "Both bands on one plot"
+  },
+  {
+   "id": "residuals-and-ols",
+   "title": "Residuals and OLS"
+  },
+  {
+   "id": "fitted-values-and-residuals",
+   "title": "Fitted values and residuals"
+  },
+  {
+   "id": "ols-choose-the-line-with-the-smallest-squared-misses",
+   "title": "OLS: choose the line with the smallest squared misses"
+  },
+  {
+   "id": "residuals-vs-fitted-first-look",
+   "title": "Residuals vs fitted: first look"
+  },
+  {
+   "id": "r2-and-adjusted-r2",
+   "title": "R² and adjusted R²"
+  },
+  {
+   "id": "r2-how-much-of-the-variation-does-the-model-account-for",
+   "title": "R²: how much of the variation does the model account for?"
+  },
+  {
+   "id": "r2-always-rises-adjusted-r2-punishes-junk",
+   "title": "R² always rises; adjusted R² punishes junk"
+  },
+  {
+   "id": "reading-r2-sensibly",
+   "title": "Reading R² sensibly"
+  },
+  {
+   "id": "topic-4-centering-and-scaling",
+   "title": "Topic 4 — Centering and scaling"
+  },
+  {
+   "id": "an-intercept-at-age-0",
+   "title": "An intercept at age 0?"
+  },
+  {
+   "id": "centering-move-the-zero-to-a-meaningful-place",
+   "title": "Centering: move the zero to a meaningful place"
+  },
+  {
+   "id": "same-line-new-origin",
+   "title": "Same line, new origin"
+  },
+  {
+   "id": "scaling-change-the-unit-not-the-relationship",
+   "title": "Scaling: change the unit, not the relationship"
+  },
+  {
+   "id": "switch-to-r-lab-2",
+   "title": "🔧 Switch to R — Lab 2"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "regression-workshop/s3_multiple_regression": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-5-inference-for-beta",
+   "title": "Topic 5 — Inference for β"
+  },
+  {
+   "id": "is-the-slope-different-from-zero",
+   "title": "Is the slope different from zero?"
+  },
+  {
+   "id": "what-a-p-value-looks-like",
+   "title": "What a p-value looks like"
+  },
+  {
+   "id": "what-a-p-value-is-and-is-not",
+   "title": "What a p-value is — and is not"
+  },
+  {
+   "id": "confidence-intervals-say-more",
+   "title": "Confidence intervals say more"
+  },
+  {
+   "id": "statistical-vs-clinical-significance",
+   "title": "Statistical vs clinical significance"
+  },
+  {
+   "id": "topic-6-confounding-and-adjustment",
+   "title": "Topic 6 — Confounding and adjustment"
+  },
+  {
+   "id": "what-is-a-confounder",
+   "title": "What is a confounder?"
+  },
+  {
+   "id": "in-our-data-older-heavier-people-eat-more-salt",
+   "title": "In our data: older, heavier people eat more salt"
+  },
+  {
+   "id": "crude-vs-adjusted-beta",
+   "title": "Crude vs adjusted β"
+  },
+  {
+   "id": "which-variable-moved-it-add-them-one-at-a-time",
+   "title": "Which variable moved it? Add them one at a time"
+  },
+  {
+   "id": "interpreting-adjusted-coefficients",
+   "title": "Interpreting adjusted coefficients"
+  },
+  {
+   "id": "holding-the-others-constant",
+   "title": "\"Holding the others constant\""
+  },
+  {
+   "id": "confounding-can-even-reverse-a-story-education",
+   "title": "Confounding can even reverse a story: education"
+  },
+  {
+   "id": "dummy-coding",
+   "title": "Dummy coding"
+  },
+  {
+   "id": "categorical-predictors-become-01-columns",
+   "title": "Categorical predictors become 0/1 columns"
+  },
+  {
+   "id": "interpreting-each-level",
+   "title": "Interpreting each level"
+  },
+  {
+   "id": "changing-the-reference-relevel",
+   "title": "Changing the reference: relevel()"
+  },
+  {
+   "id": "model-building-strategies",
+   "title": "Model-building strategies"
+  },
+  {
+   "id": "four-ways-to-choose-covariates",
+   "title": "Four ways to choose covariates"
+  },
+  {
+   "id": "purposeful-selection-hosmerlemeshow",
+   "title": "Purposeful selection (Hosmer–Lemeshow)"
+  },
+  {
+   "id": "dag-theory-driven-selection-recommended",
+   "title": "DAG / theory-driven selection — recommended"
+  },
+  {
+   "id": "how-theory-chooses-the-model",
+   "title": "How theory chooses the model"
+  },
+  {
+   "id": "automated-selection-how-step-works",
+   "title": "Automated selection: how step() works"
+  },
+  {
+   "id": "step-in-r-forward",
+   "title": "step() in R — forward"
+  },
+  {
+   "id": "step-in-r-backward-and-both",
+   "title": "step() in R — backward and both"
+  },
+  {
+   "id": "do-they-agree",
+   "title": "Do they agree?"
+  },
+  {
+   "id": "why-automated-selection-is-problematic",
+   "title": "Why automated selection is problematic"
+  },
+  {
+   "id": "demo-1-step-on-pure-noise",
+   "title": "Demo 1: step() on pure noise"
+  },
+  {
+   "id": "demo-2-the-selection-changes-with-the-sample",
+   "title": "Demo 2: the selection changes with the sample"
+  },
+  {
+   "id": "demo-3-the-beta-after-selection-is-distorted",
+   "title": "Demo 3: the β after selection is distorted"
+  },
+  {
+   "id": "a-defensible-workflow",
+   "title": "A defensible workflow"
+  },
+  {
+   "id": "switch-to-r-lab-3",
+   "title": "🔧 Switch to R — Lab 3"
+  },
+  {
+   "id": "self-check-quiz-16",
+   "title": "Self-check quiz (1/6)"
+  },
+  {
+   "id": "self-check-quiz-26",
+   "title": "Self-check quiz (2/6)"
+  },
+  {
+   "id": "self-check-quiz-36",
+   "title": "Self-check quiz (3/6)"
+  },
+  {
+   "id": "self-check-quiz-46",
+   "title": "Self-check quiz (4/6)"
+  },
+  {
+   "id": "self-check-quiz-56",
+   "title": "Self-check quiz (5/6)"
+  },
+  {
+   "id": "self-check-quiz-66",
+   "title": "Self-check quiz (6/6)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "regression-workshop/s4_assumptions": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-7-assumptions",
+   "title": "Topic 7 — Assumptions"
+  },
+  {
+   "id": "the-checklist",
+   "title": "The checklist"
+  },
+  {
+   "id": "what-goes-wrong-when-each-fails",
+   "title": "What goes wrong when each fails"
+  },
+  {
+   "id": "the-one-page-panel-check_model",
+   "title": "The one-page panel: check_model()"
+  },
+  {
+   "id": "l-linearity",
+   "title": "L — Linearity"
+  },
+  {
+   "id": "linearity-what-and-how",
+   "title": "Linearity: what and how"
+  },
+  {
+   "id": "in-our-data-age-is-slightly-curved",
+   "title": "In our data: age is slightly curved"
+  },
+  {
+   "id": "a-formal-nudge-reset-test",
+   "title": "A formal nudge: RESET test"
+  },
+  {
+   "id": "what-to-do-about-non-linearity",
+   "title": "What to do about non-linearity"
+  },
+  {
+   "id": "i-independence",
+   "title": "I — Independence"
+  },
+  {
+   "id": "independence-what-and-how",
+   "title": "Independence: what and how"
+  },
+  {
+   "id": "in-our-data-people-are-clustered-in-20-villages",
+   "title": "In our data: people are clustered in 20 villages"
+  },
+  {
+   "id": "how-big-is-the-clustering",
+   "title": "How big is the clustering?"
+  },
+  {
+   "id": "what-to-do-about-non-independence",
+   "title": "What to do about non-independence"
+  },
+  {
+   "id": "n-normality",
+   "title": "N — Normality"
+  },
+  {
+   "id": "normality-of-residuals-what-and-how",
+   "title": "Normality of residuals: what and how"
+  },
+  {
+   "id": "in-our-data",
+   "title": "In our data"
+  },
+  {
+   "id": "if-normality-is-badly-violated",
+   "title": "If normality is badly violated"
+  },
+  {
+   "id": "e-equal-variance",
+   "title": "E — Equal variance"
+  },
+  {
+   "id": "homoscedasticity-what-and-how",
+   "title": "Homoscedasticity: what and how"
+  },
+  {
+   "id": "in-our-data-sbp-varies-more-in-older-adults",
+   "title": "In our data: SBP varies more in older adults"
+  },
+  {
+   "id": "tests-for-non-constant-variance",
+   "title": "Tests for non-constant variance"
+  },
+  {
+   "id": "what-to-do-about-unequal-variance",
+   "title": "What to do about unequal variance"
+  },
+  {
+   "id": "m-multicollinearity",
+   "title": "M — Multicollinearity"
+  },
+  {
+   "id": "multicollinearity-what-and-how",
+   "title": "Multicollinearity: what and how"
+  },
+  {
+   "id": "in-our-data-bmi-and-waist",
+   "title": "In our data: BMI and waist"
+  },
+  {
+   "id": "vif-with-both-in-the-model",
+   "title": "VIF with both in the model"
+  },
+  {
+   "id": "what-collinearity-does-to-the-estimates",
+   "title": "What collinearity does to the estimates"
+  },
+  {
+   "id": "how-to-handle-collinearity",
+   "title": "How to handle collinearity"
+  },
+  {
+   "id": "influential-points",
+   "title": "Influential points"
+  },
+  {
+   "id": "a-few-people-can-drive-a-result",
+   "title": "A few people can drive a result"
+  },
+  {
+   "id": "all-five-assumptions-on-one-slide",
+   "title": "All five assumptions on one slide"
+  },
+  {
+   "id": "switch-to-r-lab-4",
+   "title": "🔧 Switch to R — Lab 4"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "regression-workshop/s5_logistic_regression": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "a-binary-outcome",
+   "title": "A binary outcome"
+  },
+  {
+   "id": "hypertension-in-our-survey",
+   "title": "Hypertension in our survey"
+  },
+  {
+   "id": "why-not-just-use-linear-regression",
+   "title": "Why not just use linear regression?"
+  },
+  {
+   "id": "a-straight-line-leaves-the-01-range",
+   "title": "A straight line leaves the 0–1 range"
+  },
+  {
+   "id": "three-problems-with-a-straight-line-for-a-01-outcome",
+   "title": "Three problems with a straight line for a 0/1 outcome"
+  },
+  {
+   "id": "probability-odds-log-odds",
+   "title": "Probability → odds → log-odds"
+  },
+  {
+   "id": "three-ways-to-express-the-same-risk",
+   "title": "Three ways to express the same risk"
+  },
+  {
+   "id": "the-logit-scale-is-unbounded-and-symmetric",
+   "title": "The logit scale is unbounded and symmetric"
+  },
+  {
+   "id": "a-22-example-age-and-hypertension",
+   "title": "A 2×2 example: age and hypertension"
+  },
+  {
+   "id": "the-model",
+   "title": "The model"
+  },
+  {
+   "id": "the-logistic-regression-equation",
+   "title": "The logistic regression equation"
+  },
+  {
+   "id": "fitting-it-glmfamily-binomial",
+   "title": "Fitting it: glm(family = binomial)"
+  },
+  {
+   "id": "the-s-shaped-curve",
+   "title": "The S-shaped curve"
+  },
+  {
+   "id": "why-we-exponentiate-beta",
+   "title": "Why we exponentiate β"
+  },
+  {
+   "id": "step-1-the-model-speaks-in-log-odds",
+   "title": "Step 1 — the model speaks in log-odds"
+  },
+  {
+   "id": "step-2-compare-x-1-with-x",
+   "title": "Step 2 — compare x + 1 with x"
+  },
+  {
+   "id": "step-3-a-worked-number-from-our-model",
+   "title": "Step 3 — a worked number from our model"
+  },
+  {
+   "id": "check-it-directly-with-two-different-people",
+   "title": "Check it directly with two different people"
+  },
+  {
+   "id": "confidence-intervals-exponentiate-the-limits-too",
+   "title": "Confidence intervals: exponentiate the limits too"
+  },
+  {
+   "id": "symmetric-on-the-beta-scale-asymmetric-on-the-or-scale",
+   "title": "Symmetric on the β scale, asymmetric on the OR scale"
+  },
+  {
+   "id": "why-or-1-corresponds-to-beta-0",
+   "title": "Why OR = 1 corresponds to β = 0"
+  },
+  {
+   "id": "crude-vs-adjusted-ors",
+   "title": "Crude vs adjusted ORs"
+  },
+  {
+   "id": "reading-an-or-its-ci-and-its-p-value",
+   "title": "Reading an OR, its CI and its p-value"
+  },
+  {
+   "id": "likelihood-based-assessment",
+   "title": "Likelihood-based assessment"
+  },
+  {
+   "id": "likelihood-how-probable-were-the-data-we-saw",
+   "title": "Likelihood: how probable were the data we saw?"
+  },
+  {
+   "id": "maximum-likelihood-the-peak-of-the-curve",
+   "title": "Maximum likelihood: the peak of the curve"
+  },
+  {
+   "id": "deviance-and-log-likelihood-in-r",
+   "title": "Deviance and log-likelihood in R"
+  },
+  {
+   "id": "likelihood-ratio-test-lrt-for-nested-models",
+   "title": "Likelihood ratio test (LRT) for nested models"
+  },
+  {
+   "id": "why-lrt-rather-than-wald-for-comparing-models",
+   "title": "Why LRT rather than Wald for comparing models"
+  },
+  {
+   "id": "aic-comparing-models-that-are-not-nested",
+   "title": "AIC: comparing models that are not nested"
+  },
+  {
+   "id": "pseudo-r2",
+   "title": "Pseudo-R²"
+  },
+  {
+   "id": "three-pseudo-r2-measures",
+   "title": "Three pseudo-R² measures"
+  },
+  {
+   "id": "how-to-use-and-not-use-pseudo-r2",
+   "title": "How to use (and not use) pseudo-R²"
+  },
+  {
+   "id": "tjurs-r2-has-a-picture",
+   "title": "Tjur's R² has a picture"
+  },
+  {
+   "id": "calibration-and-discrimination",
+   "title": "Calibration and discrimination"
+  },
+  {
+   "id": "two-different-questions",
+   "title": "Two different questions"
+  },
+  {
+   "id": "calibration-plot-predicted-vs-observed",
+   "title": "Calibration plot: predicted vs observed"
+  },
+  {
+   "id": "hosmerlemeshow-test",
+   "title": "Hosmer–Lemeshow test"
+  },
+  {
+   "id": "roc-curve-and-auc",
+   "title": "ROC curve and AUC"
+  },
+  {
+   "id": "interpreting-the-auc",
+   "title": "Interpreting the AUC"
+  },
+  {
+   "id": "a-cut-off-and-a-caution",
+   "title": "A cut-off, and a caution"
+  },
+  {
+   "id": "or-vs-prevalence-ratio",
+   "title": "OR vs prevalence ratio"
+  },
+  {
+   "id": "the-or-overstates-the-pr-when-the-outcome-is-common",
+   "title": "The OR overstates the PR when the outcome is common"
+  },
+  {
+   "id": "why-the-gap-grows-with-baseline-risk",
+   "title": "Why: the gap grows with baseline risk"
+  },
+  {
+   "id": "getting-a-prevalence-ratio-poisson-with-robust-se",
+   "title": "Getting a prevalence ratio: Poisson with robust SE"
+  },
+  {
+   "id": "switch-to-r-lab-5",
+   "title": "🔧 Switch to R — Lab 5"
+  },
+  {
+   "id": "self-check-quiz-16",
+   "title": "Self-check quiz (1/6)"
+  },
+  {
+   "id": "self-check-quiz-26",
+   "title": "Self-check quiz (2/6)"
+  },
+  {
+   "id": "self-check-quiz-36",
+   "title": "Self-check quiz (3/6)"
+  },
+  {
+   "id": "self-check-quiz-46",
+   "title": "Self-check quiz (4/6)"
+  },
+  {
+   "id": "self-check-quiz-56",
+   "title": "Self-check quiz (5/6)"
+  },
+  {
+   "id": "self-check-quiz-66",
+   "title": "Self-check quiz (6/6)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "regression-workshop/s6_reporting": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-9-reading-the-output",
+   "title": "Topic 9 — Reading the output"
+  },
+  {
+   "id": "linear-regression-what-each-number-means",
+   "title": "Linear regression: what each number means"
+  },
+  {
+   "id": "logistic-regression-what-each-number-means",
+   "title": "Logistic regression: what each number means"
+  },
+  {
+   "id": "a-publication-ready-combined-table",
+   "title": "A publication-ready combined table"
+  },
+  {
+   "id": "topic-10-writing-it-up",
+   "title": "Topic 10 — Writing it up"
+  },
+  {
+   "id": "results-sentence-linear-regression",
+   "title": "Results sentence — linear regression"
+  },
+  {
+   "id": "results-sentence-logistic-regression",
+   "title": "Results sentence — logistic regression"
+  },
+  {
+   "id": "tables-and-figures-what-a-reader-needs",
+   "title": "Tables and figures: what a reader needs"
+  },
+  {
+   "id": "the-methods-paragraph",
+   "title": "The Methods paragraph"
+  },
+  {
+   "id": "software-line-let-r-tell-you",
+   "title": "Software line: let R tell you"
+  },
+  {
+   "id": "common-pitfalls",
+   "title": "Common pitfalls"
+  },
+  {
+   "id": "pitfall-1-stepwise-selection-presented-as-the-analysis",
+   "title": "Pitfall 1 — Stepwise selection presented as *the* analysis"
+  },
+  {
+   "id": "pitfall-2-p-0.2-into-the-model",
+   "title": "Pitfall 2 — \"p < 0.2 into the model\""
+  },
+  {
+   "id": "pitfalls-36-say-it-properly",
+   "title": "Pitfalls 3–6: say it properly"
+  },
+  {
+   "id": "pitfall-7-overfitting-too-few-events-per-variable",
+   "title": "Pitfall 7 — Overfitting: too few events per variable"
+  },
+  {
+   "id": "overfitting-in-action-60-pure-noise-predictors",
+   "title": "Overfitting in action: 60 pure-noise predictors"
+  },
+  {
+   "id": "pitfall-8-ignoring-assumptions-and-clustering",
+   "title": "Pitfall 8 — Ignoring assumptions and clustering"
+  },
+  {
+   "id": "pitfall-9-calling-associations-causal",
+   "title": "Pitfall 9 — Calling associations causal"
+  },
+  {
+   "id": "before-you-submit",
+   "title": "Before you submit"
+  },
+  {
+   "id": "beyond-this-workshop",
+   "title": "Beyond this workshop"
+  },
+  {
+   "id": "other-outcome-types",
+   "title": "Other outcome types"
+  },
+  {
+   "id": "data-structure-and-design",
+   "title": "Data structure and design"
+  },
+  {
+   "id": "flexible-models-and-helpful-tools",
+   "title": "Flexible models and helpful tools"
+  },
+  {
+   "id": "take-home-messages-of-the-day",
+   "title": "Take-home messages of the day"
+  },
+  {
+   "id": "switch-to-r-lab-6",
+   "title": "🔧 Switch to R — Lab 6"
+  },
+  {
+   "id": "self-check-quiz-16",
+   "title": "Self-check quiz (1/6)"
+  },
+  {
+   "id": "self-check-quiz-26",
+   "title": "Self-check quiz (2/6)"
+  },
+  {
+   "id": "self-check-quiz-36",
+   "title": "Self-check quiz (3/6)"
+  },
+  {
+   "id": "self-check-quiz-46",
+   "title": "Self-check quiz (4/6)"
+  },
+  {
+   "id": "self-check-quiz-56",
+   "title": "Self-check quiz (5/6)"
+  },
+  {
+   "id": "self-check-quiz-66",
+   "title": "Self-check quiz (6/6)"
+  },
+  {
+   "id": "score-and-close",
+   "title": "Score and close"
+  }
+ ],
+ "stats-workshop/s1_know_your_data": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "our-data",
+   "title": "Our data"
+  },
+  {
+   "id": "topic-1-what-kind-of-variable",
+   "title": "Topic 1 — What kind of variable?"
+  },
+  {
+   "id": "four-kinds-of-variable",
+   "title": "Four kinds of variable"
+  },
+  {
+   "id": "describing-a-category-counts-and-percentages",
+   "title": "Describing a category: counts and percentages"
+  },
+  {
+   "id": "describing-a-number-mean-or-median",
+   "title": "Describing a number: mean or median?"
+  },
+  {
+   "id": "topic-2-check-before-you-test",
+   "title": "Topic 2 — Check before you test"
+  },
+  {
+   "id": "a-test-cannot-rescue-bad-data",
+   "title": "A test cannot rescue bad data"
+  },
+  {
+   "id": "what-to-do-with-suspicious-values",
+   "title": "What to do with suspicious values"
+  },
+  {
+   "id": "topic-3-choosing-a-test",
+   "title": "Topic 3 — Choosing a test"
+  },
+  {
+   "id": "four-questions-choose-the-test",
+   "title": "Four questions choose the test"
+  },
+  {
+   "id": "the-map-category-outcome",
+   "title": "The map: category outcome"
+  },
+  {
+   "id": "the-map-number-outcome",
+   "title": "The map: number outcome"
+  },
+  {
+   "id": "topic-4-reading-a-result",
+   "title": "Topic 4 — Reading a result"
+  },
+  {
+   "id": "three-numbers-not-one",
+   "title": "Three numbers, not one"
+  },
+  {
+   "id": "example-weight-in-women-and-men",
+   "title": "Example: weight in women and men"
+  },
+  {
+   "id": "the-sentence-to-write",
+   "title": "The sentence to write"
+  },
+  {
+   "id": "switch-to-r-lab-1",
+   "title": "🔧 Switch to R — Lab 1"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "stats-workshop/s2_assumptions": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "three-assumptions-behind-most-tests",
+   "title": "Three assumptions behind most tests"
+  },
+  {
+   "id": "topic-1-independence",
+   "title": "Topic 1 — Independence"
+  },
+  {
+   "id": "independence-comes-from-the-design",
+   "title": "Independence comes from the design"
+  },
+  {
+   "id": "topic-2-normality",
+   "title": "Topic 2 — Normality"
+  },
+  {
+   "id": "what-has-to-be-normal",
+   "title": "What has to be normal?"
+  },
+  {
+   "id": "look-first-the-q-q-plot",
+   "title": "Look first: the Q-Q plot"
+  },
+  {
+   "id": "three-normality-tests",
+   "title": "Three normality tests"
+  },
+  {
+   "id": "trap-1-ks-against-the-wrong-normal",
+   "title": "Trap 1: KS against the wrong normal"
+  },
+  {
+   "id": "trap-2-the-answer-depends-on-n",
+   "title": "Trap 2: the answer depends on n"
+  },
+  {
+   "id": "why-mild-skew-rarely-matters",
+   "title": "Why mild skew rarely matters"
+  },
+  {
+   "id": "topic-3-equal-spread",
+   "title": "Topic 3 — Equal spread"
+  },
+  {
+   "id": "compare-the-spreads",
+   "title": "Compare the spreads"
+  },
+  {
+   "id": "welch-is-the-safe-default",
+   "title": "Welch is the safe default"
+  },
+  {
+   "id": "topic-4-when-an-assumption-fails",
+   "title": "Topic 4 — When an assumption fails"
+  },
+  {
+   "id": "four-honest-options",
+   "title": "Four honest options"
+  },
+  {
+   "id": "write-what-you-did",
+   "title": "Write what you did"
+  },
+  {
+   "id": "switch-to-r-lab-2",
+   "title": "🔧 Switch to R — Lab 2"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "stats-workshop/s3_categorical": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-one-group",
+   "title": "Topic 1 — One group"
+  },
+  {
+   "id": "goodness-of-fit-is-the-split-what-we-expected",
+   "title": "Goodness of fit: is the split what we expected?"
+  },
+  {
+   "id": "better-estimate-the-proportion-with-its-ci",
+   "title": "Better: estimate the proportion with its CI"
+  },
+  {
+   "id": "topic-2-two-groups-two-outcomes-the-2-x-2-table",
+   "title": "Topic 2 — Two groups, two outcomes: the 2 x 2 table"
+  },
+  {
+   "id": "diabetes-in-women-and-men",
+   "title": "Diabetes in women and men"
+  },
+  {
+   "id": "the-assumption-is-about-expected-counts",
+   "title": "The assumption is about expected counts"
+  },
+  {
+   "id": "report-the-effect-not-only-p",
+   "title": "Report the effect, not only p"
+  },
+  {
+   "id": "when-an-expected-count-is-small-fisher",
+   "title": "When an expected count is small: Fisher"
+  },
+  {
+   "id": "reading-fishers-result",
+   "title": "Reading Fisher's result"
+  },
+  {
+   "id": "yates-correction",
+   "title": "Yates' correction"
+  },
+  {
+   "id": "topic-3-larger-tables",
+   "title": "Topic 3 — Larger tables"
+  },
+  {
+   "id": "marital-status-and-wealth-3-x-5",
+   "title": "Marital status and wealth (3 x 5)"
+  },
+  {
+   "id": "a-significant-table-where-is-the-difference",
+   "title": "A significant table: where is the difference?"
+  },
+  {
+   "id": "if-expected-counts-are-too-small-monte-carlo",
+   "title": "If expected counts are too small: Monte Carlo"
+  },
+  {
+   "id": "topic-4-paired-yesno-outcomes",
+   "title": "Topic 4 — Paired yes/no outcomes"
+  },
+  {
+   "id": "foot-pain-before-and-after-mcnemar",
+   "title": "Foot pain before and after: McNemar"
+  },
+  {
+   "id": "only-the-people-who-changed-count",
+   "title": "Only the people who changed count"
+  },
+  {
+   "id": "which-test-for-a-category-outcome",
+   "title": "Which test for a category outcome?"
+  },
+  {
+   "id": "switch-to-r-lab-3",
+   "title": "🔧 Switch to R — Lab 3"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "stats-workshop/s4_two_groups": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-one-group-against-a-benchmark",
+   "title": "Topic 1 — One group against a benchmark"
+  },
+  {
+   "id": "one-sample-t-fasting-glucose-against-100-mgdl",
+   "title": "One-sample t: fasting glucose against 100 mg/dL"
+  },
+  {
+   "id": "z-or-t",
+   "title": "z or t?"
+  },
+  {
+   "id": "reading-the-one-sample-result",
+   "title": "Reading the one-sample result"
+  },
+  {
+   "id": "topic-2-two-independent-groups",
+   "title": "Topic 2 — Two independent groups"
+  },
+  {
+   "id": "welch-t-age-by-diabetes-history",
+   "title": "Welch t: age by diabetes history"
+  },
+  {
+   "id": "reading-it",
+   "title": "Reading it"
+  },
+  {
+   "id": "two-non-significant-results-two-different-stories",
+   "title": "Two non-significant results, two different stories"
+  },
+  {
+   "id": "mannwhitney-u-glucose-by-diabetes-history",
+   "title": "Mann–Whitney U: glucose by diabetes history"
+  },
+  {
+   "id": "what-mannwhitney-actually-tests",
+   "title": "What Mann–Whitney actually tests"
+  },
+  {
+   "id": "topic-3-paired-measurements",
+   "title": "Topic 3 — Paired measurements"
+  },
+  {
+   "id": "paired-t-fasting-glucose-at-presentation-and-6-months",
+   "title": "Paired t: fasting glucose at presentation and 6 months"
+  },
+  {
+   "id": "reading-the-paired-result",
+   "title": "Reading the paired result"
+  },
+  {
+   "id": "wilcoxon-signed-rank-systolic-pressure-presentation-and-6-months",
+   "title": "Wilcoxon signed-rank: systolic pressure, presentation and 6 months"
+  },
+  {
+   "id": "which-test-for-two-groups",
+   "title": "Which test for two groups?"
+  },
+  {
+   "id": "switch-to-r-lab-4",
+   "title": "🔧 Switch to R — Lab 4"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "stats-workshop/s5_groups_correlation_reporting": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-three-or-more-independent-groups",
+   "title": "Topic 1 — Three or more independent groups"
+  },
+  {
+   "id": "one-way-anova-bmi-by-wealth-index",
+   "title": "One-way ANOVA: BMI by wealth index"
+  },
+  {
+   "id": "check-the-assumptions-on-the-residuals",
+   "title": "Check the assumptions on the residuals"
+  },
+  {
+   "id": "significant-now-how-big-and-where",
+   "title": "Significant: now how big, and where?"
+  },
+  {
+   "id": "post-hoc-tests-when-and-which",
+   "title": "Post hoc tests: when and which"
+  },
+  {
+   "id": "kruskalwallis-systolic-pressure-by-marital-status",
+   "title": "Kruskal–Wallis: systolic pressure by marital status"
+  },
+  {
+   "id": "before-you-explain-it-who-is-in-each-group",
+   "title": "Before you explain it: who is in each group?"
+  },
+  {
+   "id": "topic-2-repeated-measurements",
+   "title": "Topic 2 — Repeated measurements"
+  },
+  {
+   "id": "repeated-measures-anova-fasting-glucose-at-0-3-and-6-months",
+   "title": "Repeated-measures ANOVA: fasting glucose at 0, 3 and 6 months"
+  },
+  {
+   "id": "sphericity-and-the-correction",
+   "title": "Sphericity, and the correction"
+  },
+  {
+   "id": "post-hoc-for-repeated-measures-must-be-paired",
+   "title": "Post hoc for repeated measures must be paired"
+  },
+  {
+   "id": "friedman-systolic-pressure-at-0-3-and-6-months",
+   "title": "Friedman: systolic pressure at 0, 3 and 6 months"
+  },
+  {
+   "id": "topic-3-two-numbers-together-correlation",
+   "title": "Topic 3 — Two numbers together: correlation"
+  },
+  {
+   "id": "plot-first-then-r",
+   "title": "Plot first, then r"
+  },
+  {
+   "id": "reading-r",
+   "title": "Reading r"
+  },
+  {
+   "id": "pearson-or-spearman",
+   "title": "Pearson or Spearman?"
+  },
+  {
+   "id": "topic-4-many-tests-and-the-write-up",
+   "title": "Topic 4 — Many tests, and the write-up"
+  },
+  {
+   "id": "multiple-testing",
+   "title": "Multiple testing"
+  },
+  {
+   "id": "a-results-paragraph",
+   "title": "A results paragraph"
+  },
+  {
+   "id": "reporting-checklist",
+   "title": "Reporting checklist"
+  },
+  {
+   "id": "switch-to-r-lab-5",
+   "title": "🔧 Switch to R — Lab 5"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "survey-workshop/s1_survey_design": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "what-is-different-about-survey-data",
+   "title": "What is different about survey data"
+  },
+  {
+   "id": "our-survey-an-adult-health-survey-synthetic",
+   "title": "Our survey: an adult health survey (synthetic)"
+  },
+  {
+   "id": "topic-1-weights",
+   "title": "Topic 1 — Weights"
+  },
+  {
+   "id": "what-is-a-sampling-weight",
+   "title": "What is a sampling weight?"
+  },
+  {
+   "id": "weighted-and-unweighted-prevalence",
+   "title": "Weighted and unweighted prevalence"
+  },
+  {
+   "id": "topic-2-the-design-in-r",
+   "title": "Topic 2 — The design in R"
+  },
+  {
+   "id": "declaring-the-design",
+   "title": "Declaring the design"
+  },
+  {
+   "id": "design-based-estimate-and-standard-error",
+   "title": "Design-based estimate and standard error"
+  },
+  {
+   "id": "checklist-when-you-get-a-survey-file",
+   "title": "Checklist when you get a survey file"
+  },
+  {
+   "id": "switch-to-r-lab-1",
+   "title": "🔧 Switch to R — Lab 1"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "survey-workshop/s2_descriptive": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-means-proportions-totals",
+   "title": "Topic 1 — Means, proportions, totals"
+  },
+  {
+   "id": "means-and-totals",
+   "title": "Means and totals"
+  },
+  {
+   "id": "a-proportion-with-a-good-ci",
+   "title": "A proportion with a good CI"
+  },
+  {
+   "id": "by-groups",
+   "title": "By groups"
+  },
+  {
+   "id": "quantiles",
+   "title": "Quantiles"
+  },
+  {
+   "id": "topic-2-design-effect-and-subpopulations",
+   "title": "Topic 2 — Design effect and subpopulations"
+  },
+  {
+   "id": "design-effect",
+   "title": "Design effect"
+  },
+  {
+   "id": "subpopulations",
+   "title": "Subpopulations"
+  },
+  {
+   "id": "weighted-tables-and-tests",
+   "title": "Weighted tables and tests"
+  },
+  {
+   "id": "the-same-with-srvyr-tidy-syntax",
+   "title": "The same with srvyr (tidy syntax)"
+  },
+  {
+   "id": "switch-to-r-lab-2",
+   "title": "🔧 Switch to R — Lab 2"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "survey-workshop/s3_survey_regression": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-svyglm",
+   "title": "Topic 1 — svyglm"
+  },
+  {
+   "id": "a-logistic-model-for-hypertension",
+   "title": "A logistic model for hypertension"
+  },
+  {
+   "id": "odds-ratios",
+   "title": "Odds ratios"
+  },
+  {
+   "id": "topic-2-why-not-just-glm",
+   "title": "Topic 2 — Why not just glm()?"
+  },
+  {
+   "id": "three-analyses-of-the-same-model",
+   "title": "Three analyses of the same model"
+  },
+  {
+   "id": "should-regression-be-weighted",
+   "title": "Should regression be weighted?"
+  },
+  {
+   "id": "topic-3-other-outcomes-and-tests",
+   "title": "Topic 3 — Other outcomes and tests"
+  },
+  {
+   "id": "a-continuous-outcome",
+   "title": "A continuous outcome"
+  },
+  {
+   "id": "testing-a-multi-level-variable",
+   "title": "Testing a multi-level variable"
+  },
+  {
+   "id": "predicted-probabilities",
+   "title": "Predicted probabilities"
+  },
+  {
+   "id": "switch-to-r-lab-3",
+   "title": "🔧 Switch to R — Lab 3"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "survey-workshop/s4_nonresponse_raking": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-nonresponse",
+   "title": "Topic 1 — Nonresponse"
+  },
+  {
+   "id": "who-responds",
+   "title": "Who responds?"
+  },
+  {
+   "id": "the-adjustment",
+   "title": "The adjustment"
+  },
+  {
+   "id": "topic-2-diagnostics-and-raking",
+   "title": "Topic 2 — Diagnostics and raking"
+  },
+  {
+   "id": "check-the-weights",
+   "title": "Check the weights"
+  },
+  {
+   "id": "raking-calibration",
+   "title": "Raking (calibration)"
+  },
+  {
+   "id": "trimming",
+   "title": "Trimming"
+  },
+  {
+   "id": "topic-3-replicate-weights",
+   "title": "Topic 3 — Replicate weights"
+  },
+  {
+   "id": "another-way-to-get-the-variance",
+   "title": "Another way to get the variance"
+  },
+  {
+   "id": "switch-to-r-lab-4",
+   "title": "🔧 Switch to R — Lab 4"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "survey-workshop/s5_choose_check_report": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-choosing",
+   "title": "Topic 1 — Choosing"
+  },
+  {
+   "id": "three-analyses-of-the-same-prevalence",
+   "title": "Three analyses of the same prevalence"
+  },
+  {
+   "id": "design-effects-differ-by-outcome",
+   "title": "Design effects differ by outcome"
+  },
+  {
+   "id": "topic-2-checking",
+   "title": "Topic 2 — Checking"
+  },
+  {
+   "id": "common-errors",
+   "title": "Common errors"
+  },
+  {
+   "id": "lonely-psus",
+   "title": "Lonely PSUs"
+  },
+  {
+   "id": "topic-3-planning-and-reporting",
+   "title": "Topic 3 — Planning and reporting"
+  },
+  {
+   "id": "sample-size-for-a-survey",
+   "title": "Sample size for a survey"
+  },
+  {
+   "id": "reporting-survey-results",
+   "title": "Reporting survey results"
+  },
+  {
+   "id": "an-example-sentence",
+   "title": "An example sentence"
+  },
+  {
+   "id": "switch-to-r-lab-5",
+   "title": "🔧 Switch to R — Lab 5"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "survival-workshop/s1_time_to_event": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "our-data-a-synthetic-tb-cohort",
+   "title": "Our data: a synthetic TB cohort"
+  },
+  {
+   "id": "topic-1-why-survival-analysis",
+   "title": "Topic 1 — Why survival analysis?"
+  },
+  {
+   "id": "two-problems-with-ordinary-methods",
+   "title": "Two problems with ordinary methods"
+  },
+  {
+   "id": "censored-patients-still-carry-information",
+   "title": "Censored patients still carry information"
+  },
+  {
+   "id": "the-three-quantities",
+   "title": "The three quantities"
+  },
+  {
+   "id": "topic-2-the-surv-object",
+   "title": "Topic 2 — The Surv object"
+  },
+  {
+   "id": "time-and-event-together",
+   "title": "Time and event together"
+  },
+  {
+   "id": "do-not-summarise-survival-times-with-a-mean",
+   "title": "Do not summarise survival times with a mean"
+  },
+  {
+   "id": "topic-3-person-time-and-rates",
+   "title": "Topic 3 — Person-time and rates"
+  },
+  {
+   "id": "incidence-rate",
+   "title": "Incidence rate"
+  },
+  {
+   "id": "describing-follow-up-honestly",
+   "title": "Describing follow-up honestly"
+  },
+  {
+   "id": "checklist-before-any-analysis",
+   "title": "Checklist before any analysis"
+  },
+  {
+   "id": "switch-to-r-lab-1",
+   "title": "🔧 Switch to R — Lab 1"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "survival-workshop/s2_kaplan_meier": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-how-the-estimate-is-built",
+   "title": "Topic 1 — How the estimate is built"
+  },
+  {
+   "id": "a-step-function",
+   "title": "A step function"
+  },
+  {
+   "id": "reading-the-toy-example",
+   "title": "Reading the toy example"
+  },
+  {
+   "id": "the-overall-curve",
+   "title": "The overall curve"
+  },
+  {
+   "id": "topic-2-reading-the-curve",
+   "title": "Topic 2 — Reading the curve"
+  },
+  {
+   "id": "survival-at-a-time",
+   "title": "Survival at a time"
+  },
+  {
+   "id": "the-median-survival-time",
+   "title": "The median survival time"
+  },
+  {
+   "id": "confidence-and-the-tail",
+   "title": "Confidence and the tail"
+  },
+  {
+   "id": "topic-3-curves-by-group",
+   "title": "Topic 3 — Curves by group"
+  },
+  {
+   "id": "hiv-positive-and-negative",
+   "title": "HIV-positive and negative"
+  },
+  {
+   "id": "reporting-a-kaplan-meier-analysis",
+   "title": "Reporting a Kaplan-Meier analysis"
+  },
+  {
+   "id": "switch-to-r-lab-2",
+   "title": "🔧 Switch to R — Lab 2"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "survival-workshop/s3_logrank": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-the-log-rank-test",
+   "title": "Topic 1 — The log-rank test"
+  },
+  {
+   "id": "what-it-compares",
+   "title": "What it compares"
+  },
+  {
+   "id": "hiv-status",
+   "title": "HIV status"
+  },
+  {
+   "id": "a-null-result",
+   "title": "A null result"
+  },
+  {
+   "id": "topic-2-getting-it-right",
+   "title": "Topic 2 — Getting it right"
+  },
+  {
+   "id": "stratified-log-rank",
+   "title": "Stratified log-rank"
+  },
+  {
+   "id": "more-than-two-groups",
+   "title": "More than two groups"
+  },
+  {
+   "id": "the-wrong-tests",
+   "title": "The wrong tests"
+  },
+  {
+   "id": "the-log-rank-test-does-not",
+   "title": "The log-rank test does not"
+  },
+  {
+   "id": "switch-to-r-lab-3",
+   "title": "🔧 Switch to R — Lab 3"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "survival-workshop/s4_cox_regression": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-the-hazard-ratio",
+   "title": "Topic 1 — The hazard ratio"
+  },
+  {
+   "id": "the-model",
+   "title": "The model"
+  },
+  {
+   "id": "one-predictor",
+   "title": "One predictor"
+  },
+  {
+   "id": "topic-2-adjusted-model",
+   "title": "Topic 2 — Adjusted model"
+  },
+  {
+   "id": "several-predictors-at-once",
+   "title": "Several predictors at once"
+  },
+  {
+   "id": "reading-the-adjusted-hazard-ratios",
+   "title": "Reading the adjusted hazard ratios"
+  },
+  {
+   "id": "reading-continuous-predictors",
+   "title": "Reading continuous predictors"
+  },
+  {
+   "id": "events-per-variable",
+   "title": "Events per variable"
+  },
+  {
+   "id": "topic-3-using-the-model",
+   "title": "Topic 3 — Using the model"
+  },
+  {
+   "id": "predicted-survival-for-a-patient-profile",
+   "title": "Predicted survival for a patient profile"
+  },
+  {
+   "id": "hr-is-not-a-risk-ratio",
+   "title": "HR is not a risk ratio"
+  },
+  {
+   "id": "reporting-a-cox-model",
+   "title": "Reporting a Cox model"
+  },
+  {
+   "id": "switch-to-r-lab-4",
+   "title": "🔧 Switch to R — Lab 4"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ],
+ "survival-workshop/s5_assumptions_reporting": [
+  {
+   "id": "where-we-are",
+   "title": "Where we are"
+  },
+  {
+   "id": "topic-1-proportional-hazards",
+   "title": "Topic 1 — Proportional hazards"
+  },
+  {
+   "id": "the-assumption",
+   "title": "The assumption"
+  },
+  {
+   "id": "reading-the-test",
+   "title": "Reading the test"
+  },
+  {
+   "id": "look-at-it",
+   "title": "Look at it"
+  },
+  {
+   "id": "topic-2-fixing-a-violation",
+   "title": "Topic 2 — Fixing a violation"
+  },
+  {
+   "id": "fix-1-stratify",
+   "title": "Fix 1: stratify"
+  },
+  {
+   "id": "fix-2-split-time-and-estimate-the-effect-in-each-period",
+   "title": "Fix 2: split time and estimate the effect in each period"
+  },
+  {
+   "id": "topic-3-censoring-and-reporting",
+   "title": "Topic 3 — Censoring and reporting"
+  },
+  {
+   "id": "is-censoring-non-informative",
+   "title": "Is censoring \"non-informative\"?"
+  },
+  {
+   "id": "other-threats",
+   "title": "Other threats"
+  },
+  {
+   "id": "reporting-checklist",
+   "title": "Reporting checklist"
+  },
+  {
+   "id": "switch-to-r-lab-5",
+   "title": "🔧 Switch to R — Lab 5"
+  },
+  {
+   "id": "self-check-quiz-15",
+   "title": "Self-check quiz (1/5)"
+  },
+  {
+   "id": "self-check-quiz-25",
+   "title": "Self-check quiz (2/5)"
+  },
+  {
+   "id": "self-check-quiz-35",
+   "title": "Self-check quiz (3/5)"
+  },
+  {
+   "id": "self-check-quiz-45",
+   "title": "Self-check quiz (4/5)"
+  },
+  {
+   "id": "self-check-quiz-55",
+   "title": "Self-check quiz (5/5)"
+  },
+  {
+   "id": "score-and-take-home",
+   "title": "Score and take-home"
+  }
+ ]
+}
