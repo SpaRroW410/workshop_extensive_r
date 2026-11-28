@@ -3,9 +3,11 @@
 Branch `claude/eager-newton-ai0u3z` (from `main` after PR #8). Plan: [`CUSTOM_DECKS_PLAN.md`](CUSTOM_DECKS_PLAN.md);
 what I decided on the way is its §10 (B1–B11).
 
-## ❓ Questions for you (nothing is waiting on them; I carried on)
+## ❓ Questions for you — answered 2026-11-28
 
-These are the plan's open decisions (§9); I built so that any answer is a small change.
+Answers: 1 export for custom decks, open to all · 2 limits stay · 3 images after the Cloudflare launch · 4 notes on Basic
+and Moderate pages too (**built**: 142 pages, tested) · 5 viewers see own slides but not the owner's speaker notes
+(**built**: the share API strips them, tested). Original questions below.
 
 1. **PowerPoint export and group sharing:** a Facilitator product, or part of the all-tracks bundle? For now the
    "⬇ For PowerPoint" button is shown to everyone (the export runs on the user's own machine, so there is nothing to gate yet).

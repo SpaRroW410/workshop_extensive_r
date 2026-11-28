@@ -109,6 +109,21 @@ for (const f of ['slide-tools.js', 'slide-tools.css']) cpSync(join(HERE, '..', '
 const WEBR_VERSION = '0.6.1';
 const webrSkipped = await stageWebR(join(OUT, 'webr'));
 
+// Notes on the Basic/Moderate pages (decided 2026-11-28), in whichever track shows them.
+// Their folders; workshop decks have their own tools, the game and the landing page have none.
+const NOTE_FOLDERS = ['r-foundations', 'data-visualization', 'plot-gallery', 'specialized', 'statistical-analysis', 'ggstatsplot', 'gtsummary', 'quarto_repro_w', 'exporting_tools'];
+let notePages = 0;
+for (const file of walk(OUT).filter((p) => p.endsWith('.html'))) {
+  const rel = relative(OUT, file).split('\\').join('/');
+  if (!NOTE_FOLDERS.includes(rel.split('/')[1])) continue;
+  const html = readFileSync(file, 'utf8');
+  const at = html.lastIndexOf('</body>');
+  if (at < 0 || html.includes('/st/page-notes.js')) continue;
+  const tags = '<link rel="stylesheet" href="/st/slide-tools.css"><link rel="stylesheet" href="/st/page-notes.css"><script src="/st/page-notes.js" defer></script>\n';
+  writeFileSync(file, html.slice(0, at) + tags + html.slice(at));
+  notePages++;
+}
+
 // Paid files leave their public paths (see src/layout.js for why).
 const { moved } = hidePaidFiles(OUT, join(HERE, 'src', 'generated'));
 
@@ -122,7 +137,7 @@ if (problems.length) {
 }
 mkdirSync(OUT, { recursive: true });
 if (webrSkipped) console.warn(`webR not staged (${webrSkipped}); decks will load it from webr.r-wasm.org`);
-console.log(`Staged ${count} files in cloud/.deploy (${moved} paid files hidden, sync script on ${injected} pages, _routes.json written)`);
+console.log(`Staged ${count} files in cloud/.deploy (${moved} paid files hidden, sync script on ${injected} pages, notes on ${notePages} Basic/Moderate pages, _routes.json written)`);
 
 async function stageWebR(dest) {
   // The browser build is the GitHub release archive (the npm package is webR's Node.js build).

@@ -40,6 +40,16 @@ test('notes: write, read back by deck, edit, delete with empty text; private to 
   assert.deepEqual(r.notes, {});
 });
 
+test('notes on Basic/Moderate pages: by page, per section, private', async () => {
+  const ref = 'page:r-foundations/getting-started#installing-r';
+  assert.equal((await call('PUT', '/api/notes', asha, { slide: ref, text: 'Use the Posit mirror' })).status, 200);
+  const r = await (await call('GET', '/api/notes?page=r-foundations/getting-started', asha)).json();
+  assert.equal(r.notes['installing-r'].text, 'Use the Posit mirror');
+  assert.deepEqual((await (await call('GET', '/api/notes?page=r-foundations/getting-started', ravi)).json()).notes, {});
+  assert.equal((await call('GET', '/api/notes?page=../x', asha)).status, 400);
+  assert.equal((await call('PUT', '/api/notes', asha, { slide: 'page:../../etc#x', text: 'x' })).status, 400);
+});
+
 test('notes: bad slide references, oversized text and non-JSON bodies are refused', async () => {
   assert.equal((await call('PUT', '/api/notes', asha, { slide: '../etc/passwd', text: 'x' })).status, 400);
   assert.equal((await call('PUT', '/api/notes', asha, { slide: S, text: 'x'.repeat(20001) })).status, 400);
@@ -86,12 +96,15 @@ test('own slides: create (anchored after a workshop slide), list by deck, edit, 
   assert.equal(r.slides.length, 1); assert.equal(r.slides[0].body.title, 'My Welch test');
   assert.equal((await (await call('GET', '/api/slides?anchor=stats-workshop/s2_assumptions', ravi)).json()).slides.length, 0);
   assert.equal((await call('PUT', `/api/slides/${id}`, ravi, { body })).status, 404, 'another account cannot edit it');
-  assert.equal((await call('PUT', `/api/slides/${id}`, asha, { body: { ...body, title: 'Renamed' } })).status, 200);
+  assert.equal((await call('PUT', `/api/slides/${id}`, asha, { body: { ...body, title: 'Renamed', notes: 'Say it slowly' } })).status, 200);
   // In a shared deck the viewer gets the slide's content with the deck.
   const d = await (await call('POST', '/api/decks', asha, { title: 'With my slide', items: [{ type: 'own', id }] })).json();
   const { share } = await (await call('PUT', `/api/decks/${d.id}`, asha, { share: true })).json();
   const shared = await (await call('GET', `/api/decks/${d.id}?share=${share}`, '')).json();
   assert.equal(shared.deck.own[id].title, 'Renamed');
+  assert.equal(shared.deck.own[id].notes, undefined, 'viewers do not get the owner\'s speaker notes');
+  const mine = await (await call('GET', `/api/decks/${d.id}`, asha)).json();
+  assert.equal(mine.deck.own[id].notes, 'Say it slowly', 'the owner still has them');
   assert.equal((await call('DELETE', `/api/slides/${id}`, asha)).status, 200);
 });
 

@@ -1,5 +1,6 @@
 // /api/decks/:id — one custom deck.
-// GET                 owner: { deck }; anyone with ?share=<token>: the same, read-only (owner fields left out)
+// GET                 owner: { deck }; anyone with ?share=<token>: the same, read-only (owner fields and the
+//                     speaker notes of the owner's own slides left out)
 //                     deck = { id, title, items, share?, own: { "<own slide id>": body } }
 // PUT { title?, items?, share?: true|false }   owner only; share:true makes (or keeps) a link token, false removes it
 // DELETE              owner only
@@ -27,7 +28,10 @@ export async function onRequestGet({ request, env, params }) {
   const viaLink = row && token && row.share && token === row.share;
   if (!owner && !viaLink) return json({ error: 'not found' }, 404);
   const items = JSON.parse(row.items);
-  const deck = { id: row.id, title: row.title, items, own: await ownSlides(env, row.userId, items), owner: !!owner };
+  const own = await ownSlides(env, row.userId, items);
+  // Viewers by link see the owner's slides but not the owner's speaker notes (decided 2026-11-28).
+  if (!owner) for (const body of Object.values(own)) delete body.notes;
+  const deck = { id: row.id, title: row.title, items, own, owner: !!owner };
   if (owner) deck.share = row.share;
   return json({ deck });
 }

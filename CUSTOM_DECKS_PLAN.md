@@ -18,7 +18,9 @@ Written 2026-11-27, alongside [`LAUNCH_PLAN.md`](LAUNCH_PLAN.md) (Cloudflare lau
 | Where user content lives | **In the user's account** (Cloudflare D1), never in the repository or the site files |
 | Own slides | An editor with **fonts, alignment, code block, output space** and layouts |
 
-Still open: images in own slides (§5.4), notes on reading pages (§6, decision 4), who may export PowerPoint (§7).
+Decided 2026-11-28 (§9): export is for **custom decks** only and **open to all**; the free-account limits stay;
+images in own slides come **after the Cloudflare launch**; notes also on the **Basic and Moderate pages**; viewers of a
+shared deck see the owner's own slides but **not the owner's speaker notes**.
 
 ## 2. webR: are our packages available? (checked 2026-11-27)
 
@@ -245,7 +247,7 @@ includes all tracks: your decision (§9, decision 1).
 - **Static pages stay static:** View mode adds one small script per deck and no requests, so free pages keep working
   even if the Function quota runs out.
 
-## 9. Decisions needed
+## 9. Decisions (answered 2026-11-28: 1 export for custom decks, open to all · 2 limits as §3.5 · 3 images after launch · 4 notes on Basic and Moderate pages too · 5 viewers see own slides, not the owner's notes)
 
 1. **Who gets PowerPoint export and group sharing:** a separate Facilitator product, or included with the all-tracks
    bundle? (§7)
@@ -269,3 +271,5 @@ includes all tracks: your decision (§9, decision 1).
 | B9 | The editor's preview is exact inside a deck (real theme), close in the builder (no deck theme there) | the builder is not a deck; the player shows the real result |
 | B10 | "⬇ For PowerPoint" is shown to everyone; the export runs on the user's machine | who may export is your decision (§9, 1); nothing to gate until then |
 | B11 | In the player, running a workshop slide's code loads **that** slide's deck setup; switching to another deck's slide reloads setup | slides from several decks can be mixed without wrong variables |
+| B12 | Notes on Basic/Moderate pages are keyed by page, not track (`page:<folder>/<page>#<section or slide id>`), and added at staging (Cloudflare only) | the same page appears in several tracks; staging avoids a full re-render; GitHub Pages is being retired |
+| B13 | Reading-page notes hang on section headings (Quarto's IDs); a note whose heading was renamed is listed at the end of the page | those pages have no stable-ID check like the workshops; nothing is lost |

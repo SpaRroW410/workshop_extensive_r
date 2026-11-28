@@ -11,6 +11,9 @@ export const LIMITS = {
 /** "<workshop>/<deck>#<id>", the stable slide reference. */
 export const SLIDE_REF = /^[a-z0-9-]+-workshop\/s\d[\w]*#[A-Za-z][\w.-]{0,150}$/;
 export const DECK_REF = /^[a-z0-9-]+-workshop\/s\d[\w]*$/;
+/** A note on a Basic/Moderate page: "page:<folder>/<page>#<section or slide id>" (decided 2026-11-28). */
+export const PAGE_NOTE_REF = /^page:[a-z0-9_-]+\/[\w.-]{1,80}#[A-Za-z][\w.:-]{0,150}$/;
+export const PAGE_REF = /^[a-z0-9_-]+\/[\w.-]{1,80}$/;
 export const ID = /^[A-Za-z0-9_-]{10,40}$/;
 
 export function newId() {

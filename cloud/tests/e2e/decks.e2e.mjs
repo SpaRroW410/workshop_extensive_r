@@ -199,6 +199,43 @@ try {
     await ctx3.close();
   });
 
+  await step('Basic reading page: a note on a section, saved to the account, shown after reload; not for others', async () => {
+    const d = watch(await ctx.newPage());
+    await d.goto(site.base + '/basic/r-foundations/merging_dataset', { waitUntil: 'load' });
+    await d.waitForFunction(() => window.PageNotes);
+    const sec = await d.evaluate(() => document.querySelector('main section.level2[id]').id);
+    await d.locator(`section#${sec} .pn-add`).first().click();
+    await d.locator(`section#${sec} .pn-text`).fill('Left join keeps every row of x.');
+    await d.waitForFunction((s) => /Saved to your account/.test(document.querySelector(`section#${s} .pn-status`).textContent), sec, { timeout: 10000 });
+    const api = await d.evaluate(() => fetch('/api/notes?page=r-foundations/merging_dataset').then((r) => r.json()));
+    assert.equal(api.notes[sec].text, 'Left join keeps every row of x.');
+    // the same page in another track (one this account holds) shows the same note
+    site.sql(`insert into entitlement values ('${uid}', 'moderate', null, 'manual', ${Date.now()})`);
+    await d.goto(site.base + '/moderate/r-foundations/merging_dataset', { waitUntil: 'load' });
+    await d.waitForSelector(`section#${sec} .pn-view`);
+    assert.match(await d.locator(`section#${sec} .pn-view`).innerText(), /Left join/);
+    await d.close();
+    const ctx4 = await browser.newContext(); const o = watch(await ctx4.newPage());
+    await o.goto(site.base + '/basic/r-foundations/merging_dataset', { waitUntil: 'load' });
+    await o.waitForFunction(() => window.PageNotes);
+    assert.equal(await o.locator('.pn-view').count(), 0);
+    await ctx4.close();
+  });
+
+  await step('Basic slide page: a note per slide', async () => {
+    const d = watch(await ctx.newPage());
+    await d.goto(site.base + '/basic/r-foundations/getting-started', { waitUntil: 'load' });
+    await d.waitForFunction(() => window.Reveal && Reveal.isReady() && window.PageNotes);
+    await d.waitForSelector('.pn-slide-btn');
+    await d.click('.pn-slide-btn');
+    await d.fill('.st-note-text', 'Install R before RStudio.');
+    await d.waitForFunction(() => /Saved to your account/.test(document.querySelector('.st-note-status').textContent), null, { timeout: 10000 });
+    const id = await d.evaluate(() => Reveal.getCurrentSlide().id);
+    const api = await d.evaluate(() => fetch('/api/notes?page=r-foundations/getting-started').then((r) => r.json()));
+    assert.equal(api.notes[id].text, 'Install R before RStudio.');
+    await d.close();
+  });
+
   if (!process.env.SKIP_RUN) await step('on Cloudflare: Run uses the self-hosted webR, the deck manifest and the data through the site', async () => {
     const d = watch(await ctx.newPage());
     const webrUrls = [];
