@@ -1,8 +1,11 @@
 # tools/
 
+Everyone can download a custom deck as PowerPoint from the Custom decks page (**⬇ PowerPoint**, made in the browser;
+charts come as pictures). The script below is for facilitators who want the charts editable too.
+
 ## export_pptx.R — a custom deck as an editable PowerPoint (facilitators)
 
-1. On the site, open **Custom decks** (`/decks`), build or open a deck, and click **⬇ For PowerPoint**. You get a `.json` file
+1. On the site, open **Custom decks** (`/decks`), build or open a deck, and click **⬇ For the R export**. You get a `.json` file
    (the slide list, your own slides and your notes).
 2. From the repository root, with the workshop packages installed (as for the labs) plus `officer`, `flextable`, `rvg`:
 

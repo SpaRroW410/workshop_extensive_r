@@ -5,10 +5,13 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { startSite } from '../helpers.js';
+import { spawnSync } from 'node:child_process';
+import { mkdirSync } from 'node:fs';
 
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
 const DEPLOY = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '.deploy');
+mkdirSync(join(dirname(fileURLToPath(import.meta.url)), '..', '..', '.cache'), { recursive: true });
 
 const steps = [];
 async function step(name, fn) {
@@ -131,6 +134,38 @@ try {
     assert.equal(await own.locator('script').count(), 0, 'the <script> stayed text');
     assert.match(await own.locator('table').innerText(), /Fisher/);
     await player.close();
+  });
+
+  await step('PowerPoint in the browser: editable text, tables, code, chart pictures, quiz answer in notes; locked slide left out', async () => {
+    const items = [
+      { type: 'slide', ref: 'stats-workshop/s1_know_your_data#describing-a-number-mean-or-median' },   // code, output, plot
+      { type: 'slide', ref: 'stats-workshop/s1_know_your_data#four-kinds-of-variable' },              // a table
+      { type: 'slide', ref: 'stats-workshop/s1_know_your_data#self-check-quiz-15' },                  // a quiz
+      { type: 'slide', ref: PAID },                                                                    // regression: unlocked
+      { type: 'slide', ref: 'stats-workshop/s2_assumptions#look-first-the-q-q-plot' },                // statistics: not held
+    ];
+    const made = await page.evaluate((items) => fetch('/api/decks', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ title: 'PPTX check', items }) }).then((r) => r.json()), items);
+    await page.goto(site.base + '/decks?id=' + made.id, { waitUntil: 'networkidle' });
+    await page.waitForFunction(() => document.querySelectorAll('#items li').length === 5);
+    const [dl] = await Promise.all([page.waitForEvent('download', { timeout: 120000 }), page.click('#pptx')]);
+    const file = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '.cache', 'pptx-check.pptx');
+    await dl.saveAs(file);
+    await page.waitForSelector('.msg.info, .msg.ok');
+    assert.match(await page.locator('#msg').innerText(), /Left out .*Q-Q/);
+    const r = spawnSync('Rscript', ['-e', `suppressPackageStartupMessages(library(officer)); x <- read_pptx("${file}"); s <- pptx_summary(x);
+      f <- utils::unzip("${file}", list = TRUE)$Name; d <- tempfile(); utils::unzip("${file}", exdir = d);
+      notes <- paste(unlist(lapply(file.path(d, grep("notesSlide[0-9]+[.]xml$", f, value = TRUE)), readLines, warn = FALSE)), collapse = " ");
+      cat(length(x), grepl("<p:pic", paste(readLines(file.path(d, "ppt/slides/slide2.xml"), warn = FALSE), collapse = "")), any(s$content_type == "table cell" & grepl("Nominal", s$text)),
+          any(grepl("Ordinal, because its levels have an order", s$text)), grepl("Answer:", notes), any(grepl("summarise", s$text)),
+          any(grepl("Q-Q", s$text)), sep = "|")`], { encoding: 'utf8' });
+    const [slides, media, table, quiz, answer, code, qq] = r.stdout.trim().split('|');
+    assert.ok(Number(slides) >= 5, `slides: ${slides} ${r.stderr}`);
+    assert.equal(media, 'TRUE', 'the histogram is on its slide as a picture');
+    assert.equal(table, 'TRUE', 'the variable-type table is a real table');
+    assert.equal(quiz, 'TRUE', 'quiz options are text');
+    assert.equal(answer, 'TRUE', 'the quiz answer is in the speaker notes');
+    assert.equal(code, 'TRUE', 'code is text');
+    assert.equal(qq, 'FALSE', 'the slide this account has not unlocked is not in the file');
   });
 
   await step('a viewer with the share link (another account, no regression): deck opens, paid slide locked', async () => {

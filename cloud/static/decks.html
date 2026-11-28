@@ -84,7 +84,8 @@
       <a class="btn" id="play" href="#" target="_blank" rel="noopener">▶ Play</a>
       <a class="btn" id="pdf" href="#" target="_blank" rel="noopener">⬇ PDF</a>
       <button class="btn" id="share" type="button">🔗 Share link</button>
-      <button class="btn" id="export" type="button" title="For facilitators: a file for tools/export_pptx.R (editable PowerPoint)">⬇ For PowerPoint</button>
+      <button class="btn" id="pptx" type="button" title="Download as PowerPoint: text, tables and code editable; charts as pictures">⬇ PowerPoint</button>
+      <button class="btn" id="export" type="button" title="Facilitators: a file for tools/export_pptx.R, which also makes the charts editable">⬇ For the R export</button>
       <button class="btn btn--danger" id="delete" type="button">Delete deck</button>
     </div>
     <div class="share" id="share-box" hidden><input type="text" id="share-url" readonly aria-label="Share link"><button class="btn" id="unshare" type="button">Stop sharing</button></div>
@@ -92,6 +93,7 @@
   </section>
 </main>
 <script src="/st/slide-tools.js"></script>
+<script src="/st/deck-pptx.js"></script>
 <script>
 (function () {
   'use strict';
@@ -289,6 +291,27 @@
     else await fetch('/api/decks/' + encodeURIComponent(state.deck.id), { method: 'DELETE', credentials: 'same-origin' });
     await loadDecks(); await openDeck(''); msg('Deck deleted.');
   });
+  // PowerPoint for everyone, made in the browser (decided 2026-11-28).
+  async function allNotes() {
+    let local = {}; try { local = JSON.parse(localStorage.getItem('st-notes')) || {}; } catch (e) { /* */ }
+    if (!account()) return local;
+    try { return (await (await fetch('/api/notes', { credentials: 'same-origin' })).json()).notes || local; } catch (e) { return local; }
+  }
+  $('pptx').addEventListener('click', async () => {
+    if (!state.deck.items.length) { msg('Add slides first.', 'err'); return; }
+    const b = $('pptx'); b.disabled = true;
+    try {
+      const own = {};
+      for (const it of state.deck.items) if (it.type === 'own' && state.own[it.id]) own[it.id] = state.own[it.id].body;
+      const res = await window.DeckPptx.build({ title: $('title').value.trim() || 'Custom deck', items: state.deck.items, own }, state.cat, await allNotes(),
+        (k, n) => msg(`Making the PowerPoint… ${k} of ${n}`, 'info'));
+      msg(res.skipped.length
+        ? `Downloaded ${res.file}. Left out (not unlocked on this account): ${res.skipped.join('; ')}.`
+        : `Downloaded ${res.file}.`, res.skipped.length ? 'info' : 'ok');
+    } catch (e) { msg('The PowerPoint could not be made: ' + (e.message || e), 'err'); }
+    b.disabled = false;
+  });
+
   // For facilitators: everything tools/export_pptx.R needs, in one file.
   $('export').addEventListener('click', () => {
     if (!state.deck.items.length) { msg('Add slides first.', 'err'); return; }

@@ -8,6 +8,8 @@ what I decided on the way is its §10 (B1–B11).
 Answers: 1 export for custom decks, open to all · 2 limits stay · 3 images after the Cloudflare launch · 4 notes on Basic
 and Moderate pages too (**built**: 142 pages, tested) · 5 viewers see own slides but not the owner's speaker notes
 (**built**: the share API strips them, tested). Original questions below.
+Follow-up to 1 ("open for all"): **⬇ PowerPoint** on `/decks` now makes the file in the browser for any user (text, tables, code
+editable; charts as pictures; locked slides left out). Tested in the custom-deck browser suite (13/13).
 
 1. **PowerPoint export and group sharing:** a Facilitator product, or part of the all-tracks bundle? For now the
    "⬇ For PowerPoint" button is shown to everyone (the export runs on the user's own machine, so there is nothing to gate yet).
